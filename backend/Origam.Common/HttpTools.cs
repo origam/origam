@@ -475,7 +475,7 @@ public class HttpTools : IHttpTools
 public record HttpResult(
 	object Content, 
 	int? StatusCode,
-	string? StatusDescription,
+	string StatusDescription,
 	Dictionary<string, string> Headers,
 	Exception Exception=null);
 

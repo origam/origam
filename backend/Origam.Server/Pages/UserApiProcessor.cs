@@ -43,11 +43,15 @@ using Origam.Extensions;
 using Origam.Service.Core;
 using ImageMagick;
 using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Origam.Server.Pages;
 public class UserApiProcessor
 {
     private readonly IHttpTools httpTools;
+    private readonly IWebHostEnvironment environment;
+
     private static readonly log4net.ILog log 
         = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -56,9 +60,10 @@ public class UserApiProcessor
              (ServiceManager.Services.GetService<SchemaService>())
                 .GetProvider<PagesSchemaItemProvider>()
             ));
-    public UserApiProcessor(IHttpTools httpTools)
+    public UserApiProcessor(IHttpTools httpTools, IWebHostEnvironment environment)
     {
         this.httpTools = httpTools;
+        this.environment = environment;
     }
     #region IHttpModule Members
     public void Dispose()
@@ -158,28 +163,35 @@ public class UserApiProcessor
                 log.DebugFormat("Result Content Type: {0}",
                     resultContentType);
             }
-            string message;
-            context.Response.TrySkipIisCustomErrors = true;
-            if (ex is RuleException ruleEx)
-            {
-                message =
-                    $@"{{""Message"" : 
-                    {JsonConvert.SerializeObject(ruleEx.Message)}, 
-                    ""RuleResult"" : 
-                    {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
-            }
-            else
-            {
-                message = JsonConvert.SerializeObject(ex);
-            }
+
             context.Response.Clear();
-            context.Response.StatusCode = GetStausCode(ex);
+            context.Response.StatusCode = GetStatusCode(ex);
             context.Response.ContentType = "application/json";   
+            context.Response.TrySkipIisCustomErrors = true;
+            string message = GetErrorObject(ex);
             context.Response.Write(message);
             context.Response.End();
         }
     }
-    private int GetStausCode(Exception ex)
+
+    private string GetErrorObject(Exception ex)
+    {
+        if (ex is RuleException ruleEx)
+        {
+            return
+                $@"{{""Message"" : 
+                    {JsonConvert.SerializeObject(ruleEx.Message)}, 
+                    ""RuleResult"" : 
+                    {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
+        }
+        if (environment.IsProduction())
+        {
+            return "There was en error, check log for details";
+        }
+        return JsonConvert.SerializeObject(ex);
+    }
+
+    private int GetStatusCode(Exception ex)
     {
         if (ex is RuleException ruleException)
         {
@@ -191,7 +203,7 @@ public class UserApiProcessor
                 return dataList[0].HttpStatusCode;
             }
         }
-        return 400;
+        return 500;
     }
     protected virtual void Handle404(IHttpContextWrapper context)
     { 

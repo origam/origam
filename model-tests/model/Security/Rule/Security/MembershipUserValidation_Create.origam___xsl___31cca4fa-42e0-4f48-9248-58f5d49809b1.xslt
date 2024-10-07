@@ -36,7 +36,7 @@
 				<xsl:with-param name="Severity"><xsl:value-of select="'High'"/></xsl:with-param>
 			</xsl:call-template>		
 		</xsl:if>
-		<xsl:if test="string(@UserName) != '' and string(AS:LookupValue('a427e92f-943e-4ba0-9db7-ca5d42190aaf', @UserName)) != ''">
+		<xsl:if test="string(UserName) != '' and string(AS:LookupValue('a427e92f-943e-4ba0-9db7-ca5d42190aaf', UserName)) != ''">
 			<xsl:call-template name="Exception">
 				<xsl:with-param name="FieldName"><xsl:value-of select="'UserName'"/></xsl:with-param>
 				<xsl:with-param name="EntityName"><xsl:value-of select="'BusinessPartner'"/></xsl:with-param>

@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2024.8.0.$(Build.BuildId)
+  value: 2024.11.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 24.8.0.$(Build.BuildId)
+  value: 24.11.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2024.8.alpha
+  value: 2024.11.alpha
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2024.7.0
+  value: 2024.10.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2024.8
+  value: 2024.11
 
 
 resources:
@@ -190,9 +190,9 @@ jobs:
        displayName: 'Prepare sources for setup (model)'
      - powershell: |
         & "$(WIX)bin\candle.exe" -ext WixSqlExtension -ext WixUtilExtension ArchitectSetup.wxs
-        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
-        New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
-        Copy-Item OrigamSetup.msi $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
+        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out origam-architect.msi ArchitectSetup.wixobj
+        New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
+        Copy-Item origam-architect.msi $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
        workingDirectory: $(Agent.BuildDirectory)\s\backend\OrigamSetup
        displayName: 'Build setup'
      - task: PublishBuildArtifacts@1
@@ -266,7 +266,7 @@ jobs:
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net6.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -480,17 +480,17 @@ jobs:
            
            ---
            
-           Docker image
+           Server Docker Images
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId).linux
            docker pull origam/server:$(TAG).$(Build.BuildId).win
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
-           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
-           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
-           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
+           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
@@ -515,16 +515,17 @@ jobs:
            
            ---
            
-           Docker image
+           Server Docker Images
            ```
            docker pull origam/server:$(TAG_LATEST).linux
            docker pull origam/server:$(TAG_LATEST).win
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
-           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
-           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
+           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'

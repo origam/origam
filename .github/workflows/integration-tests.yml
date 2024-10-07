@@ -46,7 +46,7 @@ jobs:
         yarn build
 
     - name: Upload frontend artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: htmlfrontendbuild
         path: "frontend-html/dist"   
@@ -72,24 +72,30 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Restore Packages
+      run: |
+       cd backend
+       msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
     - name: Build Server
       run: |
        cd backend
-       msbuild Origam.sln -t:restore /p:Configuration="Release Server"
-       msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
-       msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
+       msbuild Origam.sln -warnaserror -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+    - name: Build Origam.WorkflowTests
+      run: |
+       cd backend
+       msbuild Origam.sln -warnaserror -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
     - name: Upload server artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: htmlserverbuild
-        path: "backend/Origam.Server/bin/Release/net6.0/publish"
+        path: "backend/Origam.Server/bin/Release/net8.0/publish"
 
     - name: Upload workflow integration tests artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: workflowbuild
-        path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
+        path: "backend/Origam.WorkflowTests/bin/Release Server/net8.0/publish"
         
   integration-tests:
     needs: [build-frontend,build-server]
@@ -112,19 +118,19 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download HTML5 artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: htmlserverbuild
         path: test/HTML5
         
     - name: Download Frontend artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: htmlfrontendbuild
         path: test/HTML5/clients/origam
 
     - name: Download workflow integration tests artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: workflowbuild
         path: test/HTML5_TESTS

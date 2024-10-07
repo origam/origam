@@ -35,6 +35,8 @@ using Origam.DA;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using ImageMagick;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
@@ -49,7 +51,8 @@ public class BlobController : AbstractController
     public BlobController(
         SessionObjects sessionObjects, 
         IStringLocalizer<SharedResources> localizer,
-        ILogger<BlobController> log) : base(log, sessionObjects)
+        ILogger<BlobController> log, IWebHostEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
     }
@@ -156,7 +159,7 @@ public class BlobController : AbstractController
             {
                 disposition = "attachment; " + disposition;
             }
-            Response.Headers.Add(
+            Response.Headers.Append(
                 HeaderNames.ContentDisposition, disposition);
             return File(resultStream, HttpTools.Instance.GetMimeType(filename));
         }

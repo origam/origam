@@ -95,3 +95,17 @@ test.each([
   const momentValue = dateCompleterUs.autoComplete(incompleteDate)
   expect(momentValue).toBe(undefined);
 });
+
+test.each([
+  ["13. září 2020 10:00"],
+])('Should not try to complete time when input is in incompatible format using dateCompleterCz', (incompleteDate) => {
+  const momentValue = dateCompleterCz.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
+
+test.each([
+  ["13. september 2020 10:00"],
+])('Should not try to complete time when input is in incompatible format using dateCompleterUs', (incompleteDate) => {
+  const momentValue = dateCompleterUs.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});

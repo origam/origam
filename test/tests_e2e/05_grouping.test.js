@@ -1,7 +1,7 @@
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected, beforeEachTest, afterEachTest
 } = require('./testTools');
-const {installMouseHelper} = require('./instalMouseHelper_');
+const {installMouseHelper} = require('./installMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 

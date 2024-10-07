@@ -32,7 +32,10 @@ public class NullRuntimeModelConfig : IRuntimeModelConfig
     public void UpdateConfig(IPersistent persistent)
     {
     }
+#pragma warning disable 67
     public event EventHandler<List<Guid>> ConfigurationReloaded;
+#pragma warning restore 67
+    
     public void Dispose()
     {
     }

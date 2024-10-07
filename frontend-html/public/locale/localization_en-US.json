@@ -59,12 +59,13 @@
   "type_search_here": "Search for anything here",
   "infopanel_title": "Info",
   "error_window_title": "Error",
-  "filter_menu_set_default_filter": "Remember The Current Filter",
+  "filter_menu_set_default_filter": "Set the Current Filter as Default",
   "filter_menu_cancel_default_filter": "Cancel Default Filter",
   "filter_menu_save_filter": "Save Current Filter",
   "filter_menu_delete": "Delete",
   "filter_menu_cancel": "Cancel Filter",
   "filter_menu_filter_off": "Cancel and Hide Filter",
+  "filter_always_menu": "Always Show Filter",
   "filter_operator_begins_with": "begins with",
   "filter_operator_contains": "contains",
   "filter_operator_ends_with": "ends with",
@@ -147,5 +148,6 @@
   "add_new_record": "Add New Record",
   "cancel_workflow_confirmation": "Are you sure you want to cancel the workflow?",
   "hold_ctrl_tool_tip": "Hold Ctrl and click to open link",
-  "hold_cmd_tool_tip": "Hold Cmd and click to open link"
+  "hold_cmd_tool_tip": "Hold Cmd and click to open link",
+  "server_error": "Server error occurred. Please check server log for more details."
 }

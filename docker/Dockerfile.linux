@@ -2,11 +2,11 @@
 #For more information, please see https://aka.ms/containercompat
 
 # Fix of https://community.origam.com/t/not-displaying-c-at-the-end-of-words-in-pdf-generated-from-fastreport/755/19
-# Rebuilding libgdiplus library to correctly display international characters 
-# in FastReports. i.e. in czech language it doesn't display è located in the end
-# of string. Instead of Kè it printed just K.
+# Rebuilding libgdiplus library to correctly display international characters
+# in FastReports. i.e. in czech language it doesn't display Ã¨ located in the end
+# of string. Instead of KÃ¨ it printed just K.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
 #INSTALL YARN & NODEJS 18
 RUN apt-get update \
@@ -43,6 +43,11 @@ RUN mv reverse-proxy.conf /etc/nginx/sites-available \
 && su origam 
 USER origam
 
+# nginx and SSL setup
+COPY linux/createSslCertificate.sh /etc/nginx/ssl/createSslCertificate.sh
+RUN sudo chmod +x /etc/nginx/ssl/createSslCertificate.sh
+COPY nginx.conf /etc/nginx/nginx.conf
+
 WORKDIR /home/origam
 RUN mkdir HTML5 HTML5-SOURCE
 COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
@@ -60,4 +65,4 @@ RUN mkdir data \
 && chmod +x startServer.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh
-CMD sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh && ./startServer.sh
+CMD cd /etc/nginx/ssl && sudo /etc/nginx/ssl/createSslCertificate.sh && sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh && ./startServer.sh

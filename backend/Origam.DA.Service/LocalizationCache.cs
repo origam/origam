@@ -54,7 +54,7 @@ public class LocalizationCache: ILocalizationCache, IDisposable
 	{
 #if !ORIGAM_CLIENT
 		return;
-#endif
+#else
 		OrigamSettings settings =
 			ConfigurationManager.GetActiveConfiguration() ;
 		if (settings.LocalizationFolder == String.Empty)
@@ -96,6 +96,7 @@ public class LocalizationCache: ILocalizationCache, IDisposable
 				settings.LocalizationFolder,
 				"Localization folder specified in OrigamSettings not found.");
 		}
+#endif
 	}
 	/// <summary>
 	/// Loads a file.

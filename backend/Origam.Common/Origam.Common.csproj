@@ -70,7 +70,6 @@
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    <Reference Include="System.IO.Compression" />
   </ItemGroup>
 
   <ItemGroup>
@@ -92,5 +91,9 @@
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+        <Reference Include="System.IO.Compression"  />
+    </ItemGroup>
 
 </Project>

@@ -65,6 +65,7 @@
   "filter_menu_delete": "Smazat uložený filtr",
   "filter_menu_cancel": "Zrušit filtr",
   "filter_menu_filter_off": "Zrušit a schovat filtr",
+  "filter_always_menu": "Vždy zobrazit filtr",
   "filter_operator_begins_with": "začíná na",
   "filter_operator_contains": "obsahuje",
   "filter_operator_ends_with": "končí na",
@@ -148,5 +149,6 @@
   "add_new_record": "Přidat nový záznam",
   "cancel_workflow_confirmation": "Opravdu chcete zrušit workflow?",
   "hold_ctrl_tool_tip": "Držte klávesu Ctrl a klikněte pro otevření odkazu",
-  "hold_cmd_tool_tip": "Držte klávesu Cmd a klikněte pro otevření odkazu"
+  "hold_cmd_tool_tip": "Držte klávesu Cmd a klikněte pro otevření odkazu",
+  "server_error": "Objevila se chyba na serveru. V log souboru serveru jsou detaily."
 }

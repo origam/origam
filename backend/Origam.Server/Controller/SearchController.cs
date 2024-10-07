@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Server.Attributes;
@@ -32,7 +33,8 @@ public class SearchController: AbstractController
 {
     private readonly SearchHandler searchHandler;
     public SearchController(ILogger<AbstractController> log, SessionObjects sessionObjects,
-        SearchHandler searchHandler) : base(log, sessionObjects)
+        SearchHandler searchHandler, IWebHostEnvironment environment)
+        : base(log, sessionObjects, environment)
     {
         this.searchHandler = searchHandler;
     }

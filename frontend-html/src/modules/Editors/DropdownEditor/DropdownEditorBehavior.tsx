@@ -125,6 +125,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
+  handlingNewValue = false;
 
   @observable cursorRowId = "";
 
@@ -169,14 +170,22 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     }
   }
 
-  private clear() {
-    this.ensureRequestCancelled();
-    this.userEnteredValue = undefined;
-    this.dataTable.setFilterPhrase("");
-    this.dataTable.clearData();
-    this.willLoadPage = 1;
-    this.willLoadNextPage = true;
-    this.scrollToRowIndex = 0;
+  @action.bound
+  private async clear() {
+    try {
+      if (this.handlingNewValue) {
+        await this.runningPromise;
+      }
+    } finally {
+      this.ensureRequestCancelled();
+      this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
+      this.dataTable.clearData();
+      this.willLoadPage = 1;
+      this.willLoadNextPage = true;
+      this.scrollToRowIndex = 0;
+      this.handlingNewValue = false;
+    }
   }
 
   @action.bound
@@ -251,10 +260,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   async handleInputBlur(event: any) {
-    if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
-      await this.data.chooseNewValue(this.cursorRowId);
-    } else if (this.userEnteredValue === "") {
-      await this.data.chooseNewValue(null);
+    if (!this.handlingNewValue) {
+      if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
+        await this.data.chooseNewValue(this.cursorRowId);
+      } else if (this.userEnteredValue === "") {
+        await this.data.chooseNewValue(null);
+      }
     }
     this.dropUp();
   }
@@ -286,7 +297,17 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
           this.onAddNewRecordClick?.(this.userEnteredValue);
         }
         if (this.isDropped && !this.isWorking) {
-          await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          this.handleInputChangeDeb.flush();
+          (async() => {
+            try {
+              this.handlingNewValue = true;
+              await this.runningPromise;
+            } finally {
+              this.handlingNewValue = false;
+              this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+                .catch(error => console.error('Error when setting a new value:', error));
+            }
+          })();
           this.dropUp();
         }
         if (wasDropped) {
@@ -298,11 +319,21 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         break;
       case "Tab":
         if (this.isDropped) {
+          if (this.handlingNewValue) {
+            break;
+          }
           if (this.cursorRowId) {
-            // chooseNewValue is not awaited here because we need the dropdown to close immediately and not wait for it.
-            // Focus may end up in an unexpected place if Tab is pressed again while the dropdown is still open!
-            this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
-                .catch(error => console.error('Error when setting a new value:', error));
+            this.handleInputChangeDeb.flush();
+            (async() => {
+              try {
+                this.handlingNewValue = true;
+                await this.runningPromise;
+              } finally {
+                this.handlingNewValue = false;
+                this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+                  .catch(error => console.error('Error when setting a new value:', error));
+              }
+            })();
           }
           else {
             this.handleTabPressedBeforeDropdownReady(event);
@@ -314,7 +345,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Delete":
-        await this.clearSelection();
+        if (!this.isReadOnly) {
+          await this.clearSelection();
+        }
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -350,6 +383,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Backspace":
+        if (this.isReadOnly) {
+          return;
+        }
         if (document.getSelection()?.toString() === event.target.value ||
           this.userEnteredValue?.length === 1)
         {
@@ -368,9 +404,15 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     setTimeout(async () => {
       this.handleInputChangeDeb.cancel();
       this.handleInputChangeImm();
-      await this.runningPromise;
-      await this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
-      this.forceRequestFinish = false;
+      try {
+        this.handlingNewValue = true;
+        await this.runningPromise;
+      } finally {
+        this.handlingNewValue = false;
+        this.forceRequestFinish = false;
+        await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+          .catch(error => console.error('Error when setting a new value:', error));
+      }
       this.clear();
     });
   }
@@ -418,11 +460,17 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   async handleTableCellClicked(event: any, visibleRowIndex: any) {
-    const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    await this.data.chooseNewValue(id);
-    this.userEnteredValue = "";
-    this.dataTable.setFilterPhrase("");
-    this.dropUp();
+    this.handlingNewValue = true;
+    try {
+      const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
+      await this.data.chooseNewValue(id);
+      this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
+      this.dropUp();
+    }
+    finally {
+       this.handlingNewValue = false;
+    }
   }
 
   @action.bound

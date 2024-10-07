@@ -29,7 +29,7 @@ using System.Data;
 using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.JSON;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using System.Linq;
 using Origam.Rule.Xslt;
@@ -93,7 +93,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         else
         {
-            data = core.DataService.Instance.LoadData(
+            data = CoreServices.DataService.Instance.LoadData(
                 xsltPage.DataStructureId, 
                 xsltPage.DataStructureMethodId, 
                 defaultSetId:Guid.Empty, 
@@ -316,7 +316,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             mergeParams);
         Validate(data, transformParams, ruleEngine, 
             xsltPage.SaveValidationAfterMerge);
-        core.DataService.Instance.StoreData(
+        CoreServices.DataService.Instance.StoreData(
             xsltPage.DataStructureId, 
             data.DataSet, 
             loadActualValuesAfterUpdate:false, 
@@ -340,7 +340,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                 row.Delete();
             }
         }
-        core.DataService.Instance.StoreData(
+        CoreServices.DataService.Instance.StoreData(
             xsltPage.DataStructureId, 
             data, 
             loadActualValuesAfterUpdate:false, 

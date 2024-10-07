@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.Server.Controller;
 using Origam.Service.Core;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 public class WorkflowServiceSoap: IWorkflowServiceSoap
@@ -25,7 +25,7 @@ public class WorkflowServiceSoap: IWorkflowServiceSoap
             log.Log(LogLevel.Information, "ExecuteWorkflow0");
         }
         Guid guid = new Guid(workflowId);
-        object result = core.WorkflowService.ExecuteWorkflow(guid);
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid);
         object diffGram = ToDiffGram(result, "ExecuteWorkflow0Result");
         return Task.FromResult(diffGram);
     }
@@ -37,7 +37,7 @@ public class WorkflowServiceSoap: IWorkflowServiceSoap
         }
         Guid guid = new Guid(workflowId);
         var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-        object result = core.WorkflowService.ExecuteWorkflow(guid, parameterCollection, null);
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid, parameterCollection, null);
         object diffGram = ToDiffGram(result, "ExecuteWorkflowResult");
         return Task.FromResult(diffGram);
     }
@@ -50,7 +50,7 @@ public class WorkflowServiceSoap: IWorkflowServiceSoap
         Guid guid = new Guid(workflowId);
         QueryParameterCollection parameters = new QueryParameterCollection();
         parameters.Add(new QueryParameter(paramName, paramValue));
-        object result = core.WorkflowService.ExecuteWorkflow(guid, parameters, null);
+        object result = CoreServices.WorkflowService.ExecuteWorkflow(guid, parameters, null);
         object diffGram = ToDiffGram(result, "ExecuteWorkflow1Result");
         return Task.FromResult(diffGram);
     }

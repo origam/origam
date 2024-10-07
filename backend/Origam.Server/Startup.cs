@@ -102,9 +102,6 @@ public class Startup
         });
         services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
         var builder = services.AddMvc().AddNewtonsoftJson();
-#if DEBUG
-        builder.AddRazorRuntimeCompilation();
-#endif
         services.Configure<IdentityOptions>(options =>
         {
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);

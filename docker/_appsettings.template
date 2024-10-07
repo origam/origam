@@ -91,7 +91,7 @@
             },
             {
                 "Culture": "cs-CZ",
-                "Caption": "Cesky",
+                "Caption": "Česky",
 				"ResetPasswordMailSubject": "Obnova Hesla",
 				"ResetPasswordMailBodyFileName": "testResetPwFile.txt",
 				"DateCompleterConfig":{

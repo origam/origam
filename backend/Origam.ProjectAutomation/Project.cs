@@ -42,7 +42,6 @@ public class Project
     private string _dataConnectionString;
     private string _modelConnectionString;
     private string _builderDataConnectionString;
-    private string _builderModelConnectionString;
     private string _architectUserName;
     private string _newPackageId;
     private string _sourcesFolder;

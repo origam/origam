@@ -43,14 +43,11 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Origam.Schema.GuiModel;
-using System.Web;
 using Origam.DA;
 using Origam.Schema.WorkflowModel;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Rule;
-using System.Xml;
-using Origam.Schema;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
@@ -87,7 +84,7 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
 				}
 			}
 		}
-		object workflowResult = core.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
+		object workflowResult = CoreServices.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
         bool handled = false;
         var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(AbstractWorkflowPageAction.CategoryConst);
         actions.Sort();

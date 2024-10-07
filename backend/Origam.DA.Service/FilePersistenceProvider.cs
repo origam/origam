@@ -51,6 +51,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
     private readonly TrackerLoaderFactory trackerLoaderFactory;
     private readonly OrigamFileManager origamFileManager;
     private readonly IRuntimeModelConfig runtimeModelConfig;
+    private readonly DateTime instanceCreationTime;
     public override bool InTransaction => persistor.IsInTransaction;
     public override ILocalizationCache LocalizationCache => localizationCache;
     public HashSet<Guid> LoadedPackages {
@@ -66,6 +67,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
         FilePersistenceIndex index, OrigamFileManager origamFileManager,
         bool checkRules, IRuntimeModelConfig runtimeModelConfig)
     {
+        instanceCreationTime = DateTime.Now;
         CheckRules = checkRules;
         this.origamFileManager = origamFileManager;
         this.runtimeModelConfig = runtimeModelConfig;
@@ -431,6 +433,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
     {
         List<FileInfo> modelDirectoryFiles = TopDirectory
             .GetAllFilesInSubDirectories()
+            .Where(file => file.CreationTime < instanceCreationTime)
             .ToList();
         return 
             new IFileSystemModelChecker[]

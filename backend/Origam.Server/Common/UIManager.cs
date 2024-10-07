@@ -37,13 +37,10 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
-using Origam.Server;
 using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
-using Origam.Workflow;
-using core = Origam.Workbench.Services.CoreServices;
-using Debug = System.Diagnostics.Debug;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 public class UIManager
@@ -501,7 +498,7 @@ public class UIManager
         XmlElement rootElement = doc.CreateElement("dashboardViews");
         doc.AppendChild(rootElement);
         IPrincipal principal = SecurityManager.CurrentPrincipal;
-        DataSet data = core.DataService.Instance.LoadData(
+        DataSet data = CoreServices.DataService.Instance.LoadData(
             new Guid("e6b7e890-032c-4837-b3e1-592f9d6f9d0f"),
             new Guid("916f8028-9d89-49b2-bb66-97548bde8b7d"), Guid.Empty,
             Guid.Empty, null,

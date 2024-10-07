@@ -39,19 +39,15 @@ public class MonitoredMsSqlDataService : MsSqlDataService
         DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
         string transactionId, bool forceBulkInsert)
     {
-        var deletesWorkQueueEntry = 
-            dataset != null &&
-            dataset.Tables.Count == 1 &&
-            dataset.Tables[0].TableName == "WorkQueueEntry" &&
-            dataset.Tables[0].Rows.Count == 1 &&
-            dataset.Tables[0].Rows[0].RowState == DataRowState.Deleted;
+        var deletesWorkQueueEntry = dataset 
+            is { Tables: [{ TableName: "WorkQueueEntry", 
+                Rows: [{ RowState: DataRowState.Deleted }] }] };
         if (deletesWorkQueueEntry)
         {
             dataset.Tables[0].Rows[0].RejectChanges();
             var deletedRowId = (Guid)dataset.Tables[0].Rows[0]["Id"];
             var refWorkQueueId = (Guid)dataset.Tables[0].Rows[0]["refWorkQueueId"];
             dataset.Tables[0].Rows[0].Delete();
-
             AddOperation(
                 new DeleteWorkQueueEntryOperation("UpdateData",
                     new Dictionary<string, object>
@@ -61,7 +57,6 @@ public class MonitoredMsSqlDataService : MsSqlDataService
                         { "executedAt", DateTime.Now }
                     }));
         }
-
         return base.UpdateData(query, userProfile, dataset,
             transactionId, forceBulkInsert);
     }

@@ -38,7 +38,7 @@ export function handleError(ctx: any) {
       }
     }
     if (error.response && error.response.status === 474) {
-      // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
+      // 474 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
       // finished (RowStates for example)
       return;
     }
@@ -53,7 +53,7 @@ export function handleError(ctx: any) {
     }
     if (error.response &&
         error.response.status === 404 &&
-        error.response.data.message.includes("Origam.Server.RowNotFoundException")) {
+        error.response.data.message.includes("row not found")) {
       yield*selectors.error.getDialogController(ctx).pushError(
         T(
           `The row you requested was not found on the server. Please refresh the data.`,

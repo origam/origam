@@ -1222,7 +1222,6 @@ Global
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
@@ -1293,7 +1292,6 @@ Global
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
@@ -1417,7 +1415,6 @@ Global
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU

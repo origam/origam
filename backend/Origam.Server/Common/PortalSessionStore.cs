@@ -22,8 +22,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Origam;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 public class PortalSessionStore
@@ -80,7 +79,7 @@ public class PortalSessionStore
     }
     public bool ShouldBeCleared()
     {
-        DataSet data = core.DataService.Instance.LoadData(
+        DataSet data = CoreServices.DataService.Instance.LoadData(
             new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
             new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
             Guid.Empty, 

@@ -29,8 +29,9 @@ import { prepareAnyForFilter, prepareForFilter } from "../selectors/PortalSettin
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 
 export class FilterConfiguration implements IFilterConfiguration {
-  constructor(implicitFilters: IImplicitFilter[]) {
+  constructor(implicitFilters: IImplicitFilter[], alwaysShowFilters: boolean) {
     this.implicitFilters = implicitFilters;
+    this.isFilterControlsDisplayed = alwaysShowFilters
     this.start();
   }
 

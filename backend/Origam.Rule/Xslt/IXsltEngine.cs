@@ -38,7 +38,7 @@ public interface IXsltEngine : ITraceInfoContainer
     Guid TraceStepId {get; set;}
     Guid TraceWorkflowId {get; set;}
     bool Trace { get; set; }
-    void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
+    new void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
     IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
         IDataStructure outputStructure, bool validateOnly);
     IXmlContainer Transform(IXmlContainer data, Guid transformationId, 

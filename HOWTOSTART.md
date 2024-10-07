@@ -25,7 +25,7 @@ Install [Visual Studio](https://visualstudio.microsoft.com/downloads/).
 Select **ASP.NET and web development** and **.NET desktop development** during the installation process.
 
 #### Node.js
-Make sure you download at least version 14 of [Node.js](https://nodejs.org/en/).
+Make sure you download at least version 18 of [Node.js](https://nodejs.org/en/).
 
 #### Javascript IDE
 Either [Visual Studio Code](https://code.visualstudio.com/), [JetBrains Webstorm](https://www.jetbrains.com/webstorm/) or something else.
