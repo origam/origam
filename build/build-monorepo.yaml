@@ -190,9 +190,9 @@ jobs:
        displayName: 'Prepare sources for setup (model)'
      - powershell: |
         & "$(WIX)bin\candle.exe" -ext WixSqlExtension -ext WixUtilExtension ArchitectSetup.wxs
-        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
-        New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
-        Copy-Item OrigamSetup.msi $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
+        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out origam-architect.msi ArchitectSetup.wixobj
+        New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
+        Copy-Item origam-architect.msi $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
        workingDirectory: $(Agent.BuildDirectory)\s\backend\OrigamSetup
        displayName: 'Build setup'
      - task: PublishBuildArtifacts@1
@@ -487,7 +487,7 @@ jobs:
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
-           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
+           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
@@ -522,7 +522,7 @@ jobs:
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
-           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
+           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
