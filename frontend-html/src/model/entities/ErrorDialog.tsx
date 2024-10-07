@@ -101,7 +101,7 @@ export class ErrorDialogController implements IErrorDialogController {
 
       if (errItem.error?.request?.status === 500 || errItem.error?.request?.status === 409) {
         errorMessage = T(
-          "Server error occurred. Please check server log for more details",
+          "Server error occurred. Please check server log for more details.",
           "server_error")
       }
 
