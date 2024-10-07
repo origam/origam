@@ -4,7 +4,6 @@
  <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <LangVersion>10</LangVersion>
-     <Nullable>annotations</Nullable>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyName>Origam</AssemblyName>

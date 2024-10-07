@@ -26,8 +26,8 @@ using System.Threading;
 namespace Origam;
 public class LanguageSwitcher : IDisposable
 {
-    private readonly CultureInfo? originalUICulture;
-    private readonly CultureInfo? originalCulture;
+    private readonly CultureInfo originalUICulture;
+    private readonly CultureInfo originalCulture;
     public LanguageSwitcher(string langIetf = "")
     {
         originalCulture = null;
