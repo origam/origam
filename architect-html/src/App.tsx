@@ -34,30 +34,30 @@ const App: React.FC = () => {
 
   return (
     <ArchitectApiProvider api={architectApi}>
-      <ScreenSectionEditor/>
-      {/*<TopLayout*/}
-      {/*  topToolBar={<SaveButton/>}*/}
-      {/*  editorArea={editor}*/}
-      {/*  sideBar={*/}
-      {/*    <TabView items={[*/}
-      {/*      {*/}
-      {/*        id: TabViewId.Packages,*/}
-      {/*        label: "Packages",*/}
-      {/*        node: <Packages onPackageLoaded={onPackageLoaded}/>*/}
-      {/*      },*/}
-      {/*      {*/}
-      {/*        id: TabViewId.Model,*/}
-      {/*        label: "Model",*/}
-      {/*        node: <LazyLoadedTree*/}
-      {/*          topNodes={topNodes}*/}
-      {/*          openEditor={(node) => {*/}
-      {/*            setEditor(getEditor(node));*/}
-      {/*          }}*/}
-      {/*        />*/}
-      {/*      }*/}
-      {/*    ]}/>*/}
-      {/*  }*/}
-      {/*/>*/}
+      {/*<ScreenSectionEditor/>*/}
+      <TopLayout
+        topToolBar={<SaveButton/>}
+        editorArea={editor}
+        sideBar={
+          <TabView items={[
+            {
+              id: TabViewId.Packages,
+              label: "Packages",
+              node: <Packages onPackageLoaded={onPackageLoaded}/>
+            },
+            {
+              id: TabViewId.Model,
+              label: "Model",
+              node: <LazyLoadedTree
+                topNodes={topNodes}
+                openEditor={(node) => {
+                  setEditor(getEditor(node));
+                }}
+              />
+            }
+          ]}/>
+        }
+      />
     </ArchitectApiProvider>
   );
 };
