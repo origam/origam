@@ -137,5 +137,6 @@
   "add_new_record": "Ajouter nouveau dossier",
   "cancel_workflow_confirmation": "Êtes-vous certain de vouloir annuler le flux de travail?",
   "hold_ctrl_tool_tip": "Maintenez Ctrl enfoncé et cliquez pour ouvrir le lien",
-  "hold_cmd_tool_tip": "Maintenez Cmd enfoncé et cliquez pour ouvrir le lien"
+  "hold_cmd_tool_tip": "Maintenez Cmd enfoncé et cliquez pour ouvrir le lien",
+  "server_error": "Une erreur de serveur s'est produite. Veuillez consulter le journal du serveur pour plus de détails."
 }
