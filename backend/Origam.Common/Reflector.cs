@@ -31,7 +31,7 @@ using Origam.Extensions;
 namespace Origam;
 public class Reflector
 {
-	public static readonly BindingFlags SearchCriteria 
+	private static readonly BindingFlags SearchCriteria 
 		= BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 	private static readonly ConcurrentDictionary<Type, 
 		ConcurrentDictionary<Type, List<MemberAttributeInfo>>> memberTypeCache 
@@ -43,11 +43,6 @@ public class Reflector
     protected Reflector() 
 	{
 	}
-    public static IReflectorCache ClassCache
-    {
-        get => classCache;
-        set => classCache = value;
-    }
 	
 	public static List<ConstructorInfo> FindConstructors( Type type )
 	{
