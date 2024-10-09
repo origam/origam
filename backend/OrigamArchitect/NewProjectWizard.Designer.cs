@@ -44,19 +44,6 @@ namespace OrigamArchitect
             this.label1 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.pageAzureDeploymentSettings = new AeroWizard.WizardPage();
-            this.txtAzureSubscriptionId = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtAzureRedirectUri = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.txtAzureClientId = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.txtAzureTenantId = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.txtAzurePassword = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtAzureUserName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.pagePaths = new AeroWizard.WizardPage();
             this.btnSelectTemplateFolder = new System.Windows.Forms.Button();
             this.btnSelectBinFolderRoot = new System.Windows.Forms.Button();
@@ -141,7 +128,6 @@ namespace OrigamArchitect
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
-            this.pageAzureDeploymentSettings.SuspendLayout();
             this.pagePaths.SuspendLayout();
             this.pageWebUser.SuspendLayout();
             this.pageGit.SuspendLayout();
@@ -164,7 +150,6 @@ namespace OrigamArchitect
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
             this.wizard1.Pages.Add(this.pageDeploymentType);
-            this.wizard1.Pages.Add(this.pageAzureDeploymentSettings);
             this.wizard1.Pages.Add(this.pageTemplateType);
             this.wizard1.Pages.Add(this.wizOpenRepository);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
@@ -275,125 +260,6 @@ namespace OrigamArchitect
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(559, 23);
             this.txtName.TabIndex = 1;
-            // 
-            // pageAzureDeploymentSettings
-            // 
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzureSubscriptionId);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label14);
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzureRedirectUri);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label13);
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzureClientId);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label12);
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzureTenantId);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label11);
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzurePassword);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label10);
-            this.pageAzureDeploymentSettings.Controls.Add(this.txtAzureUserName);
-            this.pageAzureDeploymentSettings.Controls.Add(this.label5);
-            this.pageAzureDeploymentSettings.Name = "pageAzureDeploymentSettings";
-            this.pageAzureDeploymentSettings.NextPage = this.pagePaths;
-            this.pageAzureDeploymentSettings.Size = new System.Drawing.Size(737, 407);
-            this.pageAzureDeploymentSettings.TabIndex = 5;
-            this.pageAzureDeploymentSettings.Text = "Microsoft Azure Deployment Settings";
-            this.pageAzureDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageAzureDeploymentSettings_Commit);
-            // 
-            // txtAzureSubscriptionId
-            // 
-            this.txtAzureSubscriptionId.Location = new System.Drawing.Point(143, 123);
-            this.txtAzureSubscriptionId.Name = "txtAzureSubscriptionId";
-            this.txtAzureSubscriptionId.Size = new System.Drawing.Size(203, 23);
-            this.txtAzureSubscriptionId.TabIndex = 11;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 131);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(86, 15);
-            this.label14.TabIndex = 10;
-            this.label14.Text = "Subscription Id";
-            // 
-            // txtAzureRedirectUri
-            // 
-            this.txtAzureRedirectUri.Location = new System.Drawing.Point(143, 152);
-            this.txtAzureRedirectUri.Name = "txtAzureRedirectUri";
-            this.txtAzureRedirectUri.Size = new System.Drawing.Size(203, 23);
-            this.txtAzureRedirectUri.TabIndex = 9;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 160);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(71, 15);
-            this.label13.TabIndex = 8;
-            this.label13.Text = "Redirect URI";
-            // 
-            // txtAzureClientId
-            // 
-            this.txtAzureClientId.Location = new System.Drawing.Point(143, 94);
-            this.txtAzureClientId.Name = "txtAzureClientId";
-            this.txtAzureClientId.Size = new System.Drawing.Size(203, 23);
-            this.txtAzureClientId.TabIndex = 7;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 102);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(51, 15);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "Client Id";
-            // 
-            // txtAzureTenantId
-            // 
-            this.txtAzureTenantId.Location = new System.Drawing.Point(143, 65);
-            this.txtAzureTenantId.Name = "txtAzureTenantId";
-            this.txtAzureTenantId.Size = new System.Drawing.Size(203, 23);
-            this.txtAzureTenantId.TabIndex = 5;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 73);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 15);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "Tenant Id";
-            // 
-            // txtAzurePassword
-            // 
-            this.txtAzurePassword.Location = new System.Drawing.Point(143, 36);
-            this.txtAzurePassword.Name = "txtAzurePassword";
-            this.txtAzurePassword.PasswordChar = '*';
-            this.txtAzurePassword.Size = new System.Drawing.Size(203, 23);
-            this.txtAzurePassword.TabIndex = 3;
-            this.txtAzurePassword.UseSystemPasswordChar = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(3, 44);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(57, 15);
-            this.label10.TabIndex = 2;
-            this.label10.Text = "Password";
-            // 
-            // txtAzureUserName
-            // 
-            this.txtAzureUserName.Location = new System.Drawing.Point(143, 7);
-            this.txtAzureUserName.Name = "txtAzureUserName";
-            this.txtAzureUserName.Size = new System.Drawing.Size(203, 23);
-            this.txtAzureUserName.TabIndex = 1;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 15);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 15);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "User Name";
             // 
             // pagePaths
             // 
@@ -1198,8 +1064,6 @@ namespace OrigamArchitect
             this.pageWelcome.PerformLayout();
             this.pageDeploymentType.ResumeLayout(false);
             this.pageDeploymentType.PerformLayout();
-            this.pageAzureDeploymentSettings.ResumeLayout(false);
-            this.pageAzureDeploymentSettings.PerformLayout();
             this.pagePaths.ResumeLayout(false);
             this.pagePaths.PerformLayout();
             this.pageWebUser.ResumeLayout(false);
@@ -1266,19 +1130,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox txtName;
-        private AeroWizard.WizardPage pageAzureDeploymentSettings;
-        private System.Windows.Forms.TextBox txtAzurePassword;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox txtAzureUserName;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtAzureRedirectUri;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox txtAzureClientId;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox txtAzureTenantId;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox txtAzureSubscriptionId;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.CheckBox gitrepo;
         private AeroWizard.WizardPage pageGit;
