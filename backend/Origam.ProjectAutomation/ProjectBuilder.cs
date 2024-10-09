@@ -48,21 +48,8 @@ public class ProjectBuilder
         //OrigamSettings
         project.BuilderDataConnectionString =
         dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
-        switch (project.Deployment)
-        {
-            case DeploymentType.Local:
-                project.BaseUrl =
-                    configureWebServerBuilder.WebSiteUrl(project.WebRootName);
-                break;
-            case DeploymentType.Docker:
-                project.BaseUrl =
-                    dockerBuilder.WebSiteUrl(project);
-                break;
-            case DeploymentType.DockerPostgres:
-                project.BaseUrl =
-                    dockerBuilder.WebSiteUrl(project);
-                break;
-        }
+        project.BaseUrl =
+            dockerBuilder.WebSiteUrl(project);
         IProjectBuilder activeTask = null;
         try
         {
@@ -94,39 +81,21 @@ public class ProjectBuilder
             tasks.Add(new FileModelImportBuilder());
             tasks.Add(new FileModelInitBuilder());
             tasks.Add(new DataDatabaseStructureBuilder());
-            if (_project.Deployment == DeploymentType.Local)
-            {
-                tasks.Add(new ModifyConfigurationFilesBuilder());
-                tasks.Add(configureWebServerBuilder);
-            }
             tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new NewPackageBuilder());
         }
         if (_project.DatabaseType == DatabaseType.PgSql)
         {
             tasks.Add(new FileModelImportBuilder());
-            if (_project.Deployment == DeploymentType.DockerPostgres)
-            {
-                tasks.Add(new DockerBuilder());
-                tasks.Add(new DockerCreator("master-latest".GetAssemblyVersion(),_project.DockerApiAddress));
-            }
             tasks.Add(settingsBuilder);
             tasks.Add(dataDatabaseBuilder);
             tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new FileModelInitBuilder());
             tasks.Add(new DataDatabaseStructureBuilder());
-            if (_project.Deployment == DeploymentType.Local)
-            {
-                tasks.Add(new ModifyConfigurationFilesBuilder());
-                tasks.Add(configureWebServerBuilder);
-            }
             tasks.Add(new NewPackageBuilder());
         }
         tasks.Add(new NewUserBuilder());
-        if (_project.Deployment == DeploymentType.Docker)
-        {
-            tasks.Add(new DockerBuilder());
-        }
+        tasks.Add(new DockerBuilder());
         AddGitTasks(_project);
     }
     private void AddGitTasks(Project _project)

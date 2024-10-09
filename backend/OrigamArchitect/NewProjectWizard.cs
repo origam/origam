@@ -59,9 +59,6 @@ public partial class NewProjectWizard : Form
     ProjectBuilder _builder = new ProjectBuilder();
     Project _project = new Project();
     NewProjectWizardSettings _settings = new NewProjectWizardSettings();
-    private WebGitXmlParser XmlParser = new WebGitXmlParser();
-    private List<WebGitData> repositories = new List<WebGitData>();
-    private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
     public NewProjectWizard()
     {
         InitializeComponent();
@@ -75,22 +72,6 @@ public partial class NewProjectWizard : Form
         {
             txtGitUser.Text = creditials[0];
             txtGitEmail.Text = creditials[1];
-        }
-    }
-    private DeploymentType Deployment
-    {
-        get
-        {
-            switch (cboDeploymentType.SelectedIndex)
-            {
-                case 0:
-                    return DeploymentType.Docker;
-                case 1:
-                    return DeploymentType.DockerPostgres;
-                default:
-                    throw new ArgumentOutOfRangeException("DeploymentType",
-                        cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
-            }
         }
     }
     private DatabaseType DatabaseType
@@ -146,7 +127,6 @@ public partial class NewProjectWizard : Form
         _settings.BinFolder = txtBinFolderRoot.Text;
         _settings.DatabaseServerName = txtServerName.Text;
         _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
-        _settings.DockerApiAdress = txtDockerApiAdress.Text;
         _settings.DockerSourceFolder = txtdosourcefolder.Text;
         _settings.Save();
     }
@@ -172,15 +152,6 @@ public partial class NewProjectWizard : Form
             AsMessageBox.ShowError(this, strings.NameContainsInvalidChars_Message, strings.NewProjectWizard_Title, null);
             e.Cancel = true;
             return;
-        }
-        if (Deployment == DeploymentType.Local)
-        {
-            if (string.IsNullOrEmpty(cboWebRoot.Text))
-            {
-                AsMessageBox.ShowError(this, strings.SelectWebRoot_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
-            }
         }
         if (string.IsNullOrEmpty(txtServerName.Text))
         {
@@ -218,24 +189,6 @@ public partial class NewProjectWizard : Form
         _project.DatabaseType = DatabaseType;
         _project.Port = Port;
         _project.NewPackageId = Guid.NewGuid().ToString();
-        if(Deployment == DeploymentType.DockerPostgres)
-        {
-            string tag = "";
-            if (DatabaseType == DatabaseType.MsSql)
-            {
-                tag = "pg_master-latest";
-                _project.DatabaseUserName = "sa";
-            }
-            if (DatabaseType == DatabaseType.PgSql)
-            {
-                tag = "mssql_master-latest";
-                _project.DatabaseUserName = "postgres";
-            }
-            _project.DatabasePassword = Project.CreatePassword();
-            DockerManager dockerManager = new DockerManager(tag.GetAssemblyVersion(),
-                    txtDockerApiAdress.Text);
-            dockerManager.PullImage();
-        }
     }
     private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
     {
@@ -244,17 +197,6 @@ public partial class NewProjectWizard : Form
         cboWebRoot.Visible = false;
         lblWebRoot.Visible = false;
         label2.Visible = false;
-        if (Deployment == DeploymentType.Local )
-        {
-            cboWebRoot.Items.AddRange(_builder.WebSites());
-            if (cboWebRoot.Items.Count > 0)
-            {
-                cboWebRoot.SelectedIndex = 0;
-            }
-            cboWebRoot.Visible = true;
-            lblWebRoot.Visible = true;
-            label2.Visible = true;
-        }
         if (txtDatabaseType.SelectedIndex == -1)
         {
             txtDatabaseType.SelectedItem = null;
@@ -262,26 +204,6 @@ public partial class NewProjectWizard : Form
                 "Microsoft Sql Server",
                 "Postgre Sql Server"});
             txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
-            if(Deployment == DeploymentType.DockerPostgres)
-            {
-                txtDatabaseType.SelectedIndex = 1;
-            }
-        }
-        TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
-    }
-    private void SetPort()
-    {
-        if (DatabaseType == DatabaseType.MsSql)
-        {
-            txtPort.Text = "1433";
-        }
-        if (DatabaseType == DatabaseType.PgSql)
-        {
-            txtPort.Text = "5432";
-        }
-        if (Deployment == DeploymentType.DockerPostgres)
-        {
-            txtPort.Text = "5433";
         }
     }
     private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -303,17 +225,6 @@ public partial class NewProjectWizard : Form
             AsMessageBox.ShowError(this, strings.DefaultModelFileNotExists_Message, strings.NewProjectWizard_Title, null);
             e.Cancel = true;
             return;
-        }
-        if (Deployment == DeploymentType.Local)
-        {
-            DirectoryInfo dir = new DirectoryInfo(txtBinFolderRoot.Text);
-            if (!dir.Exists)
-            {
-                AsMessageBox.ShowError(this, strings.WebAppFolderNotExists_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
-            }
-            _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
         }
         _project.DefaultModelPath = defaultModelPath.Text;
         _project.GitRepository = gitrepo.Checked;
@@ -350,33 +261,6 @@ public partial class NewProjectWizard : Form
         btnSelectBinFolderRoot.Visible = false;
         lblBinFolderRoot.Visible = false;
         lblBinFolderRootDescription.Visible = false;
-        if (Deployment == DeploymentType.Local)
-        {
-            txtBinFolderRoot.Visible = true;
-            btnSelectBinFolderRoot.Visible = false;
-            lblBinFolderRoot.Visible = true;
-            lblBinFolderRootDescription.Visible = true;
-        }
-    }
-    private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
-    {
-        if (NEEDS_ELEVATED_PRIVILEDGES && !IsAdmin())
-        {
-            pageWelcome.AllowNext = false;
-            lblAdminWarning.Visible = true;
-            btnAdminElevate.Visible = true;
-            AddShieldToButton(btnAdminElevate);
-        }
-        else
-        {
-            InitTemplates();
-        }
-    }
-    private static bool IsAdmin()
-    {
-        WindowsIdentity id = WindowsIdentity.GetCurrent();
-        WindowsPrincipal p = new WindowsPrincipal(id);
-        return p.IsInRole(WindowsBuiltInRole.Administrator);
     }
     private static void RestartElevated()
     {
@@ -416,80 +300,10 @@ public partial class NewProjectWizard : Form
         {
             AsMessageBox.ShowError(this, "Only alphanumeric characters are allowed.", strings.NewProjectWizard_Title, null);
             e.Cancel = true;
-            return;
-        }
-        if (string.IsNullOrEmpty(cboDeploymentType.Text))
-        {
-            AsMessageBox.ShowError(this, strings.SelectDeploymentType_Message, strings.NewProjectWizard_Title, null);
-            e.Cancel = true;
-            return;
-        }
-        _project.Deployment = Deployment;
-        switch (Deployment)
-        {
-            case DeploymentType.Local:
-                pageDeploymentType.NextPage = pageTemplateType;
-                break;
-            case DeploymentType.Azure:
-                pageDeploymentType.NextPage = pageAzureDeploymentSettings;
-                break;
-            case DeploymentType.Docker:
-                pageDeploymentType.NextPage = pageTemplateType;
-                break;
-            case DeploymentType.DockerPostgres:
-                pageDeploymentType.NextPage = pageTemplateType;
-                //Pull docker Origam/Server image.
-                DockerManager dockerManager = new DockerManager("master-latest".GetAssemblyVersion(),
-                    txtDockerApiAdress.Text);
-                Task<Origam.Docker.OperatingSystem> task = Task.Run(() =>
-                {
-                    return new Origam.Docker.OperatingSystem(dockerManager.IsDockerInstaledAsync());
-                }
-                );
-                Origam.Docker.OperatingSystem dockerOs = task.Result;
-                if(dockerOs.IsOnline())
-                {
-                    AsMessageBox.ShowError(this, "Can't connect to docker instance. Check docker address.", strings.NewProjectWizard_Title, null);
-                    e.Cancel = true;
-                    return;
-                }
-                dockerManager.PullImage();
-                _project.DockerApiAddress = txtDockerApiAdress.Text;
-                _project.DockerOs = dockerOs;
-                break;
-        }
-    }
-    private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
-    {
-        if (cboDeploymentType.SelectedIndex < 0)
-        {
-            cboDeploymentType.SelectedIndex = 0;
-        }
-        if(string.IsNullOrEmpty(txtDockerApiAdress.Text))
-        {
-            txtDockerApiAdress.Text = _settings.DockerApiAdress;
         }
     }
     private void pageAzureDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-    }
-    private void PageGit_Init(object sender, WizardPageConfirmEventArgs e)
-    {
-        if (Deployment == DeploymentType.DockerPostgres)
-        {
-            dockerSourceFolderLabel.Show();
-            txtdosourcefolder.Show();
-            dockerlabel.Show();
-            dockerlabeldescription.Show();
-            txtdosourcefolder.Text = _settings.DockerSourceFolder;
-        }
-        else
-        {
-            dockerSourceFolderLabel.Hide();
-            txtdosourcefolder.Hide();
-            dockerlabel.Hide();
-            dockerlabeldescription.Hide();
-        }
     }
     private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
     {
@@ -525,101 +339,15 @@ public partial class NewProjectWizard : Form
         _project.Gitusername = txtGitUser.Text;
         _project.Gitemail = txtGitEmail.Text;
         _project.DockerSourcePath = txtdosourcefolder.Text;
-        if( Deployment == DeploymentType.Local)
-        {
-            pageGit.NextPage = pageReview;
-        }
-        else
-        {
-            pageGit.NextPage = pageDocker;
-        }
+        pageGit.NextPage = pageDocker;
     }
     private void Gitrepo_CheckedChanged(object sender, EventArgs e)
     {
         txtGitUser.Enabled = gitrepo.Checked;
         txtGitEmail.Enabled = gitrepo.Checked;
     }
-    private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if(Deployment == DeploymentType.DockerPostgres)
-        {
-            txtPort.Text = "5433";
-        }
-        SetPort();
-    }
-    private void InitTemplates()
-    {
-        Thread bgThread = new Thread(FillTemplate)
-        {
-            IsBackground = true
-        };
-        bgThread.Start();
-    }
-    private void PageTemplateType_Initialize(object sender, WizardPageInitEventArgs e)
-    {
-        WaitForLoaded();
-        if (listViewTemplate.Items.Count == 0)
-        {
-            ImageList imageList = new ImageList
-            {
-                ImageSize = new Size(32, 32)
-            };
-            int imgindex = 0;
-            foreach (WebGitData webGitData in repositories)
-            {
-                imageList.Images.Add(webGitData.avatar);
-                ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = webGitData.RepositoryName };
-                viewItem.Tag = webGitData;
-                listViewTemplate.Items.Add(viewItem);
-                imgindex++;
-            }
-            listViewTemplate.LargeImageList = imageList;
-        }
-        if (this.listViewTemplate.Items.Count > 0)
-        {
-            listViewTemplate.HideSelection = false;
-            this.listViewTemplate.Items[0].EnsureVisible();
-        }
-    }
-    private void WaitForLoaded()
-    {
-        Cursor.Current = Cursors.WaitCursor;
-        for (int i = 0; i < 10; i++)
-        {
-            if (!XmlParser.IsLoaded)
-            {
-                Thread.Sleep(1500);
-            }
-            else
-            {
-                break;
-            }
-        }
-        Cursor.Current = Cursors.Default;
-    }
-    private void FillTemplate()
-    {
-        repositories.Add(new WebGitData(Images.New, 
-            "Empty Template", null, 
-            "This template will create an new empty project.", 
-            TypeTemplate.Default));
-        repositories.Add(new WebGitData(Images.New,
-            "From Git Repository...", null, 
-            "You will be able to provide a URL of a Git repository in the next step.",
-            TypeTemplate.Open));
-        //Disable add project from web. After project will be prepared, then can setup list of projects and enable it.
-        //try
-        //{
-        //    repositories.AddRange(XmlParser.GetList());
-        //}
-        //catch (Exception ex)
-        //{
-        //    this.RunWithInvoke(() => MessageBox.Show(
-        //        "Cannot receive list of repositories: \n" + ex.Message,
-        //        "Template Repository Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
-        //}
-        XmlParser.IsLoaded = true;
-    }
+   
+   
     private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         if (listViewTemplate.SelectedItems.Count == 0)
@@ -760,20 +488,5 @@ public partial class NewProjectWizard : Form
         _project.WebFirstName = txtWebFirstname.Text;
         _project.WebSurname = txtWebSurname.Text;
         _project.WebEmail = txtWebEmail.Text;
-    }
-    private void cboDeploymentType_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if(cboDeploymentType.SelectedIndex == 1)
-        {
-            txtDockerApiAdress.Show();
-            dockerlabel.Show();
-            dockerlabeldescription.Show();
-        }
-        else
-        {
-            txtDockerApiAdress.Hide();
-            dockerlabel.Hide();
-            dockerlabeldescription.Hide();
-        }
     }
 }

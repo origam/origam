@@ -39,18 +39,11 @@ namespace OrigamArchitect
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.lblAdminWarning = new System.Windows.Forms.Label();
             this.lblWelcome1 = new System.Windows.Forms.Label();
-            this.btnAdminElevate = new System.Windows.Forms.Button();
             this.pageDeploymentType = new AeroWizard.WizardPage();
-            this.dockerlabeldescription = new System.Windows.Forms.Label();
-            this.dockerlabel = new System.Windows.Forms.Label();
-            this.txtDockerApiAdress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.cboDeploymentType = new System.Windows.Forms.ComboBox();
-            this.lblDeploymentType = new System.Windows.Forms.Label();
             this.pageAzureDeploymentSettings = new AeroWizard.WizardPage();
             this.txtAzureSubscriptionId = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -191,14 +184,11 @@ namespace OrigamArchitect
             this.pageWelcome.Controls.Add(this.label8);
             this.pageWelcome.Controls.Add(this.label7);
             this.pageWelcome.Controls.Add(this.label6);
-            this.pageWelcome.Controls.Add(this.lblAdminWarning);
             this.pageWelcome.Controls.Add(this.lblWelcome1);
-            this.pageWelcome.Controls.Add(this.btnAdminElevate);
             this.pageWelcome.Name = "pageWelcome";
             this.pageWelcome.Size = new System.Drawing.Size(737, 407);
             this.pageWelcome.TabIndex = 3;
             this.pageWelcome.Text = "Welcome To New Project Wizard";
-            this.pageWelcome.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageWelcome_Initialize);
             // 
             // label9
             // 
@@ -236,17 +226,6 @@ namespace OrigamArchitect
             this.label6.TabIndex = 3;
             this.label6.Text = "– Add an Architect configuration";
             // 
-            // lblAdminWarning
-            // 
-            this.lblAdminWarning.AutoSize = true;
-            this.lblAdminWarning.Location = new System.Drawing.Point(-3, 187);
-            this.lblAdminWarning.Name = "lblAdminWarning";
-            this.lblAdminWarning.Size = new System.Drawing.Size(522, 15);
-            this.lblAdminWarning.TabIndex = 2;
-            this.lblAdminWarning.Text = "Administrator privileges are mandatory otherwise it won\'t be possible to configur" +
-    "e the web server.";
-            this.lblAdminWarning.Visible = false;
-            // 
             // lblWelcome1
             // 
             this.lblWelcome1.Location = new System.Drawing.Point(-3, 13);
@@ -256,59 +235,16 @@ namespace OrigamArchitect
             this.lblWelcome1.Text = "This wizard will help you with multiple steps that are required in order to go th" +
     "rough the following tasks:";
             // 
-            // btnAdminElevate
-            // 
-            this.btnAdminElevate.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnAdminElevate.Location = new System.Drawing.Point(0, 217);
-            this.btnAdminElevate.Name = "btnAdminElevate";
-            this.btnAdminElevate.Size = new System.Drawing.Size(218, 30);
-            this.btnAdminElevate.TabIndex = 0;
-            this.btnAdminElevate.Text = "Restart As an Administrator";
-            this.btnAdminElevate.UseVisualStyleBackColor = true;
-            this.btnAdminElevate.Visible = false;
-            this.btnAdminElevate.Click += new System.EventHandler(this.btnAdminElevate_Click);
-            // 
             // pageDeploymentType
             // 
-            this.pageDeploymentType.Controls.Add(this.dockerlabeldescription);
-            this.pageDeploymentType.Controls.Add(this.dockerlabel);
-            this.pageDeploymentType.Controls.Add(this.txtDockerApiAdress);
             this.pageDeploymentType.Controls.Add(this.label1);
             this.pageDeploymentType.Controls.Add(this.lblName);
             this.pageDeploymentType.Controls.Add(this.txtName);
-            this.pageDeploymentType.Controls.Add(this.cboDeploymentType);
-            this.pageDeploymentType.Controls.Add(this.lblDeploymentType);
             this.pageDeploymentType.Name = "pageDeploymentType";
             this.pageDeploymentType.Size = new System.Drawing.Size(737, 407);
             this.pageDeploymentType.TabIndex = 4;
             this.pageDeploymentType.Text = "Deployment Type";
             this.pageDeploymentType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDeploymentType_Commit);
-            this.pageDeploymentType.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDeploymentType_Initialize);
-            // 
-            // dockerlabeldescription
-            // 
-            this.dockerlabeldescription.AutoSize = true;
-            this.dockerlabeldescription.Location = new System.Drawing.Point(158, 203);
-            this.dockerlabeldescription.Name = "dockerlabeldescription";
-            this.dockerlabeldescription.Size = new System.Drawing.Size(200, 15);
-            this.dockerlabeldescription.TabIndex = 1;
-            this.dockerlabeldescription.Text = "Default value is http://localhost:2375";
-            // 
-            // dockerlabel
-            // 
-            this.dockerlabel.AutoSize = true;
-            this.dockerlabel.Location = new System.Drawing.Point(4, 157);
-            this.dockerlabel.Name = "dockerlabel";
-            this.dockerlabel.Size = new System.Drawing.Size(89, 15);
-            this.dockerlabel.TabIndex = 16;
-            this.dockerlabel.Text = "Docker Address";
-            // 
-            // txtDockerApiAdress
-            // 
-            this.txtDockerApiAdress.Location = new System.Drawing.Point(161, 154);
-            this.txtDockerApiAdress.Name = "txtDockerApiAdress";
-            this.txtDockerApiAdress.Size = new System.Drawing.Size(556, 23);
-            this.txtDockerApiAdress.TabIndex = 15;
             // 
             // label1
             // 
@@ -339,29 +275,6 @@ namespace OrigamArchitect
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(559, 23);
             this.txtName.TabIndex = 1;
-            // 
-            // cboDeploymentType
-            // 
-            this.cboDeploymentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDeploymentType.FormattingEnabled = true;
-            this.cboDeploymentType.Items.AddRange(new object[] {
-            "Docker",
-            "Docker Postgres"});
-            this.cboDeploymentType.Location = new System.Drawing.Point(161, 97);
-            this.cboDeploymentType.Name = "cboDeploymentType";
-            this.cboDeploymentType.Size = new System.Drawing.Size(241, 23);
-            this.cboDeploymentType.TabIndex = 4;
-            this.cboDeploymentType.SelectedIndexChanged += new System.EventHandler(this.cboDeploymentType_SelectedIndexChanged);
-            // 
-            // lblDeploymentType
-            // 
-            this.lblDeploymentType.AutoSize = true;
-            this.lblDeploymentType.Enabled = false;
-            this.lblDeploymentType.Location = new System.Drawing.Point(4, 100);
-            this.lblDeploymentType.Name = "lblDeploymentType";
-            this.lblDeploymentType.Size = new System.Drawing.Size(133, 15);
-            this.lblDeploymentType.TabIndex = 3;
-            this.lblDeploymentType.Text = "Select Deployment Type";
             // 
             // pageAzureDeploymentSettings
             // 
@@ -540,7 +453,7 @@ namespace OrigamArchitect
             this.lblTemplateFolder.TabIndex = 7;
             this.lblTemplateFolder.Text = "Default Model";
             // 
-            // defaultModelpath
+            // defaultModelPath
             // 
             this.defaultModelPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -728,7 +641,6 @@ namespace OrigamArchitect
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Configure Source Control";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
-            this.pageGit.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageGit_Init);
             // 
             // dockerSourceFolderLabel
             // 
@@ -872,7 +784,7 @@ namespace OrigamArchitect
             this.label22.Size = new System.Drawing.Size(0, 15);
             this.label22.TabIndex = 19;
             // 
-            // label20
+            // dockerPortLabel
             // 
             this.dockerPortLabel.AutoSize = true;
             this.dockerPortLabel.Location = new System.Drawing.Point(16, 115);
@@ -953,7 +865,6 @@ namespace OrigamArchitect
             this.pageTemplateType.TabIndex = 7;
             this.pageTemplateType.Text = "Select Template";
             this.pageTemplateType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageTemplateType_Commit);
-            this.pageTemplateType.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageTemplateType_Initialize);
             // 
             // splitContainer1
             // 
@@ -1142,7 +1053,7 @@ namespace OrigamArchitect
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(100, 23);
             this.txtPort.TabIndex = 18;
-            this.txtPort.Text = "0";
+            this.txtPort.Text = "1433";
             // 
             // labelPrivileges
             // 
@@ -1170,7 +1081,6 @@ namespace OrigamArchitect
             this.txtDatabaseType.Name = "txtDatabaseType";
             this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
             this.txtDatabaseType.TabIndex = 15;
-            this.txtDatabaseType.SelectedIndexChanged += new System.EventHandler(this.TxtDatabaseType_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -1351,12 +1261,8 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label lblAdminWarning;
         private System.Windows.Forms.Label lblWelcome1;
-        private System.Windows.Forms.Button btnAdminElevate;
         private AeroWizard.WizardPage pageDeploymentType;
-        private System.Windows.Forms.ComboBox cboDeploymentType;
-        private System.Windows.Forms.Label lblDeploymentType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox txtName;
@@ -1423,10 +1329,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebFirstname;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
-        private System.Windows.Forms.Label dockerlabel;
-        private System.Windows.Forms.TextBox txtDockerApiAdress;
         private System.Windows.Forms.Label dockerSourceFolderLabel;
         private System.Windows.Forms.TextBox txtdosourcefolder;
-        private System.Windows.Forms.Label dockerlabeldescription;
     }
 }

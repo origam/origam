@@ -300,7 +300,6 @@ public class Project
     public TypeDoTemplate TypeDoTemplate { get; set; }
     public string RepositoryUsername { get; set; }
     public string RepositoryPassword { get; set; }
-    public DeploymentType Deployment { get;  set; }
     public string RootSourceFolder { get; set; }
     public int DockerPort { get; set; }
     public string WebUserName { get; set; }
@@ -322,11 +321,4 @@ public class Project
     } 
     public Docker.OperatingSystem DockerOs { get; set; }
     #endregion
-}
-public enum DeploymentType
-{
-    Local,
-    Azure,
-    Docker,
-    DockerPostgres
 }
