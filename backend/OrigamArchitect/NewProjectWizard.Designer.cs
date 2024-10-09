@@ -91,16 +91,6 @@ namespace OrigamArchitect
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.wizOpenRepository = new AeroWizard.WizardPage();
-            this.rdNone = new System.Windows.Forms.RadioButton();
-            this.rdCopy = new System.Windows.Forms.RadioButton();
-            this.rdClone = new System.Windows.Forms.RadioButton();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbRepPassword = new System.Windows.Forms.TextBox();
-            this.tbRepUsername = new System.Windows.Forms.TextBox();
-            this.tbRepositoryLink = new System.Windows.Forms.TextBox();
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
             this.labelPort = new System.Windows.Forms.Label();
             this.txtPort = new System.Windows.Forms.TextBox();
@@ -128,7 +118,6 @@ namespace OrigamArchitect
             this.pageGit.SuspendLayout();
             this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
-            this.wizOpenRepository.SuspendLayout();
             this.pageLocalDeploymentSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
@@ -140,7 +129,6 @@ namespace OrigamArchitect
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
             this.wizard1.Pages.Add(this.pageDeploymentType);
-            this.wizard1.Pages.Add(this.wizOpenRepository);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
             this.wizard1.Pages.Add(this.pageWebUser);
@@ -712,106 +700,6 @@ namespace OrigamArchitect
             this.colStatus.Text = "Status";
             this.colStatus.Width = 81;
             // 
-            // wizOpenRepository
-            // 
-            this.wizOpenRepository.Controls.Add(this.rdNone);
-            this.wizOpenRepository.Controls.Add(this.rdCopy);
-            this.wizOpenRepository.Controls.Add(this.rdClone);
-            this.wizOpenRepository.Controls.Add(this.label18);
-            this.wizOpenRepository.Controls.Add(this.label17);
-            this.wizOpenRepository.Controls.Add(this.label3);
-            this.wizOpenRepository.Controls.Add(this.tbRepPassword);
-            this.wizOpenRepository.Controls.Add(this.tbRepUsername);
-            this.wizOpenRepository.Controls.Add(this.tbRepositoryLink);
-            this.wizOpenRepository.Name = "wizOpenRepository";
-            this.wizOpenRepository.Size = new System.Drawing.Size(737, 407);
-            this.wizOpenRepository.TabIndex = 9;
-            this.wizOpenRepository.Text = "Open Git Repository";
-            this.wizOpenRepository.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.WizOpenRepository_Commit);
-            this.wizOpenRepository.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.WizOpenRepository_Initialize);
-            // 
-            // rdNone
-            // 
-            this.rdNone.AutoSize = true;
-            this.rdNone.Location = new System.Drawing.Point(235, 89);
-            this.rdNone.Name = "rdNone";
-            this.rdNone.Size = new System.Drawing.Size(54, 19);
-            this.rdNone.TabIndex = 8;
-            this.rdNone.TabStop = true;
-            this.rdNone.Text = "None";
-            this.rdNone.UseVisualStyleBackColor = true;
-            // 
-            // rdCopy
-            // 
-            this.rdCopy.AutoSize = true;
-            this.rdCopy.Location = new System.Drawing.Point(113, 88);
-            this.rdCopy.Name = "rdCopy";
-            this.rdCopy.Size = new System.Drawing.Size(53, 19);
-            this.rdCopy.TabIndex = 7;
-            this.rdCopy.TabStop = true;
-            this.rdCopy.Text = "Copy";
-            this.rdCopy.UseVisualStyleBackColor = true;
-            // 
-            // rdClone
-            // 
-            this.rdClone.AutoSize = true;
-            this.rdClone.Location = new System.Drawing.Point(172, 88);
-            this.rdClone.Name = "rdClone";
-            this.rdClone.Size = new System.Drawing.Size(56, 19);
-            this.rdClone.TabIndex = 6;
-            this.rdClone.TabStop = true;
-            this.rdClone.Text = "Clone";
-            this.rdClone.UseVisualStyleBackColor = true;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(0, 168);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(57, 15);
-            this.label18.TabIndex = 5;
-            this.label18.Text = "Password";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(0, 139);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(56, 15);
-            this.label17.TabIndex = 4;
-            this.label17.Text = "Usename";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 15);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Repository Link";
-            // 
-            // tbRepPassword
-            // 
-            this.tbRepPassword.Location = new System.Drawing.Point(113, 165);
-            this.tbRepPassword.Name = "tbRepPassword";
-            this.tbRepPassword.PasswordChar = '*';
-            this.tbRepPassword.Size = new System.Drawing.Size(191, 23);
-            this.tbRepPassword.TabIndex = 2;
-            // 
-            // tbRepUsername
-            // 
-            this.tbRepUsername.Location = new System.Drawing.Point(113, 136);
-            this.tbRepUsername.Name = "tbRepUsername";
-            this.tbRepUsername.Size = new System.Drawing.Size(191, 23);
-            this.tbRepUsername.TabIndex = 1;
-            // 
-            // tbRepositoryLink
-            // 
-            this.tbRepositoryLink.Location = new System.Drawing.Point(113, 59);
-            this.tbRepositoryLink.Name = "tbRepositoryLink";
-            this.tbRepositoryLink.Size = new System.Drawing.Size(380, 23);
-            this.tbRepositoryLink.TabIndex = 0;
-            // 
             // pageLocalDeploymentSettings
             // 
             this.pageLocalDeploymentSettings.Controls.Add(this.labelPort);
@@ -1006,8 +894,6 @@ namespace OrigamArchitect
             this.pageDocker.ResumeLayout(false);
             this.pageDocker.PerformLayout();
             this.pageReview.ResumeLayout(false);
-            this.wizOpenRepository.ResumeLayout(false);
-            this.wizOpenRepository.PerformLayout();
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
@@ -1072,16 +958,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label labelPrivileges;
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
-        private WizardPage wizOpenRepository;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbRepPassword;
-        private System.Windows.Forms.TextBox tbRepUsername;
-        private System.Windows.Forms.TextBox tbRepositoryLink;
-        private System.Windows.Forms.RadioButton rdCopy;
-        private System.Windows.Forms.RadioButton rdClone;
-        private System.Windows.Forms.RadioButton rdNone;
         private WizardPage pageDocker;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label21;

@@ -346,47 +346,6 @@ public partial class NewProjectWizard : Form
         txtGitUser.Enabled = gitrepo.Checked;
         txtGitEmail.Enabled = gitrepo.Checked;
     }
-    private void WizOpenRepository_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
-        if (string.IsNullOrEmpty(tbRepositoryLink.Text))
-        {
-            AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, "Template", null);
-            e.Cancel = true;
-            return;
-        }
-        if (!TestTemplate())
-        {
-            AsMessageBox.ShowError(this, "Cannot connect to a repository!", "Template", null);
-            e.Cancel = true;
-            return;
-        }
-        _project.GitRepositoryLink = tbRepositoryLink.Text;
-        _project.RepositoryUsername = tbRepUsername.Text;
-        _project.RepositoryPassword = tbRepPassword.Text;
-        if (rdCopy.Checked) _project.TypeDoTemplate = TypeDoTemplate.Copy;
-        if (rdClone.Checked) _project.TypeDoTemplate = TypeDoTemplate.Clone;
-        if (rdNone.Checked)
-        {
-            _project.TypeDoTemplate = TypeDoTemplate.None;
-            gitrepo.Checked = false;
-            gitrepo.Enabled = false;
-        }
-    }
-    public bool TestTemplate()
-    {
-        string gitPassw = tbRepPassword.Text;
-        string gitUsername = tbRepUsername.Text;
-        GitManager gitManager = new GitManager();
-        return gitManager.IsValidUrl(tbRepositoryLink.Text, gitUsername, gitPassw);
-    }
-    private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
-    {
-        if(!rdClone.Checked && !rdClone.Checked &&!rdNone.Checked)
-        {
-            rdCopy.Checked = true;
-        }
-        gitrepo.Enabled = true;
-    }
     private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
     {
         label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
