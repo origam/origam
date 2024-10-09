@@ -51,14 +51,9 @@ using System.Threading.Tasks;
 namespace OrigamArchitect;
 public partial class NewProjectWizard : Form
 {
-    [DllImport("user32")]
-    public static extern UInt32 SendMessage
-        (IntPtr hWnd, UInt32 msg, UInt32 wParam, UInt32 lParam);
-    internal const int BCM_FIRST = 0x1600; //Normal button
-    internal const int BCM_SETSHIELD = (BCM_FIRST + 0x000C); //Elevated button
-    ProjectBuilder _builder = new ProjectBuilder();
-    Project _project = new Project();
-    NewProjectWizardSettings _settings = new NewProjectWizardSettings();
+    private readonly ProjectBuilder _builder = new ();
+    readonly Project _project = new ();
+    readonly NewProjectWizardSettings _settings = new ();
     public NewProjectWizard()
     {
         InitializeComponent();
@@ -216,32 +211,7 @@ public partial class NewProjectWizard : Form
         targetControl.Text = folderBrowserDialog1.SelectedPath;
         targetControl.Focus();
     }
-    private static void RestartElevated()
-    {
-        ProcessStartInfo startInfo = new ProcessStartInfo();
-        startInfo.UseShellExecute = true;
-        startInfo.WorkingDirectory = Environment.CurrentDirectory;
-        startInfo.FileName = Application.ExecutablePath;
-        startInfo.Verb = "runas";
-        try
-        {
-            Process p = Process.Start(startInfo);
-        }
-        catch
-        {
-            return;
-        }
-        Application.Exit();
-    }
-    private static void AddShieldToButton(Button b)
-    {
-        b.FlatStyle = FlatStyle.System;
-        SendMessage(b.Handle, BCM_SETSHIELD, 0, 0xFFFFFFFF);
-    }
-    private void btnAdminElevate_Click(object sender, EventArgs e)
-    {
-        RestartElevated();
-    }
+
     private void pageDeploymentType_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         if (string.IsNullOrEmpty(txtName.Text))
@@ -255,9 +225,6 @@ public partial class NewProjectWizard : Form
             AsMessageBox.ShowError(this, "Only alphanumeric characters are allowed.", strings.NewProjectWizard_Title, null);
             e.Cancel = true;
         }
-    }
-    private void pageAzureDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
     }
     private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
     {
@@ -290,8 +257,8 @@ public partial class NewProjectWizard : Form
         _project.ModelSourceFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text,"model");
         _project.RootSourceFolder = txtSourcesFolder.Text;
         _project.GitRepository = gitrepo.Checked;
-        _project.Gitusername = txtGitUser.Text;
-        _project.Gitemail = txtGitEmail.Text;
+        _project.GitUsername = txtGitUser.Text;
+        _project.GitEmail = txtGitEmail.Text;
         pageGit.NextPage = pageDocker;
     }
     private void Gitrepo_CheckedChanged(object sender, EventArgs e)
