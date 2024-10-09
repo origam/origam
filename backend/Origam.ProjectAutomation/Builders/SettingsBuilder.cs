@@ -58,9 +58,11 @@ public class SettingsBuilder : AbstractBuilder
         SaveSettings(_settings);
         ConfigurationManager.SetActiveConfiguration(null);
     }
-    public static OrigamSettingsCollection GetSettings() => 
+
+    private static OrigamSettingsCollection GetSettings() => 
         ConfigurationManager.GetAllUserHomeConfigurations();
-    public static void SaveSettings(OrigamSettingsCollection settings)
+
+    private static void SaveSettings(OrigamSettingsCollection settings)
     {
         ConfigurationManager.WriteConfiguration(settings);
     }

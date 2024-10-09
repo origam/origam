@@ -90,18 +90,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractBuilder.cs" />
-    <Compile Include="Builders\ConfigureAzureWebServerBuilder.cs" />
     <Compile Include="Builders\CreateGitRepository.cs" />
     <Compile Include="Builders\DockerBuilder.cs" />
-    <Compile Include="Builders\DockerCreator.cs" />
-    <Compile Include="Builders\DropGitRepository.cs" />
     <Compile Include="Builders\FileModelImportBuilder.cs" />
     <Compile Include="Builders\FileModelInitBuilder.cs" />
     <Compile Include="Builders\DataDatabaseStructureBuilder.cs" />
     <Compile Include="Builders\DataDatabaseBuilder.cs" />
     <Compile Include="AbstractDatabaseBuilder.cs" />
-    <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
-    <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
     <Compile Include="Builders\NewPackageBuilder.cs" />
     <Compile Include="Builders\NewUserBuilder.cs" />

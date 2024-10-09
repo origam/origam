@@ -26,11 +26,10 @@ using static Origam.DA.Common.Enums;
 namespace Origam.ProjectAutomation;
 public class ProjectBuilder
 {
-    private readonly List<IProjectBuilder> tasks = new List<IProjectBuilder>();
-    private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
-    private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
-    private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
-    private readonly DockerBuilder dockerBuilder = new DockerBuilder();
+    private readonly List<IProjectBuilder> tasks = new();
+    private readonly SettingsBuilder settingsBuilder = new();
+    private readonly DataDatabaseBuilder dataDatabaseBuilder = new();
+    private readonly DockerBuilder dockerBuilder = new();
     public ProjectBuilder()
     {           
         
@@ -38,10 +37,8 @@ public class ProjectBuilder
     public void Create(Project project)
     {
         dataDatabaseBuilder.ResetDataservice();
-        //Wizard connection
         project.DataConnectionString =
         dataDatabaseBuilder.BuildConnectionString(project, true);
-        //OrigamSettings
         project.BuilderDataConnectionString =
         dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
         project.BaseUrl =
