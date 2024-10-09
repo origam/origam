@@ -19,48 +19,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Service;
-using Origam.Extensions;
 using Origam.Git;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using Origam.ProjectAutomation.Builders;
-using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation;
 public class FileModelImportBuilder: AbstractBuilder
 {
-    private string modelSourcesFolder;
     private string sourcesFolder;
     public override string Name => "Import Model";
     public override void Execute(Project project)
     {
-        modelSourcesFolder = project.ModelSourceFolder;
         sourcesFolder = project.SourcesFolder;
         CreateSourceFolder();
-        switch(project.TypeTemplate)
-        {
-            case TypeTemplate.Default:
-                UnzipDefaultModel(project);
-
-                CreateCustomAssetsFolder(project.SourcesFolder);
-                CreateAndFillNewProjectDirectory(project);
-                
-                break;
-            case TypeTemplate.Open:
-            case TypeTemplate.Template:
-                CloneGitRepository(project);
-                CheckModelDirectory(project);
-                CreateAndFillNewProjectDirectory(project);
-                project.NewPackageId = GetFromDockerEnvFile(project)?? GetPackageId();
-                break;
-            default:
-                throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
-        }
+        UnzipDefaultModel(project);
+        CreateCustomAssetsFolder(project.SourcesFolder);
+        CreateAndFillNewProjectDirectory(project);
     }
     private void CreateAndFillNewProjectDirectory(Project project)
     {
@@ -91,78 +69,6 @@ public class FileModelImportBuilder: AbstractBuilder
         StringBuilder template = new StringBuilder();
         template.AppendLine("docker run --env-file \"{envFilePath}\" -it --name {projectName} -v \"{parentPathProject}\":/home/origam/HTML5/data/origam -p {dockerPort}:443 origam/server:master-latest.linux");
         return template;
-    }
-    private void CloneGitRepository(Project project)
-    {
-        GitManager gitManager = new GitManager();
-        gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder,
-            project.RepositoryUsername,project.RepositoryPassword);
-    }
-    private void CheckModelDirectory(Project project)
-    {
-        DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
-        if (!dir.Exists)
-        {
-            modelSourcesFolder = sourcesFolder;
-            project.ModelSourceFolder = sourcesFolder;
-        }
-    }
-    private string GetPackageId()
-    {
-        string modelId = "";
-        DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
-        if (string.IsNullOrEmpty(modelId) && dir.Exists && dir.EnumerateFileSystemInfos().Any())
-        {
-            string[] exclude_dirs = new [] {"Root","Root Menu","Security","l10n", ".git" };
-            List<string> list_exclude_dirs = exclude_dirs.ToList();
-            string xmlPath = "";
-            do
-            {
-                DirectoryInfo model = dir.EnumerateDirectories().Where(directoryInfo => directoryInfo.Name.Contains("Root Menu")).First();
-                if(model==null)
-                {
-                    throw new Exception("Can't find package for guidId. It looks like that it is not origam project.");
-                }
-                xmlPath = Path.Combine(modelSourcesFolder, model.Name, ".origamPackage");
-                if(!File.Exists(xmlPath))
-                {
-                    list_exclude_dirs.Add(model.Name);
-                }
-            } while (!File.Exists(xmlPath));
-            if (File.Exists(xmlPath))
-            {
-                FileInfo fileInfo = new FileInfo(xmlPath);
-                OrigamXmlDocument xmlDocument = new OrigamXmlDocument(xmlPath);
-                var xmlFileData = new XmlFileData(xmlDocument, fileInfo);
-                modelId = XmlUtils.ReadId(xmlFileData) ?? XmlUtils.ReadNewModelId(xmlFileData);
-            }
-            else
-            {
-                throw new Exception("Can't find package for guidId. It looks like that it is not origam project.");
-            }
-        }
-        if(string.IsNullOrEmpty(modelId))
-        {
-            throw new Exception("Can't find package ID. It looks like that it is problem with parse origamPackage. Please Contact Origam Team.");
-        }
-        return modelId;
-    }
-    private string GetFromDockerEnvFile(Project project)
-    {
-        string path = Path.Combine(project.SourcesFolder, DockerBuilder.DockerFolderName);
-        if(!Directory.Exists(path))
-        {
-            return null;
-        }
-        var files = Directory.GetFiles(path, "*.env");
-        if(files.Length == 0)
-        {
-            return null;
-        }
-        string[] lines = File.ReadAllLines(files[0]);
-        string guidId = lines.Where(line => line.Contains("OrigamSettings_SchemaExtensionGuid"))
-            .Select(line => { return line.Split("=")[1] ; }).FirstOrDefault();
-        return string.IsNullOrEmpty(guidId)? null: guidId;
     }
     private void UnzipDefaultModel(Project project)
     {

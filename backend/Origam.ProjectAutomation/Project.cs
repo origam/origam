@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using static Origam.DA.Common.Enums;
-using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation;
 public class Project
@@ -76,8 +75,6 @@ public class Project
     public string SourcesFolder { get; set; }
     public string BaseUrl { get; set; }
     public string GitRepositoryLink { get; set; }
-    public TypeTemplate TypeTemplate { get; set; }
-    public TypeDoTemplate TypeDoTemplate { get; set; }
     public string RepositoryUsername { get; set; }
     public string RepositoryPassword { get; set; }
     public string RootSourceFolder { get; set; }

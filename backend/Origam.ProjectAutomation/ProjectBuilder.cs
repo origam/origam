@@ -19,13 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Extensions;
 using Origam.ProjectAutomation.Builders;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using static Origam.DA.Common.Enums;
-using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation;
 public class ProjectBuilder
@@ -71,10 +67,10 @@ public class ProjectBuilder
             throw;
         }
     }
-    public void CreateTasks(Project _project)
+    public void CreateTasks(Project project)
     {
         tasks.Clear();
-        if (_project.DatabaseType == DatabaseType.MsSql)
+        if (project.DatabaseType == DatabaseType.MsSql)
         {
             tasks.Add(settingsBuilder);
             tasks.Add(dataDatabaseBuilder);
@@ -84,7 +80,7 @@ public class ProjectBuilder
             tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new NewPackageBuilder());
         }
-        if (_project.DatabaseType == DatabaseType.PgSql)
+        if (project.DatabaseType == DatabaseType.PgSql)
         {
             tasks.Add(new FileModelImportBuilder());
             tasks.Add(settingsBuilder);
@@ -96,43 +92,19 @@ public class ProjectBuilder
         }
         tasks.Add(new NewUserBuilder());
         tasks.Add(new DockerBuilder());
-        AddGitTasks(_project);
+        AddGitTasks(project);
     }
-    private void AddGitTasks(Project _project)
+    private void AddGitTasks(Project project)
     {
-        switch (_project.TypeTemplate)
-        {
-            case TypeTemplate.Default:
-                CreateGit(_project);
-                break;
-            case TypeTemplate.Template:
-                tasks.Add(new DropGitRepository());
-                CreateGit(_project);
-                break;
-            case TypeTemplate.Open:
-                if (_project.TypeDoTemplate == TypeDoTemplate.Clone &&
-                    _project.GitRepository)
-                {
-                    break;
-                }
-                tasks.Add(new DropGitRepository());
-                if (_project.TypeDoTemplate == TypeDoTemplate.Copy)
-                {
-                    CreateGit(_project);
-                }
-                break;
-        }
-    }
-    private void CreateGit(Project _project)
-    {
-        if (_project.GitRepository)
+        if (project.GitRepository)
         {
             tasks.Add(new CreateGitRepository());
         }
     }
+
     #region Properties
     public List<IProjectBuilder> Tasks => tasks;
-    public string[] WebSites() => configureWebServerBuilder.WebSites();
+
     #endregion
     private void Rollback(IProjectBuilder builder)
     {

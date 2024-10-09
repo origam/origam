@@ -28,25 +28,11 @@ using Origam.ProjectAutomation;
 using Origam.Workbench.Services;
 using Origam.Workbench.Commands;
 using System.IO;
-using System.Security.Principal;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using Origam.Git;
 using static Origam.DA.Common.Enums;
 using Origam;
-using System.Xml;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Net;
-using System.Threading;
 using System.Text.RegularExpressions;
-using static Origam.NewProjectEnums;
-using Origam.Extensions;
-using Origam.DA.Service;
-using NPOI.Util;
-using Origam.Docker;
-using System.Reflection;
-using System.Threading.Tasks;
+
 
 namespace OrigamArchitect;
 public partial class NewProjectWizard : Form
