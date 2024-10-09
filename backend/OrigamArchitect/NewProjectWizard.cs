@@ -124,7 +124,6 @@ public partial class NewProjectWizard : Form
     private void SaveSettings()
     {
         _settings.SourcesFolder = txtSourcesFolder.Text;
-        _settings.BinFolder = txtBinFolderRoot.Text;
         _settings.DatabaseServerName = txtServerName.Text;
         _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
         _settings.DockerSourceFolder = txtdosourcefolder.Text;
@@ -206,41 +205,13 @@ public partial class NewProjectWizard : Form
             txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
         }
     }
-    private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
-        if (string.IsNullOrEmpty(defaultModelPath.Text))
-        {
-            AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, strings.NewProjectWizard_Title, null);
-            e.Cancel = true;
-            return;
-        }
-        if (string.IsNullOrEmpty(txtBinFolderRoot.Text))
-        {
-            AsMessageBox.ShowError(this, strings.EnterWebAppFolder_Message, strings.NewProjectWizard_Title, null);
-            e.Cancel = true;
-            return;
-        }
-        if (!File.Exists(defaultModelPath.Text))
-        {
-            AsMessageBox.ShowError(this, strings.DefaultModelFileNotExists_Message, strings.NewProjectWizard_Title, null);
-            e.Cancel = true;
-            return;
-        }
-        _project.DefaultModelPath = defaultModelPath.Text;
-        _project.GitRepository = gitrepo.Checked;
-    }
-    private void btnSelectBinFolderRoot_Click(object sender, EventArgs e)
-    {
-        SelectFolder(txtBinFolderRoot);
-    }
+
+
     private void btnSelectSourcesFolder_Click(object sender, EventArgs e)
     {
         SelectFolder(txtSourcesFolder);
     }
-    private void btnSelectTemplateFolder_Click(object sender, EventArgs e)
-    {
-        SelectFolder(defaultModelPath);
-    }
+
     private void SelectFolder(TextBox targetControl)
     {
         if (!string.IsNullOrEmpty(targetControl.Text))
@@ -250,17 +221,6 @@ public partial class NewProjectWizard : Form
         folderBrowserDialog1.ShowDialog(this);
         targetControl.Text = folderBrowserDialog1.SelectedPath;
         targetControl.Focus();
-    }
-    private void pagePaths_Initialize(object sender, WizardPageInitEventArgs e)
-    {
-        txtSourcesFolder.Text = _settings.SourcesFolder;
-        txtdosourcefolder.Text = _settings.DockerSourceFolder;
-        txtBinFolderRoot.Text = _settings.BinFolder;
-        defaultModelPath.Text = Path.Combine(Application.StartupPath, @"Project Templates\DefaultModel.zip");
-        txtBinFolderRoot.Visible = false;
-        btnSelectBinFolderRoot.Visible = false;
-        lblBinFolderRoot.Visible = false;
-        lblBinFolderRootDescription.Visible = false;
     }
     private static void RestartElevated()
     {

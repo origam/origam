@@ -44,15 +44,6 @@ namespace OrigamArchitect
             this.label1 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.pagePaths = new AeroWizard.WizardPage();
-            this.btnSelectTemplateFolder = new System.Windows.Forms.Button();
-            this.btnSelectBinFolderRoot = new System.Windows.Forms.Button();
-            this.lblTemplateFolderDescription = new System.Windows.Forms.Label();
-            this.lblTemplateFolder = new System.Windows.Forms.Label();
-            this.defaultModelPath = new System.Windows.Forms.TextBox();
-            this.lblBinFolderRootDescription = new System.Windows.Forms.Label();
-            this.lblBinFolderRoot = new System.Windows.Forms.Label();
-            this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
             this.pageWebUser = new AeroWizard.WizardPage();
             this.label30 = new System.Windows.Forms.Label();
             this.txtWebUserPasswordConfirmed = new System.Windows.Forms.TextBox();
@@ -113,7 +104,6 @@ namespace OrigamArchitect
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
-            this.pagePaths.SuspendLayout();
             this.pageWebUser.SuspendLayout();
             this.pageGit.SuspendLayout();
             this.pageDocker.SuspendLayout();
@@ -130,7 +120,6 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.pageWelcome);
             this.wizard1.Pages.Add(this.pageDeploymentType);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
-            this.wizard1.Pages.Add(this.pagePaths);
             this.wizard1.Pages.Add(this.pageWebUser);
             this.wizard1.Pages.Add(this.pageGit);
             this.wizard1.Pages.Add(this.pageDocker);
@@ -237,101 +226,6 @@ namespace OrigamArchitect
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(559, 23);
             this.txtName.TabIndex = 1;
-            // 
-            // pagePaths
-            // 
-            this.pagePaths.Controls.Add(this.btnSelectTemplateFolder);
-            this.pagePaths.Controls.Add(this.btnSelectBinFolderRoot);
-            this.pagePaths.Controls.Add(this.lblTemplateFolderDescription);
-            this.pagePaths.Controls.Add(this.lblTemplateFolder);
-            this.pagePaths.Controls.Add(this.defaultModelPath);
-            this.pagePaths.Controls.Add(this.lblBinFolderRootDescription);
-            this.pagePaths.Controls.Add(this.lblBinFolderRoot);
-            this.pagePaths.Controls.Add(this.txtBinFolderRoot);
-            this.pagePaths.Name = "pagePaths";
-            this.pagePaths.NextPage = this.pageWebUser;
-            this.pagePaths.Size = new System.Drawing.Size(737, 407);
-            this.pagePaths.TabIndex = 2;
-            this.pagePaths.Text = "Paths";
-            this.pagePaths.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pagePaths_Commit);
-            this.pagePaths.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pagePaths_Initialize);
-            // 
-            // btnSelectTemplateFolder
-            // 
-            this.btnSelectTemplateFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTemplateFolder.Location = new System.Drawing.Point(701, 110);
-            this.btnSelectTemplateFolder.Name = "btnSelectTemplateFolder";
-            this.btnSelectTemplateFolder.Size = new System.Drawing.Size(25, 23);
-            this.btnSelectTemplateFolder.TabIndex = 11;
-            this.btnSelectTemplateFolder.Text = "...";
-            this.btnSelectTemplateFolder.UseVisualStyleBackColor = true;
-            this.btnSelectTemplateFolder.Click += new System.EventHandler(this.btnSelectTemplateFolder_Click);
-            // 
-            // btnSelectBinFolderRoot
-            // 
-            this.btnSelectBinFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectBinFolderRoot.Location = new System.Drawing.Point(701, 23);
-            this.btnSelectBinFolderRoot.Name = "btnSelectBinFolderRoot";
-            this.btnSelectBinFolderRoot.Size = new System.Drawing.Size(25, 23);
-            this.btnSelectBinFolderRoot.TabIndex = 9;
-            this.btnSelectBinFolderRoot.Text = "...";
-            this.btnSelectBinFolderRoot.UseVisualStyleBackColor = true;
-            this.btnSelectBinFolderRoot.Click += new System.EventHandler(this.btnSelectBinFolderRoot_Click);
-            // 
-            // lblTemplateFolderDescription
-            // 
-            this.lblTemplateFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblTemplateFolderDescription.Location = new System.Drawing.Point(161, 140);
-            this.lblTemplateFolderDescription.Name = "lblTemplateFolderDescription";
-            this.lblTemplateFolderDescription.Size = new System.Drawing.Size(370, 41);
-            this.lblTemplateFolderDescription.TabIndex = 8;
-            this.lblTemplateFolderDescription.Text = "Enter a path to DefaultModel.zip file which contains the initial model files.";
-            // 
-            // lblTemplateFolder
-            // 
-            this.lblTemplateFolder.AutoSize = true;
-            this.lblTemplateFolder.Location = new System.Drawing.Point(4, 114);
-            this.lblTemplateFolder.Name = "lblTemplateFolder";
-            this.lblTemplateFolder.Size = new System.Drawing.Size(82, 15);
-            this.lblTemplateFolder.TabIndex = 7;
-            this.lblTemplateFolder.Text = "Default Model";
-            // 
-            // defaultModelPath
-            // 
-            this.defaultModelPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.defaultModelPath.Location = new System.Drawing.Point(161, 110);
-            this.defaultModelPath.Name = "defaultModelPath";
-            this.defaultModelPath.Size = new System.Drawing.Size(533, 23);
-            this.defaultModelPath.TabIndex = 6;
-            // 
-            // lblBinFolderRootDescription
-            // 
-            this.lblBinFolderRootDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblBinFolderRootDescription.Location = new System.Drawing.Point(161, 53);
-            this.lblBinFolderRootDescription.Name = "lblBinFolderRootDescription";
-            this.lblBinFolderRootDescription.Size = new System.Drawing.Size(370, 39);
-            this.lblBinFolderRootDescription.TabIndex = 2;
-            this.lblBinFolderRootDescription.Text = "The web application\'s binary files will be copied here. A new folder will be crea" +
-    "ted for your application.";
-            // 
-            // lblBinFolderRoot
-            // 
-            this.lblBinFolderRoot.AutoSize = true;
-            this.lblBinFolderRoot.Location = new System.Drawing.Point(4, 26);
-            this.lblBinFolderRoot.Name = "lblBinFolderRoot";
-            this.lblBinFolderRoot.Size = new System.Drawing.Size(131, 15);
-            this.lblBinFolderRoot.TabIndex = 1;
-            this.lblBinFolderRoot.Text = "Web Application Folder";
-            // 
-            // txtBinFolderRoot
-            // 
-            this.txtBinFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtBinFolderRoot.Location = new System.Drawing.Point(161, 23);
-            this.txtBinFolderRoot.Name = "txtBinFolderRoot";
-            this.txtBinFolderRoot.Size = new System.Drawing.Size(533, 23);
-            this.txtBinFolderRoot.TabIndex = 0;
             // 
             // pageWebUser
             // 
@@ -718,7 +612,6 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
             this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
-            this.pageLocalDeploymentSettings.NextPage = this.pagePaths;
             this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 407);
             this.pageLocalDeploymentSettings.TabIndex = 0;
             this.pageLocalDeploymentSettings.Text = "Local Deployment Settings";
@@ -885,8 +778,6 @@ namespace OrigamArchitect
             this.pageWelcome.PerformLayout();
             this.pageDeploymentType.ResumeLayout(false);
             this.pageDeploymentType.PerformLayout();
-            this.pagePaths.ResumeLayout(false);
-            this.pagePaths.PerformLayout();
             this.pageWebUser.ResumeLayout(false);
             this.pageWebUser.PerformLayout();
             this.pageGit.ResumeLayout(false);
@@ -918,21 +809,12 @@ namespace OrigamArchitect
         private System.Windows.Forms.ListView lstTasks;
         private System.Windows.Forms.ColumnHeader colText;
         private System.Windows.Forms.ColumnHeader colStatus;
-        private AeroWizard.WizardPage pagePaths;
-        private System.Windows.Forms.Label lblBinFolderRoot;
-        private System.Windows.Forms.TextBox txtBinFolderRoot;
-        private System.Windows.Forms.Label lblBinFolderRootDescription;
-        private System.Windows.Forms.Label lblTemplateFolderDescription;
-        private System.Windows.Forms.Label lblTemplateFolder;
-        private System.Windows.Forms.TextBox defaultModelPath;
         private System.Windows.Forms.Label lblSourcesFolderDescription;
         private System.Windows.Forms.Label lblSourcesFolder;
         private System.Windows.Forms.TextBox txtSourcesFolder;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnSelectTemplateFolder;
         private System.Windows.Forms.Button btnSelectSourcesFolder;
-        private System.Windows.Forms.Button btnSelectBinFolderRoot;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private AeroWizard.WizardPage pageWelcome;
         private System.Windows.Forms.Label label9;
