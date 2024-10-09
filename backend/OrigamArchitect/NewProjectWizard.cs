@@ -181,7 +181,6 @@ public partial class NewProjectWizard : Form
         _project.DatabasePassword = txtDatabasePassword.Text;
         _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_");
         _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
-        _project.WebRootName = cboWebRoot.Text;
         _project.Url = txtName.Text;
         _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
         _project.DatabaseType = DatabaseType;
@@ -191,10 +190,6 @@ public partial class NewProjectWizard : Form
     private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
     {
         txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text) ? _settings.DatabaseServerName : txtServerName.Text;
-        cboWebRoot.Items.Clear();
-        cboWebRoot.Visible = false;
-        lblWebRoot.Visible = false;
-        label2.Visible = false;
         if (txtDatabaseType.SelectedIndex == -1)
         {
             txtDatabaseType.SelectedItem = null;

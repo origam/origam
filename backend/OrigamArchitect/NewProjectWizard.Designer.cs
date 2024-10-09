@@ -44,6 +44,19 @@ namespace OrigamArchitect
             this.label1 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.labelPrivileges = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtDatabaseType = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblDatabasePassword = new System.Windows.Forms.Label();
+            this.txtDatabasePassword = new System.Windows.Forms.TextBox();
+            this.lblDatabaseUserName = new System.Windows.Forms.Label();
+            this.txtServerName = new System.Windows.Forms.TextBox();
+            this.lblServerName = new System.Windows.Forms.Label();
+            this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
             this.pageWebUser = new AeroWizard.WizardPage();
             this.label30 = new System.Windows.Forms.Label();
             this.txtWebUserPasswordConfirmed = new System.Windows.Forms.TextBox();
@@ -75,38 +88,21 @@ namespace OrigamArchitect
             this.dockerPortLabel = new System.Windows.Forms.Label();
             this.txtDockerPort = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
             this.pageReview = new AeroWizard.WizardPage();
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
-            this.labelPort = new System.Windows.Forms.Label();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.labelPrivileges = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.txtDatabaseType = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cboWebRoot = new System.Windows.Forms.ComboBox();
-            this.lblDatabasePassword = new System.Windows.Forms.Label();
-            this.txtDatabasePassword = new System.Windows.Forms.TextBox();
-            this.lblWebRoot = new System.Windows.Forms.Label();
-            this.lblDatabaseUserName = new System.Windows.Forms.Label();
-            this.txtServerName = new System.Windows.Forms.TextBox();
-            this.lblServerName = new System.Windows.Forms.Label();
-            this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
+            this.pageLocalDeploymentSettings.SuspendLayout();
             this.pageWebUser.SuspendLayout();
             this.pageGit.SuspendLayout();
             this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
-            this.pageLocalDeploymentSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
             this.SuspendLayout();
@@ -181,8 +177,8 @@ namespace OrigamArchitect
             this.lblWelcome1.Name = "lblWelcome1";
             this.lblWelcome1.Size = new System.Drawing.Size(574, 36);
             this.lblWelcome1.TabIndex = 1;
-            this.lblWelcome1.Text = "This wizard will help you with multiple steps that are required in order to go th" +
-    "rough the following tasks:";
+            this.lblWelcome1.Text = "This wizard will help you set up a new project. We will go through several steps:" +
+    "";
             // 
             // pageDeploymentType
             // 
@@ -202,8 +198,8 @@ namespace OrigamArchitect
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(370, 39);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Enter the name of your project. It will be used to set a name of the package, dat" +
-    "abase, URL and folders. Example: MyNewProject";
+            this.label1.Text = "Enter a name for your project. It will be used to set the package, database and f" +
+    "olders names. Example: MyNewProject";
             // 
             // lblName
             // 
@@ -224,6 +220,134 @@ namespace OrigamArchitect
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(559, 23);
             this.txtName.TabIndex = 1;
+            // 
+            // pageLocalDeploymentSettings
+            // 
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPrivileges);
+            this.pageLocalDeploymentSettings.Controls.Add(this.label16);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
+            this.pageLocalDeploymentSettings.Controls.Add(this.label4);
+            this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabasePassword);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabasePassword);
+            this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabaseUserName);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtServerName);
+            this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
+            this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
+            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 407);
+            this.pageLocalDeploymentSettings.TabIndex = 0;
+            this.pageLocalDeploymentSettings.Text = "Local Deployment Settings";
+            this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
+            this.pageLocalDeploymentSettings.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageLocalDeploymentSettings_Initialize);
+            // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(420, 134);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(29, 15);
+            this.labelPort.TabIndex = 19;
+            this.labelPort.Text = "Port";
+            // 
+            // txtPort
+            // 
+            this.txtPort.Location = new System.Drawing.Point(464, 131);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(100, 23);
+            this.txtPort.TabIndex = 18;
+            this.txtPort.Text = "1433";
+            // 
+            // labelPrivileges
+            // 
+            this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelPrivileges.Location = new System.Drawing.Point(157, 284);
+            this.labelPrivileges.Name = "labelPrivileges";
+            this.labelPrivileges.Size = new System.Drawing.Size(563, 36);
+            this.labelPrivileges.TabIndex = 17;
+            this.labelPrivileges.Text = "Enter database user name and password. The user must have the create database pri" +
+    "vilage.";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 86);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(55, 15);
+            this.label16.TabIndex = 16;
+            this.label16.Text = "Database";
+            // 
+            // txtDatabaseType
+            // 
+            this.txtDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.txtDatabaseType.Enabled = false;
+            this.txtDatabaseType.FormattingEnabled = true;
+            this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
+            this.txtDatabaseType.Name = "txtDatabaseType";
+            this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
+            this.txtDatabaseType.TabIndex = 15;
+            // 
+            // label4
+            // 
+            this.label4.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label4.Location = new System.Drawing.Point(157, 166);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(518, 53);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "Enter \".\" if your database is located on your machnie. If not enter an IP address" +
+    ".";
+            // 
+            // lblDatabasePassword
+            // 
+            this.lblDatabasePassword.AutoSize = true;
+            this.lblDatabasePassword.Location = new System.Drawing.Point(7, 255);
+            this.lblDatabasePassword.Name = "lblDatabasePassword";
+            this.lblDatabasePassword.Size = new System.Drawing.Size(57, 15);
+            this.lblDatabasePassword.TabIndex = 7;
+            this.lblDatabasePassword.Text = "Password";
+            // 
+            // txtDatabasePassword
+            // 
+            this.txtDatabasePassword.Location = new System.Drawing.Point(160, 252);
+            this.txtDatabasePassword.Name = "txtDatabasePassword";
+            this.txtDatabasePassword.PasswordChar = '*';
+            this.txtDatabasePassword.Size = new System.Drawing.Size(121, 23);
+            this.txtDatabasePassword.TabIndex = 9;
+            // 
+            // lblDatabaseUserName
+            // 
+            this.lblDatabaseUserName.AutoSize = true;
+            this.lblDatabaseUserName.Location = new System.Drawing.Point(7, 225);
+            this.lblDatabaseUserName.Name = "lblDatabaseUserName";
+            this.lblDatabaseUserName.Size = new System.Drawing.Size(65, 15);
+            this.lblDatabaseUserName.TabIndex = 6;
+            this.lblDatabaseUserName.Text = "User Name";
+            // 
+            // txtServerName
+            // 
+            this.txtServerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtServerName.Location = new System.Drawing.Point(160, 131);
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Size = new System.Drawing.Size(223, 23);
+            this.txtServerName.TabIndex = 3;
+            // 
+            // lblServerName
+            // 
+            this.lblServerName.AutoSize = true;
+            this.lblServerName.Location = new System.Drawing.Point(7, 134);
+            this.lblServerName.Name = "lblServerName";
+            this.lblServerName.Size = new System.Drawing.Size(90, 15);
+            this.lblServerName.TabIndex = 5;
+            this.lblServerName.Text = "Database Server";
+            // 
+            // txtDatabaseUserName
+            // 
+            this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 222);
+            this.txtDatabaseUserName.Name = "txtDatabaseUserName";
+            this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
+            this.txtDatabaseUserName.TabIndex = 8;
             // 
             // pageWebUser
             // 
@@ -352,9 +476,10 @@ namespace OrigamArchitect
             this.label24.ForeColor = System.Drawing.SystemColors.GrayText;
             this.label24.Location = new System.Drawing.Point(18, 31);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(321, 21);
+            this.label24.Size = new System.Drawing.Size(469, 21);
             this.label24.TabIndex = 15;
-            this.label24.Text = "Please fill Username and password for new First User";
+            this.label24.Text = "Please fill user name and password for the first user in your client web applicat" +
+    "ion";
             // 
             // pageGit
             // 
@@ -414,8 +539,8 @@ namespace OrigamArchitect
             this.lblSourcesFolderDescription.Name = "lblSourcesFolderDescription";
             this.lblSourcesFolderDescription.Size = new System.Drawing.Size(370, 39);
             this.lblSourcesFolderDescription.TabIndex = 5;
-            this.lblSourcesFolderDescription.Text = "Model XML files will be stored here. You can use it as a GIT repository. A new fo" +
-    "lder will be created for your application.";
+            this.lblSourcesFolderDescription.Text = "A new folder with your project\'s name will be created here. Origam will store the" +
+    " model in it. ";
             // 
             // lblSourcesFolder
             // 
@@ -474,7 +599,6 @@ namespace OrigamArchitect
             this.pageDocker.Controls.Add(this.dockerPortLabel);
             this.pageDocker.Controls.Add(this.txtDockerPort);
             this.pageDocker.Controls.Add(this.label21);
-            this.pageDocker.Controls.Add(this.label19);
             this.pageDocker.Name = "pageDocker";
             this.pageDocker.NextPage = this.pageReview;
             this.pageDocker.Size = new System.Drawing.Size(737, 407);
@@ -490,8 +614,7 @@ namespace OrigamArchitect
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(253, 49);
             this.label23.TabIndex = 20;
-            this.label23.Text = "If you have already created docker for other project on your computer please fill" +
-    " different port.";
+            this.label23.Text = "The client web application will be available on this https port.";
             // 
             // label22
             // 
@@ -512,11 +635,12 @@ namespace OrigamArchitect
             // 
             // txtDockerPort
             // 
+            this.txtDockerPort.Enabled = false;
             this.txtDockerPort.Location = new System.Drawing.Point(112, 112);
             this.txtDockerPort.Name = "txtDockerPort";
             this.txtDockerPort.Size = new System.Drawing.Size(100, 23);
             this.txtDockerPort.TabIndex = 17;
-            this.txtDockerPort.Text = "8080";
+            this.txtDockerPort.Text = "443";
             // 
             // label21
             // 
@@ -525,16 +649,6 @@ namespace OrigamArchitect
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(662, 19);
             this.label21.TabIndex = 16;
-            // 
-            // label19
-            // 
-            this.label19.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label19.Location = new System.Drawing.Point(16, 17);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(705, 17);
-            this.label19.TabIndex = 14;
-            this.label19.Text = "This wizard create start script for start docker with new project.All files are i" +
-    "n OrigamModel subdirectory scripts.";
             // 
             // pageReview
             // 
@@ -574,164 +688,6 @@ namespace OrigamArchitect
             this.colStatus.Text = "Status";
             this.colStatus.Width = 81;
             // 
-            // pageLocalDeploymentSettings
-            // 
-            this.pageLocalDeploymentSettings.Controls.Add(this.labelPort);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtPort);
-            this.pageLocalDeploymentSettings.Controls.Add(this.labelPrivileges);
-            this.pageLocalDeploymentSettings.Controls.Add(this.label16);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
-            this.pageLocalDeploymentSettings.Controls.Add(this.label4);
-            this.pageLocalDeploymentSettings.Controls.Add(this.label2);
-            this.pageLocalDeploymentSettings.Controls.Add(this.cboWebRoot);
-            this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabasePassword);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabasePassword);
-            this.pageLocalDeploymentSettings.Controls.Add(this.lblWebRoot);
-            this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabaseUserName);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtServerName);
-            this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
-            this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
-            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 407);
-            this.pageLocalDeploymentSettings.TabIndex = 0;
-            this.pageLocalDeploymentSettings.Text = "Local Deployment Settings";
-            this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
-            this.pageLocalDeploymentSettings.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageLocalDeploymentSettings_Initialize);
-            // 
-            // labelPort
-            // 
-            this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(420, 134);
-            this.labelPort.Name = "labelPort";
-            this.labelPort.Size = new System.Drawing.Size(29, 15);
-            this.labelPort.TabIndex = 19;
-            this.labelPort.Text = "Port";
-            // 
-            // txtPort
-            // 
-            this.txtPort.Location = new System.Drawing.Point(464, 131);
-            this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(100, 23);
-            this.txtPort.TabIndex = 18;
-            this.txtPort.Text = "1433";
-            // 
-            // labelPrivileges
-            // 
-            this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelPrivileges.Location = new System.Drawing.Point(157, 284);
-            this.labelPrivileges.Name = "labelPrivileges";
-            this.labelPrivileges.Size = new System.Drawing.Size(563, 36);
-            this.labelPrivileges.TabIndex = 17;
-            this.labelPrivileges.Text = "Enter User Name and Password witch has privileges to create Database and user.";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 86);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(55, 15);
-            this.label16.TabIndex = 16;
-            this.label16.Text = "Database";
-            // 
-            // txtDatabaseType
-            // 
-            this.txtDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.txtDatabaseType.FormattingEnabled = true;
-            this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
-            this.txtDatabaseType.Name = "txtDatabaseType";
-            this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
-            this.txtDatabaseType.TabIndex = 15;
-            // 
-            // label4
-            // 
-            this.label4.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label4.Location = new System.Drawing.Point(157, 166);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(518, 53);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Enter the connection information to your database server. A new database will be " +
-    "created for storing the data. Example: .\\SQLEXPRESS or localhost";
-            // 
-            // label2
-            // 
-            this.label2.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label2.Location = new System.Drawing.Point(157, 42);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(370, 39);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "A new virtual directory/application will be created under the selected web site. " +
-    "Example: Default Web Site";
-            // 
-            // cboWebRoot
-            // 
-            this.cboWebRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboWebRoot.FormattingEnabled = true;
-            this.cboWebRoot.Location = new System.Drawing.Point(161, 13);
-            this.cboWebRoot.Name = "cboWebRoot";
-            this.cboWebRoot.Size = new System.Drawing.Size(559, 23);
-            this.cboWebRoot.TabIndex = 1;
-            // 
-            // lblDatabasePassword
-            // 
-            this.lblDatabasePassword.AutoSize = true;
-            this.lblDatabasePassword.Location = new System.Drawing.Point(7, 255);
-            this.lblDatabasePassword.Name = "lblDatabasePassword";
-            this.lblDatabasePassword.Size = new System.Drawing.Size(57, 15);
-            this.lblDatabasePassword.TabIndex = 7;
-            this.lblDatabasePassword.Text = "Password";
-            // 
-            // txtDatabasePassword
-            // 
-            this.txtDatabasePassword.Location = new System.Drawing.Point(160, 252);
-            this.txtDatabasePassword.Name = "txtDatabasePassword";
-            this.txtDatabasePassword.PasswordChar = '*';
-            this.txtDatabasePassword.Size = new System.Drawing.Size(121, 23);
-            this.txtDatabasePassword.TabIndex = 9;
-            // 
-            // lblWebRoot
-            // 
-            this.lblWebRoot.AutoSize = true;
-            this.lblWebRoot.Location = new System.Drawing.Point(7, 16);
-            this.lblWebRoot.Name = "lblWebRoot";
-            this.lblWebRoot.Size = new System.Drawing.Size(90, 15);
-            this.lblWebRoot.TabIndex = 4;
-            this.lblWebRoot.Text = "Parent Web Site";
-            // 
-            // lblDatabaseUserName
-            // 
-            this.lblDatabaseUserName.AutoSize = true;
-            this.lblDatabaseUserName.Location = new System.Drawing.Point(7, 225);
-            this.lblDatabaseUserName.Name = "lblDatabaseUserName";
-            this.lblDatabaseUserName.Size = new System.Drawing.Size(65, 15);
-            this.lblDatabaseUserName.TabIndex = 6;
-            this.lblDatabaseUserName.Text = "User Name";
-            // 
-            // txtServerName
-            // 
-            this.txtServerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerName.Location = new System.Drawing.Point(160, 131);
-            this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(223, 23);
-            this.txtServerName.TabIndex = 3;
-            // 
-            // lblServerName
-            // 
-            this.lblServerName.AutoSize = true;
-            this.lblServerName.Location = new System.Drawing.Point(7, 134);
-            this.lblServerName.Name = "lblServerName";
-            this.lblServerName.Size = new System.Drawing.Size(90, 15);
-            this.lblServerName.TabIndex = 5;
-            this.lblServerName.Text = "Database Server";
-            // 
-            // txtDatabaseUserName
-            // 
-            this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 222);
-            this.txtDatabaseUserName.Name = "txtDatabaseUserName";
-            this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
-            this.txtDatabaseUserName.TabIndex = 8;
-            // 
             // projectBindingSource
             // 
             this.projectBindingSource.DataSource = typeof(Origam.ProjectAutomation.Project);
@@ -758,6 +714,8 @@ namespace OrigamArchitect
             this.pageWelcome.PerformLayout();
             this.pageDeploymentType.ResumeLayout(false);
             this.pageDeploymentType.PerformLayout();
+            this.pageLocalDeploymentSettings.ResumeLayout(false);
+            this.pageLocalDeploymentSettings.PerformLayout();
             this.pageWebUser.ResumeLayout(false);
             this.pageWebUser.PerformLayout();
             this.pageGit.ResumeLayout(false);
@@ -765,8 +723,6 @@ namespace OrigamArchitect
             this.pageDocker.ResumeLayout(false);
             this.pageDocker.PerformLayout();
             this.pageReview.ResumeLayout(false);
-            this.pageLocalDeploymentSettings.ResumeLayout(false);
-            this.pageLocalDeploymentSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).EndInit();
             this.ResumeLayout(false);
@@ -778,13 +734,11 @@ namespace OrigamArchitect
         private AeroWizard.WizardControl wizard1;
         private AeroWizard.WizardPage pageLocalDeploymentSettings;
         private System.Windows.Forms.Label lblServerName;
-        private System.Windows.Forms.Label lblWebRoot;
         private System.Windows.Forms.TextBox txtServerName;
         private System.Windows.Forms.Label lblDatabaseUserName;
         private System.Windows.Forms.Label lblDatabasePassword;
         private System.Windows.Forms.TextBox txtDatabaseUserName;
         private System.Windows.Forms.TextBox txtDatabasePassword;
-        private System.Windows.Forms.ComboBox cboWebRoot;
         private AeroWizard.WizardPage pageReview;
         private System.Windows.Forms.ListView lstTasks;
         private System.Windows.Forms.ColumnHeader colText;
@@ -793,7 +747,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label lblSourcesFolder;
         private System.Windows.Forms.TextBox txtSourcesFolder;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSelectSourcesFolder;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private AeroWizard.WizardPage pageWelcome;
@@ -821,7 +774,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
         private WizardPage pageDocker;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label22;
