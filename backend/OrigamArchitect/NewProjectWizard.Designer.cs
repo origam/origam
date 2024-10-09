@@ -91,11 +91,6 @@ namespace OrigamArchitect
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pageTemplateType = new AeroWizard.WizardPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewTemplate = new System.Windows.Forms.ListView();
-            this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.wbReadmeText = new System.Windows.Forms.WebBrowser();
             this.wizOpenRepository = new AeroWizard.WizardPage();
             this.rdNone = new System.Windows.Forms.RadioButton();
             this.rdCopy = new System.Windows.Forms.RadioButton();
@@ -133,11 +128,6 @@ namespace OrigamArchitect
             this.pageGit.SuspendLayout();
             this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
-            this.pageTemplateType.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.wizOpenRepository.SuspendLayout();
             this.pageLocalDeploymentSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
@@ -150,7 +140,6 @@ namespace OrigamArchitect
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
             this.wizard1.Pages.Add(this.pageDeploymentType);
-            this.wizard1.Pages.Add(this.pageTemplateType);
             this.wizard1.Pages.Add(this.wizOpenRepository);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
@@ -723,62 +712,6 @@ namespace OrigamArchitect
             this.colStatus.Text = "Status";
             this.colStatus.Width = 81;
             // 
-            // pageTemplateType
-            // 
-            this.pageTemplateType.Controls.Add(this.splitContainer1);
-            this.pageTemplateType.Name = "pageTemplateType";
-            this.pageTemplateType.Size = new System.Drawing.Size(737, 407);
-            this.pageTemplateType.TabIndex = 7;
-            this.pageTemplateType.Text = "Select Template";
-            this.pageTemplateType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageTemplateType_Commit);
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.listViewTemplate);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.wbReadmeText);
-            this.splitContainer1.Size = new System.Drawing.Size(731, 390);
-            this.splitContainer1.SplitterDistance = 297;
-            this.splitContainer1.TabIndex = 7;
-            // 
-            // listViewTemplate
-            // 
-            this.listViewTemplate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listViewTemplate.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Projects});
-            this.listViewTemplate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewTemplate.ForeColor = System.Drawing.Color.Black;
-            this.listViewTemplate.FullRowSelect = true;
-            this.listViewTemplate.HideSelection = false;
-            this.listViewTemplate.Location = new System.Drawing.Point(0, 0);
-            this.listViewTemplate.Name = "listViewTemplate";
-            this.listViewTemplate.Size = new System.Drawing.Size(295, 388);
-            this.listViewTemplate.TabIndex = 5;
-            this.listViewTemplate.UseCompatibleStateImageBehavior = false;
-            this.listViewTemplate.View = System.Windows.Forms.View.Tile;
-            this.listViewTemplate.SelectedIndexChanged += new System.EventHandler(this.ListViewTemplate_SelectedIndexChanged);
-            // 
-            // Projects
-            // 
-            this.Projects.Width = 118;
-            // 
-            // wbReadmeText
-            // 
-            this.wbReadmeText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wbReadmeText.Location = new System.Drawing.Point(0, 0);
-            this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wbReadmeText.Name = "wbReadmeText";
-            this.wbReadmeText.Size = new System.Drawing.Size(428, 388);
-            this.wbReadmeText.TabIndex = 6;
-            // 
             // wizOpenRepository
             // 
             this.wizOpenRepository.Controls.Add(this.rdNone);
@@ -1073,11 +1006,6 @@ namespace OrigamArchitect
             this.pageDocker.ResumeLayout(false);
             this.pageDocker.PerformLayout();
             this.pageReview.ResumeLayout(false);
-            this.pageTemplateType.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.wizOpenRepository.ResumeLayout(false);
             this.wizOpenRepository.PerformLayout();
             this.pageLocalDeploymentSettings.ResumeLayout(false);
@@ -1144,10 +1072,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label labelPrivileges;
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
-        private AeroWizard.WizardPage pageTemplateType;
-        private System.Windows.Forms.ListView listViewTemplate;
-        private System.Windows.Forms.ColumnHeader Projects;
-        private System.Windows.Forms.WebBrowser wbReadmeText;
         private WizardPage wizOpenRepository;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
@@ -1157,7 +1081,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox tbRepositoryLink;
         private System.Windows.Forms.RadioButton rdCopy;
         private System.Windows.Forms.RadioButton rdClone;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RadioButton rdNone;
         private WizardPage pageDocker;
         private System.Windows.Forms.Label label19;

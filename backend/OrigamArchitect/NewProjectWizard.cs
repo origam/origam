@@ -346,42 +346,6 @@ public partial class NewProjectWizard : Form
         txtGitUser.Enabled = gitrepo.Checked;
         txtGitEmail.Enabled = gitrepo.Checked;
     }
-   
-   
-    private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
-        if (listViewTemplate.SelectedItems.Count == 0)
-        {
-            AsMessageBox.ShowError(this, strings.TemplateNotSelect, "Template", null);
-            e.Cancel = true;
-            return;
-        }
-        foreach (ListViewItem item in listViewTemplate.SelectedItems)
-        {
-            WebGitData webGit = (WebGitData)item.Tag;
-            _project.GitRepositoryLink = webGit.RepositoryLink;
-            _project.TypeTemplate = webGit.TypeTemplate;
-        }
-        switch (_project.TypeTemplate)
-        {
-            case TypeTemplate.Open:
-                pageTemplateType.NextPage = wizOpenRepository;
-                break;
-            case TypeTemplate.Default:
-            case TypeTemplate.Template:
-                pageTemplateType.NextPage = pageLocalDeploymentSettings;
-                break;
-        }
-    }
-    private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
-        foreach (ListViewItem item in listViewTemplate.SelectedItems)
-        {
-            WebGitData webGit = (WebGitData)item.Tag;
-            wbReadmeText.DocumentText = md.Transform(webGit.Readme);
-        }
-    }
     private void WizOpenRepository_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         if (string.IsNullOrEmpty(tbRepositoryLink.Text))
