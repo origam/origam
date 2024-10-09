@@ -46,25 +46,23 @@ public class FileModelImportBuilder: AbstractBuilder
         {
             case TypeTemplate.Default:
                 UnzipDefaultModel(project);
-                if (project.Deployment == DeploymentType.Docker ||
-                    project.Deployment == DeploymentType.DockerPostgres)
-                {
-                    CreateCustomAssetsFolder(project.SourcesFolder);
-                    CheckNewProjectDirectory(project);
-                }
+
+                CreateCustomAssetsFolder(project.SourcesFolder);
+                CreateAndFillNewProjectDirectory(project);
+                
                 break;
             case TypeTemplate.Open:
             case TypeTemplate.Template:
                 CloneGitRepository(project);
                 CheckModelDirectory(project);
-                CheckNewProjectDirectory(project);
+                CreateAndFillNewProjectDirectory(project);
                 project.NewPackageId = GetFromDockerEnvFile(project)?? GetPackageId();
                 break;
             default:
                 throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
         }
     }
-    private void CheckNewProjectDirectory(Project project)
+    private void CreateAndFillNewProjectDirectory(Project project)
     {
         DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
         if (dir.Exists)

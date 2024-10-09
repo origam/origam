@@ -52,35 +52,13 @@ public class DockerBuilder : AbstractBuilder
         string cmdFile = Path.Combine(newProjectFolder, project.Name + ".cmd");
         if (File.Exists(cmdFile))
         {
-            if (project.Deployment == DeploymentType.Docker)
-            {
-                string text = File.ReadAllText(cmdFile);
-                text = text.Replace("{envFilePath}", Path.Combine(project.SourcesFolder,
-                    DockerFolderName, project.DockerEnvPath));
-                text = text.Replace("{parentPathProject}", project.SourcesFolder);
-                text = text.Replace("{dockerPort}", project.DockerPort.ToString());
-                text = text.Replace("{projectName}", project.Name);
-                File.WriteAllText(cmdFile, text);
-            }
-            else if(project.Deployment == DeploymentType.DockerPostgres)
-            {
-                File.Delete(cmdFile);
-                cmdFile = Path.Combine(newProjectFolder, "StartWebServer_" + project.Name + 
-                    project.DockerOs.FileNameExtension);
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("docker start " + project.Name);
-                stringBuilder.Append("docker exec --env-file " + project.DockerEnvPath + 
-                    " -it " + project.Name + 
-                    " bash startOrigamServer.sh");
-                File.WriteAllText(cmdFile, stringBuilder.ToString());
-                cmdFile = Path.Combine(newProjectFolder, "StartContainer_" + project.Name +
-                    project.DockerOs.FileNameExtension);
-                string text = "docker start " + project.Name;
-                File.WriteAllText(cmdFile, text);
-                cmdFile = Path.Combine(newProjectFolder, "CreateContainer_" + project.Name + 
-                    project.DockerOs.FileNameExtension);
-                File.WriteAllText(cmdFile, FillDockerParameter(project));
-            }
+            string text = File.ReadAllText(cmdFile);
+            text = text.Replace("{envFilePath}", Path.Combine(project.SourcesFolder,
+                DockerFolderName, project.DockerEnvPath));
+            text = text.Replace("{parentPathProject}", project.SourcesFolder);
+            text = text.Replace("{dockerPort}", project.DockerPort.ToString());
+            text = text.Replace("{projectName}", project.Name);
+            File.WriteAllText(cmdFile, text);
         }
     }
     private string FillDockerParameter(Project project)
@@ -189,18 +167,11 @@ public class DockerBuilder : AbstractBuilder
     }
     private string SetDbHost(Project project)
     {
-        if (project.Deployment == DeploymentType.DockerPostgres)
+        if (project.DatabaseServerName.Equals("localhost") ||
+            project.DatabaseServerName.Equals(".") ||
+            project.DatabaseServerName.Equals("127.0.0.1"))
         {
-            return "localhost";
-        }
-        if (project.Deployment == DeploymentType.Docker)
-        {
-            if (project.DatabaseServerName.Equals("localhost") ||
-                project.DatabaseServerName.Equals(".") ||
-                project.DatabaseServerName.Equals("127.0.0.1"))
-            {
-                return "host.docker.internal";
-            }
+            return "host.docker.internal";
         }
         return project.DatabaseServerName;
     }
