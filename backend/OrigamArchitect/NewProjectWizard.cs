@@ -126,7 +126,6 @@ public partial class NewProjectWizard : Form
         _settings.SourcesFolder = txtSourcesFolder.Text;
         _settings.DatabaseServerName = txtServerName.Text;
         _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
-        _settings.DockerSourceFolder = txtdosourcefolder.Text;
         _settings.Save();
     }
     private void pageReview_Initialize(object sender, WizardPageInitEventArgs e)
@@ -298,7 +297,6 @@ public partial class NewProjectWizard : Form
         _project.GitRepository = gitrepo.Checked;
         _project.Gitusername = txtGitUser.Text;
         _project.Gitemail = txtGitEmail.Text;
-        _project.DockerSourcePath = txtdosourcefolder.Text;
         pageGit.NextPage = pageDocker;
     }
     private void Gitrepo_CheckedChanged(object sender, EventArgs e)

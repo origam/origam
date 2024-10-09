@@ -59,8 +59,6 @@ namespace OrigamArchitect
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.pageGit = new AeroWizard.WizardPage();
-            this.dockerSourceFolderLabel = new System.Windows.Forms.Label();
-            this.txtdosourcefolder = new System.Windows.Forms.TextBox();
             this.lblgitemail = new System.Windows.Forms.Label();
             this.lblgituser = new System.Windows.Forms.Label();
             this.txtGitEmail = new System.Windows.Forms.TextBox();
@@ -360,8 +358,6 @@ namespace OrigamArchitect
             // 
             // pageGit
             // 
-            this.pageGit.Controls.Add(this.dockerSourceFolderLabel);
-            this.pageGit.Controls.Add(this.txtdosourcefolder);
             this.pageGit.Controls.Add(this.lblgitemail);
             this.pageGit.Controls.Add(this.lblgituser);
             this.pageGit.Controls.Add(this.txtGitEmail);
@@ -378,22 +374,6 @@ namespace OrigamArchitect
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Configure Source Control";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
-            // 
-            // dockerSourceFolderLabel
-            // 
-            this.dockerSourceFolderLabel.AutoSize = true;
-            this.dockerSourceFolderLabel.Location = new System.Drawing.Point(3, 280);
-            this.dockerSourceFolderLabel.Name = "dockerSourceFolderLabel";
-            this.dockerSourceFolderLabel.Size = new System.Drawing.Size(117, 15);
-            this.dockerSourceFolderLabel.TabIndex = 1;
-            this.dockerSourceFolderLabel.Text = "Docker Model Folder";
-            // 
-            // txtdosourcefolder
-            // 
-            this.txtdosourcefolder.Location = new System.Drawing.Point(160, 277);
-            this.txtdosourcefolder.Name = "txtdosourcefolder";
-            this.txtdosourcefolder.Size = new System.Drawing.Size(530, 23);
-            this.txtdosourcefolder.TabIndex = 18;
             // 
             // lblgitemail
             // 
@@ -861,7 +841,5 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebFirstname;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
-        private System.Windows.Forms.Label dockerSourceFolderLabel;
-        private System.Windows.Forms.TextBox txtdosourcefolder;
     }
 }
