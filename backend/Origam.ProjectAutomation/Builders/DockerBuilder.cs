@@ -196,6 +196,7 @@ public class DockerBuilder : AbstractBuilder
         if (project.Deployment == DeploymentType.Docker)
         {
             if (project.DatabaseServerName.Equals("localhost") ||
+                project.DatabaseServerName.Equals(".") ||
                 project.DatabaseServerName.Equals("127.0.0.1"))
             {
                 return "host.docker.internal";
@@ -226,6 +227,6 @@ public class DockerBuilder : AbstractBuilder
     }
     public string WebSiteUrl (Project project)
     {
-        return "http://localhost:" + project.DockerPort;
+        return "https://localhost:" + project.DockerPort;
     }
 }
