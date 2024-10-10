@@ -84,8 +84,8 @@ namespace OrigamArchitect
             this.gitrepo = new System.Windows.Forms.CheckBox();
             this.pageReview = new AeroWizard.WizardPage();
             this.lstTasks = new System.Windows.Forms.ListView();
-            this.colText = new System.Windows.Forms.ColumnHeader();
-            this.colStatus = new System.Windows.Forms.ColumnHeader();
+            this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pageSuccess = new AeroWizard.WizardPage();
             this.finalMessageLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -114,7 +114,7 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.pageGit);
             this.wizard1.Pages.Add(this.pageReview);
             this.wizard1.Pages.Add(this.pageSuccess);
-            this.wizard1.Size = new System.Drawing.Size(784, 561);
+            this.wizard1.Size = new System.Drawing.Size(1176, 863);
             this.wizard1.TabIndex = 0;
             this.wizard1.Title = "New Project";
             this.wizard1.TitleIcon = ((System.Drawing.Icon)(resources.GetObject("wizard1.TitleIcon")));
@@ -127,14 +127,15 @@ namespace OrigamArchitect
             this.pageWelcome.Controls.Add(this.label6);
             this.pageWelcome.Controls.Add(this.lblWelcome1);
             this.pageWelcome.Name = "pageWelcome";
-            this.pageWelcome.Size = new System.Drawing.Size(737, 371);
+            this.pageWelcome.Size = new System.Drawing.Size(1129, 638);
             this.pageWelcome.TabIndex = 3;
             this.pageWelcome.Text = "Welcome To New Project Wizard";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(23, 121);
+            this.label9.Location = new System.Drawing.Point(34, 186);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(304, 25);
             this.label9.TabIndex = 6;
@@ -143,7 +144,8 @@ namespace OrigamArchitect
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(23, 97);
+            this.label8.Location = new System.Drawing.Point(34, 149);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(181, 25);
             this.label8.TabIndex = 5;
@@ -152,7 +154,8 @@ namespace OrigamArchitect
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(23, 73);
+            this.label7.Location = new System.Drawing.Point(34, 112);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(264, 25);
             this.label7.TabIndex = 4;
@@ -161,7 +164,8 @@ namespace OrigamArchitect
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(23, 49);
+            this.label6.Location = new System.Drawing.Point(34, 75);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(269, 25);
             this.label6.TabIndex = 3;
@@ -169,11 +173,13 @@ namespace OrigamArchitect
             // 
             // lblWelcome1
             // 
-            this.lblWelcome1.Location = new System.Drawing.Point(-3, 13);
+            this.lblWelcome1.Location = new System.Drawing.Point(-4, 20);
+            this.lblWelcome1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWelcome1.Name = "lblWelcome1";
-            this.lblWelcome1.Size = new System.Drawing.Size(574, 36);
+            this.lblWelcome1.Size = new System.Drawing.Size(861, 55);
             this.lblWelcome1.TabIndex = 1;
-            this.lblWelcome1.Text = "This wizard will help you set up a new project. We will go through several steps:" + "";
+            this.lblWelcome1.Text = "This wizard will help you set up a new project. We will go through several steps:" +
+    "";
             // 
             // pageDeploymentType
             // 
@@ -181,7 +187,7 @@ namespace OrigamArchitect
             this.pageDeploymentType.Controls.Add(this.lblName);
             this.pageDeploymentType.Controls.Add(this.txtName);
             this.pageDeploymentType.Name = "pageDeploymentType";
-            this.pageDeploymentType.Size = new System.Drawing.Size(737, 371);
+            this.pageDeploymentType.Size = new System.Drawing.Size(1129, 638);
             this.pageDeploymentType.TabIndex = 4;
             this.pageDeploymentType.Text = "Project Name";
             this.pageDeploymentType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDeploymentType_Commit);
@@ -189,17 +195,20 @@ namespace OrigamArchitect
             // label1
             // 
             this.label1.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label1.Location = new System.Drawing.Point(161, 44);
+            this.label1.Location = new System.Drawing.Point(242, 68);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(370, 39);
+            this.label1.Size = new System.Drawing.Size(555, 60);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Enter a name for your project. It will be used to set the package, database and f" + "olders names. Example: MyNewProject";
+            this.label1.Text = "Enter a name for your project. It will be used to set the package, database and f" +
+    "olders names. Example: MyNewProject";
             // 
             // lblName
             // 
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.World);
-            this.lblName.Location = new System.Drawing.Point(4, 17);
+            this.lblName.Location = new System.Drawing.Point(6, 26);
+            this.lblName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(40, 15);
             this.lblName.TabIndex = 14;
@@ -207,11 +216,13 @@ namespace OrigamArchitect
             // 
             // txtName
             // 
-            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.World);
-            this.txtName.Location = new System.Drawing.Point(161, 14);
+            this.txtName.Location = new System.Drawing.Point(242, 22);
+            this.txtName.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(559, 23);
+            this.txtName.Size = new System.Drawing.Size(859, 23);
             this.txtName.TabIndex = 1;
             // 
             // pageLocalDeploymentSettings
@@ -229,7 +240,7 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
             this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
-            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 371);
+            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(1129, 638);
             this.pageLocalDeploymentSettings.TabIndex = 0;
             this.pageLocalDeploymentSettings.Text = "Database";
             this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
@@ -238,7 +249,8 @@ namespace OrigamArchitect
             // labelPort
             // 
             this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(420, 134);
+            this.labelPort.Location = new System.Drawing.Point(630, 206);
+            this.labelPort.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPort.Name = "labelPort";
             this.labelPort.Size = new System.Drawing.Size(44, 25);
             this.labelPort.TabIndex = 19;
@@ -246,25 +258,29 @@ namespace OrigamArchitect
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(464, 131);
+            this.txtPort.Location = new System.Drawing.Point(696, 202);
+            this.txtPort.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(100, 31);
+            this.txtPort.Size = new System.Drawing.Size(148, 31);
             this.txtPort.TabIndex = 4;
             this.txtPort.Text = "1433";
             // 
             // labelPrivileges
             // 
             this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelPrivileges.Location = new System.Drawing.Point(157, 284);
+            this.labelPrivileges.Location = new System.Drawing.Point(236, 437);
+            this.labelPrivileges.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPrivileges.Name = "labelPrivileges";
-            this.labelPrivileges.Size = new System.Drawing.Size(563, 36);
+            this.labelPrivileges.Size = new System.Drawing.Size(844, 55);
             this.labelPrivileges.TabIndex = 17;
-            this.labelPrivileges.Text = "Enter database user name and password. The user must have the create database pri" + "vilage.";
+            this.labelPrivileges.Text = "Enter database user name and password. The user must have the create database pri" +
+    "vilage.";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 102);
+            this.label16.Location = new System.Drawing.Point(10, 157);
+            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(86, 25);
             this.label16.TabIndex = 16;
@@ -275,24 +291,28 @@ namespace OrigamArchitect
             this.txtDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtDatabaseType.Enabled = false;
             this.txtDatabaseType.FormattingEnabled = true;
-            this.txtDatabaseType.Location = new System.Drawing.Point(160, 102);
+            this.txtDatabaseType.Location = new System.Drawing.Point(240, 157);
+            this.txtDatabaseType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDatabaseType.Name = "txtDatabaseType";
-            this.txtDatabaseType.Size = new System.Drawing.Size(223, 33);
+            this.txtDatabaseType.Size = new System.Drawing.Size(332, 33);
             this.txtDatabaseType.TabIndex = 15;
             // 
             // label4
             // 
             this.label4.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label4.Location = new System.Drawing.Point(157, 166);
+            this.label4.Location = new System.Drawing.Point(236, 255);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(518, 53);
+            this.label4.Size = new System.Drawing.Size(777, 82);
             this.label4.TabIndex = 14;
-            this.label4.Text = "Enter \".\" if your database is located on your machnie. If not enter an IP address" + ".";
+            this.label4.Text = "Enter \".\" if your database is located on your machnie. If not enter an IP address" +
+    ".";
             // 
             // lblDatabasePassword
             // 
             this.lblDatabasePassword.AutoSize = true;
-            this.lblDatabasePassword.Location = new System.Drawing.Point(7, 255);
+            this.lblDatabasePassword.Location = new System.Drawing.Point(10, 392);
+            this.lblDatabasePassword.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabasePassword.Name = "lblDatabasePassword";
             this.lblDatabasePassword.Size = new System.Drawing.Size(87, 25);
             this.lblDatabasePassword.TabIndex = 7;
@@ -300,16 +320,18 @@ namespace OrigamArchitect
             // 
             // txtDatabasePassword
             // 
-            this.txtDatabasePassword.Location = new System.Drawing.Point(160, 252);
+            this.txtDatabasePassword.Location = new System.Drawing.Point(240, 388);
+            this.txtDatabasePassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDatabasePassword.Name = "txtDatabasePassword";
             this.txtDatabasePassword.PasswordChar = '*';
-            this.txtDatabasePassword.Size = new System.Drawing.Size(121, 31);
+            this.txtDatabasePassword.Size = new System.Drawing.Size(180, 31);
             this.txtDatabasePassword.TabIndex = 2;
             // 
             // lblDatabaseUserName
             // 
             this.lblDatabaseUserName.AutoSize = true;
-            this.lblDatabaseUserName.Location = new System.Drawing.Point(7, 225);
+            this.lblDatabaseUserName.Location = new System.Drawing.Point(10, 346);
+            this.lblDatabaseUserName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDatabaseUserName.Name = "lblDatabaseUserName";
             this.lblDatabaseUserName.Size = new System.Drawing.Size(99, 25);
             this.lblDatabaseUserName.TabIndex = 6;
@@ -317,16 +339,19 @@ namespace OrigamArchitect
             // 
             // txtServerName
             // 
-            this.txtServerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerName.Location = new System.Drawing.Point(160, 131);
+            this.txtServerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtServerName.Location = new System.Drawing.Point(240, 202);
+            this.txtServerName.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(223, 31);
+            this.txtServerName.Size = new System.Drawing.Size(355, 31);
             this.txtServerName.TabIndex = 3;
             // 
             // lblServerName
             // 
             this.lblServerName.AutoSize = true;
-            this.lblServerName.Location = new System.Drawing.Point(7, 134);
+            this.lblServerName.Location = new System.Drawing.Point(10, 206);
+            this.lblServerName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblServerName.Name = "lblServerName";
             this.lblServerName.Size = new System.Drawing.Size(140, 25);
             this.lblServerName.TabIndex = 5;
@@ -334,9 +359,10 @@ namespace OrigamArchitect
             // 
             // txtDatabaseUserName
             // 
-            this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 222);
+            this.txtDatabaseUserName.Location = new System.Drawing.Point(240, 342);
+            this.txtDatabaseUserName.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtDatabaseUserName.Name = "txtDatabaseUserName";
-            this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 31);
+            this.txtDatabaseUserName.Size = new System.Drawing.Size(180, 31);
             this.txtDatabaseUserName.TabIndex = 1;
             // 
             // pageWebUser
@@ -356,7 +382,7 @@ namespace OrigamArchitect
             this.pageWebUser.Controls.Add(this.label24);
             this.pageWebUser.Name = "pageWebUser";
             this.pageWebUser.NextPage = this.pageGit;
-            this.pageWebUser.Size = new System.Drawing.Size(737, 371);
+            this.pageWebUser.Size = new System.Drawing.Size(1129, 638);
             this.pageWebUser.TabIndex = 10;
             this.pageWebUser.Text = "First Web User";
             this.pageWebUser.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageWebUser_Commit);
@@ -364,7 +390,8 @@ namespace OrigamArchitect
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(21, 144);
+            this.label30.Location = new System.Drawing.Point(32, 222);
+            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(156, 25);
             this.label30.TabIndex = 26;
@@ -372,17 +399,19 @@ namespace OrigamArchitect
             // 
             // txtWebUserPasswordConfirmed
             // 
-            this.txtWebUserPasswordConfirmed.Location = new System.Drawing.Point(142, 141);
+            this.txtWebUserPasswordConfirmed.Location = new System.Drawing.Point(213, 217);
+            this.txtWebUserPasswordConfirmed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtWebUserPasswordConfirmed.Name = "txtWebUserPasswordConfirmed";
             this.txtWebUserPasswordConfirmed.PasswordChar = '*';
-            this.txtWebUserPasswordConfirmed.Size = new System.Drawing.Size(174, 31);
+            this.txtWebUserPasswordConfirmed.Size = new System.Drawing.Size(259, 31);
             this.txtWebUserPasswordConfirmed.TabIndex = 20;
             this.txtWebUserPasswordConfirmed.UseSystemPasswordChar = true;
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(21, 267);
+            this.label29.Location = new System.Drawing.Point(32, 411);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(54, 25);
             this.label29.TabIndex = 24;
@@ -391,7 +420,8 @@ namespace OrigamArchitect
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(21, 233);
+            this.label28.Location = new System.Drawing.Point(32, 358);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(82, 25);
             this.label28.TabIndex = 23;
@@ -400,7 +430,8 @@ namespace OrigamArchitect
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(21, 204);
+            this.label27.Location = new System.Drawing.Point(32, 314);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(97, 25);
             this.label27.TabIndex = 22;
@@ -408,45 +439,51 @@ namespace OrigamArchitect
             // 
             // txtWebEmail
             // 
-            this.txtWebEmail.Location = new System.Drawing.Point(142, 259);
+            this.txtWebEmail.Location = new System.Drawing.Point(213, 398);
+            this.txtWebEmail.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtWebEmail.Name = "txtWebEmail";
-            this.txtWebEmail.Size = new System.Drawing.Size(174, 31);
+            this.txtWebEmail.Size = new System.Drawing.Size(259, 31);
             this.txtWebEmail.TabIndex = 23;
             // 
             // txtWebSurname
             // 
-            this.txtWebSurname.Location = new System.Drawing.Point(142, 230);
+            this.txtWebSurname.Location = new System.Drawing.Point(213, 354);
+            this.txtWebSurname.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtWebSurname.Name = "txtWebSurname";
-            this.txtWebSurname.Size = new System.Drawing.Size(174, 31);
+            this.txtWebSurname.Size = new System.Drawing.Size(259, 31);
             this.txtWebSurname.TabIndex = 22;
             // 
             // txtWebFirstname
             // 
-            this.txtWebFirstname.Location = new System.Drawing.Point(142, 201);
+            this.txtWebFirstname.Location = new System.Drawing.Point(213, 309);
+            this.txtWebFirstname.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtWebFirstname.Name = "txtWebFirstname";
-            this.txtWebFirstname.Size = new System.Drawing.Size(174, 31);
+            this.txtWebFirstname.Size = new System.Drawing.Size(259, 31);
             this.txtWebFirstname.TabIndex = 21;
             // 
             // txtWebUserPassword
             // 
-            this.txtWebUserPassword.Location = new System.Drawing.Point(142, 112);
+            this.txtWebUserPassword.Location = new System.Drawing.Point(213, 172);
+            this.txtWebUserPassword.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtWebUserPassword.Name = "txtWebUserPassword";
             this.txtWebUserPassword.PasswordChar = '*';
-            this.txtWebUserPassword.Size = new System.Drawing.Size(174, 31);
+            this.txtWebUserPassword.Size = new System.Drawing.Size(259, 31);
             this.txtWebUserPassword.TabIndex = 19;
             this.txtWebUserPassword.UseSystemPasswordChar = true;
             // 
             // txtWebUserLoginName
             // 
-            this.txtWebUserLoginName.Location = new System.Drawing.Point(142, 83);
+            this.txtWebUserLoginName.Location = new System.Drawing.Point(213, 128);
+            this.txtWebUserLoginName.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtWebUserLoginName.Name = "txtWebUserLoginName";
-            this.txtWebUserLoginName.Size = new System.Drawing.Size(174, 31);
+            this.txtWebUserLoginName.Size = new System.Drawing.Size(259, 31);
             this.txtWebUserLoginName.TabIndex = 18;
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(21, 115);
+            this.label26.Location = new System.Drawing.Point(32, 177);
+            this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(87, 25);
             this.label26.TabIndex = 17;
@@ -455,7 +492,8 @@ namespace OrigamArchitect
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(21, 86);
+            this.label25.Location = new System.Drawing.Point(32, 132);
+            this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(108, 25);
             this.label25.TabIndex = 16;
@@ -464,11 +502,13 @@ namespace OrigamArchitect
             // label24
             // 
             this.label24.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label24.Location = new System.Drawing.Point(18, 31);
+            this.label24.Location = new System.Drawing.Point(27, 48);
+            this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(690, 67);
+            this.label24.Size = new System.Drawing.Size(1035, 103);
             this.label24.TabIndex = 15;
-            this.label24.Text = "Please fill user name and password for the first user in your client web applicat" + "ion. You will use this account to access the applciation.ion";
+            this.label24.Text = "Please fill user name and password for the first user in your client web applicat" +
+    "ion. You will use this account to access the applciation.ion";
             // 
             // pageGit
             // 
@@ -483,7 +523,7 @@ namespace OrigamArchitect
             this.pageGit.Controls.Add(this.label15);
             this.pageGit.Controls.Add(this.gitrepo);
             this.pageGit.Name = "pageGit";
-            this.pageGit.Size = new System.Drawing.Size(737, 371);
+            this.pageGit.Size = new System.Drawing.Size(1129, 638);
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Model Location";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
@@ -491,7 +531,8 @@ namespace OrigamArchitect
             // lblgitemail
             // 
             this.lblgitemail.AutoSize = true;
-            this.lblgitemail.Location = new System.Drawing.Point(3, 122);
+            this.lblgitemail.Location = new System.Drawing.Point(4, 188);
+            this.lblgitemail.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblgitemail.Name = "lblgitemail";
             this.lblgitemail.Size = new System.Drawing.Size(54, 25);
             this.lblgitemail.TabIndex = 17;
@@ -500,7 +541,8 @@ namespace OrigamArchitect
             // lblgituser
             // 
             this.lblgituser.AutoSize = true;
-            this.lblgituser.Location = new System.Drawing.Point(3, 76);
+            this.lblgituser.Location = new System.Drawing.Point(4, 117);
+            this.lblgituser.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblgituser.Name = "lblgituser";
             this.lblgituser.Size = new System.Drawing.Size(47, 25);
             this.lblgituser.TabIndex = 16;
@@ -508,31 +550,36 @@ namespace OrigamArchitect
             // 
             // txtGitEmail
             // 
-            this.txtGitEmail.Location = new System.Drawing.Point(160, 119);
+            this.txtGitEmail.Location = new System.Drawing.Point(240, 183);
+            this.txtGitEmail.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtGitEmail.Name = "txtGitEmail";
-            this.txtGitEmail.Size = new System.Drawing.Size(204, 31);
+            this.txtGitEmail.Size = new System.Drawing.Size(304, 31);
             this.txtGitEmail.TabIndex = 15;
             // 
             // txtGitUser
             // 
-            this.txtGitUser.Location = new System.Drawing.Point(160, 73);
+            this.txtGitUser.Location = new System.Drawing.Point(240, 112);
+            this.txtGitUser.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtGitUser.Name = "txtGitUser";
-            this.txtGitUser.Size = new System.Drawing.Size(204, 31);
+            this.txtGitUser.Size = new System.Drawing.Size(304, 31);
             this.txtGitUser.TabIndex = 14;
             // 
             // lblSourcesFolderDescription
             // 
             this.lblSourcesFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblSourcesFolderDescription.Location = new System.Drawing.Point(160, 195);
+            this.lblSourcesFolderDescription.Location = new System.Drawing.Point(240, 300);
+            this.lblSourcesFolderDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSourcesFolderDescription.Name = "lblSourcesFolderDescription";
-            this.lblSourcesFolderDescription.Size = new System.Drawing.Size(370, 39);
+            this.lblSourcesFolderDescription.Size = new System.Drawing.Size(555, 60);
             this.lblSourcesFolderDescription.TabIndex = 5;
-            this.lblSourcesFolderDescription.Text = "A new folder with your project\'s name will be created here. Origam will store the" + " model in it. ";
+            this.lblSourcesFolderDescription.Text = "A new folder with your project\'s name will be created here. Origam will store the" +
+    " model in it. ";
             // 
             // lblSourcesFolder
             // 
             this.lblSourcesFolder.AutoSize = true;
-            this.lblSourcesFolder.Location = new System.Drawing.Point(3, 168);
+            this.lblSourcesFolder.Location = new System.Drawing.Point(4, 258);
+            this.lblSourcesFolder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSourcesFolder.Name = "lblSourcesFolder";
             this.lblSourcesFolder.Size = new System.Drawing.Size(129, 25);
             this.lblSourcesFolder.TabIndex = 4;
@@ -540,18 +587,21 @@ namespace OrigamArchitect
             // 
             // txtSourcesFolder
             // 
-            this.txtSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSourcesFolder.Location = new System.Drawing.Point(160, 165);
+            this.txtSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSourcesFolder.Location = new System.Drawing.Point(240, 254);
+            this.txtSourcesFolder.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.txtSourcesFolder.Name = "txtSourcesFolder";
-            this.txtSourcesFolder.Size = new System.Drawing.Size(533, 31);
+            this.txtSourcesFolder.Size = new System.Drawing.Size(821, 31);
             this.txtSourcesFolder.TabIndex = 3;
             // 
             // btnSelectSourcesFolder
             // 
             this.btnSelectSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectSourcesFolder.Location = new System.Drawing.Point(700, 165);
+            this.btnSelectSourcesFolder.Location = new System.Drawing.Point(1073, 254);
+            this.btnSelectSourcesFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSelectSourcesFolder.Name = "btnSelectSourcesFolder";
-            this.btnSelectSourcesFolder.Size = new System.Drawing.Size(25, 23);
+            this.btnSelectSourcesFolder.Size = new System.Drawing.Size(38, 35);
             this.btnSelectSourcesFolder.TabIndex = 10;
             this.btnSelectSourcesFolder.Text = "...";
             this.btnSelectSourcesFolder.UseVisualStyleBackColor = true;
@@ -560,7 +610,8 @@ namespace OrigamArchitect
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(3, 33);
+            this.label15.Location = new System.Drawing.Point(4, 51);
+            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(179, 25);
             this.label15.TabIndex = 13;
@@ -571,7 +622,8 @@ namespace OrigamArchitect
             this.gitrepo.AutoSize = true;
             this.gitrepo.Checked = true;
             this.gitrepo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gitrepo.Location = new System.Drawing.Point(160, 34);
+            this.gitrepo.Location = new System.Drawing.Point(240, 52);
+            this.gitrepo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gitrepo.Name = "gitrepo";
             this.gitrepo.Size = new System.Drawing.Size(22, 21);
             this.gitrepo.TabIndex = 12;
@@ -581,26 +633,27 @@ namespace OrigamArchitect
             // pageReview
             // 
             this.pageReview.Controls.Add(this.lstTasks);
-            this.pageReview.IsFinishPage = false;
             this.pageReview.Name = "pageReview";
-            this.pageReview.NextPage = this.pageReview;
-            this.pageReview.Size = new System.Drawing.Size(737, 371);
+            this.pageReview.NextPage = this.pageSuccess;
+            this.pageReview.Size = new System.Drawing.Size(1129, 638);
             this.pageReview.TabIndex = 1;
-            this.pageReview.NextPage = pageSuccess;
             this.pageReview.Text = "Progress";
             this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageReview_Commit);
             this.pageReview.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageReview_Initialize);
             // 
             // lstTasks
             // 
-            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.colText, this.colStatus });
+            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colText,
+            this.colStatus});
             this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstTasks.FullRowSelect = true;
             this.lstTasks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lstTasks.HideSelection = false;
             this.lstTasks.Location = new System.Drawing.Point(0, 0);
+            this.lstTasks.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lstTasks.Name = "lstTasks";
-            this.lstTasks.Size = new System.Drawing.Size(737, 371);
+            this.lstTasks.Size = new System.Drawing.Size(1129, 638);
             this.lstTasks.TabIndex = 0;
             this.lstTasks.UseCompatibleStateImageBehavior = false;
             this.lstTasks.View = System.Windows.Forms.View.Details;
@@ -625,33 +678,26 @@ namespace OrigamArchitect
             this.pageSuccess.Name = "pageSuccess";
             this.pageSuccess.ShowCancel = false;
             this.pageSuccess.ShowNext = false;
-            this.pageSuccess.Size = new System.Drawing.Size(737, 371);
+            this.pageSuccess.Size = new System.Drawing.Size(1129, 638);
             this.pageSuccess.TabIndex = 11;
             this.pageSuccess.Text = "Success";
-            this.pageSuccess.Initialize += pageSuccess_Initialize;
             // 
             // finalMessageLabel
             // 
-            this.finalMessageLabel.Location = new System.Drawing.Point(14, 28);
+            this.finalMessageLabel.Location = new System.Drawing.Point(21, 43);
+            this.finalMessageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.finalMessageLabel.Name = "finalMessageLabel";
-            this.finalMessageLabel.Size = new System.Drawing.Size(692, 35);
+            this.finalMessageLabel.Size = new System.Drawing.Size(1038, 158);
             this.finalMessageLabel.TabIndex = 1;
-            // 
-            // projectBindingSource
-            // 
-            this.projectBindingSource.DataSource = typeof(Origam.ProjectAutomation.Project);
-            // 
-            // projectBindingSource1
-            // 
-            this.projectBindingSource1.DataSource = typeof(Origam.ProjectAutomation.Project);
             // 
             // NewProjectWizard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(1176, 863);
             this.ControlBox = false;
             this.Controls.Add(this.wizard1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NewProjectWizard";
@@ -674,6 +720,7 @@ namespace OrigamArchitect
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         private System.Windows.Forms.Label finalMessageLabel;
