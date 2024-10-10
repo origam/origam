@@ -188,7 +188,7 @@ namespace OrigamArchitect
             this.pageDeploymentType.Name = "pageDeploymentType";
             this.pageDeploymentType.Size = new System.Drawing.Size(737, 407);
             this.pageDeploymentType.TabIndex = 4;
-            this.pageDeploymentType.Text = "Deployment Type";
+            this.pageDeploymentType.Text = "Project Name";
             this.pageDeploymentType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDeploymentType_Commit);
             // 
             // label1
@@ -238,7 +238,7 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
             this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 407);
             this.pageLocalDeploymentSettings.TabIndex = 0;
-            this.pageLocalDeploymentSettings.Text = "Local Deployment Settings";
+            this.pageLocalDeploymentSettings.Text = "Database";
             this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
             this.pageLocalDeploymentSettings.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageLocalDeploymentSettings_Initialize);
             // 
@@ -368,7 +368,7 @@ namespace OrigamArchitect
             this.pageWebUser.NextPage = this.pageGit;
             this.pageWebUser.Size = new System.Drawing.Size(737, 407);
             this.pageWebUser.TabIndex = 10;
-            this.pageWebUser.Text = "Create New Web User";
+            this.pageWebUser.Text = "First Web User";
             this.pageWebUser.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageWebUser_Commit);
             // 
             // label30
@@ -478,7 +478,7 @@ namespace OrigamArchitect
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(469, 21);
             this.label24.TabIndex = 15;
-            this.label24.Text = "Please fill user name and password for the first user in your client web applicat" +
+            this.label24.Text = "Please fill user name and password for the first user in your client web application. You will use this account to access the applciation." +
     "ion";
             // 
             // pageGit
@@ -497,7 +497,7 @@ namespace OrigamArchitect
             this.pageGit.NextPage = this.pageDocker;
             this.pageGit.Size = new System.Drawing.Size(737, 407);
             this.pageGit.TabIndex = 6;
-            this.pageGit.Text = "Configure Source Control";
+            this.pageGit.Text = "Model Location";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
             // 
             // lblgitemail
