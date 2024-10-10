@@ -82,12 +82,6 @@ namespace OrigamArchitect
             this.btnSelectSourcesFolder = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.gitrepo = new System.Windows.Forms.CheckBox();
-            this.pageDocker = new AeroWizard.WizardPage();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.dockerPortLabel = new System.Windows.Forms.Label();
-            this.txtDockerPort = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
             this.pageReview = new AeroWizard.WizardPage();
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = new System.Windows.Forms.ColumnHeader();
@@ -103,7 +97,6 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.SuspendLayout();
             this.pageWebUser.SuspendLayout();
             this.pageGit.SuspendLayout();
-            this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
             this.pageSuccess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
@@ -119,7 +112,6 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pageWebUser);
             this.wizard1.Pages.Add(this.pageGit);
-            this.wizard1.Pages.Add(this.pageDocker);
             this.wizard1.Pages.Add(this.pageReview);
             this.wizard1.Pages.Add(this.pageSuccess);
             this.wizard1.Size = new System.Drawing.Size(784, 561);
@@ -491,7 +483,6 @@ namespace OrigamArchitect
             this.pageGit.Controls.Add(this.label15);
             this.pageGit.Controls.Add(this.gitrepo);
             this.pageGit.Name = "pageGit";
-            this.pageGit.NextPage = this.pageDocker;
             this.pageGit.Size = new System.Drawing.Size(737, 371);
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Model Location";
@@ -587,64 +578,6 @@ namespace OrigamArchitect
             this.gitrepo.UseVisualStyleBackColor = true;
             this.gitrepo.CheckedChanged += new System.EventHandler(this.Gitrepo_CheckedChanged);
             // 
-            // pageDocker
-            // 
-            this.pageDocker.Controls.Add(this.label23);
-            this.pageDocker.Controls.Add(this.label22);
-            this.pageDocker.Controls.Add(this.dockerPortLabel);
-            this.pageDocker.Controls.Add(this.txtDockerPort);
-            this.pageDocker.Controls.Add(this.label21);
-            this.pageDocker.Name = "pageDocker";
-            this.pageDocker.NextPage = this.pageReview;
-            this.pageDocker.Size = new System.Drawing.Size(737, 371);
-            this.pageDocker.TabIndex = 7;
-            this.pageDocker.Text = "Docker Configuration";
-            this.pageDocker.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDocker_Commit);
-            this.pageDocker.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDocker_Initialize);
-            // 
-            // label23
-            // 
-            this.label23.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label23.Location = new System.Drawing.Point(109, 151);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(253, 49);
-            this.label23.TabIndex = 20;
-            this.label23.Text = "The client web application will be available on this https port.";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(109, 151);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(0, 25);
-            this.label22.TabIndex = 19;
-            // 
-            // dockerPortLabel
-            // 
-            this.dockerPortLabel.AutoSize = true;
-            this.dockerPortLabel.Location = new System.Drawing.Point(16, 115);
-            this.dockerPortLabel.Name = "dockerPortLabel";
-            this.dockerPortLabel.Size = new System.Drawing.Size(105, 25);
-            this.dockerPortLabel.TabIndex = 18;
-            this.dockerPortLabel.Text = "Docker Port";
-            // 
-            // txtDockerPort
-            // 
-            this.txtDockerPort.Enabled = false;
-            this.txtDockerPort.Location = new System.Drawing.Point(112, 112);
-            this.txtDockerPort.Name = "txtDockerPort";
-            this.txtDockerPort.Size = new System.Drawing.Size(100, 31);
-            this.txtDockerPort.TabIndex = 17;
-            this.txtDockerPort.Text = "443";
-            // 
-            // label21
-            // 
-            this.label21.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label21.Location = new System.Drawing.Point(16, 49);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(662, 19);
-            this.label21.TabIndex = 16;
-            // 
             // pageReview
             // 
             this.pageReview.Controls.Add(this.lstTasks);
@@ -736,8 +669,6 @@ namespace OrigamArchitect
             this.pageWebUser.PerformLayout();
             this.pageGit.ResumeLayout(false);
             this.pageGit.PerformLayout();
-            this.pageDocker.ResumeLayout(false);
-            this.pageDocker.PerformLayout();
             this.pageReview.ResumeLayout(false);
             this.pageSuccess.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
@@ -793,12 +724,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label labelPrivileges;
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
-        private AeroWizard.WizardPage pageDocker;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label dockerPortLabel;
-        private System.Windows.Forms.TextBox txtDockerPort;
         private AeroWizard.WizardPage pageWebUser;
         private System.Windows.Forms.TextBox txtWebUserPassword;
         private System.Windows.Forms.TextBox txtWebUserLoginName;

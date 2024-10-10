@@ -250,28 +250,11 @@ public partial class NewProjectWizard : Form
         _project.GitRepository = gitrepo.Checked;
         _project.GitUsername = txtGitUser.Text;
         _project.GitEmail = txtGitEmail.Text;
-        pageGit.NextPage = pageDocker;
     }
     private void Gitrepo_CheckedChanged(object sender, EventArgs e)
     {
         txtGitUser.Enabled = gitrepo.Checked;
         txtGitEmail.Enabled = gitrepo.Checked;
-    }
-    private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
-    {
-        // label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
-        // label21.Text += Environment.NewLine;
-        // label21.Text += "After create new project run " + Path.Combine(_project.SourcesFolder, _project.Url, _project.Url) + ".cmd and this script run docker with new project.";
-    }
-    private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
-        if(!int.TryParse(txtDockerPort.Text,out int result))
-        {
-            AsMessageBox.ShowError(this, "Port is not number!", "DockerPort", null);
-            e.Cancel = true;
-            return;
-        }
-        _project.DockerPort = result;
     }
     private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
     {

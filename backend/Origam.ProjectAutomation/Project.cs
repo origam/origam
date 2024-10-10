@@ -69,7 +69,7 @@ public class Project
     public string SourcesFolder { get; set; }
     public string BaseUrl { get; set; }
     public string RootSourceFolder { get; set; }
-    public int DockerPort { get; set; }
+    public int DockerPort { get; set; } = 443;
     public string WebUserName { get; set; }
     public string WebUserPassword { get; set; }
     public string WebFirstName { get;  set; }
