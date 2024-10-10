@@ -87,10 +87,10 @@ namespace OrigamArchitect
             this.colText = new System.Windows.Forms.ColumnHeader();
             this.colStatus = new System.Windows.Forms.ColumnHeader();
             this.pageSuccess = new AeroWizard.WizardPage();
+            this.finalMessageLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.finalMessageLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
@@ -466,7 +466,7 @@ namespace OrigamArchitect
             this.label24.ForeColor = System.Drawing.SystemColors.GrayText;
             this.label24.Location = new System.Drawing.Point(18, 31);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(469, 21);
+            this.label24.Size = new System.Drawing.Size(690, 67);
             this.label24.TabIndex = 15;
             this.label24.Text = "Please fill user name and password for the first user in your client web applicat" + "ion. You will use this account to access the applciation.ion";
             // 
@@ -627,7 +627,13 @@ namespace OrigamArchitect
             this.pageSuccess.Size = new System.Drawing.Size(737, 371);
             this.pageSuccess.TabIndex = 11;
             this.pageSuccess.Text = "Success";
-            this.pageSuccess.Initialize += pageSuccess_Initialize;
+            // 
+            // finalMessageLabel
+            // 
+            this.finalMessageLabel.Location = new System.Drawing.Point(14, 28);
+            this.finalMessageLabel.Name = "finalMessageLabel";
+            this.finalMessageLabel.Size = new System.Drawing.Size(692, 35);
+            this.finalMessageLabel.TabIndex = 1;
             // 
             // projectBindingSource
             // 
@@ -636,14 +642,6 @@ namespace OrigamArchitect
             // projectBindingSource1
             // 
             this.projectBindingSource1.DataSource = typeof(Origam.ProjectAutomation.Project);
-            // 
-            // label2
-            // 
-            this.finalMessageLabel.Location = new System.Drawing.Point(14, 28);
-            this.finalMessageLabel.Name = "finalMessageLabel";
-            this.finalMessageLabel.Size = new System.Drawing.Size(692, 35);
-            this.finalMessageLabel.TabIndex = 1;
-            this.finalMessageLabel.Text = "";
             // 
             // NewProjectWizard
             // 
