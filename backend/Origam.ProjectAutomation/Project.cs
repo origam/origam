@@ -77,8 +77,7 @@ public class Project
     public string WebEmail { get;  set; }
     public int ActiveConfigurationIndex { get; set; }
     public string DockerEnvPath { get; internal set; }
-    public string DockerSourcePath { get; set; }
-    public string DatabaseAdminPassword { get; } = CreatePassword();
+    public string DockerCmdPath { get; set; }
 
     #endregion
 }

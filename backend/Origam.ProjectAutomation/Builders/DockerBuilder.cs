@@ -60,6 +60,8 @@ public class DockerBuilder : AbstractBuilder
             text = text.Replace("{projectName}", project.Name);
             File.WriteAllText(cmdFile, text);
         }
+
+        project.DockerCmdPath = cmdFile;
     }
     private void ProcessEnvironmentFile(Project project)
     {
