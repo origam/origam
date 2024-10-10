@@ -67,7 +67,11 @@ public class FileModelImportBuilder: AbstractBuilder
     private StringBuilder CreateCmdTemplate()
     {
         StringBuilder template = new StringBuilder();
-        template.AppendLine("docker run --env-file \"{envFilePath}\" -it --name {projectName} -v \"{parentPathProject}\":/home/origam/HTML5/data/origam -p {dockerPort}:443 origam/server:master-latest.linux");
+        template.AppendLine("docker run --env-file \"{envFilePath}\" ^\n" +
+                            "-it --name {projectName} ^\n" +
+                            "-v \"{parentPathProject}\":/home/origam/HTML5/data/origam ^\n" +
+                            "-p {dockerPort}:443 ^\n" +
+                            "origam/server:master-latest.linux");
         return template;
     }
     private void UnzipDefaultModel(Project project)

@@ -581,11 +581,12 @@ namespace OrigamArchitect
             // pageReview
             // 
             this.pageReview.Controls.Add(this.lstTasks);
-            this.pageReview.IsFinishPage = true;
+            this.pageReview.IsFinishPage = false;
             this.pageReview.Name = "pageReview";
             this.pageReview.NextPage = this.pageReview;
             this.pageReview.Size = new System.Drawing.Size(737, 371);
             this.pageReview.TabIndex = 1;
+            this.pageReview.NextPage = pageSuccess;
             this.pageReview.Text = "Progress";
             this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageReview_Commit);
             this.pageReview.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageReview_Initialize);
@@ -627,6 +628,7 @@ namespace OrigamArchitect
             this.pageSuccess.Size = new System.Drawing.Size(737, 371);
             this.pageSuccess.TabIndex = 11;
             this.pageSuccess.Text = "Success";
+            this.pageSuccess.Initialize += pageSuccess_Initialize;
             // 
             // finalMessageLabel
             // 

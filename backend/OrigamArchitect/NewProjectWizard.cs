@@ -117,7 +117,9 @@ public partial class NewProjectWizard : Form
     private void pageSuccess_Initialize(object sender, WizardPageInitEventArgs e)
     {
         finalMessageLabel.Text =
-            $"The new project has been generated. Review the created env file {_project.DockerEnvPath} and run the command generated at {_project.DockerCmdPath} to create and run the client web application docker container.";
+            $"The new project has been generated. Review the created env file {_project.DockerEnvPath} and" +
+            $" run the command generated at {_project.DockerCmdPath} to create and run" +
+            $" the client web application docker container.";
     }
     private void InitTaskList()
     {
