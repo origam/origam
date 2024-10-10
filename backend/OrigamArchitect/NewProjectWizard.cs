@@ -45,30 +45,30 @@ public partial class NewProjectWizard : Form
         InitializeComponent();
         InitGitConfig();
         wizard1.FinishButtonText = "Run";
+        _project.DefaultModelPath = Path.Combine(
+            Application.StartupPath,
+            @"Project Templates\DefaultModel.zip");
     }
     private void InitGitConfig()
     {
-        string[] creditials = new GitManager().GitConfig();
-        if (creditials != null)
+        string[] credentials = new GitManager().GitConfig();
+        if (credentials != null)
         {
-            txtGitUser.Text = creditials[0];
-            txtGitEmail.Text = creditials[1];
+            txtGitUser.Text = credentials[0];
+            txtGitEmail.Text = credentials[1];
         }
     }
     private DatabaseType DatabaseType
     {
         get
         {
-            switch (txtDatabaseType.SelectedIndex)
+            return txtDatabaseType.SelectedIndex switch
             {
-                case 0:
-                    return DatabaseType.MsSql;
-                case 1:
-                    return DatabaseType.PgSql;
-                default:
-                    throw new ArgumentOutOfRangeException("DatabaseType",
-                        txtDatabaseType.SelectedIndex, strings.UnknownDatabaseType);
-            }
+                0 => DatabaseType.MsSql,
+                1 => DatabaseType.PgSql,
+                _ => throw new ArgumentOutOfRangeException("DatabaseType",
+                    txtDatabaseType.SelectedIndex, strings.UnknownDatabaseType)
+            };
         }
     }
     private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -150,7 +150,7 @@ public partial class NewProjectWizard : Form
             e.Cancel = true;
             return;
         }
-        if (!int.TryParse(txtPort.Text, out int Port))
+        if (!int.TryParse(txtPort.Text, out int port))
         {
             AsMessageBox.ShowError(this, strings.PortError, strings.NewProjectWizard_Title, null);
             e.Cancel = true;
@@ -165,7 +165,7 @@ public partial class NewProjectWizard : Form
         _project.Url = txtName.Text;
         _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
         _project.DatabaseType = DatabaseType;
-        _project.Port = Port;
+        _project.Port = port;
         _project.NewPackageId = Guid.NewGuid().ToString();
     }
     private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
@@ -254,21 +254,15 @@ public partial class NewProjectWizard : Form
     }
     private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
     {
-        label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
-        label21.Text += Environment.NewLine;
-        label21.Text += "After create new project run " + Path.Combine(_project.SourcesFolder, _project.Url, _project.Url) + ".cmd and this script run docker with new project.";
+        // label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
+        // label21.Text += Environment.NewLine;
+        // label21.Text += "After create new project run " + Path.Combine(_project.SourcesFolder, _project.Url, _project.Url) + ".cmd and this script run docker with new project.";
     }
     private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         if(!int.TryParse(txtDockerPort.Text,out int result))
         {
             AsMessageBox.ShowError(this, "Port is not number!", "DockerPort", null);
-            e.Cancel = true;
-            return;
-        }
-        if(result<1024)
-        {
-            AsMessageBox.ShowError(this, "Port can be between 1025-65535!", "DockerPort", null);
             e.Cancel = true;
             return;
         }

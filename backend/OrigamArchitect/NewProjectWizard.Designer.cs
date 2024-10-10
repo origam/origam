@@ -256,7 +256,7 @@ namespace OrigamArchitect
             this.txtPort.Location = new System.Drawing.Point(464, 131);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(100, 23);
-            this.txtPort.TabIndex = 18;
+            this.txtPort.TabIndex = 4;
             this.txtPort.Text = "1433";
             // 
             // labelPrivileges
@@ -272,7 +272,7 @@ namespace OrigamArchitect
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 86);
+            this.label16.Location = new System.Drawing.Point(7, 102);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(55, 15);
             this.label16.TabIndex = 16;
@@ -283,7 +283,7 @@ namespace OrigamArchitect
             this.txtDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtDatabaseType.Enabled = false;
             this.txtDatabaseType.FormattingEnabled = true;
-            this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
+            this.txtDatabaseType.Location = new System.Drawing.Point(160, 102);
             this.txtDatabaseType.Name = "txtDatabaseType";
             this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
             this.txtDatabaseType.TabIndex = 15;
@@ -313,7 +313,7 @@ namespace OrigamArchitect
             this.txtDatabasePassword.Name = "txtDatabasePassword";
             this.txtDatabasePassword.PasswordChar = '*';
             this.txtDatabasePassword.Size = new System.Drawing.Size(121, 23);
-            this.txtDatabasePassword.TabIndex = 9;
+            this.txtDatabasePassword.TabIndex = 2;
             // 
             // lblDatabaseUserName
             // 
@@ -347,7 +347,7 @@ namespace OrigamArchitect
             this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 222);
             this.txtDatabaseUserName.Name = "txtDatabaseUserName";
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
-            this.txtDatabaseUserName.TabIndex = 8;
+            this.txtDatabaseUserName.TabIndex = 1;
             // 
             // pageWebUser
             // 
@@ -603,7 +603,7 @@ namespace OrigamArchitect
             this.pageDocker.NextPage = this.pageReview;
             this.pageDocker.Size = new System.Drawing.Size(737, 407);
             this.pageDocker.TabIndex = 7;
-            this.pageDocker.Text = "Docker start script";
+            this.pageDocker.Text = "Docker Configuration";
             this.pageDocker.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDocker_Commit);
             this.pageDocker.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDocker_Initialize);
             // 

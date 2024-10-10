@@ -61,18 +61,6 @@ public class DockerBuilder : AbstractBuilder
             File.WriteAllText(cmdFile, text);
         }
     }
-    private string FillDockerParameter(Project project)
-    {
-        var stringBuilder = new StringBuilder();
-        stringBuilder.Append("docker run ");
-        stringBuilder.AppendFormat("--env-file {0} ", project.DockerEnvPath);
-        stringBuilder.AppendFormat("--mount source={0},target=/var/lib/postgresql ",project.Name);
-        stringBuilder.AppendFormat("-v {0}:/home/origam/HTML5/data/origam ",project.DockerSourcePath);
-        stringBuilder.AppendFormat("-p {0}:5433 -p {1}:8080 ",project.Port,project.DockerPort);
-        stringBuilder.AppendFormat("-e OrigamSettings_DbPassword={0} ",project.DatabaseAdminPassword);
-        stringBuilder.AppendFormat("origam/server:pg_{0} ", "master-latest".GetAssemblyVersion());
-        return stringBuilder.ToString();
-    }
     private void ProcessEnvironmentFile(Project project)
     {
         List<string> dockerParameters = FillDockerParameters();

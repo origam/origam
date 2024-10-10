@@ -26,9 +26,7 @@ namespace Origam.ProjectAutomation;
 public class Project
 {
     public string GitUsername { get; set; }
-
     public string GitEmail { get; set; }
-
     public DatabaseType DatabaseType { get; set; } = DatabaseType.MsSql;
     public int Port { get; set; }
     public string UserPassword { get; } = CreatePassword();
@@ -36,21 +34,19 @@ public class Project
     {
         return Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
     }
-    // Root Menu package
 
     public string GetDataDataService
     {
         get
         {
-            switch (DatabaseType)
+            return DatabaseType switch
             {
-                case DatabaseType.MsSql:
-                    return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
-                case DatabaseType.PgSql:
-                    return "Origam.DA.Service.PgSqlDataService, Origam.DA.Service";
-                default:
-                    throw new ArgumentOutOfRangeException("DatabaseType");
-            }
+                DatabaseType.MsSql =>
+                    "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
+                DatabaseType.PgSql =>
+                    "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
+                _ => throw new ArgumentOutOfRangeException("DatabaseType")
+            };
         }
     }
     #region Properties
@@ -63,9 +59,7 @@ public class Project
     public string DatabasePassword { get; set; }
     public bool DatabaseIntegratedAuthentication { get; set; }
     public bool GitRepository { get; set; }
-    public string WebRootName { get; set; }
     public string Url { get; set; }
-    public string BinFolder { get; set; }
     public string DataConnectionString { get; set; }
     public string BuilderDataConnectionString { get; set; }
     public string BasePackageId { get; set; } = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
@@ -74,9 +68,6 @@ public class Project
     public string DefaultModelPath { get; set; }
     public string SourcesFolder { get; set; }
     public string BaseUrl { get; set; }
-    public string GitRepositoryLink { get; set; }
-    public string RepositoryUsername { get; set; }
-    public string RepositoryPassword { get; set; }
     public string RootSourceFolder { get; set; }
     public int DockerPort { get; set; }
     public string WebUserName { get; set; }
