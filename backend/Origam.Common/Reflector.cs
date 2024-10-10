@@ -31,31 +31,23 @@ using Origam.Extensions;
 namespace Origam;
 public class Reflector
 {
-	static public readonly BindingFlags SearchCriteria = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-	private static ConcurrentDictionary<Type, ConcurrentDictionary<Type, List<MemberAttributeInfo>>> memberTypeCache = new();
+	private static readonly BindingFlags SearchCriteria 
+		= BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+	private static readonly ConcurrentDictionary<Type, 
+		ConcurrentDictionary<Type, List<MemberAttributeInfo>>> memberTypeCache 
+		= new();
 	private static IReflectorCache classCache;
     private static readonly log4net.ILog log
         = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
+	        MethodBase.GetCurrentMethod()?.DeclaringType);
     protected Reflector() 
 	{
 	}
-    static public IReflectorCache ClassCache
-    {
-        get
-        {
-            return classCache;
-        }
-        set
-        {
-            classCache = value;
-        }
-    }
 	
-	static public List<ConstructorInfo> FindConstructors( Type type )
+	public static List<ConstructorInfo> FindConstructors( Type type )
 	{
 		var result = new List<ConstructorInfo>();
-		foreach( ConstructorInfo constructorInfo in type.GetConstructors( SearchCriteria ) )
+		foreach (ConstructorInfo constructorInfo in type.GetConstructors(SearchCriteria))
 		{
 			// exclude abstract constructors (weird concept anyway)
 			if( ! constructorInfo.IsAbstract )
@@ -63,20 +55,27 @@ public class Reflector
 		}
 		return result;
 	}
-	public static void CopyMembers(object source, object target, Type[] attributeTypes)
+	public static void CopyMembers(
+		object source, object target, Type[] attributeTypes)
 	{
 		FindMembers(source.GetType(), attributeTypes)
 			.ForEach(attrInfo =>
 			{
 				MemberInfo memberInfo = attrInfo.MemberInfo;
-				if (memberInfo is PropertyInfo propInfo)
+				switch (memberInfo)
 				{
-					object value = propInfo.GetValue(source);
-					propInfo.SetValue(target, value);
-				} else if (memberInfo is FieldInfo fieldInfo)
-				{
-					object value = fieldInfo.GetValue(source);
-					fieldInfo.SetValue(target, value);
+					case PropertyInfo propInfo:
+					{
+						object value = propInfo.GetValue(source);
+						propInfo.SetValue(target, value);
+						break;
+					}
+					case FieldInfo fieldInfo:
+					{
+						object value = fieldInfo.GetValue(source);
+						fieldInfo.SetValue(target, value);
+						break;
+					}
 				}
 			});
 	}
@@ -87,62 +86,56 @@ public class Reflector
 			.SelectMany(attr => FindMembers(type, attr))
 			.ToList();
 	}
-	// this signature causes nothing to be returned.. very strange
-	// static public MemberAttributeInfo[] FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
-	public static List<MemberAttributeInfo> FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
+	public static List<MemberAttributeInfo> FindMembers(
+		Type type, Type primaryAttribute, params Type[] secondaryAttributes)
 	{
 		List<MemberAttributeInfo> GetAttributes(Type key)
 		{
 			var result = new List<MemberAttributeInfo>();
 			foreach (MemberInfo memberInfo in type.GetMembers(SearchCriteria))
 			{
-				object[] attrs = memberInfo.GetCustomAttributes(primaryAttribute, true);
+				object[] attrs = memberInfo.GetCustomAttributes(
+					primaryAttribute, inherit: true);
 				foreach (object attr in attrs)
 				{
-					List<Attribute> memberAttrs = FindAttributes(memberInfo, secondaryAttributes);
-					result.Add(new MemberAttributeInfo(memberInfo, attr as Attribute, memberAttrs));
+					List<Attribute> memberAttrs = FindAttributes(
+						memberInfo, secondaryAttributes);
+					result.Add(new MemberAttributeInfo(
+						memberInfo, attr as Attribute, memberAttrs));
 				}
 			}
 			return result;
 		}
 		// cache only requests without secondary attributes
-		if(secondaryAttributes.Length == 0)
+		if (secondaryAttributes.Length == 0)
 		{
 			var innerDictionary = memberTypeCache.GetOrAdd(type,
-				key => new ConcurrentDictionary<Type, List<MemberAttributeInfo>>());
+				_ => new ConcurrentDictionary<Type, List<MemberAttributeInfo>>());
 			return innerDictionary.GetOrAdd(primaryAttribute, GetAttributes);
 		}
-
 		return GetAttributes(type);
 	}
-	//static public Attribute[] FindAttributes( MemberInfo memberInfo, params Type[] attributes )
-	static public List<Attribute> FindAttributes( MemberInfo memberInfo, params Type[] attributes )
+	public static List<Attribute> FindAttributes(
+		MemberInfo memberInfo, params Type[] attributes)
 	{
 		var result = new List<Attribute>();
-		foreach( Type attribute in attributes )
+		foreach (Type attribute in attributes)
 		{
-			object[] attrs = memberInfo.GetCustomAttributes( attribute, true );
-			if( attrs != null && attrs.Length == 1 )
-				result.Add( attrs[ 0 ] as Attribute );
+			object[] attrs = memberInfo.GetCustomAttributes(
+				attribute, inherit: true);
+			if (attrs is { Length: 1 })
+			{
+				result.Add(attrs[ 0 ] as Attribute);
+			}
 		}
-		// return result.Count == 0 ? null : result.ToArray() as Attribute[];
 		return result;
 	}
-	static private void ActivateCache()
+	private static void ActivateCache()
 	{
-		if(classCache == null)
-		{
-            // new way a)
-            classCache = Activator.CreateInstance(
-                Type.GetType("Origam.ReflectorCache.ReflectorCache,Origam.ReflectorCache"))
-                as IReflectorCache;
-            // new way b)
-            //Assembly a = Assembly.Load("Origam.ReflectorCache");
-            //classCache = a.CreateInstance("Origam.ReflectorCache.ReflectorCache") as IReflectorCache;
-            // old way
-            //System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance("Origam.ReflectorCache", "Origam.ReflectorCache.ReflectorCache");
-            //classCache = oh.Unwrap() as IReflectorCache;
-        }
+		classCache ??= Activator.CreateInstance(
+				Type.GetType(
+					"Origam.ReflectorCache.ReflectorCache,Origam.ReflectorCache"))
+			as IReflectorCache;
 	}
     private static string ComposeAssemblyPath(string assembly)
     {
@@ -150,35 +143,26 @@ public class Reflector
                 + assembly.Split(",".ToCharArray())[0].Trim()
                 + ".dll";
     }
-	static public object InvokeObject(string classname, string assembly)
+	public static object InvokeObject(string classname, string assembly)
     {
-        Reflector.ActivateCache();
+        ActivateCache();
         object result = null;
         // try to get the object from the cache
         if (classCache != null)
+        {
             result = classCache.InvokeObject(classname, assembly);
+        }
         if (result != null)
+        {
             return result;
+        }
         // it was not instanced by cache, so we invoke it using reflection
-        // new way - a)
         Type classType = ResolveTypeFromAssembly(classname, assembly);
         if (classType == null)
         {
             throw new Exception($"Class {classname} from assembly {assembly} was not found.");
         }
         return Activator.CreateInstance(classType);
-        // new way - b)
-        //Assembly a = Assembly.Load(assembly);
-        //return a.CreateInstance(classname);
-        // old way
-        //System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance(assembly, classname);
-        //return oh.Unwrap();
-        //			Assembly foundAssembly=LoadAssembly(assembly);
-        //			if(foundAssembly!=null)
-        //			{
-        //				result=foundAssembly.CreateInstance(classname);
-        //			}
-        //			return result;
     }
     public static Type ResolveTypeFromAssembly(
         string classname, string assemblyName)
@@ -206,142 +190,157 @@ public class Reflector
 #endif
         return classType;
     }
-    static public object InvokeObject(string assemblyName, string typeName, object[] args)
+    public static object InvokeObject(
+	    string assemblyName, string typeName, object[] args)
 	{
-		Reflector.ActivateCache();
+		ActivateCache();
 		object instance = null;
-		if(classCache != null)
+		if (classCache != null)
+		{
 			instance = classCache.InvokeObject(typeName, args);
-		if(instance != null)
+		}
+		if (instance != null)
+		{
 			return instance;
-        /*
-         * new proposed way a)
-         */
+		}
         var classType = ResolveTypeFromAssembly(typeName, assemblyName);
-        return Activator.CreateInstance(classType, BindingFlags.DeclaredOnly |
-            BindingFlags.Public | BindingFlags.NonPublic |
-            BindingFlags.Instance | BindingFlags.CreateInstance, null, args,
+        return Activator.CreateInstance(classType, 
+	        bindingAttr: BindingFlags.DeclaredOnly 
+	                     | BindingFlags.Public 
+	                     | BindingFlags.NonPublic 
+	                     | BindingFlags.Instance 
+	                     | BindingFlags.CreateInstance, 
+	        binder: null, 
+	        args,
             System.Globalization.CultureInfo.CurrentCulture);
-        /*
-         * new proposed way b)
-         *
-        Assembly a = Assembly.Load(assemblyName);
-        return a.CreateInstance(typeName, true, BindingFlags.DeclaredOnly |
-            BindingFlags.Public | BindingFlags.NonPublic |
-            BindingFlags.Instance | BindingFlags.CreateInstance
-            , null, args, System.Globalization.CultureInfo.CurrentCulture, null);
-        */
-        
-        /*
-         * Old way
-         * 
-        System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance(assemblyName, typeName, false, BindingFlags.DeclaredOnly | 
-			BindingFlags.Public | BindingFlags.NonPublic | 
-			BindingFlags.Instance | BindingFlags.CreateInstance
-			, null, args, System.Globalization.CultureInfo.CurrentCulture, null, null);
-		return oh.Unwrap();
-        */
     }
 	public static object GetValue(Type type, object instance, string memberName)
 	{
-		MemberInfo[] mi = type.GetMember(memberName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-		if(mi.Length == 0)
+		MemberInfo[] memberInfos = type.GetMember(
+			memberName, 
+			bindingAttr: BindingFlags.Static 
+			             | BindingFlags.Public 
+			             | BindingFlags.NonPublic 
+			             | BindingFlags.Instance);
+		if (memberInfos.Length == 0)
 		{
-			throw new ArgumentOutOfRangeException("memberName", memberName, ResourceUtils.GetString("InvalidProperty"));
+			throw new ArgumentOutOfRangeException(
+				nameof(memberName), memberName, 
+				ResourceUtils.GetString("InvalidProperty"));
 		}
-		return GetValue(mi[0], instance);
+		return GetValue(memberInfos[0], instance);
 	}
-    public static void SetValue(object instance, string memberName, object value)
+    public static void SetValue(
+	    object instance, string memberName, object value)
     {
-        MemberInfo[] mi = instance.GetType().GetMember(
-            memberName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        if (mi.Length == 0)
+        MemberInfo[] memberInfos = instance.GetType().GetMember(
+            memberName, 
+            bindingAttr: BindingFlags.Static 
+                         | BindingFlags.Public 
+                         | BindingFlags.NonPublic 
+                         | BindingFlags.Instance);
+        if (memberInfos.Length == 0)
         {
-            throw new ArgumentOutOfRangeException("memberName", memberName, ResourceUtils.GetString("InvalidProperty"));
+            throw new ArgumentOutOfRangeException(
+	            nameof(memberName), memberName, 
+	            ResourceUtils.GetString("InvalidProperty"));
         }
-        SetValue(mi[0], instance, value);
+        SetValue(memberInfos[0], instance, value);
     }
-    public static object GetValue(MemberInfo mi, object instance)
+    public static object GetValue(MemberInfo memberInfo, object instance)
 	{
-		PropertyInfo pi = mi as PropertyInfo;
-		FieldInfo fi = mi as FieldInfo;
-		if(pi != null)
+		var propertyInfo = memberInfo as PropertyInfo;
+		var fieldInfo = memberInfo as FieldInfo;
+		if (propertyInfo != null)
 		{
-			return pi.GetValue(instance, new object[0]);
+			return propertyInfo.GetValue(
+				instance, index: Array.Empty<object>());
 		}
-		else if(fi != null)
+		if (fieldInfo != null)
 		{
-			return fi.GetValue(instance);
+			return fieldInfo.GetValue(instance);
 		}
-		else
-		{
-			throw new ArgumentOutOfRangeException(mi.Name, mi, ResourceUtils.GetString("UnsupportedType"));
-		}
+		throw new ArgumentOutOfRangeException(
+			memberInfo.Name, memberInfo, 
+			ResourceUtils.GetString("UnsupportedType"));
 	}
 #if DEBUG
-	static Hashtable _reflectionAnalyzer =  new Hashtable();
+	static readonly Hashtable reflectionAnalyzer =  new Hashtable();
 #endif
-	static public void SetValue(MemberInfo mi, object instance, object value)
+	public static void SetValue(MemberInfo memberInfo, object instance, object value)
 	{
-		PropertyInfo pi = mi as PropertyInfo;
-		if(pi != null)
+		var propertyInfo = memberInfo as PropertyInfo;
+		if (propertyInfo != null)
 		{
-			if(!pi.CanWrite)	return;
+			if (!propertyInfo.CanWrite)
+			{
+				return;
+			}
 		}
-	
 #if DEBUGX
 		Hashtable memberAnalyzer;
-		if(_reflectionAnalyzer.Contains(mi.DeclaringType))
+		if (reflectionAnalyzer.Contains(memberInfo.DeclaringType))
 		{
-			memberAnalyzer = _reflectionAnalyzer[mi.DeclaringType] as Hashtable;
+			memberAnalyzer 
+				= reflectionAnalyzer[memberInfo.DeclaringType] as Hashtable;
 		}
 		else
 		{
 			memberAnalyzer = new Hashtable();
-			_reflectionAnalyzer.Add(mi.DeclaringType, memberAnalyzer);
+			reflectionAnalyzer.Add(memberInfo.DeclaringType, memberAnalyzer);
 		}
-		if(! memberAnalyzer.Contains(mi.Name))
+		if (!memberAnalyzer.Contains(memberInfo.Name))
 		{
-			memberAnalyzer.Add(mi.Name, mi);
+			memberAnalyzer.Add(memberInfo.Name, memberInfo);
 		}
 #endif
-		
 		try
 		{
-			Reflector.ActivateCache();
+			ActivateCache();
 			// first we try cache
-			if(classCache.SetValue(instance, mi.Name, value)) return;
+			if (classCache.SetValue(instance, memberInfo.Name, value))
+			{
+				return;
+			}
 			// Set the value
-			if(pi != null)
+			if (propertyInfo != null)
 			{
 				// convert from decimal to int
 				object finalValue;
-				if(pi.PropertyType == typeof(int) && value is decimal)
+				if ((propertyInfo.PropertyType == typeof(int))
+				    && (value is decimal decimalValue))
 				{
-					finalValue = Convert.ToInt32((decimal)value);
+					finalValue = Convert.ToInt32(decimalValue);
 				}
 				else
 				{
 					finalValue = value;
 				}
-				pi.SetValue(instance, finalValue, Reflector.SearchCriteria, null, null, null);
+				propertyInfo.SetValue(
+					instance, 
+					finalValue, 
+					invokeAttr: SearchCriteria, 
+					binder: null, 
+					index: null, 
+					culture: null);
 			}
 			else
 			{
-				(mi as FieldInfo).SetValue(instance, value, Reflector.SearchCriteria, null, null);
+				(memberInfo as FieldInfo)?.SetValue(
+					instance, 
+					value, 
+					invokeAttr: SearchCriteria, 
+					binder: null, 
+					culture: null);
 			}
 		}
 		catch(Exception ex)
 		{
-			throw new Exception(String.Format("Failed setting value '{0}' ({1}) to {2} {3}.{4} ({5})",
-				value,
-				(value == null ? "null" : value.GetType().Name),
-				mi.MemberType.ToString(),
-				instance.GetType().Name,
-				mi.Name,
-				pi == null ? (mi as FieldInfo).FieldType.Name : pi.PropertyType.Name),
-				ex
-				);
+			throw new Exception(
+				$"Failed setting {nameof(value)} '{value}' ({(value == null ? "null" : value.GetType().Name)}) "
+				+ $"to {memberInfo.MemberType.ToString()} {instance.GetType().Name}.{memberInfo.Name} "
+				+ $"({(propertyInfo == null ? (memberInfo as FieldInfo)?.FieldType.Name : propertyInfo.PropertyType.Name)})",
+				ex);
 		}
 	}
 	
@@ -353,88 +352,118 @@ public class Reflector
 #if DEBUG
 	public static string GenerateReflectorCacheMethods()
 	{
-		StringBuilder result = new StringBuilder();
-		result.Append("public object InvokeObject(Type type, object[] args)" + Environment.NewLine);
-		result.Append("{" + Environment.NewLine);
-		result.Append("\tOrigam.Key key = args[0] as Origam.Key;" + Environment.NewLine);
-		result.Append("\tswitch(type.ToString())" + Environment.NewLine);
-		result.Append("\t{" + Environment.NewLine);
-		foreach(DictionaryEntry entry in _reflectionAnalyzer)
+		var result = new StringBuilder();
+		result.Append("public object InvokeObject(Type type, object[] args)");
+		result.AppendLine();
+		result.Append("{");
+		result.AppendLine();
+		result.Append("\tOrigam.Key key = args[0] as Origam.Key;");
+		result.AppendLine();
+		result.Append("\tswitch(type.ToString())");
+		result.AppendLine();
+		result.Append("\t{");
+		result.AppendLine();
+		foreach (DictionaryEntry entry in reflectionAnalyzer)
 		{
 			Type classType = entry.Key as Type;
-			if(!classType.IsAbstract)
+			if (classType is { IsAbstract: true })
 			{
-				result.AppendFormat("\t\tcase \"{0}\":" + Environment.NewLine, classType.ToString());
-				result.AppendFormat("\t\t\treturn new {0}(key);" + Environment.NewLine, classType.ToString());
+				continue;
 			}
+			result.AppendFormat("\t\tcase \"{0}\":", classType);
+			result.AppendLine();
+			result.AppendFormat("\t\t\treturn new {0}(key);", classType);
+			result.AppendLine();
 		}
-		result.Append("\t}" + Environment.NewLine);	// switch(type.ToString()...
-		result.Append("\treturn null;" + Environment.NewLine);	// if(instance...
-		result.Append("}" + Environment.NewLine);	// method end
+		result.Append("\t}");	
+		result.AppendLine();
+		result.Append("\treturn null;");	
+		result.AppendLine();
+		result.Append("}");	
+		result.AppendLine();
 		return result.ToString();
 	}
 	
 	public static string GenerateReflectorCacheMethods2()
 	{
-		StringBuilder result = new StringBuilder();
-		result.Append("public bool SetValue(object instance, string property, object value)" + Environment.NewLine);
-		result.Append("{" + Environment.NewLine);
-		foreach(DictionaryEntry entry in _reflectionAnalyzer)
+		var result = new StringBuilder();
+		result.Append("public bool SetValue(object instance, string property, object value)");
+		result.AppendLine();
+		result.Append("{");
+		result.AppendLine();
+		foreach (DictionaryEntry entry in reflectionAnalyzer)
 		{
 			Type classType = entry.Key as Type;
 			// class type begin
-			result.AppendFormat("\tif(instance is {0})" + Environment.NewLine, classType.ToString());
-			result.Append("\t{" + Environment.NewLine);
-			result.Append("\t\tswitch(property)" + Environment.NewLine);
-			result.Append("\t\t{" + Environment.NewLine);
-			Hashtable memberAnalyzer = entry.Value as Hashtable;
-			if(memberAnalyzer != null)
+			result.AppendFormat("\tif(instance is {0})", classType);
+			result.AppendLine();
+			result.Append("\t{");
+			result.AppendLine();
+			result.Append("\t\tswitch(property)");
+			result.AppendLine();
+			result.Append("\t\t{");
+			result.AppendLine();
+			if (entry.Value is Hashtable memberAnalyzer)
 			{
 				foreach(DictionaryEntry memberEntry in memberAnalyzer)
 				{
 					Type type;
-					MemberInfo member = memberEntry.Value as MemberInfo; 
-					if(member is FieldInfo)
+					var memberInfo = memberEntry.Value as MemberInfo;
+					type = memberInfo switch
 					{
-						type = (member as FieldInfo).FieldType;
-					}
-					else if(member is PropertyInfo)
-					{
-						type = (member as PropertyInfo).PropertyType;
-					}
-					else
-					{
-						throw new Exception("Member must be property or field.");
-					}
-					result.AppendFormat("\t\t\tcase \"{0}\":" + Environment.NewLine, member.Name);
-					result.AppendFormat("\t\t\t\t(instance as {0}).{1} = ", classType.ToString(), member.Name);
-					
+						FieldInfo info => info.FieldType,
+						PropertyInfo info => info.PropertyType,
+						_ => throw new Exception(
+							"Member must be property or field.")
+					};
+					result.AppendFormat("\t\t\tcase \"{0}\":", memberInfo.Name);
+					result.AppendLine();
+					result.AppendFormat("\t\t\t\t(instance as {0}).{1} = ", 
+						classType, memberInfo.Name);
 					switch(type.ToString())
 					{
 						case "System.String":
-							result.Append("value == null ? null : (string)value;" + Environment.NewLine);
+						{
+							result.Append(
+								"value == null ? null : (string)value;");
 							break;
+						}
 						case "System.Int32":
-							result.Append("(int)value;" + Environment.NewLine);
+						{
+							result.Append("(int)value;");
 							break;
+						}
 						case "System.Int64":
-							result.Append("(long)value;" + Environment.NewLine);
+						{
+							result.Append("(long)value;");
 							break;
+						}
 						case "System.Guid":
-							result.Append("value == null ? Guid.Empty : (Guid)value;" + Environment.NewLine);
+						{
+							result.Append(
+								"value == null ? Guid.Empty : (Guid)value;");
 							break;
+						}	
 						default:
-							result.AppendFormat("({0})value;" + Environment.NewLine, type.ToString());
+						{
+							result.AppendFormat("({0})value;", type);
 							break;
+						}
 					}
-					result.AppendFormat("\t\t\t\treturn true;" + Environment.NewLine);
+					result.AppendLine();
+					result.AppendFormat("\t\t\t\treturn true;");
+					result.AppendLine();
 				}
 			}
-			result.Append("\t\t}" + Environment.NewLine);	// switch(property...
-			result.Append("\t}" + Environment.NewLine);	// if(instance...
+			result.Append("\t\t}");	
+			result.AppendLine();
+			result.Append("\t}");	
+			result.AppendLine();
 		}
-		result.Append("\treturn false;" + Environment.NewLine);	// if(instance...
-		result.Append("}" + Environment.NewLine);	// method end
+		result.Append("\treturn false;");
+		result.AppendLine();
+		result.Append("}");	
+		result.AppendLine();
 		return result.ToString();
 	}
 #endif
