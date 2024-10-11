@@ -32,7 +32,6 @@ namespace OrigamArchitect
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewProjectWizard));
             this.wizard1 = new AeroWizard.WizardControl();
             this.pageWelcome = new AeroWizard.WizardPage();
             this.label9 = new System.Windows.Forms.Label();
@@ -117,7 +116,6 @@ namespace OrigamArchitect
             this.wizard1.Size = new System.Drawing.Size(1176, 863);
             this.wizard1.TabIndex = 0;
             this.wizard1.Title = "New Project";
-            this.wizard1.TitleIcon = ((System.Drawing.Icon)(resources.GetObject("wizard1.TitleIcon")));
             // 
             // pageWelcome
             // 
