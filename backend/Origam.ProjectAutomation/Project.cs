@@ -28,7 +28,7 @@ public class Project
     public string GitUsername { get; set; }
     public string GitEmail { get; set; }
     public DatabaseType DatabaseType { get; set; } = DatabaseType.MsSql;
-    public int Port { get; set; }
+    public int DatabasePort { get; set; }
     public string UserPassword { get; } = CreatePassword();
     public static string CreatePassword()
     {

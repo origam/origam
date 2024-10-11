@@ -41,8 +41,7 @@ public class ProjectBuilder
         dataDatabaseBuilder.BuildConnectionString(project, true);
         project.BuilderDataConnectionString =
         dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
-        project.BaseUrl =
-            dockerBuilder.WebSiteUrl(project);
+        project.BaseUrl = dockerBuilder.WebSiteUrl(project);
         IProjectBuilder activeTask = null;
         try
         {

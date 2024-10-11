@@ -172,7 +172,7 @@ public partial class NewProjectWizard : Form
         _project.Url = txtName.Text;
         _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
         _project.DatabaseType = DatabaseType;
-        _project.Port = port;
+        _project.DatabasePort = port;
         _project.NewPackageId = Guid.NewGuid().ToString();
     }
     private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)

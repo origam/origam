@@ -38,45 +38,6 @@ public class FileModelImportBuilder: AbstractBuilder
         CreateSourceFolder();
         UnzipDefaultModel(project);
         CreateCustomAssetsFolder(project.SourcesFolder);
-        CreateAndFillNewProjectDirectory(project);
-    }
-    private void CreateAndFillNewProjectDirectory(Project project)
-    {
-        DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
-        if (dir.Exists)
-        {
-            string newDir = Path.Combine(sourcesFolder, DockerBuilder.DockerFolderName);
-            if (!Directory.Exists(newDir))
-            {
-                Directory.CreateDirectory(newDir);
-            }
-            string cmdDocker = Path.Combine(newDir, project.Name + ".cmd");
-            if (!File.Exists(cmdDocker))
-            {
-              using (StreamWriter writer = new StreamWriter(cmdDocker, false))
-              {
-                 writer.WriteLine(CreateCmdTemplate());
-              }
-            }
-        }
-        else
-        {
-            throw new Exception(sourcesFolder + " not exists!");
-        }
-    }
-    private StringBuilder CreateCmdTemplate()
-    {
-        StringBuilder template = new StringBuilder();
-        template.AppendLine("docker run --env-file \"{envFilePath}\" ^\n" +
-                            "    -it --name {projectName} ^\n" +
-                            "    -v \"{parentPathProject}\\model\":/home/origam/HTML5/data/origam ^\n" +
-                            "    -p {dockerPort}:443 ^\n" +
-                            "    origam/server:master-latest.linux\n" +
-                            "\n" +
-                            "REM origam/server:master-latest.linux is the latest version, that may not be what you want.\n" +
-                            "REM Here you can find current releases and their docker images:\n" +
-                            "REM https://github.com/origam/origam/releases");
-        return template;
     }
     private void UnzipDefaultModel(Project project)
     {
