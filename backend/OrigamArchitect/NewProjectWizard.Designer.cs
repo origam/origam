@@ -125,7 +125,7 @@ namespace OrigamArchitect
             this.pageWelcome.Controls.Add(this.label6);
             this.pageWelcome.Controls.Add(this.lblWelcome1);
             this.pageWelcome.Name = "pageWelcome";
-            this.pageWelcome.Size = new System.Drawing.Size(1129, 638);
+            this.pageWelcome.Size = new System.Drawing.Size(1129, 673);
             this.pageWelcome.TabIndex = 3;
             this.pageWelcome.Text = "Welcome To New Project Wizard";
             // 
@@ -185,7 +185,7 @@ namespace OrigamArchitect
             this.pageDeploymentType.Controls.Add(this.lblName);
             this.pageDeploymentType.Controls.Add(this.txtName);
             this.pageDeploymentType.Name = "pageDeploymentType";
-            this.pageDeploymentType.Size = new System.Drawing.Size(1129, 638);
+            this.pageDeploymentType.Size = new System.Drawing.Size(1129, 673);
             this.pageDeploymentType.TabIndex = 4;
             this.pageDeploymentType.Text = "Project Name";
             this.pageDeploymentType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDeploymentType_Commit);
@@ -238,7 +238,7 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
             this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
-            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(1129, 638);
+            this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(1129, 673);
             this.pageLocalDeploymentSettings.TabIndex = 0;
             this.pageLocalDeploymentSettings.Text = "Database";
             this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
@@ -380,7 +380,7 @@ namespace OrigamArchitect
             this.pageWebUser.Controls.Add(this.label24);
             this.pageWebUser.Name = "pageWebUser";
             this.pageWebUser.NextPage = this.pageGit;
-            this.pageWebUser.Size = new System.Drawing.Size(1129, 638);
+            this.pageWebUser.Size = new System.Drawing.Size(1129, 673);
             this.pageWebUser.TabIndex = 10;
             this.pageWebUser.Text = "First Web User";
             this.pageWebUser.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageWebUser_Commit);
@@ -521,7 +521,7 @@ namespace OrigamArchitect
             this.pageGit.Controls.Add(this.label15);
             this.pageGit.Controls.Add(this.gitrepo);
             this.pageGit.Name = "pageGit";
-            this.pageGit.Size = new System.Drawing.Size(1129, 638);
+            this.pageGit.Size = new System.Drawing.Size(1129, 673);
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Model Location";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
@@ -633,7 +633,7 @@ namespace OrigamArchitect
             this.pageReview.Controls.Add(this.lstTasks);
             this.pageReview.Name = "pageReview";
             this.pageReview.NextPage = this.pageSuccess;
-            this.pageReview.Size = new System.Drawing.Size(1129, 638);
+            this.pageReview.Size = new System.Drawing.Size(1129, 673);
             this.pageReview.TabIndex = 1;
             this.pageReview.Text = "Progress";
             this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageReview_Commit);
@@ -651,7 +651,7 @@ namespace OrigamArchitect
             this.lstTasks.Location = new System.Drawing.Point(0, 0);
             this.lstTasks.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lstTasks.Name = "lstTasks";
-            this.lstTasks.Size = new System.Drawing.Size(1129, 638);
+            this.lstTasks.Size = new System.Drawing.Size(1129, 673);
             this.lstTasks.TabIndex = 0;
             this.lstTasks.UseCompatibleStateImageBehavior = false;
             this.lstTasks.View = System.Windows.Forms.View.Details;
@@ -670,16 +670,14 @@ namespace OrigamArchitect
             // 
             this.pageSuccess.AllowBack = false;
             this.pageSuccess.AllowCancel = false;
-            this.pageSuccess.AllowNext = false;
             this.pageSuccess.Controls.Add(this.finalMessageLabel);
             this.pageSuccess.IsFinishPage = true;
             this.pageSuccess.Name = "pageSuccess";
             this.pageSuccess.ShowCancel = false;
-            this.pageSuccess.ShowNext = false;
-            this.pageSuccess.Size = new System.Drawing.Size(1129, 638);
+            this.pageSuccess.Size = new System.Drawing.Size(1129, 673);
             this.pageSuccess.TabIndex = 11;
             this.pageSuccess.Text = "Success";
-            this.pageSuccess.Initialize += pageSuccess_Initialize;
+            this.pageSuccess.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageSuccess_Initialize);;
             // 
             // finalMessageLabel
             // 
