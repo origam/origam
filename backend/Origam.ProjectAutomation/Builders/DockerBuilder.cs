@@ -133,8 +133,6 @@ public class DockerBuilder : AbstractBuilder
                                                     project.UserPassword : project.DatabasePassword;
                     case "DatabaseName":
                         return project.DataDatabaseName.ToLower();
-                    case "OrigamSettings_ModelName":
-                        return "origam";
                     case "DatabaseType":
                         return project.DatabaseType == DatabaseType.PgSql ? "postgresql" :
                                                             project.DatabaseType.ToString().ToLower();
@@ -177,7 +175,6 @@ public class DockerBuilder : AbstractBuilder
             "OrigamSettings_DbUsername",
             "OrigamSettings_DbPassword",
             "DatabaseName",
-            "OrigamSettings_ModelName",
             "DatabaseType",
             "ExternalDomain_SetOnStart",
         };
