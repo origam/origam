@@ -68,10 +68,14 @@ public class FileModelImportBuilder: AbstractBuilder
     {
         StringBuilder template = new StringBuilder();
         template.AppendLine("docker run --env-file \"{envFilePath}\" ^\n" +
-                            "-it --name {projectName} ^\n" +
-                            "-v \"{parentPathProject}\":/home/origam/HTML5/data/origam ^\n" +
-                            "-p {dockerPort}:443 ^\n" +
-                            "origam/server:master-latest.linux");
+                            "    -it --name {projectName} ^\n" +
+                            "    -v \"{parentPathProject}\\model\":/home/origam/HTML5/data/origam ^\n" +
+                            "    -p {dockerPort}:443 ^\n" +
+                            "    origam/server:master-latest.linux\n" +
+                            "\n" +
+                            "REM origam/server:master-latest.linux is the latest version, that may not be what you want.\n" +
+                            "REM Here you can find current releases and their docker images:\n" +
+                            "REM https://github.com/origam/origam/releases");
         return template;
     }
     private void UnzipDefaultModel(Project project)
