@@ -44,7 +44,7 @@ public partial class NewProjectWizard : Form
     {
         InitializeComponent();
         InitGitConfig();
-        wizard1.FinishButtonText = "Run";
+        wizard1.FinishButtonText = "Close";
         _project.DefaultModelPath = Path.Combine(
             Application.StartupPath,
             @"Project Templates\DefaultModel.zip");
