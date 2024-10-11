@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -37,6 +50,29 @@
         asi:name="WidgetSectionTestDetailDetailKey1"
         ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WidgetSectionTestDetailDetail.origam#WidgetSectionTestDetailDetail/refWidgetSectionTestDetailId/1b49f1d3-d04c-426c-9313-818487d0fd07" />
     </eri:EntityRelation>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="829c8329-5ce4-4309-ae04-fd8133bd4688"
+      euia:label="MultipleCheckboxesActionDetail"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="MultipleCheckboxes"
+      asi:name="MultipleCheckboxesAction"
+      euia:order="10"
+      euia:placement="PanelHeader"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNothing.origam#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a" />
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
