@@ -185,6 +185,10 @@ public class DockerBuilder : AbstractBuilder
     }
     public string WebSiteUrl (Project project)
     {
+        if (project.DockerPort == Constants.DefaultHttpsPort)
+        {
+            return "https://localhost";
+        }
         return "https://localhost:" + project.DockerPort;
     }
 }
