@@ -455,12 +455,12 @@ public class ServerCoreUIService : IBasicUIService
         }
         var sessionStore = sessionManager.GetSession(
             input.SessionFormIdentifier);
+        // check if action is on data list entity
+        // we can't execute multiple checkboxes action on list entity,
+        // but it is OK to execute them on details
         if (sessionStore.IsDelayedLoading 
             && (action is EntityWorkflowAction workflowAction)
             && (action.Mode == PanelActionMode.MultipleCheckboxes)
-            // check if action is on data list entity
-            // we can't execute multiple checkboxes action on list entity,
-            // but it is OK to execute them on details
             && (sessionStore.DataListEntity == input.Entity)
             && (workflowAction.MergeType != ServiceOutputMethod.Ignore))
         {
