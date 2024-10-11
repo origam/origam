@@ -681,6 +681,7 @@ namespace OrigamArchitect
             this.pageSuccess.Size = new System.Drawing.Size(1129, 638);
             this.pageSuccess.TabIndex = 11;
             this.pageSuccess.Text = "Success";
+            this.pageSuccess.Initialize += pageSuccess_Initialize;
             // 
             // finalMessageLabel
             // 
