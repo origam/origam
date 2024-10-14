@@ -51,6 +51,10 @@ public class FastReportService : IReportService
             ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
                 report.ReportFileName,
                 parameters));
+        if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+        {
+            throw new Exception(Strings.PathNotOnReportPath);
+        }
         if (File.Exists(path))
         {
             reportDoc.Load(path);
