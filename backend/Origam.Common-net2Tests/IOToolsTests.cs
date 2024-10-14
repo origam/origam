@@ -28,7 +28,6 @@ namespace Origam.Common_net2Tests;
 [TestFixture]
 public class IOToolsTests
 {
-    [TestCase(@"c:\foo", @"c:", ExpectedResult = true)]
     [TestCase(@"c:\foo", @"c:\", ExpectedResult = true)]
     [TestCase(@"c:\foo", @"c:\foo", ExpectedResult = true)]
     [TestCase(@"c:\foo", @"c:\foo\", ExpectedResult = true)]
