@@ -187,8 +187,12 @@ public partial class NewProjectWizard : Form
             txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
         }
     }
-
-
+    
+    private void pageGit_Initialize(object sender, WizardPageInitEventArgs e)
+    {
+        txtSourcesFolder.Text = _settings.SourcesFolder;
+    }
+    
     private void btnSelectSourcesFolder_Click(object sender, EventArgs e)
     {
         SelectFolder(txtSourcesFolder);

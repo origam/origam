@@ -524,6 +524,7 @@ namespace OrigamArchitect
             this.pageGit.Size = new System.Drawing.Size(1129, 673);
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Model Location";
+            this.pageGit.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageGit_Initialize);
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
             // 
             // lblgitemail
