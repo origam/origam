@@ -35,6 +35,9 @@ public class FastReportService : IReportService
         string format, Hashtable parameters, string dbTransaction)
     {
         var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        parameters ??= new Hashtable();
+        ReportHelper.PopulateDefaultValues(
+            report, parameters);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
             report, data, parameters, dbTransaction);
         DataSet dataset = xmlDataDoc.DataSet;
