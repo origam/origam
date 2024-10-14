@@ -38,7 +38,10 @@ public static class IOTools
                 fullBasePath.Split(Path.DirectorySeparatorChar);
             string[] dirNames = fullPath
                 .Split(Path.DirectorySeparatorChar);
-            if (baseDirNames.Length > dirNames.Length) return false;
+            if (baseDirNames.Length > dirNames.Length) 
+            {
+                return false;
+            }
             return !baseDirNames
                 .Where((dir, i) => dir != dirNames[i])
                 .Any();
