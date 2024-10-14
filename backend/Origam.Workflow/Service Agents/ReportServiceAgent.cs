@@ -27,9 +27,6 @@ using Origam.BI;
 using Origam.Service.Core;
 
 namespace Origam.Workflow;
-/// <summary>
-/// Summary description for ReportServiceAgent.
-/// </summary>
 public class ReportServiceAgent : AbstractServiceAgent
 {
 	private void PrintReport(
@@ -97,17 +94,17 @@ public class ReportServiceAgent : AbstractServiceAgent
 			case "PrintReport":
 				PrintReport(
 					Parameters.Get<Guid>("Report"),
-					Parameters.Get<IXmlContainer>("Data"),
-					Parameters.Get<string>("PrinterName"),
+					Parameters.TryGet<IXmlContainer>("Data"),
+					Parameters.TryGet<string>("PrinterName"),
 					Parameters.Get<int>("Copies"),
-					Parameters.Get<Hashtable>("Parameters"));
+					Parameters.TryGet<Hashtable>("Parameters"));
 				break;
 			case "GetReport":
 				result = GetReport(
 					Parameters.Get<Guid>("Report"),
-					Parameters.Get<IXmlContainer>("Data"),
-					Parameters.Get<string>("Format"),
-					Parameters.Get<Hashtable>("Parameters"));
+					Parameters.TryGet<IXmlContainer>("Data"),
+					Parameters.TryGet<string>("Format"),
+					Parameters.TryGet<Hashtable>("Parameters"));
 				break;
 			default:
 				throw new ArgumentOutOfRangeException(
