@@ -93,7 +93,10 @@ public class CrystalReportHelper
 		ReportHelper.PopulateDefaultValues(report, parameters);
         ReportHelper.ComputeXsltValueParameters(report, parameters);
         // get report
-        return CreateReport(report.ReportFileName, data, parameters, report);
+        string reportFileName =  ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+	        report.ReportFileName,
+	        parameters);
+        return CreateReport(reportFileName, data, parameters, report);
 	}
 	public ReportDocument CreateReport(string fileName, DataSet data)
 	{
@@ -122,6 +125,10 @@ public class CrystalReportHelper
 		{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 			path = System.IO.Path.Combine(settings.ReportsFolder(), fileName);
+			if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+			{
+				throw new Exception(Strings.PathNotOnReportPath);
+			}			
 			result.Load(path, CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy);
 		}
 		catch (Exception ex)

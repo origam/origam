@@ -35,6 +35,9 @@ public class FastReportService : IReportService
         string format, Hashtable parameters, string dbTransaction)
     {
         var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        parameters ??= new Hashtable();
+        ReportHelper.PopulateDefaultValues(
+            report, parameters);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
             report, data, parameters, dbTransaction);
         DataSet dataset = xmlDataDoc.DataSet;
@@ -44,7 +47,14 @@ public class FastReportService : IReportService
         OrigamSettings settings 
             = ConfigurationManager.GetActiveConfiguration();
         string path = Path.Combine(
-            settings.ReportsFolder(), report.ReportFileName);
+            settings.ReportsFolder(), 
+            ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                report.ReportFileName,
+                parameters));
+        if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+        {
+            throw new Exception(Strings.PathNotOnReportPath);
+        }
         if (File.Exists(path))
         {
             reportDoc.Load(path);

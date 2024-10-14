@@ -606,6 +606,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="ParametrizedReportFilename"
+    x:id="37723fa7-7a4a-4ebe-97ab-2b10877b3aa7"
+    asi:name="ParametrizedReportFilename"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/TestParametrizedReportFilename.origam#TestParametrizedReportFilename/8df10756-8355-442e-b557-2839f7ecce3f" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Check Tls Version"
     x:id="4f825c40-8349-4533-b25f-0a592484977d"
     asi:name="NewWorkflow"
