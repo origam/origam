@@ -44,7 +44,7 @@
       euia:default="false"
       x:id="67c37b07-c970-44e9-833b-1477715d20b4"
       euia:label="MultipleCheckboxesActionMaster"
-      ewa:mergeType="AppendMergeExisting"
+      ewa:mergeType="Ignore"
       euia:modal="false"
       euia:mode="MultipleCheckboxes"
       asi:name="MultipleCheckboxesAction"
