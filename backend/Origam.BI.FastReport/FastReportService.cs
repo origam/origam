@@ -44,7 +44,10 @@ public class FastReportService : IReportService
         OrigamSettings settings 
             = ConfigurationManager.GetActiveConfiguration();
         string path = Path.Combine(
-            settings.ReportsFolder(), report.ReportFileName);
+            settings.ReportsFolder(), 
+            ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                report.ReportFileName,
+                parameters));
         if (File.Exists(path))
         {
             reportDoc.Load(path);
