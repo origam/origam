@@ -98,10 +98,10 @@ public static class IOExtensions
         {
             yield return fileInfo;
         }
-        foreach (DirectoryInfo subDirinfo in
+        foreach (DirectoryInfo subDirInfo in
             directory.GetAllSubDirectories())
         {
-            foreach (FileInfo fileInfo in subDirinfo.GetFiles())
+            foreach (FileInfo fileInfo in subDirInfo.GetFiles())
             {
                 yield return fileInfo;
             }
@@ -110,24 +110,12 @@ public static class IOExtensions
     public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
         DirectoryInfo other)
     {
-        return IsOnPathOf(thisDirInfo.FullName, other.FullName);
+        return IOTools.IsSubPathOf(other.FullName, thisDirInfo.FullName);
     }
     public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
         string otherPath)
     {
-        return IsOnPathOf(thisDirInfo.FullName, otherPath);
-    }
-    private static bool IsOnPathOf(string path,
-        string otherPath)
-    {
-        string[] otherDirNames =
-            otherPath.Split(Path.DirectorySeparatorChar);
-        string[] thisDirNames = path
-            .Split(Path.DirectorySeparatorChar);
-        if (thisDirNames.Length > otherDirNames.Length) return false;
-        return !thisDirNames
-            .Where((dir, i) => dir != otherDirNames[i])
-            .Any();
+        return IOTools.IsSubPathOf(otherPath, thisDirInfo.FullName);
     }
     public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
     {
