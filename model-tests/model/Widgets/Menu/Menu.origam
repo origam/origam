@@ -661,6 +661,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="ReceiveInvalidJson"
+    x:id="e16ec107-4560-4847-b20e-b8d058b3b99c"
+    asi:name="ReceiveInvalidJson"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/ReceiveInvalidJson.origam#ReceiveInvalidJson/32ba9685-1650-4790-985f-4ccabcfbcea8" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="RuleTest"
     x:id="fec8466e-ced8-4f60-b683-2de37bde96a4"
     asi:name="RuleTest"
