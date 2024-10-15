@@ -52,7 +52,7 @@ public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
     }
     private string BuildConnectionString(Project project)
     {
-        return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
+        return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.DatabasePort,
         project.DataDatabaseName, project.DatabaseUserName,
         project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
     }
