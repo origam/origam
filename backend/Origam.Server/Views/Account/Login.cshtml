@@ -36,16 +36,7 @@
                         <label asp-for="Password">@SharedLocalizer["Password"]</label>
                         <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
                     </div>
-
-                    @if (Model.AllowRememberLogin)
-                    {
-                        <div class="form-group login-remember">
-                            <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin">
-                                <strong>@SharedLocalizer["RememberLogin"]</strong>
-                            </label>
-                        </div>
-                    }
+                    
                     <div class="input-row">
                         <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
                         <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
