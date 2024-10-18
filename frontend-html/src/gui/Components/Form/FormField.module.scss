@@ -27,10 +27,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   top: 0;
   left: 0;
-  display: block;
+  display: flex;
+  align-items: center;
   overflow: hidden;
   padding: 0 0.5em 0 0;
   white-space: nowrap;
+  height: 20px;
 }
 
 .editor {
