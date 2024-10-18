@@ -1168,8 +1168,6 @@ namespace Origam.Gui {
                 base.Columns.Add(this.columnRecordUpdatedBy);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnStringValue.MaxLength = 300;
-                this.columnStringValue2.MaxLength = 300;
                 this.columnBoolValue2.DefaultValue = ((bool)(false));
                 this.columnrefOrigamPanelFilterId.AllowDBNull = false;
                 this.columnColumnName.AllowDBNull = false;
