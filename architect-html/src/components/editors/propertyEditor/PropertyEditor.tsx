@@ -29,8 +29,11 @@ export function PropertyEditor(props: {
         <select
           onChange={(e) => handleInputChange(property.name, e.target.value)}>
           {property.dropDownValues.map(x =>
-            <option selected={x.value === property.value}
-                    value={x.value}>{x.name}</option>)
+            <option
+              key={property.value + x.name}
+              defaultValue={property.value}
+              value={x.value}>{x.name}
+            </option>)
           }
         </select>
       )
