@@ -12,15 +12,12 @@ import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
-import {
-  ScreenSectionEditor
-} from "src/components/screenSectionEditor2/ScreenSectionEditor.tsx";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
   const [topNodes, setTopNodes] = useState<TreeNode[]>([])
 
-  const architectApi = new ArchitectApi();
+  const architectApi = new ArchitectApi(errorHandler);
 
   async function loadTopNodes() {
     setTopNodes(await architectApi.getTopModelNodes());
@@ -74,6 +71,11 @@ function getEditor(node: TreeNode) {
   if (node.editorType === "XslTEditor") {
     return <XsltEditor node={node}/>
   }
+}
+
+export function errorHandler(error: any) {
+  console.error(error);
+  alert(error?.message);
 }
 
 export default App;

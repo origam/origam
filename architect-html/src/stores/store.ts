@@ -7,8 +7,9 @@ import {
   loadStateFromLocalStorage, localStorageMiddleware
 } from "src/stores/localStorageMiddleware";
 import { tabReducer } from "src/components/tabView/TabViewSlice.ts";
+import { errorHandler } from "src/App.tsx";
 
-const architectApi = new ArchitectApi();
+const architectApi = new ArchitectApi(errorHandler);
 
 const preloadedState = {
   tree: {

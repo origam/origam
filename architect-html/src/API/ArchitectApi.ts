@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
 import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
@@ -6,20 +6,50 @@ import { Package } from "src/components/packages/Packages";
 
 export class ArchitectApi implements IArchitectApi {
 
+  errorHandler: (error: any) => void;
+  axiosInstance: AxiosInstance;
+
+  constructor(errorHandler: (error: any) => void) {
+    this.axiosInstance = this.createAxiosInstance();
+    this.errorHandler = errorHandler;
+  }
+
+  private createAxiosInstance() {
+    const axiosInstance = axios.create({
+    });
+
+    axiosInstance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      async (error) => {
+        if (error.response?.data?.constructor?.name === 'Blob') {
+          error.response.data = await error.response.data.text();
+        }
+        if (!axios.isCancel(error)) {
+          this.errorHandler(error);
+        }
+        throw error;
+      }
+    );
+    return axiosInstance;
+  }
+
+
   async setActivePackage(packageId: string): Promise<void> {
-      await axios.post("/Package/SetActive", {id: packageId})
+      await this.axiosInstance.post("/Package/SetActive", {id: packageId})
   }
 
   async getPackages(): Promise<Package[]> {
-     return (await axios.get("/Package/GetAll")).data
+     return (await this.axiosInstance.get("/Package/GetAll")).data
   }
 
   async getTopModelNodes(): Promise<TreeNode[]> {
-    return (await axios.get(`/Model/GetTopNodes`)).data;
+    return (await this.axiosInstance.get(`/Model/GetTopNodes`)).data;
   }
 
   async getNodeChildren(node: TreeNode): Promise<TreeNode[]> {
-    return (await axios.get(
+    return (await this.axiosInstance.get(
       `/Model/GetChildren`,
       {
         params: {
@@ -31,7 +61,7 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async getProperties(schemaItemId: string): Promise<EditorProperty[]> {
-    return (await (axios.get("/Editor/EditableProperties", {
+    return (await (this.axiosInstance.get("/Editor/EditableProperties", {
       params: {schemaItemId: schemaItemId}
     }))).data;
   }
@@ -45,7 +75,7 @@ export class ArchitectApi implements IArchitectApi {
           value: x.value === undefined || x.value === null ? null : x.value.toString(),
         }
       });
-    await axios.post(`/Editor/PersistChanges`, {schemaItemId, changes});
+    await this.axiosInstance.post(`/Editor/PersistChanges`, {schemaItemId, changes});
   }
 }
 
