@@ -56,24 +56,26 @@ export const XsltEditor = (props: { node: TreeNode }) => {
 
   return (
     <div className={S.root}>
-      <TabView items={[
-        {
-          id: TabViewId.Packages,
-          label: "XSL",
-          node: <CodeEditor
-            value={editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
-            onChange={(text)=> handleInputChange("TextStore", text)}/>
-        },
-        {
-          id: TabViewId.Model,
-          label: "Settings",
-          node:
-            <PropertyEditor
-              editorId={editorId}
-              properties={editorState.properties
-                .filter(x => x.name !== "TextStore")}/>
-        }
-      ]}/>
+      <TabView
+        instanceId={"XslEditor_" + editorId}
+        items={[
+          {
+            id: TabViewId.Packages,
+            label: "XSL",
+            node: <CodeEditor
+              value={editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
+              onChange={(text) => handleInputChange("TextStore", text)}/>
+          },
+          {
+            id: TabViewId.Model,
+            label: "Settings",
+            node:
+              <PropertyEditor
+                editorId={editorId}
+                properties={editorState.properties
+                  .filter(x => x.name !== "TextStore")}/>
+          }
+        ]}/>
     </div>
   );
 }
@@ -83,7 +85,7 @@ interface CodeEditorProps {
   onChange: (value: string | undefined) => void;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({value, onChange}) => {
   const editorRef = useRef<any>(null);
   const vimStatusBarRef = useRef<HTMLDivElement>(null);
   const vimModeRef = useRef<any>(null);
@@ -120,13 +122,13 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
         options={{
-          minimap: { enabled: false },
+          minimap: {enabled: false},
           lineNumbers: 'on',
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
       />
-      <div ref={vimStatusBarRef} className={S.vimStatus} />
+      <div ref={vimStatusBarRef} className={S.vimStatus}/>
     </div>
   );
 };

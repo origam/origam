@@ -1,5 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import LazyLoadedTree, { TreeNode } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
+import LazyLoadedTree, {
+  TreeNode
+} from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import "./App.css"
@@ -39,34 +41,37 @@ const App: React.FC = () => {
         topToolBar={<SaveButton/>}
         editorArea={editor}
         sideBar={
-          <TabView items={[
-            {
-              id: TabViewId.Packages,
-              label: "Packages",
-              node: <Packages onPackageLoaded={onPackageLoaded}/>
-            },
-            {
-              id: TabViewId.Model,
-              label: "Model",
-              node: <LazyLoadedTree
-                topNodes={topNodes}
-                openEditor={(node) => {
-                  setEditor(getEditor(node));
-                }}
-              />
-            }
-          ]}/>
+          <TabView
+            instanceId={"SideBar"}
+            items={[
+              {
+                id: TabViewId.Packages,
+                label: "Packages",
+                node: <Packages onPackageLoaded={onPackageLoaded}/>
+              },
+              {
+                id: TabViewId.Model,
+                label: "Model",
+                node: <LazyLoadedTree
+                  topNodes={topNodes}
+                  openEditor={(node) => {
+                    setEditor(getEditor(node));
+                  }}
+                />
+              }
+            ]}
+          />
         }
       />
     </ArchitectApiProvider>
   );
 };
 
-function getEditor(node: TreeNode){
-  if(node.editorType === "GridEditor") {
+function getEditor(node: TreeNode) {
+  if (node.editorType === "GridEditor") {
     return <GridEditor node={node}/>
   }
-  if(node.editorType === "XslTEditor") {
+  if (node.editorType === "XslTEditor") {
     return <XsltEditor node={node}/>
   }
 }

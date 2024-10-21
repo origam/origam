@@ -19,41 +19,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { ReactNode, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'src/stores/store.ts';
-import { setActiveTab } from 'src/components/tabView/TabViewSlice.ts';
+import {
+  selectTabState,
+  setActiveTab
+} from 'src/components/tabView/TabViewSlice.ts';
 import S from "./TabView.module.scss";
 
 export const TabView: React.FC<{
   items: TabViewItem[];
-}> = (props) => {
+  instanceId: string;
+  defaultActiveTab?: TabViewId;
+}> = ({ items, instanceId, defaultActiveTab }) => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state: RootState) => state.tab.activeTab);
+  const activeTab = useSelector((state: RootState) => selectTabState(state, instanceId));
 
   useEffect(() => {
-    if (props.items.length > 0 && activeTab === undefined) {
-      dispatch(setActiveTab(props.items[0].id));
+    if (items.length > 0 && activeTab === undefined) {
+      dispatch(setActiveTab({ instanceId, tabId: defaultActiveTab || items[0].id }));
     }
-  }, [dispatch, props.items, activeTab]);
+  }, [dispatch, items, activeTab, instanceId, defaultActiveTab]);
 
   return (
     <div className={S.root}>
       <div className={S.content}>
-        {props.items.map(x =>
+        {items.map(x => (
           <div key={x.id} className={activeTab !== x.id ? S.hidden : S.visible}>
             {x.node}
           </div>
-        )}
+        ))}
       </div>
       <div className={S.labels}>
-        {props.items.map(x =>
-          <div key={x.id} onClick={() => dispatch(setActiveTab(x.id))}>
+        {items.map(x => (
+          <div key={x.id} onClick={() => dispatch(setActiveTab({ instanceId, tabId: x.id }))}>
             {x.label}
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
 }
-
 export interface TabViewItem {
   id: TabViewId;
   label: string;
