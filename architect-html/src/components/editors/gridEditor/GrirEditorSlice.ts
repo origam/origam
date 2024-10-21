@@ -88,10 +88,11 @@ const editorSlice = createSlice({
   },
 });
 
-export const selectActiveEditorState = (state: RootState) => {
+export const selectActiveEditorState = (state: RootState): EditorState | null => {
   for (const editorState of Object.values(state.editorStates.editors)) {
-    if ((editorState as any).isActive) {
-      return editorState;
+    const state = editorState as EditorState;
+    if (state.isActive) {
+      return state;
     }
   }
   return null;
