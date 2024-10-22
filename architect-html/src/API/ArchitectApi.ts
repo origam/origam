@@ -9,9 +9,9 @@ export class ArchitectApi implements IArchitectApi {
   errorHandler: (error: any) => void;
   axiosInstance: AxiosInstance;
 
-  constructor(errorHandler: (error: any) => void) {
+  constructor(errorHandler?: (error: any) => void) {
     this.axiosInstance = this.createAxiosInstance();
-    this.errorHandler = errorHandler;
+    this.errorHandler = errorHandler ?? simpleErrorHandler;
   }
 
   private createAxiosInstance() {
@@ -84,4 +84,14 @@ export class ArchitectApi implements IArchitectApi {
     )
   }
 }
+
+export function simpleErrorHandler(error: any) {
+  console.error(error);
+  alert(
+    error?.response?.data ??
+    error?.message ??
+    error?.code ??
+    "Unknown error");
+}
+
 

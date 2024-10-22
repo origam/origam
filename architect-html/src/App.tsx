@@ -17,7 +17,7 @@ const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
   const [topNodes, setTopNodes] = useState<TreeNode[]>([])
 
-  const architectApi = new ArchitectApi(errorHandler);
+  const architectApi = new ArchitectApi();
 
   async function loadTopNodes() {
     setTopNodes(await architectApi.getTopModelNodes());
@@ -71,11 +71,6 @@ function getEditor(node: TreeNode) {
   if (node.editorType === "XslTEditor") {
     return <XsltEditor node={node}/>
   }
-}
-
-export function errorHandler(error: any) {
-  console.error(error);
-  alert(error?.message);
 }
 
 export default App;
