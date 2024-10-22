@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Origam.Architect.Server.Models;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
-using Origam.Server.Attributes;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -13,19 +10,13 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ModelController : ControllerBase
+public class ModelController(
+    SchemaService schemaService,
+    IPersistenceService persistenceService,
+    TreeNodeFactory treeNodeFactory,
+    ILogger<ModelController> log) : ControllerBase
 {
-    private readonly SchemaService schemaService;
-    private readonly IPersistenceProvider persistenceProvider;
-    private readonly TreeNodeFactory treeNodeFactory;
-
-    public ModelController(SchemaService schemaService,
-        IPersistenceService persistenceService, TreeNodeFactory treeNodeFactory)
-    {
-        this.schemaService = schemaService;
-        this.treeNodeFactory = treeNodeFactory;
-        persistenceProvider = persistenceService.SchemaProvider;
-    }
+    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
     [HttpGet("GetTopNodes")]
     public ActionResult<List<TreeNode>> GetTopNodes()
@@ -123,12 +114,15 @@ public class ModelController : ControllerBase
     }
 
     [HttpPost("DeleteSchemaItem")]
-    public IActionResult DeleteSchemaItem([Required][FromBody]DeleteModel input)
+    public IActionResult DeleteSchemaItem(
+        [Required] [FromBody] DeleteModel input)
     {
         try
         {
             persistenceProvider.BeginTransaction();
-            var instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(input.SchemaItemId);
+            var instance =
+                persistenceProvider.RetrieveInstance<IBrowserNode2>(
+                    input.SchemaItemId);
             instance.Delete();
         }
         catch (InvalidOperationException ex)
