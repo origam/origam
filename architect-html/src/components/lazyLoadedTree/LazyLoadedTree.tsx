@@ -9,7 +9,7 @@ import {
 import {
   Menu,
   Item,
-  useContextMenu, TriggerEvent
+  useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 
@@ -107,10 +107,10 @@ const TreeNodeComponent: React.FC<{
           onVisibilityChange={onMenuVisibilityChange}
         >
           {/*<Submenu label="New" disabled>*/}
-          {/*  /!*<Item id="reload" onClick={handleItemClick}>Reload</Item>*!/*/}
+            {/*<Item id="reload" onClick={handleItemClick}>Reload</Item>*/}
           {/*</Submenu>*/}
-          {/*<Separator/>*/}
-          {/*<Item id="edit" onClick={handleItemClick}>Edit</Item>*/}
+          <Separator/>
+          <Item id="edit" onClick={() => onNodeDoubleClick(node)}>Edit</Item>
           <Item id="delete" onClick={handleDelete}>Delete</Item>
         </Menu>
         {isLoading && ' Loading...'}
