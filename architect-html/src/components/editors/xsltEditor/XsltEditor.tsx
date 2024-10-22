@@ -28,7 +28,7 @@ import {
   EditorState, getEditorId,
   updateProperty
 } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
-import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
+import { TabView } from "src/components/tabView/TabView.tsx";
 import {
   PropertyEditor
 } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
@@ -59,14 +59,12 @@ export const XsltEditor = (props: { node: TreeNode }) => {
         instanceId={"XslEditor_" + editorId}
         items={[
           {
-            id: TabViewId.Packages,
             label: "XSL",
             node: <CodeEditor
               value={editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
               onChange={(text) => handleInputChange("TextStore", text)}/>
           },
           {
-            id: TabViewId.Model,
             label: "Settings",
             node:
               <PropertyEditor

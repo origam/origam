@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 import { setActiveTab } from "src/components/tabView/TabViewSlice.ts";
 import { useDispatch } from "react-redux";
-import { TabViewId } from "src/components/tabView/TabView.tsx";
 
 export function Packages(props: {
   onPackageLoaded: ()=>void
@@ -34,7 +33,7 @@ function PackageItem(props: {
   async function onPackageClick(){
     await architectApi.setActivePackage(props.package.id);
     props.onPackageLoaded();
-    dispatch(setActiveTab(TabViewId.Model));
+    dispatch(setActiveTab({ instanceId: "SideBar", index: 1 }));
   }
 
   return (

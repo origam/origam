@@ -28,29 +28,29 @@ import S from "./TabView.module.scss";
 export const TabView: React.FC<{
   items: TabViewItem[];
   instanceId: string;
-  defaultActiveTab?: TabViewId;
+  defaultActiveTab?: number;
 }> = ({ items, instanceId, defaultActiveTab }) => {
   const dispatch = useDispatch();
-  const activeTab = useSelector((state: RootState) => selectTabState(state, instanceId));
+  const activeTabIndex = useSelector((state: RootState) => selectTabState(state, instanceId));
 
   useEffect(() => {
-    if (items.length > 0 && activeTab === undefined) {
-      dispatch(setActiveTab({ instanceId, tabId: defaultActiveTab || items[0].id }));
+    if (items.length > 0 && activeTabIndex === undefined) {
+      dispatch(setActiveTab({ instanceId, index: defaultActiveTab || 0 }));
     }
-  }, [dispatch, items, activeTab, instanceId, defaultActiveTab]);
+  }, [dispatch, items, activeTabIndex, instanceId, defaultActiveTab]);
 
   return (
     <div className={S.root}>
       <div className={S.content}>
-        {items.map(x => (
-          <div key={x.id} className={activeTab !== x.id ? S.hidden : S.visible}>
+        {items.map((x, i) => (
+          <div key={x.label} className={activeTabIndex !== i ? S.hidden : S.visible}>
             {x.node}
           </div>
         ))}
       </div>
       <div className={S.labels}>
-        {items.map(x => (
-          <div key={x.id} onClick={() => dispatch(setActiveTab({ instanceId, tabId: x.id }))}>
+        {items.map((x, i) => (
+          <div key={x.label} onClick={() => dispatch(setActiveTab({ instanceId, index: i }))}>
             {x.label}
           </div>
         ))}
@@ -59,9 +59,6 @@ export const TabView: React.FC<{
   );
 }
 export interface TabViewItem {
-  id: TabViewId;
   label: string;
   node: ReactNode
 }
-
-export enum TabViewId { Packages, Model }

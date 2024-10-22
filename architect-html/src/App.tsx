@@ -42,12 +42,10 @@ const App: React.FC = () => {
             instanceId={"SideBar"}
             items={[
               {
-                id: TabViewId.Packages,
                 label: "Packages",
                 node: <Packages onPackageLoaded={onPackageLoaded}/>
               },
               {
-                id: TabViewId.Model,
                 label: "Model",
                 node: <LazyLoadedTree
                   topNodes={topNodes}
