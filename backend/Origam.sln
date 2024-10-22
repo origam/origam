@@ -185,6 +185,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.WorkflowTests", "Ori
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Architect.Server", "Origam.Architect.Server\Origam.Architect.Server.csproj", "{4E9545BA-B4EF-440E-9E03-723C3879C58D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server.Common", "Origam.Server.Common\Origam.Server.Common.csproj", "{B4299208-8C10-4D67-8E33-67FFDB2A373C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect Server|Any CPU = Debug Architect Server|Any CPU
@@ -1446,6 +1448,24 @@ Global
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Client|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1501,6 +1521,7 @@ Global
 		{1D907319-08A1-4355-98CE-5E03EDA31556} = {3A6D8686-1687-4091-B3EC-1A6703402F53}
 		{911951B0-9953-4C69-8FDF-4C0A13621860} = {0029C8FC-A94D-4C3D-8952-31A703FD54C8}
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D} = {BC8B57AC-75CA-4EB9-9E0F-11D33B5B071F}
+		{B4299208-8C10-4D67-8E33-67FFDB2A373C} = {A31519ED-616D-4FC0-8E2B-70984B8F760A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB8C0770-FBB8-4EAB-B71B-3967781A266B}

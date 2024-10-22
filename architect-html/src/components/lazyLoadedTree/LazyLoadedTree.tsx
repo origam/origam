@@ -6,6 +6,12 @@ import {
   toggleNode,
   selectExpandedNodes
 } from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
+import {
+  Menu,
+  Item,
+  useContextMenu, TriggerEvent
+} from 'react-contexify';
+import 'react-contexify/ReactContexify.css';
 
 export interface TreeNode {
   id: string;
@@ -25,14 +31,24 @@ const TreeNodeComponent: React.FC<{
   const dispatch = useDispatch();
   const expandedNodes = useSelector(selectExpandedNodes);
   const isExpanded = expandedNodes.includes(node.id);
-  const[childNodes, setChildNodes] = useState(children)
+  const [childNodes, setChildNodes] = useState(children)
   const [isLoading, setIsLoading] = useState(false)
+  const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
     if (isExpanded && node.hasChildNodes) {
       loadChildren();
     }
   }, [isExpanded, node.hasChildNodes]);
+
+
+  const {show, hideAll} = useContextMenu({
+    id: menuId,
+  });
+
+  function handleContextMenu(event: TriggerEvent) {
+    show({event, props: {}});
+  }
 
   async function loadChildren() {
     if (!childNodes && !isLoading) {
@@ -61,13 +77,42 @@ const TreeNodeComponent: React.FC<{
     dispatch(toggleNode(node.id));
   };
 
+  async function handleDelete(){
+    await architectApi.deleteSchemaItem(node.id);
+  }
+
+  function onMenuVisibilityChange(isVisible: boolean) {
+    if (isVisible) {
+      document.addEventListener('wheel', hideAll);
+    }
+    else {
+      document.removeEventListener('wheel', hideAll);
+    }
+  }
+
   return (
     <div className={"treeNode"}>
       <div className={"treeNodeTitle"}>
         <div onClick={onToggle}>
           {node.hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}
         </div>
-        <div onDoubleClick={() => onNodeDoubleClick(node)}>{node.nodeText}</div>
+        <div
+          onDoubleClick={() => onNodeDoubleClick(node)}
+          onContextMenu={handleContextMenu}
+        >
+          {node.nodeText}
+        </div>
+        <Menu
+          id={menuId}
+          onVisibilityChange={onMenuVisibilityChange}
+        >
+          {/*<Submenu label="New" disabled>*/}
+          {/*  /!*<Item id="reload" onClick={handleItemClick}>Reload</Item>*!/*/}
+          {/*</Submenu>*/}
+          {/*<Separator/>*/}
+          {/*<Item id="edit" onClick={handleItemClick}>Edit</Item>*/}
+          <Item id="delete" onClick={handleDelete}>Delete</Item>
+        </Menu>
         {isLoading && ' Loading...'}
       </div>
       {isExpanded && childNodes && (

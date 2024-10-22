@@ -15,4 +15,6 @@ export interface IArchitectApi {
   getProperties(schemaItemId: string): Promise<EditorProperty[]>;
 
   persistChanges(schemaItemId: string, changedProperties:  EditorProperty[]): Promise<void>;
+
+  deleteSchemaItem(schemaItemId: string): Promise<void>;
 }

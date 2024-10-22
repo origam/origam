@@ -77,5 +77,11 @@ export class ArchitectApi implements IArchitectApi {
       });
     await this.axiosInstance.post(`/Editor/PersistChanges`, {schemaItemId, changes});
   }
+
+  async deleteSchemaItem(schemaItemId: string){
+    await this.axiosInstance.post("/Model/DeleteSchemaItem",
+      {schemaItemId: schemaItemId}
+    )
+  }
 }
 

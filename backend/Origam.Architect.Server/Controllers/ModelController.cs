@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Origam.Architect.Server.Models;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Server.Attributes;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -12,15 +16,15 @@ namespace Origam.Architect.Server.Controllers;
 public class ModelController : ControllerBase
 {
     private readonly SchemaService schemaService;
-    private readonly IPersistenceService persistenceService;
+    private readonly IPersistenceProvider persistenceProvider;
     private readonly TreeNodeFactory treeNodeFactory;
 
     public ModelController(SchemaService schemaService,
         IPersistenceService persistenceService, TreeNodeFactory treeNodeFactory)
     {
         this.schemaService = schemaService;
-        this.persistenceService = persistenceService;
         this.treeNodeFactory = treeNodeFactory;
+        persistenceProvider = persistenceService.SchemaProvider;
     }
 
     [HttpGet("GetTopNodes")]
@@ -75,7 +79,7 @@ public class ModelController : ControllerBase
     private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem,
         string nodeText)
     {
-        IBrowserNode2 provider = persistenceService.SchemaProvider
+        IBrowserNode2 provider = persistenceProvider
             .RetrieveInstance<IBrowserNode2>(id);
         if (isNonPersistentItem)
         {
@@ -116,5 +120,23 @@ public class ModelController : ControllerBase
             .SelectMany(x => x.ChildNodes().Cast<ISchemaItemProvider>())
             .FirstOrDefault(x => x.NodeId == id);
         return provider;
+    }
+
+    [HttpPost("DeleteSchemaItem")]
+    public IActionResult DeleteSchemaItem([Required][FromBody]DeleteModel input)
+    {
+        try
+        {
+            persistenceProvider.BeginTransaction();
+            var instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(input.SchemaItemId);
+            instance.Delete();
+        }
+        catch (InvalidOperationException ex)
+        {
+            persistenceProvider.EndTransactionDontSave();
+            return BadRequest(ex);
+        }
+        persistenceProvider.EndTransaction();
+        return Ok();
     }
 }

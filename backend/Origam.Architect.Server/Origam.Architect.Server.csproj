@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Server.Common\Origam.Server.Common.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
   </ItemGroup>
 
