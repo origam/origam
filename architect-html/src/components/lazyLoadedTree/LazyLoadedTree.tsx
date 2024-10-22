@@ -37,7 +37,7 @@ const TreeNodeComponent: React.FC<{
 
   useEffect(() => {
     if (isExpanded && node.hasChildNodes) {
-      loadChildren();
+      initializeChildren();
     }
   }, [isExpanded, node.hasChildNodes]);
 
@@ -51,14 +51,21 @@ const TreeNodeComponent: React.FC<{
   }
 
   async function loadChildren() {
-    if (!childNodes && !isLoading) {
-      setIsLoading(true);
-      try {
-        const nodes = await architectApi.getNodeChildren(node);
-        setChildNodes(nodes);
-      } finally {
-        setIsLoading(false);
-      }
+    if (isLoading || !node.hasChildNodes) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const nodes = await architectApi.getNodeChildren(node);
+      setChildNodes(nodes);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function initializeChildren() {
+    if (!childNodes) {
+      await loadChildren();
     }
   }
 
@@ -72,7 +79,7 @@ const TreeNodeComponent: React.FC<{
 
   const onToggle = async () => {
     if (node.hasChildNodes && !isLoading) {
-      await loadChildren();
+      await initializeChildren();
     }
     dispatch(toggleNode(node.id));
   };
