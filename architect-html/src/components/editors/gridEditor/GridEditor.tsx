@@ -1,11 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
-import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 import {
-  EditorState,
-  initializeEditor
+  EditorState, getEditorId,
+   initializeEditor
 } from 'src/components/editors/gridEditor/GrirEditorSlice.ts';
 import { RootState } from 'src/stores/store.ts';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
@@ -32,28 +31,10 @@ export function GridEditor(props: {
 export function useEditorInitialization(editorState: EditorState, node: TreeNode){
   const dispatch = useDispatch();
   const editorId = getEditorId(node);
-  const architectApi = useContext(ArchitectApiContext)!;
   useEffect(() => {
-    async function getData() {
-      try {
-        const newProperties = await architectApi.getProperties(node.id);
-        dispatch(initializeEditor({
-          editorId,
-          schemaItemId: node.id,
-          properties: newProperties
-        }));
-      } catch (error) {
-        console.error("Error fetching properties:", error);
-      }
-    }
-
     if (!editorState) {
-      getData();
+      dispatch(initializeEditor(node) as any);
     }
-  }, [editorId, architectApi, dispatch, editorState]);
+  }, [editorId, dispatch, editorState]);
   return editorId;
-}
-
-export function getEditorId(node: TreeNode): string {
-  return node.nodeText + "_" + node.id;
 }

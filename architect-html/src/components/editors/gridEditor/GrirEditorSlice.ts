@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from 'src/stores/store.ts';
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 
 export interface EditorProperty {
   name: string;
@@ -35,7 +36,7 @@ const editorSlice = createSlice({
   name: 'editorStates',
   initialState,
   reducers: {
-    initializeEditor: (state, action: PayloadAction<{
+    initEditor: (state, action: PayloadAction<{
       editorId: string;
       schemaItemId: string;
       properties: EditorProperty[]
@@ -99,7 +100,7 @@ export const selectActiveEditorState = (state: RootState): EditorState | null =>
 }
 
 export const {
-  initializeEditor,
+  initEditor,
   updateProperty,
   setSaving,
   setDirty
@@ -121,4 +122,23 @@ export const saveEditorContent = (editorId: string): AppThunk =>
     }
   };
 
+export const initializeEditor = (node: TreeNode): AppThunk =>
+  async (dispatch, getState, {architectApi}) => {
+    const editorId = getEditorId(node)
+    try {
+      const newProperties = await architectApi.getProperties(node.id);
+      dispatch(initEditor({
+        editorId,
+        schemaItemId: node.id,
+        properties: newProperties
+      }));
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+    }
+  };
+
+
+export function getEditorId(node: TreeNode): string {
+  return node.nodeText + "_" + node.id;
+}
 export default editorSlice.reducer;

@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/stores/store.ts";
 import { useEffect, useRef } from "react";
 import {
-  EditorState,
+  EditorState, getEditorId,
   updateProperty
 } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
@@ -36,7 +36,6 @@ import React from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import * as monacoVim from 'monaco-vim';
 import {
-  getEditorId,
   useEditorInitialization
 } from "src/components/editors/gridEditor/GridEditor.tsx";
 
