@@ -128,7 +128,7 @@ public class ModelController(
         catch (InvalidOperationException ex)
         {
             persistenceProvider.EndTransactionDontSave();
-            return BadRequest(ex);
+            return StatusCode(400, ex.Message);
         }
         persistenceProvider.EndTransaction();
         return Ok();
