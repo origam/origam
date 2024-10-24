@@ -30,7 +30,7 @@ using NUnit.Framework;
 
 namespace Origam.Common_net2Tests;
 [TestFixture]
-public class DictiaoaryExtensionsTests
+public class DictionaryExtensionsTests
 {
     [Test]
     public void ShouldRemoveValues()

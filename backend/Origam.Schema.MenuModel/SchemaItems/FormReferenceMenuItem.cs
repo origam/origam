@@ -488,9 +488,10 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 	
 	private string GetErrorOrNull(EntityWorkflowAction action, FormReferenceMenuItem menuItem)
 	{
-		if (menuItem.Screen == null ||
-		    action.MergeType == ServiceOutputMethod.Ignore || 
-		    action.Mode != PanelActionMode.MultipleCheckboxes)
+		if ((menuItem.Screen == null)
+		    || (action.MergeType == ServiceOutputMethod.Ignore)
+		    || (action.Mode != PanelActionMode.MultipleCheckboxes)
+		    || (menuItem.ListEntity.Entity.Id != action.ParentItem.Id))
 		{
 			return null;
 		}

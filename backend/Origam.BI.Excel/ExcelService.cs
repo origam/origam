@@ -54,6 +54,7 @@ public class ExcelService : IReportService
         Hashtable parameters, 
         string dbTransaction)
     {
+        parameters ??= new Hashtable();
         if (format != DataReportExportFormatType.MSExcel.ToString())
         {
             throw new ArgumentOutOfRangeException(nameof(format), format,
@@ -74,9 +75,15 @@ public class ExcelService : IReportService
         var sourceWorkbook = spreadsheetData.Workbook.Rows[0] 
             as OrigamSpreadsheet.WorkbookRow;
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        var reportFileInfo = new FileInfo(
-            Path.Combine(
-                settings.ReportsFolder(), report.ReportFileName));
+        var reportFileInfo = new FileInfo(Path.Combine(
+            settings.ReportsFolder(), 
+            ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                report.ReportFileName,
+                parameters)));
+        if (!IOTools.IsSubPathOf(reportFileInfo.FullName, settings.ReportsFolder()))
+        {
+            throw new Exception(Strings.PathNotOnReportPath);
+        }
         if (!reportFileInfo.Exists)
         {
             throw new Exception($"Could not open {report.ReportFileName}");

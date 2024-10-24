@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="603adfdf-3a6b-424d-b5af-f6363a93bbd8"
+    xdp:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+    ap:mimeType="application/json"
+    asi:name="InvalidJson"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    xdp:resultXPath="/ROOT/value"
+    ap:roles="*"
+    xdp:transformation="Widgets/Transformation/Widgets/InvalidJson.origam#InvalidJson/48f4b0c0-5a4c-41cd-a4fc-5642473bd1e9"
+    ap:url="api/public/invalid-json" />
+</x:file>

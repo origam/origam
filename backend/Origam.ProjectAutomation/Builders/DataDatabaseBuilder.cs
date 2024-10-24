@@ -46,7 +46,7 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
     public string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
     {
         return DataService(_databaseType).BuildConnectionString(
-            project.DatabaseServerName, project.Port, creatingDatabase, project.DatabaseUserName,
+            project.DatabaseServerName, project.DatabasePort, creatingDatabase, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
         
     }
@@ -57,7 +57,7 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
     public string BuildConnectionString(Project project, bool pooling)
     {
         _databaseType = project.DatabaseType;
-        return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
+        return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.DatabasePort,
             project.DataDatabaseName, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
     }
@@ -71,7 +71,7 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         if (_databaseType == DatabaseType.PgSql)
         {
             this.DataService(_databaseType).DbUser=project.Name;
-            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
+            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.DatabasePort,
                 project.DataDatabaseName, DataService(_databaseType).DbUser,
                  project.UserPassword, project.DatabaseIntegratedAuthentication, pooling);
         }

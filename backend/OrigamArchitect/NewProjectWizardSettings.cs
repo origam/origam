@@ -25,7 +25,7 @@ namespace OrigamArchitect;
 public class NewProjectWizardSettings : ApplicationSettingsBase
 {
     [UserScopedSetting()]
-    [DefaultSettingValue(@".")]
+    [DefaultSettingValue(@"localhost")]
     public string DatabaseServerName
     {
         get

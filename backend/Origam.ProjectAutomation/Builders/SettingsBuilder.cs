@@ -20,30 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-using System;
-using System.IO;
-using static Origam.NewProjectEnums;
-
 namespace Origam.ProjectAutomation;
 public class SettingsBuilder : AbstractBuilder
 {
     private int _settingsIndex;
     OrigamSettingsCollection _settings;
     OrigamSettings _setting;
-    public OrigamSettings Setting
-    {
-        get
-        {
-            return _setting;
-        }
-    }
-    public override string Name
-    {
-        get
-        {
-            return "Add Settings";
-        }
-    }
+    public override string Name => "Add Settings";
+
     public override void Execute(Project project)
     {
         _settings = GetSettings();
@@ -51,7 +35,6 @@ public class SettingsBuilder : AbstractBuilder
         _setting.Name = project.Name;
         _setting.TitleText = project.Name;
         _setting.DataConnectionString = project.BuilderDataConnectionString;
-        _setting.ModelSourceControlLocation = GetModelSourceLocation(project);
         _setting.ServerUrl = project.BaseUrl;
         _setting.DataDataService = project.GetDataDataService;
         _setting.SchemaDataService = project.GetDataDataService;
@@ -69,29 +52,17 @@ public class SettingsBuilder : AbstractBuilder
             throw;
         }
     }
-    private string GetModelSourceLocation(Project project)
-    {
-        switch (project.TypeTemplate)
-        {
-            case TypeTemplate.Default:
-                return project.ModelSourceFolder;
-            case TypeTemplate.Open:
-            case TypeTemplate.Template:
-                return project.SourcesFolder;
-            default:
-                throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
-        }
-        
-    }
     public override void Rollback()
     {
         _settings.RemoveAt(_settingsIndex);
         SaveSettings(_settings);
         ConfigurationManager.SetActiveConfiguration(null);
     }
-    public static OrigamSettingsCollection GetSettings() => 
+
+    private static OrigamSettingsCollection GetSettings() => 
         ConfigurationManager.GetAllUserHomeConfigurations();
-    public static void SaveSettings(OrigamSettingsCollection settings)
+
+    private static void SaveSettings(OrigamSettingsCollection settings)
     {
         ConfigurationManager.WriteConfiguration(settings);
     }

@@ -17,22 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.caption {
+.root {
   position: absolute;
-  top: 0;
-  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.caption {
   display: block;
   overflow: hidden;
   padding: 0 0.5em 0 0;
   text-overflow: ellipsis;
- white-space: nowrap;
+  white-space: nowrap;
   word-wrap: normal;
-}
-
-.editor {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .focusedLabel{

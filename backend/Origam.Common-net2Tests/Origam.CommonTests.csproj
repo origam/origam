@@ -70,6 +70,7 @@
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="DebugTimerTests.cs" />
     <Compile Include="HttpToolsTests.cs" />
+    <Compile Include="IOToolsTests.cs" />
     <Compile Include="OrigamSettingsReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

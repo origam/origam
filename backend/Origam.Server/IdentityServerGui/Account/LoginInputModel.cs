@@ -11,6 +11,5 @@ public class LoginInputModel
     public string Username { get; set; }
     [Required(ErrorMessage = "PasswordRequired")]
     public string Password { get; set; }
-    public bool RememberLogin { get; set; }
     public string ReturnUrl { get; set; }
 }
