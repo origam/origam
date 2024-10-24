@@ -13,12 +13,6 @@
                 <div class="input-row">
                     <input id="userNameInput" asp-for="TwoFactorCode" autofocus>
                 </div>
-                <div class="form-group login-remember">
-                    <label asp-for="RememberLogin">
-                        <input asp-for="RememberLogin" value=@ViewData["RememberLogin"]>
-                        <strong>@SharedLocalizer["RememberLogin"]</strong>
-                    </label>
-                </div>
                 <div class="input-row">
                     <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
                 </div>

@@ -1,0 +1,1 @@
+﻿ALTER TABLE "OrigamPanelFilterDetail" ALTER COLUMN "StringValue" TYPE TEXT;

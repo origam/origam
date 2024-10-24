@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:rr="http://schemas.origam.com/Origam.Schema.GuiModel.ReportReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="8df10756-8355-442e-b557-2839f7ecce3f"
+    asi:name="TestParametrizedReportFilename"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="eaf7bc66-4eb1-4878-a96b-4cf3356d6b1c"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="97f604d1-abe7-42b7-b535-2ba943c6063b"
+      asi:name="0100_GetReport"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/TestParametrizedReportFilename.origam#TestParametrizedReportFilename/AllDataTypes/eaf7bc66-4eb1-4878-a96b-4cf3356d6b1c"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/ReportService.origam#ReportService/372f3db0-41a1-4739-81aa-e1f7f7741791"
+      smct:serviceMethod="Root/Service/ReportService.origam#ReportService/GetReport/7d3c9582-e748-41cb-9ae6-b842d2aeea75">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="20372d0f-55df-4ef6-8191-9cb352d23c6a"
+        asi:name="Format"
+        smcp:serviceMethodParameter="Root/Service/ReportService.origam#ReportService/GetReport/Format/90ec5cb3-5c2b-4b55-95b7-45283bcea2cd">
+        <dcr:DataConstantReference
+          asi:abstract="false"
+          dcr:constant="Root/DataConstant/Report Format Constants/ReportFormat_PDF.origam#ReportFormat_PDF/96291154-fe31-4f73-8386-a3464cb2f9bc"
+          x:id="c068615b-6c47-4ca9-b8da-cd996261042e"
+          asi:name="PDF" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="2d78b9c0-ab41-400a-a07f-bf64eac845ad"
+        asi:name="Report"
+        smcp:serviceMethodParameter="Root/Service/ReportService.origam#ReportService/GetReport/Report/9fa99c06-520f-4168-8f58-88d4f191a804">
+        <rr:ReportReference
+          asi:abstract="false"
+          x:id="5a696933-5a2e-4744-9046-0fe1886c79c2"
+          asi:name="ParametrizedReportFilename"
+          rr:report="Widgets/Report/ParametrizedReportFilename.origam#ParametrizedReportFilename/763dcfa8-9f11-4e85-a053-a92a767af464" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="80d49025-de18-4a42-977f-2b2fcb532439"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/ReportService.origam#ReportService/GetReport/Parameters/08e8a2af-f08e-4bd6-9fe6-4ec603f82969" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="fa6dd397-e9da-485b-80c4-08ed3f7405a4"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/ReportService.origam#ReportService/GetReport/Data/e077b6eb-eae1-48f9-b74f-b7521bddee1b">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Widgets/Workflow/Widgets/TestParametrizedReportFilename.origam#TestParametrizedReportFilename/AllDataTypes/eaf7bc66-4eb1-4878-a96b-4cf3356d6b1c"
+          x:id="a4c9e62c-179a-4ca1-815a-00893b9673c0"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

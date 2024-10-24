@@ -27,6 +27,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-top: 1px;
   :global(.isFormView) & {
     width: 20px;
     height: 20px;

@@ -60,20 +60,12 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr4.StringTemplate">
-      <HintPath>..\EnterpriseLibrary\Antlr4.StringTemplate.dll</HintPath>
-    </Reference>
-    <Reference Include="Docker.DotNet, Version=3.125.0.0, Culture=neutral, PublicKeyToken=e628c633e2cf4146">
-      <HintPath>..\..\..\..\Users\jindr\.nuget\packages\docker.dotnet\3.125.13\lib\netstandard2.0\Docker.DotNet.dll</HintPath>
-    </Reference>
+    <Reference Include="Docker.DotNet, Version=3.125.0.0, Culture=neutral, PublicKeyToken=e628c633e2cf4146"/>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"/>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -90,21 +82,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractBuilder.cs" />
-    <Compile Include="Builders\ConfigureAzureWebServerBuilder.cs" />
     <Compile Include="Builders\CreateGitRepository.cs" />
     <Compile Include="Builders\DockerBuilder.cs" />
-    <Compile Include="Builders\DockerCreator.cs" />
-    <Compile Include="Builders\DropGitRepository.cs" />
     <Compile Include="Builders\FileModelImportBuilder.cs" />
     <Compile Include="Builders\FileModelInitBuilder.cs" />
     <Compile Include="Builders\DataDatabaseStructureBuilder.cs" />
     <Compile Include="Builders\DataDatabaseBuilder.cs" />
     <Compile Include="AbstractDatabaseBuilder.cs" />
-    <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
-    <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
     <Compile Include="Builders\NewPackageBuilder.cs" />
     <Compile Include="Builders\NewUserBuilder.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="IProjectBuilder.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectBuilder.cs" />

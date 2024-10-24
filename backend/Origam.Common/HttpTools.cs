@@ -278,12 +278,18 @@ public class HttpTools : IHttpTools
 			try
 			{
 				xmlDocument = JsonConvert.DeserializeXmlNode(
-					body, "ROOT");
+					value: body, 
+					deserializeRootElementName: "ROOT",
+					writeArrayAttribute: false, 
+					encodeSpecialCharacters: true);
 			}
 			catch (JsonSerializationException)
 			{
 				xmlDocument = JsonConvert.DeserializeXmlNode(
-					"{\"ARRAY\":" + body + "}", "ROOT");
+					value: "{\"ARRAY\":" + body + "}", 
+					deserializeRootElementName: "ROOT",
+					writeArrayAttribute: false,
+					encodeSpecialCharacters: true);
 			}
 			return new XmlContainer(xmlDocument);
 		}

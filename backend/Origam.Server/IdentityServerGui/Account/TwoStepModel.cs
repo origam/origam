@@ -29,6 +29,5 @@ public class TwoStepModel
     [Required(ErrorMessage = "TwoFactorCodeRequired")]
     [DataType(DataType.Text)]
     public string TwoFactorCode { get; set; }
-    public bool RememberLogin { get; set; }
     public string ReturnUrl { get; set; }
 }
