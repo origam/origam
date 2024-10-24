@@ -1,18 +1,33 @@
-# escape=`
-# Learn about building .NET container images:
+ARG REPO=mcr.microsoft.com/dotnet/runtime
+FROM $REPO:8.0.10-windowsservercore-ltsc2019
 
-ARG TAG=ltsc2022
+# ASP.NET Core version
+ENV ASPNET_VERSION=8.0.10
 
-FROM mcr.microsoft.com/windows/servercore:$TAG
+# Install ASP.NET Core Runtime
+RUN powershell -Command \
+        $ErrorActionPreference = 'Stop'; \
+        $ProgressPreference = 'SilentlyContinue'; \
+        Invoke-WebRequest -OutFile aspnetcore.zip https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/$Env:ASPNET_VERSION/aspnetcore-runtime-$Env:ASPNET_VERSION-win-x64.zip; \
+        $aspnetcore_sha512 = 'b9d08366e056def8760882d08f09e8495a6cf6ebfd1b881c92f3c385637c77ccf432ed51f930e4994e66156fb5311daeb0b2aa06074da17cbbb068e0e5dfad3a'; \
+        if ((Get-FileHash aspnetcore.zip -Algorithm sha512).Hash -ne $aspnetcore_sha512) { \
+            Write-Host 'CHECKSUM VERIFICATION FAILED!'; \
+            exit 1; \
+        }; \
+        tar -oxzf aspnetcore.zip -C $Env:ProgramFiles\dotnet ./shared/Microsoft.AspNetCore.App; \
+        Remove-Item -Force aspnetcore.zip
+
 WORKDIR /home/origam
 
-RUN mkdir HTML5
-RUN mkdir HTML5-SOURCE
-RUN mkdir Scheduler
+RUN mkdir HTML5 && \
+    mkdir HTML5-SOURCE && \
+    mkdir "C:\ssl"
+# RUN mkdir Scheduler
 
 COPY HTML5 HTML5/
 COPY HTML5-SOURCE HTML5-SOURCE/
-COPY Scheduler Scheduler/
+# COPY Scheduler Scheduler/
+COPY windows/createSslCertificate.ps1 C:/ssl/
 
 WORKDIR /home/origam/HTML5
 
@@ -20,10 +35,11 @@ COPY _appsettings.template .
 COPY _OrigamSettings.mssql.template .
 COPY _OrigamSettings.postgres.template .
 COPY log4net.config .
-COPY windows/script.ps1 .
-COPY windows/yarninstall.ps1 .
-RUN Powershell.exe -executionpolicy remotesigned -File yarninstall.ps1
+COPY windows/startServer.ps1 .
+COPY windows/install.ps1 .
+RUN Powershell.exe -executionpolicy remotesigned -File install.ps1
 WORKDIR /home/origam/HTML5-SOURCE
 COPY windows/buildfrontend.ps1 .
 WORKDIR /home/origam/HTML5
-CMD Powershell.exe -executionpolicy remotesigned -File script.ps1
+CMD Powershell.exe -executionpolicy remotesigned -File C:/ssl/createSslCertificate.ps1; Powershell.exe -executionpolicy remotesigned -File startServer.ps1
+
