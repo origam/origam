@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
 import {
   EditorState, getEditorId,
@@ -10,6 +9,7 @@ import { RootState } from 'src/stores/store.ts';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 import {
 } from "src/components/editors/xsltEditor/XsltEditor.tsx";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 
 export function GridEditor(props: {
   node: TreeNode

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from 'src/stores/store.ts';
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 
 export interface EditorProperty {
   name: string;
@@ -126,7 +126,7 @@ export const initializeEditor = (node: TreeNode): AppThunk =>
   async (dispatch, getState, {architectApi}) => {
     const editorId = getEditorId(node)
     try {
-      const newProperties = await architectApi.getProperties(node.id);
+      const newProperties = await architectApi.getProperties(node.origamId);
       dispatch(initEditor({
         editorId,
         schemaItemId: node.id,

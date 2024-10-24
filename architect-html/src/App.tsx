@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import LazyLoadedTree, {
-  TreeNode
 } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
@@ -9,18 +8,22 @@ import "src/colors.scss"
 import { ArchitectApiProvider } from "src/API/ArchitectApiContext.tsx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
-import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
+import { TabView } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
+import {
+  addTopNodes, TreeNode
+} from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
+import { useDispatch } from "react-redux";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
-  const [topNodes, setTopNodes] = useState<TreeNode[]>([])
-
+  const dispatch = useDispatch();
   const architectApi = new ArchitectApi();
 
   async function loadTopNodes() {
-    setTopNodes(await architectApi.getTopModelNodes());
+    const topNodes= await architectApi.getTopModelNodes();
+    dispatch(addTopNodes(topNodes));
   }
 
   async function onPackageLoaded() {
@@ -48,7 +51,6 @@ const App: React.FC = () => {
               {
                 label: "Model",
                 node: <LazyLoadedTree
-                  topNodes={topNodes}
                   openEditor={(node) => {
                     setEditor(getEditor(node));
                   }}

@@ -14,6 +14,7 @@ const architectApi = new ArchitectApi();
 const preloadedState = {
   tree: {
     expandedNodes: loadStateFromLocalStorage(),
+    nodes: {}
   },
 };
 

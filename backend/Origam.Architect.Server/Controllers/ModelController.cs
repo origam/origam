@@ -31,7 +31,8 @@ public class ModelController(
             .Cast<SchemaItemProviderGroup>()
             .Select(x => new TreeNode
             {
-                Id = x.NodeId,
+                OrigamId = x.NodeId,
+                Id = x.NodeId + x.NodeText,
                 NodeText = x.NodeText,
                 HasChildNodes = x.HasChildNodes,
                 Children = x.ChildNodes()

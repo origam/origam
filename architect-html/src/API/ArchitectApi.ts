@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
 import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { Package } from "src/components/packages/Packages";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 
 export class ArchitectApi implements IArchitectApi {
 
@@ -53,7 +53,7 @@ export class ArchitectApi implements IArchitectApi {
       `/Model/GetChildren`,
       {
         params: {
-          id: node.id,
+          id: node.origamId,
           nodeText: node.nodeText,
           isNonPersistentItem: node.isNonPersistentItem
         }

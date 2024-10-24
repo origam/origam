@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 import {
   toggleNode,
-  selectExpandedNodes
+  selectExpandedNodes,
+  TreeNode,
+  selectTopNodes,
+  setChildNodes, makeSelectChildNodes
 } from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
 import {
   Menu,
@@ -12,34 +15,29 @@ import {
   useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
+import { RootState } from "src/stores/store.ts";
 
-export interface TreeNode {
-  id: string;
-  nodeText: string;
-  hasChildNodes: boolean;
-  isNonPersistentItem: boolean;
-  editorType: null | "GridEditor";
-  children?: TreeNode[];
-}
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
   openEditor: (node: TreeNode) => void;
-  children?: TreeNode[];
-}> = ({node, openEditor, children}) => {
+}> = ({node, openEditor}) => {
   const architectApi = useContext(ArchitectApiContext)!;
   const dispatch = useDispatch();
   const expandedNodes = useSelector(selectExpandedNodes);
   const isExpanded = expandedNodes.includes(node.id);
-  const [childNodes, setChildNodes] = useState(children)
+  const selectChildNodesForId = useMemo(makeSelectChildNodes, []);
+    const childNodes = useSelector((state: RootState) =>
+    selectChildNodesForId(state, node.id)
+  );
   const [isLoading, setIsLoading] = useState(false)
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
-    if (isExpanded && node.hasChildNodes) {
-      initializeChildren();
+    if (isExpanded && node.hasChildNodes && (!node.childrenIds || node.childrenIds.length === 0)) {
+      loadChildren();
     }
-  }, [isExpanded, node.hasChildNodes]);
+  }, [isExpanded, node.childrenIds]);
 
 
   const {show, hideAll} = useContextMenu({
@@ -57,15 +55,9 @@ const TreeNodeComponent: React.FC<{
     setIsLoading(true);
     try {
       const nodes = await architectApi.getNodeChildren(node);
-      setChildNodes(nodes);
+      dispatch(setChildNodes({nodeId: node.id, children: nodes}));
     } finally {
       setIsLoading(false);
-    }
-  }
-
-  async function initializeChildren() {
-    if (!childNodes) {
-      await loadChildren();
     }
   }
 
@@ -78,14 +70,14 @@ const TreeNodeComponent: React.FC<{
   }
 
   const onToggle = async () => {
-    if (node.hasChildNodes && !isLoading) {
-      await initializeChildren();
+    if (node.hasChildNodes && !isLoading && !isExpanded && (!node.childrenIds || node.childrenIds.length === 0)) { // !isExpanded => will be expanded now
+      await loadChildren();
     }
     dispatch(toggleNode(node.id));
   };
 
   async function handleDelete(){
-    await architectApi.deleteSchemaItem(node.id);
+    await architectApi.deleteSchemaItem(node.schemaItemId);
   }
 
   function onMenuVisibilityChange(isVisible: boolean) {
@@ -138,14 +130,15 @@ const TreeNodeComponent: React.FC<{
 };
 
 const LazyLoadedTree: React.FC<{
-  topNodes: TreeNode[];
   openEditor: (node: TreeNode) => void;
-}> = ({topNodes, openEditor}) => {
+}> = ({openEditor}) => {
+  const nodes = useSelector(selectTopNodes);
+
   return (
     <div>
-      {topNodes.map((node) => (
+      {nodes.map((node) => (
         <TreeNodeComponent
-          key={node.id}
+          key={node.id + node.nodeText}
           node={node}
           openEditor={openEditor}
           children={node.children} // The top nodes come with preloaded children

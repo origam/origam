@@ -7,6 +7,7 @@ namespace Origam.Architect.Server.Controllers;
 
 public class TreeNode
 {
+    public string OrigamId { get; set; }
     public string Id { get; set; }
     public string NodeText { get; set; }
     public bool HasChildNodes { get; set; }
@@ -22,7 +23,8 @@ public class TreeNodeFactory
     {
         return new TreeNode
         {
-            Id = node.NodeId,
+            OrigamId = node.NodeId,
+            Id = node.NodeId + node.NodeText,
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,

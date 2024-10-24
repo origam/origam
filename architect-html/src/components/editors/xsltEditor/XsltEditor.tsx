@@ -19,7 +19,6 @@ along with ORIGAM. If notL, see <http://www.gnu.org/licenses/>.
 
 import S from "src/components/editors/xsltEditor/XsltEditor.module.scss";
 import {
-  TreeNode
 } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/stores/store.ts";
@@ -38,6 +37,7 @@ import * as monacoVim from 'monaco-vim';
 import {
   useEditorInitialization
 } from "src/components/editors/gridEditor/GridEditor.tsx";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 
 export const XsltEditor = (props: { node: TreeNode }) => {
   const editorId = getEditorId(props.node);
@@ -84,7 +84,7 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({value, onChange}) => {
   const editorRef = useRef<any>(null);
-  const vimStatusBarRef = useRef<HTMLDivElement>(null);
+  const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
   const vimModeRef = useRef<any>(null);
 
   useEffect(() => {
