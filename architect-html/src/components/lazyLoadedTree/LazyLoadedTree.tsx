@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 import {
@@ -7,7 +7,7 @@ import {
   selectExpandedNodes,
   TreeNode,
   selectTopNodes,
-  setChildNodes, makeSelectChildNodes
+  setChildNodes, SelectChildNodes
 } from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
 import {
   Menu,
@@ -26,18 +26,15 @@ const TreeNodeComponent: React.FC<{
   const dispatch = useDispatch();
   const expandedNodes = useSelector(selectExpandedNodes);
   const isExpanded = expandedNodes.includes(node.id);
-  const selectChildNodesForId = useMemo(makeSelectChildNodes, []);
-    const childNodes = useSelector((state: RootState) =>
-    selectChildNodesForId(state, node.id)
-  );
+  const childNodes = useSelector((state: RootState) => SelectChildNodes(state, node.id), shallowEqual)
   const [isLoading, setIsLoading] = useState(false)
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
-    if (isExpanded && node.hasChildNodes && (!node.childrenIds || node.childrenIds.length === 0)) {
+    if (isExpanded && node.hasChildNodes && (childNodes.length === 0)) {
       loadChildren();
     }
-  }, [isExpanded, node.childrenIds]);
+  }, [isExpanded, childNodes]);
 
 
   const {show, hideAll} = useContextMenu({
@@ -70,7 +67,7 @@ const TreeNodeComponent: React.FC<{
   }
 
   const onToggle = async () => {
-    if (node.hasChildNodes && !isLoading && !isExpanded && (!node.childrenIds || node.childrenIds.length === 0)) { // !isExpanded => will be expanded now
+    if (node.hasChildNodes && !isLoading && !isExpanded && (childNodes.length === 0)) { // !isExpanded => will be expanded now
       await loadChildren();
     }
     dispatch(toggleNode(node.id));

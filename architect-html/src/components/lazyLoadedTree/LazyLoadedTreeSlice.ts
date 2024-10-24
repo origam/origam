@@ -82,16 +82,9 @@ export const selectTopNodes = createSelector(
   (nodes) => Object.values(nodes).filter(x => x.parentId === null)
 );
 
-export const makeSelectChildNodes = () => {
-  return createSelector(
-    [
-      selectTopNodesInternal,
-      (_state: RootState, nodeId: string) => nodeId
-    ],
-    (nodes, nodeId) => {
-      return nodes[nodeId].childrenIds.map(childId => nodes[childId]);
-    }
-  );
-};
+export const SelectChildNodes =  (state: RootState, nodeId: string) => {
+  const treeState = state.tree;
+  return treeState.nodes[nodeId].childrenIds.map(childId => treeState.nodes[childId]);
+}
 
 export default treeSlice.reducer;
