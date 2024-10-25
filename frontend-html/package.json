@@ -79,7 +79,7 @@
     "xstate": "^4.38.3"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
     "@babel/preset-typescript": "^7.25.9",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
