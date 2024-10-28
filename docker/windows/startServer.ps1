@@ -1,7 +1,12 @@
-#curl https://dot.net/v1/dotnet-install.ps1 -O dotnet-install.ps1
-#.\dotnet-install.ps1 -Channel 6.0 -Runtime aspnetcore
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
-cd c:\home\origam\HTML5
+# First generate the HTTPS SSL certificate
+Write-Host "Generating HTTPS SSL certificate..."
+& 'C:\ssl\createSslCertificate.ps1'
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "HTTPS SSL certificate generation failed"
+    exit $LASTEXITCODE
+}
 
 if ($Env:gitPullOnStart -eq "true") {
     Write-Host "Git pull on start is enabled. Cloning/pulling repository..."
@@ -33,7 +38,6 @@ if ($Env:gitPullOnStart -eq "true") {
 # Generate SSL certificate for HTTPS
 Powershell.exe -executionpolicy remotesigned -File C:\ssl\createSslCertificate.ps1
 
-
 $httpsPassword = Get-Content "C:\ssl\https-cert-password.txt"
 $httpsConfig = @"
 ,
@@ -53,9 +57,8 @@ $httpsConfig = @"
   }
 "@
 
+cd c:\home\origam\HTML5
 
-# Insert the HTTPS configuration into appsettings.json before the closing brace
-(Get-Content .\appsettings.json) -replace "}$", "$httpsConfig`n}" | Set-Content .\appsettings.json
 
 # Generate SSL certificate for jwt tokens
 openssl.exe rand -base64 10 | Set-Content -NoNewline certpass
@@ -64,6 +67,8 @@ openssl.exe pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout fil
 
 (Get-Content .\_appsettings.template) -replace "certpassword", (Get-Content .\certpass) | Set-Content .\appsettings.json
 
+# Insert the HTTPS configuration into appsettings.json before the closing brace
+(Get-Content .\appsettings.json) -replace "}$", "$httpsConfig`n}" | Set-Content .\appsettings.json
 
 (Get-Content .\appsettings.json) -replace "ExternalDomain", $Env:ExternalDomain_SetOnStart | Set-Content .\appsettings.json
 (Get-Content .\appsettings.json) -replace "pathchatapp", $Env:pathchatapp | Set-Content .\appsettings.json
