@@ -38,8 +38,42 @@ if ($Env:gitPullOnStart -eq "true") {
 # Generate SSL certificate for HTTPS
 Powershell.exe -executionpolicy remotesigned -File C:\ssl\createSslCertificate.ps1
 
-$httpsPassword = Get-Content "C:\ssl\https-cert-password.txt"
-$httpsConfig = @"
+cd c:\home\origam\HTML5
+
+try {
+    Write-Host "Starting configuration file generation..."
+
+    # Check if template exists
+    if (-not (Test-Path ".\_appsettings.template")) {
+        throw "Template file _appsettings.template not found!"
+    }
+
+    # Read template content
+    $templateContent = Get-Content ".\_appsettings.template" -Raw
+    if ([string]::IsNullOrEmpty($templateContent)) {
+        throw "Template file is empty!"
+    }
+    Write-Host "Successfully read template file"
+
+    # Generate SSL certificate for jwt tokens
+    Write-Host "Generating JWT SSL certificate..."
+    openssl.exe rand -base64 10 | Set-Content -NoNewline certpass
+    openssl.exe req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
+    openssl.exe pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out serverCore.pfx
+    Write-Host "JWT SSL certificate generated"
+
+    # Get the certificate password for JWT
+    $certPass = Get-Content .\certpass
+    Write-Host "Retrieved JWT certificate password"
+
+    # Create initial appsettings.json
+    $templateContent = $templateContent -replace "certpassword", $certPass
+    $templateContent | Set-Content .\appsettings.json
+    Write-Host "Created initial appsettings.json"
+
+    # Add HTTPS configuration
+    $httpsPassword = Get-Content "C:\ssl\https-cert-password.txt" -ErrorAction Stop
+    $httpsConfig = @"
 ,
   "Kestrel": {
     "Endpoints": {
@@ -57,22 +91,37 @@ $httpsConfig = @"
   }
 "@
 
-cd c:\home\origam\HTML5
+    # Update appsettings.json with HTTPS config
+    $appSettings = Get-Content .\appsettings.json -Raw
+    $appSettings = $appSettings -replace "}$", "$httpsConfig`n}"
+    $appSettings | Set-Content .\appsettings.json
+    Write-Host "Added HTTPS configuration"
 
+    # Replace environment variables
+    $replacements = @{
+        "ExternalDomain" = $Env:ExternalDomain_SetOnStart
+        "pathchatapp" = $Env:pathchatapp
+        "chatinterval" = if ([string]::IsNullOrEmpty($Env:chatinterval)) { "0" } else { $Env:chatinterval }
+    }
 
-# Generate SSL certificate for jwt tokens
-openssl.exe rand -base64 10 | Set-Content -NoNewline certpass
-openssl.exe req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
-openssl.exe pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out serverCore.pfx
+    foreach ($key in $replacements.Keys) {
+        if ([string]::IsNullOrEmpty($replacements[$key])) {
+            Write-Host "Warning: Environment variable for $key is empty"
+        }
+        $appSettings = Get-Content .\appsettings.json -Raw
+        $appSettings = $appSettings -replace $key, $replacements[$key]
+        $appSettings | Set-Content .\appsettings.json
+        Write-Host "Replaced $key with $($replacements[$key])"
+    }
 
-(Get-Content .\_appsettings.template) -replace "certpassword", (Get-Content .\certpass) | Set-Content .\appsettings.json
+    Write-Host "Configuration file generation completed successfully"
+#    Write-Host "Final appsettings.json content:"
+#    Write-Host $finalContent
 
-# Insert the HTTPS configuration into appsettings.json before the closing brace
-(Get-Content .\appsettings.json) -replace "}$", "$httpsConfig`n}" | Set-Content .\appsettings.json
-
-(Get-Content .\appsettings.json) -replace "ExternalDomain", $Env:ExternalDomain_SetOnStart | Set-Content .\appsettings.json
-(Get-Content .\appsettings.json) -replace "pathchatapp", $Env:pathchatapp | Set-Content .\appsettings.json
-(Get-Content .\appsettings.json) -replace "chatinterval", $Env:chatinterval | Set-Content .\appsettings.json
+} catch {
+    Write-Host "Error during configuration generation: $_" -ForegroundColor Red
+    throw $_
+}
 
 (Get-Content .\_OrigamSettings.mssql.template) -replace "OrigamSettings_SchemaExtensionGuid", $Env:OrigamSettings_SchemaExtensionGuid | Set-Content .\OrigamSettings.config
 (Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DbHost", $Env:OrigamSettings_DbHost | Set-Content .\OrigamSettings.config
