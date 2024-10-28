@@ -41,7 +41,7 @@ Powershell.exe -executionpolicy remotesigned -File C:\ssl\createSslCertificate.p
 cd c:\home\origam\HTML5
 
 try {
-    Write-Host "Starting configuration file generation..."
+    Write-Host "Starting appsettings generation..."
 
     # Check if template exists
     if (-not (Test-Path ".\_appsettings.template")) {
@@ -92,9 +92,8 @@ try {
 "@
 
     # Update appsettings.json with HTTPS config
-    $appSettings = Get-Content .\appsettings.json -Raw
-    $appSettings = $appSettings -replace "}$", "$httpsConfig`n}"
-    $appSettings | Set-Content .\appsettings.json
+    $templateContent = $templateContent -replace "}$", "$httpsConfig`n}"
+
     Write-Host "Added HTTPS configuration"
 
     # Replace environment variables
@@ -108,33 +107,73 @@ try {
         if ([string]::IsNullOrEmpty($replacements[$key])) {
             Write-Host "Warning: Environment variable for $key is empty"
         }
-        $appSettings = Get-Content .\appsettings.json -Raw
-        $appSettings = $appSettings -replace $key, $replacements[$key]
-        $appSettings | Set-Content .\appsettings.json
+        $templateContent = $templateContent -replace $key, $replacements[$key]
         Write-Host "Replaced $key with $($replacements[$key])"
     }
+    $templateContent | Set-Content .\appsettings.json
 
     Write-Host "Configuration file generation completed successfully"
 #    Write-Host "Final appsettings.json content:"
-#    Write-Host $finalContent
+#    Write-Host templateContent
 
 } catch {
     Write-Host "Error during configuration generation: $_" -ForegroundColor Red
     throw $_
 }
+try {
+    Write-Host "Starting OrigamSettings generation..."
 
-(Get-Content .\_OrigamSettings.mssql.template) -replace "OrigamSettings_SchemaExtensionGuid", $Env:OrigamSettings_SchemaExtensionGuid | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DbHost", $Env:OrigamSettings_DbHost | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DbPort", $Env:OrigamSettings_DbPort | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DbUsername", $Env:OrigamSettings_DbUsername | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DatabaseName", $Env:DatabaseName | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DatabaseName", $Env:DatabaseName | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_DbPassword", $Env:OrigamSettings_DbPassword | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_Title", $Env:OrigamSettings_TitleName | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_Title", $Env:OrigamSettings_TitleName | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_ReportDefinitionsPath", $Env:OrigamSettings_ReportDefinitionsPath | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_RuntimeModelConfigurationPath", $Env:OrigamSettings_RuntimeModelConfigurationPath | Set-Content .\OrigamSettings.config
-(Get-Content .\OrigamSettings.config) -replace "OrigamSettings_ModelName", "data\$Env:OrigamSettings_ModelSubDirectory" | Set-Content .\OrigamSettings.config
+    # Check if template exists
+    if (-not (Test-Path ".\_OrigamSettings.mssql.template")) {
+        throw "Template file _OrigamSettings.mssql.template not found!"
+    }
 
+    # Read template content and create initial config
+    $templateContent = Get-Content ".\_OrigamSettings.mssql.template" -Raw
+    if ([string]::IsNullOrEmpty($templateContent)) {
+        throw "Template file is empty!"
+    }
+    Write-Host "Successfully read database configuration template"
+
+    Write-Host "Current Environment Variables:"
+    Get-ChildItem Env: | Format-Table Name, Value
+
+    # Define required environment variables and their default values
+    $replacements = @{
+        "OrigamSettings_SchemaExtensionGuid" = $Env:OrigamSettings_SchemaExtensionGuid
+        "OrigamSettings_DbHost" = $Env:OrigamSettings_DbHost
+        "OrigamSettings_DbPort" = if ([string]::IsNullOrEmpty($Env:OrigamSettings_DbPort)) { "1433" } else { $Env:OrigamSettings_DbPort }
+        "OrigamSettings_DbUsername" = $Env:OrigamSettings_DbUsername
+        "OrigamSettings_DatabaseName" = $Env:DatabaseName
+        "OrigamSettings_DbPassword" = $Env:OrigamSettings_DbPassword
+        "OrigamSettings_Title" = $Env:OrigamSettings_TitleName
+        "OrigamSettings_ReportDefinitionsPath" = $Env:OrigamSettings_ReportDefinitionsPath
+        "OrigamSettings_RuntimeModelConfigurationPath" = $Env:OrigamSettings_RuntimeModelConfigurationPath
+        "OrigamSettings_ModelName" = "data\$Env:OrigamSettings_ModelSubDirectory"
+    }
+
+    # Create initial config file
+    $templateContent | Set-Content .\OrigamSettings.config
+    Write-Host "Created initial database configuration file"
+
+    # Validate and replace each setting
+    foreach ($setting in $replacements.Keys) {
+        if ([string]::IsNullOrEmpty($replacements[$setting])) {
+            Write-Host "Warning: $setting is empty" -ForegroundColor Yellow
+        }
+
+        $templateContent = $templateContent -replace $setting, $replacements[$setting]
+        Write-Host "Configured $setting with value: $($replacements[$setting])"
+    }
+    $templateContent | Set-Content .\OrigamSettings.config
+
+    Write-Host "Database configuration completed successfully"
+    Write-Host "Final appsettings.json content:"
+    Write-Host $templateContent
+
+} catch {
+    Write-Host "Error during database configuration: $_" -ForegroundColor Red
+    throw $_
+}
 [System.Environment]::SetEnvironmentVariable('ASPNETCORE_URLS','http://+:8080')
 dotnet.exe Origam.Server.dll
