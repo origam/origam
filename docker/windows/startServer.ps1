@@ -36,7 +36,6 @@ function Update-ConfigFromTemplate {
         Write-Host $templateContent
     }
 
-    # Write output
     $templateContent | Set-Content $OutputFile
 }
 

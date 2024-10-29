@@ -1,4 +1,3 @@
-# Save as windows/install.ps1
 $ErrorActionPreference = 'Stop'
 
 # Create installation directory

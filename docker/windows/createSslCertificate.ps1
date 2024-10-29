@@ -1,10 +1,9 @@
-# createSslCertificate.ps1
 $certPath = "C:\ssl"
 $keyFile = "$certPath\https.key"
 $csrFile = "$certPath\https.csr"
 $crtFile = "$certPath\https.crt"
 $pfxFile = "$certPath\https.pfx"
-$certPassword = "YourSecurePassword123" # Fixed password for simplicity
+$certPassword = "NotAVerySecurePasswordSinceThisIsJustADevelopmnetCertificate"
 
 # Check if files already exist
 if ((Test-Path $pfxFile)) {
