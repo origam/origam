@@ -66,13 +66,11 @@ try {
 
     # Create initial appsettings.json
     $templateContent = $templateContent -replace "certpassword", $certPass
-    $templateContent | Set-Content .\appsettings.json
     Write-Host "Created initial appsettings.json"
 
     # Add HTTPS configuration
     $httpsPassword = Get-Content "C:\ssl\https-cert-password.txt" -ErrorAction Stop
     $httpsConfig = @"
-,
   "Kestrel": {
     "Endpoints": {
       "Https": {
@@ -90,7 +88,7 @@ try {
 "@
 
     # Update appsettings.json with HTTPS config
-    $templateContent = $templateContent -replace "}$", "$httpsConfig`n}"
+    $templateContent = $templateContent -replace '"Kestrel": \{\}', $httpsConfig
     Write-Host "Added HTTPS configuration"
 
     $replacements = @{
@@ -110,7 +108,7 @@ try {
 
     Write-Host "Configuration file generation completed successfully"
 #    Write-Host "Final appsettings.json content:"
-#    Write-Host templateContent
+#    Write-Host $templateContent
 
 } catch {
     Write-Host "Error during configuration generation: $_" -ForegroundColor Red
@@ -132,8 +130,8 @@ try {
     }
     Write-Host "Successfully read database configuration template"
 
-    Write-Host "Current Environment Variables:"
-    Get-ChildItem Env: | Format-Table Name, Value
+#    Write-Host "Current Environment Variables:"
+#    Get-ChildItem Env: | Format-Table Name, Value
 
     # Define required environment variables and their default values
     $replacements = @{
@@ -165,8 +163,8 @@ try {
     $templateContent | Set-Content .\OrigamSettings.config
 
     Write-Host "OrigamSettings.config generation completed successfully"
-    Write-Host "Final OrigamSettings.config content:"
-    Write-Host $templateContent
+#    Write-Host "Final OrigamSettings.config content:"
+#    Write-Host $templateContent
 
 } catch {
     Write-Host "Error during database configuration: $_" -ForegroundColor Red
