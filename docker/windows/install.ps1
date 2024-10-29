@@ -41,6 +41,12 @@ try {
     $env:PATH = "$opensslPath;$env:PATH"
     [Environment]::SetEnvironmentVariable('PATH', $env:PATH, [EnvironmentVariableTarget]::Machine)
 
+    # Copy OpenSSL config to expected location
+    $configSourcePath = "$installDir\openssl-3\ssl\openssl.cnf"
+    $configDestDir = "C:\Program Files\Common Files\FireDaemon SSL 3"
+    New-Item -Path $configDestDir -ItemType Directory -Force | Out-Null
+    Copy-Item -Path $configSourcePath -Destination "$configDestDir\openssl.cnf" -Force
+
     Write-Host "OpenSSL installation completed"
 } catch {
     Write-Host "Error installing OpenSSL: $_"
