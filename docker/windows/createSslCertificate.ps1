@@ -14,7 +14,7 @@ if ((Test-Path $pfxFile)) {
 
 try {
     # Create CSR with default values
-    openssl req -new -newkey rsa:2048 -nodes -keyout $keyFile -out $csrFile -subj "/C=US/ST=State/L=City/O=Organization/OU=OrganizationalUnit/CN=localhost"
+    openssl req -new -newkey rsa:2048 -nodes -keyout $keyFile -out $csrFile -subj "/C=US/ST=State/L=City/O=Organization/OU=OrganizationalUnit/CN=localhost" -quiet
 
     # Generate self-signed certificate
     openssl x509 -req -days 365 -in $csrFile -signkey $keyFile -out $crtFile

@@ -1,3 +1,45 @@
+function Update-ConfigFromTemplate {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$TemplateFile,
+
+        [Parameter(Mandatory=$true)]
+        [string]$OutputFile,
+
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Replacements,
+
+        [Parameter(Mandatory=$false)]
+        [boolean]$PrintResult = $false
+    )
+
+    if (-not (Test-Path $TemplateFile)) {
+        throw "Template file $TemplateFile not found!"
+    }
+
+    $templateContent = Get-Content $TemplateFile -Raw
+    if ([string]::IsNullOrEmpty($templateContent)) {
+        throw "Template file is empty!"
+    }
+    Write-Host "Successfully read template file"
+
+    foreach ($key in $Replacements.Keys) {
+        if ([string]::IsNullOrEmpty($Replacements[$key])) {
+            Write-Host "Warning: Value for $key is empty" -ForegroundColor Yellow
+        }
+        $templateContent = $templateContent -replace $key, $Replacements[$key]
+    }
+
+    Write-Host "Configuration file generation completed successfully"
+    if ($PrintResult) {
+        Write-Host "Final $OutputFile content:"
+        Write-Host $templateContent
+    }
+
+    # Write output
+    $templateContent | Set-Content $OutputFile
+}
+
 $ErrorActionPreference = 'Stop'
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
 
@@ -41,36 +83,24 @@ if ($Env:gitPullOnStart -eq "true") {
 try {
     Write-Host "Starting appsettings generation..."
 
-    # Check if template exists
-    if (-not (Test-Path ".\_appsettings.template")) {
-        throw "Template file _appsettings.template not found!"
-    }
-
-    # Read template content
-    $templateContent = Get-Content ".\_appsettings.template" -Raw
-    if ([string]::IsNullOrEmpty($templateContent)) {
-        throw "Template file is empty!"
-    }
-    Write-Host "Successfully read template file"
-
     # Generate SSL certificate for jwt tokens
     Write-Host "Generating JWT SSL certificate..."
     openssl rand -base64 10 | Set-Content -NoNewline certpass
-    openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
+    openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer -quiet
     openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out serverCore.pfx
     Write-Host "JWT SSL certificate generated"
 
-    # Get the certificate password for JWT
-    $certPass = Get-Content .\certpass
+    $JwtcertificatePassword = Get-Content .\certpass
     Write-Host "Retrieved JWT certificate password"
 
-    # Create initial appsettings.json
-    $templateContent = $templateContent -replace "certpassword", $certPass
-    Write-Host "Created initial appsettings.json"
-
-    # Add HTTPS configuration
     $httpsPassword = Get-Content "C:\ssl\https-cert-password.txt" -ErrorAction Stop
-    $httpsConfig = @"
+
+    $replacements = @{
+        "ExternalDomain" = $Env:ExternalDomain_SetOnStart
+        "pathchatapp" = $Env:pathchatapp
+        "certpassword" = $JwtcertificatePassword
+        "chatinterval" = if ([string]::IsNullOrEmpty($Env:chatinterval)) { "0" } else { $Env:chatinterval }
+        '"Kestrel": \{\}' = @"
   "Kestrel": {
     "Endpoints": {
       "Https": {
@@ -86,29 +116,12 @@ try {
     }
   }
 "@
-
-    # Update appsettings.json with HTTPS config
-    $templateContent = $templateContent -replace '"Kestrel": \{\}', $httpsConfig
-    Write-Host "Added HTTPS configuration"
-
-    $replacements = @{
-        "ExternalDomain" = $Env:ExternalDomain_SetOnStart
-        "pathchatapp" = $Env:pathchatapp
-        "chatinterval" = if ([string]::IsNullOrEmpty($Env:chatinterval)) { "0" } else { $Env:chatinterval }
     }
 
-    foreach ($key in $replacements.Keys) {
-        if ([string]::IsNullOrEmpty($replacements[$key])) {
-            Write-Host "Warning: Environment variable for $key is empty"
-        }
-        $templateContent = $templateContent -replace $key, $replacements[$key]
-        Write-Host "Replaced $key with $($replacements[$key])"
-    }
-    $templateContent | Set-Content .\appsettings.json
-
-    Write-Host "Configuration file generation completed successfully"
-#    Write-Host "Final appsettings.json content:"
-#    Write-Host $templateContent
+    Update-ConfigFromTemplate -TemplateFile ".\_appsettings.template" `
+                        -OutputFile ".\appsettings.json" `
+                        -Replacements $replacements `
+                        -PrintResult ($Env:OrigamDockerDebug -eq "true")
 
 } catch {
     Write-Host "Error during configuration generation: $_" -ForegroundColor Red
@@ -118,22 +131,9 @@ try {
 try {
     Write-Host "Starting OrigamSettings generation..."
 
-    # Check if template exists
-    if (-not (Test-Path ".\_OrigamSettings.mssql.template")) {
-        throw "Template file _OrigamSettings.mssql.template not found!"
-    }
-
-    # Read template content and create initial config
-    $templateContent = Get-Content ".\_OrigamSettings.mssql.template" -Raw
-    if ([string]::IsNullOrEmpty($templateContent)) {
-        throw "Template file is empty!"
-    }
-    Write-Host "Successfully read database configuration template"
-
 #    Write-Host "Current Environment Variables:"
 #    Get-ChildItem Env: | Format-Table Name, Value
 
-    # Define required environment variables and their default values
     $replacements = @{
         "OrigamSettings_SchemaExtensionGuid" = $Env:OrigamSettings_SchemaExtensionGuid
         "OrigamSettings_DbHost" = $Env:OrigamSettings_DbHost
@@ -147,24 +147,11 @@ try {
         "OrigamSettings_ModelName" = "data\$Env:OrigamSettings_ModelSubDirectory"
     }
 
-    # Create initial config file
-    $templateContent | Set-Content .\OrigamSettings.config
-    Write-Host "Created initial database configuration file"
 
-    # Validate and replace each setting
-    foreach ($key in $replacements.Keys) {
-        if ([string]::IsNullOrEmpty($replacements[$key])) {
-            Write-Host "Warning: $key is empty" -ForegroundColor Yellow
-        }
-
-        $templateContent = $templateContent -replace $key, $replacements[$key]
-        Write-Host "Replaced $key with $($replacements[$key])"
-    }
-    $templateContent | Set-Content .\OrigamSettings.config
-
-    Write-Host "OrigamSettings.config generation completed successfully"
-#    Write-Host "Final OrigamSettings.config content:"
-#    Write-Host $templateContent
+    Update-ConfigFromTemplate -TemplateFile ".\_OrigamSettings.mssql.template" `
+                        -OutputFile ".\OrigamSettings.config" `
+                        -Replacements $replacements `
+                        -PrintResult ($Env:OrigamDockerDebug -eq "true")
 
 } catch {
     Write-Host "Error during database configuration: $_" -ForegroundColor Red
