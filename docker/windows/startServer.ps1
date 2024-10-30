@@ -44,7 +44,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
 
 # First generate the HTTPS SSL certificate
 Write-Host "Generating HTTPS SSL certificate..."
-& 'C:\ssl\createSslCertificate.ps1'
+& './createSslCertificate.ps1'
 if ($LASTEXITCODE -ne 0) {
     Write-Host "HTTPS SSL certificate generation failed"
     exit $LASTEXITCODE

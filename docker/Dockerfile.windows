@@ -25,7 +25,6 @@ RUN mkdir HTML5 && \
 COPY HTML5 HTML5/
 COPY HTML5-SOURCE HTML5-SOURCE/
 # COPY Scheduler Scheduler/
-COPY windows/createSslCertificate.ps1 C:/ssl/
 
 WORKDIR /home/origam/HTML5
 
@@ -36,6 +35,7 @@ COPY _OrigamSettings.postgres.template .
 COPY log4net.config .
 COPY windows/startServer.ps1 .
 COPY windows/install.ps1 .
+COPY windows/createSslCertificate.ps1 .
 
 # Install dependencies
 RUN pwsh.exe -ExecutionPolicy Bypass -File install.ps1
