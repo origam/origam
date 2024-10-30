@@ -6,7 +6,7 @@ New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
 # Install MinGit (smaller version of Git)
 Write-Host "Installing MinGit..."
-$gitUrl = "https://github.com/git-for-windows/git/releases/download/v2.42.0.windows.2/MinGit-2.42.0.2-64-bit.zip"
+$gitUrl = "https://github.com/git-for-windows/git/releases/download/v2.47.0.windows.2/MinGit-2.47.0.2-64-bit.zip"
 $gitZip = "$env:TEMP\git.zip"
 $gitInstallPath = "$installDir\Git"
 
@@ -31,10 +31,12 @@ Write-Host "Installing portable OpenSSL..."
 $opensslUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.4.0.zip"
 $opensslZip = "$env:TEMP\openssl.zip"
 $opensslPath = "$installDir\openssl-3\x64\bin"
+$opensslInstallFolder = "$installDir\openssl-3"
 
 try {
     Invoke-WebRequest -Uri $opensslUrl -OutFile $opensslZip
-    Expand-Archive -Path $opensslZip -DestinationPath $installDir -Force
+    New-Item -ItemType Directory -Force -Path $opensslInstallFolder | Out-Null
+    Expand-Archive -Path $opensslZip -DestinationPath $opensslInstallFolder -Force
 
     # Add OpenSSL to PATH
     $env:PATH = "$opensslPath;$env:PATH"
