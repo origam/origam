@@ -19,12 +19,12 @@ WORKDIR /home/origam
 RUN mkdir HTML5 && \
     mkdir HTML5-SOURCE && \
     mkdir "C:\\ssl"
-# RUN mkdir Scheduler
+RUN mkdir Scheduler
 
 # Copy application files
 COPY HTML5 HTML5/
 COPY HTML5-SOURCE HTML5-SOURCE/
-# COPY Scheduler Scheduler/
+COPY Scheduler Scheduler/
 
 WORKDIR /home/origam/HTML5
 
