@@ -129,10 +129,6 @@ try {
 
 try {
     Write-Host "Starting OrigamSettings generation..."
-
-#    Write-Host "Current Environment Variables:"
-#    Get-ChildItem Env: | Format-Table Name, Value
-
     $replacements = @{
         "OrigamSettings_SchemaExtensionGuid" = $Env:OrigamSettings_SchemaExtensionGuid
         "OrigamSettings_DbHost" = $Env:OrigamSettings_DbHost
