@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/Components/EditorsCommon.module";
+@use "src/gui/Components/EditorsCommon.module" as editors;
 
 .inpuContainer {
   display: flex;
   flex-flow: column;
 }
 
-#lastRow{
+#lastRow {
   padding-bottom: 0px
 }
 
-.row{
+.row {
   display: flex;
   flex-flow: row;
   justify-content: flex-start;
@@ -36,20 +36,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   width: 260px;
 }
 
-.label{
+.label {
   width: 95px;
 }
 
-.textInput{
+.textInput {
   width: 150px;
 }
 
-.chcekBoxinput{
+.chcekBoxinput {
   margin: 3px 3px 3px 0;
 }
 
 .notification {
-  @include notification;
+  @include editors.notification;
   position: relative;
   right: -3px;
 }

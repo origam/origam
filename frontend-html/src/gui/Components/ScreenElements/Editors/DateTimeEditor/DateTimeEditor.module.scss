@@ -17,28 +17,28 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/Components/EditorsCommon.module";
-@import "src/gui/commonStyles";
-@import "src/gui/definitions";
+@use "src/gui/Components/EditorsCommon.module" as editors;
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions ;
 
 .droppedPanelContainer {
   z-index: 1000;
   background-color:var(--background1);
   overflow: hidden;
-  @include popoverShadow;
+  @include styles.popoverShadow;
   width: 224px;
 
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
-  @include border-radius(4px);
+  @include definitions.border-radius(4px);
 }
 
 .dropdownSymbol {
-  @include dropdownSymbol;
+  @include editors.dropdownSymbol;
 }
 
 .input {
-  @include input;
+  @include editors.input;
   padding-right: 18px;
 }
 
@@ -47,11 +47,11 @@ input.readOnlyInput{
 }
 
 .notification {
-  @include notification;
+  @include editors.notification;
 }
 
 .editorContainer {
-  @include editorContainer;
+  @include editors.editorContainer;
 }
 
 

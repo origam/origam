@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
-@import "src/gui/definitions";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions;
 
 .button {
-  @include dialogButton;
+  @include styles.dialogButton;
   background: var(--background2);
   box-sizing: border-box;
   font-weight: 700;
   margin: 0 0.5em;
   min-width: 75px;
   padding: 0 1.5em;
-  @include border-radius(3em);
+  @include definitions.border-radius(3em);
 
   &:first-of-type {
     margin-left: 0;

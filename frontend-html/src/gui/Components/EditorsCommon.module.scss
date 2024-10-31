@@ -17,9 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
-@import "src/gui/definitions";
-
+@use "src/gui/commonStyles" as common;
 
 @mixin input {
   width: 100%;
@@ -29,7 +27,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     padding-left: 24px;
   }
   border-radius: 2px;
-  @include hoverItemAnimation;
+  @include common.hoverItemAnimation;
   background: var(--background2);
   border: 1px solid var(--background5);
   color: var(--background8);
@@ -86,7 +84,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   z-index: 200;
   background-color: transparent;
   cursor: pointer;
-  @include hoverItemAnimation;
+  @include common.hoverItemAnimation;
   color: var(--background8);
   height: 100%;
   display: flex;
