@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/commonStyles" as styles;
-@import "src/gui/Components/EditorsCommon.module";
+@use "src/gui/Components/EditorsCommon.module" as editors;
 @import "src/gui/definitions";
 
 .droppedPanelContainer {
@@ -34,11 +34,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropdownSymbol {
-  @include dropdownSymbol;
+  @include editors.dropdownSymbol;
 }
 
 .input {
-  @include input;
+  @include editors.input;
   padding-right: 18px;
 }
 
@@ -47,11 +47,11 @@ input.readOnlyInput{
 }
 
 .notification {
-  @include notification;
+  @include editors.notification;
 }
 
 .editorContainer {
-  @include editorContainer;
+  @include editors.editorContainer;
 }
 
 

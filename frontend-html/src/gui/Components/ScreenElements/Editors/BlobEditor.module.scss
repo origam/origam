@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/commonStyles" as styles;
-@import "src/gui/Components/EditorsCommon.module";
+@use "src/gui/Components/EditorsCommon.module" as editors;
 
 .blobEditor {
   width: 100%;
@@ -158,11 +158,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .editorContainer {
-  @include editorContainer;
+  @include editors.editorContainer;
 }
 
 .notification {
-  @include notification;
+  @include editors.notification;
 }
 
 .standardBorder{
