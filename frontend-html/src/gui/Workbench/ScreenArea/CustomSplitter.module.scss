@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/definitions" as definitions;
-@import "../../Components/Splitter/Splitter.module";
+@use "../../Components/Splitter/Splitter.module" as splitter;
 
 .divider {
   background: var(--background1);
@@ -35,4 +35,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
     background: var(--background1);
   }
+}
+
+.root {
+  @include splitter.root;
+}
+
+.panel {
+  @include splitter.panel;
 }
