@@ -30,6 +30,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using log4net;
+using Npgsql;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.Generators;
 using Origam.Extensions;
@@ -220,6 +221,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	}
     
     #region Public Methods
+    
+	public override void DiagnoseConnection()
+	{
+		using IDbConnection connection = GetConnection(ConnectionString);
+		connection.Open();
+	}
     public abstract string CreateSystemRole(string roleName);
     
     public abstract string CreateInsert(int fieldCount);
