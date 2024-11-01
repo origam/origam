@@ -62,7 +62,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     line-height: 25px;
     padding: 0 0.5em;
     right: -3px;
-    @extend %transition;
+    @include definitions.transition;
   }
 }
 
@@ -109,7 +109,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin: 0;
   padding: 0;
   height: 100%;
-  @extend %transition;
+  @include definitions.transition;
   &:hover, &:focus {
     background: var(--foreground1);
   }

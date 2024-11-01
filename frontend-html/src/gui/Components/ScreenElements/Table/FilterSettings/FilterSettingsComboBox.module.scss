@@ -36,7 +36,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
  white-space: nowrap;
   word-wrap: normal;
   @include definitions.border-radius(2px);
-  @extend %transition;
+  @include definitions.transition;
   background: var(--foreground1);
   border: 1px solid var(--foreground1);
   color: var(--background1);

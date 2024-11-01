@@ -45,7 +45,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   :global(.dividerLine) {
     border-color: var(--background1) !important;
 		border-style: solid !important;
-		@extend %transition;
+		@include definitions.transition;
   }
   &:global(.isHoriz) {
     width: 0.5em;

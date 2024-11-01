@@ -98,7 +98,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin: 0;
   padding: 0;
   width: 14.3%;
-  @extend %transition;
+  @include definitions.transition;
 
   &:hover {
     background: var(--foreground1);
