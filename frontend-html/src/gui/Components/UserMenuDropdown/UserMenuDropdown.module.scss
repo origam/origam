@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@use "src/gui/commonStyles" as styles;
 @import "src/gui/definitions";
-@import "src/gui/commonStyles";
 
 .avatarSection {
   display: flex;
@@ -74,7 +74,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background6);
   cursor: pointer;
   margin: 0 0 0 1em;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
 }
 
 .userNameLabel:hover  {

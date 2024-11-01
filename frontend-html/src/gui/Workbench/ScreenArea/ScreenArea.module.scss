@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
+@use "src/gui/commonStyles" as styles;
 @import "src/gui/definitions";
 
 .Root {
@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   background-color: var(--background7);
-  @include noSelect;
+  @include styles.noSelect;
 }
 
 .TabHandle {
@@ -82,7 +82,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .workflowActionBtn {
-  @include dialogButton();
+  @include styles.dialogButton();
   box-sizing: border-box;
   font-size: $font-size;
   height: 2em;

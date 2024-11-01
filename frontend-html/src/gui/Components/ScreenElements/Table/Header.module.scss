@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@use "src/gui/commonStyles" as styles;
 @import "src/gui/definitions";
-@import "src/gui/commonStyles";
 
 .root{
   display: flex;
@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .noSelect {
-  @include noSelect;
+  @include styles.noSelect;
 }
 
 .header {

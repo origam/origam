@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-@import "src/gui/commonStyles";
+@use "src/gui/commonStyles" as styles;
 
 .resultGroupRow {
   padding-left: 15px;
@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   border-bottom: 1px solid var(--background1);
   background-color: var(--background2);
-  @include noSelect;
+  @include styles.noSelect;
 }
 
 .groupName{
