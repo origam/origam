@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/commonStyles" as styles;
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
 .root{
   display: flex;
@@ -57,7 +57,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   .Header_order {
     background: var(--background2);
     color: var(--foreground1);
-    font-size: $font-size;
+    font-size: definitions.$font-size;
     height: 25px;
     line-height: 25px;
     padding: 0 0.5em;

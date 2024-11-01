@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/commonStyles" as styles;
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
 
 .modalWindow {
@@ -33,7 +33,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
-  @include border-radius(4px);
+  @include definitions.border-radius(4px);
 }
 
 .title {
@@ -46,10 +46,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: default;
   background: var(--background3);
   height: 40px;
-  font-size: $h1-fontsize;
-  line-height: $h1-lineheight;
+  font-size: definitions.$h1-fontsize;
+  line-height: definitions.$h1-lineheight;
   padding: 0 0.65em 0 0.65em;
-  @include border-radius(4px 4px 0 0);
+  @include definitions.border-radius(4px 4px 0 0);
 }
 
 .progressIndicator {
@@ -153,7 +153,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin: 0 0.5em;
   min-width: 75px;
   padding: 0 1.5em;
-  @include border-radius(3em);
+  @include definitions.border-radius(3em);
 
   &:first-of-type {
     margin-left: 0;

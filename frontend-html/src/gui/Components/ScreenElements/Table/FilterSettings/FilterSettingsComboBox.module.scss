@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
 .container {
   width: 100%;
@@ -35,7 +35,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-overflow: ellipsis;
  white-space: nowrap;
   word-wrap: normal;
-  @include border-radius(2px);
+  @include definitions.border-radius(2px);
   @extend %transition;
   background: var(--foreground1);
   border: 1px solid var(--foreground1);
@@ -67,7 +67,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
   box-sizing: border-box;
-  @include border-radius(4px);
+  @include definitions.border-radius(4px);
 }
 
 .dropdownItem {

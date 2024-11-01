@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @use "src/gui/commonStyles" as styles;
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
 .root {
   cursor: pointer;

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 @use "src/gui/commonStyles" as styles;
 @use "src/gui/Components/EditorsCommon.module" as editors;
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
 .droppedPanelContainer {
   z-index: 1000;
@@ -30,7 +30,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
-  @include border-radius(4px);
+  @include definitions.border-radius(4px);
 }
 
 .dropdownSymbol {
