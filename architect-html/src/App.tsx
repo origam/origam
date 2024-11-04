@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import LazyLoadedTree, {
 } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
@@ -15,11 +15,14 @@ import {
   addTopNodes, TreeNode
 } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 import { useDispatch } from "react-redux";
+import { RootStoreContext, UiStoreContext } from "src/main.tsx";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
   const dispatch = useDispatch();
   const architectApi = new ArchitectApi();
+  const rootStore = useContext(RootStoreContext);
+  const uiStore = useContext(UiStoreContext);
 
   async function loadTopNodes() {
     const topNodes= await architectApi.getTopModelNodes();
@@ -42,7 +45,7 @@ const App: React.FC = () => {
         editorArea={editor}
         sideBar={
           <TabView
-            instanceId={"SideBar"}
+            state={uiStore.sideBarTabViewState}
             items={[
               {
                 label: "Packages",

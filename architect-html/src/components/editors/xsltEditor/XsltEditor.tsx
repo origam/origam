@@ -38,6 +38,7 @@ import {
   useEditorInitialization
 } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
+import { TabViewState } from "src/components/tabView/TabViewState.ts";
 
 export const XsltEditor = (props: { node: TreeNode }) => {
   const editorId = getEditorId(props.node);
@@ -56,7 +57,7 @@ export const XsltEditor = (props: { node: TreeNode }) => {
   return (
     <div className={S.root}>
       <TabView
-        instanceId={"XslEditor_" + editorId}
+        state={new TabViewState()}
         items={[
           {
             label: "XSL",
