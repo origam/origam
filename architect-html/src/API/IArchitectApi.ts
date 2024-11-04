@@ -1,5 +1,3 @@
-import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
-
 export interface IArchitectApi {
 
   getPackages(): Promise<Package[]>;
@@ -10,9 +8,9 @@ export interface IArchitectApi {
 
   getNodeChildren(node: ApiTreeNode): Promise<ApiTreeNode[]>;
 
-  getProperties(schemaItemId: string): Promise<EditorProperty[]>;
+  getProperties(schemaItemId: string): Promise<ApiEditorProperty[]>;
 
-  persistChanges(schemaItemId: string, changedProperties:  EditorProperty[]): Promise<void>;
+  persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 }
@@ -23,7 +21,7 @@ export interface ApiTreeNode {
   nodeText: string;
   hasChildNodes: boolean;
   isNonPersistentItem: boolean;
-  editorType: null | "GridEditor";
+  editorType: null | "GridEditor" | "XslTEditor";
   childrenIds: string[];
   children?: ApiTreeNode[];
 }
@@ -31,4 +29,19 @@ export interface ApiTreeNode {
 export interface Package {
   id: string
   name: string
+}
+
+export interface ApiEditorProperty {
+  name: string;
+  type: "boolean" | "enum" | "string" | "looukup";
+  value: any;
+  dropDownValues: DropDownValue[];
+  category: string | null;
+  description: string;
+  readOnly: boolean;
+}
+
+export interface DropDownValue {
+    name: string;
+    value: any;
 }

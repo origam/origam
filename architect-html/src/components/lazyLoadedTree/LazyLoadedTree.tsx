@@ -13,8 +13,8 @@ import { observer } from "mobx-react-lite";
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
-  openEditor: (node: TreeNode) => void;
-}> = observer( ({node, openEditor}) => {
+}> = observer( ({node}) => {
+  const projectState = useContext(RootStoreContext).projectState;
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const TreeNodeComponent: React.FC<{
     if (!node.editorType) {
       await onToggle();
     } else {
-      openEditor(node);
+      projectState.openEditor(node);
     }
   }
 
@@ -82,7 +82,6 @@ const TreeNodeComponent: React.FC<{
             <TreeNodeComponent
               key={childNode.id + childNode.nodeText}
               node={childNode}
-              openEditor={openEditor}
             />
           ))}
         </div>
@@ -91,9 +90,7 @@ const TreeNodeComponent: React.FC<{
   );
 });
 
-const LazyLoadedTree: React.FC<{
-  openEditor: (node: TreeNode) => void;
-}> = observer(({openEditor}) => {
+const LazyLoadedTree: React.FC = observer(() => {
   const projectState = useContext(RootStoreContext).projectState;
 
   return (
@@ -102,7 +99,6 @@ const LazyLoadedTree: React.FC<{
         <TreeNodeComponent
           key={node.id + node.nodeText}
           node={node}
-          openEditor={openEditor}
           children={node.children} // The top nodes come with preloaded children
         />
       ))}

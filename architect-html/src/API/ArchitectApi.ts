@@ -1,6 +1,10 @@
 import axios, { AxiosInstance } from "axios";
-import { IArchitectApi, Package } from "src/API/IArchitectApi.ts";
-import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
+import {
+  ApiEditorProperty,
+  IArchitectApi,
+  Package
+} from "src/API/IArchitectApi.ts";
+
 
 import { TreeNode } from "src/stores/TreeNode.ts";
 
@@ -61,13 +65,13 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async getProperties(schemaItemId: string): Promise<EditorProperty[]> {
+  async getProperties(schemaItemId: string): Promise<ApiEditorProperty[]> {
     return (await (this.axiosInstance.get("/Editor/EditableProperties", {
       params: {schemaItemId: schemaItemId}
     }))).data;
   }
 
-  async persistChanges(schemaItemId: string, changedProperties: EditorProperty[]): Promise<void> {
+  async persistChanges(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<void> {
     const changes = changedProperties
       .filter(x => !x.readOnly)
       .map(x => {

@@ -18,15 +18,7 @@ along with ORIGAM. If notL, see <http://www.gnu.org/licenses/>.
 */
 
 import S from "src/components/editors/xsltEditor/XsltEditor.module.scss";
-import {
-} from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "src/stores/store.ts";
 import { useEffect, useRef } from "react";
-import {
-  EditorState, getEditorId,
-  updateProperty
-} from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { TabView } from "src/components/tabView/TabView.tsx";
 import {
   PropertyEditor
@@ -34,25 +26,16 @@ import {
 import React from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import * as monacoVim from 'monaco-vim';
-import {
-  useEditorInitialization
-} from "src/components/editors/gridEditor/GridEditor.tsx";
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
 
 import { TreeNode } from "src/stores/TreeNode.ts";
+import {
+  EditorState
+} from "src/components/editors/gridEditor/GridEditorState.ts";
 
-export const XsltEditor = (props: { node: TreeNode }) => {
-  const editorId = getEditorId(props.node);
-  const dispatch = useDispatch();
-  const editorState = useSelector<RootState, EditorState>(state => state.editorStates.editors[editorId]);
-  useEditorInitialization(editorState, props.node);
-
-  if (!editorState) {
-    return null;
-  }
-
-  const handleInputChange = (propertyName: string, value: any) => {
-    dispatch(updateProperty({editorId: editorId, propertyName, value}));
+export const XsltEditor = (props: { node: TreeNode, editorState: EditorState; }) => {
+  const handleInputChange = (value: any) => {
+    props.editorState.properties.find(x => x.name === "TextStore")!.value = value;
   };
 
   return (
@@ -63,15 +46,15 @@ export const XsltEditor = (props: { node: TreeNode }) => {
           {
             label: "XSL",
             node: <CodeEditor
-              value={editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
-              onChange={(text) => handleInputChange("TextStore", text)}/>
+              value={props.editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
+              onChange={(text) => handleInputChange(text)}/>
           },
           {
             label: "Settings",
             node:
               <PropertyEditor
-                editorId={editorId}
-                properties={editorState.properties
+                editorState={props.editorState}
+                properties={props.editorState.properties
                   .filter(x => x.name !== "TextStore")}/>
           }
         ]}/>

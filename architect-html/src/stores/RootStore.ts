@@ -18,10 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import { flow, observable } from "mobx";
+import { action, flow, observable } from "mobx";
 import { Package } from "src/API/IArchitectApi.ts";
 import { TreeNode } from "src/stores/TreeNode.ts";
 import { UiStore } from "src/stores/UiStore.ts";
+import {
+  EditorState
+} from "src/components/editors/gridEditor/GridEditorState.ts";
+import { Editor, getEditor } from "src/components/editors/GetEditor.tsx";
 
 export class RootStore {
   public projectState: ProjectState;
@@ -32,10 +36,11 @@ export class RootStore {
   }
 }
 
-class ProjectState {
+export class ProjectState {
   @observable.ref accessor packages: Package[] = [];
   @observable accessor activePackageId: string | undefined;
   @observable accessor modelNodes: TreeNode[] = []
+  @observable accessor editorStates: Editor[] = [];
 
   constructor(private architectApi: ArchitectApi, private uiStore: UiStore) {
   }
@@ -54,5 +59,22 @@ class ProjectState {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node => new TreeNode(node, this.architectApi, this.uiStore.treeViewUiState))
   }
+
+  @action.bound
+  openEditor(node: TreeNode) {
+    const editor = getEditor(node, this.architectApi);
+    this.editorStates.push(editor);
+
+  }
+
+  get activeEditorState() {
+    return this.editorStates.find(editor => editor.state.isActive)?.state;
+  }
+
+  get activeEditor() {
+    return this.editorStates.find(editor => editor.state.isActive)?.element;
+  }
 }
+
+
 

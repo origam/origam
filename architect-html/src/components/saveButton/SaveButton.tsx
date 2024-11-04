@@ -1,29 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  EditorState,
-  saveEditorContent,
-  selectActiveEditorState
-} from 'src/components/editors/gridEditor/GrirEditorSlice.ts';
+import { RootStoreContext } from "src/main.tsx";
+import { useContext } from "react";
+import { flow } from "mobx";
+import { observer } from "mobx-react-lite";
 
-export const SaveButton = () => {
-  const dispatch = useDispatch();
-  const activeEditor = useSelector<any, EditorState | null>(selectActiveEditorState);
-
-  if (!activeEditor) return null;
-
-  const { isDirty, isSaving } = activeEditor;
-
+export const SaveButton = observer( () => {
+  const projectState = useContext(RootStoreContext).projectState;
+  const activeEditor = projectState.activeEditorState;
+  if (!activeEditor) {
+    return null;
+  }
   const handleSave = () => {
-    dispatch(saveEditorContent(activeEditor.id) as any);
+    flow(activeEditor.save.bind(activeEditor))();
   };
 
   return (
     <button
       onClick={handleSave}
-      disabled={!isDirty || isSaving}
-      style={{ backgroundColor: isDirty ? 'red' : 'initial' }}
+      disabled={!activeEditor.isDirty || activeEditor.isSaving}
+      style={{ backgroundColor: activeEditor.isDirty ? 'red' : 'initial' }}
     >
-      {isSaving ? 'Saving...' : 'Save'}
+      {activeEditor.isSaving ? 'Saving...' : 'Save'}
     </button>
   );
-};
+});

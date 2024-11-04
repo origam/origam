@@ -28,7 +28,7 @@ export class TreeNode {
   nodeText: string;
   hasChildNodes: boolean;
   isNonPersistentItem: boolean;
-  editorType: null | "GridEditor";
+  editorType: null | "GridEditor" | "XslTEditor";
   children: TreeNode[];
   childrenIds: string[];
   parent: TreeNode | null;

@@ -1,22 +1,27 @@
 import {
-  EditorProperty,
-  updateProperty
 } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { useDispatch } from "react-redux";
 import S from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
+import {
+  EditorProperty, EditorState
+} from "src/components/editors/gridEditor/GridEditorState.ts";
+import { action } from "mobx";
+import { observer } from "mobx-react-lite";
 
-export function PropertyEditor(props: {
+export const PropertyEditor: React.FC<{
   properties: EditorProperty[];
-  editorId: string;
-}) {
-  const dispatch = useDispatch();
-
+  editorState: EditorState;
+}> = observer( (props) => {
   if (!props.properties) {
     return null;
   }
-  const handleInputChange = (propertyName: string, value: any) => {
-    dispatch(updateProperty({editorId: props.editorId, propertyName, value}));
-  };
+
+  function onValueChange(property: EditorProperty, value: any) {
+    action(() => {
+      props.editorState.isDirty = true;
+      property.value = value;
+    })();
+  }
 
   const {
     groupedProperties,
@@ -27,7 +32,7 @@ export function PropertyEditor(props: {
     if (property.type === "enum" || property.type === "looukup") {
       return (
         <select
-          onChange={(e) => handleInputChange(property.name, e.target.value)}>
+          onChange={(e) => onValueChange(property, e.target.value)}>
           {property.dropDownValues.map(x =>
             <option
               key={property.value + x.name}
@@ -44,7 +49,7 @@ export function PropertyEditor(props: {
           <input
             type="checkbox"
             checked={property.value}
-            onChange={(e) => handleInputChange(property.name, e.target.checked)}
+            onChange={(e) => onValueChange(property, e.target.checked)}
             disabled={property.readOnly}
             className={S.checkbox}
           />
@@ -56,7 +61,7 @@ export function PropertyEditor(props: {
         type="text"
         disabled={property.readOnly}
         value={property.value != null ? property.value : undefined}
-        onChange={(e) => handleInputChange(property.name, e.target.value)}
+        onChange={(e) => onValueChange(property, e.target.value)}
       />
     );
   }
@@ -76,7 +81,7 @@ export function PropertyEditor(props: {
       ))}
     </div>
   );
-}
+});
 
 
 function getSortedProperties(properties: EditorProperty[]) {

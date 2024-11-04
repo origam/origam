@@ -1,42 +1,29 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo } from "react";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
-import {
-  EditorState, getEditorId,
-   initializeEditor
-} from 'src/components/editors/gridEditor/GrirEditorSlice.ts';
-import { RootState } from 'src/stores/store.ts';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
-import {
-} from "src/components/editors/xsltEditor/XsltEditor.tsx";
 
 import { TreeNode } from "src/stores/TreeNode.ts";
+import {
+  EditorState
+} from "src/components/editors/gridEditor/GridEditorState.ts";
+import { flow } from "mobx";
+import { observer } from "mobx-react-lite";
 
 
-export function GridEditor(props: {
-  node: TreeNode
-}) {
-  const editorId = props.node.nodeText + "_" + props.node.id;
-  const editorState = useSelector((state: RootState) => state.editorStates.editors[editorId]);
-  useEditorInitialization(editorState, props.node);
+export const GridEditor: React.FC<{
+  node: TreeNode,
+  editorState: EditorState
+}> = observer( (props) => {
+   useEffect(() => {
+    flow(props.editorState.initialize.bind(props.editorState))();
+  }, []);
 
   return (
     <div className={S.gridEditor}>
       <h3 className={S.title}>{`Editing: ${props.node.nodeText}`}</h3>
       <PropertyEditor
-        editorId={editorId}
-        properties={editorState?.properties}/>
+        editorState={props.editorState}
+        properties={props.editorState.properties}/>
     </div>
   );
-}
-
-export function useEditorInitialization(editorState: EditorState, node: TreeNode){
-  const dispatch = useDispatch();
-  const editorId = getEditorId(node);
-  useEffect(() => {
-    if (!editorState) {
-      dispatch(initializeEditor(node) as any);
-    }
-  }, [editorId, dispatch, editorState]);
-  return editorId;
-}
+});
