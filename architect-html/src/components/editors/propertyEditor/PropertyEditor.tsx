@@ -1,6 +1,3 @@
-import {
-} from "src/components/editors/gridEditor/GrirEditorSlice.ts";
-import { useDispatch } from "react-redux";
 import S from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
 import {
   EditorProperty, EditorState
