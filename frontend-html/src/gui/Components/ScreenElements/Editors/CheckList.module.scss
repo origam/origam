@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
-@import "src/gui/Components/EditorsCommon.module";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/Components/EditorsCommon.module" as editors;
 
 .root {
   width: 100%;
@@ -74,7 +74,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
   margin-bottom: 3px;
 
   &:hover {
@@ -113,5 +113,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .editorContainer {
-  @include editorContainer;
+  @include editors.editorContainer;
 }

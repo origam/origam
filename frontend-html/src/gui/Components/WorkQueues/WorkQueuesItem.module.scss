@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
+@use "src/gui/commonStyles" as styles;
 
 .root {
   height: 30px;
@@ -32,11 +32,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-decoration: none;
   font-style: normal;
 
-  color: $textColorNoHover;
+  color: styles.$textColorNoHover;
 
   background-color: var(--background2);
 
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
 
   &:global(.isOpenedScreen) {
     background-color: var(--background1);
@@ -74,7 +74,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   &:not(:global(.isActive)):hover {
-    color: $textColorHover;
+    color: styles.$textColorHover;
     svg:global(.icon) {
       stroke: var(--background8);
       stroke-width: 1.5;
@@ -82,7 +82,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   svg:global(.icon) {
-    @include hoverItemAnimation;
+    @include styles.hoverItemAnimation;
   }
 }
 

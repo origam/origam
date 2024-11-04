@@ -30,7 +30,6 @@ Autor URI: icontel.com
 /*  ---------------------------------------------------------------------- */
 /*  settings */
 /*  ---------------------------------------------------------------------- */
-@import "./colors.scss";
 
 $font-size:         12px;
 
@@ -41,7 +40,7 @@ $h2-lineheight:     1.4em;
 
 /*  ---------------------------------------------------------------------- */
 
-%transition {
+@mixin transition {
 	-webkit-transition: all 200ms linear;
 	   -moz-transition: all 200ms linear;
 		-ms-transition: all 200ms linear;

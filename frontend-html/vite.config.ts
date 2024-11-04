@@ -50,7 +50,13 @@ export default defineConfig({
 	css:{
 		modules: {
 			generateScopedName: "[name]__[local]__[hash:base64:2]"
-		}
+		},
+		preprocessorOptions: {
+      scss: {
+        api: 'modern',
+				loadPaths: ['./'],
+      }
+    }
 	},
 	optimizeDeps: {
 		esbuildOptions: {
@@ -69,6 +75,7 @@ export default defineConfig({
 		}
 	},
 	build: {
+		chunkSizeWarningLimit: 4000, // size in kB
 		commonjsOptions: {
 			transformMixedEsModules: true
 		},

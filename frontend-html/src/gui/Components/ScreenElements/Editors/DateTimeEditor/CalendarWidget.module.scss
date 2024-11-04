@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/Components/EditorsCommon.module";
-@import "src/gui/commonStyles";
-@import "src/gui/definitions";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/Components/EditorsCommon.module" as editors;
+@use "src/gui/definitions" as definitions;
 
 .container {
 
@@ -57,7 +57,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background: var(--foreground1);
   color: var(--background1);
   font-weight: 700;
-  @include border-radius(5em);
+  @include definitions.border-radius(5em);
 }
 
 .dayHeaderCell {
@@ -98,12 +98,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin: 0;
   padding: 0;
   width: 14.3%;
-  @extend %transition;
+  @include definitions.transition;
 
   &:hover {
     background: var(--foreground1);
     color: var(--background1);
-    @include border-radius(5em);
+    @include definitions.border-radius(5em);
   }
   i {
     font-size: 1.25em;
