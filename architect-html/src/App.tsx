@@ -19,6 +19,17 @@ const App: React.FC = observer(() => {
     flow(rootStore.projectState.loadPackageNodes.bind(rootStore.projectState))();
   }, []);
 
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
   // {/*<ScreenSectionEditor/>*/}
   return (
     <TopLayout

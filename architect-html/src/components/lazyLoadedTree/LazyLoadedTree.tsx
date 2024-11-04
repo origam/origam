@@ -13,7 +13,7 @@ import { observer } from "mobx-react-lite";
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
-}> = observer( ({node}) => {
+}> = observer(({node}) => {
   const projectState = useContext(RootStoreContext).projectState;
   const menuId = 'SideMenu' + node.id;
 
@@ -28,6 +28,9 @@ const TreeNodeComponent: React.FC<{
   });
 
   function handleContextMenu(event: TriggerEvent) {
+    if (node.isNonPersistentItem) {
+      return;
+    }
     show({event, props: {}});
   }
 
@@ -72,7 +75,8 @@ const TreeNodeComponent: React.FC<{
           {/*</Submenu>*/}
           <Separator/>
           <Item id="edit" onClick={() => onNodeDoubleClick(node)}>Edit</Item>
-          <Item id="delete" onClick={() => flow(node.delete.bind(node))()}>Delete</Item>
+          <Item id="delete"
+                onClick={() => flow(node.delete.bind(node))()}>Delete</Item>
         </Menu>
         {node.isLoading && ' Loading...'}
       </div>
