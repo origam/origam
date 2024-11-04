@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
@@ -7,7 +7,7 @@ import {
   selectExpandedNodes,
   TreeNode,
   selectTopNodes,
-  setChildNodes, SelectChildNodes
+  setChildNodes, SelectChildNodes, reloadChildren
 } from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
 import {
   Menu,
@@ -16,7 +16,6 @@ import {
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import { RootState } from "src/stores/store.ts";
-
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
@@ -74,7 +73,10 @@ const TreeNodeComponent: React.FC<{
   };
 
   async function handleDelete(){
-    await architectApi.deleteSchemaItem(node.schemaItemId);
+    await architectApi.deleteSchemaItem(node.origamId);
+    if (node.parentId) {
+      dispatch( reloadChildren(node.parentId) as any);
+    }
   }
 
   function onMenuVisibilityChange(isVisible: boolean) {
@@ -129,7 +131,7 @@ const TreeNodeComponent: React.FC<{
 const LazyLoadedTree: React.FC<{
   openEditor: (node: TreeNode) => void;
 }> = ({openEditor}) => {
-  const nodes = useSelector(selectTopNodes);
+  const nodes = useSelector(selectTopNodes) as TreeNode[];
 
   return (
     <div>

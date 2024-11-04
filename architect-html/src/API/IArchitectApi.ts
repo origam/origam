@@ -1,6 +1,6 @@
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { Package } from "src/components/packages/Packages.tsx";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 
 export interface IArchitectApi {
 

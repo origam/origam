@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from 'src/stores/store.ts';
+import { AppThunk, RootState } from 'src/stores/store.ts';
 
 export interface TreeNode {
   id: string;
@@ -45,6 +45,7 @@ export const treeSlice = createSlice({
        const childNodeIds = []
        for (const childNode of children) {
          childNode.childrenIds = [];
+         childNode.parentId = nodeId;
          state.nodes[childNode.id] = childNode;
          childNodeIds.push(childNode.id)
       }
@@ -81,6 +82,16 @@ export const selectTopNodes = createSelector(
   [selectTopNodesInternal],
   (nodes) => Object.values(nodes).filter(x => x.parentId === null)
 );
+
+export const reloadChildren = (nodeId: string): AppThunk =>
+  async (dispatch, getState, {architectApi}) => {
+    const node = getState().tree.nodes[nodeId] as TreeNode;
+    if (!node) {
+      return;
+    }
+    const nodes = await architectApi.getNodeChildren(node);
+    dispatch(setChildNodes({nodeId: node.id, children: nodes}));
+  };
 
 export const SelectChildNodes =  (state: RootState, nodeId: string) => {
   const treeState = state.tree;
