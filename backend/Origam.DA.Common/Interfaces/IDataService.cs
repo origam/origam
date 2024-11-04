@@ -71,4 +71,6 @@ public interface IDataService : IDisposable
         (DataStructureQuery dataStructureQuery);
     IEnumerable<Dictionary<string, object>>
         ExecuteDataReaderReturnPairs(DataStructureQuery query);
+
+    void DiagnoseConnection();
 }
