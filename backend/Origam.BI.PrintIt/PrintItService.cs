@@ -75,7 +75,7 @@ public class PrintItService : IReportService
 					stream.Position = 0;
 					StreamReader reader = new StreamReader(stream);
 					string jsonString = reader.ReadToEnd();
-					TraceReportData(jsonString, report.ReportFileName);
+					TraceReportData(jsonString, report.ReportFileName, parameters);
 					postData = string.Format("jargs={0}", HttpTools.Instance.EscapeDataStringLong(jsonString));
 				}
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
@@ -91,13 +91,21 @@ public class PrintItService : IReportService
 			}
 		}
 	}
-	private void TraceReportData(string data, string reportName)
+	private void TraceReportData(string data, string reportName, Hashtable parameters)
 	{
 		try
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-			string path = System.IO.Path.Combine(settings.ReportsFolder(), reportName + ".json");
-			using (System.IO.StreamWriter file = new System.IO.StreamWriter(path))
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+			string path = Path.Combine(
+				settings.ReportsFolder(), 
+				ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+					reportName,
+					parameters) + ".json");
+			if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
+			{
+				throw new Exception(Strings.PathNotOnReportPath);
+			}
+			using (StreamWriter file = new StreamWriter(path))
 			{
 				file.Write(data);
 				file.Close();

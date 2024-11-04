@@ -70,7 +70,10 @@ public class CrystalReportHelper
         parameters = PrepareParameters(data, parameters, report);
         // get report
         string paramString = $"&format={format}";
-        object result = SendReportRequest("Report", report.ReportFileName, 
+        string reportFileName =  ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+            report.ReportFileName,
+            parameters);
+        object result = SendReportRequest("Report", reportFileName, 
             data, parameters, report, paramString);
         if (result is byte[] bytes)
         {

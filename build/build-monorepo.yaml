@@ -622,7 +622,7 @@ jobs:
     displayName: Build Windows Docker
     dependsOn: build_release
     pool:
-      vmImage: windows-2022
+      vmImage: windows-2019
     steps:
      - checkout: origam
        fetchDepth: 1

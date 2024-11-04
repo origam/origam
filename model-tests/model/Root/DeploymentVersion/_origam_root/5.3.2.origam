@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="d1f0331d-1e55-4d8a-8558-cb9eafde7b09"
+    asi:name="5.3.2"
+    dv:version="5.3.2">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:5.3.2.origam___commandText___57603a02-33a9-4fb8-ac55-55a16556ae4d.txt"
+      x:id="57603a02-33a9-4fb8-ac55-55a16556ae4d"
+      asi:name="00040_PG_Database_Field_OrigamPanelFilterDetail.StringValue2"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.3.2.origam___commandText___c4c2f86b-31c4-40d9-9f7b-e2731d25aa8f.txt"
+      x:id="c4c2f86b-31c4-40d9-9f7b-e2731d25aa8f"
+      asi:name="00030_PG_Database_Field_OrigamPanelFilterDetail.StringValue"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.3.2.origam___commandText___e73dc62f-8ac9-455b-9a10-1f8a4846cc81.txt"
+      x:id="e73dc62f-8ac9-455b-9a10-1f8a4846cc81"
+      asi:name="00010_Database_Field_OrigamPanelFilterDetail.StringValue"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.3.2.origam___commandText___e9ba6ada-0d58-4e2e-879e-e14449ff1f9f.txt"
+      x:id="e9ba6ada-0d58-4e2e-879e-e14449ff1f9f"
+      asi:name="00020_Database_Field_OrigamPanelFilterDetail.StringValue2"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

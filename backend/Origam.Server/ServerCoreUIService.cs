@@ -455,10 +455,14 @@ public class ServerCoreUIService : IBasicUIService
         }
         var sessionStore = sessionManager.GetSession(
             input.SessionFormIdentifier);
-        if (sessionStore.IsDelayedLoading && 
-            action?.Mode == PanelActionMode.MultipleCheckboxes && 
-            action is EntityWorkflowAction workflowAction &&
-            workflowAction.MergeType != ServiceOutputMethod.Ignore)
+        // check if action is on data list entity
+        // we can't execute multiple checkboxes action on list entity,
+        // but it is OK to execute them on details
+        if (sessionStore.IsDelayedLoading 
+            && (action is EntityWorkflowAction workflowAction)
+            && (action.Mode == PanelActionMode.MultipleCheckboxes)
+            && (sessionStore.DataListEntity == input.Entity)
+            && (workflowAction.MergeType != ServiceOutputMethod.Ignore))
         {
             throw new Exception("Only actions with merge type Ignore can be invoked in lazily loaded screens.");
         }

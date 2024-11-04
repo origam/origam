@@ -383,7 +383,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             {
                 return View("EmailNotConfirmed");
             }
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: true);
             if (result.Succeeded && user != null)
             {
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
@@ -426,7 +426,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             }
             if (result.RequiresTwoFactor)
             {
-                return RedirectToAction(nameof(LoginTwoStep), new { user.UserName, model.RememberLogin, model.ReturnUrl });
+                return RedirectToAction(nameof(LoginTwoStep), new { user.UserName, model.ReturnUrl });
             }
         }
         // something went wrong, show form with error
@@ -471,7 +471,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             return View("Error", new ErrorViewModel(_localizer["LoginFailedUnknown"]));
         }
-        var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberLogin, rememberClient: false);
+        var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, false, rememberClient: false);
         if(result.Succeeded)
         {
             if (Url.IsLocalUrl(twoStepModel.ReturnUrl))
@@ -602,7 +602,6 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return new LoginViewModel
         {
-            AllowRememberLogin = AccountOptions.AllowRememberLogin,
             EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
             ReturnUrl = returnUrl,
             Username = context?.LoginHint,
@@ -613,7 +612,6 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
         vm.Username = model.Username;
-        vm.RememberLogin = model.RememberLogin;
         return vm;
     }
     private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)

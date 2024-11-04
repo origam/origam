@@ -1,29 +1,48 @@
-# escape=`
-# Learn about building .NET container images:
+# PowerShell stage
+FROM mcr.microsoft.com/powershell:nanoserver-1809 AS powershell
 
-ARG TAG=ltsc2022
+# Final image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809
 
-FROM mcr.microsoft.com/windows/servercore:$TAG
+# Copy PowerShell from the powershell stage, should work better that installing it...
+ARG src="C:/Program Files/PowerShell/"
+ARG target="C:/Program Files/PowerShell/"
+COPY --from=powershell ${src} ${target}
+
+# Set PowerShell path
+USER ContainerAdministrator
+RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
+
 WORKDIR /home/origam
 
-RUN mkdir HTML5
-RUN mkdir HTML5-SOURCE
+# Create required directories
+RUN mkdir HTML5 && \
+    mkdir HTML5-SOURCE && \
+    mkdir "C:\\ssl"
 RUN mkdir Scheduler
 
+# Copy application files
 COPY HTML5 HTML5/
 COPY HTML5-SOURCE HTML5-SOURCE/
 COPY Scheduler Scheduler/
 
 WORKDIR /home/origam/HTML5
 
+# Copy configuration templates and scripts
 COPY _appsettings.template .
 COPY _OrigamSettings.mssql.template .
 COPY _OrigamSettings.postgres.template .
 COPY log4net.config .
-COPY windows/script.ps1 .
-COPY windows/yarninstall.ps1 .
-RUN Powershell.exe -executionpolicy remotesigned -File yarninstall.ps1
+COPY windows/startServer.ps1 .
+COPY windows/install.ps1 .
+COPY windows/createSslCertificate.ps1 .
+
+# Install dependencies
+RUN pwsh.exe -ExecutionPolicy Bypass -File install.ps1
+
 WORKDIR /home/origam/HTML5-SOURCE
-COPY windows/buildfrontend.ps1 .
 WORKDIR /home/origam/HTML5
-CMD Powershell.exe -executionpolicy remotesigned -File script.ps1
+
+# Set the entry point to use PowerShell
+EXPOSE 8080 443
+ENTRYPOINT ["pwsh.exe", "-ExecutionPolicy", "Bypass", "-File", "startServer.ps1"]

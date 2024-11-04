@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adr="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractDataReport/6.0.0"
+  xmlns:ar="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractReport/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dvp="http://schemas.origam.com/Origam.Schema.EntityModel.DefaultValueParameter/6.0.0"
+  xmlns:fr1="http://schemas.origam.com/Origam.Schema.GuiModel.FastReport/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
+  <fr1:Report
+    asi:abstract="false"
+    adr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    x:id="763dcfa8-9f11-4e85-a053-a92a767af464"
+    adr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+    asi:name="ParametrizedReportFilename"
+    adr:reportFileName="{template-name}.report">
+    <dvp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="false"
+      sip:dataType="String"
+      dvp:defaultValue="Widgets/DataConstant/Widgets/ReportTemplateName.origam#ReportTemplateName/fe570c7e-fe40-4712-84cc-807face163ce"
+      x:id="d285a4e2-01e7-48a5-af0d-7bfe1252ca70"
+      asi:name="template-name" />
+  </fr1:Report>
+</x:file>

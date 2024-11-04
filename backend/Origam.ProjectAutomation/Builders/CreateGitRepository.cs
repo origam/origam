@@ -28,7 +28,7 @@ class CreateGitRepository : AbstractBuilder
     {
         GitManager.CreateRepository(project.SourcesFolder);
         GitManager gitmanager = new GitManager(project.SourcesFolder);
-        gitmanager.Init(project.Gitusername, project.Gitemail);
+        gitmanager.Init(project.GitUsername, project.GitEmail);
     }
     public override void Rollback()
     {

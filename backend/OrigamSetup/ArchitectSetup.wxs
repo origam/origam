@@ -78,14 +78,6 @@
               <File Id="AEROWIZARD.DLL" Name="AeroWizard.dll" Source="source\AeroWizard.dll">
               </File>
             </Component>
-            <Component Id="ANTLR3.RUNTIME.DLL" DiskId="1" Guid="83C989DD-8841-47E2-9363-CBE8D0F4D19B">
-              <File Id="ANTLR3.RUNTIME.DLL" Name="Antlr3.Runtime.dll" Source="source\Antlr3.Runtime.dll">
-              </File>
-            </Component>
-            <Component Id="ANTLR4.STRINGTEMPLATE.DLL" DiskId="1" Guid="E678591A-2EEF-4FB5-B34F-CEF6F44BC0E9">
-              <File Id="ANTLR4.STRINGTEMPLATE.DLL" Name="Antlr4.StringTemplate.dll" Source="source\Antlr4.StringTemplate.dll">
-              </File>
-            </Component>
             <Component Id="ORIGAM.ORIGAMENGINE.DLL" DiskId="1" Guid="F023875C-B41F-4D2F-94FF-3E1FB1F87452">
               <File Id="ORIGAM.ORIGAMENGINE.DLL" Name="Origam.OrigamEngine.dll" Source="source\Origam.OrigamEngine.dll">
               </File>
@@ -669,10 +661,6 @@
       <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
       <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
       <ComponentRef Id="AEROWIZARD.DLL">
-      </ComponentRef>
-      <ComponentRef Id="ANTLR3.RUNTIME.DLL">
-      </ComponentRef>
-      <ComponentRef Id="ANTLR4.STRINGTEMPLATE.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.ORIGAMENGINE.DLL">
       </ComponentRef>
