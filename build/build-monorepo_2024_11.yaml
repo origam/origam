@@ -1,0 +1,606 @@
+name: $(Build.BuildId)
+
+
+variables:
+- name: NUGET_PACKAGES # location of nuget packages (used by cache)
+  value: $(Pipeline.Workspace)/.nuget/packages
+- name: YARN_CACHE_FOLDER # location of yarn cache
+  value: $(Pipeline.Workspace)/.yarn
+- name: BRANCH # branch to be used
+  value: 2024.11
+- name: VERSION_NUMBER # version number of the build
+  value: 2024.11.0.$(Build.BuildId)
+- name: PRODUCT_NUMBER # product number to be used in the installation file
+  value: 24.11.0.$(Build.BuildId)
+- name: TAG # tag to be used
+  value: 2024.11.0
+- name: TAG_LATEST # tag to be used
+  value: 2024.11.0
+- name: TAG_PREVIOUS # tag to compare changelog to
+  value: 2024.10.0
+- name: IS_PRERELASE
+  value: false
+- name: PRODUCT_VERSION # used in setup to differentiate the version of architect
+  value: 2024.11
+
+
+resources:
+  repositories:
+   - repository: origam-html-chat
+     type: github
+     endpoint: https://github.com/origam/
+     name: origam/origam-html-chat
+     ref: $(BRANCH)
+   - repository: origam
+     type: github
+     endpoint: https://github.com/origam/
+     name: origam/origam
+     ref: $(BRANCH)
+
+jobs:
+  - job: build_desktop_applications
+    displayName: Build Desktop Applications
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: NuGetToolInstaller@0
+       displayName: 'Use NuGet 5.8'
+       inputs:
+         versionSpec: 5.8
+     - task: Cache@2
+       displayName: 'NuGet Cache'
+       inputs:
+         key: 'nuget-2021-04-11-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
+         path: '$(NUGET_PACKAGES)'
+         restoreKeys: 'nuget-2021-04-11-01 | "$(Agent.OS)"'
+     - task: NuGetCommand@2
+       displayName: 'NuGet restore'
+       inputs:
+         command: 'restore'
+         restoreSolution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         feedsToUse: 'select'
+     - powershell: |
+         $commitId = (git -C $(Agent.BuildDirectory)\s rev-parse HEAD)
+         Write-Host $commitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
+       displayName: Store origam-origam commit id
+     - powershell: |
+        $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs -Recurse
+        $filename | %{
+         (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
+        }
+        $fileName = Get-ChildItem "*" -Include *.csproj -Recurse
+        $filename | %{
+         (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
+        }
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
+       displayName: 'Build Number'
+     - task: VSBuild@1
+       displayName: 'Build architect'
+       inputs:
+         solution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         platform: 'Any CPU'
+         configuration: 'Release Architect'
+         msbuildArchitecture: 'x64'
+     - task: VSTest@2
+       displayName: 'Run tests'
+       inputs:
+         testSelector: 'testAssemblies'
+         testAssemblyVer2: |
+           **\*Tests.dll
+           !**\*TestAdapter.dll
+           !**\obj\**
+         searchFolder: '$(Agent.BuildDirectory)\s\backend\'
+         runInParallel: false
+     - task: CopyFiles@2
+       displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
+       condition: succeededOrFailed()
+     - task: CopyFiles@2
+       displayName: 'Copy architect to: $(build.artifactstagingdirectory)\origam-architect'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamArchitect\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
+       condition: succeededOrFailed()
+     - task: CopyFiles@2
+       displayName: 'Copy external architect dlls to: $(build.artifactstagingdirectory)\origam-architect'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\'
+         Contents: 'EnterpriseLibrary\Interop.MSCommLib.dll'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
+         flattenFolders: true
+       condition: succeededOrFailed()
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-architect'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect'
+         ArtifactName: origam-architect
+       condition: succeededOrFailed()
+     - task: VSBuild@1
+       displayName: 'Build Client'
+       inputs:
+         solution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         platform: 'Any CPU'
+         configuration: 'Release Client'
+         msbuildArchitecture: 'x64'
+     - task: CopyFiles@2
+       displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-client'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+           **\*.exe.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
+       condition: succeededOrFailed()
+     - task: CopyFiles@2
+       displayName: 'Copy client to: $(build.artifactstagingdirectory)\origam-client'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamArchitect\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+           **\*.exe.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
+       condition: succeededOrFailed()
+     - powershell: |
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
+       displayName: 'Rename Config files'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-client'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-client'
+         ArtifactName: origam-client
+       condition: succeededOrFailed()
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-client'
+         Contents: |
+           **\*.*
+         RemoveSourceFolder: true
+       displayName: 'origam-client clean up'
+     - powershell: |
+        (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@product_version@", "$(PRODUCT_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
+        (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
+       displayName: 'Prepare ArchitectSetup.wxs'
+     - powershell: |
+        xcopy $(Agent.BuildDirectory)\s\model-root\l10n model_template\l10n /i /e /y
+        xcopy $(Agent.BuildDirectory)\s\model-root\model model_template\model /i /e /y
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('model_template', '$(Agent.BuildDirectory)\s\backend\OrigamSetup\model_root_source\DefaultModel.zip'); }
+        xcopy model_template $(build.artifactstagingdirectory)\origam-model /i /e /y
+        xcopy $(build.artifactstagingdirectory)\origam-architect $(Agent.BuildDirectory)\s\backend\OrigamSetup\source /i /e /y
+       displayName: 'Prepare sources for setup (model)'
+     - powershell: |
+        & "$(WIX)bin\candle.exe" -ext WixSqlExtension -ext WixUtilExtension ArchitectSetup.wxs
+        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out origam-architect.msi ArchitectSetup.wixobj
+        New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
+        Copy-Item origam-architect.msi $(build.artifactstagingdirectory)\origam-setup\origam-architect.msi -Force
+       workingDirectory: $(Agent.BuildDirectory)\s\backend\OrigamSetup
+       displayName: 'Build setup'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-setup'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-setup'
+         ArtifactName: origam-setup
+       condition: succeededOrFailed()
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-architect'
+         Contents: |
+           **\*.*
+         RemoveSourceFolder: true
+       displayName: 'origam-architect clean up'
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamSetup'
+         Contents: |
+           source\**\*.*
+           server_source\**\*.*
+         RemoveSourceFolder: true
+       displayName: 'origam-setup clean up'
+  - job: build_server
+    displayName: Build Server
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: NuGetToolInstaller@0
+       displayName: 'Use NuGet 5.8'
+       inputs:
+         versionSpec: 5.8
+     - task: Cache@2
+       displayName: 'NuGet Cache'
+       inputs:
+         key: 'nuget-2021-04-11-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
+         path: '$(NUGET_PACKAGES)'
+         restoreKeys: 'nuget-2021-04-11-01 | "$(Agent.OS)"'
+     - task: NuGetCommand@2
+       displayName: 'NuGet restore'
+       inputs:
+         command: 'restore'
+         restoreSolution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         feedsToUse: 'select'
+     - powershell: |
+         $commitId = (git -C $(Agent.BuildDirectory)\s rev-parse HEAD)
+         Write-Host $commitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
+       displayName: Store origam-origam commit id
+     - powershell: |
+        $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs -Recurse
+        $filename | %{
+         (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
+        }
+        $fileName = Get-ChildItem "*" -Include *.csproj -Recurse
+        $filename | %{
+         (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
+        }
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
+       displayName: 'Build Number'
+     - script: |
+        set MsBuildEmitSolution=1
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       displayName: 'Build HTML Server'
+     - task: CopyFiles@2
+       displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
+         Contents: |
+           **\*.*
+           !*.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-html'
+       condition: succeededOrFailed()
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-html-server'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-html'
+         ArtifactName: origam-html-server
+       condition: succeededOrFailed()
+  - job: build_html
+    displayName: Build HTML Frontend
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - checkout: origam-html-chat
+       fetchDepth: 1
+     - task: NodeTool@0
+       displayName: 'Use Node 18.x'
+       inputs:
+         versionSpec: 18.x
+     - task: geeklearningio.gl-vsts-tasks-yarn.yarn-installer-task.YarnInstaller@3
+       displayName: 'Use Yarn 1.x'
+     - task: Cache@2
+       displayName: 'Yarn Cache'
+       inputs:
+         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
+         path: '$(YARN_CACHE_FOLDER)'
+         restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
+     - script: |
+        yarn install --frozen-lockfile
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
+       displayName: 'origam-html yarn'
+     - script: |
+        yarn build
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
+       displayName: 'origam-html yarn build'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-html-client'
+       inputs:
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\dist'
+         ArtifactName: origam-html-client
+       condition: succeededOrFailed()
+     - script: |
+        yarn install --frozen-lockfile
+       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
+       displayName: 'origam-html-chat yarn'
+     - script: |
+        yarn build
+       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
+       displayName: 'origam-html-chat yarn build'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-html-chat'
+       inputs:
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
+         ArtifactName: origam-html-chat
+       condition: succeededOrFailed()
+  - job: build_release
+    displayName: Create Github Release
+    dependsOn: 
+    - build_html
+    - build_desktop_applications
+    - build_server
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+       persistCredentials: true
+     - checkout: origam-html-chat
+       fetchDepth: 1
+       persistCredentials: true
+     - powershell: |
+         $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
+         Write-Host $commitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
+       displayName: Store origam-origam commit id
+     - powershell: |
+         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
+         Write-Host $htmlChatCommitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_CHAT_COMMIT_ID;]$htmlChatCommitId"
+       displayName: Store origam-html-chat commit id
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-setup artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-setup'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-client artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-client'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-html-server artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html-server'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-html-client artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html-client'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-html-chat artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html-chat'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: CopyFiles@2
+       displayName: Copy origam-model to staging directory
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\origam\model-root'
+         Contents: |
+           model/**
+           l10n/**
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-model'
+     - task: CopyFiles@2
+       displayName: Copy origam-html-client to origam-html-server
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-html-client'
+         Contents: '**'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-html-server\clients\origam'
+     - task: CopyFiles@2
+       displayName: Copy origam-html-chat to origam-html-server
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-html-chat'
+         Contents: '**'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-html-server\clients\chat'
+     - task: PublishBuildArtifacts@1
+       inputs:
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)\origam-html-server'
+         ArtifactName: 'origam-html'
+       displayName: 'Publish artifact: origam-html'
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam'
+         action: 'delete'
+         tag: '$(TAG)'
+       displayName: Delete previous GitHub origam/$(TAG) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam/$(TAG_LATEST) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam-html-chat'
+         action: 'delete'
+         tag: '$(TAG)'
+       displayName: Delete previous GitHub origam-html-chat/$(TAG) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam-html-chat'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam-html-chat/$(TAG_LATEST) release
+       continueOnError: true
+     - script: |
+        git tag -f $(TAG)
+        git tag -f $(TAG_LATEST)
+        git push -f origin --tags
+       workingDirectory: $(Agent.BuildDirectory)\s\origam
+       displayName: 'Tag origam'
+     - script: |
+        git tag -f $(TAG)
+        git tag -f $(TAG_LATEST)
+        git push -f origin --tags
+       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat
+       displayName: 'Tag origam-html-chat'
+     - powershell: |
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-desktop-client.zip"); }
+       displayName: Zip files for release
+     # ------------------------------------
+     # RELEASE ORIGAM_ORIGAM - TAG
+     # ------------------------------------
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam'
+         action: 'create'
+         target: $(ORIGAM_ORIGAM_COMMIT_ID)
+         tagSource: 'userSpecifiedTag'
+         tag: '$(TAG)'
+         title: '$(TAG)'
+         isPreRelease: $(IS_PRERELASE)
+         releaseNotesSource: 'inline'
+         releaseNotesInline: |
+           The latest $(TAG) build. Version $(VERSION_NUMBER).
+           
+           ---
+           
+           Server Docker Images
+           ```
+           docker pull origam/server:$(TAG).$(Build.BuildId).linux
+           docker pull origam/server:$(TAG).$(Build.BuildId).win
+           ```
+           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
+         assets: |
+           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
+           $(Build.ArtifactStagingDirectory)/origam-server.zip
+           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
+         addChangeLog: true
+         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
+         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
+         changeLogType: 'commitBased'
+       displayName: Create new GitHub $(TAG) release
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(Build.ArtifactStagingDirectory)'
+         Contents: |
+           **\*.*
+         RemoveSourceFolder: false
+       displayName: 'origam-release clean up'
+     # ------------------------------------
+     # RELEASE ORIGAM_HTML_CHAT - TAG
+     # ------------------------------------
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam-html-chat'
+         action: 'create'
+         target: $(ORIGAM_HTML_CHAT_COMMIT_ID)
+         tagSource: 'userSpecifiedTag'
+         tag: '$(TAG)'
+         title: '$(TAG)'
+         isPreRelease: $(IS_PRERELASE)
+         releaseNotesSource: 'inline'
+         releaseNotesInline: |
+           The latest $(TAG) build. Version $(VERSION_NUMBER).
+           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG)">origam-source/$(TAG)</a>
+         addChangeLog: true
+         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
+         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
+         changeLogType: 'commitBased'
+       displayName: Create new GitHub origam-html-chat/$(TAG) release
+  # ------------------------------------
+  # DOCKER Linux
+  # ------------------------------------
+  - job: build_docker
+    displayName: Build Linux Docker
+    dependsOn: build_release
+    pool:
+      vmImage: ubuntu-20.04
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-html artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - bash: |
+        cp -R ../frontend-html HTML5-SOURCE
+        mv origam-html HTML5
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Download origam-html and source artifact
+     - task: Docker@2
+       displayName: 'Build and publish docker image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/server
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.linux'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).linux
+           $(TAG_LATEST).linux
+     - task: ado-discord-webhook@2
+       inputs:
+         webhookId: '1159149912907333722'
+         webhookKey: 'fltKzMh0vLlA7nCIMk7-WLeWWQ5pJsU9EhSf0ouHd695fbLjIg_p9Lsds-n8iYH8_p5L'
+         content: 'New $(TAG) build: https://github.com/origam/origam/releases/tag/$(TAG)'
+  # ------------------------------------
+  # DOCKER WINDOWS
+  # ------------------------------------
+  - job: build_docker_windows
+    displayName: Build Windows Docker
+    dependsOn: build_release
+    pool:
+      vmImage: windows-2019
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-html artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-client artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-client'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - powershell: |
+        Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
+        Move-Item -Path origam-html -Destination HTML5 -force
+        Move-Item -Path origam-client -Destination Scheduler -force
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Download origam-html and source artifact
+     - task: Docker@2
+       displayName: 'Build and publish docker windows image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/server
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.windows'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).win
+           $(TAG_LATEST).win
