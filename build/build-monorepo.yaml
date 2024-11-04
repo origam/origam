@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2024.11.0.$(Build.BuildId)
+  value: 2024.12.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 24.11.0.$(Build.BuildId)
+  value: 24.12.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2024.11.alpha
+  value: 2024.12.alpha
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2024.10.0
+  value: 2024.11.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2024.11
+  value: 2024.12
 
 
 resources:
@@ -291,14 +291,14 @@ jobs:
        displayName: 'Use Node 18.x'
        inputs:
          versionSpec: 18.x
-     - task: geeklearningio.gl-vsts-tasks-yarn.yarn-installer-task.YarnInstaller@3
-       displayName: 'Use Yarn 1.x'
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
          key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
+     - script: corepack enable
+       displayName: 'Enable Corepack'
      - script: |
         yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
