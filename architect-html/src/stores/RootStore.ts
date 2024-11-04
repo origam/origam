@@ -64,9 +64,7 @@ export class ProjectState {
   openEditor(node: TreeNode) {
     const editor = getEditor(node, this.architectApi);
     editor.state.isActive = true;
-    // this.editorStates.push(editor);
-    this.editorStates = [editor];
-
+    this.editorStates = [editor]; //will be changed when we implement tabs
   }
 
   get activeEditorState() {

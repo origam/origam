@@ -16,7 +16,7 @@ export const GridEditor: React.FC<{
 }> = observer( (props) => {
    useEffect(() => {
     flow(props.editorState.initialize.bind(props.editorState))();
-  }, []);
+  }, [props.editorState]);
 
   return (
     <div className={S.gridEditor}>

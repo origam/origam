@@ -1,8 +1,6 @@
 import { TreeNode } from "src/stores/TreeNode.ts";
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
-import { ProjectState } from "src/stores/RootStore.ts";
-import { useMemo } from "react";
 import {
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
