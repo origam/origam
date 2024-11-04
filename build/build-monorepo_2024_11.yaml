@@ -291,14 +291,14 @@ jobs:
        displayName: 'Use Node 18.x'
        inputs:
          versionSpec: 18.x
-     - task: geeklearningio.gl-vsts-tasks-yarn.yarn-installer-task.YarnInstaller@3
-       displayName: 'Use Yarn 1.x'
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
          key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
+     - script: corepack enable
+       displayName: 'Enable Corepack'
      - script: |
         yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
