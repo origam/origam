@@ -1,40 +1,27 @@
-import { useContext, useEffect, useState } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useContext, useEffect } from 'react';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
-import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
-import {
-  toggleNode,
-  selectExpandedNodes,
-  TreeNode,
-  selectTopNodes,
-  setChildNodes, SelectChildNodes, reloadChildren
-} from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
 import {
   Menu,
   Item,
   useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-import { RootState } from "src/stores/store.ts";
+import { TreeNode } from "src/stores/TreeNode.ts";
+import { RootStoreContext } from "src/main.tsx";
+import { flow } from "mobx";
+import { observer } from "mobx-react-lite";
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
   openEditor: (node: TreeNode) => void;
-}> = ({node, openEditor}) => {
-  const architectApi = useContext(ArchitectApiContext)!;
-  const dispatch = useDispatch();
-  const expandedNodes = useSelector(selectExpandedNodes);
-  const isExpanded = expandedNodes.includes(node.id);
-  const childNodes = useSelector((state: RootState) => SelectChildNodes(state, node.id), shallowEqual)
-  const [isLoading, setIsLoading] = useState(false)
+}> = observer( ({node, openEditor}) => {
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
-    if (isExpanded && node.hasChildNodes && (childNodes.length === 0)) {
-      loadChildren();
+    if (node.isExpanded && node.hasChildNodes && (node.children.length === 0)) {
+      flow(node.loadChildren.bind(node))();
     }
-  }, [isExpanded, childNodes]);
-
+  }, [node.isExpanded, node.children]);
 
   const {show, hideAll} = useContextMenu({
     id: menuId,
@@ -42,19 +29,6 @@ const TreeNodeComponent: React.FC<{
 
   function handleContextMenu(event: TriggerEvent) {
     show({event, props: {}});
-  }
-
-  async function loadChildren() {
-    if (isLoading || !node.hasChildNodes) {
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const nodes = await architectApi.getNodeChildren(node);
-      dispatch(setChildNodes({nodeId: node.id, children: nodes}));
-    } finally {
-      setIsLoading(false);
-    }
   }
 
   const onNodeDoubleClick = async (node: TreeNode) => {
@@ -66,24 +40,13 @@ const TreeNodeComponent: React.FC<{
   }
 
   const onToggle = async () => {
-    if (node.hasChildNodes && !isLoading && !isExpanded && (childNodes.length === 0)) { // !isExpanded => will be expanded now
-      await loadChildren();
-    }
-    dispatch(toggleNode(node.id));
+    await flow(node.toggle.bind(node))();
   };
-
-  async function handleDelete(){
-    await architectApi.deleteSchemaItem(node.origamId);
-    if (node.parentId) {
-      dispatch( reloadChildren(node.parentId) as any);
-    }
-  }
 
   function onMenuVisibilityChange(isVisible: boolean) {
     if (isVisible) {
       document.addEventListener('wheel', hideAll);
-    }
-    else {
+    } else {
       document.removeEventListener('wheel', hideAll);
     }
   }
@@ -92,7 +55,7 @@ const TreeNodeComponent: React.FC<{
     <div className={"treeNode"}>
       <div className={"treeNodeTitle"}>
         <div onClick={onToggle}>
-          {node.hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}
+          {node.hasChildNodes ? (node.isExpanded ? '▼' : '▶') : '•'}
         </div>
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
@@ -105,17 +68,17 @@ const TreeNodeComponent: React.FC<{
           onVisibilityChange={onMenuVisibilityChange}
         >
           {/*<Submenu label="New" disabled>*/}
-            {/*<Item id="reload" onClick={handleItemClick}>Reload</Item>*/}
+          {/*<Item id="reload" onClick={handleItemClick}>Reload</Item>*/}
           {/*</Submenu>*/}
           <Separator/>
           <Item id="edit" onClick={() => onNodeDoubleClick(node)}>Edit</Item>
-          <Item id="delete" onClick={handleDelete}>Delete</Item>
+          <Item id="delete" onClick={() => flow(node.delete)()}>Delete</Item>
         </Menu>
-        {isLoading && ' Loading...'}
+        {node.isLoading && ' Loading...'}
       </div>
-      {isExpanded && childNodes && (
+      {node.isExpanded && node.children.length > 0 && (
         <div>
-          {childNodes.map((childNode) => (
+          {node.children.map((childNode) => (
             <TreeNodeComponent
               key={childNode.id + childNode.nodeText}
               node={childNode}
@@ -126,16 +89,16 @@ const TreeNodeComponent: React.FC<{
       )}
     </div>
   );
-};
+});
 
 const LazyLoadedTree: React.FC<{
   openEditor: (node: TreeNode) => void;
-}> = ({openEditor}) => {
-  const nodes = useSelector(selectTopNodes) as TreeNode[];
+}> = observer(({openEditor}) => {
+  const projectState = useContext(RootStoreContext).projectState;
 
   return (
     <div>
-      {nodes.map((node) => (
+      {projectState.modelNodes.map((node) => (
         <TreeNodeComponent
           key={node.id + node.nodeText}
           node={node}
@@ -145,6 +108,6 @@ const LazyLoadedTree: React.FC<{
       ))}
     </div>
   );
-};
+});
 
 export default LazyLoadedTree;

@@ -5,13 +5,10 @@ import './index.css'
 import { store } from "src/stores/store.ts";
 import { Provider } from "react-redux";
 import { RootStore } from "src/stores/RootStore.ts";
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { UiStore } from "src/stores/UiStore.ts";
 
-
-const architectApi = new ArchitectApi();
-const rootSore = new RootStore(architectApi)
 const uiStore = new UiStore();
+const rootSore = new RootStore(uiStore);
 
 export const RootStoreContext = createContext(rootSore);
 export const UiStoreContext = createContext(uiStore);

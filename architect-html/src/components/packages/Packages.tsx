@@ -1,49 +1,40 @@
-import { useContext, useEffect, useState } from "react";
-import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
-import { setActiveTab } from "src/components/tabView/TabViewSlice.ts";
-import { useDispatch } from "react-redux";
+import { useContext, useEffect } from "react";
+import { RootStoreContext, UiStoreContext } from "src/main.tsx";
+import { observer } from "mobx-react-lite";
+import { flow } from "mobx";
+import { Package } from "src/API/IArchitectApi.ts";
 
-export function Packages(props: {
-  onPackageLoaded: ()=>void
-}) {
-  const architectApi = useContext(ArchitectApiContext)!;
-  const [packages, setPackages] = useState<Package[]>([]);
+export const Packages: React.FC = observer(() => {
+    const projectState = useContext(RootStoreContext).projectState;
 
   useEffect(() => {
-    (async () => {
-      setPackages(await architectApi.getPackages());
-    })();
+    projectState.loadPackages();
   }, []);
 
   return (
     <div>
-      {packages.map(x => <PackageItem key={x.id} package={x} onPackageLoaded={props.onPackageLoaded}/>)}
+      {projectState.packages.map(x => <PackageItem key={x.id} package={x}/>)}
     </div>
   );
-}
+});
 
 function PackageItem(props: {
-  package: Package,
-  onPackageLoaded: ()=>void
+  package: Package
 }) {
-  const dispatch = useDispatch();
-  const architectApi = useContext(ArchitectApiContext)!;
+  const projectState = useContext(RootStoreContext).projectState;
+  const uiStore = useContext(UiStoreContext);
 
   async function onPackageClick(){
-    await architectApi.setActivePackage(props.package.id);
-    props.onPackageLoaded();
-    dispatch(setActiveTab({ instanceId: "SideBar", index: 1 }));
+    flow(function*(){
+      yield projectState.setActivePackage(props.package.id);
+      uiStore.showModelTree();
+      yield projectState.loadPackageNodes();
+    })();
   }
 
   return (
       <div onClick={onPackageClick}>{props.package.name}</div>
   );
-}
-
-
-export interface Package {
-  id: string
-  name: string
 }
 
 

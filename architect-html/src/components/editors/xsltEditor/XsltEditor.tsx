@@ -37,8 +37,9 @@ import * as monacoVim from 'monaco-vim';
 import {
   useEditorInitialization
 } from "src/components/editors/gridEditor/GridEditor.tsx";
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
+
+import { TreeNode } from "src/stores/TreeNode.ts";
 
 export const XsltEditor = (props: { node: TreeNode }) => {
   const editorId = getEditorId(props.node);

@@ -9,7 +9,9 @@ import { RootState } from 'src/stores/store.ts';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 import {
 } from "src/components/editors/xsltEditor/XsltEditor.tsx";
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
+
+import { TreeNode } from "src/stores/TreeNode.ts";
+
 
 export function GridEditor(props: {
   node: TreeNode

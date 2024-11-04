@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import LazyLoadedTree, {
 } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
@@ -11,30 +11,29 @@ import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
-import {
-  addTopNodes, TreeNode
-} from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
-import { useDispatch } from "react-redux";
 import { RootStoreContext, UiStoreContext } from "src/main.tsx";
+import { flow } from "mobx";
+
+import { TreeNode } from "src/stores/TreeNode.ts";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
-  const dispatch = useDispatch();
   const architectApi = new ArchitectApi();
   const rootStore = useContext(RootStoreContext);
   const uiStore = useContext(UiStoreContext);
 
-  async function loadTopNodes() {
-    const topNodes= await architectApi.getTopModelNodes();
-    dispatch(addTopNodes(topNodes));
-  }
-
-  async function onPackageLoaded() {
-    await loadTopNodes();
-  }
+  // async function loadTopNodes() {
+  //   const topNodes= await architectApi.getTopModelNodes();
+  //   dispatch(addTopNodes(topNodes));
+  // }
+  //
+  // async function onPackageLoaded() {
+  //   await loadTopNodes();
+  //
+  // }
 
   useEffect(() => {
-    loadTopNodes();
+    flow(rootStore.projectState.loadPackageNodes.bind(rootStore.projectState))();
   }, []);
 
   return (
@@ -49,7 +48,7 @@ const App: React.FC = () => {
             items={[
               {
                 label: "Packages",
-                node: <Packages onPackageLoaded={onPackageLoaded}/>
+                node: <Packages/>
               },
               {
                 label: "Model",

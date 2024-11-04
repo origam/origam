@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from 'src/stores/store.ts';
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
+
+import { TreeNode } from "src/stores/TreeNode.ts";
 
 export interface EditorProperty {
   name: string;

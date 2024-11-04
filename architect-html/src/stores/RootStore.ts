@@ -18,10 +18,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
+import { flow, observable } from "mobx";
+import { Package } from "src/API/IArchitectApi.ts";
+import { TreeNode } from "src/stores/TreeNode.ts";
+import { UiStore } from "src/stores/UiStore.ts";
 
 export class RootStore {
-  constructor(private architectApi: ArchitectApi) {
+  public projectState: ProjectState;
 
+  constructor(uiStore: UiStore) {
+    const architectApi = new ArchitectApi();
+    this.projectState = new ProjectState(architectApi, uiStore);
+  }
+}
+
+class ProjectState {
+  @observable.ref accessor packages: Package[] = [];
+  @observable accessor activePackageId: string | undefined;
+  @observable accessor modelNodes: TreeNode[] = []
+
+  constructor(private architectApi: ArchitectApi, private uiStore: UiStore) {
+  }
+
+  @flow
+  * loadPackages() {
+    this.packages = yield this.architectApi.getPackages();
+  }
+
+  * setActivePackage(packageId: string) {
+    yield this.architectApi.setActivePackage(packageId);
+    this.activePackageId = packageId;
+  }
+
+  * loadPackageNodes() {
+    const apiNodes = yield this.architectApi.getTopModelNodes();
+    this.modelNodes = apiNodes.map(node => new TreeNode(node, this.architectApi, this.uiStore.treeViewUiState))
   }
 }
 

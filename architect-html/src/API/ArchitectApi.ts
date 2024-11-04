@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from "axios";
-import { IArchitectApi } from "src/API/IArchitectApi.ts";
+import { IArchitectApi, Package } from "src/API/IArchitectApi.ts";
 import { EditorProperty } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
-import { Package } from "src/components/packages/Packages";
-import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts";
+
+import { TreeNode } from "src/stores/TreeNode.ts";
+
 
 export class ArchitectApi implements IArchitectApi {
 
