@@ -72,7 +72,7 @@ const TreeNodeComponent: React.FC<{
           {/*</Submenu>*/}
           <Separator/>
           <Item id="edit" onClick={() => onNodeDoubleClick(node)}>Edit</Item>
-          <Item id="delete" onClick={() => flow(node.delete)()}>Delete</Item>
+          <Item id="delete" onClick={() => flow(node.delete.bind(node))()}>Delete</Item>
         </Menu>
         {node.isLoading && ' Loading...'}
       </div>

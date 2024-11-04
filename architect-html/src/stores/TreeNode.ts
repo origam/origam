@@ -67,7 +67,7 @@ export class TreeNode {
   * delete() {
     yield this.architectApi.deleteSchemaItem(this.origamId);
     if (this.parent) {
-      yield this.parent.loadChildren.bind(this.parent)();
+      yield* this.parent.loadChildren.bind(this.parent)();
     }
   }
 }
