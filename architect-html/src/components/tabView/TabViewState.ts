@@ -1,11 +1,5 @@
-import { makeObservable, observable } from "mobx";
+import { observable } from "mobx";
 
 export class TabViewState {
-  constructor() {
-    makeObservable(this, {
-      activeTabIndex: observable,
-    })
-  }
-
-  activeTabIndex = 0;
+  @observable accessor activeTabIndex = 0;
 }
