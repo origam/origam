@@ -63,7 +63,9 @@ export class ProjectState {
   @action.bound
   openEditor(node: TreeNode) {
     const editor = getEditor(node, this.architectApi);
-    this.editorStates.push(editor);
+    editor.state.isActive = true;
+    // this.editorStates.push(editor);
+    this.editorStates = [editor];
 
   }
 

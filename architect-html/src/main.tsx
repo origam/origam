@@ -6,14 +6,13 @@ import { RootStore } from "src/stores/RootStore.ts";
 import { UiStore } from "src/stores/UiStore.ts";
 
 const uiStore = new UiStore();
-const rootSore = new RootStore(uiStore);
-
-export const RootStoreContext = createContext(rootSore);
+const rootStore = new RootStore(uiStore);
+export const RootStoreContext = createContext(rootStore);
 export const UiStoreContext = createContext(uiStore);
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+root.render(
   <React.StrictMode>
-    <RootStoreContext.Provider value={rootSore}>
+    <RootStoreContext.Provider value={rootStore}>
       <UiStoreContext.Provider value={uiStore}>
         <App/>
       </UiStoreContext.Provider>

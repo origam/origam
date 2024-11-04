@@ -14,7 +14,7 @@ export class EditorState {
   schemaItemId: string;
   @observable accessor properties: EditorProperty[] = [];
   @observable accessor isDirty= false;
-  @observable accessor isSaving= false;
+  @observable accessor isSaving = false;
   @observable accessor isActive= true;
 
   *initialize() {
