@@ -2279,6 +2279,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-dom@npm:^18.3.1":
+  version: 18.3.1
+  resolution: "@types/react-dom@npm:18.3.1"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/8b416551c60bb6bd8ec10e198c957910cfb271bc3922463040b0d57cf4739cdcd24b13224f8d68f10318926e1ec3cd69af0af79f0291b599a992f8c80d47f1eb
+  languageName: node
+  linkType: hard
+
 "@types/react-draft-wysiwyg@npm:^1.13.8":
   version: 1.13.8
   resolution: "@types/react-draft-wysiwyg@npm:1.13.8"
@@ -6161,6 +6170,7 @@ __metadata:
     "@types/numeral": "npm:^2.0.5"
     "@types/react-beautiful-dnd": "npm:^13.1.8"
     "@types/react-color": "npm:^3.0.12"
+    "@types/react-dom": "npm:^18.3.1"
     "@types/react-draft-wysiwyg": "npm:^1.13.8"
     "@types/react-highlight-words": "npm:^0.20.0"
     "@types/react-inlinesvg": "npm:^1.0.0"

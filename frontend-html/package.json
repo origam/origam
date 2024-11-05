@@ -84,6 +84,7 @@
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@testing-library/dom": "^10.4.0",
     "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dom": "^18.3.1",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.3",
     "browserslist": "^4.24.0",
@@ -96,7 +97,6 @@
   },
   "resolutions": {
     "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2",
     "@types/leaflet": "1.7.11",
     "@types/leaflet-draw": "1.0.5"
   },
