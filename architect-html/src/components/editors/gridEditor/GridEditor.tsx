@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 
-import { TreeNode } from "src/stores/TreeNode.ts";
+import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 import {
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";

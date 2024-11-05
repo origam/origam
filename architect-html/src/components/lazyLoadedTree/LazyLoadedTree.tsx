@@ -6,7 +6,7 @@ import {
   useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-import { TreeNode } from "src/stores/TreeNode.ts";
+import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";

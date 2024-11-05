@@ -6,7 +6,7 @@ import {
 } from "src/API/IArchitectApi.ts";
 
 
-import { TreeNode } from "src/stores/TreeNode.ts";
+import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 
 
 export class ArchitectApi implements IArchitectApi {

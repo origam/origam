@@ -1,4 +1,4 @@
-import { TreeNode } from "src/stores/TreeNode.ts";
+import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
 import {
