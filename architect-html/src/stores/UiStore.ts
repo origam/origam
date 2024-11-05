@@ -37,7 +37,7 @@ export class TreeViewUiState {
 
   loadStateFromLocalStorage() {
     try {
-      const serializedState = localStorage.getItem(this.storageKey);
+      const serializedState = localStorage.getItem(this.storageKey) ?? "";
       return JSON.parse(serializedState) ?? [];
     } catch (err) {
       console.error('Error loading state from local storage:', err);

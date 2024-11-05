@@ -31,8 +31,6 @@ export class TreeNode {
   editorType: null | "GridEditor" | "XslTEditor";
   children: TreeNode[];
   childrenIds: string[];
-  parent: TreeNode | null;
-  architectApi: ArchitectApi
 
   @observable accessor isLoading: boolean = false;
 
