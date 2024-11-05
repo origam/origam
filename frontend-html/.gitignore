@@ -50,3 +50,4 @@ src/.ionide/symbolCache.db
 /dist/
 /public/supportedBrowserRegEx.js
 /src/plugins/implementations/
+/.yarn/
