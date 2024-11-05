@@ -1,3 +1,5 @@
+import { TreeNode } from "src/stores/TreeNode.ts";
+
 export interface IArchitectApi {
 
   getPackages(): Promise<Package[]>;
@@ -13,6 +15,17 @@ export interface IArchitectApi {
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
+
+  getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]>;
+
+  createNew(node: ApiTreeNode, typeName: string): Promise<void>;
+}
+
+export interface MenuItemInfo {
+    caption: string;
+    typeName: string;
+    iconName: string;
+    iconIndex: number | null;
 }
 
 export interface ApiTreeNode {

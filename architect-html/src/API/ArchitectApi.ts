@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
-  ApiEditorProperty,
-  IArchitectApi,
+  ApiEditorProperty, ApiTreeNode,
+  IArchitectApi, MenuItemInfo,
   Package
 } from "src/API/IArchitectApi.ts";
 
@@ -86,6 +86,27 @@ export class ArchitectApi implements IArchitectApi {
   async deleteSchemaItem(schemaItemId: string){
     await this.axiosInstance.post("/Model/DeleteSchemaItem",
       {schemaItemId: schemaItemId}
+    )
+  }
+
+  async getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]> {
+    return (await this.axiosInstance.get(
+      `/Model/GetMenuItems`,
+      {
+        params: {
+          id: node.origamId,
+          nodeText: node.nodeText,
+          isNonPersistentItem: node.isNonPersistentItem
+        }
+      })).data;
+  }
+
+  async createNew(node: ApiTreeNode, typeName: string) {
+    await this.axiosInstance.post("/Model/CreateNew",
+      {
+        nodeId: node.origamId,
+        newTypeName: typeName
+      }
     )
   }
 }

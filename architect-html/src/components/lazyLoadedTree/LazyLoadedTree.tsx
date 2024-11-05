@@ -3,7 +3,7 @@ import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import {
   Menu,
   Item,
-  useContextMenu, TriggerEvent, Separator
+  useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import { TreeNode } from "src/stores/TreeNode.ts";
@@ -27,10 +27,12 @@ const TreeNodeComponent: React.FC<{
     id: menuId,
   });
 
-  function handleContextMenu(event: TriggerEvent) {
-    if (node.isNonPersistentItem) {
-      return;
-    }
+  async function handleContextMenu(event: TriggerEvent) {
+    await node.getMenuItems();
+
+    // if (node.isNonPersistentItem) {
+    //   return;
+    // }
     show({event, props: {}});
   }
 
@@ -70,13 +72,34 @@ const TreeNodeComponent: React.FC<{
           id={menuId}
           onVisibilityChange={onMenuVisibilityChange}
         >
-          {/*<Submenu label="New" disabled>*/}
-          {/*<Item id="reload" onClick={handleItemClick}>Reload</Item>*/}
-          {/*</Submenu>*/}
+          <Submenu label="New">
+            {node.contextMenuItems.map((item) => (
+              <Item
+                key={item.typeName + item.caption}
+                id={item.typeName}
+                onClick={() => node.createNew(item.typeName)}
+              >
+                {item.caption}
+              </Item>
+            ))}
+          </Submenu>
           <Separator/>
-          <Item id="edit" onClick={() => onNodeDoubleClick(node)}>Edit</Item>
-          <Item id="delete"
-                onClick={() => flow(node.delete.bind(node))()}>Delete</Item>
+          {node.isNonPersistentItem &&
+            <>
+              <Item
+                id="edit"
+                onClick={() => onNodeDoubleClick(node)}
+              >
+                Edit
+              </Item>
+              <Item
+                id="delete"
+                onClick={() => flow(node.delete.bind(node))()}
+              >
+                Delete
+              </Item>
+            </>
+          }
         </Menu>
         {node.isLoading && ' Loading...'}
       </div>

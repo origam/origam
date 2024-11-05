@@ -134,4 +134,53 @@ public class ModelController(
         persistenceProvider.EndTransaction();
         return Ok();
     }
+    
+
+    
+    // Inspired by class Origam.Workbench.Commands.SchemaItemEditorsMenuBuilder, 
+    // method public AsMenuCommand[] BuildSubmenu(object owner)
+    [HttpGet("GetMenuItems")]
+    public IEnumerable<MenuItemInfo> GetMenuItems( [FromQuery] string id, 
+        [FromQuery] bool isNonPersistentItem, [FromQuery] string nodeText)
+    {
+        if (!Guid.TryParse(id, out Guid schemaItemId))
+        {
+            ISchemaItemProvider provider = GetRootProviderById(id);
+            if (provider == null)
+            {
+                return new List<MenuItemInfo>();
+            }
+            return provider.NewItemTypes.Select(GetMenuInfo);
+        }
+        
+        IBrowserNode2 instance = persistenceProvider
+            .RetrieveInstance<IBrowserNode2>(schemaItemId);
+        
+        ISchemaItemFactory factory = isNonPersistentItem 
+            ? new NonpersistentSchemaItemNode
+                {
+                    NodeText = nodeText,
+                    ParentNode = instance
+                }
+            : (ISchemaItemFactory)instance;
+        
+         return factory.NewItemTypes.Select(GetMenuInfo);
+    }
+    private MenuItemInfo GetMenuInfo(Type type)
+    {
+        SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
+        if (attr is null)
+        {
+            return new MenuItemInfo(
+                caption: type.Name,
+                typeName: type.FullName, 
+                iconName: null, 
+                iconIndex: null);
+        }
+        return new MenuItemInfo(
+            caption: attr.Name,
+            typeName: type.FullName, 
+            iconName: attr.Icon is string iconName ? iconName : null, 
+            iconIndex: attr.Icon is int iconIndex ? iconIndex : null);
+    }
 }

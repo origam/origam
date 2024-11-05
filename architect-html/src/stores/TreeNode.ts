@@ -1,5 +1,5 @@
-import { ApiTreeNode } from "src/API/IArchitectApi.ts";
-import { flow, observable } from "mobx";
+import { ApiTreeNode, MenuItemInfo } from "src/API/IArchitectApi.ts";
+import { action, flow, observable } from "mobx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
 
@@ -33,6 +33,7 @@ export class TreeNode {
   childrenIds: string[];
 
   @observable accessor isLoading: boolean = false;
+  @observable accessor contextMenuItems: MenuItemInfo[] = [];
 
   get isExpanded() {
     return this.treeViewUiState.isExpanded(this.id);
@@ -67,6 +68,15 @@ export class TreeNode {
     if (this.parent) {
       yield* this.parent.loadChildren.bind(this.parent)();
     }
+  }
+
+  @action
+  async getMenuItems() {
+    this.contextMenuItems = await this.architectApi.getMenuItems(this);
+  }
+
+  async createNew(typeName: string) {
+     await this.architectApi.createNew(this, typeName);
   }
 }
 
