@@ -5760,7 +5760,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:2.2.2, mobx-react-lite@npm:^2.2.0":
+"mobx-react-lite@npm:4.0.7":
+  version: 4.0.7
+  resolution: "mobx-react-lite@npm:4.0.7"
+  dependencies:
+    use-sync-external-store: "npm:^1.2.0"
+  peerDependencies:
+    mobx: ^6.9.0
+    react: ^16.8.0 || ^17 || ^18
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 10c0/175e190c5e6c35136ce2b8ef7e9ddeae68b180b585a907a891cd1781038c97eaad195ce9846b0f8e6fe87ac8bc005e31310003d1f7b402f81e460b9411d801d8
+  languageName: node
+  linkType: hard
+
+"mobx-react-lite@npm:^2.2.0":
   version: 2.2.2
   resolution: "mobx-react-lite@npm:2.2.2"
   peerDependencies:
@@ -6604,7 +6621,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     mobx: "npm:5"
     mobx-react: "npm:6.3.1"
-    mobx-react-lite: "npm:2.2.2"
+    mobx-react-lite: "npm:4.0.7"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
     oidc-client-ts: "npm:^3.1.0"
@@ -7675,6 +7692,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 10c0/3d596e65a6b47b2f1818061599738e00daad1f9a9bb4e5ce1f014b20a35b297e50fe4bf1d8c1699ab43ea97f01f84649a736c15ceff96de83bfa696925f6cc6b
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.2
+  resolution: "use-sync-external-store@npm:1.2.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/23b1597c10adf15b26ade9e8c318d8cc0abc9ec0ab5fc7ca7338da92e89c2536abd150a5891bf076836c352fdfa104fc7231fb48f806fd9960e0cbe03601abaf
   languageName: node
   linkType: hard
 
