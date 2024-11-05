@@ -8,7 +8,7 @@ export const Packages: React.FC = observer(() => {
   const projectState = useContext(RootStoreContext).projectState;
 
   useEffect(() => {
-    projectState.loadPackages();
+    flow(projectState.loadPackages.bind(projectState))();
   }, []);
 
   return (

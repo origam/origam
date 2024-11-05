@@ -38,7 +38,7 @@ export class TreeNode {
     return this.treeViewUiState.isExpanded(this.id);
   }
 
-  * loadChildren() {
+  *loadChildren(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
     if (this.isLoading) {
       return;
     }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 

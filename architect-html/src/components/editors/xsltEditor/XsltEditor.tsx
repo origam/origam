@@ -25,6 +25,7 @@ import {
 } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 import React from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
+// @ts-expect-error types for monaco-vim are missing
 import * as monacoVim from 'monaco-vim';
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
 

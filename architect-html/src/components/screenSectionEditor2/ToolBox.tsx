@@ -4,7 +4,7 @@ import {
   DraggableLabel
 } from "src/components/screenSectionEditor2/designComponents/DraggableLabel.tsx";
 
-export const ToolBox = (props: {}) => {
+export const ToolBox = () => {
   return (
     <div className={S.root}>
       <DraggableLabel  text={"Label1"}/>

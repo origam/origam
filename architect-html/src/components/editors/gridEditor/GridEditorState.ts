@@ -10,14 +10,12 @@ export class EditorState {
   ) {
   }
 
-  id: string;
-  schemaItemId: string;
   @observable accessor properties: EditorProperty[] = [];
   @observable accessor isDirty= false;
   @observable accessor isSaving = false;
   @observable accessor isActive= true;
 
-  *initialize() {
+  *initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
     const apiProperties = yield this.architectApi.getProperties(this.origamId);
     this.properties = apiProperties.map(apiProperty => new EditorProperty(apiProperty));
   }

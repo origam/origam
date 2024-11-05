@@ -18,13 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import { action, flow, observable } from "mobx";
+import { action, observable } from "mobx";
 import { Package } from "src/API/IArchitectApi.ts";
 import { TreeNode } from "src/stores/TreeNode.ts";
 import { UiStore } from "src/stores/UiStore.ts";
-import {
-  EditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
 import { Editor, getEditor } from "src/components/editors/GetEditor.tsx";
 
 export class RootStore {
@@ -45,8 +42,7 @@ export class ProjectState {
   constructor(private architectApi: ArchitectApi, private uiStore: UiStore) {
   }
 
-  @flow
-  * loadPackages() {
+  * loadPackages(): Generator<Promise<Package[]>, void, Package[]> {
     this.packages = yield this.architectApi.getPackages();
   }
 
@@ -55,7 +51,7 @@ export class ProjectState {
     this.activePackageId = packageId;
   }
 
-  * loadPackageNodes() {
+  * loadPackageNodes(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node => new TreeNode(node, this.architectApi, this.uiStore.treeViewUiState))
   }
@@ -63,6 +59,9 @@ export class ProjectState {
   @action.bound
   openEditor(node: TreeNode) {
     const editor = getEditor(node, this.architectApi);
+    if (!editor) {
+      return;
+    }
     editor.state.isActive = true;
     this.editorStates = [editor]; //will be changed when we implement tabs
   }

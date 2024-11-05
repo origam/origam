@@ -3,7 +3,7 @@ import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import {
   Menu,
   Item,
-  useContextMenu, TriggerEvent, Separator, Submenu
+  useContextMenu, TriggerEvent, Separator
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import { TreeNode } from "src/stores/TreeNode.ts";
@@ -103,7 +103,6 @@ const LazyLoadedTree: React.FC = observer(() => {
         <TreeNodeComponent
           key={node.id + node.nodeText}
           node={node}
-          children={node.children} // The top nodes come with preloaded children
         />
       ))}
     </div>

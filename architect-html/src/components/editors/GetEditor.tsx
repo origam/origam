@@ -24,6 +24,7 @@ export function getEditor(node: TreeNode, architectApi: ArchitectApi) {
         editorState={editorState}/>
     );
   }
+  return null;
 }
 
 export class Editor {
