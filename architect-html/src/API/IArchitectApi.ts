@@ -1,4 +1,3 @@
-import { TreeNode } from "src/stores/TreeNode.ts";
 
 export interface IArchitectApi {
 
@@ -60,6 +59,7 @@ export interface ApiEditorProperty {
   category: string | null;
   description: string;
   readOnly: boolean;
+  errors: string[];
 }
 
 export interface DropDownValue {

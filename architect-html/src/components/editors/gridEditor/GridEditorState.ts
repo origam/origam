@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import {
   ApiEditorProperty,
@@ -42,8 +42,8 @@ export class EditorState {
     for (const property of this.properties) {
       const ruleError = ruleErrors.find(error => property.name === error.name)
       property.errors = ruleError
-        ? ruleError.errors.join("\n")
-        : undefined;
+        ? ruleError.errors
+        : [];
     }
     this.isDirty = ruleErrors.length === 0
   }
@@ -57,7 +57,14 @@ export class EditorProperty implements ApiEditorProperty {
   category: string | null;
   description: string;
   readOnly: boolean;
-  @observable accessor errors: string | undefined;
+  @observable accessor errors: string[];
+
+  @computed
+  get error(): string | undefined {
+    return this.errors.length === 0
+      ? undefined
+      : this.errors.join("\n");
+  }
 
   constructor(apiProperty: ApiEditorProperty) {
     this.name = apiProperty.name;
@@ -67,5 +74,6 @@ export class EditorProperty implements ApiEditorProperty {
     this.category = apiProperty.category;
     this.description = apiProperty.description;
     this.readOnly = apiProperty.readOnly;
+    this.errors = apiProperty.errors ?? [];
   }
 }

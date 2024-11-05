@@ -70,8 +70,8 @@ export const PropertyEditor: React.FC<{
           {groupedProperties[category].map((property: EditorProperty) => (
             <div className={S.property} key={property.name}>
               <div
-                title={property.errors}
-                className={S.propertyName + (property.errors ? " " + S.errorProperty : "")}
+                title={property.error}
+                className={S.propertyName + (property.error ? " " + S.errorProperty : "")}
               >
                 {property.name}
               </div>

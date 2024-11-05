@@ -119,7 +119,7 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async createNew(node: ApiTreeNode, typeName: string) {
-    await this.axiosInstance.post("/Model/CreateNew",
+    await this.axiosInstance.post("/Editor/CreateNew",
       {
         nodeId: node.origamId,
         newTypeName: typeName

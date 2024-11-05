@@ -24,6 +24,7 @@ public class EditorProperty(
     public string Category { get; } = Category;
     public string Description { get; } = Description;
     public bool ReadOnly { get; } = ReadOnly;
+    public List<string> Errors { get; set; }
 }
 
 public class DropDownValue(string Name, object Value)

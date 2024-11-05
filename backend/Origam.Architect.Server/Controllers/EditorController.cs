@@ -1,18 +1,13 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
-using Origam.Architect.Server.Utils;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -32,7 +27,7 @@ public class EditorController(
         persistenceService.SchemaProvider;
 
     [HttpPost("CreateNew")]
-    public ActionResult<IEnumerable<EditorProperty>> CreateNew(
+    public IEnumerable<EditorProperty> CreateNew(
         [Required] [FromBody] NewItemModel input)
     {
         IBrowserNode2 parentItem = persistenceProvider
@@ -49,7 +44,20 @@ public class EditorController(
 
         ISchemaItem item = (ISchemaItem)result;
 
-        return GetEditorProperties(item);
+        var editorProperties = GetEditorProperties(item);
+        foreach (var editorProperty in editorProperties)
+        {
+            editorProperty.Errors = GetRuleErrorsIfExist(editorProperty, item);
+            yield return editorProperty;
+        }
+    }
+    
+    private List<string> GetRuleErrorsIfExist(EditorProperty editorProperty, ISchemaItem item)
+    {
+        Type type = item.GetType();
+        PropertyInfo[] properties = type.GetProperties();
+        PropertyInfo propertyInfo = properties.First(property => property.Name == editorProperty.Name);
+        return GetRuleErrors(propertyInfo, item)?.Errors;
     }
 
     [HttpGet("EditableProperties")]
@@ -63,10 +71,10 @@ public class EditorController(
             return NotFound($"SchemaItem with id \"{schemaItemId}\" not found");
         }
 
-        return GetEditorProperties(item);
+        return Ok(GetEditorProperties(item));
     }
 
-    private ActionResult<IEnumerable<EditorProperty>> GetEditorProperties(
+    private IEnumerable<EditorProperty> GetEditorProperties(
         ISchemaItem item)
     {
         if (item is XslTransformation xsltTransformation)
@@ -76,14 +84,14 @@ public class EditorController(
                     xsltTransformation,
                     new[] { "Id", "Package", "TextStore", "XsltEngineType" }
                 );
-            return Ok(xsltProperties);
+            return xsltProperties;
         }
 
         if (item is XslRule xslRule)
         {
             var xsltProperties =
                 GetEditorPropertiesByName(xslRule, new[] { "Xsl" });
-            return Ok(xsltProperties);
+            return xsltProperties;
         }
 
         var properties = item.GetType()
@@ -91,39 +99,28 @@ public class EditorController(
             .Select(
                 prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
             .Where(x => x != null);
-        return Ok(properties);
+        return properties;
     }
 
     [HttpPost("CheckRules")]
     public IEnumerable<RuleErrors> CheckRules([FromBody] ChangesModel changes)
     {
-        ISchemaItem item = ChangesToSchemaItem(changes);
-        return item.GetType()
+        return ChangesToSchemaItem(changes)
+            .GetType()
             .GetProperties()
-            .Select(property =>
-            {
-                List<string> ruleErrors = GetRuleErrors(item, property);
-                if (ruleErrors.Count == 0)
-                {
-                    return null;
-                }
-
-                return new RuleErrors
-                {
-                    Name = property.Name,
-                    Errors = ruleErrors
-                };
-            })
+            .Select(property => GetRuleErrors(property, ChangesToSchemaItem(changes)))
             .Where(errors => errors != null);
     }
-
-    private List<string> GetRuleErrors( ISchemaItem item, PropertyInfo propertyInfo)
+    private RuleErrors GetRuleErrors(PropertyInfo property, ISchemaItem item)
     {
-        return propertyInfo.GetCustomAttributes()
+        List<string> ruleErrors = property.GetCustomAttributes()
             .OfType<IModelElementRule>()
-            .Select(rule => rule.CheckRule(item, propertyInfo.Name)?.Message)
+            .Select(rule => rule.CheckRule(item, property.Name)?.Message)
             .Where(message => message != null)
             .ToList();
+        return ruleErrors.Count == 0 
+            ? null :
+            new RuleErrors { Name = property.Name, Errors = ruleErrors };
     }
     
     [HttpPost("PersistChanges")]
