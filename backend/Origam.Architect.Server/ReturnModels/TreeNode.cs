@@ -3,7 +3,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 
-namespace Origam.Architect.Server.Controllers;
+namespace Origam.Architect.Server.ReturnModels;
 
 public class TreeNode
 {

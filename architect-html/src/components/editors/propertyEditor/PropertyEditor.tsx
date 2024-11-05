@@ -2,7 +2,7 @@ import S from "src/components/editors/propertyEditor/PropertyEditor.module.scss"
 import {
   EditorProperty, EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { action } from "mobx";
+import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 
 export const PropertyEditor: React.FC<{
@@ -14,9 +14,8 @@ export const PropertyEditor: React.FC<{
   }
 
   function onValueChange(property: EditorProperty, value: any) {
-    action(() => {
-      props.editorState.isDirty = true;
-      property.value = value;
+    flow(function*() {
+      yield* props.editorState.onPropertyUpdated(property, value);
     })();
   }
 
@@ -70,7 +69,12 @@ export const PropertyEditor: React.FC<{
           <h4>{category ?? "Misc"}</h4>
           {groupedProperties[category].map((property: EditorProperty) => (
             <div className={S.property} key={property.name}>
-              <div className={S.propertyName}>{property.name}</div>
+              <div
+                title={property.errors}
+                className={S.propertyName + (property.errors ? " " + S.errorProperty : "")}
+              >
+                {property.name}
+              </div>
               {renderPropertyEditor(property)}
             </div>
           ))}

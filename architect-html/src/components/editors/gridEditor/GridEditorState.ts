@@ -1,6 +1,10 @@
 import { observable } from "mobx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import { ApiEditorProperty, DropDownValue } from "src/API/IArchitectApi.ts";
+import {
+  ApiEditorProperty,
+  DropDownValue,
+  RuleErrors
+} from "src/API/IArchitectApi.ts";
 
 export class EditorState {
   constructor(
@@ -11,16 +15,16 @@ export class EditorState {
   }
 
   @observable accessor properties: EditorProperty[] = [];
-  @observable accessor isDirty= false;
+  @observable accessor isDirty = false;
   @observable accessor isSaving = false;
-  @observable accessor isActive= true;
+  @observable accessor isActive = true;
 
-  *initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
+  * initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
     const apiProperties = yield this.architectApi.getProperties(this.origamId);
     this.properties = apiProperties.map(apiProperty => new EditorProperty(apiProperty));
   }
 
-  *save() {
+  * save() {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.origamId, this.properties);
@@ -30,6 +34,18 @@ export class EditorState {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<RuleErrors[]>, void, RuleErrors[]> {
+    property.value = value;
+    const ruleErrors = (yield this.architectApi.checkRules(this.origamId, this.properties)) as RuleErrors[];
+    for (const property of this.properties) {
+      const ruleError = ruleErrors.find(error => property.name === error.name)
+      property.errors = ruleError
+        ? ruleError.errors.join("\n")
+        : undefined;
+    }
+    this.isDirty = ruleErrors.length === 0
   }
 }
 
@@ -41,6 +57,7 @@ export class EditorProperty implements ApiEditorProperty {
   category: string | null;
   description: string;
   readOnly: boolean;
+  @observable accessor errors: string | undefined;
 
   constructor(apiProperty: ApiEditorProperty) {
     this.name = apiProperty.name;

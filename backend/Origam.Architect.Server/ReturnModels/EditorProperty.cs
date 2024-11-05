@@ -1,14 +1,12 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
-using Microsoft.OpenApi.Extensions;
 using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
-using Origam.UI;
 
-namespace Origam.Architect.Server.Controllers;
+namespace Origam.Architect.Server.ReturnModels;
 
 public class EditorProperty(
     string Name,

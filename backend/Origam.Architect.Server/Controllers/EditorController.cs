@@ -8,6 +8,7 @@ using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
+using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -93,16 +94,50 @@ public class EditorController(
         return Ok(properties);
     }
 
+    [HttpPost("CheckRules")]
+    public IEnumerable<RuleErrors> CheckRules([FromBody] ChangesModel changes)
+    {
+        ISchemaItem item = ChangesToSchemaItem(changes);
+        return item.GetType()
+            .GetProperties()
+            .Select(property =>
+            {
+                List<string> ruleErrors = GetRuleErrors(item, property);
+                if (ruleErrors.Count == 0)
+                {
+                    return null;
+                }
+
+                return new RuleErrors
+                {
+                    Name = property.Name,
+                    Errors = ruleErrors
+                };
+            })
+            .Where(errors => errors != null);
+    }
+
+    private List<string> GetRuleErrors( ISchemaItem item, PropertyInfo propertyInfo)
+    {
+        return propertyInfo.GetCustomAttributes()
+            .OfType<IModelElementRule>()
+            .Select(rule => rule.CheckRule(item, propertyInfo.Name)?.Message)
+            .Where(message => message != null)
+            .ToList();
+    }
+    
     [HttpPost("PersistChanges")]
     public ActionResult PersistChanges([FromBody] ChangesModel input)
     {
+        ISchemaItem item = ChangesToSchemaItem(input);
+        persistenceService.SchemaProvider.Persist(item);
+        return Ok();
+    }
+
+    private ISchemaItem ChangesToSchemaItem(ChangesModel input)
+    {
         ISchemaItem item = persistenceService.SchemaProvider
-            .RetrieveInstance<ISchemaItem>(input.SchemaItemId);
-        if (item == null)
-        {
-            return NotFound(
-                $"SchemaItem with id \"{input.SchemaItemId}\" not found");
-        }
+            .RetrieveInstance<ISchemaItem>(input.SchemaItemId, false);
 
         PropertyInfo[] properties = item.GetType().GetProperties();
         foreach (var change in input.Changes)
@@ -120,8 +155,7 @@ public class EditorController(
             propertyToChange.SetValue(item, value);
         }
 
-        persistenceService.SchemaProvider.Persist(item);
-        return Ok();
+        return item;
     }
 
     private IEnumerable<EditorProperty> GetEditorPropertiesByName(

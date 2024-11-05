@@ -1,6 +1,4 @@
-﻿using Origam.Architect.Server.Controllers;
-
-namespace Origam.Architect.Server.ReturnModels;
+﻿namespace Origam.Architect.Server.ReturnModels;
 
 public class XsltEditorData (List<EditorProperty> properties, string xslt)
 {

@@ -14,11 +14,19 @@ export interface IArchitectApi {
 
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
+  checkRules(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<RuleErrors[]>;
+
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
   getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]>;
 
   createNew(node: ApiTreeNode, typeName: string): Promise<void>;
+}
+
+export interface RuleErrors
+{
+  name: string;
+  errors: string[];
 }
 
 export interface MenuItemInfo {

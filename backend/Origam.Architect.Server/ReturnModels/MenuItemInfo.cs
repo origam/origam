@@ -1,4 +1,4 @@
-﻿namespace Origam.Architect.Server.Controllers;
+﻿namespace Origam.Architect.Server.ReturnModels;
 
 public class MenuItemInfo
 {

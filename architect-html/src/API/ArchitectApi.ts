@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   ApiEditorProperty, ApiTreeNode,
   IArchitectApi, MenuItemInfo,
-  Package
+  Package, RuleErrors
 } from "src/API/IArchitectApi.ts";
 
 
@@ -20,8 +20,7 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   private createAxiosInstance() {
-    const axiosInstance = axios.create({
-    });
+    const axiosInstance = axios.create({});
 
     axiosInstance.interceptors.response.use(
       (response) => {
@@ -42,11 +41,11 @@ export class ArchitectApi implements IArchitectApi {
 
 
   async setActivePackage(packageId: string): Promise<void> {
-      await this.axiosInstance.post("/Package/SetActive", {id: packageId})
+    await this.axiosInstance.post("/Package/SetActive", {id: packageId})
   }
 
   async getPackages(): Promise<Package[]> {
-     return (await this.axiosInstance.get("/Package/GetAll")).data
+    return (await this.axiosInstance.get("/Package/GetAll")).data
   }
 
   async getTopModelNodes(): Promise<TreeNode[]> {
@@ -80,10 +79,28 @@ export class ArchitectApi implements IArchitectApi {
           value: x.value === undefined || x.value === null ? null : x.value.toString(),
         }
       });
-    await this.axiosInstance.post(`/Editor/PersistChanges`, {schemaItemId, changes});
+    await this.axiosInstance.post(`/Editor/PersistChanges`, {
+      schemaItemId,
+      changes
+    });
   }
 
-  async deleteSchemaItem(schemaItemId: string){
+  async checkRules(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<RuleErrors[]> {
+    const changes = changedProperties
+      .filter(x => !x.readOnly)
+      .map(x => {
+        return {
+          name: x.name,
+          value: x.value === undefined || x.value === null ? null : x.value.toString(),
+        }
+      });
+    return (await this.axiosInstance.post(`/Editor/CheckRules`, {
+      schemaItemId,
+      changes
+    })).data;
+  }
+
+  async deleteSchemaItem(schemaItemId: string) {
     await this.axiosInstance.post("/Model/DeleteSchemaItem",
       {schemaItemId: schemaItemId}
     )
