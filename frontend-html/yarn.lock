@@ -5760,7 +5760,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:2.2.2, mobx-react-lite@npm:^2.2.0":
+"mobx-react-lite@npm:^2.2.0":
   version: 2.2.2
   resolution: "mobx-react-lite@npm:2.2.2"
   peerDependencies:
@@ -6604,7 +6604,6 @@ __metadata:
     lodash: "npm:^4.17.21"
     mobx: "npm:5"
     mobx-react: "npm:6.3.1"
-    mobx-react-lite: "npm:2.2.2"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
     oidc-client-ts: "npm:^3.1.0"
