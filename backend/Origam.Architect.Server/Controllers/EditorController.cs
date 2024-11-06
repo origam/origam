@@ -1,17 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
-using Origam.UI;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -19,16 +16,12 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class EditorController(
-    SchemaService schemaService,
     IPersistenceService persistenceService,
     EditorPropertyFactory propertyFactory,
     TreeNodeFactory treeNodeFactory,
-    EditorService editorService,
-    PropertyParser propertyParser)
+    EditorService editorService)
     : ControllerBase
 {
-    private readonly IPersistenceProvider persistenceProvider =
-        persistenceService.SchemaProvider;
 
     [HttpPost("CreateNew")]
     public NewEditorData CreateNew(
