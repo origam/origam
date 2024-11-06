@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Architect.Server.Services;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
@@ -20,6 +22,8 @@ public class EditorController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
     EditorPropertyFactory propertyFactory,
+    TreeNodeFactory treeNodeFactory,
+    EditorService editorService,
     PropertyParser propertyParser)
     : ControllerBase
 {
@@ -27,36 +31,30 @@ public class EditorController(
         persistenceService.SchemaProvider;
 
     [HttpPost("CreateNew")]
-    public IEnumerable<EditorProperty> CreateNew(
+    public NewEditorData CreateNew(
         [Required] [FromBody] NewItemModel input)
     {
-        IBrowserNode2 parentItem = persistenceProvider
-            .RetrieveInstance<IBrowserNode2>(input.NodeId);
-        var factory = (ISchemaItemFactory)parentItem;
+        var item = editorService.CreateSchemaItem(input.NodeId, input.NewTypeName);
 
-        Type newItemType = Reflector.GetTypeByName(input.NewTypeName);
-        object result = factory
-            .GetType()
-            .GetMethod("NewItem")
-            .MakeGenericMethod(newItemType)
-            .Invoke(factory,
-                new object[] { schemaService.ActiveSchemaExtensionId, null });
-
-        ISchemaItem item = (ISchemaItem)result;
-
-        var editorProperties = GetEditorProperties(item);
-        foreach (var editorProperty in editorProperties)
+        var editorProperties = GetEditorProperties(item)
+            .Peek(property =>
+            {
+                property.Errors = GetRuleErrorsIfExist(property, item);
+            });
+        return new NewEditorData
         {
-            editorProperty.Errors = GetRuleErrorsIfExist(editorProperty, item);
-            yield return editorProperty;
-        }
+            Node = treeNodeFactory.Create(item),
+            Properties = editorProperties
+        };
     }
     
-    private List<string> GetRuleErrorsIfExist(EditorProperty editorProperty, ISchemaItem item)
+    private List<string> GetRuleErrorsIfExist(EditorProperty editorProperty,
+        ISchemaItem item)
     {
         Type type = item.GetType();
         PropertyInfo[] properties = type.GetProperties();
-        PropertyInfo propertyInfo = properties.First(property => property.Name == editorProperty.Name);
+        PropertyInfo propertyInfo =
+            properties.First(property => property.Name == editorProperty.Name);
         return GetRuleErrors(propertyInfo, item)?.Errors;
     }
 
@@ -105,12 +103,14 @@ public class EditorController(
     [HttpPost("CheckRules")]
     public IEnumerable<RuleErrors> CheckRules([FromBody] ChangesModel changes)
     {
-        return ChangesToSchemaItem(changes)
+        return editorService.ChangesToSchemaItem(changes)
             .GetType()
             .GetProperties()
-            .Select(property => GetRuleErrors(property, ChangesToSchemaItem(changes)))
+            .Select(property =>
+                GetRuleErrors(property, editorService.ChangesToSchemaItem(changes)))
             .Where(errors => errors != null);
     }
+
     private RuleErrors GetRuleErrors(PropertyInfo property, ISchemaItem item)
     {
         List<string> ruleErrors = property.GetCustomAttributes()
@@ -118,43 +118,20 @@ public class EditorController(
             .Select(rule => rule.CheckRule(item, property.Name)?.Message)
             .Where(message => message != null)
             .ToList();
-        return ruleErrors.Count == 0 
-            ? null :
-            new RuleErrors { Name = property.Name, Errors = ruleErrors };
+        return ruleErrors.Count == 0
+            ? null
+            : new RuleErrors { Name = property.Name, Errors = ruleErrors };
     }
-    
+
     [HttpPost("PersistChanges")]
     public ActionResult PersistChanges([FromBody] ChangesModel input)
     {
-        ISchemaItem item = ChangesToSchemaItem(input);
+        ISchemaItem item = editorService.ChangesToSchemaItem(input);
         persistenceService.SchemaProvider.Persist(item);
         return Ok();
     }
 
-    private ISchemaItem ChangesToSchemaItem(ChangesModel input)
-    {
-        ISchemaItem item = persistenceService.SchemaProvider
-            .RetrieveInstance<ISchemaItem>(input.SchemaItemId, false);
-
-        PropertyInfo[] properties = item.GetType().GetProperties();
-        foreach (var change in input.Changes)
-        {
-            PropertyInfo propertyToChange = properties
-                .FirstOrDefault(prop => prop.Name == change.Name);
-
-            if (propertyToChange == null)
-            {
-                throw new Exception(
-                    $"Property {change.Name} not found on type {item.GetType().Name}");
-            }
-
-            object value = propertyParser.Parse(propertyToChange, change.Value);
-            propertyToChange.SetValue(item, value);
-        }
-
-        return item;
-    }
-
+  
     private IEnumerable<EditorProperty> GetEditorPropertiesByName(
         ISchemaItem item, string[] names)
     {

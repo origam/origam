@@ -29,12 +29,12 @@ import Editor, { EditorProps } from '@monaco-editor/react';
 import * as monacoVim from 'monaco-vim';
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
 
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
+
 import {
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 
-export const XsltEditor = (props: { node: TreeNode, editorState: EditorState; }) => {
+export const XsltEditor = (props: { editorState: EditorState; }) => {
   const handleInputChange = (value: any) => {
     props.editorState.properties.find(x => x.name === "TextStore")!.value = value;
   };

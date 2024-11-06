@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
-
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 import {
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
@@ -11,7 +9,7 @@ import { observer } from "mobx-react-lite";
 
 
 export const GridEditor: React.FC<{
-  node: TreeNode,
+  title: string,
   editorState: EditorState
 }> = observer( (props) => {
    useEffect(() => {
@@ -20,7 +18,7 @@ export const GridEditor: React.FC<{
 
   return (
     <div className={S.gridEditor}>
-      <h3 className={S.title}>{`Editing: ${props.node.nodeText}`}</h3>
+      <h3 className={S.title}>{`Editing: ${props.title}`}</h3>
       <PropertyEditor
         editorState={props.editorState}
         properties={props.editorState.properties}/>

@@ -1,12 +1,23 @@
-import { ApiTreeNode, MenuItemInfo } from "src/API/IArchitectApi.ts";
+import {
+  ApiTreeNode,
+  EditorType,
+  IApiEditorNode,
+  MenuItemInfo
+} from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
+import { IEditorManager } from "src/stores/IEditorManager.ts";
+import {
+  EditorProperty
+} from "src/components/editors/gridEditor/GridEditorState.ts";
+import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
 
-export class TreeNode {
+export class TreeNode implements IApiEditorNode {
 
   constructor(
     apiNode: ApiTreeNode,
+    private editorManager: IEditorManager,
     private architectApi: ArchitectApi,
     private treeViewUiState: TreeViewUiState,
     private parent: TreeNode | null = null
@@ -19,7 +30,8 @@ export class TreeNode {
     this.editorType = apiNode.editorType;
     this.childrenIds = apiNode.childrenIds;
     this.children = apiNode.children
-      ? apiNode.children.map(child => new TreeNode(child, architectApi, this.treeViewUiState, this))
+      ? apiNode.children.map(child =>
+        new TreeNode(child, this.editorManager, architectApi, this.treeViewUiState, this))
       : [];
   }
 
@@ -28,7 +40,7 @@ export class TreeNode {
   nodeText: string;
   hasChildNodes: boolean;
   isNonPersistentItem: boolean;
-  editorType: null | "GridEditor" | "XslTEditor";
+  editorType: EditorType;
   children: TreeNode[];
   childrenIds: string[];
 
@@ -39,7 +51,7 @@ export class TreeNode {
     return this.treeViewUiState.isExpanded(this.id);
   }
 
-  *loadChildren(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
+  * loadChildren(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
     if (this.isLoading) {
       return;
     }
@@ -50,7 +62,8 @@ export class TreeNode {
     this.isLoading = true;
     try {
       const nodes = yield this.architectApi.getNodeChildren(this);
-      this.children = nodes.map(node => new TreeNode(node, this.architectApi, this.treeViewUiState, this));
+      this.children = nodes.map(node =>
+        new TreeNode(node, this.editorManager, this.architectApi, this.treeViewUiState, this));
     } finally {
       this.isLoading = false;
     }
@@ -76,7 +89,10 @@ export class TreeNode {
   }
 
   async createNew(typeName: string) {
-     await this.architectApi.createNew(this, typeName);
+    const editorData = await this.architectApi.createNew(this, typeName);
+    const properties = editorData.properties.map(property => new EditorProperty(property));
+    const editorNode= new NewEditorNode(editorData.node, this);
+    this.editorManager.openEditor(editorNode, properties);
   }
 }
 

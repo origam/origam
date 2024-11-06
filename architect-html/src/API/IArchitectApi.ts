@@ -13,13 +13,18 @@ export interface IArchitectApi {
 
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
-  checkRules(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<RuleErrors[]>;
+  checkRules(
+    schemaItemId: string | undefined,
+    parentId: string | undefined,
+    fullTypeName: string | undefined,
+    changedProperties: ApiEditorProperty[]
+  ): Promise<RuleErrors[]>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
   getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]>;
 
-  createNew(node: ApiTreeNode, typeName: string): Promise<void>;
+  createNew(node: ApiTreeNode, typeName: string): Promise<INewEditorData>;
 }
 
 export interface RuleErrors
@@ -35,13 +40,15 @@ export interface MenuItemInfo {
     iconIndex: number | null;
 }
 
+export type EditorType = "GridEditor" | "XslTEditor" | null;
+
 export interface ApiTreeNode {
   id: string;
   origamId: string;
   nodeText: string;
   hasChildNodes: boolean;
   isNonPersistentItem: boolean;
-  editorType: null | "GridEditor" | "XslTEditor";
+  editorType: EditorType;
   childrenIds: string[];
   children?: ApiTreeNode[];
 }
@@ -65,4 +72,16 @@ export interface ApiEditorProperty {
 export interface DropDownValue {
     name: string;
     value: any;
+}
+
+export interface INewEditorData {
+  node: IApiEditorNode;
+  properties: ApiEditorProperty[];
+}
+
+export interface IApiEditorNode {
+  id: string;
+  origamId: string;
+  nodeText: string;
+  editorType: EditorType;
 }
