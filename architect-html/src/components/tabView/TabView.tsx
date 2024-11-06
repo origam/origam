@@ -26,16 +26,6 @@ export const TabView: React.FC<{
   items: TabViewItem[];
   state: TabViewState;
 }> = observer(({ items, state }) => {
-  // const dispatch = useDispatch();
-  // const activeTabIndex = useSelector((state: RootState) => selectTabState(state, instanceId));
-
-  // useEffect(() => {
-  //   if (items.length > 0 && state.activeTabIndex === undefined) {
-  //     dispatch(setActiveTab({ instanceId, index: defaultActiveTab || 0 }));
-  //     state.activeTabIndex  =
-  //   }
-  // }, [dispatch, items, activeTabIndex, instanceId, defaultActiveTab]);
-
   return (
     <div className={S.root}>
       <div className={S.content}>

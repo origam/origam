@@ -16,13 +16,18 @@ export class EditorState {
     this.properties = properties ?? [];
   }
 
-    //   public id: string,
-    // public origamId: string,
-
   @observable accessor properties: EditorProperty[];
   @observable accessor isDirty = false;
   @observable accessor isSaving = false;
   @observable accessor isActive = true;
+
+  get label (){
+    return this.properties.find(x => x.name === "Name")?.value || "";
+  }
+
+  get schemaItemId(){
+    return this.editorNode.origamId;
+  }
 
   * initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
     if (this.properties.length === 0) {

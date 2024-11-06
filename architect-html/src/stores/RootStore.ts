@@ -46,7 +46,7 @@ export class ProjectState implements IEditorManager {
   @observable.ref accessor packages: Package[] = [];
   @observable accessor activePackageId: string | undefined;
   @observable accessor modelNodes: TreeNode[] = []
-  @observable accessor editorStates: Editor[] = [];
+  @observable accessor editors: Editor[] = [];
 
   constructor(private architectApi: ArchitectApi, private uiStore: UiStore) {
   }
@@ -77,15 +77,30 @@ export class ProjectState implements IEditorManager {
       return;
     }
     editor.state.isActive = true;
-    this.editorStates = [editor]; //will be changed when we implement tabs
+    this.editors = [editor]; //will be changed when we implement tabs
   }
 
   get activeEditorState() {
-    return this.editorStates.find(editor => editor.state.isActive)?.state;
+    return this.editors.find(editor => editor.state.isActive)?.state;
   }
 
   get activeEditor() {
-    return this.editorStates.find(editor => editor.state.isActive)?.element;
+    return this.editors.find(editor => editor.state.isActive)?.element;
+  }
+
+  setActiveEditor(schemaItemId: string) {
+    const editor = this.editors.find(editor => editor.state.schemaItemId === schemaItemId)?.state;
+    if (editor) {
+      editor.isActive = true;
+    }
+  }
+
+  closeEditor(schemaItemId: string) {
+    const self = this;
+    return function*(){
+      self.editors= self.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
+      yield;
+    }
   }
 }
 

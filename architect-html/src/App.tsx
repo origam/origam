@@ -9,6 +9,7 @@ import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { RootStoreContext, UiStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
+import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 
 const App: React.FC = observer(() => {
 
@@ -34,7 +35,7 @@ const App: React.FC = observer(() => {
   return (
     <TopLayout
       topToolBar={<SaveButton/>}
-      editorArea={rootStore.projectState.activeEditor}
+      editorArea={<EditorTabView/>}
       sideBar={
         <TabView
           state={uiStore.sideBarTabViewState}
