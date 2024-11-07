@@ -99,7 +99,7 @@ export class ProjectState implements IEditorManager {
     const self = this;
     return function*(){
       self.editors= self.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
-      yield;
+      yield self.architectApi.closeEditor(schemaItemId);
     }
   }
 }

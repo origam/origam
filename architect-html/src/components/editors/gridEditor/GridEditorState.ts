@@ -31,7 +31,7 @@ export class EditorState {
 
   * initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
     if (this.properties.length === 0) {
-      const apiProperties = yield this.architectApi.getProperties(this.editorNode.origamId);
+      const apiProperties = yield this.architectApi.openEditor(this.editorNode.origamId);
       this.properties = apiProperties.map(apiProperty => new EditorProperty(apiProperty));
     }
   }

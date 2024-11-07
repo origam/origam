@@ -16,9 +16,9 @@ public class EditorService(
     private readonly IPersistenceProvider persistenceProvider =
         persistenceService.SchemaProvider;
 
-    private readonly List<ISchemaItem> unsavedSchemaItems = new();
+    private readonly List<ISchemaItem> editorSchemaItems = new();
 
-    public ISchemaItem CreateSchemaItem(Guid parentId, string fullTypeName)
+    public ISchemaItem OpenEditorWithNewItem(Guid parentId, string fullTypeName)
     {
         IBrowserNode2 parentItem = persistenceProvider
             .RetrieveInstance<IBrowserNode2>(parentId);
@@ -33,27 +33,55 @@ public class EditorService(
                 new object[] { schemaService.ActiveSchemaExtensionId, null });
 
         ISchemaItem item = (ISchemaItem)result;
-        unsavedSchemaItems.Add(item);
+        editorSchemaItems.Add(item);
         return item;
     }
-
-    public void CloseEditor(Guid itemId)
+    
+    public ISchemaItem OpenEditor(Guid schemaItemId)
     {
-        // The old architect removes the items at AbstractEditor_Closing method of
-        // AbstractEditor class. This will have to happen here
+        var editorItem = editorSchemaItems.FirstOrDefault(x => x.Id == schemaItemId);
+        if (editorItem == null)
+        {
+            editorItem = persistenceService.SchemaProvider
+                .RetrieveInstance<ISchemaItem>(schemaItemId, false);
+            editorSchemaItems.Add(editorItem);
+        }
+
+        return editorItem;
+    }
+
+    public void CloseEditor(Guid schemaItemId)
+    {
+        var editorItem = editorSchemaItems.FirstOrDefault(x => x.Id == schemaItemId);
+        if (editorItem == null)
+        {
+            return;
+        }
         
-        // ISchemaItemProvider parentProvider = (ISchemaItemProvider)parentItem;
-        // if (parentProvider.ChildItems.Contains(item))
-        // {
-        //     parentProvider.ChildItems.Remove(item);
-        // }  
+        if(editorItem.IsPersisted)
+        {
+            // in case we edited some of the children we invalidate their cache
+            editorItem.InvalidateChildrenPersistenceCache();
+            editorItem.ClearCache();
+        }
+        else
+        {
+            ISchemaItemProvider provider = editorItem.ParentItem ?? editorItem.RootProvider ;
+            if (provider != null)
+            {
+                if (provider.ChildItems.Contains(editorItem))
+                {
+                    provider.ChildItems.Remove(editorItem);
+                }
+            }
+        }
     }
 
     public ISchemaItem ChangesToSchemaItem(ChangesModel input)
     {
         // We should probably make sure that a single item is not edited in multiple editors. Put the item to unsavedSchemaItems and rename it?
         ISchemaItem item =
-            unsavedSchemaItems.FirstOrDefault(x => x.Id == input.SchemaItemId) ??
+            editorSchemaItems.FirstOrDefault(x => x.Id == input.SchemaItemId) ??
             persistenceService.SchemaProvider
                 .RetrieveInstance<ISchemaItem>(input.SchemaItemId, false);
         

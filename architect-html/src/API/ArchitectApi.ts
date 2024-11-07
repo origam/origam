@@ -64,10 +64,14 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async getProperties(schemaItemId: string): Promise<ApiEditorProperty[]> {
-    return (await (this.axiosInstance.get("/Editor/EditableProperties", {
-      params: {schemaItemId: schemaItemId}
-    }))).data;
+  async openEditor(schemaItemId: string): Promise<ApiEditorProperty[]> {
+    return (await (this.axiosInstance.post("/Editor/OpenEditor",
+      {schemaItemId: schemaItemId}))).data;
+  }
+
+  async closeEditor(schemaItemId: string) {
+    await (this.axiosInstance.post("/Editor/CloseEditor",
+      {schemaItemId: schemaItemId}));
   }
 
   async persistChanges(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<void> {

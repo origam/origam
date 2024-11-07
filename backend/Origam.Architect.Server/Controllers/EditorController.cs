@@ -22,12 +22,13 @@ public class EditorController(
     EditorService editorService)
     : ControllerBase
 {
-
     [HttpPost("CreateNew")]
     public NewEditorData CreateNew(
         [Required] [FromBody] NewItemModel input)
     {
-        var item = editorService.CreateSchemaItem(input.NodeId, input.NewTypeName);
+        var item =
+            editorService.OpenEditorWithNewItem(input.NodeId,
+                input.NewTypeName);
 
         var editorProperties = GetEditorProperties(item)
             .Peek(property =>
@@ -40,7 +41,7 @@ public class EditorController(
             Properties = editorProperties
         };
     }
-    
+
     private List<string> GetRuleErrorsIfExist(EditorProperty editorProperty,
         ISchemaItem item)
     {
@@ -51,18 +52,18 @@ public class EditorController(
         return GetRuleErrors(propertyInfo, item)?.Errors;
     }
 
-    [HttpGet("EditableProperties")]
-    public ActionResult<IEnumerable<EditorProperty>> EditableProperties(
-        [FromQuery] Guid schemaItemId)
+    [HttpPost("OpenEditor")]
+    public ActionResult<IEnumerable<EditorProperty>> OpenEditor(
+        [Required] [FromBody] OpenEditorModel input)
     {
-        ISchemaItem item = persistenceService.SchemaProvider
-            .RetrieveInstance<ISchemaItem>(schemaItemId);
-        if (item == null)
-        {
-            return NotFound($"SchemaItem with id \"{schemaItemId}\" not found");
-        }
-
+        ISchemaItem item = editorService.OpenEditor(input.SchemaItemId);
         return Ok(GetEditorProperties(item));
+    }
+    
+    [HttpPost("CloseEditor")]
+    public void CloseEditor([Required] [FromBody] CloseEditorModel input)
+    {
+        editorService.CloseEditor(input.SchemaItemId);
     }
 
     private IEnumerable<EditorProperty> GetEditorProperties(
@@ -100,7 +101,8 @@ public class EditorController(
             .GetType()
             .GetProperties()
             .Select(property =>
-                GetRuleErrors(property, editorService.ChangesToSchemaItem(changes)))
+                GetRuleErrors(property,
+                    editorService.ChangesToSchemaItem(changes)))
             .Where(errors => errors != null);
     }
 
@@ -124,7 +126,7 @@ public class EditorController(
         return Ok();
     }
 
-  
+
     private IEnumerable<EditorProperty> GetEditorPropertiesByName(
         ISchemaItem item, string[] names)
     {

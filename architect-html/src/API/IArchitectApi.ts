@@ -9,7 +9,7 @@ export interface IArchitectApi {
 
   getNodeChildren(node: ApiTreeNode): Promise<ApiTreeNode[]>;
 
-  getProperties(schemaItemId: string): Promise<ApiEditorProperty[]>;
+  openEditor(schemaItemId: string): Promise<ApiEditorProperty[]>;
 
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
