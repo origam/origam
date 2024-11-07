@@ -1,8 +1,7 @@
 import { computed, observable } from "mobx";
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import {
   ApiEditorProperty,
-  DropDownValue,
+  DropDownValue, IArchitectApi,
   RuleErrors
 } from "src/API/IArchitectApi.ts";
 import { IEditorNode } from "src/stores/IEditorManager.ts";
@@ -11,7 +10,7 @@ export class EditorState {
   constructor(
     private editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
-    private architectApi: ArchitectApi
+    private architectApi: IArchitectApi
   ) {
     this.properties = properties ?? [];
   }

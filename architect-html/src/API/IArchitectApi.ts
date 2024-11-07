@@ -13,12 +13,12 @@ export interface IArchitectApi {
 
   openEditor(schemaItemId: string): Promise<ApiEditorProperty[]>;
 
+  closeEditor(schemaItemId: string): Promise<void>
+
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
   checkRules(
     schemaItemId: string | undefined,
-    parentId: string | undefined,
-    fullTypeName: string | undefined,
     changedProperties: ApiEditorProperty[]
   ): Promise<RuleErrors[]>;
 

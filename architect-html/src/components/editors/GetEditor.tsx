@@ -4,13 +4,13 @@ import {
   EditorProperty,
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { IEditorNode } from "src/stores/IEditorManager.ts";
+import { IArchitectApi } from "src/API/IArchitectApi.ts";
 
 export function getEditor(
   editorNode: IEditorNode,
   properties: EditorProperty[] | undefined,
-  architectApi: ArchitectApi
+  architectApi: IArchitectApi
 ) {
   const editorState = new EditorState(editorNode, properties, architectApi);
   if (editorNode.editorType === "GridEditor") {

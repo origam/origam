@@ -42,7 +42,7 @@ export const EditorTabView: React.FC = observer(() => {
             >
               {editor.label}
             </div>
-            <div className={S.closeSymbol} onClick={() => flow(projectState.closeEditor(editor.schemaItemId).bind(projectState))() }>X</div>
+            <div className={S.closeSymbol} onClick={() => flow(projectState.closeEditor(editor.schemaItemId))() }>X</div>
           </div>
         ))}
       </div>
