@@ -84,8 +84,8 @@
 				  "DateSequence": "MonthDayYear"
 				},
 				"DefaultDateFormats":{
-				  "Short": "dd.MM.yyyy",
-				  "Long": "dd.MM.yyyy HH:mm:ss",
+				  "Short": "MM/dd/yyyy",
+				  "Long": "MM/dd/yyyy HH:mm:ss",
 				  "Time": "HH:mm:ss"
 				}
             }
