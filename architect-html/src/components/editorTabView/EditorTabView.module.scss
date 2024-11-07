@@ -27,6 +27,8 @@
 
 .labelContainer {
   display: flex;
+  justify-content: space-between;
+  min-width: 80px;
 }
 
 .closeSymbol {
@@ -35,5 +37,5 @@
 }
 
 .activeTab {
-
+  font-weight: bold;
 }

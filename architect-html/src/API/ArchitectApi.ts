@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
   ApiEditorProperty, ApiTreeNode,
-  IArchitectApi, INewEditorData, MenuItemInfo,
+  IArchitectApi, IEditorData, MenuItemInfo,
   Package, RuleErrors
 } from "src/API/IArchitectApi.ts";
 
@@ -122,7 +122,12 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async createNew(node: ApiTreeNode, typeName: string): Promise<INewEditorData> {
+  async getOpenEditors(): Promise<IEditorData[]> {
+    return (await this.axiosInstance.get(
+      `/Editor/GetOpenEditors`)).data;
+  }
+
+  async createNew(node: ApiTreeNode, typeName: string): Promise<IEditorData> {
     return (await this.axiosInstance.post("/Editor/CreateNew",
       {
         nodeId: node.origamId,

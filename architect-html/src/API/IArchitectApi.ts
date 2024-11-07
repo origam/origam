@@ -1,6 +1,8 @@
 
 export interface IArchitectApi {
 
+  getOpenEditors():  Promise<IEditorData[]>;
+
   getPackages(): Promise<Package[]>;
 
   setActivePackage(packageId: string): Promise<void>;
@@ -24,7 +26,7 @@ export interface IArchitectApi {
 
   getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]>;
 
-  createNew(node: ApiTreeNode, typeName: string): Promise<INewEditorData>;
+  createNew(node: ApiTreeNode, typeName: string): Promise<IEditorData>;
 }
 
 export interface RuleErrors
@@ -74,7 +76,9 @@ export interface DropDownValue {
     value: any;
 }
 
-export interface INewEditorData {
+export interface IEditorData {
+  parentNodeId: string | undefined;
+  isPersisted: boolean;
   node: IApiEditorNode;
   properties: ApiEditorProperty[];
 }

@@ -19,7 +19,7 @@ export class EditorState {
   @observable accessor properties: EditorProperty[];
   @observable accessor isDirty = false;
   @observable accessor isSaving = false;
-  @observable accessor isActive = true;
+  @observable accessor isActive = false;
 
   get label (){
     return this.properties.find(x => x.name === "Name")?.value || "";

@@ -23,7 +23,7 @@ public class EditorController(
     : ControllerBase
 {
     [HttpPost("CreateNew")]
-    public NewEditorData CreateNew(
+    public EditorData CreateNew(
         [Required] [FromBody] NewItemModel input)
     {
         var item =
@@ -35,8 +35,9 @@ public class EditorController(
             {
                 property.Errors = GetRuleErrorsIfExist(property, item);
             });
-        return new NewEditorData
+        return new EditorData
         {
+            IsPersisted = false,
             Node = treeNodeFactory.Create(item),
             Properties = editorProperties
         };
@@ -50,6 +51,21 @@ public class EditorController(
         PropertyInfo propertyInfo =
             properties.First(property => property.Name == editorProperty.Name);
         return GetRuleErrors(propertyInfo, item)?.Errors;
+    }
+    
+    [HttpGet("GetOpenEditors")]
+    public IEnumerable<EditorData> GetOpenEditors()
+    {
+        var items = editorService
+            .GetOpenEditors()
+            .Select(item => new EditorData
+            {
+                ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
+                IsPersisted = false,
+                Node = treeNodeFactory.Create(item),
+                Properties = GetEditorPropertiesWithErrors(item)
+            });
+        return items;
     }
 
     [HttpPost("OpenEditor")]
@@ -66,8 +82,17 @@ public class EditorController(
         editorService.CloseEditor(input.SchemaItemId);
     }
 
-    private IEnumerable<EditorProperty> GetEditorProperties(
-        ISchemaItem item)
+    private IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(ISchemaItem item)
+    {
+        var editorProperties = GetEditorProperties(item)
+            .Peek(property =>
+            {
+                property.Errors = GetRuleErrorsIfExist(property, item);
+            });
+        return editorProperties;
+    }
+
+    private IEnumerable<EditorProperty> GetEditorProperties(ISchemaItem item)
     {
         if (item is XslTransformation xsltTransformation)
         {

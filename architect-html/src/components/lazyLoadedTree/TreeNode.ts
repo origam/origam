@@ -1,19 +1,18 @@
 import {
   ApiTreeNode,
   EditorType,
-  IApiEditorNode,
   MenuItemInfo
 } from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
-import { IEditorManager } from "src/stores/IEditorManager.ts";
+import { IEditorManager, IEditorNode } from "src/stores/IEditorManager.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
 
-export class TreeNode implements IApiEditorNode {
+export class TreeNode implements IEditorNode {
 
   constructor(
     apiNode: ApiTreeNode,

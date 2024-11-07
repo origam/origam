@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { action, observable } from "mobx";
 import {
-  IApiEditorNode,
+  IEditorData,
   Package
 } from "src/API/IArchitectApi.ts";
 import {
@@ -32,6 +32,7 @@ import { IEditorManager, IEditorNode } from "src/stores/IEditorManager.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
+import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
 
 export class RootStore {
   public projectState: ProjectState;
@@ -66,18 +67,53 @@ export class ProjectState implements IEditorManager {
       new TreeNode(node, this, this.architectApi, this.uiStore.treeViewUiState))
   }
 
-  // * reloadParentNode(nodeId: string){
-  //
-  // }
+  private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
+    if (!nodeId) {
+      return null;
+    }
+    for (const node of nodes) {
+      if (node.id === nodeId) {
+        return node;
+      }
+      const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
+      if (foundNode) {
+        return foundNode;
+      }
+    }
+    return null;
+  }
+
+  * initializeOpenEditors(): Generator<Promise<IEditorData[]>, void, IEditorData[]> {
+    const openEditorsData = (yield this.architectApi.getOpenEditors()) as IEditorData[];
+    this.editors = openEditorsData
+      .map(data => this.toEditor(data)) as Editor[];
+    if(this.editors.length > 0){
+      this.setActiveEditor(this.editors[this.editors.length - 1].state.schemaItemId);
+    }
+  }
+
+  private toEditor(data: IEditorData) {
+    const parentNode = this.findNodeByIdRecursively(data.parentNodeId, this.modelNodes)
+    return getEditor(
+      new NewEditorNode(data.node, parentNode),
+        data.properties.map(property => new EditorProperty(property)),
+        this.architectApi)
+  }
 
   @action.bound
   openEditor(node: IEditorNode, properties?: EditorProperty[]): void {
+    const alreadyOpenEditor = this.editors.find(editor => editor.state.schemaItemId === node.origamId);
+    if (alreadyOpenEditor) {
+      this.setActiveEditor(alreadyOpenEditor.state.schemaItemId);
+      return;
+    }
+
     const editor = getEditor(node, properties, this.architectApi);
     if (!editor) {
       return;
     }
-    editor.state.isActive = true;
-    this.editors = [editor]; //will be changed when we implement tabs
+    this.setActiveEditor(editor.state.schemaItemId);
+    this.editors.push(editor)
   }
 
   get activeEditorState() {
@@ -89,16 +125,15 @@ export class ProjectState implements IEditorManager {
   }
 
   setActiveEditor(schemaItemId: string) {
-    const editor = this.editors.find(editor => editor.state.schemaItemId === schemaItemId)?.state;
-    if (editor) {
-      editor.isActive = true;
+    for (const editor of this.editors) {
+      editor.state.isActive = editor.state.schemaItemId === schemaItemId;
     }
   }
 
   closeEditor(schemaItemId: string) {
     const self = this;
-    return function*(){
-      self.editors= self.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
+    return function* () {
+      self.editors = self.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
       yield self.architectApi.closeEditor(schemaItemId);
     }
   }

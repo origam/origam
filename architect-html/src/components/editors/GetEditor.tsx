@@ -5,7 +5,6 @@ import {
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import React from "react";
 import { IEditorNode } from "src/stores/IEditorManager.ts";
 
 export function getEditor(

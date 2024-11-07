@@ -86,6 +86,7 @@ public class ModelController(
         return provider
             .ChildNodes().Cast<IBrowserNode2>()
             .OrderBy(x => x.NodeText)
+            .Where(x => x is not ISchemaItem item || item.IsPersisted)
             .Select(treeNodeFactory.Create)
             .ToList();
     }
@@ -135,8 +136,6 @@ public class ModelController(
         persistenceProvider.EndTransaction();
         return Ok();
     }
-    
-
     
     // Inspired by class Origam.Workbench.Commands.SchemaItemEditorsMenuBuilder, 
     // method public AsMenuCommand[] BuildSubmenu(object owner)

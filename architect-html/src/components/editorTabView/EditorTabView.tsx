@@ -16,21 +16,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import S from "./EditorTabView.module.scss";
 import { observer } from "mobx-react-lite";
 import { action, flow } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
 
-export const EditorTabView: React.FC= observer(() => {
+export const EditorTabView: React.FC = observer(() => {
   const projectState = useContext(RootStoreContext).projectState;
   const editors = projectState.editors.map(x => x.state);
+
+  useEffect(() => {
+    flow(projectState.initializeOpenEditors.bind(projectState))();
+  }, []);
+
   return (
     <div className={S.root}>
       <div className={S.labels}>
         {editors.map((editor) => (
           <div className={S.labelContainer} >
-            <div key={editor.label} onClick={() => action(() => projectState.setActiveEditor(editor.schemaItemId))()}>
+            <div
+              key={editor.label}
+              onClick={() => action(() => projectState.setActiveEditor(editor.schemaItemId))()}
+              className={editor.isActive ? S.activeTab : ""}
+            >
               {editor.label}
             </div>
             <div className={S.closeSymbol} onClick={() => flow(projectState.closeEditor(editor.schemaItemId).bind(projectState))() }>X</div>
@@ -39,7 +48,7 @@ export const EditorTabView: React.FC= observer(() => {
       </div>
       <div className={S.content}>
         {projectState.editors.map((editorContainer) => (
-          <div key={editorContainer.state.label} className={projectState.activeEditorState?.schemaItemId === editorContainer.state.schemaItemId ? S.visible : S.hidden }>
+          <div key={editorContainer.state.label} className={editorContainer.state.isActive ? S.visible : S.hidden }>
             {editorContainer.element}
           </div>
         ))}

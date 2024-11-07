@@ -11,7 +11,7 @@ export class NewEditorNode implements IEditorNode {
   editorType: EditorType;
   parent: TreeNode | null = null;
 
-  constructor(node: IApiEditorNode, parent: TreeNode) {
+  constructor(node: IApiEditorNode, parent: TreeNode | null) {
     this.id = node.id;
     this.origamId = node.origamId;
     this.nodeText = node.nodeText;
