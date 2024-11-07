@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import S from "./EditorTabView.module.scss";
 import { observer } from "mobx-react-lite";
 import { action, flow } from "mobx";
@@ -25,10 +25,14 @@ import { RootStoreContext } from "src/main.tsx";
 export const EditorTabView: React.FC = observer(() => {
   const projectState = useContext(RootStoreContext).projectState;
   const editors = projectState.editors.map(x => x.state);
+  const initializeOpenEditors = useMemo(
+    () => projectState.initializeOpenEditors.bind(projectState),
+    [projectState]
+  );
 
   useEffect(() => {
-    flow(projectState.initializeOpenEditors.bind(projectState))();
-  }, []);
+    flow(initializeOpenEditors)();
+  }, [initializeOpenEditors]);
 
   return (
     <div className={S.root}>
