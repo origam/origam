@@ -5,10 +5,6 @@ import {
   Package, RuleErrors
 } from "src/API/IArchitectApi.ts";
 
-
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
-
-
 export class ArchitectApi implements IArchitectApi {
 
   errorHandler: (error: any) => void;
@@ -48,11 +44,11 @@ export class ArchitectApi implements IArchitectApi {
     return (await this.axiosInstance.get("/Package/GetAll")).data
   }
 
-  async getTopModelNodes(): Promise<TreeNode[]> {
+  async getTopModelNodes(): Promise<ApiTreeNode[]> {
     return (await this.axiosInstance.get(`/Model/GetTopNodes`)).data;
   }
 
-  async getNodeChildren(node: TreeNode): Promise<TreeNode[]> {
+  async getNodeChildren(node: ApiTreeNode): Promise<ApiTreeNode[]> {
     return (await this.axiosInstance.get(
       `/Model/GetChildren`,
       {

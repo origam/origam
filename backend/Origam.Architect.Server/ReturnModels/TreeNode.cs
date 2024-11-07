@@ -15,6 +15,12 @@ public class TreeNode
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
     public string EditorType { get; set; }
+
+
+    public static string ToTreeNodeId(IBrowserNode2 node)
+    {
+        return node.NodeId + node.NodeText;
+    }
 }
 
 public class TreeNodeFactory
@@ -24,7 +30,7 @@ public class TreeNodeFactory
         return new TreeNode
         {
             OrigamId = node.NodeId,
-            Id = node.NodeId + node.NodeText,
+            Id = TreeNode.ToTreeNodeId(node),
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,

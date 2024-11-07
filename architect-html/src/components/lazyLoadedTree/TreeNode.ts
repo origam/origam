@@ -1,10 +1,9 @@
 import {
   ApiTreeNode,
-  EditorType,
+  EditorType, IArchitectApi,
   MenuItemInfo
 } from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
 import { IEditorManager, IEditorNode } from "src/stores/IEditorManager.ts";
 import {
@@ -17,9 +16,9 @@ export class TreeNode implements IEditorNode {
   constructor(
     apiNode: ApiTreeNode,
     private editorManager: IEditorManager,
-    private architectApi: ArchitectApi,
+    private architectApi: IArchitectApi,
     private treeViewUiState: TreeViewUiState,
-    private parent: TreeNode | null = null
+    public parent: TreeNode | null = null
   ) {
     this.id = apiNode.id;
     this.origamId = apiNode.origamId;
@@ -50,7 +49,7 @@ export class TreeNode implements IEditorNode {
     return this.treeViewUiState.isExpanded(this.id);
   }
 
-  * loadChildren(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
+  * loadChildren(): Generator<Promise<ApiTreeNode[]>, void, ApiTreeNode[]> {
     if (this.isLoading) {
       return;
     }

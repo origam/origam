@@ -20,6 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { action, observable } from "mobx";
 import {
+  ApiTreeNode,
+  IArchitectApi,
   IEditorData,
   Package
 } from "src/API/IArchitectApi.ts";
@@ -49,7 +51,7 @@ export class ProjectState implements IEditorManager {
   @observable accessor modelNodes: TreeNode[] = []
   @observable accessor editors: Editor[] = [];
 
-  constructor(private architectApi: ArchitectApi, private uiStore: UiStore) {
+  constructor(private architectApi: IArchitectApi, private uiStore: UiStore) {
   }
 
   * loadPackages(): Generator<Promise<Package[]>, void, Package[]> {
@@ -61,7 +63,7 @@ export class ProjectState implements IEditorManager {
     this.activePackageId = packageId;
   }
 
-  * loadPackageNodes(): Generator<Promise<TreeNode[]>, void, TreeNode[]> {
+  * loadPackageNodes(): Generator<Promise<ApiTreeNode[]>, void, ApiTreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node =>
       new TreeNode(node, this, this.architectApi, this.uiStore.treeViewUiState))
