@@ -4,7 +4,6 @@ import {
   IMenuItemInfo
 } from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
-import { TreeViewUiState } from "src/stores/UiStore.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
@@ -12,6 +11,7 @@ import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
 import {
   EditorTabViewState, IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
+import { TreeViewUiState } from "src/stores/TreeViewUiState.ts";
 
 export class TreeNode implements IEditorNode {
 

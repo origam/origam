@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { RootStoreContext, UiStoreContext } from "src/main.tsx";
+import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import { flow } from "mobx";
 import { IPackage } from "src/API/IArchitectApi.ts";
@@ -22,12 +22,11 @@ function PackageItem(props: {
   package: IPackage
 }) {
   const projectState = useContext(RootStoreContext).projectState;
-  const uiStore = useContext(UiStoreContext);
 
   async function onPackageClick() {
     flow(function* () {
       yield* projectState.setActivePackage(props.package.id);
-      uiStore.showModelTree();
+      projectState.showModelTree();
       yield* projectState.loadPackageNodes();
     })();
   }

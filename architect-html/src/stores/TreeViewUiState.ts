@@ -1,14 +1,4 @@
-import { TabViewState } from "src/components/tabView/TabViewState.ts";
 import { observable } from "mobx";
-
-export class UiStore {
-  public sideBarTabViewState = new TabViewState();
-  public treeViewUiState = new TreeViewUiState();
-
-  showModelTree() {
-    this.sideBarTabViewState.activeTabIndex = 1;
-  }
-}
 
 export class TreeViewUiState {
 
@@ -45,4 +35,3 @@ export class TreeViewUiState {
     }
   }
 }
-

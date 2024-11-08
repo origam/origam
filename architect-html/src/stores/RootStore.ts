@@ -25,17 +25,18 @@ import {
   IPackage
 } from "src/API/IArchitectApi.ts";
 import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
-import { UiStore } from "src/stores/UiStore.ts";
 import {
   EditorTabViewState
 } from "src/components/editorTabView/EditorTabViewState.ts";
+import { TabViewState } from "src/components/tabView/TabViewState.ts";
+import { TreeViewUiState } from "src/stores/TreeViewUiState.ts";
 
 export class RootStore {
   public projectState: ProjectState;
 
-  constructor(uiStore: UiStore) {
+  constructor() {
     const architectApi = new ArchitectApi();
-    this.projectState = new ProjectState(architectApi, uiStore);
+    this.projectState = new ProjectState(architectApi);
   }
 }
 
@@ -52,9 +53,16 @@ export class ProjectState implements IModelNodesContainer {
   @observable.ref accessor packages: IPackage[] = [];
   @observable accessor activePackageId: string | undefined;
   @observable accessor modelNodes: TreeNode[] = []
-  editorTabViewState: EditorTabViewState;
 
-  constructor(private architectApi: IArchitectApi, private uiStore: UiStore) {
+  public editorTabViewState: EditorTabViewState;
+  public sideBarTabViewState = new TabViewState();
+  public treeViewUiState = new TreeViewUiState();
+
+  showModelTree() {
+    this.sideBarTabViewState.activeTabIndex = 1;
+  }
+
+  constructor(private architectApi: IArchitectApi) {
     this.editorTabViewState = new EditorTabViewState(architectApi, this);
   }
 
@@ -70,7 +78,7 @@ export class ProjectState implements IModelNodesContainer {
   * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node =>
-      new TreeNode(node, this.editorTabViewState, this.architectApi, this.uiStore.treeViewUiState))
+      new TreeNode(node, this.editorTabViewState, this.architectApi, this.treeViewUiState))
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {

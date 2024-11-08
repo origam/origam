@@ -6,7 +6,7 @@ import "src/colors.scss"
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
-import { RootStoreContext, UiStoreContext } from "src/main.tsx";
+import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
@@ -14,7 +14,6 @@ import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 const App: React.FC = observer(() => {
 
   const rootStore = useContext(RootStoreContext);
-  const uiStore = useContext(UiStoreContext);
 
   useEffect(() => {
     flow(rootStore.projectState.loadPackageNodes.bind(rootStore.projectState))();
@@ -38,7 +37,7 @@ const App: React.FC = observer(() => {
       editorArea={<EditorTabView/>}
       sideBar={
         <TabView
-          state={uiStore.sideBarTabViewState}
+          state={rootStore.projectState.sideBarTabViewState}
           items={[
             {
               label: "Packages",
