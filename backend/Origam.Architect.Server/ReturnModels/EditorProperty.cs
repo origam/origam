@@ -84,7 +84,7 @@ public class EditorPropertyFactory
         return value;
     }
 
-    private DropDownValue[] GetAvailableValues(PropertyInfo property,
+    public DropDownValue[] GetAvailableValues(PropertyInfo property,
         ISchemaItem item)
     {
         if (property.PropertyType == typeof(string) ||

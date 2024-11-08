@@ -1,7 +1,8 @@
 ﻿namespace Origam.Architect.Server.ReturnModels;
 
-public class RuleErrors
+public class PropertyUpdate
 {
-    public string Name { get; set; }
+    public string PropertyName { get; set; }
     public List<string> Errors { get; set; }
+    public DropDownValue[] DropDownValues { get; set; }
 }
