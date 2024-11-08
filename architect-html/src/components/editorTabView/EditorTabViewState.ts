@@ -9,15 +9,14 @@ import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { IModelNodesContainer } from "src/stores/RootStore.ts";
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
+import { ProjectState } from "src/stores/RootStore.ts";
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
-
   constructor(
     private architectApi: IArchitectApi,
-    private nodesContainer: IModelNodesContainer) {
+    private rootStore: ProjectState) {
   }
 
   * initializeOpenEditors(): Generator<Promise<IEditorData[]>, void, IEditorData[]> {
@@ -30,7 +29,7 @@ export class EditorTabViewState {
   }
 
   private toEditor(data: IEditorData) {
-    const parentNode = this.nodesContainer.findNodeById(data.parentNodeId)
+    const parentNode = this.rootStore.getModelTreeState().findNodeById(data.parentNodeId)
     return getEditor(
       new NewEditorNode(data.node, parentNode),
       data.properties.map(property => new EditorProperty(property)),

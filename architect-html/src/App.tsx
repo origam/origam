@@ -16,7 +16,7 @@ const App: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   useEffect(() => {
-    flow(rootStore.projectState.loadPackageNodes.bind(rootStore.projectState))();
+    flow(rootStore.projectState.getModelTreeState().loadPackageNodes.bind(rootStore.projectState.getModelTreeState()))();
   }, []);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const App: React.FC = observer(() => {
       editorArea={<EditorTabView/>}
       sideBar={
         <TabView
-          state={rootStore.projectState.sideBarTabViewState}
+          state={rootStore.projectState.getSideBarTabViewState()}
           items={[
             {
               label: "Packages",

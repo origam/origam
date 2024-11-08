@@ -11,7 +11,7 @@ import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
 import {
   EditorTabViewState, IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
-import { TreeViewUiState } from "src/stores/TreeViewUiState.ts";
+import { UiState } from "src/stores/UiState.ts";
 
 export class TreeNode implements IEditorNode {
 
@@ -19,7 +19,7 @@ export class TreeNode implements IEditorNode {
     apiNode: IApiTreeNode,
     private editorManager: EditorTabViewState,
     private architectApi: IArchitectApi,
-    private treeViewUiState: TreeViewUiState,
+    private treeViewUiState: UiState,
     public parent: TreeNode | null = null
   ) {
     this.id = apiNode.id;

@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 
-export class TreeViewUiState {
+export class UiState {
 
   storageKey = 'treeExpandedNodes';
 

@@ -18,15 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import { observable } from "mobx";
-import { IApiTreeNode, IArchitectApi } from "src/API/IArchitectApi.ts";
-import { TreeNode } from "src/components/modelTree/TreeNode.ts";
+import { IArchitectApi } from "src/API/IArchitectApi.ts";
 import {
   EditorTabViewState
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
-import { TreeViewUiState } from "src/stores/TreeViewUiState.ts";
+import { UiState } from "src/stores/UiState.ts";
 import { PackagesState } from "src/components/packages/PackagesState.ts";
+import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
 
 export class RootStore {
   public projectState: ProjectState;
@@ -37,55 +36,41 @@ export class RootStore {
   }
 }
 
-export interface IModelNodesContainer {
-  modelNodes: TreeNode[];
 
-  loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]>;
+export class ProjectState {
+  private editorTabViewState: EditorTabViewState;
+  private sideBarTabViewState = new TabViewState();
+  private uiState = new UiState();
+  private packagesState: PackagesState;
+  private modelTreeState: ModelTreeState;
 
-  findNodeById(nodeId: string | undefined): TreeNode | null;
-}
+  public getEditorTabViewState() {
+    return this.editorTabViewState;
+  }
+  public getUiState() {
+    return this.uiState;
+  }
+  public getSideBarTabViewState() {
+    return this.sideBarTabViewState;
+  }
+  public getPackagesState() {
+    return this.packagesState;
+  }
 
-export class ProjectState implements IModelNodesContainer {
-  @observable accessor modelNodes: TreeNode[] = []
-
-  public editorTabViewState: EditorTabViewState;
-  public sideBarTabViewState = new TabViewState();
-  public treeViewUiState = new TreeViewUiState();
-  public packagesState: PackagesState
+  public getModelTreeState() {
+    return this.modelTreeState;
+  }
 
   constructor(private architectApi: IArchitectApi) {
     this.packagesState = new PackagesState(architectApi);
     this.editorTabViewState = new EditorTabViewState(architectApi, this);
+    this.modelTreeState = new ModelTreeState(architectApi, this);
   }
+
   showModelTree() {
     this.sideBarTabViewState.activeTabIndex = 1;
   }
-
-  * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
-    const apiNodes = yield this.architectApi.getTopModelNodes();
-    this.modelNodes = apiNodes.map(node =>
-      new TreeNode(node, this.editorTabViewState, this.architectApi, this.treeViewUiState))
-  }
-
-  findNodeById(nodeId: string | undefined): TreeNode | null {
-    return this.findNodeByIdRecursively(nodeId, this.modelNodes);
-  }
-
-  private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
-    if (!nodeId) {
-      return null;
-    }
-    for (const node of nodes) {
-      if (node.id === nodeId) {
-        return node;
-      }
-      const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
-      if (foundNode) {
-        return foundNode;
-      }
-    }
-    return null;
-  }
 }
+
 
 
