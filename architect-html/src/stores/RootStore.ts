@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { observable } from "mobx";
 import { IApiTreeNode, IArchitectApi } from "src/API/IArchitectApi.ts";
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
+import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import {
   EditorTabViewState
 } from "src/components/editorTabView/EditorTabViewState.ts";

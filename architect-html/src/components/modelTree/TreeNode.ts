@@ -7,7 +7,7 @@ import { action, flow, observable } from "mobx";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
+import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
 import {
   EditorTabViewState, IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";

@@ -1,7 +1,7 @@
 import { EditorType, IApiEditorNode } from "src/API/IArchitectApi.ts";
 import {
   TreeNode
-} from "src/components/lazyLoadedTree/TreeNode.ts";
+} from "src/components/modelTree/TreeNode.ts";
 import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";

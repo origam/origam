@@ -1,20 +1,20 @@
 import { useContext, useEffect } from 'react';
-import "src/components/lazyLoadedTree/LazyLoadedTree.css"
+import S from "src/components/modelTree/ModelTree.module.scss"
 import {
   Menu,
   Item,
   useContextMenu, TriggerEvent, Separator, Submenu
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
+import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 
-const TreeNodeComponent: React.FC<{
+const ModelTree: React.FC<{
   node: TreeNode;
 }> = observer(({node}) => {
-  const projectState = useContext(RootStoreContext).projectState;
+  const editorTabViewState = useContext(RootStoreContext).projectState.editorTabViewState;
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const TreeNodeComponent: React.FC<{
     if (!node.editorType) {
       await onToggle();
     } else {
-      projectState.openEditor(node);
+      editorTabViewState.openEditor(node);
     }
   }
 
@@ -57,8 +57,8 @@ const TreeNodeComponent: React.FC<{
   }
 
   return (
-    <div className={"treeNode"}>
-      <div className={"treeNodeTitle"}>
+    <div className={S.treeNode}>
+      <div className={S.treeNodeTitle}>
         <div onClick={onToggle}>
           {node.hasChildNodes ? (node.isExpanded ? '▼' : '▶') : '•'}
         </div>
@@ -106,7 +106,7 @@ const TreeNodeComponent: React.FC<{
       {node.isExpanded && node.children.length > 0 && (
         <div>
           {node.children.map((childNode) => (
-            <TreeNodeComponent
+            <ModelTree
               key={childNode.id + childNode.nodeText}
               node={childNode}
             />
@@ -123,7 +123,7 @@ const LazyLoadedTree: React.FC = observer(() => {
   return (
     <div>
       {projectState.modelNodes.map((node) => (
-        <TreeNodeComponent
+        <ModelTree
           key={node.id + node.nodeText}
           node={node}
         />

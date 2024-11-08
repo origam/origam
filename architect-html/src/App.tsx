@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react';
-import LazyLoadedTree from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
 import "./App.css"
 import "src/colors.scss"
@@ -10,6 +9,7 @@ import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
+import ModelTree from "src/components/modelTree/ModelTree.tsx";
 
 const App: React.FC = observer(() => {
 
@@ -45,7 +45,7 @@ const App: React.FC = observer(() => {
             },
             {
               label: "Model",
-              node: <LazyLoadedTree/>
+              node: <ModelTree/>
             }
           ]}
         />

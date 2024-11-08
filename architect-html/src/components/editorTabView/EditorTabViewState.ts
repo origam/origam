@@ -5,12 +5,12 @@ import {
   IArchitectApi,
   IEditorData
 } from "src/API/IArchitectApi.ts";
-import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
+import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { IModelNodesContainer } from "src/stores/RootStore.ts";
-import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
+import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
