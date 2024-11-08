@@ -180,6 +180,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               autoComplete={"off"}
               style={getStyle()}
               size={1}
+              onDragStart={(e: any) =>  e.preventDefault()}
             />
           </TagInput>
         </div>
