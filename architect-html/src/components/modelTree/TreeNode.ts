@@ -8,25 +8,19 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
-import {
-  EditorTabViewState, IEditorNode
+import { IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
-import { UiState } from "src/stores/UiState.ts";
 import { RootStore } from "src/stores/RootStore.ts";
 
 export class TreeNode implements IEditorNode {
-    private editorManager: EditorTabViewState;
     private architectApi: IArchitectApi;
-    private treeViewUiState: UiState;
 
   constructor(
     apiNode: IApiTreeNode,
     private rootStore: RootStore,
     public parent: TreeNode | null = null
   ) {
-    this.editorManager = rootStore.getEditorTabViewState();
     this.architectApi = rootStore.architectApi;
-    this.treeViewUiState = rootStore.getUiState();
     this.id = apiNode.id;
     this.origamId = apiNode.origamId;
     this.nodeText = apiNode.nodeText;
@@ -53,7 +47,7 @@ export class TreeNode implements IEditorNode {
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
   get isExpanded() {
-    return this.treeViewUiState.isExpanded(this.id);
+    return this.rootStore.getUiState().isExpanded(this.id);
   }
 
   * loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -78,7 +72,7 @@ export class TreeNode implements IEditorNode {
     if (this.hasChildNodes && !this.isLoading && !this.isExpanded && (this.children.length === 0)) { // !isExpanded => will be expanded now
       yield flow(this.loadChildren.bind(this))();
     }
-    this.treeViewUiState.setExpanded(this.id, !this.isExpanded)
+    this.rootStore.getUiState().setExpanded(this.id, !this.isExpanded)
   }
 
   * delete() {
@@ -97,7 +91,7 @@ export class TreeNode implements IEditorNode {
     const editorData = await this.architectApi.createNew(this, typeName);
     const properties = editorData.properties.map(property => new EditorProperty(property));
     const editorNode= new NewEditorNode(editorData.node, this);
-    this.editorManager.openEditor(editorNode, properties);
+    this.rootStore.getEditorTabViewState().openEditor(editorNode, properties);
   }
 }
 
