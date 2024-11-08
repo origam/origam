@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
   ApiEditorProperty, ApiTreeNode,
-  IArchitectApi, IEditorData, MenuItemInfo,
+  IArchitectApi, IEditorData, MenuItemInfo, PropertyUpdate,
   Package, RuleErrors
 } from "src/API/IArchitectApi.ts";
 
@@ -85,7 +85,7 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async checkRules(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<RuleErrors[]> {
+  async updateProperties(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<PropertyUpdate[]> {
     const changes = changedProperties
       .filter(x => !x.readOnly)
       .map(x => {
@@ -94,7 +94,7 @@ export class ArchitectApi implements IArchitectApi {
           value: x.value === undefined || x.value === null ? null : x.value.toString(),
         }
       });
-    return (await this.axiosInstance.post(`/Editor/CheckRules`, {
+    return (await this.axiosInstance.post(`/Editor/UpdateProperties`, {
       schemaItemId,
       changes
     })).data;

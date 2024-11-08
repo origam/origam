@@ -50,9 +50,9 @@ public class EditorController(
         PropertyInfo[] properties = type.GetProperties();
         PropertyInfo propertyInfo =
             properties.First(property => property.Name == editorProperty.Name);
-        return GetRuleErrors(propertyInfo, item)?.Errors;
+        return GetRuleErrors(propertyInfo, item);
     }
-    
+
     [HttpGet("GetOpenEditors")]
     public IEnumerable<EditorData> GetOpenEditors()
     {
@@ -75,14 +75,15 @@ public class EditorController(
         ISchemaItem item = editorService.OpenEditor(input.SchemaItemId);
         return Ok(GetEditorProperties(item));
     }
-    
+
     [HttpPost("CloseEditor")]
     public void CloseEditor([Required] [FromBody] CloseEditorModel input)
     {
         editorService.CloseEditor(input.SchemaItemId);
     }
 
-    private IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(ISchemaItem item)
+    private IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(
+        ISchemaItem item)
     {
         var editorProperties = GetEditorProperties(item)
             .Peek(property =>
@@ -119,19 +120,30 @@ public class EditorController(
         return properties;
     }
 
-    [HttpPost("CheckRules")]
-    public IEnumerable<RuleErrors> CheckRules([FromBody] ChangesModel changes)
+    [HttpPost("UpdateProperties")]
+    public IEnumerable<PropertyUpdate> UpdateProperties(
+        [FromBody] ChangesModel changes)
     {
-        return editorService.ChangesToSchemaItem(changes)
+        ISchemaItem item = editorService.ChangesToSchemaItem(changes);
+        PropertyInfo[] properties = item
             .GetType()
-            .GetProperties()
-            .Select(property =>
-                GetRuleErrors(property,
-                    editorService.ChangesToSchemaItem(changes)))
-            .Where(errors => errors != null);
+            .GetProperties();
+        return GetEditorProperties(item)
+            .Select(editorProperty =>
+            {
+                PropertyInfo property = properties
+                    .FirstOrDefault(x => x.Name == editorProperty.Name);
+                return new PropertyUpdate
+                {
+                    PropertyName = editorProperty.Name,
+                    Errors = GetRuleErrors(property, item),
+                    DropDownValues = editorProperty
+                        .DropDownValues ?? Array.Empty<DropDownValue>()
+                };
+            });
     }
 
-    private RuleErrors GetRuleErrors(PropertyInfo property, ISchemaItem item)
+    private List<string> GetRuleErrors(PropertyInfo property, ISchemaItem item)
     {
         List<string> ruleErrors = property.GetCustomAttributes()
             .OfType<IModelElementRule>()
@@ -140,7 +152,7 @@ public class EditorController(
             .ToList();
         return ruleErrors.Count == 0
             ? null
-            : new RuleErrors { Name = property.Name, Errors = ruleErrors };
+            : ruleErrors;
     }
 
     [HttpPost("PersistChanges")]

@@ -17,10 +17,10 @@ export interface IArchitectApi {
 
   persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
 
-  checkRules(
+  updateProperties(
     schemaItemId: string | undefined,
     changedProperties: ApiEditorProperty[]
-  ): Promise<RuleErrors[]>;
+  ): Promise<PropertyUpdate[]>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
@@ -29,10 +29,11 @@ export interface IArchitectApi {
   createNew(node: ApiTreeNode, typeName: string): Promise<IEditorData>;
 }
 
-export interface RuleErrors
-{
-  name: string;
-  errors: string[];
+
+export interface PropertyUpdate {
+    propertyName: string;
+    errors: string[];
+    dropDownValues: DropDownValue[];
 }
 
 export interface MenuItemInfo {

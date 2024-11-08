@@ -28,11 +28,11 @@ export const PropertyEditor: React.FC<{
     if (property.type === "enum" || property.type === "looukup") {
       return (
         <select
+          value={property.value ?? ""}
           onChange={(e) => onValueChange(property, e.target.value)}>
           {property.dropDownValues.map(x =>
             <option
               key={property.value + x.name}
-              defaultValue={property.value}
               value={x.value}>{x.name}
             </option>)
           }
