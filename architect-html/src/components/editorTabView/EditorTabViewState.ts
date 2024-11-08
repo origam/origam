@@ -16,8 +16,7 @@ export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
   architectApi: IArchitectApi;
 
-  constructor(private rootStore: RootStore)
-  {
+  constructor(private rootStore: RootStore) {
     this.architectApi = this.rootStore.architectApi;
   }
 
@@ -72,10 +71,15 @@ export class EditorTabViewState {
     return function* (this: any) {
       this.editors = this.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
       yield this.architectApi.closeEditor(schemaItemId);
+      if (this.editors.length > 0) {
+        const editorToActivate = this.editors[this.editors.length - 1];
+        this.setActiveEditor(editorToActivate.state.schemaItemId);
+      }
+
     }.bind(this);
   }
 }
 
-export interface IEditorNode extends IApiEditorNode{
+export interface IEditorNode extends IApiEditorNode {
   parent: TreeNode | null;
 }
