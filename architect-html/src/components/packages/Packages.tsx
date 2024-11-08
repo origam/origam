@@ -5,15 +5,15 @@ import { flow } from "mobx";
 import { IPackage } from "src/API/IArchitectApi.ts";
 
 export const Packages: React.FC = observer(() => {
-  const projectState = useContext(RootStoreContext).projectState;
+  const packagesState = useContext(RootStoreContext).projectState.packagesState;
 
   useEffect(() => {
-    flow(projectState.loadPackages.bind(projectState))();
+    flow(packagesState.loadPackages.bind(packagesState))();
   }, []);
 
   return (
     <div>
-      {projectState.packages.map(x => <PackageItem key={x.id} package={x}/>)}
+      {packagesState.packages.map(x => <PackageItem key={x.id} package={x}/>)}
     </div>
   );
 });
@@ -22,10 +22,11 @@ function PackageItem(props: {
   package: IPackage
 }) {
   const projectState = useContext(RootStoreContext).projectState;
+  const packagesState = useContext(RootStoreContext).projectState.packagesState;
 
   async function onPackageClick() {
     flow(function* () {
-      yield* projectState.setActivePackage(props.package.id);
+      yield* packagesState.setActivePackage(props.package.id);
       projectState.showModelTree();
       yield* projectState.loadPackageNodes();
     })();

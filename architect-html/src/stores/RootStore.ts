@@ -19,17 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { observable } from "mobx";
-import {
-  IApiTreeNode,
-  IArchitectApi,
-  IPackage
-} from "src/API/IArchitectApi.ts";
+import { IApiTreeNode, IArchitectApi } from "src/API/IArchitectApi.ts";
 import { TreeNode } from "src/components/lazyLoadedTree/TreeNode.ts";
 import {
   EditorTabViewState
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
 import { TreeViewUiState } from "src/stores/TreeViewUiState.ts";
+import { PackagesState } from "src/components/packages/PackagesState.ts";
 
 export class RootStore {
   public projectState: ProjectState;
@@ -40,7 +37,6 @@ export class RootStore {
   }
 }
 
-
 export interface IModelNodesContainer {
   modelNodes: TreeNode[];
 
@@ -50,29 +46,19 @@ export interface IModelNodesContainer {
 }
 
 export class ProjectState implements IModelNodesContainer {
-  @observable.ref accessor packages: IPackage[] = [];
-  @observable accessor activePackageId: string | undefined;
   @observable accessor modelNodes: TreeNode[] = []
 
   public editorTabViewState: EditorTabViewState;
   public sideBarTabViewState = new TabViewState();
   public treeViewUiState = new TreeViewUiState();
-
-  showModelTree() {
-    this.sideBarTabViewState.activeTabIndex = 1;
-  }
+  public packagesState: PackagesState
 
   constructor(private architectApi: IArchitectApi) {
+    this.packagesState = new PackagesState(architectApi);
     this.editorTabViewState = new EditorTabViewState(architectApi, this);
   }
-
-  * loadPackages(): Generator<Promise<IPackage[]>, void, IPackage[]> {
-    this.packages = yield this.architectApi.getPackages();
-  }
-
-  * setActivePackage(packageId: string) {
-    yield this.architectApi.setActivePackage(packageId);
-    this.activePackageId = packageId;
+  showModelTree() {
+    this.sideBarTabViewState.activeTabIndex = 1;
   }
 
   * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -101,6 +87,5 @@ export class ProjectState implements IModelNodesContainer {
     return null;
   }
 }
-
 
 
