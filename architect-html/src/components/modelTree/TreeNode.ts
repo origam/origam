@@ -12,16 +12,21 @@ import {
   EditorTabViewState, IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import { UiState } from "src/stores/UiState.ts";
+import { RootStore } from "src/stores/RootStore.ts";
 
 export class TreeNode implements IEditorNode {
+    private editorManager: EditorTabViewState;
+    private architectApi: IArchitectApi;
+    private treeViewUiState: UiState;
 
   constructor(
     apiNode: IApiTreeNode,
-    private editorManager: EditorTabViewState,
-    private architectApi: IArchitectApi,
-    private treeViewUiState: UiState,
+    private rootStore: RootStore,
     public parent: TreeNode | null = null
   ) {
+    this.editorManager = rootStore.getEditorTabViewState();
+    this.architectApi = rootStore.architectApi;
+    this.treeViewUiState = rootStore.getUiState();
     this.id = apiNode.id;
     this.origamId = apiNode.origamId;
     this.nodeText = apiNode.nodeText;
@@ -31,7 +36,7 @@ export class TreeNode implements IEditorNode {
     this.childrenIds = apiNode.childrenIds;
     this.children = apiNode.children
       ? apiNode.children.map(child =>
-        new TreeNode(child, this.editorManager, architectApi, this.treeViewUiState, this))
+        new TreeNode(child, this.rootStore, this))
       : [];
   }
 
@@ -63,7 +68,7 @@ export class TreeNode implements IEditorNode {
     try {
       const nodes = yield this.architectApi.getNodeChildren(this);
       this.children = nodes.map(node =>
-        new TreeNode(node, this.editorManager, this.architectApi, this.treeViewUiState, this));
+        new TreeNode(node, this.rootStore, this));
     } finally {
       this.isLoading = false;
     }

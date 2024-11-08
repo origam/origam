@@ -14,9 +14,11 @@ import { RootStore } from "src/stores/RootStore.ts";
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
-  constructor(
-    private architectApi: IArchitectApi,
-    private rootStore: RootStore) {
+  architectApi: IArchitectApi;
+
+  constructor(private rootStore: RootStore)
+  {
+    this.architectApi = this.rootStore.architectApi;
   }
 
   * initializeOpenEditors(): Generator<Promise<IEditorData[]>, void, IEditorData[]> {

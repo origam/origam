@@ -5,20 +5,16 @@ import { RootStore } from "src/stores/RootStore.ts";
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
+  private architectApi: IArchitectApi;
 
-  constructor(
-    private architectApi: IArchitectApi,
-    private rootStore: RootStore) {
+  constructor(private rootStore: RootStore) {
+    this.architectApi = this.rootStore.architectApi;
   }
 
   * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node =>
-      new TreeNode(
-        node,
-        this.rootStore.getEditorTabViewState(),
-        this.architectApi,
-        this.rootStore.getUiState()))
+      new TreeNode(node, this.rootStore))
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {

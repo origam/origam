@@ -55,8 +55,8 @@ export class RootStore {
 
   constructor() {
     this.packagesState = new PackagesState(this.architectApi);
-    this.editorTabViewState = new EditorTabViewState(this.architectApi, this);
-    this.modelTreeState = new ModelTreeState(this.architectApi, this);
+    this.editorTabViewState = new EditorTabViewState(this);
+    this.modelTreeState = new ModelTreeState(this);
   }
 
   showModelTree() {
