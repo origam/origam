@@ -292,6 +292,7 @@ export class DateTimeEditor extends React.Component<{
                     onClick={this.props.onClick}
                     onDoubleClick={this.props.onDoubleClick}
                     onKeyDown={this.handleKeyDown}
+                    onDragStart={(e: any) =>  e.preventDefault()}
                   />
                 </>
               )}
@@ -348,6 +349,7 @@ export class DateTimeEditor extends React.Component<{
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onKeyDown={this.handleKeyDown}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       </div>
     );
