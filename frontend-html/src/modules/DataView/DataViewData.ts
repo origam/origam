@@ -34,7 +34,6 @@ export class DataViewData {
     const dataTable = this.dataTable();
     const property = this.propertyById(propertyId);
     const row = dataTable.getRowById(rowId);
-    //dataTable.resolveCellText(property, value)
     if (property && row) {
       return dataTable.getCellValue(row, property);
     } else return null;
