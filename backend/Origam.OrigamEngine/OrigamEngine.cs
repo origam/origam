@@ -128,15 +128,16 @@ public class OrigamEngine
 			serviceFactory = customServiceFactory;
 		}
 		serviceFactory.InitializeServices();
+		
+		var dataService = DataServiceFactory.GetDataService();
+		dataService.DiagnoseConnection();
+		
 		SchemaService schema 
             = ServiceManager.Services.GetService<SchemaService>();
 		log.Info("Loading model " + settings.Name + ", Package ID: " + settings.DefaultSchemaExtensionId.ToString());
 		schema.LoadSchema(settings.DefaultSchemaExtensionId);
 		log.Info("Loading model finished successfully. Version loaded: " + schema.ActiveExtension.Version);
 		InitializeSchemaItemProviders(schema);
-		
-		var dataService = DataServiceFactory.GetDataService();
-		dataService.DiagnoseConnection();
 		
 		// upgrade database
 		if (settings.ExecuteUpgradeScriptsOnStart)
