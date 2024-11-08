@@ -128,6 +128,7 @@ export function DropdownEditorInput(props: {
           autoCorrect={"off"}
           autoCapitalize={"off"}
           spellCheck={"false"}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       )}
     </Observer>
