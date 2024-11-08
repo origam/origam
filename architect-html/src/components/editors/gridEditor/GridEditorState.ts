@@ -3,7 +3,10 @@ import {
   IApiEditorProperty,
   IDropDownValue, IArchitectApi, IPropertyUpdate,
 } from "src/API/IArchitectApi.ts";
-import { IEditorNode } from "src/stores/IEditorManager.ts";
+import {
+  IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
+
 
 export class EditorState {
   constructor(

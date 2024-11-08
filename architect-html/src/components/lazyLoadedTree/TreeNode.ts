@@ -5,17 +5,19 @@ import {
 } from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
-import { IEditorManager, IEditorNode } from "src/stores/IEditorManager.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
+import {
+  EditorTabViewState, IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
 
 export class TreeNode implements IEditorNode {
 
   constructor(
     apiNode: IApiTreeNode,
-    private editorManager: IEditorManager,
+    private editorManager: EditorTabViewState,
     private architectApi: IArchitectApi,
     private treeViewUiState: TreeViewUiState,
     public parent: TreeNode | null = null

@@ -4,8 +4,10 @@ import {
   EditorProperty,
   EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { IEditorNode } from "src/stores/IEditorManager.ts";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
+import {
+  IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
 
 export function getEditor(
   editorNode: IEditorNode,

@@ -23,11 +23,11 @@ import { action, flow } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
 
 export const EditorTabView: React.FC = observer(() => {
-  const projectState = useContext(RootStoreContext).projectState;
-  const editors = projectState.editors.map(x => x.state);
+  const state = useContext(RootStoreContext).projectState.editorTabViewState;
+  const editors = state.editors.map(x => x.state);
   const initializeOpenEditors = useMemo(
-    () => projectState.initializeOpenEditors.bind(projectState),
-    [projectState]
+    () => state.initializeOpenEditors.bind(state),
+    [state]
   );
 
   useEffect(() => {
@@ -40,17 +40,17 @@ export const EditorTabView: React.FC = observer(() => {
         {editors.map((editor) => (
           <div key={editor.label} className={S.labelContainer} >
             <div
-              onClick={() => action(() => projectState.setActiveEditor(editor.schemaItemId))()}
+              onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
               className={editor.isActive ? S.activeTab : ""}
             >
               {editor.label}
             </div>
-            <div className={S.closeSymbol} onClick={() => flow(projectState.closeEditor(editor.schemaItemId))() }>X</div>
+            <div className={S.closeSymbol} onClick={() => flow(state.closeEditor(editor.schemaItemId))() }>X</div>
           </div>
         ))}
       </div>
       <div className={S.content}>
-        {projectState.editors.map((editorContainer) => (
+        {state.editors.map((editorContainer) => (
           <div key={editorContainer.state.label} className={editorContainer.state.isActive ? S.visible : S.hidden }>
             {editorContainer.element}
           </div>

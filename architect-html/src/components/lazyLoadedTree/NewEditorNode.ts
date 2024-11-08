@@ -2,7 +2,9 @@ import { EditorType, IApiEditorNode } from "src/API/IArchitectApi.ts";
 import {
   TreeNode
 } from "src/components/lazyLoadedTree/TreeNode.ts";
-import { IEditorNode } from "src/stores/IEditorManager.ts";
+import {
+  IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
 
 export class NewEditorNode implements IEditorNode {
   id: string;

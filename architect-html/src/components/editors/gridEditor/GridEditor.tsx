@@ -7,7 +7,6 @@ import {
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 
-
 export const GridEditor: React.FC<{
   title: string,
   editorState: EditorState
