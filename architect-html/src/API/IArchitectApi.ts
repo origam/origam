@@ -3,40 +3,40 @@ export interface IArchitectApi {
 
   getOpenEditors():  Promise<IEditorData[]>;
 
-  getPackages(): Promise<Package[]>;
+  getPackages(): Promise<IPackage[]>;
 
   setActivePackage(packageId: string): Promise<void>;
 
-  getTopModelNodes(): Promise<ApiTreeNode[]>;
+  getTopModelNodes(): Promise<IApiTreeNode[]>;
 
-  getNodeChildren(node: ApiTreeNode): Promise<ApiTreeNode[]>;
+  getNodeChildren(node: IApiTreeNode): Promise<IApiTreeNode[]>;
 
-  openEditor(schemaItemId: string): Promise<ApiEditorProperty[]>;
+  openEditor(schemaItemId: string): Promise<IApiEditorProperty[]>;
 
   closeEditor(schemaItemId: string): Promise<void>
 
-  persistChanges(schemaItemId: string, changedProperties:  ApiEditorProperty[]): Promise<void>;
+  persistChanges(schemaItemId: string, changedProperties:  IApiEditorProperty[]): Promise<void>;
 
   updateProperties(
     schemaItemId: string | undefined,
-    changedProperties: ApiEditorProperty[]
-  ): Promise<PropertyUpdate[]>;
+    changedProperties: IApiEditorProperty[]
+  ): Promise<IPropertyUpdate[]>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
-  getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]>;
+  getMenuItems(node: IApiTreeNode): Promise<IMenuItemInfo[]>;
 
-  createNew(node: ApiTreeNode, typeName: string): Promise<IEditorData>;
+  createNew(node: IApiTreeNode, typeName: string): Promise<IEditorData>;
 }
 
 
-export interface PropertyUpdate {
+export interface IPropertyUpdate {
     propertyName: string;
     errors: string[];
-    dropDownValues: DropDownValue[];
+    dropDownValues: IDropDownValue[];
 }
 
-export interface MenuItemInfo {
+export interface IMenuItemInfo {
     caption: string;
     typeName: string;
     iconName: string;
@@ -45,7 +45,7 @@ export interface MenuItemInfo {
 
 export type EditorType = "GridEditor" | "XslTEditor" | null;
 
-export interface ApiTreeNode {
+export interface IApiTreeNode {
   id: string;
   origamId: string;
   nodeText: string;
@@ -53,26 +53,26 @@ export interface ApiTreeNode {
   isNonPersistentItem: boolean;
   editorType: EditorType;
   childrenIds: string[];
-  children?: ApiTreeNode[];
+  children?: IApiTreeNode[];
 }
 
-export interface Package {
+export interface IPackage {
   id: string
   name: string
 }
 
-export interface ApiEditorProperty {
+export interface IApiEditorProperty {
   name: string;
   type: "boolean" | "enum" | "string" | "looukup";
   value: any;
-  dropDownValues: DropDownValue[];
+  dropDownValues: IDropDownValue[];
   category: string | null;
   description: string;
   readOnly: boolean;
   errors: string[];
 }
 
-export interface DropDownValue {
+export interface IDropDownValue {
     name: string;
     value: any;
 }
@@ -81,7 +81,7 @@ export interface IEditorData {
   parentNodeId: string | undefined;
   isPersisted: boolean;
   node: IApiEditorNode;
-  properties: ApiEditorProperty[];
+  properties: IApiEditorProperty[];
 }
 
 export interface IApiEditorNode {

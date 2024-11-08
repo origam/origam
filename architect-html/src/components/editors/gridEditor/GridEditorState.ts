@@ -1,7 +1,7 @@
 import { computed, observable } from "mobx";
 import {
-  ApiEditorProperty,
-  DropDownValue, IArchitectApi, PropertyUpdate,
+  IApiEditorProperty,
+  IDropDownValue, IArchitectApi, IPropertyUpdate,
 } from "src/API/IArchitectApi.ts";
 import { IEditorNode } from "src/stores/IEditorManager.ts";
 
@@ -37,7 +37,7 @@ export class EditorState {
     return this.editorNode.origamId;
   }
 
-  * initialize(): Generator<Promise<ApiEditorProperty[]>, void, ApiEditorProperty[]> {
+  * initialize(): Generator<Promise<IApiEditorProperty[]>, void, IApiEditorProperty[]> {
     if (this.properties.length === 0) {
       const apiProperties = yield this.architectApi.openEditor(this.editorNode.origamId);
       this.properties = apiProperties.map(apiProperty => new EditorProperty(apiProperty));
@@ -61,9 +61,9 @@ export class EditorState {
     }
   }
 
-  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<PropertyUpdate[]>, void, PropertyUpdate[]> {
+  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IPropertyUpdate[]>, void, IPropertyUpdate[]> {
     property.value = value;
-    const propertyUpdates = (yield this.architectApi.updateProperties(this.editorNode.origamId, this.properties)) as PropertyUpdate[];
+    const propertyUpdates = (yield this.architectApi.updateProperties(this.editorNode.origamId, this.properties)) as IPropertyUpdate[];
     for (const property of this.properties) {
       const propertyUpdate = propertyUpdates.find(update => property.name === update.propertyName)
       property.update(propertyUpdate);
@@ -71,11 +71,11 @@ export class EditorState {
   }
 }
 
-export class EditorProperty implements ApiEditorProperty {
+export class EditorProperty implements IApiEditorProperty {
   name: string;
   type: "boolean" | "enum" | "string" | "looukup";
   @observable private accessor _value: any;
-  @observable.shallow accessor dropDownValues: DropDownValue[];
+  @observable.shallow accessor dropDownValues: IDropDownValue[];
   category: string | null;
   description: string;
   readOnly: boolean;
@@ -103,7 +103,7 @@ export class EditorProperty implements ApiEditorProperty {
       : this.errors.join("\n");
   }
 
-  constructor(apiProperty: ApiEditorProperty) {
+  constructor(apiProperty: IApiEditorProperty) {
     this.name = apiProperty.name;
     this.type = apiProperty.type;
     this._value = apiProperty.value;
@@ -114,7 +114,7 @@ export class EditorProperty implements ApiEditorProperty {
     this.errors = apiProperty.errors ?? [];
   }
 
-  update(propertyUpdate: PropertyUpdate | undefined) {
+  update(propertyUpdate: IPropertyUpdate | undefined) {
     if (!propertyUpdate) {
       this.errors = [];
       return;

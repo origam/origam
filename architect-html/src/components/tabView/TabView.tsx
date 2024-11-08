@@ -23,7 +23,7 @@ import { observer } from "mobx-react-lite";
 import { action } from "mobx";
 
 export const TabView: React.FC<{
-  items: TabViewItem[];
+  items: ITabViewItem[];
   state: TabViewState;
 }> = observer(({ items, state }) => {
   return (
@@ -45,7 +45,8 @@ export const TabView: React.FC<{
     </div>
   );
 });
-export interface TabViewItem {
+
+export interface ITabViewItem {
   label: string;
   node: ReactNode
 }

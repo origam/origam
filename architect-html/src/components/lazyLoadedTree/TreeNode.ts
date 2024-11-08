@@ -1,7 +1,7 @@
 import {
-  ApiTreeNode,
+  IApiTreeNode,
   EditorType, IArchitectApi,
-  MenuItemInfo
+  IMenuItemInfo
 } from "src/API/IArchitectApi.ts";
 import { action, flow, observable } from "mobx";
 import { TreeViewUiState } from "src/stores/UiStore.ts";
@@ -14,7 +14,7 @@ import { NewEditorNode } from "src/components/lazyLoadedTree/NewEditorNode.ts";
 export class TreeNode implements IEditorNode {
 
   constructor(
-    apiNode: ApiTreeNode,
+    apiNode: IApiTreeNode,
     private editorManager: IEditorManager,
     private architectApi: IArchitectApi,
     private treeViewUiState: TreeViewUiState,
@@ -43,13 +43,13 @@ export class TreeNode implements IEditorNode {
   childrenIds: string[];
 
   @observable accessor isLoading: boolean = false;
-  @observable accessor contextMenuItems: MenuItemInfo[] = [];
+  @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
   get isExpanded() {
     return this.treeViewUiState.isExpanded(this.id);
   }
 
-  * loadChildren(): Generator<Promise<ApiTreeNode[]>, void, ApiTreeNode[]> {
+  * loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;
     }

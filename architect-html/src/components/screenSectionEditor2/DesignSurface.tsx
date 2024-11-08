@@ -2,15 +2,15 @@ import React, { useState, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import S from './DesignSurface.module.scss';
 import {
-  LabelItem
-} from "src/components/screenSectionEditor2/designComponents/LabelItem.ts";
+  ILabelItem
+} from "src/components/screenSectionEditor2/designComponents/ILabelItem.ts";
 import {
   DraggableLabel
 } from "src/components/screenSectionEditor2/designComponents/DraggableLabel.tsx";
 
 
 export const DesignSurface: React.FC = () => {
-  const [labels, setLabels] = useState<LabelItem[]>([]);
+  const [labels, setLabels] = useState<ILabelItem[]>([]);
   const surfaceRef = useRef<HTMLDivElement>(null);
 
   const [, drop] = useDrop(() => ({
@@ -33,7 +33,7 @@ export const DesignSurface: React.FC = () => {
             return [...prevLabels]
           });
         } else {
-          const newLabel: LabelItem = {
+          const newLabel: ILabelItem = {
             id: `${item.text}-${Date.now()}`, // Generate a unique id
             text: item.text,
             position: {x, y},

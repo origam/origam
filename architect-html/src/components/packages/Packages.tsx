@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { RootStoreContext, UiStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import { flow } from "mobx";
-import { Package } from "src/API/IArchitectApi.ts";
+import { IPackage } from "src/API/IArchitectApi.ts";
 
 export const Packages: React.FC = observer(() => {
   const projectState = useContext(RootStoreContext).projectState;
@@ -19,7 +19,7 @@ export const Packages: React.FC = observer(() => {
 });
 
 function PackageItem(props: {
-  package: Package
+  package: IPackage
 }) {
   const projectState = useContext(RootStoreContext).projectState;
   const uiStore = useContext(UiStoreContext);

@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { action, observable } from "mobx";
 import {
-  ApiTreeNode,
+  IApiTreeNode,
   IArchitectApi,
   IEditorData,
-  Package
+  IPackage
 } from "src/API/IArchitectApi.ts";
 import {
   TreeNode
@@ -46,7 +46,7 @@ export class RootStore {
 }
 
 export class ProjectState implements IEditorManager {
-  @observable.ref accessor packages: Package[] = [];
+  @observable.ref accessor packages: IPackage[] = [];
   @observable accessor activePackageId: string | undefined;
   @observable accessor modelNodes: TreeNode[] = []
   @observable accessor editors: Editor[] = [];
@@ -54,7 +54,7 @@ export class ProjectState implements IEditorManager {
   constructor(private architectApi: IArchitectApi, private uiStore: UiStore) {
   }
 
-  * loadPackages(): Generator<Promise<Package[]>, void, Package[]> {
+  * loadPackages(): Generator<Promise<IPackage[]>, void, IPackage[]> {
     this.packages = yield this.architectApi.getPackages();
   }
 
@@ -63,7 +63,7 @@ export class ProjectState implements IEditorManager {
     this.activePackageId = packageId;
   }
 
-  * loadPackageNodes(): Generator<Promise<ApiTreeNode[]>, void, ApiTreeNode[]> {
+  * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
     this.modelNodes = apiNodes.map(node =>
       new TreeNode(node, this, this.architectApi, this.uiStore.treeViewUiState))

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface LabelItem {
+export interface ILabelItem {
   id: string;
   text: string;
   position: { x: number; y: number };

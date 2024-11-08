@@ -63,12 +63,12 @@ export const XsltEditor = (props: { editorState: EditorState; }) => {
   );
 }
 
-interface CodeEditorProps {
+interface ICodeEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({value, onChange}) => {
+const CodeEditor: React.FC<ICodeEditorProps> = ({value, onChange}) => {
   const editorRef = useRef<any>(null);
   const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
   const vimModeRef = useRef<any>(null);

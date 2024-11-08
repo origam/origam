@@ -19,11 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "./Label.module.scss";
 
-interface LabelProps {
-  text: string;
-}
-
-export const Label: React.FC<LabelProps> = ({ text }) => {
+export const Label: React.FC<{ text: string}> = ({ text}) => {
   return (
     <div className={S.root}>
       {text}

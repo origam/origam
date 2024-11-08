@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import {
-  ApiEditorProperty, ApiTreeNode,
-  IArchitectApi, IEditorData, MenuItemInfo, PropertyUpdate,
-  Package, RuleErrors
+  IApiEditorProperty, IApiTreeNode,
+  IArchitectApi, IEditorData, IMenuItemInfo, IPropertyUpdate,
+  IPackage, RuleErrors
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -40,15 +40,15 @@ export class ArchitectApi implements IArchitectApi {
     await this.axiosInstance.post("/Package/SetActive", {id: packageId})
   }
 
-  async getPackages(): Promise<Package[]> {
+  async getPackages(): Promise<IPackage[]> {
     return (await this.axiosInstance.get("/Package/GetAll")).data
   }
 
-  async getTopModelNodes(): Promise<ApiTreeNode[]> {
+  async getTopModelNodes(): Promise<IApiTreeNode[]> {
     return (await this.axiosInstance.get(`/Model/GetTopNodes`)).data;
   }
 
-  async getNodeChildren(node: ApiTreeNode): Promise<ApiTreeNode[]> {
+  async getNodeChildren(node: IApiTreeNode): Promise<IApiTreeNode[]> {
     return (await this.axiosInstance.get(
       `/Model/GetChildren`,
       {
@@ -60,7 +60,7 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async openEditor(schemaItemId: string): Promise<ApiEditorProperty[]> {
+  async openEditor(schemaItemId: string): Promise<IApiEditorProperty[]> {
     return (await (this.axiosInstance.post("/Editor/OpenEditor",
       {schemaItemId: schemaItemId}))).data;
   }
@@ -70,7 +70,7 @@ export class ArchitectApi implements IArchitectApi {
       {schemaItemId: schemaItemId}));
   }
 
-  async persistChanges(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<void> {
+  async persistChanges(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<void> {
     const changes = changedProperties
       .filter(x => !x.readOnly)
       .map(x => {
@@ -85,7 +85,7 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async updateProperties(schemaItemId: string, changedProperties: ApiEditorProperty[]): Promise<PropertyUpdate[]> {
+  async updateProperties(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<IPropertyUpdate[]> {
     const changes = changedProperties
       .filter(x => !x.readOnly)
       .map(x => {
@@ -106,7 +106,7 @@ export class ArchitectApi implements IArchitectApi {
     )
   }
 
-  async getMenuItems(node: ApiTreeNode): Promise<MenuItemInfo[]> {
+  async getMenuItems(node: IApiTreeNode): Promise<IMenuItemInfo[]> {
     return (await this.axiosInstance.get(
       `/Model/GetMenuItems`,
       {
@@ -123,7 +123,7 @@ export class ArchitectApi implements IArchitectApi {
       `/Editor/GetOpenEditors`)).data;
   }
 
-  async createNew(node: ApiTreeNode, typeName: string): Promise<IEditorData> {
+  async createNew(node: IApiTreeNode, typeName: string): Promise<IEditorData> {
     return (await this.axiosInstance.post("/Editor/CreateNew",
       {
         nodeId: node.origamId,
