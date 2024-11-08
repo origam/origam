@@ -23,7 +23,7 @@ import { action, flow } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
 
 export const EditorTabView: React.FC = observer(() => {
-  const state = useContext(RootStoreContext).projectState.editorTabViewState;
+  const state = useContext(RootStoreContext).getEditorTabViewState();
   const editors = state.editors.map(x => x.state);
   const initializeOpenEditors = useMemo(
     () => state.initializeOpenEditors.bind(state),

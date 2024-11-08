@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   IApiEditorProperty, IApiTreeNode,
   IArchitectApi, IEditorData, IMenuItemInfo, IPropertyUpdate,
-  IPackage, RuleErrors
+  IPackage
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {

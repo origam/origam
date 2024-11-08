@@ -14,7 +14,7 @@ import { observer } from "mobx-react-lite";
 const ModelTree: React.FC<{
   node: TreeNode;
 }> = observer(({node}) => {
-  const editorTabViewState = useContext(RootStoreContext).projectState.getEditorTabViewState();
+  const editorTabViewState = useContext(RootStoreContext).getEditorTabViewState();
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const ModelTree: React.FC<{
 });
 
 const LazyLoadedTree: React.FC = observer(() => {
-  const modelTreeState = useContext(RootStoreContext).projectState.getModelTreeState();
+  const modelTreeState = useContext(RootStoreContext).getModelTreeState();
 
   return (
     <div>

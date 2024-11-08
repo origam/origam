@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
 import {
   EditorTabViewState
@@ -26,23 +25,16 @@ import { TabViewState } from "src/components/tabView/TabViewState.ts";
 import { UiState } from "src/stores/UiState.ts";
 import { PackagesState } from "src/components/packages/PackagesState.ts";
 import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
+import { ArchitectApi } from "src/API/ArchitectApi.ts";
 
 export class RootStore {
-  public projectState: ProjectState;
-
-  constructor() {
-    const architectApi = new ArchitectApi();
-    this.projectState = new ProjectState(architectApi);
-  }
-}
-
-
-export class ProjectState {
   private editorTabViewState: EditorTabViewState;
   private sideBarTabViewState = new TabViewState();
   private uiState = new UiState();
   private packagesState: PackagesState;
   private modelTreeState: ModelTreeState;
+
+  public architectApi: IArchitectApi = new ArchitectApi();
 
   public getEditorTabViewState() {
     return this.editorTabViewState;
@@ -61,10 +53,10 @@ export class ProjectState {
     return this.modelTreeState;
   }
 
-  constructor(private architectApi: IArchitectApi) {
-    this.packagesState = new PackagesState(architectApi);
-    this.editorTabViewState = new EditorTabViewState(architectApi, this);
-    this.modelTreeState = new ModelTreeState(architectApi, this);
+  constructor() {
+    this.packagesState = new PackagesState(this.architectApi);
+    this.editorTabViewState = new EditorTabViewState(this.architectApi, this);
+    this.modelTreeState = new ModelTreeState(this.architectApi, this);
   }
 
   showModelTree() {

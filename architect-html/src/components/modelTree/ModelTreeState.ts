@@ -1,14 +1,14 @@
 import { observable } from "mobx";
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { IApiTreeNode, IArchitectApi } from "src/API/IArchitectApi.ts";
-import { ProjectState } from "src/stores/RootStore.ts";
+import { RootStore } from "src/stores/RootStore.ts";
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
 
   constructor(
     private architectApi: IArchitectApi,
-    private projectState: ProjectState) {
+    private rootStore: RootStore) {
   }
 
   * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -16,9 +16,9 @@ export class ModelTreeState {
     this.modelNodes = apiNodes.map(node =>
       new TreeNode(
         node,
-        this.projectState.getEditorTabViewState(),
+        this.rootStore.getEditorTabViewState(),
         this.architectApi,
-        this.projectState.getUiState()))
+        this.rootStore.getUiState()))
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {

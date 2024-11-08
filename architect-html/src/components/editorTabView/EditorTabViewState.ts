@@ -10,13 +10,13 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
-import { ProjectState } from "src/stores/RootStore.ts";
+import { RootStore } from "src/stores/RootStore.ts";
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
   constructor(
     private architectApi: IArchitectApi,
-    private rootStore: ProjectState) {
+    private rootStore: RootStore) {
   }
 
   * initializeOpenEditors(): Generator<Promise<IEditorData[]>, void, IEditorData[]> {
