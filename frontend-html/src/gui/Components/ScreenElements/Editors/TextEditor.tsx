@@ -242,6 +242,7 @@ export class TextEditor extends React.Component<{
           onDoubleClick={this.props.onDoubleClick}
           onBlur={this.props.onEditorBlur}
           onFocus={this.handleFocus}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       );
     }
