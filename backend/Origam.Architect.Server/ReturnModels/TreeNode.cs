@@ -75,10 +75,6 @@ public class TreeNodeFactory
         {
             return null;
         }
-        if (node is TableMappingItem or FieldMappingItem)
-        {
-            return "GridEditor";
-        }
-        return null;
+        return "GridEditor";
     }
 }
