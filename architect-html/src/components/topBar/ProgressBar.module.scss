@@ -1,0 +1,36 @@
+.progressIndicator {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+
+  $indefiniteMarkerWidth: 200%;
+
+  @keyframes slideright {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(50%);
+    }
+  }
+
+  .indefinite {
+    animation-name: slideright;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(20);
+    width: $indefiniteMarkerWidth;
+    height: 100%;
+    background: linear-gradient(
+                    to right,
+                    var(--background1) 0%,
+                    var(--foreground2) 34%,
+                    var(--foreground3) 50%,
+                    var(--foreground2) 66%,
+                    var(--background1) 100%
+    );
+  }
+}

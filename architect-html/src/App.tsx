@@ -4,12 +4,12 @@ import "./App.css"
 import "src/colors.scss"
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
-import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 import ModelTree from "src/components/modelTree/ModelTree.tsx";
+import { TopBar } from "src/components/topBar/TopBar.tsx";
 
 const App: React.FC = observer(() => {
 
@@ -33,7 +33,7 @@ const App: React.FC = observer(() => {
   // {/*<ScreenSectionEditor/>*/}
   return (
     <TopLayout
-      topToolBar={<SaveButton/>}
+      topToolBar={<TopBar/>}
       editorArea={<EditorTabView/>}
       sideBar={
         <TabView
