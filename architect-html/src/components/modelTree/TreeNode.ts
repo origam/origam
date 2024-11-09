@@ -47,7 +47,7 @@ export class TreeNode implements IEditorNode {
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
   get isExpanded() {
-    return this.rootStore.getUiState().isExpanded(this.id);
+    return this.rootStore.uiState.isExpanded(this.id);
   }
 
   * loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -72,7 +72,7 @@ export class TreeNode implements IEditorNode {
     if (this.hasChildNodes && !this.isLoading && !this.isExpanded && (this.children.length === 0)) { // !isExpanded => will be expanded now
       yield flow(this.loadChildren.bind(this))();
     }
-    this.rootStore.getUiState().setExpanded(this.id, !this.isExpanded)
+    this.rootStore.uiState.setExpanded(this.id, !this.isExpanded)
   }
 
   * delete() {
@@ -91,7 +91,7 @@ export class TreeNode implements IEditorNode {
     const editorData = await this.architectApi.createNew(this, typeName);
     const properties = editorData.properties.map(property => new EditorProperty(property));
     const editorNode= new NewEditorNode(editorData.node, this);
-    this.rootStore.getEditorTabViewState().openEditor(editorNode, properties);
+    this.rootStore.editorTabViewState.openEditor(editorNode, properties);
   }
 }
 

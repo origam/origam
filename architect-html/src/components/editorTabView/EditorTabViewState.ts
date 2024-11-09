@@ -30,7 +30,7 @@ export class EditorTabViewState {
   }
 
   private toEditor(data: IEditorData) {
-    const parentNode = this.rootStore.getModelTreeState().findNodeById(data.parentNodeId)
+    const parentNode = this.rootStore.modelTreeState.findNodeById(data.parentNodeId)
     return getEditor(
       new NewEditorNode(data.node, parentNode),
       data.properties.map(property => new EditorProperty(property)),
@@ -57,10 +57,6 @@ export class EditorTabViewState {
     return this.editors.find(editor => editor.state.isActive)?.state;
   }
 
-  get activeEditor() {
-    return this.editors.find(editor => editor.state.isActive)?.element;
-  }
-
   setActiveEditor(schemaItemId: string) {
     for (const editor of this.editors) {
       editor.state.isActive = editor.state.schemaItemId === schemaItemId;
@@ -69,7 +65,7 @@ export class EditorTabViewState {
 
   closeEditor(schemaItemId: string) {
     return function* (this: any) {
-      this.editors = this.editors.filter(editor => editor.state.schemaItemId !== schemaItemId);
+      this.editors = this.editors.filter((editor: Editor) => editor.state.schemaItemId !== schemaItemId);
       yield this.architectApi.closeEditor(schemaItemId);
       if (this.editors.length > 0) {
         const editorToActivate = this.editors[this.editors.length - 1];

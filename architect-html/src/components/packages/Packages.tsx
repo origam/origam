@@ -5,7 +5,7 @@ import { flow } from "mobx";
 import { IPackage } from "src/API/IArchitectApi.ts";
 
 export const Packages: React.FC = observer(() => {
-  const packagesState = useContext(RootStoreContext).getPackagesState();
+  const packagesState = useContext(RootStoreContext).packagesState;
 
   useEffect(() => {
     flow(packagesState.loadPackages.bind(packagesState))();
@@ -22,13 +22,13 @@ function PackageItem(props: {
   package: IPackage
 }) {
   const rootStore = useContext(RootStoreContext);
-  const packagesState = rootStore.getPackagesState();
-  const modelTreeState = rootStore.getModelTreeState();
+  const packagesState = rootStore.packagesState;
+  const modelTreeState = rootStore.modelTreeState;
 
   async function onPackageClick() {
     flow(function* () {
       yield* packagesState.setActivePackage(props.package.id);
-      rootStore.showModelTree();
+      rootStore.sideBarTabViewState.showModelTree();
       yield* modelTreeState.loadPackageNodes();
     })();
   }

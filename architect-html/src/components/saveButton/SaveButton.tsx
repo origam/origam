@@ -4,7 +4,7 @@ import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 
 export const SaveButton = observer( () => {
-  const editorTabViewState = useContext(RootStoreContext).getEditorTabViewState();
+  const editorTabViewState = useContext(RootStoreContext).editorTabViewState;
   const activeEditor = editorTabViewState.activeEditorState;
   if (!activeEditor) {
     return null;

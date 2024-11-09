@@ -28,39 +28,17 @@ import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 
 export class RootStore {
-  private editorTabViewState: EditorTabViewState;
-  private sideBarTabViewState = new TabViewState();
-  private uiState = new UiState();
-  private packagesState: PackagesState;
-  private modelTreeState: ModelTreeState;
-
+  public editorTabViewState: EditorTabViewState;
+  public sideBarTabViewState = new TabViewState();
+  public uiState = new UiState();
+  public packagesState: PackagesState;
+  public modelTreeState: ModelTreeState;
   public architectApi: IArchitectApi = new ArchitectApi();
-
-  public getEditorTabViewState() {
-    return this.editorTabViewState;
-  }
-  public getUiState() {
-    return this.uiState;
-  }
-  public getSideBarTabViewState() {
-    return this.sideBarTabViewState;
-  }
-  public getPackagesState() {
-    return this.packagesState;
-  }
-
-  public getModelTreeState() {
-    return this.modelTreeState;
-  }
 
   constructor() {
     this.packagesState = new PackagesState(this.architectApi);
     this.editorTabViewState = new EditorTabViewState(this);
     this.modelTreeState = new ModelTreeState(this);
-  }
-
-  showModelTree() {
-    this.sideBarTabViewState.activeTabIndex = 1;
   }
 }
 
