@@ -34,11 +34,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 @mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-  -moz-border-radius: $radius;
-  -ms-border-radius: $radius;
-  -o-border-radius: $radius;
-  border-radius: $radius;
+   & {
+     -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+     -ms-border-radius: $radius;
+     -o-border-radius: $radius;
+     border-radius: $radius;
+   }
 }
 
 @mixin dialogButton {
@@ -48,16 +50,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background7);
   border: 1px solid var(--background5);
   background-color: var(--background3);
-  padding: 5px 8px 5px 8px;
+  padding: 5px 8px;
   cursor: pointer;
-  margin-right: 5px;
-  margin-left: 5px;
+  margin: 0 5px;
   @include hoverItemAnimation;
+
   &:hover {
     background: var(--background5);
     color: var(--background8);
   }
-  &:focus, &:global(.isPrimary) {
+
+  &:focus,
+  &:global(.isPrimary) {
     background: var(--foreground1);
     border-color: var(--foreground1);
     color: var(--background1);
@@ -76,9 +80,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background-color: var(--background1);
   display: flex;
   flex-direction: column;
-
   @include popoverShadow;
-
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
   @include border-radius(4px);
@@ -96,7 +98,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 40px;
   font-size: 1.5em;
   line-height: 1.3em;
-  padding: 0 0.65em 0 0.65em;
+  padding: 0 0.65em;
   @include border-radius(4px 4px 0 0);
 }
 
@@ -116,22 +118,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding: 0;
 }
 
-.buttons button {
-  background: transparent;
-  color: var(--background8);
-  border: none;
-  padding: 0;
-  border-radius: 2px;
-  width: 40px;
-  height: 40px;
-  margin: 0;
-  font-size: 10px;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  cursor: pointer;
+.buttons {
+  & button {
+    background: transparent;
+    color: var(--background8);
+    border: none;
+    padding: 0;
+    border-radius: 2px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    font-size: 10px;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    cursor: pointer;
+  }
 }
 
 .btnClose {
@@ -165,17 +169,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       stroke-width: 2px;
     }
   }
-}
 
-.btnClose :global(.icon) {
-  position: relative;
-  top: -1px;
+  :global(.icon) {
+    position: relative;
+    top: -1px;
+  }
 }
 
 .body {
   flex-grow: 1;
   overflow: auto;
-  /*padding: 10px;*/
 }
 
 .footer {
@@ -185,24 +188,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   border-top: 1px solid var(--background3);
   padding: 1em;
-}
 
-.footer button {
-  @include dialogButton;
-  background: var(--background2);
-  box-sizing: border-box;
-  font-weight: 700;
-  margin: 0 0.5em;
-  min-width: 75px;
-  padding: 0 1.5em;
-  @include border-radius(3em);
+  & button {
+    min-width: 75px;
+    background: var(--background2);
+    box-sizing: border-box;
+    font-weight: 700;
+    padding: 0 1.5em;
+    margin: 0 0.5em;
+    @include dialogButton;
+    @include border-radius(3em);
 
-  &:first-of-type {
-    margin-left: 0;
-  }
+    &:first-of-type {
+      margin-left: 0;
+    }
 
-  &:last-of-type {
-    margin-right: 0;
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 }
 
