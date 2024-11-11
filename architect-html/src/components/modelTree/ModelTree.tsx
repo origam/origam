@@ -8,18 +8,24 @@ import {
 import 'react-contexify/ReactContexify.css';
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStoreContext } from "src/main.tsx";
-import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
+import {
+  runGeneratorInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
 
 const ModelTreeNode: React.FC<{
   node: TreeNode;
 }> = observer(({node}) => {
-  const editorTabViewState = useContext(RootStoreContext).editorTabViewState;
+  const rootStore = useContext(RootStoreContext);
+  const editorTabViewState = rootStore.editorTabViewState;
   const menuId = 'SideMenu' + node.id;
 
   useEffect(() => {
     if (node.isExpanded && node.hasChildNodes && (node.children.length === 0)) {
-      flow(node.loadChildren.bind(node))();
+      runGeneratorInFlowWithHandler({
+        controller: rootStore.errorDialogController,
+        generator: node.loadChildren.bind(node),
+      });
     }
   }, [node.isExpanded, node.children]);
 
@@ -45,7 +51,10 @@ const ModelTreeNode: React.FC<{
   }
 
   const onToggle = async () => {
-    await flow(node.toggle.bind(node))();
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: node.toggle.bind(node),
+    });
   };
 
   function onMenuVisibilityChange(isVisible: boolean) {
@@ -54,6 +63,13 @@ const ModelTreeNode: React.FC<{
     } else {
       document.removeEventListener('wheel', hideAll);
     }
+  }
+
+  function onDelete() {
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: node.delete.bind(node),
+    });
   }
 
   return (
@@ -94,7 +110,7 @@ const ModelTreeNode: React.FC<{
               </Item>
               <Item
                 id="delete"
-                onClick={() => flow(node.delete.bind(node))()}
+                onClick={onDelete}
               >
                 Delete
               </Item>
@@ -117,7 +133,7 @@ const ModelTreeNode: React.FC<{
   );
 });
 
-const LazyLoadedTree: React.FC = observer(() => {
+const ModelTree: React.FC = observer(() => {
   const modelTreeState = useContext(RootStoreContext).modelTreeState;
 
   return (
@@ -132,4 +148,4 @@ const LazyLoadedTree: React.FC = observer(() => {
   );
 });
 
-export default LazyLoadedTree;
+export default ModelTree;

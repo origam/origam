@@ -1,22 +1,32 @@
-import S from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
+import S
+  from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
 import {
   EditorProperty, EditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
-import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
+import {
+  runGeneratorInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
+import { RootStoreContext } from "src/main.tsx";
+import { useContext } from "react";
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];
   editorState: EditorState;
-}> = observer( (props) => {
+}> = observer((props) => {
+  const rootStore = useContext(RootStoreContext);
+
   if (!props.properties) {
     return null;
   }
 
   function onValueChange(property: EditorProperty, value: any) {
-    flow(function*() {
-      yield* props.editorState.onPropertyUpdated(property, value);
-    })();
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: function* () {
+        yield* props.editorState.onPropertyUpdated(property, value);
+      },
+    });
   }
 
   const {

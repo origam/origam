@@ -5,19 +5,24 @@ import "src/colors.scss"
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
 import { RootStoreContext } from "src/main.tsx";
-import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 import ModelTree from "src/components/modelTree/ModelTree.tsx";
 import { TopBar } from "src/components/topBar/TopBar.tsx";
 import { ApplicationDialogStack } from "src/dialog/DialogStack.tsx";
+import {
+  runGeneratorInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
 
 const App: React.FC = observer(() => {
 
   const rootStore = useContext(RootStoreContext);
 
   useEffect(() => {
-    flow(rootStore.modelTreeState.loadPackageNodes.bind(rootStore.modelTreeState))();
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: rootStore.packagesState.loadPackages.bind(rootStore.modelTreeState),
+    });
   }, []);
 
   useEffect(() => {

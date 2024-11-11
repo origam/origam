@@ -1,14 +1,20 @@
 import { useContext, useEffect } from "react";
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
-import { flow } from "mobx";
 import { IPackage } from "src/API/IArchitectApi.ts";
+import {
+  runGeneratorInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
 
 export const Packages: React.FC = observer(() => {
-  const packagesState = useContext(RootStoreContext).packagesState;
+  const rootStore = useContext(RootStoreContext);
+  const packagesState = rootStore.packagesState;
 
   useEffect(() => {
-    flow(packagesState.loadPackages.bind(packagesState))();
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: packagesState.loadPackages.bind(packagesState),
+    });
   }, []);
 
   return (
@@ -26,11 +32,15 @@ function PackageItem(props: {
   const modelTreeState = rootStore.modelTreeState;
 
   async function onPackageClick() {
-    flow(function* () {
-      yield* packagesState.setActivePackage(props.package.id);
-      rootStore.sideBarTabViewState.showModelTree();
-      yield* modelTreeState.loadPackageNodes();
-    })();
+
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: function* () {
+        yield* packagesState.setActivePackage(props.package.id);
+        rootStore.sideBarTabViewState.showModelTree();
+        yield* modelTreeState.loadPackageNodes();
+      },
+    });
   }
 
   return (

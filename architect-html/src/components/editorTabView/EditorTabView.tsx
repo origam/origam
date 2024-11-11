@@ -21,9 +21,16 @@ import S from "./EditorTabView.module.scss";
 import { observer } from "mobx-react-lite";
 import { action, flow } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
+import {
+  runGeneratorInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
+import {
+  EditorState
+} from "src/components/editors/gridEditor/GridEditorState.ts";
 
 export const EditorTabView: React.FC = observer(() => {
-  const state = useContext(RootStoreContext).editorTabViewState;
+  const rootStore = useContext(RootStoreContext);
+  const state = rootStore.editorTabViewState;
   const editors = state.editors.map(x => x.state);
   const initializeOpenEditors = useMemo(
     () => state.initializeOpenEditors.bind(state),
@@ -31,14 +38,24 @@ export const EditorTabView: React.FC = observer(() => {
   );
 
   useEffect(() => {
-    flow(initializeOpenEditors)();
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: initializeOpenEditors,
+    });
   }, [initializeOpenEditors]);
+
+  function onClose(editor: EditorState){
+    runGeneratorInFlowWithHandler({
+      controller: rootStore.errorDialogController,
+      generator: state.closeEditor(editor.schemaItemId),
+    });
+  }
 
   return (
     <div className={S.root}>
       <div className={S.labels}>
         {editors.map((editor) => (
-          <div key={editor.label} className={S.labelContainer} >
+          <div key={editor.label} className={S.labelContainer}>
             <div
               onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
               className={editor.isActive ? S.activeTab : ""}
@@ -47,14 +64,16 @@ export const EditorTabView: React.FC = observer(() => {
             </div>
             <div
               className={S.closeSymbol}
-              onClick={() => flow(state.closeEditor(editor.schemaItemId))() }
-            >X</div>
+              onClick={() => onClose(editor)}
+            >X
+            </div>
           </div>
         ))}
       </div>
       <div className={S.content}>
         {state.editors.map((editorContainer) => (
-          <div key={editorContainer.state.label} className={editorContainer.state.isActive ? S.visible : S.hidden }>
+          <div key={editorContainer.state.label}
+               className={editorContainer.state.isActive ? S.visible : S.hidden}>
             {editorContainer.element}
           </div>
         ))}
