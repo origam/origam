@@ -3,7 +3,7 @@ import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import { IPackage } from "src/API/IArchitectApi.ts";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 
 export const Packages: React.FC = observer(() => {
@@ -11,8 +11,7 @@ export const Packages: React.FC = observer(() => {
   const packagesState = rootStore.packagesState;
 
   useEffect(() => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: packagesState.loadPackages.bind(packagesState),
     });
   }, []);
@@ -33,8 +32,7 @@ function PackageItem(props: {
 
   async function onPackageClick() {
 
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         yield* packagesState.setActivePackage(props.package.id);
         rootStore.sideBarTabViewState.showModelTree();

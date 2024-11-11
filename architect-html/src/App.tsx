@@ -11,7 +11,7 @@ import ModelTree from "src/components/modelTree/ModelTree.tsx";
 import { TopBar } from "src/components/topBar/TopBar.tsx";
 import { ApplicationDialogStack } from "src/dialog/DialogStack.tsx";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 
 const App: React.FC = observer(() => {
@@ -19,8 +19,7 @@ const App: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   useEffect(() => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: rootStore.packagesState.loadPackages.bind(rootStore.modelTreeState),
     });
   }, []);

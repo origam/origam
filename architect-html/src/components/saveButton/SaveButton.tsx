@@ -2,7 +2,7 @@ import { RootStoreContext } from "src/main.tsx";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 
 export const SaveButton = observer(() => {
@@ -13,8 +13,7 @@ export const SaveButton = observer(() => {
     return null;
   }
   const handleSave = () => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: activeEditor.save.bind(activeEditor),
     });
   };

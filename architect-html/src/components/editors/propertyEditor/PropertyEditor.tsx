@@ -5,7 +5,7 @@ import {
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import { RootStoreContext } from "src/main.tsx";
 import { useContext } from "react";
@@ -21,8 +21,7 @@ export const PropertyEditor: React.FC<{
   }
 
   function onValueChange(property: EditorProperty, value: any) {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         yield* props.editorState.onPropertyUpdated(property, value);
       },

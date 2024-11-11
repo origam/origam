@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { useContext, useEffect, useMemo } from "react";
 import S from "./EditorTabView.module.scss";
 import { observer } from "mobx-react-lite";
-import { action, flow } from "mobx";
+import { action } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import {
   EditorState
@@ -37,18 +37,14 @@ export const EditorTabView: React.FC = observer(() => {
     [state]
   );
 
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
+
   useEffect(() => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
-      generator: initializeOpenEditors,
-    });
+    run({generator: initializeOpenEditors});
   }, [initializeOpenEditors]);
 
-  function onClose(editor: EditorState){
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
-      generator: state.closeEditor(editor.schemaItemId),
-    });
+  function onClose(editor: EditorState) {
+    run({generator: state.closeEditor(editor.schemaItemId)});
   }
 
   return (

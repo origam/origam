@@ -6,7 +6,7 @@ import {
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import { RootStoreContext } from "src/main.tsx";
 
@@ -17,8 +17,7 @@ export const GridEditor: React.FC<{
    const rootStore = useContext(RootStoreContext);
 
    useEffect(() => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
+    runInFlowWithHandler(rootStore.errorDialogController)({
       generator: props.editorState.initialize.bind(props.editorState),
     });
   }, [props.editorState]);

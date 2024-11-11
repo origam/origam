@@ -10,7 +10,7 @@ import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import {
-  runGeneratorInFlowWithHandler
+  runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 
 const ModelTreeNode: React.FC<{
@@ -19,15 +19,13 @@ const ModelTreeNode: React.FC<{
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
   const menuId = 'SideMenu' + node.id;
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
     if (node.isExpanded && node.hasChildNodes && (node.children.length === 0)) {
-      runGeneratorInFlowWithHandler({
-        controller: rootStore.errorDialogController,
-        generator: node.loadChildren.bind(node),
-      });
+      run({generator: node.loadChildren.bind(node)});
     }
-  }, [node.isExpanded, node.children]);
+  }, [node.isExpanded, node.children, run]);
 
   const {show, hideAll} = useContextMenu({
     id: menuId,
@@ -51,10 +49,7 @@ const ModelTreeNode: React.FC<{
   }
 
   const onToggle = async () => {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
-      generator: node.toggle.bind(node),
-    });
+    run({generator: node.toggle.bind(node)});
   };
 
   function onMenuVisibilityChange(isVisible: boolean) {
@@ -66,10 +61,7 @@ const ModelTreeNode: React.FC<{
   }
 
   function onDelete() {
-    runGeneratorInFlowWithHandler({
-      controller: rootStore.errorDialogController,
-      generator: node.delete.bind(node),
-    });
+    run({generator: node.delete.bind(node)});
   }
 
   return (
