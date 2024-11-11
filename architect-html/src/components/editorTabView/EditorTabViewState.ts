@@ -11,6 +11,7 @@ import {
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStore } from "src/stores/RootStore.ts";
+import { askYesNoQuestion, YesNoResult } from "src/dialog/DialogUtils.tsx";
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
@@ -64,7 +65,19 @@ export class EditorTabViewState {
   }
 
   closeEditor(schemaItemId: string) {
-    return function* (this: any) {
+    return function* (this: EditorTabViewState) {
+      if (this.activeEditorState?.isDirty) {
+        const saveChanges = yield askYesNoQuestion(this.rootStore.dialogStack, "Save changes", `Do you want to save ${this.activeEditorState.label}?`);
+        switch (saveChanges) {
+          case YesNoResult.No:
+            break;
+          case YesNoResult.Cancel:
+            return;
+          case YesNoResult.Yes:
+            yield* this.activeEditorState.save();
+            break;
+        }
+      }
       this.editors = this.editors.filter((editor: Editor) => editor.state.schemaItemId !== schemaItemId);
       yield this.architectApi.closeEditor(schemaItemId);
       if (this.editors.length > 0) {

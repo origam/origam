@@ -27,8 +27,10 @@ interface YesNoQuestionProps {
   yesLabel: string;
   noLabel: string;
   message: string;
+  cancelLabel?: string
   onYesClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onNoClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onCancelClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(({
@@ -36,8 +38,10 @@ export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(({
   yesLabel,
   noLabel,
   message,
+  cancelLabel,
   onYesClick,
-  onNoClick
+  onNoClick,
+  onCancelClick
 }) => {
   return (
     <ModalWindow
@@ -59,6 +63,15 @@ export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(({
           >
             {noLabel}
           </button>
+          {onCancelClick && cancelLabel && (
+            <button
+              id="cancelButton"
+              tabIndex={0}
+              onClick={onCancelClick}
+            >
+              {cancelLabel}
+            </button>
+          )}
         </>
       }
     >

@@ -11,7 +11,7 @@ import { RootStoreContext } from "src/main.tsx";
 import { flow } from "mobx";
 import { observer } from "mobx-react-lite";
 
-const ModelTree: React.FC<{
+const ModelTreeNode: React.FC<{
   node: TreeNode;
 }> = observer(({node}) => {
   const editorTabViewState = useContext(RootStoreContext).editorTabViewState;
@@ -106,7 +106,7 @@ const ModelTree: React.FC<{
       {node.isExpanded && node.children.length > 0 && (
         <div>
           {node.children.map((childNode) => (
-            <ModelTree
+            <ModelTreeNode
               key={childNode.id + childNode.nodeText}
               node={childNode}
             />
@@ -123,7 +123,7 @@ const LazyLoadedTree: React.FC = observer(() => {
   return (
     <div>
       {modelTreeState.modelNodes.map((node) => (
-        <ModelTree
+        <ModelTreeNode
           key={node.id + node.nodeText}
           node={node}
         />

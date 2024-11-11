@@ -21,27 +21,40 @@ import { action } from "mobx";
 import { YesNoQuestion } from "src/dialog/components/YesNoQuestion.tsx";
 import { IDialogStackState } from "src/dialog/types.ts";
 
-export function askYesNoQuestion(dialogStack: IDialogStackState, title: string, question: string) {
+export function askYesNoQuestion(
+  dialogStack: IDialogStackState, title: string, question: string): Promise<YesNoResult>
+{
   return new Promise(
-    action((resolve: (value: boolean) => void) => {
+    action((resolve: (value: YesNoResult) => void) => {
         const closeDialog = dialogStack.pushDialog(
           "",
           <YesNoQuestion
             screenTitle={title}
             yesLabel={"Yes"}
             noLabel={"No"}
+            cancelLabel={"Cancel"}
             message={question}
             onYesClick={() => {
               closeDialog();
-              resolve(true);
+              resolve(YesNoResult.Yes);
             }}
             onNoClick={() => {
               closeDialog();
-              resolve(false);
+              resolve(YesNoResult.No);
+            }}
+            onCancelClick={() => {
+              closeDialog();
+              resolve(YesNoResult.Cancel);
             }}
           />
         );
       }
     )
   );
+}
+
+export enum YesNoResult {
+  Yes,
+  No,
+  Cancel
 }
