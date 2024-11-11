@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/commonStyles";
+@use "src/gui/commonStyles" as styles;
 
 .resultItem {
   width: 100%;
@@ -30,13 +30,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   text-decoration: none;
   font-style: normal;
-  color: $textColorNoHover;
+  color: styles.$textColorNoHover;
   background-color: var(--background2);
   transition: all 300ms linear;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
 
   &:not(:global(.isActive)):hover {
-    color: $textColorHover;
+    color: styles.$textColorHover;
     svg:global(.icon) {
       stroke: var(--background8);
       stroke-width: 1.5;
@@ -44,12 +44,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   svg:global(.icon) {
-    @include hoverItemAnimation;
+    @include styles.hoverItemAnimation;
     height: 20px;
     width: 20px;
   }
   img:global(.icon) {
-    @include hoverItemAnimation;
+    @include styles.hoverItemAnimation;
     height: 20px;
     width: 20px;
   }
@@ -69,7 +69,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .resultItem:hover {
-  color: $textColorHover;
+  color: styles.$textColorHover;
 }
 
 .resultItemName{
@@ -87,7 +87,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   background-color: var(--background2);
-  @include noSelect;
+  @include styles.noSelect;
 }
 
 .groupName{

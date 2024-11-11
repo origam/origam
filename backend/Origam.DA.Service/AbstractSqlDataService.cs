@@ -220,6 +220,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	}
     
     #region Public Methods
+    
+	public override void DiagnoseConnection()
+	{
+		using IDbConnection connection = GetConnection(ConnectionString);
+		connection.Open();
+	}
     public abstract string CreateSystemRole(string roleName);
     
     public abstract string CreateInsert(int fieldCount);

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/gui/definitions";
+@use "src/gui/definitions" as definitions;
 
-.root {
+@mixin root {
   height: 100%;
   max-height: 100%;
   flex-grow: 1;
@@ -35,13 +35,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+.root {
+ @include root;
+}
+
 .divider {
   background-color:var(--foreground1);
   flex-shrink: 0;
   :global(.dividerLine) {
     border-color: var(--background1) !important;
 		border-style: solid !important;
-		@extend %transition;
+		@include definitions.transition;
   }
   &:global(.isHoriz) {
     width: 0.5em;
@@ -78,7 +82,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
-.panel {
+@mixin panel {
   flex-grow: 1;
   flex-shrink: 1;
   overflow: none;
@@ -90,4 +94,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:global(.isVert) {
     width: 100%;
   }
+}
+
+.panel {
+  @include panel;
 }

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 // THIS FILE MIGHT POTENTIALLY GET UNUSED AFTER MIGRATING THE OLD EDITORS
 
-@import "src/gui/commonStyles";
+@use "src/gui/commonStyles" as styles;
 
 @mixin input {
   width: 100%;
@@ -31,7 +31,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 20px;
   padding: 0 3px;
   border-radius: 2px;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
 
   &:hover {
     background: var(--background1);

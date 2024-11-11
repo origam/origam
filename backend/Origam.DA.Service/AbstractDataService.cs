@@ -780,7 +780,9 @@ public abstract class AbstractDataService : IDataService
         (DataStructureQuery dataStructureQuery);
     public abstract IEnumerable<Dictionary<string, object>>
         ExecuteDataReaderReturnPairs(DataStructureQuery query);
-    
+
+    public abstract void DiagnoseConnection();
+
     #endregion
     #region IDisposable Members
     public virtual void Dispose()

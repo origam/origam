@@ -189,6 +189,7 @@ export class NumberEditor extends React.Component<NumberEditorProps, any> {
           onDoubleClick={this.props.onDoubleClick}
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       </div>
     );
