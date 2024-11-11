@@ -26,6 +26,8 @@ import { UiState } from "src/stores/UiState.ts";
 import { PackagesState } from "src/components/packages/PackagesState.ts";
 import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
+import { DialogStackState } from "src/dialog/DialogStackState.tsx";
+import { IDialogStackState } from "src/dialog/types.ts";
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -34,6 +36,7 @@ export class RootStore {
   public packagesState: PackagesState;
   public modelTreeState: ModelTreeState;
   public architectApi: IArchitectApi = new ArchitectApi();
+  public dialogStack: IDialogStackState = new DialogStackState();
 
   constructor() {
     this.packagesState = new PackagesState(this.architectApi);

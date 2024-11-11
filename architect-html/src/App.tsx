@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 import ModelTree from "src/components/modelTree/ModelTree.tsx";
 import { TopBar } from "src/components/topBar/TopBar.tsx";
+import { ApplicationDialogStack } from "src/dialog/DialogStack.tsx";
 
 const App: React.FC = observer(() => {
 
@@ -32,25 +33,28 @@ const App: React.FC = observer(() => {
 
   // {/*<ScreenSectionEditor/>*/}
   return (
-    <TopLayout
-      topToolBar={<TopBar/>}
-      editorArea={<EditorTabView/>}
-      sideBar={
-        <TabView
-          state={rootStore.sideBarTabViewState}
-          items={[
-            {
-              label: "Packages",
-              node: <Packages/>
-            },
-            {
-              label: "Model",
-              node: <ModelTree/>
-            }
-          ]}
-        />
-      }
-    />
+    <>
+      <TopLayout
+        topToolBar={<TopBar/>}
+        editorArea={<EditorTabView/>}
+        sideBar={
+          <TabView
+            state={rootStore.sideBarTabViewState}
+            items={[
+              {
+                label: "Packages",
+                node: <Packages/>
+              },
+              {
+                label: "Model",
+                node: <ModelTree/>
+              }
+            ]}
+          />
+        }
+      />
+      <ApplicationDialogStack/>
+    </>
   );
 });
 
