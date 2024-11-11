@@ -24,7 +24,7 @@ import { ProgressBar } from "src/components/topBar/ProgressBar.tsx";
 export const TopBar = () => {
   return (
     <div className={S.root}>
-      <ProgressBar isLoading={true}/>
+      <ProgressBar isLoading={false}/>
       <div className={S.buttons}>
         <SaveButton/>
       </div>
