@@ -1,4 +1,5 @@
 using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
@@ -34,6 +35,15 @@ public class Program
         {
             logging.AddLog4Net();
         });
+        
+        var spaConfig = builder.Configuration
+            .GetSection("SpaConfig")
+            .Get<SpaConfig>();
+        builder.Services.AddSpaStaticFiles(configuration =>
+        {
+            configuration.RootPath = Path.Combine(spaConfig.SourcePath, "dist");
+        });
+        
         var app = builder.Build();
             
         if (app.Environment.IsDevelopment())
@@ -44,7 +54,13 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.UseStaticFiles();
+        app.UseSpaStaticFiles();
         app.MapControllers();
+        app.UseSpa(spa =>
+        {
+            spa.Options.SourcePath = spaConfig.SourcePath;
+        });
         app.Run();
     }
 }
