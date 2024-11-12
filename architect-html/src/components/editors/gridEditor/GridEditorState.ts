@@ -12,14 +12,17 @@ export class EditorState {
   constructor(
     private editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
+    isPersisted: boolean,
     private architectApi: IArchitectApi
   ) {
     this.properties = properties ?? [];
+    this.isPersisted = isPersisted;
   }
 
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
+  @observable accessor isPersisted;
 
   @computed
   get isDirty() {

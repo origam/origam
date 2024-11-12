@@ -10,11 +10,16 @@ import {
 } from "src/components/editorTabView/EditorTabViewState.ts";
 
 export function getEditor(
-  editorNode: IEditorNode,
-  properties: EditorProperty[] | undefined,
-  architectApi: IArchitectApi
+  args: {
+    editorNode: IEditorNode,
+    properties: EditorProperty[] | undefined,
+    isPersisted: boolean,
+    architectApi: IArchitectApi
+  }
 ) {
-  const editorState = new EditorState(editorNode, properties, architectApi);
+
+  const { editorNode, properties, isPersisted, architectApi } = args;
+  const editorState = new EditorState(editorNode, properties, isPersisted, architectApi);
   if (editorNode.editorType === "GridEditor") {
     return new Editor(
       editorState,

@@ -86,7 +86,11 @@ export class TreeNode implements IEditorNode {
     const editorData = await this.architectApi.createNew(this, typeName);
     const properties = editorData.properties.map(property => new EditorProperty(property));
     const editorNode= new NewEditorNode(editorData.node, this);
-    this.rootStore.editorTabViewState.openEditor(editorNode, properties);
+    this.rootStore.editorTabViewState.openEditor({
+      node: editorNode,
+      properties: properties,
+      isPersisted:false
+    });
   }
 }
 

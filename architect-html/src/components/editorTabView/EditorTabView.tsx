@@ -47,6 +47,16 @@ export const EditorTabView: React.FC = observer(() => {
     run({generator: state.closeEditor(editor.schemaItemId)});
   }
 
+  function getLabel(editor: EditorState){
+    if(editor.isPersisted){
+      return editor.label;
+    }
+    if(!editor.label){
+      return "*";
+    }
+    return editor.label + " *";
+  }
+
   return (
     <div className={S.root}>
       <div className={S.labels}>
@@ -57,7 +67,7 @@ export const EditorTabView: React.FC = observer(() => {
           >
             <div className={editor.isActive ? S.activeTab : ""}
             >
-              {editor.label}
+              {getLabel(editor)}
             </div>
             <div
               className={S.closeSymbol}

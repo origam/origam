@@ -32,21 +32,35 @@ export class EditorTabViewState {
 
   private toEditor(data: IEditorData) {
     const parentNode = this.rootStore.modelTreeState.findNodeById(data.parentNodeId)
-    return getEditor(
-      new NewEditorNode(data.node, parentNode),
-      data.properties.map(property => new EditorProperty(property)),
-      this.architectApi)
+    return getEditor({
+      editorNode:  new NewEditorNode(data.node, parentNode),
+      properties: data.properties.map(property => new EditorProperty(property)),
+      isPersisted: data.isPersisted,
+      architectApi: this.architectApi
+    });
   }
 
   @action.bound
-  openEditor(node: IEditorNode, properties?: EditorProperty[]): void {
+  openEditor(
+    args:{
+      node: IEditorNode,
+      isPersisted: boolean
+      properties?: EditorProperty[],
+    }): void
+  {
+    const { node, properties, isPersisted } = args;
     const alreadyOpenEditor = this.editors.find(editor => editor.state.schemaItemId === node.origamId);
     if (alreadyOpenEditor) {
       this.setActiveEditor(alreadyOpenEditor.state.schemaItemId);
       return;
     }
 
-    const editor = getEditor(node, properties, this.architectApi);
+    const editor =  getEditor({
+      editorNode:  node,
+      properties: properties,
+      isPersisted: isPersisted,
+      architectApi: this.architectApi
+    });
     if (!editor) {
       return;
     }
