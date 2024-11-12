@@ -3,7 +3,7 @@ import {
   EditorType, IArchitectApi,
   IMenuItemInfo
 } from "src/API/IArchitectApi.ts";
-import { action, flow, observable } from "mobx";
+import { action, observable } from "mobx";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";

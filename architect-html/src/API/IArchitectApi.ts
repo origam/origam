@@ -64,9 +64,11 @@ export interface IPackage {
   name: string
 }
 
+export type PropertyType = "boolean" | "enum" | "string" | "integer" | "float" | "looukup";
+
 export interface IApiEditorProperty {
   name: string;
-  type: "boolean" | "enum" | "string" | "looukup";
+  type: PropertyType;
   value: any;
   dropDownValues: IDropDownValue[];
   category: string | null;

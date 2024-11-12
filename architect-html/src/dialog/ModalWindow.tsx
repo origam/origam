@@ -75,7 +75,7 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
     event.stopPropagation();
   }, []);
 
-  const handleWindowMouseUp = useCallback((event: MouseEvent) => {
+  const handleWindowMouseUp = useCallback(() => {
     window.removeEventListener("mousemove", handleWindowMouseMove);
     window.removeEventListener("mouseup", handleWindowMouseUp);
   }, [handleWindowMouseMove]);

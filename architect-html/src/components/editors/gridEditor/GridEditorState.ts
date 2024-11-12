@@ -1,7 +1,7 @@
 import { computed, observable } from "mobx";
 import {
   IApiEditorProperty,
-  IDropDownValue, IArchitectApi, IPropertyUpdate,
+  IDropDownValue, IArchitectApi, IPropertyUpdate, PropertyType,
 } from "src/API/IArchitectApi.ts";
 import {
   IEditorNode
@@ -22,7 +22,7 @@ export class EditorState {
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
-  @observable accessor isPersisted;
+  @observable accessor isPersisted: boolean;
 
   @computed
   get isDirty() {
@@ -80,7 +80,7 @@ export class EditorState {
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;
-  type: "boolean" | "enum" | "string" | "looukup";
+  type: PropertyType;
   @observable private accessor _value: any;
   @observable.shallow accessor dropDownValues: IDropDownValue[];
   category: string | null;

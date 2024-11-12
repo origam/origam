@@ -79,7 +79,7 @@ export class EditorTabViewState {
   }
 
   closeEditor(schemaItemId: string) {
-    return function* (this: EditorTabViewState) {
+    return function* (this: EditorTabViewState): Generator<Promise<any>, void, any> {
       if (this.activeEditorState?.isDirty) {
         const saveChanges = yield askYesNoQuestion(this.rootStore.dialogStack, "Save changes", `Do you want to save ${this.activeEditorState.label}?`);
         switch (saveChanges) {
