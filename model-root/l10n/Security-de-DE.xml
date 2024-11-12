@@ -140,6 +140,9 @@
   <Element Id="af140737-9dee-48e9-b6ae-29347a1f334b" Path="PasswordIsMandatory">
     <String OriginalText="Password is a mandatory field. Please fill in a password.">Bitte Passwort eingeben.</String>
   </Element>
+  <Element Id="6db335b0-8644-4574-a2cf-51a4feb67147" Path="OldPasswordIsMandatory">
+    <String OriginalText="Password (old) is a mandatory field. Please fill in a password.">Bitte Passwort (Original) eingeben.</String>
+  </Element>
   <Element Id="86381c0e-6c5c-479c-89f3-4a6cb6139c96" Path="UsernameAlreadyExists">
     <String OriginalText="Username already exists in the system, please fill in a different one.">Der Benutzer konnte nicht angelegt werden, da dieser schon existiert. Bitte verwenden Sie einen anderen Namen.</String>
   </Element>
