@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
+using Org.BouncyCastle.Utilities;
 using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
@@ -141,13 +142,22 @@ public class EditorPropertyFactory
         {
             return "boolean";
         }
-        if (type.IsAssignableTo(typeof(ISchemaItem)))
-        {
-            return "looukup";
-        }
         if (type.IsEnum)
         {
             return "enum";
+        }
+        if (type == typeof(int) || type == typeof(long))
+        {
+            return "integer";
+        }
+        if (type == typeof(decimal) || type == typeof(double) ||
+            type == typeof(float))
+        {
+            return "float";
+        }
+        if (type.IsAssignableTo(typeof(ISchemaItem)))
+        {
+            return "looukup";
         }
         return "string";
     }

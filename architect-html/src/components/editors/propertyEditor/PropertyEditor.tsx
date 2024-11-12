@@ -61,6 +61,45 @@ export const PropertyEditor: React.FC<{
         </div>
       )
     }
+    if (property.type === "integer") {
+      return (
+        <input
+          type="number"
+          step="1"
+          disabled={property.readOnly}
+          value={property.value ?? ""}
+          onChange={(e) => {
+            const value = e.target.value === "" ? null : parseInt(e.target.value, 10);
+            onValueChange(property, value);
+          }}
+          onBlur={(e) => {
+            if (e.target.value === "") {
+              onValueChange(property, null);
+            }
+          }}
+        />
+      )
+    }
+    if (property.type === "float") {
+      return (
+        <input
+          type="number"
+          step="any"
+          disabled={property.readOnly}
+          value={property.value ?? ""}
+          onChange={(e) => {
+            const value = e.target.value === "" ? null : parseFloat(e.target.value);
+            onValueChange(property, value);
+          }}
+          onBlur={(e) => {
+            if (e.target.value === "") {
+              onValueChange(property, null);
+            }
+          }}
+        />
+      )
+    }
+
     return (
       <input
         type="text"
