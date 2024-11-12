@@ -40,12 +40,12 @@ public class TreeNodeFactory
 
     private string GetEditorType(IBrowserNode2 node)
     {
-        string itemType = node.GetType().ToString();
-        if (node is Package)
+        if (node is not ISchemaItem || node is Package)
         {
             return null;
         }
 
+        string itemType = node.GetType().ToString();
         if(itemType == "Origam.Schema.GuiModel.FormControlSet" 
            || itemType == "Origam.Schema.GuiModel.PanelControlSet"
            || itemType == "Origam.Schema.GuiModel.ControlSetItem")

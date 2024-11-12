@@ -52,6 +52,11 @@ public class ModelController(
             return BadRequest("Id cannot be empty");
         }
 
+        if (schemaService.ActiveExtension == null)
+        {
+            return BadRequest("No schema extension is active");
+        }
+
         if (Guid.TryParse(id, out var guidId))
         {
             var childNodes = GetChildren(
