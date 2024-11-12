@@ -31,7 +31,8 @@ export class TreeNode implements IEditorNode {
       ? apiNode.children.map(child =>
         new TreeNode(child, this.rootStore, this))
       : [];
-    this.childrenInitialized = apiNode.hasChildNodes && this.children.length > 0;
+    this.childrenInitialized = apiNode.hasChildNodes && this.children.length > 0
+      || !apiNode.hasChildNodes;
   }
 
   id: string;

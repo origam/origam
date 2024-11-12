@@ -64,7 +64,7 @@ const ModelTreeNode: React.FC<{
     <div className={S.treeNode}>
       <div className={S.treeNodeTitle}>
         <div onClick={onToggle}>
-          {node.children.length > 0 ? (node.isExpanded ? '▼' : '▶') : '•'}
+          {(node.children.length > 0 || !node.childrenInitialized) ? (node.isExpanded ? '▼' : '▶') : '•'}
         </div>
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
