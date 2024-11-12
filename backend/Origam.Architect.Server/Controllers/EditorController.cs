@@ -61,7 +61,7 @@ public class EditorController(
             .Select(item => new EditorData
             {
                 ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
-                IsPersisted = false,
+                IsPersisted = item.IsPersisted,
                 Node = treeNodeFactory.Create(item),
                 Properties = GetEditorPropertiesWithErrors(item)
             });

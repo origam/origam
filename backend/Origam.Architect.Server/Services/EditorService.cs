@@ -17,7 +17,7 @@ public class EditorService(
     private readonly IPersistenceProvider persistenceProvider =
         persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<Guid, ISchemaItem> editorSchemaItems = new();
+    private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems = new();
 
     public ISchemaItem OpenEditorWithNewItem(Guid parentId, string fullTypeName)
     {
@@ -34,25 +34,32 @@ public class EditorService(
                 new object[] { schemaService.ActiveSchemaExtensionId, null });
 
         ISchemaItem item = (ISchemaItem)result;
-        return editorSchemaItems.GetOrAdd(item.Id, id => item);
+        return editorSchemaItems
+            .GetOrAdd(item.Id, id => new EditorData(item))
+            .Item;
     }
     
     public ISchemaItem OpenEditor(Guid schemaItemId)
     {
         return editorSchemaItems.GetOrAdd(
             schemaItemId,
-            id => persistenceService.SchemaProvider
-                .RetrieveInstance<ISchemaItem>(id, false));
+            id =>
+            {
+                ISchemaItem item = persistenceService.SchemaProvider
+                    .RetrieveInstance<ISchemaItem>(id, false);
+                return new EditorData(item);
+            }).Item;
     }
 
     public void CloseEditor(Guid schemaItemId)
     {
-        bool success = editorSchemaItems.TryRemove(schemaItemId, out ISchemaItem removedItem);
+        bool success = editorSchemaItems.TryRemove(schemaItemId, out EditorData removedData);
         if (!success)
         {
             return;
         }
 
+        ISchemaItem removedItem = removedData.Item;
         if(removedItem.IsPersisted)
         {
             // in case we edited some of the children we invalidate their cache
@@ -97,6 +104,15 @@ public class EditorService(
 
     public IEnumerable<ISchemaItem> GetOpenEditors()
     {
-        return editorSchemaItems.Values;
+        return editorSchemaItems.Values
+            .OrderBy(x => x.OpenedAt)
+            .Select(x => x.Item);
+    }
+    
+    private class EditorData(ISchemaItem item)
+    {
+        public ISchemaItem Item { get; } = item;
+        public DateTime OpenedAt { get; } = DateTime.Now;
     }
 }
+

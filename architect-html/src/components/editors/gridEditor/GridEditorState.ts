@@ -54,6 +54,7 @@ export class EditorState {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId, this.properties);
+      this.isPersisted = true;
       for (const property of this.properties) {
         property.isDirty = false;
       }

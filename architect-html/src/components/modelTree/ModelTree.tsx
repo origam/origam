@@ -33,10 +33,6 @@ const ModelTreeNode: React.FC<{
 
   async function handleContextMenu(event: TriggerEvent) {
     await node.getMenuItems();
-
-    // if (node.isNonPersistentItem) {
-    //   return;
-    // }
     show({event, props: {}});
   }
 
