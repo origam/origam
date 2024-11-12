@@ -35,6 +35,6 @@ public class RowSecurityState
     public bool AllowCreate { get; set; }
     public List<FieldSecurityState> Columns { get; } = new ();
     public List<RelationSecurityState> Relations { get; } = new ();
-    public List<string> DisabledActions { get; set; } = new ();
+    public List<string> DisabledActions { get; set; } = null;
     public bool NotFound { get; set; }
 }

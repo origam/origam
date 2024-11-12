@@ -221,7 +221,7 @@ export class RowState implements IRowState {
           return [column.name, rs];
         })
       ),
-      new Set(state.disabledActions),
+      state.disabledActions ? new Set(state.disabledActions) : undefined,
       state.relations
     );
     if (!this.requests.has(state.id)) {
@@ -275,7 +275,7 @@ export class RowStateItem implements IRowStateItem {
     public foregroundColor: string | undefined,
     public backgroundColor: string | undefined,
     public columns: Map<string, IRowStateColumnItem>,
-    public disabledActions: Set<string>,
+    public disabledActions: Set<string> | undefined,
     public relations: any[]
   ) {
   }
