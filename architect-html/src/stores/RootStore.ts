@@ -29,6 +29,7 @@ import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { DialogStackState } from "src/dialog/DialogStackState.tsx";
 import { IDialogStackState } from "src/dialog/types.ts";
 import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
+import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -39,6 +40,8 @@ export class RootStore {
   public architectApi: IArchitectApi = new ArchitectApi();
   public dialogStack: IDialogStackState = new DialogStackState();
   public errorDialogController: ErrorDialogController;
+  public progressBarState= new ProgressBarState();
+
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);

@@ -5,6 +5,8 @@
 }
 
 .topToolbar {
+  padding-left: 1rem;
+  padding-right: 1rem;
   display: flex;
   min-height: 100px;
 }
@@ -17,7 +19,7 @@
 
 .editorArea {
   display: flex;
-  padding: 10px;
+  padding: 1rem;
   flex: 1;
   overflow: auto;
 }
@@ -25,5 +27,7 @@
 .sideBar {
   display: flex;
   min-width: 300px;
-  padding: 10px;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
 }
