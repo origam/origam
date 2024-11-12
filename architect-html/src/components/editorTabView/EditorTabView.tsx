@@ -51,10 +51,11 @@ export const EditorTabView: React.FC = observer(() => {
     <div className={S.root}>
       <div className={S.labels}>
         {editors.map((editor) => (
-          <div key={editor.label} className={S.labelContainer}>
-            <div
-              onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
-              className={editor.isActive ? S.activeTab : ""}
+          <div
+            key={editor.label} className={S.labelContainer}
+            onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
+          >
+            <div className={editor.isActive ? S.activeTab : ""}
             >
               {editor.label}
             </div>

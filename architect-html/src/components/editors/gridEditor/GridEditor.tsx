@@ -11,7 +11,6 @@ import {
 import { RootStoreContext } from "src/main.tsx";
 
 export const GridEditor: React.FC<{
-  title: string,
   editorState: EditorState
 }> = observer( (props) => {
    const rootStore = useContext(RootStoreContext);
@@ -24,7 +23,7 @@ export const GridEditor: React.FC<{
 
   return (
     <div className={S.gridEditor}>
-      <h3 className={S.title}>{`Editing: ${props.title}`}</h3>
+      <h3 className={S.title}>{`Editing: ${props.editorState.label}`}</h3>
       <PropertyEditor
         editorState={props.editorState}
         properties={props.editorState.properties}/>

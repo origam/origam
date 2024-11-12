@@ -18,9 +18,7 @@ export function getEditor(
   if (editorNode.editorType === "GridEditor") {
     return new Editor(
       editorState,
-      <GridEditor
-        title={editorNode.nodeText}
-        editorState={editorState}/>
+      <GridEditor editorState={editorState}/>
     );
   }
   if (editorNode.editorType === "XslTEditor") {

@@ -22,10 +22,10 @@ const ModelTreeNode: React.FC<{
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
-    if (node.isExpanded && node.hasChildNodes && (node.children.length === 0)) {
+    if (node.isExpanded && !node.childrenInitialized && (node.children.length === 0)) {
       run({generator: node.loadChildren.bind(node)});
     }
-  }, [node.isExpanded, node.children, run]);
+  }, [node.isExpanded, node.children]);
 
   const {show, hideAll} = useContextMenu({
     id: menuId,
@@ -68,7 +68,7 @@ const ModelTreeNode: React.FC<{
     <div className={S.treeNode}>
       <div className={S.treeNodeTitle}>
         <div onClick={onToggle}>
-          {node.hasChildNodes ? (node.isExpanded ? '▼' : '▶') : '•'}
+          {node.children.length > 0 ? (node.isExpanded ? '▼' : '▶') : '•'}
         </div>
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
@@ -92,7 +92,7 @@ const ModelTreeNode: React.FC<{
             ))}
           </Submenu>
           <Separator/>
-          {node.isNonPersistentItem &&
+          {!node.isNonPersistentItem &&
             <>
               <Item
                 id="edit"

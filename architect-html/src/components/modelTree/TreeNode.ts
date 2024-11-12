@@ -24,7 +24,6 @@ export class TreeNode implements IEditorNode {
     this.id = apiNode.id;
     this.origamId = apiNode.origamId;
     this.nodeText = apiNode.nodeText;
-    this.hasChildNodes = apiNode.hasChildNodes;
     this.isNonPersistentItem = apiNode.isNonPersistentItem;
     this.editorType = apiNode.editorType;
     this.childrenIds = apiNode.childrenIds;
@@ -32,12 +31,13 @@ export class TreeNode implements IEditorNode {
       ? apiNode.children.map(child =>
         new TreeNode(child, this.rootStore, this))
       : [];
+    this.childrenInitialized = apiNode.hasChildNodes && this.children.length > 0;
   }
 
   id: string;
   origamId: string;
   nodeText: string;
-  hasChildNodes: boolean;
+  childrenInitialized: boolean;
   isNonPersistentItem: boolean;
   editorType: EditorType;
   children: TreeNode[];
@@ -54,25 +54,20 @@ export class TreeNode implements IEditorNode {
     if (this.isLoading) {
       return;
     }
-    if (!this.hasChildNodes) {
-      this.children = [];
-      return;
-    }
     this.isLoading = true;
     try {
       const nodes = yield this.architectApi.getNodeChildren(this);
       this.children = nodes.map(node =>
         new TreeNode(node, this.rootStore, this));
+      this.childrenInitialized = true;
     } finally {
       this.isLoading = false;
     }
   }
 
   * toggle() {
-    if (this.hasChildNodes && !this.isLoading && !this.isExpanded && (this.children.length === 0)) { // !isExpanded => will be expanded now
-      yield flow(this.loadChildren.bind(this))();
-    }
-    this.rootStore.uiState.setExpanded(this.id, !this.isExpanded)
+    this.rootStore.uiState.setExpanded(this.id, !this.isExpanded);
+    yield;
   }
 
   * delete() {

@@ -9,7 +9,7 @@ export interface IArchitectApi {
 
   getTopModelNodes(): Promise<IApiTreeNode[]>;
 
-  getNodeChildren(node: IApiTreeNode): Promise<IApiTreeNode[]>;
+  getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
   openEditor(schemaItemId: string): Promise<IApiEditorProperty[]>;
 
@@ -24,9 +24,9 @@ export interface IArchitectApi {
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
-  getMenuItems(node: IApiTreeNode): Promise<IMenuItemInfo[]>;
+  getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  createNew(node: IApiTreeNode, typeName: string): Promise<IEditorData>;
+  createNew(node: INodeLoadData, typeName: string): Promise<IEditorData>;
 }
 
 
@@ -45,12 +45,15 @@ export interface IMenuItemInfo {
 
 export type EditorType = "GridEditor" | "XslTEditor" | null;
 
-export interface IApiTreeNode {
+export interface INodeLoadData {
   id: string;
-  origamId: string;
   nodeText: string;
-  hasChildNodes: boolean;
   isNonPersistentItem: boolean;
+}
+
+export interface IApiTreeNode extends INodeLoadData {
+  origamId: string;
+  hasChildNodes: boolean;
   editorType: EditorType;
   childrenIds: string[];
   children?: IApiTreeNode[];
