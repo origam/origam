@@ -10,11 +10,14 @@ interface Component {
   width: number;
   height: number;
   text: string;
+  parentId: string | null;
+  relativeLeft?: number;
+  relativeTop?: number;
 }
 
 interface ResizeHandle {
   component: Component;
-  handle: 'top' | 'right' | 'bottom' | 'left' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | null;
+  handle: 'top' | 'right' | 'bottom' | 'left' | null;
 }
 
 interface DragState {
@@ -53,7 +56,8 @@ const DesignSurface: React.FC<{
   components: Component[];
   onDrop: (e: React.DragEvent) => void;
   onComponentUpdate: (updatedComponent: Component) => void;
-}> = ({ components, onDrop, onComponentUpdate }) => {
+  onComponentsUpdate: (updatedComponents: Component[]) => void;
+}> = ({ components, onDrop, onComponentUpdate, onComponentsUpdate }) => {
   const [resizing, setResizing] = useState<ResizeHandle>({ component: null, handle: null });
   const [dragging, setDragging] = useState<DragState>({
     component: null,
@@ -66,6 +70,32 @@ const DesignSurface: React.FC<{
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+  };
+
+  const isPointInsideComponent = (x: number, y: number, component: Component) => {
+    return (
+      x >= component.left &&
+      x <= component.left + component.width &&
+      y >= component.top &&
+      y <= component.top + component.height
+    );
+  };
+
+  const updateChildrenPositions2 = (
+    parentComponent: Component,
+    allComponents: Component[]
+  ) => {
+    return allComponents.map(comp => {
+
+      if (comp.parentId === parentComponent.id) {
+        return {
+          ...comp,
+          left: comp.relativeLeft + parentComponent.left,
+          top: comp.relativeTop + parentComponent.top
+        };
+      }
+      return comp;
+    });
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
@@ -127,15 +157,50 @@ const DesignSurface: React.FC<{
 
       const updatedComponent = {
         ...dragging.component,
-        left: Math.max(0, dragging.originalLeft + dx),
-        top: Math.max(0, dragging.originalTop + dy)
+        left: dragging.originalLeft + dx,
+        top:  dragging.originalTop + dy
       };
 
-      onComponentUpdate(updatedComponent);
+
+      let updatedComponents = components.map(comp =>
+        comp.id === updatedComponent.id ? updatedComponent : comp
+      );
+
+      // Update positions of child components if the dragged component is a GroupBox
+      if (updatedComponent.type === 'GroupBox') {
+        updatedComponents = updateChildrenPositions2(
+          updatedComponent,
+          updatedComponents
+        );
+      }
+
+      onComponentsUpdate(updatedComponents);
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (dragging.component && dragging.component.type === 'Label') {
+      const mouseX = e.clientX - surfaceRef.current!.getBoundingClientRect().left;
+      const mouseY = e.clientY - surfaceRef.current!.getBoundingClientRect().top;
+
+      // Find if the label is dropped inside any GroupBox
+      const targetGroupBox = components.find(
+        comp =>
+          comp.type === 'GroupBox' &&
+          isPointInsideComponent(mouseX, mouseY, comp)
+      );
+
+      if (targetGroupBox && dragging.component.parentId !== targetGroupBox.id) {
+        const updatedLabel = {
+          ...dragging.component,
+          parentId: targetGroupBox.id,
+          relativeLeft: mouseX - targetGroupBox.left,
+          relativeTop: mouseY - targetGroupBox.top
+        };
+        onComponentUpdate(updatedLabel);
+      }
+    }
+
     setResizing({ component: null, handle: null });
     setDragging({
       component: null,
@@ -172,7 +237,8 @@ const DesignSurface: React.FC<{
             top: `${component.top}px`,
             width: `${component.width}px`,
             height: `${component.height}px`,
-            cursor: dragging.component?.id === component.id ? 'move' : 'default'
+            cursor: dragging.component?.id === component.id ? 'move' : 'default',
+            zIndex: component.type === 'GroupBox' ? 0 : 1
           }}
           onMouseDown={(e) => handleComponentMouseDown(e, component)}
         >
@@ -221,6 +287,7 @@ export const ComponentDesigner: React.FC = () => {
       width: draggedComponentType === 'Label' ? 100 : 200,
       height: draggedComponentType === 'Label' ? 30 : 150,
       text: draggedComponentType === 'Label' ? 'New Label' : 'New Group Box',
+      parentId: null
     };
 
     setComponents([...components, newComponent]);
@@ -235,6 +302,10 @@ export const ComponentDesigner: React.FC = () => {
     );
   };
 
+  const handleComponentsUpdate = (updatedComponents: Component[]) => {
+    setComponents(updatedComponents);
+  };
+
   return (
     <div className="component-designer">
       <Toolbox onDragStart={handleToolboxDragStart} />
@@ -242,6 +313,7 @@ export const ComponentDesigner: React.FC = () => {
         components={components}
         onDrop={handleDesignSurfaceDrop}
         onComponentUpdate={handleComponentUpdate}
+        onComponentsUpdate={handleComponentsUpdate}
       />
     </div>
   );
