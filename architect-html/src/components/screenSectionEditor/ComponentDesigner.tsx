@@ -1,27 +1,20 @@
-// ComponentDesigner.tsx
-import React, { useState, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import './ComponentDesigner.css';
-
-interface Component {
-  id: string;
-  type: 'Label' | 'GroupBox';
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  text: string;
-  parentId: string | null;
-  relativeLeft?: number;
-  relativeTop?: number;
-}
+import { RootStoreContext } from "src/main.tsx";
+import { observer } from "mobx-react-lite";
+import {
+  Component,
+  ComponentType,
+  IComponent
+} from "src/components/screenSectionEditor/ComponentDesignerState.tsx";
 
 interface ResizeHandle {
-  component: Component;
+  component: IComponent | null;
   handle: 'top' | 'right' | 'bottom' | 'left' | null;
 }
 
 interface DragState {
-  component: Component | null;
+  component: IComponent | null;
   startX: number;
   startY: number;
   originalLeft: number;
@@ -29,8 +22,8 @@ interface DragState {
 }
 
 const Toolbox: React.FC<{
-  onDragStart: (type: Component['type']) => void;
-}> = ({ onDragStart }) => {
+  onDragStart: (type: IComponent['type']) => void;
+}> = ({onDragStart}) => {
   return (
     <div className="toolbox">
       <h3>Toolbox</h3>
@@ -53,12 +46,13 @@ const Toolbox: React.FC<{
 };
 
 const DesignSurface: React.FC<{
-  components: Component[];
   onDrop: (e: React.DragEvent) => void;
-  onComponentUpdate: (updatedComponent: Component) => void;
-  onComponentsUpdate: (updatedComponents: Component[]) => void;
-}> = ({ components, onDrop, onComponentUpdate, onComponentsUpdate }) => {
-  const [resizing, setResizing] = useState<ResizeHandle>({ component: null, handle: null });
+}> = observer(({onDrop}) => {
+  const designerState = useContext(RootStoreContext).componentDesignerState;
+  const [resizing, setResizing] = useState<ResizeHandle>({
+    component: null,
+    handle: null
+  });
   const [dragging, setDragging] = useState<DragState>({
     component: null,
     startX: 0,
@@ -72,7 +66,7 @@ const DesignSurface: React.FC<{
     e.preventDefault();
   };
 
-  const isPointInsideComponent = (x: number, y: number, component: Component) => {
+  const isPointInsideComponent = (x: number, y: number, component: IComponent) => {
     return (
       x >= component.left &&
       x <= component.left + component.width &&
@@ -81,24 +75,7 @@ const DesignSurface: React.FC<{
     );
   };
 
-  const updateChildrenPositions2 = (
-    parentComponent: Component,
-    allComponents: Component[]
-  ) => {
-    return allComponents.map(comp => {
-
-      if (comp.parentId === parentComponent.id) {
-        return {
-          ...comp,
-          left: comp.relativeLeft + parentComponent.left,
-          top: comp.relativeTop + parentComponent.top
-        };
-      }
-      return comp;
-    });
-  };
-
-  const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
+  const handleComponentMouseDown = (e: React.MouseEvent, component: IComponent) => {
     if (!surfaceRef.current) return;
 
     // Prevent dragging when clicking resize handles
@@ -122,59 +99,51 @@ const DesignSurface: React.FC<{
 
     // Handle resizing
     if (resizing.component && resizing.handle) {
-      const updatedComponent = { ...resizing.component };
-
+      const component = resizing.component;
       switch (resizing.handle) {
         case 'right':
-          updatedComponent.width = Math.max(50, mouseX - updatedComponent.left);
+          component.width = Math.max(50, mouseX - component.left);
           break;
         case 'bottom':
-          updatedComponent.height = Math.max(50, mouseY - updatedComponent.top);
+          component.height = Math.max(50, mouseY - component.top);
           break;
-        case 'left':
-          const newWidth = updatedComponent.width + (updatedComponent.left - mouseX);
+        case 'left': {
+          const newWidth = component.width + (component.left - mouseX);
           if (newWidth >= 50) {
-            updatedComponent.width = newWidth;
-            updatedComponent.left = mouseX;
+            component.width = newWidth;
+            component.left = mouseX;
           }
           break;
-        case 'top':
-          const newHeight = updatedComponent.height + (updatedComponent.top - mouseY);
+        }
+        case 'top': {
+          const newHeight = component.height + (component.top - mouseY);
           if (newHeight >= 50) {
-            updatedComponent.height = newHeight;
-            updatedComponent.top = mouseY;
+            component.height = newHeight;
+            component.top = mouseY;
           }
           break;
+        }
       }
-
-      onComponentUpdate(updatedComponent);
     }
 
     // Handle dragging
     else if (dragging.component) {
       const dx = mouseX - dragging.startX;
       const dy = mouseY - dragging.startY;
+      dragging.component.left = dragging.originalLeft + dx;
+      dragging.component.top = dragging.originalTop + dy;
 
-      const updatedComponent = {
-        ...dragging.component,
-        left: dragging.originalLeft + dx,
-        top:  dragging.originalTop + dy
-      };
+      console.log('dragging.component.left:', dragging.component.left);
+      console.log('dragging.component.top:', dragging.component.top);
 
-
-      let updatedComponents = components.map(comp =>
-        comp.id === updatedComponent.id ? updatedComponent : comp
-      );
-
-      // Update positions of child components if the dragged component is a GroupBox
-      if (updatedComponent.type === 'GroupBox') {
-        updatedComponents = updateChildrenPositions2(
-          updatedComponent,
-          updatedComponents
-        );
+      if (dragging.component.type === 'GroupBox') {
+        for (const comp of designerState.components) {
+          if (comp.parentId === dragging.component.id) {
+            comp.left = comp.relativeLeft + dragging.component.left;
+            comp.top = comp.relativeTop + dragging.component.top;
+          }
+        }
       }
-
-      onComponentsUpdate(updatedComponents);
     }
   };
 
@@ -183,25 +152,20 @@ const DesignSurface: React.FC<{
       const mouseX = e.clientX - surfaceRef.current!.getBoundingClientRect().left;
       const mouseY = e.clientY - surfaceRef.current!.getBoundingClientRect().top;
 
-      // Find if the label is dropped inside any GroupBox
-      const targetGroupBox = components.find(
+      const targetGroupBox = designerState.components.find(
         comp =>
           comp.type === 'GroupBox' &&
           isPointInsideComponent(mouseX, mouseY, comp)
       );
 
       if (targetGroupBox && dragging.component.parentId !== targetGroupBox.id) {
-        const updatedLabel = {
-          ...dragging.component,
-          parentId: targetGroupBox.id,
-          relativeLeft: mouseX - targetGroupBox.left,
-          relativeTop: mouseY - targetGroupBox.top
-        };
-        onComponentUpdate(updatedLabel);
+        dragging.component.parentId = targetGroupBox.id;
+        dragging.component.relativeLeft = mouseX - targetGroupBox.left;
+        dragging.component.relativeTop = mouseY - targetGroupBox.top;
       }
     }
 
-    setResizing({ component: null, handle: null });
+    setResizing({component: null, handle: null});
     setDragging({
       component: null,
       startX: 0,
@@ -211,9 +175,9 @@ const DesignSurface: React.FC<{
     });
   };
 
-  const handleResizeStart = (e: React.MouseEvent, component: Component, handle: ResizeHandle['handle']) => {
+  const handleResizeStart = (e: React.MouseEvent, component: IComponent, handle: ResizeHandle['handle']) => {
     e.stopPropagation();
-    setResizing({ component, handle });
+    setResizing({component, handle});
   };
 
   return (
@@ -226,7 +190,7 @@ const DesignSurface: React.FC<{
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {components.map((component) => (
+      {designerState.components.map((component) => (
         <div
           key={component.id}
           className={`design-component ${component.type.toLowerCase()} ${
@@ -261,13 +225,13 @@ const DesignSurface: React.FC<{
       ))}
     </div>
   );
-};
+});
 
 export const ComponentDesigner: React.FC = () => {
-  const [components, setComponents] = useState<Component[]>([]);
-  const [draggedComponentType, setDraggedComponentType] = useState<Component['type'] | null>(null);
+  const designerState = useContext(RootStoreContext).componentDesignerState;
+  const [draggedComponentType, setDraggedComponentType] = useState<ComponentType | null>(null);
 
-  const handleToolboxDragStart = (type: Component['type']) => {
+  const handleToolboxDragStart = (type: IComponent['type']) => {
     setDraggedComponentType(type);
   };
 
@@ -279,41 +243,26 @@ export const ComponentDesigner: React.FC = () => {
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    const newComponent: Component = {
+    const newComponent = new Component({
       id: `component-${Date.now()}`,
       type: draggedComponentType,
       left: dropX,
       top: dropY,
       width: draggedComponentType === 'Label' ? 100 : 200,
       height: draggedComponentType === 'Label' ? 30 : 150,
-      text: draggedComponentType === 'Label' ? 'New Label' : 'New Group Box',
-      parentId: null
-    };
+      text: draggedComponentType === 'Label' ? 'New Label' : 'New Group Box'
+    });
 
-    setComponents([...components, newComponent]);
+    designerState.components.push(newComponent);
     setDraggedComponentType(null);
   };
 
-  const handleComponentUpdate = (updatedComponent: Component) => {
-    setComponents(
-      components.map((comp) =>
-        comp.id === updatedComponent.id ? updatedComponent : comp
-      )
-    );
-  };
-
-  const handleComponentsUpdate = (updatedComponents: Component[]) => {
-    setComponents(updatedComponents);
-  };
 
   return (
     <div className="component-designer">
-      <Toolbox onDragStart={handleToolboxDragStart} />
+      <Toolbox onDragStart={handleToolboxDragStart}/>
       <DesignSurface
-        components={components}
         onDrop={handleDesignSurfaceDrop}
-        onComponentUpdate={handleComponentUpdate}
-        onComponentsUpdate={handleComponentsUpdate}
       />
     </div>
   );
