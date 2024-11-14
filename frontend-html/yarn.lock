@@ -6111,7 +6111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:*, react-inlinesvg@npm:^4.1.4":
+"react-inlinesvg@npm:*":
   version: 4.1.4
   resolution: "react-inlinesvg@npm:4.1.4"
   dependencies:
@@ -6119,6 +6119,17 @@ __metadata:
   peerDependencies:
     react: 16.8 - 18
   checksum: 10c0/adf8a19a78c7f286f4734aed060da386ae644f5ca5ec739c62cdf0a60b3130ac455c0a574fa652d9911212eb581ea58b167adfc0b6fd7284ed9db40a9ee4f74e
+  languageName: node
+  linkType: hard
+
+"react-inlinesvg@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "react-inlinesvg@npm:4.1.5"
+  dependencies:
+    react-from-dom: "npm:^0.7.3"
+  peerDependencies:
+    react: 16.8 - 19
+  checksum: 10c0/43393c8c74133484379667188bfc8dfec8d8276f83ca27c36eb0dd6826928bbca274c69ff2ce59a45a853fd5e6dde87ea522e9108cd5f1e9fbae2a9745fc58da
   languageName: node
   linkType: hard
 
@@ -6263,7 +6274,7 @@ __metadata:
     react-dom: "npm:^17.0.2"
     react-draft-wysiwyg: "npm:^1.15.0"
     react-highlight-words: "npm:^0.20.0"
-    react-inlinesvg: "npm:^4.1.4"
+    react-inlinesvg: "npm:^4.1.5"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.5"
     sass: "npm:^1.80.6"
