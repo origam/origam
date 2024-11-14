@@ -55,6 +55,7 @@ COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
 linux/startServer.sh \
+linux/entrypoint.sh \
 log4net.config \
 linux/updateEnvironment.sh \
 linux/updateEnvironmentRoot.sh \
@@ -63,6 +64,7 @@ WORKDIR /home/origam/HTML5
 RUN mkdir data \
 && mkdir logs \
 && chmod +x startServer.sh \
+&& chmod +x entrypoint.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh
-CMD cd /etc/nginx/ssl && sudo /etc/nginx/ssl/createSslCertificate.sh && sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh && ./startServer.sh
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
