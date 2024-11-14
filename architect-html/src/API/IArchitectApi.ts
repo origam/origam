@@ -26,9 +26,47 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
+  getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData>;
+
   createNew(node: INodeLoadData, typeName: string): Promise<IEditorData>;
 }
 
+export interface ISectionEditorData {
+  dataSources: IDataSource[];
+  name: string;
+  schemaExtensionId: string;
+  selectedDataSource: string;
+  id: string;
+  fields: IEditorField[];
+}
+
+export interface IDataSource {
+  schemaItemId: string;
+  name: string;
+}
+
+export interface IEditorField {
+  type: OrigamDataType;
+  name: string;
+}
+
+export enum OrigamDataType {
+  Boolean = 'Boolean',
+  Blob = 'Blob',
+  Byte = 'Byte',
+  Currency = 'Currency',
+  Date = 'Date',
+  Long = 'Long',
+  Memo = 'Memo',
+  Float = 'Float',
+  Integer = 'Integer',
+  String = 'String',
+  UniqueIdentifier = 'UniqueIdentifier',
+  Xml = 'Xml',
+  Array = 'Array',
+  Geography = 'Geography',
+  Object = 'Object'
+}
 
 export interface IPropertyUpdate {
     propertyName: string;

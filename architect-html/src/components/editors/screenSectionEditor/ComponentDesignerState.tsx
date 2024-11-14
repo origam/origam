@@ -1,4 +1,10 @@
 import { action, observable } from "mobx";
+import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
+import {
+  IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
+import { IArchitectApi } from "src/API/IArchitectApi.ts";
+
 
 export interface IComponent {
   id: string;
@@ -46,7 +52,7 @@ interface ResizeState {
 const minComponentHeight = 20;
 const minComponentWidth = 20;
 
-export class ComponentDesignerState {
+export class ComponentDesignerState implements IEditorState {
   @observable accessor components: IComponent[] = [];
   @observable accessor draggedComponentType: ComponentType | null = null;
   @observable accessor selectedComponentId: string | null = null;
@@ -68,6 +74,11 @@ export class ComponentDesignerState {
     originalTop: 0
   };
 
+  @observable accessor label: string;
+  @observable accessor isActive: boolean;
+  @observable accessor isDirty: boolean;
+  @observable accessor isPersisted: boolean;
+
   get isDragging() {
     return !!this.dragState.component;
   }
@@ -78,6 +89,26 @@ export class ComponentDesignerState {
 
   get draggingComponentId() {
     return this.dragState.component?.id;
+  }
+
+  get label() {
+    return "";
+  }
+
+  get schemaItemId() {
+    return this.editorNode.origamId;
+  }
+
+  constructor(
+    private editorNode: IEditorNode,
+    isPersisted: boolean,
+    private architectApi: IArchitectApi
+  ) {
+    this.isPersisted = isPersisted;
+  }
+
+  * save(): Generator<Promise<any>, void, any> {
+
   }
 
   @action

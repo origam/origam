@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   IApiEditorProperty, IApiTreeNode,
   IArchitectApi, IEditorData, IMenuItemInfo, IPropertyUpdate,
-  IPackage
+  IPackage, ISectionEditorData
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -114,6 +114,16 @@ export class ArchitectApi implements IArchitectApi {
           id: node.origamId,
           nodeText: node.nodeText,
           isNonPersistentItem: node.isNonPersistentItem
+        }
+      })).data;
+  }
+
+  async getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData> {
+    return (await this.axiosInstance.get(
+      `/Editor/GetSectionEditorData`,
+      {
+        params: {
+          schemaItemId: schemaItemId
         }
       })).data;
   }

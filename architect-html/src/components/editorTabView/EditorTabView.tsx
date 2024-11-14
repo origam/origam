@@ -25,7 +25,7 @@ import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import {
-  EditorState
+  GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 
 export const EditorTabView: React.FC = observer(() => {
@@ -43,11 +43,11 @@ export const EditorTabView: React.FC = observer(() => {
     run({generator: initializeOpenEditors});
   }, [initializeOpenEditors]);
 
-  function onClose(editor: EditorState) {
+  function onClose(editor: GridEditorState) {
     run({generator: state.closeEditor(editor.schemaItemId)});
   }
 
-  function getLabel(editor: EditorState){
+  function getLabel(editor: GridEditorState){
     if(editor.isPersisted){
       return editor.label;
     }

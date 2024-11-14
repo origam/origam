@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
 import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor.tsx";
 import {
-  EditorState
+  GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
@@ -11,7 +11,7 @@ import {
 import { RootStoreContext } from "src/main.tsx";
 
 export const GridEditor: React.FC<{
-  editorState: EditorState
+  editorState: GridEditorState
 }> = observer( (props) => {
    const rootStore = useContext(RootStoreContext);
 

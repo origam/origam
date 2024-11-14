@@ -1,7 +1,7 @@
 import S
   from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
 import {
-  EditorProperty, EditorState
+  EditorProperty, GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
@@ -12,7 +12,7 @@ import { useContext } from "react";
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];
-  editorState: EditorState;
+  editorState: GridEditorState;
 }> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
 

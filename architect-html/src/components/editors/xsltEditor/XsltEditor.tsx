@@ -31,10 +31,10 @@ import { TabViewState } from "src/components/tabView/TabViewState.ts";
 
 
 import {
-  EditorState
+  GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 
-export const XsltEditor = (props: { editorState: EditorState; }) => {
+export const XsltEditor = (props: { editorState: GridEditorState; }) => {
   const handleInputChange = (value: any) => {
     props.editorState.properties.find(x => x.name === "TextStore")!.value = value;
   };

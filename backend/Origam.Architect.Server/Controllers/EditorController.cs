@@ -5,9 +5,11 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.DA;
+using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 
@@ -16,12 +18,15 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class EditorController(
+    SchemaService schemaService,
     IPersistenceService persistenceService,
     EditorPropertyFactory propertyFactory,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService)
     : ControllerBase
 {
+    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
+    
     [HttpPost("CreateNew")]
     public EditorData CreateNew(
         [Required] [FromBody] NewItemModel input)
@@ -172,5 +177,44 @@ public class EditorController(
             .Where(prop => names.Contains(prop.Name))
             .Select(prop => propertyFactory.Create(prop, item));
         return properties;
+    }
+    
+    [HttpGet("GetSectionEditorData")]
+    public SectionEditorModel GetSectionEditorData([FromQuery] Guid id)
+    {
+        ISchemaItem editedItem = persistenceProvider
+            .RetrieveInstance<ISchemaItem>(id);
+
+        if (editedItem is PanelControlSet screenSection)
+        {
+            var entityProvider = schemaService.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
+            var dataSources = entityProvider.ChildItems
+                .Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
+                .ToList();
+            
+            IDataEntity dataEntity = screenSection.DataEntity;
+            
+            List<EditorField> fields = dataEntity
+                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+                .OrderBy(field => field.Name)
+                .Select(field => new EditorField
+                {
+                    Name = field.Name, 
+                    Type = field.DataType
+                })
+                .ToList();
+            
+            return new SectionEditorModel
+            {
+                Name = editedItem.Name,
+                SchemaExtensionId = editedItem.SchemaExtensionId,
+                Id = editedItem.Id,
+                DataSources = dataSources,
+                SelectedDataSource = screenSection.DataEntity.Id,
+                Fields = fields
+            };
+        }
+
+        return null;
     }
 }

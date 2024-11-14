@@ -33,7 +33,7 @@ import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
 
 import {
   ComponentDesignerState
-} from "src/components/screenSectionEditor/ComponentDesignerState.tsx";
+} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;

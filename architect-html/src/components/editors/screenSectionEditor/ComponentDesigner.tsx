@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import './ComponentDesigner.css';
+import 'src/components/editors/screenSectionEditor/ComponentDesigner.css';
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
-import { IComponent, ComponentType, ResizeHandle } from "./ComponentDesignerState";
+import { IComponent, ComponentType, ResizeHandle } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 
 const Toolbox: React.FC = () => {

@@ -50,7 +50,7 @@ public class TreeNodeFactory
            || itemType == "Origam.Schema.GuiModel.PanelControlSet"
            || itemType == "Origam.Schema.GuiModel.ControlSetItem")
         {
-            return null;
+            return "ScreenSectionEditor";
         }
         if(itemType == "Origam.Schema.EntityModel.XslTransformation"
            || itemType == "Origam.Schema.RuleModel.XslRule"
