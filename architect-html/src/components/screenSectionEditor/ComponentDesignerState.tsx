@@ -83,22 +83,31 @@ export class ComponentDesignerState {
     if (!this.dragState.component) {
       return;
     }
-    if (this.dragState.component.type !== 'GroupBox') {
+
+    const draggingComponent = this.dragState.component;
+
+    if (draggingComponent.type !== 'GroupBox') {
       const targetGroupBox = this.components.find(
         comp =>
           comp.type === 'GroupBox' &&
           this.isPointInsideComponent(mouseX, mouseY, comp)
       );
 
-      if (targetGroupBox && this.dragState.component.parentId !== targetGroupBox.id) {
-        this.dragState.component.parentId = targetGroupBox.id;
-        this.dragState.component.relativeLeft = mouseX - targetGroupBox.left;
-        this.dragState.component.relativeTop = mouseY - targetGroupBox.top;
+      if (targetGroupBox) {
+        // Calculate relative position based on the component's current position
+        draggingComponent.parentId = targetGroupBox.id;
+        draggingComponent.relativeLeft = draggingComponent.left - targetGroupBox.left;
+        draggingComponent.relativeTop = draggingComponent.top - targetGroupBox.top;
+
+        // Update the absolute position to ensure it stays in the correct place
+        draggingComponent.left = targetGroupBox.left + draggingComponent.relativeLeft;
+        draggingComponent.top = targetGroupBox.top + draggingComponent.relativeTop;
       }
-      else if(!targetGroupBox && this.dragState.component.parentId){
-        this.dragState.component.parentId = null;
-        this.dragState.component.relativeLeft = 0;
-        this.dragState.component.relativeTop = 0;
+      else if (!targetGroupBox && draggingComponent.parentId) {
+        // If we're dropping outside any group box, maintain the absolute position
+        draggingComponent.parentId = null;
+        draggingComponent.relativeLeft = undefined;
+        draggingComponent.relativeTop = undefined;
       }
     }
 
@@ -159,9 +168,9 @@ export class ComponentDesignerState {
 
     if (component.type === 'GroupBox') {
       for (const comp of this.components) {
-        if (comp.parentId === component.id) {
-          comp.left = comp.relativeLeft! + component.left;
-          comp.top = comp.relativeTop! + component.top;
+        if (comp.parentId === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
+          comp.left = comp.relativeLeft + component.left;
+          comp.top = comp.relativeTop + component.top;
         }
       }
     }
