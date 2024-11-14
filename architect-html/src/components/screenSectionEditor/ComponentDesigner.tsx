@@ -47,9 +47,10 @@ const DesignSurface: React.FC = observer(() => {
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!designerState.draggedComponentType) return;
+    if (!designerState.draggedComponentType || !surfaceRef.current) return;
 
-    const surfaceRect = (e.target as HTMLElement).getBoundingClientRect();
+    // Always use the surface ref for position calculation
+    const surfaceRect = surfaceRef.current.getBoundingClientRect();
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 

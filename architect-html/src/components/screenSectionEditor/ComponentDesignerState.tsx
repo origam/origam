@@ -80,8 +80,9 @@ export class ComponentDesignerState {
 
   @action
   endDragging(mouseX: number, mouseY: number) {
-    if (!this.dragState.component) return;
-
+    if (!this.dragState.component) {
+      return;
+    }
     if (this.dragState.component.type !== 'GroupBox') {
       const targetGroupBox = this.components.find(
         comp =>
@@ -93,6 +94,11 @@ export class ComponentDesignerState {
         this.dragState.component.parentId = targetGroupBox.id;
         this.dragState.component.relativeLeft = mouseX - targetGroupBox.left;
         this.dragState.component.relativeTop = mouseY - targetGroupBox.top;
+      }
+      else if(!targetGroupBox && this.dragState.component.parentId){
+        this.dragState.component.parentId = null;
+        this.dragState.component.relativeLeft = 0;
+        this.dragState.component.relativeTop = 0;
       }
     }
 
