@@ -28,7 +28,7 @@ export interface IArchitectApi {
 
   getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData>;
 
-  createNew(node: INodeLoadData, typeName: string): Promise<IEditorData>;
+  createNode(node: INodeLoadData, typeName: string): Promise<IEditorData>;
 }
 
 export interface ISectionEditorData {

@@ -27,8 +27,8 @@ public class EditorController(
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
     
-    [HttpPost("CreateNew")]
-    public EditorData CreateNew(
+    [HttpPost("CreateNode")]
+    public EditorData CreateNode(
         [Required] [FromBody] NewItemModel input)
     {
         var item =

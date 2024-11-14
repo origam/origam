@@ -81,7 +81,7 @@ const ModelTreeNode: React.FC<{
               <Item
                 key={item.typeName + item.caption}
                 id={item.typeName}
-                onClick={() => node.createNew(item.typeName)}
+                onClick={() => node.createNode(item.typeName)}
               >
                 {item.caption}
               </Item>

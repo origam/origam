@@ -133,8 +133,8 @@ export class ArchitectApi implements IArchitectApi {
       `/Editor/GetOpenEditors`)).data;
   }
 
-  async createNew(node: IApiTreeNode, typeName: string): Promise<IEditorData> {
-    return (await this.axiosInstance.post("/Editor/CreateNew",
+  async createNode(node: IApiTreeNode, typeName: string): Promise<IEditorData> {
+    return (await this.axiosInstance.post("/Editor/CreateNode",
       {
         nodeId: node.origamId,
         newTypeName: typeName
