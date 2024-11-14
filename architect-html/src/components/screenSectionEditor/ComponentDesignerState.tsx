@@ -293,6 +293,11 @@ export class ComponentDesignerState {
       y <= component.top + component.height
     );
   }
+
+  @action
+  deleteComponent(id: string) {
+    this.components = this.components.filter(component => component.id !== id);
+  }
 }
 
 export class Component implements IComponent {

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import './ComponentDesigner.css';
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
@@ -40,6 +40,17 @@ const DesignSurface: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const designerState = rootStore.componentDesignerState;
   const surfaceRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' && designerState.selectedComponentId) {
+        designerState.deleteComponent(designerState.selectedComponentId);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [designerState]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
