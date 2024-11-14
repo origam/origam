@@ -2,14 +2,14 @@ import React, { useContext, useRef } from 'react';
 import './ComponentDesigner.css';
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
-import { IComponent } from "src/components/screenSectionEditor/ComponentDesignerState.tsx";
+import { IComponent, ComponentType, ResizeHandle } from "./ComponentDesignerState";
 import { action } from "mobx";
 
 const Toolbox: React.FC = () => {
   const rootStore = useContext(RootStoreContext);
   const designerState = rootStore.componentDesignerState;
 
-  const onDragStart = (type: IComponent['type']) => {
+  const onDragStart = (type: ComponentType) => {
     action(() => {
       designerState.draggedComponentType = type;
     })();
@@ -49,7 +49,6 @@ const DesignSurface: React.FC = observer(() => {
     e.preventDefault();
     if (!designerState.draggedComponentType || !surfaceRef.current) return;
 
-    // Always use the surface ref for position calculation
     const surfaceRect = surfaceRef.current.getBoundingClientRect();
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
@@ -99,9 +98,24 @@ const DesignSurface: React.FC = observer(() => {
     }
   };
 
-  const handleResizeStart = (e: React.MouseEvent, component: IComponent, handle: 'top' | 'right' | 'bottom' | 'left') => {
+  const handleComponentClick = (e: React.MouseEvent, component: IComponent) => {
     e.stopPropagation();
-    designerState.startResizing(component, handle);
+    designerState.selectComponent(component.id);
+  };
+
+  const handleSurfaceClick = () => {
+    designerState.selectComponent(null);
+  };
+
+  const handleResizeStart = (e: React.MouseEvent, component: IComponent, handle: ResizeHandle) => {
+    e.stopPropagation();
+    if (!surfaceRef.current) return;
+
+    const surfaceRect = surfaceRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - surfaceRect.left;
+    const mouseY = e.clientY - surfaceRect.top;
+
+    designerState.startResizing(component, handle, mouseX, mouseY);
   };
 
   return (
@@ -113,13 +127,14 @@ const DesignSurface: React.FC = observer(() => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onClick={handleSurfaceClick}
     >
       {designerState.components.map((component) => (
         <div
           key={component.id}
           className={`design-component ${component.type.toLowerCase()} ${
             designerState.draggingComponentId === component.id ? 'dragging' : ''
-          }`}
+          } ${designerState.selectedComponentId === component.id ? 'selected' : ''}`}
           style={{
             left: `${component.left}px`,
             top: `${component.top}px`,
@@ -129,6 +144,7 @@ const DesignSurface: React.FC = observer(() => {
             zIndex: component.type === 'GroupBox' ? 0 : 1
           }}
           onMouseDown={(e) => handleComponentMouseDown(e, component)}
+          onClick={(e) => handleComponentClick(e, component)}
         >
           {component.type === 'Label' ? (
             <span>{component.text}</span>
@@ -138,12 +154,21 @@ const DesignSurface: React.FC = observer(() => {
             </div>
           )}
 
-          {['top', 'right', 'bottom', 'left'].map((handle) => (
+          {designerState.selectedComponentId === component.id && [
+            'top',
+            'right',
+            'bottom',
+            'left',
+            'topLeft',
+            'topRight',
+            'bottomRight',
+            'bottomLeft'
+          ].map((handle) => (
             <div
               key={handle}
               className={`resize-handle ${handle}`}
               onMouseDown={(e) =>
-                handleResizeStart(e, component, handle as 'top' | 'right' | 'bottom' | 'left')
+                handleResizeStart(e, component, handle as ResizeHandle)
               }
             />
           ))}

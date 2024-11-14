@@ -14,6 +14,15 @@ export interface IComponent {
 }
 
 export type ComponentType = 'Label' | 'GroupBox';
+export type ResizeHandle =
+  'top'
+  | 'right'
+  | 'bottom'
+  | 'left'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomRight'
+  | 'bottomLeft';
 
 interface DragState {
   component: IComponent | null;
@@ -25,12 +34,22 @@ interface DragState {
 
 interface ResizeState {
   component: IComponent | null;
-  handle: 'top' | 'right' | 'bottom' | 'left' | null;
+  handle: ResizeHandle | null;
+  startX: number;
+  startY: number;
+  originalWidth: number;
+  originalHeight: number;
+  originalLeft: number;
+  originalTop: number;
 }
+
+const minComponentHeight = 20;
+const minComponentWidth = 20;
 
 export class ComponentDesignerState {
   @observable accessor components: IComponent[] = [];
   @observable accessor draggedComponentType: ComponentType | null = null;
+  @observable accessor selectedComponentId: string | null = null;
   @observable accessor dragState: DragState = {
     component: null,
     startX: 0,
@@ -40,7 +59,13 @@ export class ComponentDesignerState {
   };
   @observable accessor resizeState: ResizeState = {
     component: null,
-    handle: null
+    handle: null,
+    startX: 0,
+    startY: 0,
+    originalWidth: 0,
+    originalHeight: 0,
+    originalLeft: 0,
+    originalTop: 0
   };
 
   get isDragging() {
@@ -56,7 +81,13 @@ export class ComponentDesignerState {
   }
 
   @action
+  selectComponent(componentId: string | null) {
+    this.selectedComponentId = componentId;
+  }
+
+  @action
   startDragging(component: IComponent, mouseX: number, mouseY: number) {
+    this.selectComponent(component.id);
     this.dragState = {
       component,
       startX: mouseX,
@@ -102,8 +133,7 @@ export class ComponentDesignerState {
         // Update the absolute position to ensure it stays in the correct place
         draggingComponent.left = targetGroupBox.left + draggingComponent.relativeLeft;
         draggingComponent.top = targetGroupBox.top + draggingComponent.relativeTop;
-      }
-      else if (!targetGroupBox && draggingComponent.parentId) {
+      } else if (!targetGroupBox && draggingComponent.parentId) {
         // If we're dropping outside any group box, maintain the absolute position
         draggingComponent.parentId = null;
         draggingComponent.relativeLeft = undefined;
@@ -121,8 +151,18 @@ export class ComponentDesignerState {
   }
 
   @action
-  startResizing(component: IComponent, handle: ResizeState['handle']) {
-    this.resizeState = { component, handle };
+  startResizing(component: IComponent, handle: ResizeHandle, mouseX: number, mouseY: number) {
+    this.selectComponent(component.id);
+    this.resizeState = {
+      component,
+      handle,
+      startX: mouseX,
+      startY: mouseY,
+      originalWidth: component.width,
+      originalHeight: component.height,
+      originalLeft: component.left,
+      originalTop: component.top
+    };
   }
 
   @action
@@ -130,35 +170,88 @@ export class ComponentDesignerState {
     if (!this.resizeState.component || !this.resizeState.handle) return;
 
     const component = this.resizeState.component;
+    const deltaX = mouseX - this.resizeState.startX;
+    const deltaY = mouseY - this.resizeState.startY;
+    const {
+      originalWidth,
+      originalHeight,
+      originalLeft,
+      originalTop
+    } = this.resizeState;
+
     switch (this.resizeState.handle) {
       case 'right':
-        component.width = Math.max(50, mouseX - component.left);
+        component.width = Math.max(minComponentHeight, originalWidth + deltaX);
         break;
       case 'bottom':
-        component.height = Math.max(50, mouseY - component.top);
+        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
         break;
       case 'left': {
-        const newWidth = component.width + (component.left - mouseX);
-        if (newWidth >= 50) {
+        const newWidth = originalWidth - deltaX;
+        if (newWidth >= minComponentWidth) {
           component.width = newWidth;
-          component.left = mouseX;
+          component.left = originalLeft + deltaX;
         }
         break;
       }
       case 'top': {
-        const newHeight = component.height + (component.top - mouseY);
-        if (newHeight >= 50) {
+        const newHeight = originalHeight - deltaY;
+        if (newHeight >= minComponentHeight) {
           component.height = newHeight;
-          component.top = mouseY;
+          component.top = originalTop + deltaY;
         }
         break;
       }
+      case 'topLeft': {
+        const newHeightTL = originalHeight - deltaY;
+        const newWidthTL = originalWidth - deltaX;
+        if (newHeightTL >= minComponentHeight) {
+          component.height = newHeightTL;
+          component.top = originalTop + deltaY;
+        }
+        if (newWidthTL >= minComponentWidth) {
+          component.width = newWidthTL;
+          component.left = originalLeft + deltaX;
+        }
+        break;
+      }
+      case 'topRight': {
+        const newHeightTR = originalHeight - deltaY;
+        if (newHeightTR >= minComponentHeight) {
+          component.height = newHeightTR;
+          component.top = originalTop + deltaY;
+        }
+        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
+        break;
+      }
+      case 'bottomLeft': {
+        const newWidthBL = originalWidth - deltaX;
+        if (newWidthBL >= minComponentWidth) {
+          component.width = newWidthBL;
+          component.left = originalLeft + deltaX;
+        }
+        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
+        break;
+      }
+      case 'bottomRight':
+        component.width = Math.max(minComponentWidth, originalWidth + deltaX);
+        component.height = Math.max(minComponentHeight, originalHeight + deltaY);
+        break;
     }
   }
 
   @action
   endResizing() {
-    this.resizeState = { component: null, handle: null };
+    this.resizeState = {
+      component: null,
+      handle: null,
+      startX: 0,
+      startY: 0,
+      originalWidth: 0,
+      originalHeight: 0,
+      originalLeft: 0,
+      originalTop: 0
+    };
   }
 
   @action
@@ -214,7 +307,15 @@ export class Component implements IComponent {
   @observable accessor relativeLeft: number | undefined;
   @observable accessor relativeTop: number | undefined;
 
-  constructor(args: { id: string, type: ComponentType, left: number, top: number, width: number, height: number, text: string }) {
+  constructor(args: {
+    id: string,
+    type: ComponentType,
+    left: number,
+    top: number,
+    width: number,
+    height: number,
+    text: string
+  }) {
     this.id = args.id;
     this.type = args.type;
     this.left = args.left;

@@ -44,6 +44,10 @@
   user-select: none;
 }
 
+.design-component.selected {
+  border: 1px solid #0066cc;
+}
+
 .design-component.dragging {
   opacity: 0.8;
   border: 1px solid #666;
@@ -81,9 +85,11 @@
   width: 8px;
   height: 8px;
   background-color: #fff;
-  border: 1px solid #666;
+  border: 1px solid #0066cc;
+  border-radius: 50%;
 }
 
+/* Edge handles */
 .resize-handle.top {
   top: -4px;
   left: 50%;
@@ -110,4 +116,29 @@
   left: -4px;
   transform: translateY(-50%);
   cursor: w-resize;
+}
+
+/* Corner handles */
+.resize-handle.topLeft {
+  top: -4px;
+  left: -4px;
+  cursor: nw-resize;
+}
+
+.resize-handle.topRight {
+  top: -4px;
+  right: -4px;
+  cursor: ne-resize;
+}
+
+.resize-handle.bottomRight {
+  bottom: -4px;
+  right: -4px;
+  cursor: se-resize;
+}
+
+.resize-handle.bottomLeft {
+  bottom: -4px;
+  left: -4px;
+  cursor: sw-resize;
 }
