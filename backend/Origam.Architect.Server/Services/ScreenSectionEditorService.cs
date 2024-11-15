@@ -21,6 +21,7 @@ public class ScreenSectionEditorService(
             var entityProvider = schemaService.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
             var dataSources = entityProvider.ChildItems
                 .Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
+                .OrderBy(x => x.Name)
                 .ToList();
             
             IDataEntity dataEntity = screenSection.DataEntity;

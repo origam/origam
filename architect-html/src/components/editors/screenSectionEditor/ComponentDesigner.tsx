@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import S
   from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
 import { observer } from "mobx-react-lite";
@@ -13,6 +13,7 @@ import { RootStoreContext } from "src/main.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
+import { IEditorField } from "src/API/IArchitectApi.ts";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -27,6 +28,24 @@ const Toolbox: React.FC<{
       surfaceState.draggedComponentType = type;
     })();
   };
+
+  function getToolboxComponent(field: IEditorField) {
+    return (
+      <div
+        key={field.name}
+        draggable
+        onDragStart={() => onDragStart('Label')}
+        className={S.toolboxField}
+      >
+        <div className={S.toolboxFieldIcon}>
+
+        </div>
+        <div>
+          {field.name}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={S.toolbox}>
@@ -79,22 +98,22 @@ const Toolbox: React.FC<{
         </div>
       </div>
 
-
       <div className={S.draggableItems}>
-        <div
-          className={S.toolItem}
-          draggable
-          onDragStart={() => onDragStart('Label')}
-        >
-          Label
-        </div>
-        <div
-          className={S.toolItem}
-          draggable
-          onDragStart={() => onDragStart('GroupBox')}
-        >
-          GroupBox
-        </div>
+        {toolboxState.fields.map(field => getToolboxComponent(field))}
+        {/*<div*/}
+        {/*  className={S.toolItem}*/}
+        {/*  draggable*/}
+        {/*  onDragStart={() => onDragStart('Label')}*/}
+        {/*>*/}
+        {/*  Label*/}
+        {/*</div>*/}
+        {/*<div*/}
+        {/*  className={S.toolItem}*/}
+        {/*  draggable*/}
+        {/*  onDragStart={() => onDragStart('GroupBox')}*/}
+        {/*>*/}
+        {/*  GroupBox*/}
+        {/*</div>*/}
       </div>
     </div>
   );

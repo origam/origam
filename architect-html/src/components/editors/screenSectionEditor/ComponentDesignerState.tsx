@@ -65,7 +65,7 @@ export class ComponentDesignerState implements IEditorState {
   @observable accessor isDirty: boolean;
   @observable accessor isPersisted: boolean;
 
-  get label(){
+  get label() {
     return this.toolbox.name;
   }
 

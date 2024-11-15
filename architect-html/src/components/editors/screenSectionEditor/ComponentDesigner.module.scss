@@ -156,3 +156,16 @@
     cursor: sw-resize;
   }
 }
+
+.toolboxField {
+  display: flex;
+  gap: 3px;
+  cursor: move;
+  user-select: none;
+}
+
+.toolboxFieldIcon {
+  width: 20px;
+  height: 20px;
+  background: #4C84FF;
+}
