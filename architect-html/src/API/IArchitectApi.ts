@@ -1,7 +1,7 @@
 
 export interface IArchitectApi {
 
-  getOpenEditors():  Promise<IEditorData[]>;
+  getOpenEditors():  Promise<IApiEditorData[]>;
 
   getPackages(): Promise<IPackage[]>;
 
@@ -11,7 +11,7 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  openEditor(schemaItemId: string): Promise<IEditorData>;
+  openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
   closeEditor(schemaItemId: string): Promise<void>
 
@@ -28,7 +28,7 @@ export interface IArchitectApi {
 
   getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData>;
 
-  createNode(node: INodeLoadData, typeName: string): Promise<IEditorData>;
+  createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
 }
 
 export interface ISectionEditorData {
@@ -120,7 +120,7 @@ export interface IDropDownValue {
     value: any;
 }
 
-export interface IEditorData {
+export interface IApiEditorData {
   parentNodeId: string | undefined;
   isPersisted: boolean;
   node: IApiEditorNode;

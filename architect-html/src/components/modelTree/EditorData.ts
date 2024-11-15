@@ -1,7 +1,7 @@
 import {
   EditorType,
   IApiEditorNode,
-  IEditorData
+  IApiEditorData
 } from "src/API/IArchitectApi.ts";
 import {
   TreeNode
@@ -13,7 +13,7 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 
-export class NewEditorNode implements IEditorNode {
+export class EditorNode implements IEditorNode {
   id: string;
   origamId: string;
   nodeText: string;
@@ -29,15 +29,15 @@ export class NewEditorNode implements IEditorNode {
   }
 }
 
-export class NewEditorData implements IEditorData {
+export class EditorData implements IApiEditorData {
   parentNodeId: string | undefined;
   isPersisted: boolean;
-  node: NewEditorNode;
+  node: EditorNode;
   properties: EditorProperty[];
-  constructor(data: IEditorData, parent: TreeNode | null) {
+  constructor(data: IApiEditorData, parent: TreeNode | null) {
     this.parentNodeId = data.parentNodeId;
     this.isPersisted = data.isPersisted;
-    this.node = new NewEditorNode(data.node, parent);
+    this.node = new EditorNode(data.node, parent);
     this.properties = data.properties.map(property => new EditorProperty(property));
   }
 }

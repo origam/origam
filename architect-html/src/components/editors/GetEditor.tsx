@@ -5,11 +5,11 @@ import {
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
 import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
-import { NewEditorData } from "src/components/modelTree/NewEditorNode.ts";
+import { EditorData } from "src/components/modelTree/EditorData.ts";
 
 export function getEditor(
   args: {
-    editorData: NewEditorData
+    editorData: EditorData
     architectApi: IArchitectApi
   }
 ) {

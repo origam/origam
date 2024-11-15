@@ -3,11 +3,11 @@ import { Editor, getEditor } from "src/components/editors/GetEditor.tsx";
 import {
   IApiEditorNode,
   IArchitectApi,
-  IEditorData
+  IApiEditorData
 } from "src/API/IArchitectApi.ts";
 import {
-  NewEditorData
-} from "src/components/modelTree/NewEditorNode.ts";
+  EditorData
+} from "src/components/modelTree/EditorData.ts";
 
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStore } from "src/stores/RootStore.ts";
@@ -22,8 +22,8 @@ export class EditorTabViewState {
     this.architectApi = this.rootStore.architectApi;
   }
 
-  * initializeOpenEditors(): Generator<Promise<IEditorData[]>, void, IEditorData[]> {
-    const openEditorsData = (yield this.architectApi.getOpenEditors()) as IEditorData[];
+  * initializeOpenEditors(): Generator<Promise<IApiEditorData[]>, void, IApiEditorData[]> {
+    const openEditorsData = (yield this.architectApi.getOpenEditors()) as IApiEditorData[];
     this.editors = openEditorsData
       .map(data => this.toEditor(data)) as Editor[];
     if (this.editors.length > 0) {
@@ -31,9 +31,9 @@ export class EditorTabViewState {
     }
   }
 
-  private toEditor(data: IEditorData) {
+  private toEditor(data: IApiEditorData) {
     const treeNode = this.rootStore.modelTreeState.findNodeById(data.node.id);
-    const editorData = new NewEditorData(data, treeNode);
+    const editorData = new EditorData(data, treeNode);
 
     return getEditor({
       editorData: editorData,
@@ -43,12 +43,12 @@ export class EditorTabViewState {
 
   async openEditorById(node: TreeNode){
     const apiEditorData = await this.architectApi.openEditor(node.origamId);
-    const editorData = new NewEditorData(apiEditorData, node);
+    const editorData = new EditorData(apiEditorData, node);
     this.openEditor(editorData);
   }
 
   @action.bound
-  openEditor(editorData: NewEditorData): void {
+  openEditor(editorData: EditorData): void {
     const alreadyOpenEditor = this.editors
       .find(editor => editor.state.schemaItemId === editorData.node.origamId);
     if (alreadyOpenEditor) {

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
   IApiEditorProperty, IApiTreeNode,
-  IArchitectApi, IEditorData, IMenuItemInfo, IPropertyUpdate,
+  IArchitectApi, IApiEditorData, IMenuItemInfo, IPropertyUpdate,
   IPackage, ISectionEditorData
 } from "src/API/IArchitectApi.ts";
 
@@ -60,7 +60,7 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async openEditor(schemaItemId: string): Promise<IEditorData> {
+  async openEditor(schemaItemId: string): Promise<IApiEditorData> {
     return (await (this.axiosInstance.post("/Editor/OpenEditor",
       {schemaItemId: schemaItemId}))).data;
   }
@@ -128,12 +128,12 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async getOpenEditors(): Promise<IEditorData[]> {
+  async getOpenEditors(): Promise<IApiEditorData[]> {
     return (await this.axiosInstance.get(
       `/Editor/GetOpenEditors`)).data;
   }
 
-  async createNode(node: IApiTreeNode, typeName: string): Promise<IEditorData> {
+  async createNode(node: IApiTreeNode, typeName: string): Promise<IApiEditorData> {
     return (await this.axiosInstance.post("/Editor/CreateNode",
       {
         nodeId: node.origamId,
