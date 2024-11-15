@@ -42,9 +42,8 @@ public class ScreenSectionEditorService(
             {
                 Name = editedItem.Name,
                 SchemaExtensionId = editedItem.SchemaExtensionId,
-                Id = editedItem.Id,
                 DataSources = dataSources,
-                SelectedDataSource = screenSection.DataEntity.Id,
+                SelectedDataSourceId = screenSection.DataEntity.Id,
                 Fields = fields
             };
         }

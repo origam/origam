@@ -33,8 +33,7 @@ export interface ISectionEditorData {
   dataSources: IDataSource[];
   name: string;
   schemaExtensionId: string;
-  selectedDataSource: string;
-  id: string;
+  selectedDataSourceId: string;
   fields: IEditorField[];
 }
 

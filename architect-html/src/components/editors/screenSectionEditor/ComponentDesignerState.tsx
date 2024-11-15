@@ -3,7 +3,11 @@ import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
-import { IArchitectApi, ISectionEditorData } from "src/API/IArchitectApi.ts";
+import {
+  IArchitectApi,
+  IDataSource, IEditorField,
+  ISectionEditorData
+} from "src/API/IArchitectApi.ts";
 
 
 export interface IComponent {
@@ -55,6 +59,7 @@ const minComponentWidth = 20;
 export class ComponentDesignerState implements IEditorState {
 
   public surface = new DesignSurfaceState();
+  public toolbox: ToolboxState;
 
   @observable accessor label: string;
   @observable accessor isActive: boolean;
@@ -73,10 +78,29 @@ export class ComponentDesignerState implements IEditorState {
   ) {
     this.isPersisted = isPersisted;
     this.label = editorNode.nodeText;
+    this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId);
   }
 
   * save(): Generator<Promise<any>, void, any> {
 
+  }
+}
+
+export class ToolboxState {
+  dataSources: IDataSource[];
+  @observable accessor name: string;
+  id: string;
+  schemaExtensionId: string;
+  @observable accessor selectedDataSourceId: string;
+  @observable accessor fields: IEditorField[];
+
+  constructor(sectionEditorData: ISectionEditorData, id: string) {
+    this.dataSources = sectionEditorData.dataSources;
+    this.name = sectionEditorData.name;
+    this.schemaExtensionId = sectionEditorData.schemaExtensionId;
+    this.selectedDataSourceId = sectionEditorData.selectedDataSourceId;
+    this.fields = sectionEditorData.fields;
+    this.id = id;
   }
 }
 

@@ -8,8 +8,7 @@ public class SectionEditorModel
     public List<DataSource> DataSources { get; set; }
     public string Name { get; set; }
     public Guid SchemaExtensionId { get; set; }
-    public Guid SelectedDataSource { get; set; }
-    public Guid Id { get; set; }
+    public Guid SelectedDataSourceId { get; set; }
     public IEnumerable<EditorField> Fields { get; set; }
 }
 

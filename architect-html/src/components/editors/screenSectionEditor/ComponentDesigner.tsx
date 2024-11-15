@@ -15,6 +15,8 @@ const Toolbox: React.FC<{
 }> = observer((props) => {
 
   const surfaceState = props.designerState.surface;
+  const toolboxState = props.designerState.toolbox;
+
   const onDragStart = (type: ComponentType) => {
     action(() => {
       surfaceState.draggedComponentType = type;
@@ -23,16 +25,56 @@ const Toolbox: React.FC<{
 
   return (
     <div className={S.toolbox}>
-      {/*<select*/}
-      {/*  value={surfaceState.selectedDataSource ?? ""}*/}
-      {/*  onChange={(e) => onValueChange(property, e.target.value)}>*/}
-      {/*  {property.dropDownValues.map(x =>*/}
-      {/*    <option*/}
-      {/*      key={property.value + x.name}*/}
-      {/*      value={x.value}>{x.name}*/}
-      {/*    </option>)*/}
-      {/*  }*/}
-      {/*</select>*/}
+      <div className={S.inputs}>
+        <div className={S.inputContainer}>
+          <div>
+            Data Source
+          </div>
+          <select
+            value={toolboxState.selectedDataSourceId ?? ""}
+            // onChange={(e) => onValueChange(property, e.target.value)}>
+          >
+            {toolboxState.dataSources.map(x =>
+              <option
+                key={x.schemaItemId + x.name}
+                value={x.schemaItemId}>{x.name}
+              </option>)
+            }
+          </select>
+        </div>
+        <div className={S.inputContainer}>
+          <div>
+            Name
+          </div>
+          <input
+            type="text"
+            value={toolboxState.name}
+            // onChange={(e) => onValueChange(property, e.target.value)}
+          />
+        </div>
+        <div className={S.inputContainer}>
+          <div>
+            Id
+          </div>
+          <input
+            disabled={true}
+            type="text"
+            value={toolboxState.id}
+          />
+        </div>
+        <div className={S.inputContainer}>
+          <div>
+            Package
+          </div>
+          <input
+            disabled={true}
+            type="text"
+            value={toolboxState.schemaExtensionId}
+          />
+        </div>
+      </div>
+
+
       <div className={S.draggableItems}>
         <div
           className={S.toolItem}
@@ -55,7 +97,7 @@ const Toolbox: React.FC<{
 
 const DesignSurface: React.FC<{
   surfaceState: DesignSurfaceState
-}> = observer(({designerState: surfaceState}) => {
+}> = observer(({surfaceState}) => {
   const surfaceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -212,7 +254,7 @@ export const ComponentDesigner: React.FC<{
   return (
     <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
-      <DesignSurface designerState={designerState.surface}/>
+      <DesignSurface surfaceState={designerState.surface}/>
     </div>
   );
 };
