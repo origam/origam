@@ -124,7 +124,7 @@ export interface IApiEditorData {
   parentNodeId: string | undefined;
   isPersisted: boolean;
   node: IApiEditorNode;
-  properties: IApiEditorProperty[];
+  data: IApiEditorProperty[];
   // screenSectionEditorData: ISectionEditorData; ???
   // or something more generic to replace the properties?
 }

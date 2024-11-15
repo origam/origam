@@ -44,7 +44,7 @@ public class EditorController(
         {
             IsPersisted = false,
             Node = treeNodeFactory.Create(item),
-            Properties = editorProperties
+            Data = editorProperties
         };
     }
 
@@ -68,7 +68,7 @@ public class EditorController(
                 ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
                 IsPersisted = item.IsPersisted,
                 Node = treeNodeFactory.Create(item),
-                Properties = GetEditorPropertiesWithErrors(item)
+                Data = GetEditorPropertiesWithErrors(item)
             });
         return items;
     }
@@ -82,7 +82,7 @@ public class EditorController(
         {
             IsPersisted = true,
             Node = treeNodeFactory.Create(item),
-            Properties = GetEditorProperties(item)
+            Data = GetEditorProperties(item)
         };
     }
 

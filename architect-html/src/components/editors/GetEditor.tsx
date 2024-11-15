@@ -1,6 +1,7 @@
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
 import {
+  EditorProperty,
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
@@ -14,7 +15,8 @@ export function getEditor(
   }
 ) {
   const {editorData, architectApi } = args;
-  const {node, properties, isPersisted} = editorData;
+  const {node, data, isPersisted} = editorData;
+  const properties = data.map(property => new EditorProperty(property));
   if (node.editorType === "GridEditor") {
     const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
     return new Editor(
@@ -23,6 +25,7 @@ export function getEditor(
     );
   }
   if (node.editorType === "XslTEditor") {
+    const properties = data.map(property => new EditorProperty(property));
     const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
     return new Editor(
       editorState,
@@ -31,10 +34,11 @@ export function getEditor(
     );
   }
   if (node.editorType === "ScreenSectionEditor") {
-    return new Editor(
-      new GridEditorState(node, properties, isPersisted, architectApi),
-      <GridEditor editorState={new GridEditorState(node, properties, isPersisted, architectApi)}/>
-    );
+    // return new Editor(
+    //   new GridEditorState(node, data, isPersisted, architectApi),
+    //   <GridEditor editorState={new GridEditorState(node, data, isPersisted, architectApi)}/>
+    // );
+    return null;
   }
   return null;
 }
