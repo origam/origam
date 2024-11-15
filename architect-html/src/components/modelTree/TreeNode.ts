@@ -82,10 +82,12 @@ export class TreeNode implements IEditorNode {
     this.contextMenuItems = await this.architectApi.getMenuItems(this);
   }
 
-  async createNode(typeName: string) {
-    const apiEditorData = await this.architectApi.createNode(this, typeName);
-    const editorData = new EditorData(apiEditorData, this);
-    this.rootStore.editorTabViewState.openEditor(editorData);
+  createNode(typeName: string) {
+    return function * (this: TreeNode){
+      const apiEditorData = yield this.architectApi.createNode(this, typeName);
+      const editorData = new EditorData(apiEditorData, this);
+      this.rootStore.editorTabViewState.openEditor(editorData);
+    }.bind(this);
   }
 }
 

@@ -14,7 +14,7 @@ public class TreeNode
     public bool IsNonPersistentItem { get; set; }
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
-    public string EditorType { get; set; }
+    public EditorType? EditorType { get; set; }
 
 
     public static string ToTreeNodeId(IBrowserNode2 node)
@@ -38,7 +38,7 @@ public class TreeNodeFactory
         };
     }
 
-    private string GetEditorType(IBrowserNode2 node)
+    private EditorType? GetEditorType(IBrowserNode2 node)
     {
         if (node is not ISchemaItem || node is Package)
         {
@@ -50,14 +50,14 @@ public class TreeNodeFactory
            || itemType == "Origam.Schema.GuiModel.PanelControlSet"
            || itemType == "Origam.Schema.GuiModel.ControlSetItem")
         {
-            return "ScreenSectionEditor";
+            return EditorType.ScreenSectionEditor;
         }
         if(itemType == "Origam.Schema.EntityModel.XslTransformation"
            || itemType == "Origam.Schema.RuleModel.XslRule"
            || itemType == "Origam.Schema.RuleModel.EndRule"
            || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
         {
-            return "XslTEditor";
+            return EditorType.XslTEditor;
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
@@ -75,6 +75,11 @@ public class TreeNodeFactory
         {
             return null;
         }
-        return "GridEditor";
+        return EditorType.GridEditor;
     }
+}
+
+public enum EditorType
+{
+    GridEditor, XslTEditor, ScreenSectionEditor
 }

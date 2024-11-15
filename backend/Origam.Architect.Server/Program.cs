@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.Controllers;
@@ -20,7 +22,12 @@ public class Program
         IPersistenceService persistence = ServiceManager.Services
             .GetService<IPersistenceService>();
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()    
+            .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            // options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });;
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddSingleton<ConfigManager>();
@@ -28,6 +35,8 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<EditorService>();
+        builder.Services.AddSingleton<PropertyEditorService>();
+        builder.Services.AddSingleton<ScreenSectionEditorService>();
         builder.Services.AddSingleton(schema);
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
