@@ -5,25 +5,51 @@ import {
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
   IArchitectApi,
-  IDataSource, IEditorField,
-  ISectionEditorData
+  IDataSource,
+  IEditorField,
+  ISectionEditorData,
+  OrigamDataType
 } from "src/API/IArchitectApi.ts";
 
 
 export interface IComponent {
   id: string;
-  type: ComponentType;
+  data: IComponentData;
   left: number;
   top: number;
   width: number;
   height: number;
-  text: string;
   parentId: string | null;
   relativeLeft?: number;
   relativeTop?: number;
 }
 
-export type ComponentType = 'Label' | 'GroupBox';
+export type ComponentType = 'GroupBox' | 'TextArea' | 'TextEditor' | 'NumericEditor' | 'DateEditor' | 'BooleanEditor' ;
+
+export interface IComponentData {
+  type: ComponentType;
+  name: string;
+}
+
+export function toComponentType(origamType: OrigamDataType): ComponentType {
+  switch (origamType) {
+    case OrigamDataType.Date:
+      return 'DateEditor';
+    case OrigamDataType.String:
+      return 'TextEditor';
+    case OrigamDataType.Memo:
+      return 'TextArea';
+    case OrigamDataType.Integer:
+    case OrigamDataType.Float:
+    case OrigamDataType.Long:
+      return 'NumericEditor';
+    case OrigamDataType.Boolean:
+      return 'BooleanEditor';
+    default:
+      return 'TextEditor';
+  }
+}
+
 export type ResizeHandle =
   'top'
   | 'right'
@@ -135,7 +161,7 @@ export class ToolboxState {
 
 export class DesignSurfaceState {
   @observable accessor components: IComponent[] = [];
-  @observable accessor draggedComponentType: ComponentType | null = null;
+  @observable accessor draggedComponentData: IComponentData | null = null;
   @observable accessor selectedComponentId: string | null = null;
   @observable accessor dragState: DragState = {
     component: null,
@@ -204,10 +230,10 @@ export class DesignSurfaceState {
 
     const draggingComponent = this.dragState.component;
 
-    if (draggingComponent.type !== 'GroupBox') {
+    if (draggingComponent.data.type !== 'GroupBox') {
       const targetGroupBox = this.components.find(
         comp =>
-          comp.type === 'GroupBox' &&
+          comp.data.type === 'GroupBox' &&
           this.isPointInsideComponent(mouseX, mouseY, comp)
       );
 
@@ -346,7 +372,7 @@ export class DesignSurfaceState {
     component.left = left;
     component.top = top;
 
-    if (component.type === 'GroupBox') {
+    if (component.data.type === 'GroupBox') {
       for (const comp of this.components) {
         if (comp.parentId === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
           comp.left = comp.relativeLeft + component.left;
@@ -360,16 +386,15 @@ export class DesignSurfaceState {
   createDraggedComponent(x: number, y: number) {
     const newComponent = new Component({
       id: `component-${Date.now()}`,
-      type: this.draggedComponentType!,
+      data: this.draggedComponentData!,
       left: x,
       top: y,
-      width: this.draggedComponentType === 'Label' ? 100 : 200,
-      height: this.draggedComponentType === 'Label' ? 30 : 150,
-      text: this.draggedComponentType === 'Label' ? 'New Label' : 'New Group Box'
+      width: this.draggedComponentData?.type === 'GroupBox' ? 200 : 300,
+      height: this.draggedComponentData?.type === 'GroupBox' ? 150 : 20
     });
 
     this.components.push(newComponent);
-    this.draggedComponentType = null;
+    this.draggedComponentData = null;
   }
 
   private isPointInsideComponent(x: number, y: number, component: IComponent) {
@@ -389,31 +414,28 @@ export class DesignSurfaceState {
 
 export class Component implements IComponent {
   id: string;
-  type: ComponentType;
+  data: IComponentData;
   @observable accessor left: number;
   @observable accessor top: number;
   @observable accessor width: number;
   @observable accessor height: number;
-  @observable accessor text: string;
   @observable accessor parentId: string | null = null;
   @observable accessor relativeLeft: number | undefined;
   @observable accessor relativeTop: number | undefined;
 
   constructor(args: {
     id: string,
-    type: ComponentType,
+    data: IComponentData,
     left: number,
     top: number,
     width: number,
     height: number,
-    text: string
   }) {
     this.id = args.id;
-    this.type = args.type;
+    this.data = args.data;
     this.left = args.left;
     this.top = args.top;
     this.width = args.width;
     this.height = args.height;
-    this.text = args.text;
   }
 }

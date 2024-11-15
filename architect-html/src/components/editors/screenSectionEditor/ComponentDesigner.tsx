@@ -4,9 +4,8 @@ import S
 import { observer } from "mobx-react-lite";
 import {
   IComponent,
-  ComponentType,
   ResizeHandle,
-  ComponentDesignerState, DesignSurfaceState
+  ComponentDesignerState, DesignSurfaceState, toComponentType
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
@@ -23,9 +22,12 @@ const Toolbox: React.FC<{
   const surfaceState = props.designerState.surface;
   const toolboxState = props.designerState.toolbox;
 
-  const onDragStart = (type: ComponentType) => {
+  const onDragStart = (field: IEditorField) => {
     action(() => {
-      surfaceState.draggedComponentType = type;
+      surfaceState.draggedComponentData = {
+        name: field.name,
+        type: toComponentType(field.type)
+      };
     })();
   };
 
@@ -34,7 +36,7 @@ const Toolbox: React.FC<{
       <div
         key={field.name}
         draggable
-        onDragStart={() => onDragStart('Label')}
+        onDragStart={() => onDragStart(field)}
         className={S.toolboxField}
       >
         <div className={S.toolboxFieldIcon}>
@@ -141,8 +143,9 @@ const DesignSurface: React.FC<{
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!surfaceState.draggedComponentType || !surfaceRef.current) return;
-
+    if (!surfaceState.draggedComponentData || !surfaceRef.current) {
+      return;
+    }
     const surfaceRect = surfaceRef.current.getBoundingClientRect();
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
@@ -212,6 +215,21 @@ const DesignSurface: React.FC<{
     surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
+  function getDesignSurfaceRepresentation(component: IComponent) {
+    return (
+      component.data.type === 'GroupBox' ? (
+        <div className={S.groupBoxContent}>
+          <div className={S.groupBoxHeader}>{component.data.name}</div>
+        </div>
+      ) : (
+        <div className={S.designSurfaceEditorContainer}>
+          <div style={{width: "100px"}}>{component.data.name}</div>
+          <div className={S.designSurfaceEditor}></div>
+        </div>
+      )
+    );
+  }
+
   return (
     <div
       ref={surfaceRef}
@@ -226,7 +244,7 @@ const DesignSurface: React.FC<{
       {surfaceState.components.map((component) => (
         <div
           key={component.id}
-          className={`${S.designComponent} ${S[component.type.toLowerCase()]} 
+          className={`${S.designComponent} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponentId === component.id ? S.selected : ''}`}
           style={{
@@ -240,13 +258,8 @@ const DesignSurface: React.FC<{
           onMouseDown={(e) => handleComponentMouseDown(e, component)}
           onClick={(e) => handleComponentClick(e, component)}
         >
-          {component.type === 'Label' ? (
-            <span>{component.text}</span>
-          ) : (
-            <div className={S.groupBoxContent}>
-              <div className={S.groupBoxHeader}>{component.text}</div>
-            </div>
-          )}
+
+          {getDesignSurfaceRepresentation(component)}
 
           {surfaceState.selectedComponentId === component.id && [
             'top',
