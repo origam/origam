@@ -3,7 +3,7 @@ import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
-import { IArchitectApi } from "src/API/IArchitectApi.ts";
+import { IArchitectApi, ISectionEditorData } from "src/API/IArchitectApi.ts";
 
 
 export interface IComponent {
@@ -91,9 +91,9 @@ export class ComponentDesignerState implements IEditorState {
     return this.dragState.component?.id;
   }
 
-  get label() {
-    return "";
-  }
+  // get label() {
+  //   return "";
+  // }
 
   get schemaItemId() {
     return this.editorNode.origamId;
@@ -102,6 +102,7 @@ export class ComponentDesignerState implements IEditorState {
   constructor(
     private editorNode: IEditorNode,
     isPersisted: boolean,
+    sectionEditorData: ISectionEditorData,
     private architectApi: IArchitectApi
   ) {
     this.isPersisted = isPersisted;

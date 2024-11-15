@@ -118,16 +118,6 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData> {
-    return (await this.axiosInstance.get(
-      `/Editor/GetSectionEditorData`,
-      {
-        params: {
-          schemaItemId: schemaItemId
-        }
-      })).data;
-  }
-
   async getOpenEditors(): Promise<IApiEditorData[]> {
     return (await this.axiosInstance.get(
       `/Editor/GetOpenEditors`)).data;

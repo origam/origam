@@ -19,7 +19,9 @@ public class TreeNode
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
-        return node.NodeId + node.NodeText;
+        return node == null 
+            ? null 
+            : node.NodeId + node.NodeText;
     }
 }
 

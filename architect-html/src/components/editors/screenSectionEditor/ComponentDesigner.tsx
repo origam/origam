@@ -1,13 +1,17 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import 'src/components/editors/screenSectionEditor/ComponentDesigner.css';
-import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
-import { IComponent, ComponentType, ResizeHandle } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+import {
+  IComponent,
+  ComponentType,
+  ResizeHandle,
+  ComponentDesignerState
+} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 
-const Toolbox: React.FC = () => {
-  const rootStore = useContext(RootStoreContext);
-  const designerState = rootStore.componentDesignerState;
+const Toolbox: React.FC<{
+  designerState: ComponentDesignerState
+}> = observer(({designerState}) => {
 
   const onDragStart = (type: ComponentType) => {
     action(() => {
@@ -34,11 +38,11 @@ const Toolbox: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
-const DesignSurface: React.FC = observer(() => {
-  const rootStore = useContext(RootStoreContext);
-  const designerState = rootStore.componentDesignerState;
+const DesignSurface: React.FC<{
+  designerState: ComponentDesignerState
+}> = observer(({designerState}) => {
   const surfaceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -189,11 +193,13 @@ const DesignSurface: React.FC = observer(() => {
   );
 });
 
-export const ComponentDesigner: React.FC = () => {
+export const ComponentDesigner: React.FC<{
+  designerState: ComponentDesignerState
+}> = ({designerState}) => {
   return (
     <div className="component-designer">
-      <Toolbox />
-      <DesignSurface />
+      <Toolbox designerState={designerState}/>
+      <DesignSurface designerState={designerState}/>
     </div>
   );
 };

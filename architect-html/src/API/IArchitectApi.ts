@@ -26,8 +26,6 @@ export interface IArchitectApi {
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
-  getSectionEditorData(schemaItemId: string): Promise<ISectionEditorData>;
-
   createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
 }
 
@@ -124,7 +122,7 @@ export interface IApiEditorData {
   parentNodeId: string | undefined;
   isPersisted: boolean;
   node: IApiEditorNode;
-  data: IApiEditorProperty[];
+  data: IApiEditorProperty[] | ISectionEditorData;
   // screenSectionEditorData: ISectionEditorData; ???
   // or something more generic to replace the properties?
 }
