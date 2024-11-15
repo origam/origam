@@ -41,14 +41,16 @@ export class EditorTabViewState {
     });
   }
 
-  async openEditorById(node: TreeNode){
-    const apiEditorData = await this.architectApi.openEditor(node.origamId);
-    const editorData = new EditorData(apiEditorData, node);
-    this.openEditor(editorData);
+  openEditorById(node: TreeNode) {
+    return function * (this: EditorTabViewState)
+    {
+      const apiEditorData = yield this.architectApi.openEditor(node.origamId);
+      const editorData = new EditorData(apiEditorData, node);
+      this.openEditor(editorData);
+    }.bind(this);
   }
 
-  @action.bound
-  openEditor(editorData: EditorData): void {
+  openEditor(editorData: EditorData) {
     const alreadyOpenEditor = this.editors
       .find(editor => editor.state.schemaItemId === editorData.node.origamId);
     if (alreadyOpenEditor) {

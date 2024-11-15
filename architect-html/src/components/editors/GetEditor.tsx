@@ -16,8 +16,8 @@ export function getEditor(
 ) {
   const {editorData, architectApi } = args;
   const {node, data, isPersisted} = editorData;
-  const properties = data.map(property => new EditorProperty(property));
   if (node.editorType === "GridEditor") {
+    const properties = data.map(property => new EditorProperty(property));
     const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
     return new Editor(
       editorState,

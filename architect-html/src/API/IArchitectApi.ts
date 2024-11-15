@@ -81,7 +81,7 @@ export interface IMenuItemInfo {
     iconIndex: number | null;
 }
 
-export type EditorType = "GridEditor" | "XslTEditor" | null;
+export type EditorType = "GridEditor" | "XslTEditor" | "ScreenSectionEditor" | null;
 
 export interface INodeLoadData {
   id: string;

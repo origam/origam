@@ -40,7 +40,7 @@ const ModelTreeNode: React.FC<{
     if (!node.editorType) {
       await onToggle();
     } else {
-      editorTabViewState.openEditorById(node);
+      run({generator: editorTabViewState.openEditorById(node)});
     }
   }
 
@@ -81,7 +81,7 @@ const ModelTreeNode: React.FC<{
               <Item
                 key={item.typeName + item.caption}
                 id={item.typeName}
-                onClick={() => node.createNode(item.typeName)}
+                onClick={() => run({generator: node.createNode(item.typeName)})}
               >
                 {item.caption}
               </Item>
