@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import S
   from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
 import { observer } from "mobx-react-lite";
@@ -9,11 +9,16 @@ import {
   ComponentDesignerState, DesignSurfaceState
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
+import { RootStoreContext } from "src/main.tsx";
+import {
+  runInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
 }> = observer((props) => {
-
+  const rootStore = useContext(RootStoreContext);
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
   const surfaceState = props.designerState.surface;
   const toolboxState = props.designerState.toolbox;
 
@@ -32,7 +37,7 @@ const Toolbox: React.FC<{
           </div>
           <select
             value={toolboxState.selectedDataSourceId ?? ""}
-            // onChange={(e) => onValueChange(property, e.target.value)}>
+            onChange={(e) => run({generator: toolboxState.selectedDataSourceIdChanged(e.target.value)})}
           >
             {toolboxState.dataSources.map(x =>
               <option
@@ -49,7 +54,7 @@ const Toolbox: React.FC<{
           <input
             type="text"
             value={toolboxState.name}
-            // onChange={(e) => onValueChange(property, e.target.value)}
+            onChange={(e) => run({generator: toolboxState.nameChanged(e.target.value)})}
           />
         </div>
         <div className={S.inputContainer}>

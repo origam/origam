@@ -100,6 +100,19 @@ export class ArchitectApi implements IArchitectApi {
     })).data;
   }
 
+  async updateScreenEditor(
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string
+  ): Promise<ISectionEditorData[]> {
+
+    return (await this.axiosInstance.post(`/Editor/UpdateScreenEditor`, {
+      schemaItemId,
+      name,
+      selectedDataSourceId
+    })).data;
+  }
+
   async deleteSchemaItem(schemaItemId: string) {
     await this.axiosInstance.post("/Model/DeleteSchemaItem",
       {schemaItemId: schemaItemId}

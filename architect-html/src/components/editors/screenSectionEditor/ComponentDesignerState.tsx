@@ -61,10 +61,13 @@ export class ComponentDesignerState implements IEditorState {
   public surface = new DesignSurfaceState();
   public toolbox: ToolboxState;
 
-  @observable accessor label: string;
   @observable accessor isActive: boolean;
   @observable accessor isDirty: boolean;
   @observable accessor isPersisted: boolean;
+
+  get label(){
+    return this.toolbox.name;
+  }
 
   get schemaItemId() {
     return this.editorNode.origamId;
@@ -77,8 +80,7 @@ export class ComponentDesignerState implements IEditorState {
     private architectApi: IArchitectApi
   ) {
     this.isPersisted = isPersisted;
-    this.label = editorNode.nodeText;
-    this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId);
+    this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
   }
 
   * save(): Generator<Promise<any>, void, any> {
@@ -94,13 +96,40 @@ export class ToolboxState {
   @observable accessor selectedDataSourceId: string;
   @observable accessor fields: IEditorField[];
 
-  constructor(sectionEditorData: ISectionEditorData, id: string) {
+  constructor(
+    sectionEditorData: ISectionEditorData,
+    id: string,
+    private architectApi: IArchitectApi
+  ) {
     this.dataSources = sectionEditorData.dataSources;
     this.name = sectionEditorData.name;
     this.schemaExtensionId = sectionEditorData.schemaExtensionId;
     this.selectedDataSourceId = sectionEditorData.selectedDataSourceId;
     this.fields = sectionEditorData.fields;
     this.id = id;
+  }
+
+  selectedDataSourceIdChanged(value: string) {
+    this.selectedDataSourceId = value;
+    return this.update();
+  }
+
+  nameChanged(value: string) {
+    this.name = value;
+    return this.update();
+  }
+
+  private update() {
+    return function* (this: ToolboxState) {
+      const newData = yield this.architectApi.updateScreenEditor(
+        this.id,
+        this.name,
+        this.selectedDataSourceId
+      );
+      this.name = newData.name;
+      this.selectedDataSourceId = newData.selectedDataSourceId;
+      this.fields = newData.fields;
+    }.bind(this);
   }
 }
 

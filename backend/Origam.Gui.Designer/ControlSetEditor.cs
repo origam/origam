@@ -1519,6 +1519,7 @@ public class ControlSetEditor : AbstractEditor
         }
         else
         {
+	        
 			_isEditingMainVersion = true;
             // we are editing the main version of the screen/section
             if (controlSet.ChildItems.Count == 0)

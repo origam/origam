@@ -1,7 +1,6 @@
-
 export interface IArchitectApi {
 
-  getOpenEditors():  Promise<IApiEditorData[]>;
+  getOpenEditors(): Promise<IApiEditorData[]>;
 
   getPackages(): Promise<IPackage[]>;
 
@@ -15,12 +14,18 @@ export interface IArchitectApi {
 
   closeEditor(schemaItemId: string): Promise<void>
 
-  persistChanges(schemaItemId: string, changedProperties:  IApiEditorProperty[]): Promise<void>;
+  persistChanges(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<void>;
 
   updateProperties(
     schemaItemId: string | undefined,
     changedProperties: IApiEditorProperty[]
   ): Promise<IPropertyUpdate[]>;
+
+  updateScreenEditor(
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string
+  ): Promise<ISectionEditorData[]>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
@@ -66,19 +71,23 @@ export enum OrigamDataType {
 }
 
 export interface IPropertyUpdate {
-    propertyName: string;
-    errors: string[];
-    dropDownValues: IDropDownValue[];
+  propertyName: string;
+  errors: string[];
+  dropDownValues: IDropDownValue[];
 }
 
 export interface IMenuItemInfo {
-    caption: string;
-    typeName: string;
-    iconName: string;
-    iconIndex: number | null;
+  caption: string;
+  typeName: string;
+  iconName: string;
+  iconIndex: number | null;
 }
 
-export type EditorType = "GridEditor" | "XslTEditor" | "ScreenSectionEditor" | null;
+export type EditorType =
+  "GridEditor"
+  | "XslTEditor"
+  | "ScreenSectionEditor"
+  | null;
 
 export interface INodeLoadData {
   id: string;
@@ -99,7 +108,13 @@ export interface IPackage {
   name: string
 }
 
-export type PropertyType = "boolean" | "enum" | "string" | "integer" | "float" | "looukup";
+export type PropertyType =
+  "boolean"
+  | "enum"
+  | "string"
+  | "integer"
+  | "float"
+  | "looukup";
 
 export interface IApiEditorProperty {
   name: string;
@@ -113,8 +128,8 @@ export interface IApiEditorProperty {
 }
 
 export interface IDropDownValue {
-    name: string;
-    value: any;
+  name: string;
+  value: any;
 }
 
 export interface IApiEditorData {
@@ -122,8 +137,6 @@ export interface IApiEditorData {
   isPersisted: boolean;
   node: IApiEditorNode;
   data: IApiEditorProperty[] | ISectionEditorData;
-  // screenSectionEditorData: ISectionEditorData; ???
-  // or something more generic to replace the properties?
 }
 
 export interface IApiEditorNode {

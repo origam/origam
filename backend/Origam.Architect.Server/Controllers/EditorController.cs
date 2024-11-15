@@ -18,7 +18,6 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class EditorController(
-    SchemaService schemaService,
     IPersistenceService persistenceService,
     PropertyEditorService propertyService,
     ScreenSectionEditorService sectionService,
@@ -26,8 +25,7 @@ public class EditorController(
     EditorService editorService)
     : ControllerBase
 {
-    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
-    
+
     [HttpPost("CreateNode")]
     public EditorData CreateNode(
         [Required] [FromBody] NewItemModel input)
@@ -39,7 +37,8 @@ public class EditorController(
         var editorProperties = propertyService.GetEditorProperties(item)
             .Peek(property =>
             {
-                property.Errors = propertyService.GetRuleErrorsIfExist(property, item);
+                property.Errors =
+                    propertyService.GetRuleErrorsIfExist(property, item);
             });
         return new EditorData
         {
@@ -48,18 +47,22 @@ public class EditorController(
             Data = editorProperties
         };
     }
-    
+
     [HttpGet("GetOpenEditors")]
     public IEnumerable<EditorData> GetOpenEditors()
     {
         var items = editorService
             .GetOpenEditors()
-            .Select(item => new EditorData
+            .Select(item =>
             {
-                ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
-                IsPersisted = item.IsPersisted,
-                Node = treeNodeFactory.Create(item),
-                Data = propertyService.GetEditorPropertiesWithErrors(item)
+                TreeNode treeNode = treeNodeFactory.Create(item);
+                return new EditorData
+                {
+                    ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
+                    IsPersisted = item.IsPersisted,
+                    Node = treeNode,
+                    Data = GetData(treeNode, item)
+                };
             });
         return items;
     }
@@ -68,23 +71,27 @@ public class EditorController(
     public EditorData OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
         ISchemaItem item = editorService.OpenEditor(input.SchemaItemId);
-
         TreeNode treeNode = treeNodeFactory.Create(item);
-        object data = treeNode.EditorType switch
-        {
-            EditorType.GridEditor => propertyService.GetEditorProperties(item),
-            EditorType.XslTEditor => propertyService.GetEditorProperties(item),
-            EditorType.ScreenSectionEditor => sectionService
-                .GetSectionEditorData(item.Id),
-            _ => null
-        };
 
         return new EditorData
         {
             IsPersisted = true,
             Node = treeNode,
-            Data = data
+            Data = GetData(treeNode, item)
         };
+    }
+
+    private object GetData(TreeNode treeNode, ISchemaItem item)
+    {
+        object data = treeNode.EditorType switch
+        {
+            EditorType.GridEditor => propertyService.GetEditorProperties(item),
+            EditorType.XslTEditor => propertyService.GetEditorProperties(item),
+            EditorType.ScreenSectionEditor => sectionService
+                .GetSectionEditorData(item),
+            _ => null
+        };
+        return data;
     }
 
     [HttpPost("CloseEditor")]
@@ -92,7 +99,7 @@ public class EditorController(
     {
         editorService.CloseEditor(input.SchemaItemId);
     }
-    
+
     [HttpPost("UpdateProperties")]
     public IEnumerable<PropertyUpdate> UpdateProperties(
         [FromBody] ChangesModel changes)
@@ -114,6 +121,22 @@ public class EditorController(
                         .DropDownValues ?? Array.Empty<DropDownValue>()
                 };
             });
+    }
+
+    [HttpPost("UpdateScreenEditor")]
+    public ActionResult<SectionEditorModel> UpdateScreenEditor(
+        [FromBody] SectionEditorChangesModel changes)
+    {
+        ISchemaItem editorItem = editorService.OpenEditor(changes.SchemaItemId);
+        if (editorItem is PanelControlSet screenSection)
+        {
+            screenSection.Name = changes.Name;
+            screenSection.DataSourceId = changes.SelectedDataSourceId;
+            return Ok(sectionService.GetSectionEditorData(screenSection));
+        }
+
+        return BadRequest(
+            $"item id: {changes.SchemaItemId} is not a PanelControlSet");
     }
 
     [HttpPost("PersistChanges")]

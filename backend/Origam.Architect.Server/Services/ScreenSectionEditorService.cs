@@ -14,11 +14,8 @@ public class ScreenSectionEditorService(
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
     
-    public SectionEditorModel GetSectionEditorData(Guid id)
+    public SectionEditorModel GetSectionEditorData(ISchemaItem editedItem)
     {
-        ISchemaItem editedItem = persistenceProvider
-            .RetrieveInstance<ISchemaItem>(id);
-
         if (editedItem is PanelControlSet screenSection)
         {
             var entityProvider = schemaService.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
