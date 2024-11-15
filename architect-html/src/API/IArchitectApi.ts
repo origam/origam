@@ -11,7 +11,7 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
-  openEditor(schemaItemId: string): Promise<IApiEditorProperty[]>;
+  openEditor(schemaItemId: string): Promise<IEditorData>;
 
   closeEditor(schemaItemId: string): Promise<void>
 
@@ -125,6 +125,8 @@ export interface IEditorData {
   isPersisted: boolean;
   node: IApiEditorNode;
   properties: IApiEditorProperty[];
+  // screenSectionEditorData: ISectionEditorData; ???
+  // or something more generic to replace the properties?
 }
 
 export interface IApiEditorNode {

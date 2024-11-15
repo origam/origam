@@ -43,13 +43,6 @@ export class GridEditorState implements IEditorState {
     return this.editorNode.origamId;
   }
 
-  * initialize(): Generator<Promise<IApiEditorProperty[]>, void, IApiEditorProperty[]> {
-    if (this.properties.length === 0) {
-      const apiProperties = yield this.architectApi.openEditor(this.editorNode.origamId);
-      this.properties = apiProperties.map(apiProperty => new EditorProperty(apiProperty));
-    }
-  }
-
   * save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;

@@ -40,7 +40,7 @@ const ModelTreeNode: React.FC<{
     if (!node.editorType) {
       await onToggle();
     } else {
-      editorTabViewState.openEditor({node: node, isPersisted: true});
+      editorTabViewState.openEditorById(node);
     }
   }
 

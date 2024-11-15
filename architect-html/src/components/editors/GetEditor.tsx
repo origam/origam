@@ -1,44 +1,39 @@
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
 import {
-  EditorProperty,
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
 import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
+import { NewEditorData } from "src/components/modelTree/NewEditorNode.ts";
 
 export function getEditor(
   args: {
-    editorNode: IEditorNode,
-    properties: EditorProperty[] | undefined,
-    isPersisted: boolean,
+    editorData: NewEditorData
     architectApi: IArchitectApi
   }
 ) {
-
-  const { editorNode, properties, isPersisted, architectApi } = args;
-  if (editorNode.editorType === "GridEditor") {
-    const editorState = new GridEditorState(editorNode, properties, isPersisted, architectApi);
+  const {editorData, architectApi } = args;
+  const {node, properties, isPersisted} = editorData;
+  if (node.editorType === "GridEditor") {
+    const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
     return new Editor(
       editorState,
       <GridEditor editorState={editorState}/>
     );
   }
-  if (editorNode.editorType === "XslTEditor") {
-    const editorState = new GridEditorState(editorNode, properties, isPersisted, architectApi);
+  if (node.editorType === "XslTEditor") {
+    const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
     return new Editor(
       editorState,
       <XsltEditor
         editorState={editorState}/>
     );
   }
-  if (editorNode.editorType === "ScreenSectionEditor") {
+  if (node.editorType === "ScreenSectionEditor") {
     return new Editor(
-      new GridEditorState(editorNode, properties, isPersisted, architectApi),
-      <GridEditor editorState={new GridEditorState(editorNode, properties, isPersisted, architectApi)}/>
+      new GridEditorState(node, properties, isPersisted, architectApi),
+      <GridEditor editorState={new GridEditorState(node, properties, isPersisted, architectApi)}/>
     );
   }
   return null;

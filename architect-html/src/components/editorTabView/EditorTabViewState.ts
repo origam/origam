@@ -5,13 +5,14 @@ import {
   IArchitectApi,
   IEditorData
 } from "src/API/IArchitectApi.ts";
-import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
 import {
-  EditorProperty
-} from "src/components/editors/gridEditor/GridEditorState.ts";
+  NewEditorData
+} from "src/components/modelTree/NewEditorNode.ts";
+
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStore } from "src/stores/RootStore.ts";
 import { askYesNoQuestion, YesNoResult } from "src/dialog/DialogUtils.tsx";
+
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
@@ -31,39 +32,38 @@ export class EditorTabViewState {
   }
 
   private toEditor(data: IEditorData) {
-    const parentNode = this.rootStore.modelTreeState.findNodeById(data.parentNodeId)
+    const treeNode = this.rootStore.modelTreeState.findNodeById(data.node.id);
+    const editorData = new NewEditorData(data, treeNode);
+
     return getEditor({
-      editorNode:  new NewEditorNode(data.node, parentNode),
-      properties: data.properties.map(property => new EditorProperty(property)),
-      isPersisted: data.isPersisted,
+      editorData: editorData,
       architectApi: this.architectApi
     });
   }
 
+  async openEditorById(node: TreeNode){
+    const apiEditorData = await this.architectApi.openEditor(node.origamId);
+    const editorData = new NewEditorData(apiEditorData, node);
+    this.openEditor(editorData);
+  }
+
   @action.bound
-  openEditor(
-    args:{
-      node: IEditorNode,
-      isPersisted: boolean
-      properties?: EditorProperty[],
-    }): void
-  {
-    const { node, properties, isPersisted } = args;
-    const alreadyOpenEditor = this.editors.find(editor => editor.state.schemaItemId === node.origamId);
+  openEditor(editorData: NewEditorData): void {
+    const alreadyOpenEditor = this.editors
+      .find(editor => editor.state.schemaItemId === editorData.node.origamId);
     if (alreadyOpenEditor) {
       this.setActiveEditor(alreadyOpenEditor.state.schemaItemId);
       return;
     }
 
-    const editor =  getEditor({
-      editorNode:  node,
-      properties: properties,
-      isPersisted: isPersisted,
+    const editor = getEditor({
+      editorData: editorData,
       architectApi: this.architectApi
     });
     if (!editor) {
       return;
     }
+
     this.editors.push(editor)
     this.setActiveEditor(editor.state.schemaItemId);
   }

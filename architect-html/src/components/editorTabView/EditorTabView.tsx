@@ -24,9 +24,7 @@ import { RootStoreContext } from "src/main.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
-import {
-  GridEditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
+import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -43,11 +41,11 @@ export const EditorTabView: React.FC = observer(() => {
     run({generator: initializeOpenEditors});
   }, [initializeOpenEditors]);
 
-  function onClose(editor: GridEditorState) {
+  function onClose(editor: IEditorState) {
     run({generator: state.closeEditor(editor.schemaItemId)});
   }
 
-  function getLabel(editor: GridEditorState){
+  function getLabel(editor: IEditorState){
     if(editor.isPersisted){
       return editor.label;
     }

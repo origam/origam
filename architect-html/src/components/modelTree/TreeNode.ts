@@ -5,9 +5,8 @@ import {
 } from "src/API/IArchitectApi.ts";
 import { action, observable } from "mobx";
 import {
-  EditorProperty
-} from "src/components/editors/gridEditor/GridEditorState.ts";
-import { NewEditorNode } from "src/components/modelTree/NewEditorNode.ts";
+  NewEditorData,
+} from "src/components/modelTree/NewEditorNode.ts";
 import { IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import { RootStore } from "src/stores/RootStore.ts";
@@ -84,14 +83,9 @@ export class TreeNode implements IEditorNode {
   }
 
   async createNode(typeName: string) {
-    const editorData = await this.architectApi.createNode(this, typeName);
-    const properties = editorData.properties.map(property => new EditorProperty(property));
-    const editorNode= new NewEditorNode(editorData.node, this);
-    this.rootStore.editorTabViewState.openEditor({
-      node: editorNode,
-      properties: properties,
-      isPersisted:false
-    });
+    const apiEditorData = await this.architectApi.createNode(this, typeName);
+    const editorData = new NewEditorData(apiEditorData, this);
+    this.rootStore.editorTabViewState.openEditor(editorData);
   }
 }
 

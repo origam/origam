@@ -60,7 +60,7 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async openEditor(schemaItemId: string): Promise<IApiEditorProperty[]> {
+  async openEditor(schemaItemId: string): Promise<IEditorData> {
     return (await (this.axiosInstance.post("/Editor/OpenEditor",
       {schemaItemId: schemaItemId}))).data;
   }

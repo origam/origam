@@ -74,11 +74,16 @@ public class EditorController(
     }
 
     [HttpPost("OpenEditor")]
-    public ActionResult<IEnumerable<EditorProperty>> OpenEditor(
+    public EditorData OpenEditor(
         [Required] [FromBody] OpenEditorModel input)
     {
         ISchemaItem item = editorService.OpenEditor(input.SchemaItemId);
-        return Ok(GetEditorProperties(item));
+        return new EditorData
+        {
+            IsPersisted = true,
+            Node = treeNodeFactory.Create(item),
+            Properties = GetEditorProperties(item)
+        };
     }
 
     [HttpPost("CloseEditor")]
