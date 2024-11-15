@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import 'src/components/editors/screenSectionEditor/ComponentDesigner.css';
+import S from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
 import { observer } from "mobx-react-lite";
 import {
   IComponent,
@@ -20,17 +20,17 @@ const Toolbox: React.FC<{
   };
 
   return (
-    <div className="toolbox">
+    <div className={S.toolbox}>
       <h3>Toolbox</h3>
       <div
-        className="tool-item"
+        className={S.toolItem}
         draggable
         onDragStart={() => onDragStart('Label')}
       >
         Label
       </div>
       <div
-        className="tool-item"
+        className={S.toolItem}
         draggable
         onDragStart={() => onDragStart('GroupBox')}
       >
@@ -75,7 +75,7 @@ const DesignSurface: React.FC<{
     if (!surfaceRef.current) return;
 
     // Prevent dragging when clicking resize handles
-    if ((e.target as HTMLElement).classList.contains('resize-handle')) {
+    if ((e.target as HTMLElement).classList.contains(S.resizeHandle)) {
       return;
     }
 
@@ -136,7 +136,7 @@ const DesignSurface: React.FC<{
   return (
     <div
       ref={surfaceRef}
-      className="design-surface"
+      className={S.designSurface}
       onDragOver={handleDragOver}
       onDrop={onDrop}
       onMouseMove={handleMouseMove}
@@ -147,9 +147,9 @@ const DesignSurface: React.FC<{
       {designerState.components.map((component) => (
         <div
           key={component.id}
-          className={`design-component ${component.type.toLowerCase()} ${
-            designerState.draggingComponentId === component.id ? 'dragging' : ''
-          } ${designerState.selectedComponentId === component.id ? 'selected' : ''}`}
+          className={`${S.designComponent} ${S[component.type.toLowerCase()]} 
+            ${designerState.draggingComponentId === component.id ? S.dragging : ''} 
+            ${designerState.selectedComponentId === component.id ? S.selected : ''}`}
           style={{
             left: `${component.left}px`,
             top: `${component.top}px`,
@@ -164,8 +164,8 @@ const DesignSurface: React.FC<{
           {component.type === 'Label' ? (
             <span>{component.text}</span>
           ) : (
-            <div className="group-box-content">
-              <div className="group-box-header">{component.text}</div>
+            <div className={S.groupBoxContent}>
+              <div className={S.groupBoxHeader}>{component.text}</div>
             </div>
           )}
 
@@ -181,7 +181,7 @@ const DesignSurface: React.FC<{
           ].map((handle) => (
             <div
               key={handle}
-              className={`resize-handle ${handle}`}
+              className={`${S.resizeHandle} ${S[handle]}`}
               onMouseDown={(e) =>
                 handleResizeStart(e, component, handle as ResizeHandle)
               }
@@ -197,7 +197,7 @@ export const ComponentDesigner: React.FC<{
   designerState: ComponentDesignerState
 }> = ({designerState}) => {
   return (
-    <div className="component-designer">
+    <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
       <DesignSurface designerState={designerState}/>
     </div>
