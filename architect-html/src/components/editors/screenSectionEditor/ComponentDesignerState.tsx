@@ -53,6 +53,34 @@ const minComponentHeight = 20;
 const minComponentWidth = 20;
 
 export class ComponentDesignerState implements IEditorState {
+
+  public surface = new DesignSurfaceState();
+
+  @observable accessor label: string;
+  @observable accessor isActive: boolean;
+  @observable accessor isDirty: boolean;
+  @observable accessor isPersisted: boolean;
+
+  get schemaItemId() {
+    return this.editorNode.origamId;
+  }
+
+  constructor(
+    private editorNode: IEditorNode,
+    isPersisted: boolean,
+    sectionEditorData: ISectionEditorData,
+    private architectApi: IArchitectApi
+  ) {
+    this.isPersisted = isPersisted;
+    this.label = editorNode.nodeText;
+  }
+
+  * save(): Generator<Promise<any>, void, any> {
+
+  }
+}
+
+export class DesignSurfaceState {
   @observable accessor components: IComponent[] = [];
   @observable accessor draggedComponentType: ComponentType | null = null;
   @observable accessor selectedComponentId: string | null = null;
@@ -74,11 +102,6 @@ export class ComponentDesignerState implements IEditorState {
     originalTop: 0
   };
 
-  @observable accessor label: string;
-  @observable accessor isActive: boolean;
-  @observable accessor isDirty: boolean;
-  @observable accessor isPersisted: boolean;
-
   get isDragging() {
     return !!this.dragState.component;
   }
@@ -91,42 +114,9 @@ export class ComponentDesignerState implements IEditorState {
     return this.dragState.component?.id;
   }
 
-  // get label() {
-  //   return "";
-  // }
-
-  get schemaItemId() {
-    return this.editorNode.origamId;
-  }
-
-  constructor(
-    private editorNode: IEditorNode,
-    isPersisted: boolean,
-    sectionEditorData: ISectionEditorData,
-    private architectApi: IArchitectApi
-  ) {
-    this.isPersisted = isPersisted;
-  }
-
-  * save(): Generator<Promise<any>, void, any> {
-
-  }
-
   @action
   selectComponent(componentId: string | null) {
     this.selectedComponentId = componentId;
-  }
-
-  @action
-  startDragging(component: IComponent, mouseX: number, mouseY: number) {
-    this.selectComponent(component.id);
-    this.dragState = {
-      component,
-      startX: mouseX,
-      startY: mouseY,
-      originalLeft: component.left,
-      originalTop: component.top
-    };
   }
 
   @action
@@ -139,6 +129,18 @@ export class ComponentDesignerState implements IEditorState {
     const top = this.dragState.originalTop + dy;
 
     this.updatePosition(this.dragState.component, left, top);
+  }
+
+  @action
+  startDragging(component: IComponent, mouseX: number, mouseY: number) {
+    this.selectComponent(component.id);
+    this.dragState = {
+      component,
+      startX: mouseX,
+      startY: mouseY,
+      originalLeft: component.left,
+      originalTop: component.top
+    };
   }
 
   @action

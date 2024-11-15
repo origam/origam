@@ -1,60 +1,73 @@
 import React, { useEffect, useRef } from 'react';
-import S from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
+import S
+  from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
 import { observer } from "mobx-react-lite";
 import {
   IComponent,
   ComponentType,
   ResizeHandle,
-  ComponentDesignerState
+  ComponentDesignerState, DesignSurfaceState
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
-}> = observer(({designerState}) => {
+}> = observer((props) => {
 
+  const surfaceState = props.designerState.surface;
   const onDragStart = (type: ComponentType) => {
     action(() => {
-      designerState.draggedComponentType = type;
+      surfaceState.draggedComponentType = type;
     })();
   };
 
   return (
     <div className={S.toolbox}>
-      <h3>Toolbox</h3>
-      <div
-        className={S.toolItem}
-        draggable
-        onDragStart={() => onDragStart('Label')}
-      >
-        Label
-      </div>
-      <div
-        className={S.toolItem}
-        draggable
-        onDragStart={() => onDragStart('GroupBox')}
-      >
-        GroupBox
+      {/*<select*/}
+      {/*  value={surfaceState.selectedDataSource ?? ""}*/}
+      {/*  onChange={(e) => onValueChange(property, e.target.value)}>*/}
+      {/*  {property.dropDownValues.map(x =>*/}
+      {/*    <option*/}
+      {/*      key={property.value + x.name}*/}
+      {/*      value={x.value}>{x.name}*/}
+      {/*    </option>)*/}
+      {/*  }*/}
+      {/*</select>*/}
+      <div className={S.draggableItems}>
+        <div
+          className={S.toolItem}
+          draggable
+          onDragStart={() => onDragStart('Label')}
+        >
+          Label
+        </div>
+        <div
+          className={S.toolItem}
+          draggable
+          onDragStart={() => onDragStart('GroupBox')}
+        >
+          GroupBox
+        </div>
       </div>
     </div>
   );
 });
 
 const DesignSurface: React.FC<{
-  designerState: ComponentDesignerState
-}> = observer(({designerState}) => {
+  surfaceState: DesignSurfaceState
+}> = observer(({designerState: surfaceState}) => {
   const surfaceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Delete' && designerState.selectedComponentId) {
-        designerState.deleteComponent(designerState.selectedComponentId);
+      if (e.key === 'Delete' && surfaceState.selectedComponentId) {
+        surfaceState.deleteComponent(surfaceState.selectedComponentId);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [designerState]);
+  }, [surfaceState]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -62,13 +75,13 @@ const DesignSurface: React.FC<{
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!designerState.draggedComponentType || !surfaceRef.current) return;
+    if (!surfaceState.draggedComponentType || !surfaceRef.current) return;
 
     const surfaceRect = surfaceRef.current.getBoundingClientRect();
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    designerState.createDraggedComponent(dropX, dropY);
+    surfaceState.createDraggedComponent(dropX, dropY);
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: IComponent) => {
@@ -83,7 +96,7 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRect.left;
     const mouseY = e.clientY - surfaceRect.top;
 
-    designerState.startDragging(component, mouseX, mouseY);
+    surfaceState.startDragging(component, mouseX, mouseY);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -92,10 +105,10 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRect.left;
     const mouseY = e.clientY - surfaceRect.top;
 
-    if (designerState.isResizing) {
-      designerState.updateResizing(mouseX, mouseY);
-    } else if (designerState.isDragging) {
-      designerState.updateDragging(mouseX, mouseY);
+    if (surfaceState.isResizing) {
+      surfaceState.updateResizing(mouseX, mouseY);
+    } else if (surfaceState.isDragging) {
+      surfaceState.updateDragging(mouseX, mouseY);
     }
   };
 
@@ -105,21 +118,21 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRef.current.getBoundingClientRect().left;
     const mouseY = e.clientY - surfaceRef.current.getBoundingClientRect().top;
 
-    if (designerState.isDragging) {
-      designerState.endDragging(mouseX, mouseY);
+    if (surfaceState.isDragging) {
+      surfaceState.endDragging(mouseX, mouseY);
     }
-    if (designerState.isResizing) {
-      designerState.endResizing();
+    if (surfaceState.isResizing) {
+      surfaceState.endResizing();
     }
   };
 
   const handleComponentClick = (e: React.MouseEvent, component: IComponent) => {
     e.stopPropagation();
-    designerState.selectComponent(component.id);
+    surfaceState.selectComponent(component.id);
   };
 
   const handleSurfaceClick = () => {
-    designerState.selectComponent(null);
+    surfaceState.selectComponent(null);
   };
 
   const handleResizeStart = (e: React.MouseEvent, component: IComponent, handle: ResizeHandle) => {
@@ -130,7 +143,7 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRect.left;
     const mouseY = e.clientY - surfaceRect.top;
 
-    designerState.startResizing(component, handle, mouseX, mouseY);
+    surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
   return (
@@ -144,18 +157,18 @@ const DesignSurface: React.FC<{
       onMouseLeave={handleMouseUp}
       onClick={handleSurfaceClick}
     >
-      {designerState.components.map((component) => (
+      {surfaceState.components.map((component) => (
         <div
           key={component.id}
           className={`${S.designComponent} ${S[component.type.toLowerCase()]} 
-            ${designerState.draggingComponentId === component.id ? S.dragging : ''} 
-            ${designerState.selectedComponentId === component.id ? S.selected : ''}`}
+            ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
+            ${surfaceState.selectedComponentId === component.id ? S.selected : ''}`}
           style={{
             left: `${component.left}px`,
             top: `${component.top}px`,
             width: `${component.width}px`,
             height: `${component.height}px`,
-            cursor: designerState.draggingComponentId === component.id ? 'move' : 'default',
+            cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
             zIndex: component.type === 'GroupBox' ? 0 : 1
           }}
           onMouseDown={(e) => handleComponentMouseDown(e, component)}
@@ -169,7 +182,7 @@ const DesignSurface: React.FC<{
             </div>
           )}
 
-          {designerState.selectedComponentId === component.id && [
+          {surfaceState.selectedComponentId === component.id && [
             'top',
             'right',
             'bottom',
@@ -199,7 +212,7 @@ export const ComponentDesigner: React.FC<{
   return (
     <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
-      <DesignSurface designerState={designerState}/>
+      <DesignSurface designerState={designerState.surface}/>
     </div>
   );
 };
