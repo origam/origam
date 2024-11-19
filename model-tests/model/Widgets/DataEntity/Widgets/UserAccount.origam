@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="b8c60fe5-9153-40cf-b58c-264f2d07d183"
+    ade:label="Uživatelský účet"
+    tmi:mappedObjectName="UserAccount"
+    asi:name="UserAccount"
+    ade:readOnly="false">
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2622d718-75de-4ff2-9f77-5d1d26692e1d"
+      adec:isPrimaryKey="false"
+      adec:label="Platnost do"
+      fmi:mappedColumnName="ValidTo"
+      asi:name="ValidTo"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Widgets/DataLookup/Widgets/UserName_Surname.origam#UserName_Surname/9b8686bf-d795-4ba1-806b-a537e8940231"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="44fb2fda-c501-44f1-b4d0-2e400265b3f4"
+      adec:isPrimaryKey="false"
+      adec:label="Jméno"
+      fmi:mappedColumnName="refUserNameId"
+      asi:name="refUserNameId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="8feaa4a5-f8f3-471e-b4ec-16308b8e8244"
+      adec:isPrimaryKey="false"
+      adec:label="Platnost od"
+      fmi:mappedColumnName="ValidFrom"
+      asi:name="ValidFrom"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="f8f2d69e-6278-44bf-91c6-2d31b35fdf19" />
+  </tmi:DataEntity>
+</x:file>

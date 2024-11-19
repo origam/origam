@@ -603,6 +603,48 @@
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
   </s2:MenuItem>
+  <s2:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="Test Menu Binding"
+    x:id="ec26fb85-e4e2-4d5b-87fd-ee5c17c65c2a"
+    s2:isHidden="false"
+    asi:name="TestMenuBinding"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6">
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Jméno uživatele"
+      x:id="3e71c5c8-0e6b-458a-8236-68043f90f3fa"
+      asi:name="UserName"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="Widgets/FormControlSet/Widgets/UserName.origam#UserName/c3a2cd88-61a2-4609-b259-07f033354386" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Uživatelský účet"
+      x:id="9f4755ad-3af4-46a6-ab29-7279ba6f7120"
+      asi:name="UserAccount"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="Widgets/FormControlSet/Widgets/UserAccount.origam#UserAccount/79ffc16f-6c6b-4d54-9903-f16e75b19ea3" />
+  </s2:MenuItem>
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
