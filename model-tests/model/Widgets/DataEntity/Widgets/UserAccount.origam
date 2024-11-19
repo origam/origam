@@ -39,6 +39,8 @@
       adec:defaultLookup="Widgets/DataLookup/Widgets/UserName_Surname.origam#UserName_Surname/9b8686bf-d795-4ba1-806b-a537e8940231"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/UserName.origam#UserName/9d79364b-8f71-4906-8e53-42a932c5c35e"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="44fb2fda-c501-44f1-b4d0-2e400265b3f4"
       adec:isPrimaryKey="false"
       adec:label="Jméno"

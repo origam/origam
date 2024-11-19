@@ -4,8 +4,15 @@
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
   xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr1="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
   xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
@@ -17,6 +24,53 @@
     tmi:mappedObjectName="UserName"
     asi:name="UserName"
     ade:readOnly="false">
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="UniqueIdentifier"
+      x:id="180ab66f-dceb-47e5-9cc4-6351b17d7a16"
+      asi:name="parUserName" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="59a07f63-ad27-47ca-ba31-cc10260681ab"
+      asi:name="GetBySurname">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="378f6599-064f-489e-9255-cd73ac33a385"
+        adec:isPrimaryKey="false"
+        asi:name="Equal"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="039f6ffd-c9ad-410c-a20e-a01b4de3f02d"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/UserName.origam#UserName/Surname/b44991c2-a129-4785-bc26-c8d9cc5d1589"
+            x:id="fafc5fa4-fc79-4cb0-8673-acec44cb4536"
+            asi:name="Surname" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="21145026-0c46-42c7-860d-1684c8d556c0"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="15930c13-fae1-4aa6-a731-131e5d11e96a"
+            asi:name="parUserName"
+            pr1:parameter="Widgets/DataEntity/Widgets/UserName.origam#UserName/parUserName/180ab66f-dceb-47e5-9cc4-6351b17d7a16" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"

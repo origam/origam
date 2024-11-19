@@ -643,7 +643,8 @@
       frmi:refreshPortalAfterSave="false"
       frmi:requestSaveAfterUpdate="false"
       ami:roles="*"
-      frmi:screen="Widgets/FormControlSet/Widgets/UserAccount.origam#UserAccount/79ffc16f-6c6b-4d54-9903-f16e75b19ea3" />
+      frmi:screen="Widgets/FormControlSet/Widgets/UserAccount.origam#UserAccount/79ffc16f-6c6b-4d54-9903-f16e75b19ea3"
+      frmi:selectionDialogPanel="Widgets/PanelControlSet/Widgets/SD_UserAccount.origam#SD_UserAccount/7bce6c9d-04ec-4c09-ad29-88472fdd3249" />
   </s2:MenuItem>
   <wrmi:MenuItem
     asi:abstract="false"
