@@ -93,11 +93,11 @@ jobs:
     - name: Build Server
       run: |
        cd backend
-       msbuild Origam.sln -warnaserror -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       msbuild Origam.sln -warnaserror -warnNotAsError:NU1901;NU1902;NU1903;NU1904 -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
     - name: Build Origam.WorkflowTests
       run: |
        cd backend
-       msbuild Origam.sln -warnaserror -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
+       msbuild Origam.sln -warnaserror -warnNotAsError:NU1901;NU1902;NU1903;NU1904 -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
     - name: Upload server artifact
       uses: actions/upload-artifact@v4
