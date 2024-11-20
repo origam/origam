@@ -1,4 +1,5 @@
 ﻿using Origam.Architect.Server.Controllers;
+using Origam.Architect.Server.Services;
 using Origam.Schema;
 
 namespace Origam.Architect.Server.Models;
@@ -10,6 +11,7 @@ public class SectionEditorModel
     public Guid SchemaExtensionId { get; set; }
     public Guid SelectedDataSourceId { get; set; }
     public IEnumerable<EditorField> Fields { get; set; }
+    public ApiControl RootControl { get; set; }
 }
 
 public class DataSource

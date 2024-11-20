@@ -1,4 +1,5 @@
 ﻿
+using System.Reflection;
 using Origam.Architect.Server.Models;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
@@ -35,12 +36,14 @@ public class ScreenSectionEditorService(
                     Type = field.DataType
                 })
                 .ToList();
-            
+            ControlSetItem controlSetItem = screenSection.PanelControl.PanelControlSet.MainItem;
+            ApiControl apiControl = LoadContent(controlSetItem);
             return new SectionEditorModel
             {
                 Name = editedItem.Name,
                 SchemaExtensionId = editedItem.SchemaExtensionId,
                 DataSources = dataSources,
+                RootControl = apiControl,
                 SelectedDataSourceId = screenSection.DataEntity.Id,
                 Fields = fields
             };
@@ -48,4 +51,57 @@ public class ScreenSectionEditorService(
 
         return null;
     }
+
+    private ApiControl LoadContent(ControlSetItem controlSetItem)
+    {
+        ApiControl apiControl = LoadItem(controlSetItem);
+
+        var childControls = controlSetItem
+            .ChildItemsByType<ControlSetItem>("ControlSetItem");
+        foreach (var childControl in childControls)
+        {
+            var child = LoadContent(childControl);
+            apiControl.Children.Add(child);
+        }
+
+        return apiControl;
+
+
+    }
+
+    private ApiControl LoadItem(ControlSetItem controlSetItem)
+    {
+        ApiControl control = new ApiControl();
+        var childItemsByType = controlSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
+            ControlPropertyItem.CategoryConst);
+        control.ValueItems = controlSetItem.ChildItems
+            .OfType<PropertyValueItem>()
+            .Select(valueItem => new ApiValueItem
+            {
+                Name = valueItem.Name,
+                Value = valueItem.Value
+            }).ToList();
+        var bla = controlSetItem.ChildItems
+            .OfType<PropertyBindingInfo>()
+            .Select(valueItem => new ApiValueItem
+            {
+                Name = valueItem.Name,
+                Value = valueItem.Value
+            }).ToList();
+
+        return control;
+    }
+}
+
+public class ApiControl
+{
+    public List<ApiValueItem> ValueItems { get; set; }
+    public List<ApiControl> Children { get; set; } = new();
+
+}
+
+public class ApiValueItem
+{
+    public string Name { get; set; }
+    public string Value { get; set; }
 }
