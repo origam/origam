@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -17,18 +18,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Origam.Server;
+
 public class Program
 {
     private static Log4NetProvider log4NetProvider;
+
     public static void Main(string[] args)
     {
         Log4NetProviderOptions options = new Log4NetProviderOptions();
@@ -37,7 +42,33 @@ public class Program
         ILogger startupLogger = log4NetProvider.CreateLogger();
         try
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Configuration
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false,
+                    reloadOnChange: true)
+                .AddJsonFile(
+                    $"appsettings.{builder.Environment.EnvironmentName}.json",
+                    optional: true)
+                .AddUserSecrets<Program>()
+                .AddEnvironmentVariables();
+
+            builder.Logging.Services.AddSingleton(log4NetProvider);
+            builder.Logging.SetMinimumLevel(LogLevel.Trace);
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
+
+            builder.Services.AddSingleton(builder.Configuration);
+
+            var startup = new Startup(builder.Configuration);
+            startup.ConfigureServices(builder.Services);
+
+            var app = builder.Build();
+            startup.Configure(app, app.Environment,
+                app.Services.GetRequiredService<ILoggerFactory>());
+
+            app.Run();
         }
         catch (Exception e)
         {
@@ -45,14 +76,4 @@ public class Program
             throw;
         }
     }
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args)=> 
-        WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .ConfigureLogging((hostingContext, logging) =>
-            {
-                logging.Services.AddSingleton(log4NetProvider);
-                logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddConsole();
-                logging.AddDebug();
-            });
 }
