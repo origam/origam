@@ -64,9 +64,22 @@ if [[ "$utils_result" != True ]]; then
   exit 1
 else
   echo "Initial database connection test passed, SQL server responds"
-fi 
+fi
+
 export ASPNETCORE_URLS="http://+:8080"
+
+# Start the server and capture its PID
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+SERVER_PID=$!
+
+# Wait for the process in the background and capture its exit status
+wait $SERVER_PID || {
+    print_error "Origam.Server.dll crashed!"
+    echo "Server output before crash:"
+    print_file_contents origam-output.txt
+    exit 1
+}
+
 echo "Waiting for Origam.Server.dll to initialize DB..."
 utils_result=$(dotnet origam-utils.dll test-db --attempts 5 --delay 5000 --sql-command "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$utils_result" != True ]]; then
