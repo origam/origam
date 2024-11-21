@@ -52,7 +52,7 @@ filter_test_output() {
 }
 
 # Main script
-sudo node /root/https-proxy/index.js &
+#sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 
 print_title "Generate HTTPS development certificate"
@@ -70,7 +70,7 @@ else
   echo "Initial database connection test passed, SQL server responds"
 fi
 
-export ASPNETCORE_URLS="http://+:8080"
+export ASPNETCORE_URLS="http://+:8080;https://+:443"
 
 # Start the server and capture its PID
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
