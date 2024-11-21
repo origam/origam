@@ -55,6 +55,10 @@ filter_test_output() {
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 
+print_title "Generate HTTPS development certificate"
+dotnet dev-certs https --clean
+dotnet dev-certs https
+
 print_title "Start server and wait for database to be available"
 ./startServer.sh
 echo "Trying to connect to SQL server..."
