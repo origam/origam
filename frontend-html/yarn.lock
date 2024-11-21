@@ -2337,13 +2337,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-virtualized@npm:^9.21.30":
-  version: 9.21.30
-  resolution: "@types/react-virtualized@npm:9.21.30"
+"@types/react-virtualized@npm:^9.22.0":
+  version: 9.22.0
+  resolution: "@types/react-virtualized@npm:9.22.0"
   dependencies:
     "@types/prop-types": "npm:*"
     "@types/react": "npm:*"
-  checksum: 10c0/267fd00de3fe1f93ba535e1b98b1106d61c9172a6741d8a65aa4f16720177edb359bf997518f3deb2c078b4b275e512bccd3ee941ae4019b5c7836aa16b8ed8e
+  checksum: 10c0/dede58499c90fbc2042e58a3c7192a92b8bc61fed0589a95911d2a0726f202fa0bd87c9fc68e861ce0a6a034a7460a195b291ff49465a3b620e9f630bfdc9246
   languageName: node
   linkType: hard
 
@@ -6228,7 +6228,7 @@ __metadata:
     "@types/react-highlight-words": "npm:^0.20.0"
     "@types/react-inlinesvg": "npm:^1.0.0"
     "@types/react-measure": "npm:^2.0.12"
-    "@types/react-virtualized": "npm:^9.21.30"
+    "@types/react-virtualized": "npm:^9.22.0"
     "@types/string-strip-html": "npm:^5.0.0"
     "@types/uuid": "npm:^10.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^1.1.0"
