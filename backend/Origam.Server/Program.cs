@@ -24,6 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -43,6 +44,15 @@ public class Program
         try
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configure Kestrel to use HTTP only in development/CI environments
+            if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true")
+            {
+                builder.WebHost.ConfigureKestrel(serverOptions =>
+                {
+                    serverOptions.ListenAnyIP(8080);
+                });
+            }
 
             builder.Configuration
                 .SetBasePath(Directory.GetCurrentDirectory())
