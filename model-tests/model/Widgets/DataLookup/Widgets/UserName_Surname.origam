@@ -25,7 +25,7 @@
       asi:abstract="false"
       x:id="c5dcf69d-eb3f-4115-af7a-95c6cc3ca656"
       dlmb:level="100"
-      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/TestMenuBinding/UserName/3e71c5c8-0e6b-458a-8236-68043f90f3fa"
+      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/TestMenuBinding/UserAccount/9f4755ad-3af4-46a6-ab29-7279ba6f7120"
       asi:name="MenuBinding"
       dlmb:roles="*" />
   </dsdl:DataLookup>

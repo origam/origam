@@ -2,11 +2,46 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0">
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.3.1&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.4.1&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;261b7cd5-4ba1-46a0-8963-27793379ac11, 1.0.1&#xD;&#xA;bb8c67fb-44c1-4b41-8fce-4d50cd5a759d, 1.0.0&#xD;&#xA;255eec22-89c5-479a-b48d-e7bc9baa564a, 1.0.0"
     x:id="1710ff04-0aa6-47c8-a704-fd1a3e7cf7d4"
     asi:name="1.5.5"
-    dv:version="1.5.5" />
+    dv:version="1.5.5">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___210467ad-5d39-494b-b9f6-ea28d7f4f0b2.txt"
+      x:id="210467ad-5d39-494b-b9f6-ea28d7f4f0b2"
+      asi:name="00030_Database_Entity_UserAccount"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___5b525755-ab93-4840-bde6-d3170b55ac03.txt"
+      x:id="5b525755-ab93-4840-bde6-d3170b55ac03"
+      asi:name="00040_InsertInto_UserName"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___ab61f000-6721-4fbe-b0fd-0e489b8176b5.txt"
+      x:id="ab61f000-6721-4fbe-b0fd-0e489b8176b5"
+      asi:name="00010_Database_Entity_UserAccount"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___be62d6c4-6961-4476-b8e7-e22873996e2a.txt"
+      x:id="be62d6c4-6961-4476-b8e7-e22873996e2a"
+      asi:name="00020_Database_Entity_UserName"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
 </x:file>

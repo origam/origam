@@ -27,9 +27,10 @@
     <dp:Parameter
       asi:abstract="false"
       sip:allowNulls="true"
-      sip:dataType="UniqueIdentifier"
+      sip:dataLength="40"
+      sip:dataType="String"
       x:id="180ab66f-dceb-47e5-9cc4-6351b17d7a16"
-      asi:name="parUserName" />
+      asi:name="parSurname" />
     <ef:EntityFilter
       asi:abstract="false"
       x:id="59a07f63-ad27-47ca-ba31-cc10260681ab"
@@ -81,7 +82,7 @@
       fmi:excludeFromAuditing="false"
       x:id="1785cbba-3aa7-4041-9ab5-494687a4809c"
       adec:isPrimaryKey="false"
-      adec:label="Křestní jméno"
+      adec:label="First Name"
       fmi:mappedColumnName="FirstName"
       asi:name="FirstName"
       adec:onCopyAction="Copy"
@@ -96,7 +97,7 @@
       fmi:excludeFromAuditing="false"
       x:id="b44991c2-a129-4785-bc26-c8d9cc5d1589"
       adec:isPrimaryKey="false"
-      adec:label="Příjmení"
+      adec:label="Surname"
       fmi:mappedColumnName="Surname"
       asi:name="Surname"
       adec:onCopyAction="Copy"

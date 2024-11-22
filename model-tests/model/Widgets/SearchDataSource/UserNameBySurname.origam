@@ -6,8 +6,8 @@
   <sds:SearchDataSource
     asi:abstract="false"
     sds:dataStructure="Widgets/DataStructure/Widgets/MenuSearchSource_UserName.origam#MenuSearchSource_UserName/188b8ae6-797e-4a03-b0f3-61e9ab7bf8e6"
-    sds:filterParameter="UserName_parUserName"
-    sds:groupLabel="Uživatelé"
+    sds:filterParameter="UserName_parSurname"
+    sds:groupLabel="Users"
     x:id="c65d0243-e69c-4306-99c4-e4fa58ac9a73"
     sds:lookup="Widgets/DataLookup/Widgets/UserName_Surname.origam#UserName_Surname/9b8686bf-d795-4ba1-806b-a537e8940231"
     sds:method="Widgets/DataStructure/Widgets/MenuSearchSource_UserName.origam#MenuSearchSource_UserName/BySurname/dce1f2ff-fe89-400e-9391-fa98d38beac4"

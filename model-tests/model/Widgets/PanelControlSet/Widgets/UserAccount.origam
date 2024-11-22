@@ -688,8 +688,7 @@
         asi:abstract="false"
         x:id="fc593991-55c3-4538-a1a0-f9cbc305bb36"
         asi:name="PanelTitle"
-        apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-        pvi1:value="Uživatelský účet" />
+        apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="ffac99ea-8322-4854-8a51-6109f179bd6e"
