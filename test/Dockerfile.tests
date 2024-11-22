@@ -1,7 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
-RUN apt-get -qq update > /dev/null 2>&1 \
-&& apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget > /dev/null 2>&1
+
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
@@ -35,21 +34,11 @@ RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz > /dev/null 2>&1 && \
     cd .. && \
     rm -rf gawk-5.1.0 gawk-5.1.0.tar.gz
 
-# HTTPS proxy
-COPY https-proxy /root/https-proxy
-WORKDIR /root/https-proxy
-RUN yarn --ignore-engines
 WORKDIR /root
-COPY updateTimezone.sh \
-reverse-proxy.conf \
-/root/
-RUN mv reverse-proxy.conf /etc/nginx/sites-available \
-&& unlink /etc/nginx/sites-enabled/default \
-&& ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf \
-&& nginx -t \
-&& chmod +x updateTimezone.sh \
-&& cd /home \
-&& su origam
+COPY updateTimezone.sh /root/
+RUN chmod +x updateTimezone.sh \
+    && cd /home \
+    && su origam
 
 # Copy test files
 USER origam
