@@ -1,6 +1,9 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
 
+RUN apt-get -qq update > /dev/null 2>&1 \
+&& apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo ssh curl wget > /dev/null 2>&1
+
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
