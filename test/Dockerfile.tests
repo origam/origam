@@ -4,13 +4,21 @@ WORKDIR /tmp
 RUN apt-get -qq update > /dev/null 2>&1 \
 && apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo ssh curl wget > /dev/null 2>&1
 
+# Ensure nginx is removed and its configurations are cleaned up
+RUN apt-get remove -y nginx nginx-common > /dev/null 2>&1 || true \
+    && apt-get purge -y nginx nginx-common > /dev/null 2>&1 || true \
+    && apt-get autoremove -y > /dev/null 2>&1 \
+    && rm -rf /etc/nginx \
+    && rm -rf /var/log/nginx \
+    && rm -rf /var/lib/nginx
+
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
 
 # INSTALL yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
 && apt-get -qq update > /dev/null 2>&1 \
 && apt-get -qq -y install yarn dotnet-sdk-8.0 > /dev/null 2>&1 \
 && useradd -ms /bin/bash origam \
@@ -76,4 +84,8 @@ RUN mkdir logs \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh \
 && chmod +x startTests.sh
+
+# Add a check to ensure nginx is not running
+RUN sudo netstat -tulpn | grep :443 || true
+
 CMD sudo /root/updateTimezone.sh && ./startTests.sh
