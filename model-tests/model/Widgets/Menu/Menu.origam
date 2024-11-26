@@ -3,11 +3,24 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcrmi="http://schemas.origam.com/Origam.Schema.MenuModel.DataConstantReferenceMenuItem/6.0.0"
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
   xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
   xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
   xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0"
   xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
+  <dcrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    dcrmi:constant="Widgets/DataConstant/Widgets/DataConstantLengthTest.origam#DataConstantLengthTest/36bbe708-6fa8-445b-8fc2-1220f0bf7c4b"
+    ami:displayName="DataConstantLengthTest"
+    x:id="131b4cab-fb6b-42fb-b71e-9b76aee3ec33"
+    asi:name="DataConstantLengthTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    dcrmi:refreshPortalAfterSave="false"
+    ami:roles="*" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
