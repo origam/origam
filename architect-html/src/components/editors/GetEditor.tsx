@@ -43,7 +43,7 @@ export function getEditor(
   }
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
-    const componentDesignerState = new ComponentDesignerState(node,isPersisted, sectionData, architectApi);
+    const componentDesignerState = new ComponentDesignerState(node, isPersisted, sectionData, architectApi);
     return new Editor(
       componentDesignerState,
       <ComponentDesigner designerState={componentDesignerState}/>

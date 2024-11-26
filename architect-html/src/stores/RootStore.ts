@@ -37,13 +37,10 @@ export class RootStore {
   public uiState = new UiState();
   public packagesState: PackagesState;
   public modelTreeState: ModelTreeState;
-  public architectApi: IArchitectApi = new ArchitectApi();
+  public architectApi: IArchitectApi = new ArchitectApi(error => {});
   public dialogStack: IDialogStackState = new DialogStackState();
   public errorDialogController: ErrorDialogController;
   public progressBarState= new ProgressBarState();
-  // public componentDesignerState = new ComponentDesignerState();
-  // public getEditorController = getEditorController;
-
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);

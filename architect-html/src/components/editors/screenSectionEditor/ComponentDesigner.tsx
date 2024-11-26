@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import {
   IComponent,
   ResizeHandle,
-  ComponentDesignerState, DesignSurfaceState, toComponentType
+  ComponentDesignerState, DesignSurfaceState
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
@@ -13,6 +13,9 @@ import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import { IEditorField } from "src/API/IArchitectApi.ts";
+import {
+  toComponentType
+} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -223,8 +226,8 @@ const DesignSurface: React.FC<{
         </div>
       ) : (
         <div className={S.designSurfaceEditorContainer}>
-          <div style={{width: "100px"}}>{component.data.name}</div>
-          <div className={S.designSurfaceEditor}></div>
+          <div style={{width: `${component.labelWidth}px`}}>{component.data.name}</div>
+          <div style={{width: `${component.width}px`}} className={S.designSurfaceEditor}></div>
         </div>
       )
     );
@@ -250,7 +253,7 @@ const DesignSurface: React.FC<{
           style={{
             left: `${component.left}px`,
             top: `${component.top}px`,
-            width: `${component.width}px`,
+            // width: `${component.width}px`,
             height: `${component.height}px`,
             cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
             zIndex: component.type === 'GroupBox' ? 0 : 1

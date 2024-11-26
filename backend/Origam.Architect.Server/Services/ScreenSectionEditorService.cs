@@ -71,30 +71,33 @@ public class ScreenSectionEditorService(
 
     private ApiControl LoadItem(ControlSetItem controlSetItem)
     {
-        ApiControl control = new ApiControl();
-        var childItemsByType = controlSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
-            ControlPropertyItem.CategoryConst);
+        ApiControl control = new ApiControl
+        {
+            Type = controlSetItem.ControlItem.Path,
+            Id = controlSetItem.Id,
+        };
+        // var childItemsByType = controlSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
+        //     ControlPropertyItem.CategoryConst);
         control.ValueItems = controlSetItem.ChildItems
             .OfType<PropertyValueItem>()
             .Select(valueItem => new ApiValueItem
             {
-                Name = valueItem.Name,
+                Name = valueItem.ControlPropertyItem.NodeText,
                 Value = valueItem.Value
             }).ToList();
-        var bla = controlSetItem.ChildItems
+        var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
-            .Select(valueItem => new ApiValueItem
-            {
-                Name = valueItem.Name,
-                Value = valueItem.Value
-            }).ToList();
-
+            .FirstOrDefault();
+        control.Name = bindingInfo?.Value ?? "";
         return control;
     }
 }
 
 public class ApiControl
 {
+    public Guid Id { get; set; }
+    public string Type { get; set; }
+    public string Name { get; set; }
     public List<ApiValueItem> ValueItems { get; set; }
     public List<ApiControl> Children { get; set; } = new();
 

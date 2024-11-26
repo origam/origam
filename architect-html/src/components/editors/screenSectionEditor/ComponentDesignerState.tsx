@@ -8,8 +8,13 @@ import {
   IDataSource,
   IEditorField,
   ISectionEditorData,
-  OrigamDataType
 } from "src/API/IArchitectApi.ts";
+import {
+  IComponentData,
+} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+import {
+  Component, toComponent
+} from "src/components/editors/screenSectionEditor/Component.tsx";
 
 
 export interface IComponent {
@@ -19,35 +24,10 @@ export interface IComponent {
   top: number;
   width: number;
   height: number;
+  labelWidth: number;
   parentId: string | null;
   relativeLeft?: number;
   relativeTop?: number;
-}
-
-export type ComponentType = 'GroupBox' | 'TextArea' | 'TextEditor' | 'NumericEditor' | 'DateEditor' | 'BooleanEditor' ;
-
-export interface IComponentData {
-  type: ComponentType;
-  name: string;
-}
-
-export function toComponentType(origamType: OrigamDataType): ComponentType {
-  switch (origamType) {
-    case OrigamDataType.Date:
-      return 'DateEditor';
-    case OrigamDataType.String:
-      return 'TextEditor';
-    case OrigamDataType.Memo:
-      return 'TextArea';
-    case OrigamDataType.Integer:
-    case OrigamDataType.Float:
-    case OrigamDataType.Long:
-      return 'NumericEditor';
-    case OrigamDataType.Boolean:
-      return 'BooleanEditor';
-    default:
-      return 'TextEditor';
-  }
 }
 
 export type ResizeHandle =
@@ -84,7 +64,7 @@ const minComponentWidth = 20;
 
 export class ComponentDesignerState implements IEditorState {
 
-  public surface = new DesignSurfaceState();
+  public surface ;
   public toolbox: ToolboxState;
 
   @observable accessor isActive: boolean;
@@ -107,6 +87,7 @@ export class ComponentDesignerState implements IEditorState {
   ) {
     this.isPersisted = isPersisted;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
+    this.surface = new DesignSurfaceState(sectionEditorData);
   }
 
   * save(): Generator<Promise<any>, void, any> {
@@ -159,6 +140,7 @@ export class ToolboxState {
   }
 }
 
+
 export class DesignSurfaceState {
   @observable accessor components: IComponent[] = [];
   @observable accessor draggedComponentData: IComponentData | null = null;
@@ -191,6 +173,14 @@ export class DesignSurfaceState {
 
   get draggingComponentId() {
     return this.dragState.component?.id;
+  }
+
+  constructor(sectionEditorData: ISectionEditorData) {
+    let components = [];
+    for (const child of sectionEditorData.rootControl.children) {
+      components = toComponent(child, null, components)
+    }
+    this.components = components;
   }
 
   @action
@@ -390,7 +380,8 @@ export class DesignSurfaceState {
       left: x,
       top: y,
       width: this.draggedComponentData?.type === 'GroupBox' ? 200 : 300,
-      height: this.draggedComponentData?.type === 'GroupBox' ? 150 : 20
+      height: this.draggedComponentData?.type === 'GroupBox' ? 150 : 20,
+      labelWidth: 100,
     });
 
     this.components.push(newComponent);
@@ -412,30 +403,3 @@ export class DesignSurfaceState {
   }
 }
 
-export class Component implements IComponent {
-  id: string;
-  data: IComponentData;
-  @observable accessor left: number;
-  @observable accessor top: number;
-  @observable accessor width: number;
-  @observable accessor height: number;
-  @observable accessor parentId: string | null = null;
-  @observable accessor relativeLeft: number | undefined;
-  @observable accessor relativeTop: number | undefined;
-
-  constructor(args: {
-    id: string,
-    data: IComponentData,
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-  }) {
-    this.id = args.id;
-    this.data = args.data;
-    this.left = args.left;
-    this.top = args.top;
-    this.width = args.width;
-    this.height = args.height;
-  }
-}

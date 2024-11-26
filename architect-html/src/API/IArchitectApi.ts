@@ -38,8 +38,22 @@ export interface ISectionEditorData {
   dataSources: IDataSource[];
   name: string;
   schemaExtensionId: string;
+  rootControl: ApiControl;
   selectedDataSourceId: string;
   fields: IEditorField[];
+}
+
+export interface ApiControl {
+  name: string;
+  id: string;
+  type: string;
+  valueItems: ApiValueItem[];
+  children: ApiControl[];
+}
+
+export interface ApiValueItem {
+  name: string;
+  value: string;
 }
 
 export interface IDataSource {
