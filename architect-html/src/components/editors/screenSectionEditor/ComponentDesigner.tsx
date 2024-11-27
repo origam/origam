@@ -226,8 +226,7 @@ const DesignSurface: React.FC<{
         </div>
       ) : (
         <div className={S.designSurfaceEditorContainer}>
-          <div style={{width: `${component.labelWidth}px`}}>{component.data.name}</div>
-          <div style={{width: `${component.width}px`}} className={S.designSurfaceEditor}></div>
+          <div className={S.designSurfaceEditor}></div>
         </div>
       )
     );
@@ -245,44 +244,57 @@ const DesignSurface: React.FC<{
       onClick={handleSurfaceClick}
     >
       {surfaceState.components.map((component) => (
-        <div
-          key={component.id}
-          className={`${S.designComponent} 
+        <>
+          <div
+            className={S.componentLabel}
+            style={{
+              left: `${component.left - component.labelWidth}px`,
+              top: `${component.top}px`,
+              width: `${component.labelWidth}px`,
+              height: `${component.height}px`,
+            }}
+          >
+            {component.data.name}
+          </div>
+          <div
+            key={component.id}
+            className={`${S.designComponent} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponentId === component.id ? S.selected : ''}`}
-          style={{
-            left: `${component.left}px`,
-            top: `${component.top}px`,
-            // width: `${component.width}px`,
-            height: `${component.height}px`,
-            cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-            zIndex: component.type === 'GroupBox' ? 0 : 1
-          }}
-          onMouseDown={(e) => handleComponentMouseDown(e, component)}
-          onClick={(e) => handleComponentClick(e, component)}
-        >
+            style={{
+              left: `${component.left}px`,
+              top: `${component.top}px`,
+              width: `${component.width}px`,
+              height: `${component.height}px`,
+              cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+              zIndex: component.type === 'GroupBox' ? 0 : 1
+            }}
+            onMouseDown={(e) => handleComponentMouseDown(e, component)}
+            onClick={(e) => handleComponentClick(e, component)}
+          >
 
-          {getDesignSurfaceRepresentation(component)}
+            {getDesignSurfaceRepresentation(component)}
 
-          {surfaceState.selectedComponentId === component.id && [
-            'top',
-            'right',
-            'bottom',
-            'left',
-            'topLeft',
-            'topRight',
-            'bottomRight',
-            'bottomLeft'
-          ].map((handle) => (
-            <div
-              key={handle}
-              className={`${S.resizeHandle} ${S[handle]}`}
-              onMouseDown={(e) =>
-                handleResizeStart(e, component, handle as ResizeHandle)
-              }
-            />
-          ))}
-        </div>
+            {surfaceState.selectedComponentId === component.id && [
+              'top',
+              'right',
+              'bottom',
+              'left',
+              'topLeft',
+              'topRight',
+              'bottomRight',
+              'bottomLeft'
+            ].map((handle) => (
+              <div
+                key={handle}
+                className={`${S.resizeHandle} ${S[handle]}`}
+                onMouseDown={(e) =>
+                  handleResizeStart(e, component, handle as ResizeHandle)
+                }
+              />
+            ))}
+          </div>
+        </>
       ))}
     </div>
   );
