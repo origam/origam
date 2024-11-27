@@ -71,13 +71,18 @@ public class ScreenSectionEditorService(
 
     private ApiControl LoadItem(ControlSetItem controlSetItem)
     {
+        if (controlSetItem.RootItem is not PanelControlSet controlSet)
+        {
+            throw new Exception("Parent object must be " +
+                                nameof(PanelControlSet));
+        }
+
+
         ApiControl control = new ApiControl
         {
             Type = controlSetItem.ControlItem.Path,
             Id = controlSetItem.Id,
         };
-        // var childItemsByType = controlSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(
-        //     ControlPropertyItem.CategoryConst);
         control.ValueItems = controlSetItem.ChildItems
             .OfType<PropertyValueItem>()
             .Select(valueItem => new ApiValueItem
@@ -88,7 +93,11 @@ public class ScreenSectionEditorService(
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
             .FirstOrDefault();
-        control.Name = bindingInfo?.Value ?? "";
+        var caption = controlSet.DataEntity
+            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+            .FirstOrDefault(x=> x.Name == bindingInfo?.Value)
+            ?.Caption ?? bindingInfo?.Value;
+        control.Name = caption;
         return control;
     }
 }
