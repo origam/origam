@@ -3,7 +3,7 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import { observable } from "mobx";
 import {
-  IComponent
+  IComponent, LabelPosition, parseLabelPosition
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
 
@@ -18,6 +18,7 @@ export class Component implements IComponent {
   @observable accessor parentId: string | null = null;
   @observable accessor relativeLeft: number | undefined;
   @observable accessor relativeTop: number | undefined;
+  @observable accessor labelPosition: LabelPosition;
 
   constructor(args: {
     id: string,
@@ -27,6 +28,7 @@ export class Component implements IComponent {
     width: number,
     height: number,
     labelWidth: number,
+    labelPosition: LabelPosition,
   }) {
     this.id = args.id;
     this.data = args.data;
@@ -35,6 +37,42 @@ export class Component implements IComponent {
     this.width = args.width;
     this.height = args.height;
     this.labelWidth = args.labelWidth;
+    this.labelPosition = args.labelPosition;
+  }
+
+  getLabelStyle() {
+    switch (this.labelPosition) {
+      case LabelPosition.Left:
+        return {
+          left: `${this.left - this.labelWidth}px`,
+            top: `${this.top}px`,
+            width: `${this.labelWidth}px`,
+            height: `${this.height}px`,
+        }
+        case LabelPosition.Right:
+          return {
+            left: `${this.left + this.width}px`,
+            top: `${this.top}px`,
+            width: `${this.labelWidth}px`,
+            height: `${this.height}px`,
+          }
+      case LabelPosition.Bottom:
+        return {
+          left: `${this.left}px`,
+          top: `${this.top + this.height}px`,
+          width: `${this.width}px`,
+          height: `${this.labelWidth}px`,
+        }
+      case LabelPosition.Top:
+        return {
+          left: `${this.left}px`,
+          top: `${this.top + -20}px`,
+          width: `${this.width}px`,
+          height: `${this.labelWidth}px`,
+        }
+      case LabelPosition.None:
+        return {display: 'none'}
+    }
   }
 }
 
@@ -56,7 +94,8 @@ export function toComponent(
     height: 0,
     parentId: parent,
     labelWidth: 0,
-  }
+    labelPosition: LabelPosition.None,
+  } as IComponent
 
   for (const item of control.valueItems) {
     switch (item.name){
@@ -74,6 +113,9 @@ export function toComponent(
         break;
       case "CaptionLength":
         componentArgs.labelWidth = parseFloat(item.value);
+        break;
+      case "CaptionPosition":
+        componentArgs.labelPosition = parseLabelPosition(item.value);
         break;
     }
   }

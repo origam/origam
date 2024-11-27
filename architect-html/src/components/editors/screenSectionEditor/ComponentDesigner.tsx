@@ -247,12 +247,7 @@ const DesignSurface: React.FC<{
         <>
           <div
             className={S.componentLabel}
-            style={{
-              left: `${component.left - component.labelWidth}px`,
-              top: `${component.top}px`,
-              width: `${component.labelWidth}px`,
-              height: `${component.height}px`,
-            }}
+            style={component.getLabelStyle()}
           >
             {component.data.name}
           </div>

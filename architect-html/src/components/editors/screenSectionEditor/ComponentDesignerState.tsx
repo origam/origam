@@ -28,6 +28,20 @@ export interface IComponent {
   parentId: string | null;
   relativeLeft?: number;
   relativeTop?: number;
+  labelPosition: LabelPosition;
+}
+
+export enum LabelPosition  {Left, Right, Top, Bottom, None}
+
+export function parseLabelPosition(value: string): LabelPosition {
+  const intValue = parseInt(value)
+  const validOptions = Object.values(LabelPosition);
+
+  if (!validOptions.includes(intValue as LabelPosition)) {
+    throw new Error(`Invalid LabelPosition: ${value}. Valid values are: ${validOptions.join(', ')}`);
+  }
+
+  return intValue as LabelPosition;
 }
 
 export type ResizeHandle =
@@ -382,6 +396,7 @@ export class DesignSurfaceState {
       width: this.draggedComponentData?.type === 'GroupBox' ? 200 : 300,
       height: this.draggedComponentData?.type === 'GroupBox' ? 150 : 20,
       labelWidth: 100,
+      labelPosition: LabelPosition.Left
     });
 
     this.components.push(newComponent);
