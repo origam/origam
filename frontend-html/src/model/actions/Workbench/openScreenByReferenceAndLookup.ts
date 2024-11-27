@@ -18,7 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getApi } from "model/selectors/getApi";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import {
+  openScreenIgnoreSelectionDialog
+} from "model/actions/Workbench/openScreenIgnoreSelectionDialog";
 
 
 export function openScreenByReferenceAndLookup(ctx: any) {
@@ -28,11 +30,6 @@ export function openScreenByReferenceAndLookup(ctx: any) {
       LookupId: dataSourceLookupId,
       ReferenceId: referenceId,
     });
-    yield*getWorkbenchLifecycle(ctx).onMainMenuItemIdClick({
-      event: undefined,
-      itemId: menuId,
-      idParameter: referenceId,
-      isSingleRecordEdit: true
-    });
+    yield* openScreenIgnoreSelectionDialog(menuId, referenceId, ctx);
   };
 }
