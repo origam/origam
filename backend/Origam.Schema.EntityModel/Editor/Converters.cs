@@ -197,37 +197,39 @@ public class DataStructureEntityConverter : TypeConverter
 		//but allow free-form entry
 		return true;
 	}
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+	public override StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<EntityRelationItem> columnArray;
-		List<EntityRelationItem> entities;
-		DataStructureEntity parentEntity = (context.Instance as DataStructureEntity).ParentItem as DataStructureEntity;
-		if(parentEntity == null)
+		List<ISchemaItem> entities;
+		DataStructureEntity parentEntity = (context.Instance as DataStructureEntity)?.ParentItem as DataStructureEntity;
+		if (parentEntity == null)
 		{
 			// Root entity, we display all available entities
-			entities = new List<EntityRelationItem>();
+			entities = _schema.GetProvider<EntityModelSchemaItemProvider>()
+					.ChildItems
+					.ToList();
 		}
 		else
 		{
 			// Sub-entity (relation), we return only available relations
-			if(parentEntity.Entity is IDataEntity)
+			if (parentEntity.Entity is IDataEntity entity)
+			{
 				// Parent is root entity
-				entities = (parentEntity.Entity as IDataEntity).EntityRelations;
-			else if(parentEntity.Entity is IAssociation)
+				entities = entity.EntityRelations.ToList<ISchemaItem>();
+			}
+			else if (parentEntity.Entity is IAssociation association)
+			{
 				// Parent is relation
-				entities = (parentEntity.Entity as IAssociation).AssociatedEntity.EntityRelations;
+				entities = association.AssociatedEntity.EntityRelations
+					.ToList<ISchemaItem>();
+			}
 			else
+			{
 				throw new ArgumentOutOfRangeException("ParentItem", parentEntity, ResourceUtils.GetString("ErrorParentNotIDataEntity"));
+			}
 		}
-		columnArray = new List<EntityRelationItem>(entities.Count);
-		
-		foreach(EntityRelationItem entity in entities)
-		{
-			columnArray.Add(entity);
-		}
-		columnArray.Sort();
-		return new StandardValuesCollection(columnArray);
+		entities.Sort();
+		return new StandardValuesCollection(entities);
 	}
 	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
 	{
