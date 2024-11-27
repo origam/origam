@@ -17,6 +17,7 @@
   "sign_out_data_lost_question": "Quelques donnés ne sont pas enregistrées. Déconnecter quand même?",
   "save_tool_tip": "enregistrer",
   "refresh_tool_tip": "actualiser",
+  "refresh_dropdown": "actualiser",
   "sign_out_tool_tip": "déconnecter",
   "user": "utilisateur",
   "help_button": "aide",

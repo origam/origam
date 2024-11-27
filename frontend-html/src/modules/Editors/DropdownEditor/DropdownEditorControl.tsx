@@ -45,7 +45,7 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
                     onMouseDown={(e) => e.stopPropagation()}
                     onClick={props.state.handleRefreshClick}
                   >
-                    Refresh
+                    {T("Refresh", "refresh_dropdown")}
                   </div>
                 </div>
               </div>,
