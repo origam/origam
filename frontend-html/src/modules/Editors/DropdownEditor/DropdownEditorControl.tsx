@@ -27,6 +27,10 @@ import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
+import { T } from "utils/translation";
+import DR from "gui/Components/Dropdowner/Dropdowner.module.scss";
+import DI from "gui/Components/Dropdown/DropdownItem.module.scss";
+import DD from "gui/Components/Dropdown/Dropdown.module.scss";
 
 export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
   return (
@@ -36,16 +40,16 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
           {props.state.isDropped
             ? createPortal(
               <div
-                className={"Dropdowner_droppedBox"}
+                className={DR.droppedBox}
                 style={{top: props.state.top, left: props.state.left}}
               >
-                <div className="Dropdown_root">
+                <div className={DD.root}>
                   <div
-                    className={"DropdownItem_root"}
+                    className={DI.root}
                     onMouseDown={(e) => e.stopPropagation()}
                     onClick={props.state.handleRefreshClick}
                   >
-                    Refresh
+                    {T("Refresh", "refresh_dropdown")}
                   </div>
                 </div>
               </div>,

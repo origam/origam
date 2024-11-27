@@ -17,6 +17,7 @@
   "sign_out_data_lost_question": "Einige Änderungen sind noch nicht gespeichert. Wollen Sie sich trotzdem abmelden?",
   "save_tool_tip": "Speichern",
   "refresh_tool_tip": "Aktualisieren",
+  "refresh_dropdown": "Aktualisieren",
   "sign_out_tool_tip": "Abmelden",
   "user": "Benutzer",
   "help_button": "Hilfe",
