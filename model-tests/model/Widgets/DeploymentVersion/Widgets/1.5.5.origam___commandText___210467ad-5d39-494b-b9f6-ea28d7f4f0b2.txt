@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [UserAccount] ADD CONSTRAINT [FK_UserAccount_refUserNameId_UserName]
+	FOREIGN KEY (
+		[refUserNameId]
+	)
+
+	REFERENCES [UserName] (
+		[Id]
+	);

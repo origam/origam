@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="188b8ae6-797e-4a03-b0f3-61e9ab7bf8e6"
+    ds1:localized="false"
+    asi:name="MenuSearchSource_UserName">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/UserName.origam#UserName/9d79364b-8f71-4906-8e53-42a932c5c35e"
+      x:id="08668a5b-c21c-48d0-849f-b6405f751ed7"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="UserName"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/UserName.origam#UserName/FirstName/1785cbba-3aa7-4041-9ab5-494687a4809c"
+        dsc:hideInOutput="false"
+        x:id="340c66a0-e12c-449a-b56a-877b2968acb1"
+        asi:name="Description"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Widgets/UserName.origam#UserName/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="ae4f07fc-586d-457b-bdf3-767e56d4edde"
+        asi:name="ReferenceId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/UserName.origam#UserName/Surname/b44991c2-a129-4785-bc26-c8d9cc5d1589"
+        dsc:hideInOutput="false"
+        x:id="ae508fdf-e79e-41c9-88e5-eada4a0671ea"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="dce1f2ff-fe89-400e-9391-fa98d38beac4"
+      asi:name="BySurname">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/MenuSearchSource_UserName.origam#MenuSearchSource_UserName/UserName/08668a5b-c21c-48d0-849f-b6405f751ed7"
+        dsfsf:filter="Widgets/DataEntity/Widgets/UserName.origam#UserName/GetBySurname/59a07f63-ad27-47ca-ba31-cc10260681ab"
+        x:id="5a59a02e-6dd8-4534-9dab-0906146c83b6"
+        asi:name="UserName_GetBySurname"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>
