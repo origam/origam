@@ -47,14 +47,15 @@ export interface ApiControl {
   name: string;
   id: string;
   type: string;
-  valueItems: ApiValueItem[];
+  properties: IApiEditorProperty[];
   children: ApiControl[];
 }
 
-export interface ApiValueItem {
-  name: string;
-  value: string;
-}
+// export interface ApiValueItem {
+//   name: string;
+//   value: string;
+//   type: string;
+// }
 
 export interface IDataSource {
   schemaItemId: string;

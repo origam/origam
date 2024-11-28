@@ -94,9 +94,15 @@
   height: 100%;
 }
 
-.designSurfaceEditor {
+.designSurfaceInput {
   border: 1px solid #ccc;
   flex: 1;
+}
+
+.designSurfaceCheckbox {
+  border: 1px solid #ccc;
+  width: 20px;
+  height: 20px;
 }
 
 .groupBoxHeader {

@@ -1,43 +1,61 @@
 import {
-  IComponentData, parseComponentType
+  IComponentData,
+  parseComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import { observable } from "mobx";
 import {
-  IComponent, LabelPosition, parseLabelPosition
+  IComponent,
+  LabelPosition, parseLabelPosition
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
+import {
+  EditorProperty
+} from "src/components/editors/gridEditor/GridEditorState.ts";
 
 export class Component implements IComponent {
   id: string;
   data: IComponentData;
-  @observable accessor left: number;
-  @observable accessor top: number;
-  @observable accessor width: number;
-  @observable accessor height: number;
+  @observable accessor properties: EditorProperty[];
+
+  @observable private accessor _left: number;
+  get left(): number { return this._left; }
+  set left(value: number) { this._left = value; }
+
+  @observable private accessor _top: number;
+  get top(): number { return this._top; }
+  set top(value: number) { this._top = value; }
+
+  @observable private accessor _width: number;
+  get width(): number { return this._width; }
+  set width(value: number) { this._width = value; }
+
+  @observable private accessor _height: number;
+  get height(): number { return this._height; }
+  set height(value: number) { this._height = value; }
+
   labelWidth: number;
+
+  private _labelPosition: LabelPosition;
+  get labelPosition(): LabelPosition { return this._labelPosition; }
+
   @observable accessor parentId: string | null = null;
   @observable accessor relativeLeft: number | undefined;
   @observable accessor relativeTop: number | undefined;
-  @observable accessor labelPosition: LabelPosition;
 
   constructor(args: {
     id: string,
     data: IComponentData,
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-    labelWidth: number,
-    labelPosition: LabelPosition,
+    properties: EditorProperty[]
   }) {
     this.id = args.id;
     this.data = args.data;
-    this.left = args.left;
-    this.top = args.top;
-    this.width = args.width;
-    this.height = args.height;
-    this.labelWidth = args.labelWidth;
-    this.labelPosition = args.labelPosition;
+    this.properties = args.properties;
+    this._left = this.get("Left");
+    this._top = this.get("Top");
+    this._width = this.get("Width");
+    this._height =  this.get("Height");
+    this.labelWidth =  this.get("CaptionWidth");
+    this._labelPosition =  parseLabelPosition(this.get("CaptionPosition"));
   }
 
   getLabelStyle() {
@@ -70,9 +88,15 @@ export class Component implements IComponent {
           width: `${this.width}px`,
           height: `${this.labelWidth}px`,
         }
+      case null:
+      case undefined:
       case LabelPosition.None:
         return {display: 'none'}
     }
+  }
+
+  get(text: string): any {
+    return this.properties.find(p => p.name === text)?.value;
   }
 }
 
@@ -82,44 +106,14 @@ export function toComponent(
   allComponents: Component[]
 ): Component[] {
 
-  const componentArgs = {
+  const newComponent = new Component({
     id: control.id,
     data: {
       type: parseComponentType(control.type),
       name: control.name,
     },
-    left: 0,
-    top: 0,
-    width: 0,
-    height: 0,
-    parentId: parent,
-    labelWidth: 0,
-    labelPosition: LabelPosition.None,
-  } as IComponent
-
-  for (const item of control.valueItems) {
-    switch (item.name){
-      case "Left":
-        componentArgs.left = parseFloat(item.value);
-        break;
-      case "Top":
-        componentArgs.top = parseFloat(item.value);
-        break;
-      case "Width":
-        componentArgs.width = parseFloat(item.value);
-        break;
-      case "Height":
-        componentArgs.height = parseFloat(item.value);
-        break;
-      case "CaptionLength":
-        componentArgs.labelWidth = parseFloat(item.value);
-        break;
-      case "CaptionPosition":
-        componentArgs.labelPosition = parseLabelPosition(item.value);
-        break;
-    }
-  }
-  const newComponent = new Component(componentArgs);
+    properties: control.properties.map(prop => new EditorProperty(prop)),
+  });
   for (const childControl of control.children) {
     toComponent(childControl, newComponent, allComponents);
   }

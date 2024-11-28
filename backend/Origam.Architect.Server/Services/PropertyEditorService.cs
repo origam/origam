@@ -36,7 +36,7 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
     {
         if (item is XslTransformation xsltTransformation)
         {
-            var xsltProperties =
+            IEnumerable<EditorProperty> xsltProperties =
                 GetEditorPropertiesByName(
                     xsltTransformation,
                     new[] { "Id", "Package", "TextStore", "XsltEngineType" }
@@ -46,12 +46,12 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 
         if (item is XslRule xslRule)
         {
-            var xsltProperties =
+            IEnumerable<EditorProperty> xsltProperties =
                 GetEditorPropertiesByName(xslRule, new[] { "Xsl" });
             return xsltProperties;
         }
 
-        var properties = item.GetType()
+        IEnumerable<EditorProperty> properties = item.GetType()
             .GetProperties()
             .Select(
                 prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))

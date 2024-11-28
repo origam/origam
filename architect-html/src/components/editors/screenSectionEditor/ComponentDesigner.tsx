@@ -3,9 +3,10 @@ import S
   from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
 import { observer } from "mobx-react-lite";
 import {
+  ComponentDesignerState,
+  DesignSurfaceState,
   IComponent,
-  ResizeHandle,
-  ComponentDesignerState, DesignSurfaceState
+  ResizeHandle
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
 import { RootStoreContext } from "src/main.tsx";
@@ -14,6 +15,7 @@ import {
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import { IEditorField } from "src/API/IArchitectApi.ts";
 import {
+  ComponentType,
   toComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 
@@ -219,17 +221,32 @@ const DesignSurface: React.FC<{
   };
 
   function getDesignSurfaceRepresentation(component: IComponent) {
-    return (
-      component.data.type === 'GroupBox' ? (
-        <div className={S.groupBoxContent}>
-          <div className={S.groupBoxHeader}>{component.data.name}</div>
-        </div>
-      ) : (
-        <div className={S.designSurfaceEditorContainer}>
-          <div className={S.designSurfaceEditor}></div>
-        </div>
-      )
-    );
+    switch (component.data.type) {
+      case ComponentType.GroupBox:
+        return (
+          <div className={S.groupBoxContent}>
+            <div className={S.groupBoxHeader}>{component.data.name}</div>
+          </div>
+        );
+      case ComponentType.AsCheckBox:
+        // return (
+        //   <div className={S.designSurfaceEditorContainer}>
+        //     <div className={S.designSurfaceCheckbox}></div>
+        //     <div>{component.get("Text")}</div>
+        //   </div>
+        // );
+        return (
+          <div className={S.designSurfaceEditorContainer}>
+            <div className={S.designSurfaceInput}></div>
+          </div>
+        );
+      default:
+        return (
+          <div className={S.designSurfaceEditorContainer}>
+            <div className={S.designSurfaceInput}></div>
+          </div>
+        );
+    }
   }
 
   return (

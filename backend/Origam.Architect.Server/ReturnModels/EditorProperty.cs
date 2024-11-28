@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
+using System.Security.Permissions;
 using Org.BouncyCastle.Utilities;
 using Origam.Architect.Server.Utils;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.ReturnModels;
 
@@ -36,28 +38,48 @@ public class DropDownValue(string Name, object Value)
 
 public class EditorPropertyFactory
 {
-    public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
+    public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property,
+        ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         if (category == null || !PropertyUtils.CanBeEdited(property))
         {
             return null;
         }
+
         return Create(property, item);
     }
-    
+
     public EditorProperty Create(PropertyInfo property, ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description = property.GetAttribute<DescriptionAttribute>()?.Description;
+        string description =
+            property.GetAttribute<DescriptionAttribute>()?.Description;
 
         object value = property.GetValue(item);
 
         return new EditorProperty(
-            Name: property.Name, 
+            Name: property.Name,
             Type: ToPropertyTypeName(property.PropertyType),
             Value: ToSerializableValue(value),
             DropDownValues: GetAvailableValues(property, item),
+            Category: category,
+            Description: description,
+            ReadOnly: property.GetSetMethod() == null);
+    }
+
+    public EditorProperty Create(PropertyInfo property,
+        PropertyValueItem valueItem)
+    {
+        string category = property.GetAttribute<CategoryAttribute>()?.Category;
+        string description =
+            property.GetAttribute<DescriptionAttribute>()?.Description;
+        
+        return new EditorProperty(
+            Name: property.Name,
+            Type: ToPropertyTypeName(property.PropertyType),
+            Value: valueItem?.TypedValue,
+            DropDownValues: Array.Empty<DropDownValue>(),
             Category: category,
             Description: description,
             ReadOnly: property.GetSetMethod() == null);
@@ -115,7 +137,7 @@ public class EditorPropertyFactory
         {
             return [];
         }
-        
+
         Type type = Type.GetType(converterType);
         if (type == null)
         {
@@ -126,46 +148,53 @@ public class EditorPropertyFactory
         MethodInfo getValuesMethod = type.GetMethod("GetStandardValues",
             new Type[] { typeof(ITypeDescriptorContext) })!;
         var context = new Context(item);
-        var values = getValuesMethod.Invoke(converterInstance, new object[] { context }) as TypeConverter.StandardValuesCollection;
+        var values =
+            getValuesMethod.Invoke(converterInstance, new object[] { context })
+                as TypeConverter.StandardValuesCollection;
         if (values == null || values.Count == 0)
         {
             return [];
         }
+
         return values.Cast<ISchemaItem>()
             .Select(x => new DropDownValue(x?.Name ?? "", x?.Id))
             .ToArray();
     }
-    
+
     private string ToPropertyTypeName(Type type)
     {
         if (type == typeof(bool))
         {
             return "boolean";
         }
+
         if (type.IsEnum)
         {
             return "enum";
         }
+
         if (type == typeof(int) || type == typeof(long))
         {
             return "integer";
         }
+
         if (type == typeof(decimal) || type == typeof(double) ||
             type == typeof(float))
         {
             return "float";
         }
+
         if (type.IsAssignableTo(typeof(ISchemaItem)))
         {
             return "looukup";
         }
+
         return "string";
     }
 }
 
 class Context : ITypeDescriptorContext
 {
-
     public Context(object instance)
     {
         Instance = instance;

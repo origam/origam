@@ -33,7 +33,10 @@ export interface IComponent {
 
 export enum LabelPosition  {Left, Right, Top, Bottom, None}
 
-export function parseLabelPosition(value: string): LabelPosition {
+export function parseLabelPosition(value: string | undefined | null): LabelPosition {
+  if(value === undefined || value === null || value === '') {
+    return LabelPosition.None;
+  }
   const intValue = parseInt(value)
   const validOptions = Object.values(LabelPosition);
 

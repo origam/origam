@@ -1,6 +1,6 @@
-﻿
-using System.Reflection;
+﻿using System.Reflection;
 using Origam.Architect.Server.Models;
+using Origam.Architect.Server.ReturnModels;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -11,32 +11,35 @@ namespace Origam.Architect.Server.Services;
 
 public class ScreenSectionEditorService(
     SchemaService schemaService,
-    IPersistenceService persistenceService)
+    EditorPropertyFactory propertyFactory)
 {
-    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
-    
     public SectionEditorModel GetSectionEditorData(ISchemaItem editedItem)
     {
         if (editedItem is PanelControlSet screenSection)
         {
-            var entityProvider = schemaService.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
+            var entityProvider =
+                schemaService.GetProvider(typeof(EntityModelSchemaItemProvider))
+                    as EntityModelSchemaItemProvider;
             var dataSources = entityProvider.ChildItems
-                .Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
+                .Select(x => new DataSource
+                    { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            
+
             IDataEntity dataEntity = screenSection.DataEntity;
-            
+
             List<EditorField> fields = dataEntity
-                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
+                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
+                    .CategoryConst)
                 .OrderBy(field => field.Name)
                 .Select(field => new EditorField
                 {
-                    Name = field.Name, 
+                    Name = field.Name,
                     Type = field.DataType
                 })
                 .ToList();
-            ControlSetItem controlSetItem = screenSection.PanelControl.PanelControlSet.MainItem;
+            ControlSetItem controlSetItem =
+                screenSection.PanelControl.PanelControlSet.MainItem;
             ApiControl apiControl = LoadContent(controlSetItem);
             return new SectionEditorModel
             {
@@ -65,8 +68,25 @@ public class ScreenSectionEditorService(
         }
 
         return apiControl;
+    }
 
-
+    private object GetFormObject(string oldFullClassName)
+    {
+        try
+        {
+            string className = oldFullClassName
+                .Split(".")
+                .LastOrDefault();
+            string newFullClassName =
+                "Origam.Architect.Server.Forms." + className;
+            Type type = Type.GetType(newFullClassName);
+            return Activator.CreateInstance(type);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Cannot find a form class for " +
+                                oldFullClassName, ex);
+        }
     }
 
     private ApiControl LoadItem(ControlSetItem controlSetItem)
@@ -77,25 +97,29 @@ public class ScreenSectionEditorService(
                                 nameof(PanelControlSet));
         }
 
-
+        object form = GetFormObject(controlSetItem.ControlItem.ControlType);
         ApiControl control = new ApiControl
         {
             Type = controlSetItem.ControlItem.Path,
             Id = controlSetItem.Id,
         };
-        control.ValueItems = controlSetItem.ChildItems
-            .OfType<PropertyValueItem>()
-            .Select(valueItem => new ApiValueItem
+        control.Properties = form.GetType().GetProperties()
+            .Select(property =>
             {
-                Name = valueItem.ControlPropertyItem.NodeText,
-                Value = valueItem.Value
-            }).ToList();
+                PropertyValueItem valueItem = controlSetItem.ChildItems
+                    .OfType<PropertyValueItem>()
+                    .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
+
+                return propertyFactory.Create(property, valueItem);
+            })
+            .ToList();
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
             .FirstOrDefault();
         var caption = controlSet.DataEntity
-            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
-            .FirstOrDefault(x=> x.Name == bindingInfo?.Value)
+            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
+                .CategoryConst)
+            .FirstOrDefault(x => x.Name == bindingInfo?.Value)
             ?.Caption ?? bindingInfo?.Value;
         control.Name = caption;
         return control;
@@ -107,13 +131,13 @@ public class ApiControl
     public Guid Id { get; set; }
     public string Type { get; set; }
     public string Name { get; set; }
-    public List<ApiValueItem> ValueItems { get; set; }
+    public List<EditorProperty> Properties { get; set; }
     public List<ApiControl> Children { get; set; } = new();
-
 }
 
-public class ApiValueItem
-{
-    public string Name { get; set; }
-    public string Value { get; set; }
-}
+// public class ApiValueItem
+// {
+//     public string Name { get; set; }
+//     public string Value { get; set; }
+//     public string Type { get; set; }
+// }
