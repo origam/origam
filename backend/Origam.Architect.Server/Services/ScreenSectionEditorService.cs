@@ -1,7 +1,7 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -11,6 +11,7 @@ namespace Origam.Architect.Server.Services;
 
 public class ScreenSectionEditorService(
     SchemaService schemaService,
+    IPersistenceService persistenceService,
     EditorPropertyFactory propertyFactory)
 {
     public SectionEditorModel GetSectionEditorData(ISchemaItem editedItem)
@@ -78,7 +79,7 @@ public class ScreenSectionEditorService(
                 .Split(".")
                 .LastOrDefault();
             string newFullClassName =
-                "Origam.Architect.Server.Forms." + className;
+                "Origam.Architect.Server.Controls." + className;
             Type type = Type.GetType(newFullClassName);
             return Activator.CreateInstance(type);
         }
@@ -89,7 +90,26 @@ public class ScreenSectionEditorService(
         }
     }
 
-    private ApiControl LoadItem(ControlSetItem controlSetItem)
+    private EditorProperty LoadEditorProperty(ControlSetItem controlSetItem, PropertyInfo property, bool loadDefaults)
+    {
+        object value;
+        if (loadDefaults)
+        {
+            var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
+            value = defaultValueAttribute?.Value;
+        }
+        else
+        {
+            PropertyValueItem valueItem = controlSetItem.ChildItems
+                .OfType<PropertyValueItem>()
+                .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
+            value = valueItem?.TypedValue;
+        }
+        return propertyFactory.Create(property, value);
+    }
+
+
+    private ApiControl LoadItem(ControlSetItem controlSetItem, bool loadDefaults=false)
     {
         if (controlSetItem.RootItem is not PanelControlSet controlSet)
         {
@@ -97,21 +117,14 @@ public class ScreenSectionEditorService(
                                 nameof(PanelControlSet));
         }
 
-        object form = GetFormObject(controlSetItem.ControlItem.ControlType);
+        object controlObject = GetFormObject(controlSetItem.ControlItem.ControlType);
         ApiControl control = new ApiControl
         {
-            Type = controlSetItem.ControlItem.Path,
-            Id = controlSetItem.Id,
+            Type = controlSetItem.ControlItem.ControlType,
+            Id = controlSetItem.Id
         };
-        control.Properties = form.GetType().GetProperties()
-            .Select(property =>
-            {
-                PropertyValueItem valueItem = controlSetItem.ChildItems
-                    .OfType<PropertyValueItem>()
-                    .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
-
-                return propertyFactory.Create(property, valueItem);
-            })
+        control.Properties = controlObject.GetType().GetProperties()
+            .Select(prop => LoadEditorProperty(controlSetItem, prop, loadDefaults))
             .ToList();
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
@@ -121,8 +134,24 @@ public class ScreenSectionEditorService(
                 .CategoryConst)
             .FirstOrDefault(x => x.Name == bindingInfo?.Value)
             ?.Caption ?? bindingInfo?.Value;
-        control.Name = caption;
+        control.Name = caption ?? controlSetItem.Name;
         return control;
+    }
+
+    public ApiControl CreateNewItem(string controlType, string fieldName, Guid parentControlSetItemId)
+    {
+        ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
+            .OfType<ControlItem>()
+            .FirstOrDefault(item => item.ControlType == controlType);
+        
+        ControlSetItem parent = persistenceService.SchemaProvider.RetrieveInstance<ControlSetItem>(
+            parentControlSetItemId);
+        ControlSetItem newItem = parent.NewItem<ControlSetItem>(
+            schemaService.ActiveSchemaExtensionId, null);
+        newItem.ControlItem = controlItem;
+        newItem.Name = fieldName;
+
+        return LoadItem(newItem, loadDefaults: true);
     }
 }
 
@@ -134,10 +163,3 @@ public class ApiControl
     public List<EditorProperty> Properties { get; set; }
     public List<ApiControl> Children { get; set; } = new();
 }
-
-// public class ApiValueItem
-// {
-//     public string Name { get; set; }
-//     public string Value { get; set; }
-//     public string Type { get; set; }
-// }

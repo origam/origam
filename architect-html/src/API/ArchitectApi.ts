@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   IApiEditorProperty, IApiTreeNode,
   IArchitectApi, IApiEditorData, IMenuItemInfo, IPropertyUpdate,
-  IPackage, ISectionEditorData
+  IPackage, ISectionEditorData, ApiControl
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -142,6 +142,17 @@ export class ArchitectApi implements IArchitectApi {
         nodeId: node.origamId,
         newTypeName: typeName
       }
+    )).data;
+  }
+
+  async createScreenEditorItem(args:{
+    editorSchemaItemId: string,
+    parentControlSetItemId: string,
+    componentType: string,
+    fieldName: string}
+  )  : Promise<ApiControl> {
+    return (await this.axiosInstance.post("/Editor/CreateScreenEditorItem",
+      args
     )).data;
   }
 }

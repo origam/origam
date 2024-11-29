@@ -4,42 +4,52 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
+  ApiControl,
   IArchitectApi,
   IDataSource,
   IEditorField,
   ISectionEditorData,
 } from "src/API/IArchitectApi.ts";
 import {
+  ComponentType,
   IComponentData,
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import {
-  Component, toComponent
+  Component, toComponent, toComponentRecursive
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 
+// export interface IComponent {
+//   id: string;
+//   data: IComponentData;
+//   left: number;
+//   top: number;
+//   width: number;
+//   height: number;
+//   labelWidth: number;
+//   parentId: string | null;
+//   relativeLeft?: number;
+//   relativeTop?: number;
+//   labelPosition: LabelPosition;
+// }
 
-export interface IComponent {
-  id: string;
-  data: IComponentData;
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  labelWidth: number;
-  parentId: string | null;
-  relativeLeft?: number;
-  relativeTop?: number;
-  labelPosition: LabelPosition;
-}
-
-export enum LabelPosition  {Left, Right, Top, Bottom, None}
+export enum LabelPosition {Left, Right, Top, Bottom, None}
 
 export function parseLabelPosition(value: string | undefined | null): LabelPosition {
-  if(value === undefined || value === null || value === '') {
+  if (value === undefined || value === null || value === '') {
     return LabelPosition.None;
   }
   const intValue = parseInt(value)
-  const validOptions = Object.values(LabelPosition);
+  if (isNaN(intValue)) {
+    const validOptions = Object.keys(LabelPosition);
+    if (!validOptions.includes(value)) {
+      throw new Error(`Invalid LabelPosition: ${value}. Valid values are: ${validOptions.join(', ')}`);
+    }
+    else {
+      return LabelPosition[value];
+    }
+  }
 
+  const validOptions = Object.values(LabelPosition);
   if (!validOptions.includes(intValue as LabelPosition)) {
     throw new Error(`Invalid LabelPosition: ${value}. Valid values are: ${validOptions.join(', ')}`);
   }
@@ -58,7 +68,7 @@ export type ResizeHandle =
   | 'bottomLeft';
 
 interface DragState {
-  component: IComponent | null;
+  component: Component | null;
   startX: number;
   startY: number;
   originalLeft: number;
@@ -66,7 +76,7 @@ interface DragState {
 }
 
 interface ResizeState {
-  component: IComponent | null;
+  component: Component | null;
   handle: ResizeHandle | null;
   startX: number;
   startY: number;
@@ -81,7 +91,7 @@ const minComponentWidth = 20;
 
 export class ComponentDesignerState implements IEditorState {
 
-  public surface ;
+  public surface: DesignSurfaceState;
   public toolbox: ToolboxState;
 
   @observable accessor isActive: boolean;
@@ -104,7 +114,7 @@ export class ComponentDesignerState implements IEditorState {
   ) {
     this.isPersisted = isPersisted;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
-    this.surface = new DesignSurfaceState(sectionEditorData);
+    this.surface = new DesignSurfaceState(sectionEditorData, architectApi, this.editorNode.origamId);
   }
 
   * save(): Generator<Promise<any>, void, any> {
@@ -157,9 +167,8 @@ export class ToolboxState {
   }
 }
 
-
 export class DesignSurfaceState {
-  @observable accessor components: IComponent[] = [];
+  @observable accessor components: Component[] = [];
   @observable accessor draggedComponentData: IComponentData | null = null;
   @observable accessor selectedComponentId: string | null = null;
   @observable accessor dragState: DragState = {
@@ -179,6 +188,7 @@ export class DesignSurfaceState {
     originalLeft: 0,
     originalTop: 0
   };
+  rootControl: ApiControl;
 
   get isDragging() {
     return !!this.dragState.component;
@@ -192,10 +202,14 @@ export class DesignSurfaceState {
     return this.dragState.component?.id;
   }
 
-  constructor(sectionEditorData: ISectionEditorData) {
+  constructor(sectionEditorData: ISectionEditorData,
+              private architectApi: IArchitectApi,
+              private editorNodeId: string
+  ) {
+    this.rootControl = sectionEditorData.rootControl;
     let components = [];
     for (const child of sectionEditorData.rootControl.children) {
-      components = toComponent(child, null, components)
+      components = toComponentRecursive(child, null, components)
     }
     this.components = components;
   }
@@ -218,7 +232,7 @@ export class DesignSurfaceState {
   }
 
   @action
-  startDragging(component: IComponent, mouseX: number, mouseY: number) {
+  startDragging(component: Component, mouseX: number, mouseY: number) {
     this.selectComponent(component.id);
     this.dragState = {
       component,
@@ -271,7 +285,7 @@ export class DesignSurfaceState {
   }
 
   @action
-  startResizing(component: IComponent, handle: ResizeHandle, mouseX: number, mouseY: number) {
+  startResizing(component: Component, handle: ResizeHandle, mouseX: number, mouseY: number) {
     this.selectComponent(component.id);
     this.resizeState = {
       component,
@@ -375,7 +389,7 @@ export class DesignSurfaceState {
   }
 
   @action
-  updatePosition(component: IComponent, left: number, top: number) {
+  updatePosition(component: Component, left: number, top: number) {
     component.left = left;
     component.top = top;
 
@@ -389,24 +403,31 @@ export class DesignSurfaceState {
     }
   }
 
-  @action
   createDraggedComponent(x: number, y: number) {
-    const newComponent = new Component({
-      id: `component-${Date.now()}`,
-      data: this.draggedComponentData!,
-      left: x,
-      top: y,
-      width: this.draggedComponentData?.type === 'GroupBox' ? 200 : 300,
-      height: this.draggedComponentData?.type === 'GroupBox' ? 150 : 20,
-      labelWidth: 100,
-      labelPosition: LabelPosition.Left
-    });
+    return function* () {
+      const apiControl = yield this.architectApi.createScreenEditorItem({
+        editorSchemaItemId: this.editorNodeId,
+        parentControlSetItemId: this.rootControl.id,
+        componentType: this.draggedComponentData!.type,
+        fieldName: this.draggedComponentData!.fieldName
+      });
 
-    this.components.push(newComponent);
-    this.draggedComponentData = null;
+      const newComponent = toComponent(apiControl, null);
+      newComponent.left = x;
+      newComponent.top = y;
+      newComponent.width = newComponent.width ?? 400;
+      newComponent.height = newComponent.height ?? 20;
+      // if (this.draggedComponentData!.type === ComponentType.AsTextBox) {
+      //   newComponent.labelPosition = LabelPosition.Left;
+      // } else {
+      //   newComponent.labelPosition = LabelPosition.None;
+      // }
+      this.components.push(newComponent);
+      this.draggedComponentData = null;
+    }.bind(this);
   }
 
-  private isPointInsideComponent(x: number, y: number, component: IComponent) {
+  private isPointInsideComponent(x: number, y: number, component: Component) {
     return (
       x >= component.left &&
       x <= component.left + component.width &&

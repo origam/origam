@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Origam.Architect.Server.Forms;
+namespace Origam.Architect.Server.Controls;
 
 public class AsCheckBox
 {

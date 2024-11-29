@@ -4,7 +4,6 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import { observable } from "mobx";
 import {
-  IComponent,
   LabelPosition, parseLabelPosition
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
@@ -12,8 +11,9 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 
-export class Component implements IComponent {
+export class Component {
   id: string;
+  parent: Component |  null;
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
 
@@ -37,6 +37,7 @@ export class Component implements IComponent {
 
   private _labelPosition: LabelPosition;
   get labelPosition(): LabelPosition { return this._labelPosition; }
+  set labelPosition(value: number) { this._labelPosition = value; }
 
   @observable accessor parentId: string | null = null;
   @observable accessor relativeLeft: number | undefined;
@@ -44,6 +45,7 @@ export class Component implements IComponent {
 
   constructor(args: {
     id: string,
+    parent: Component |  null,
     data: IComponentData,
     properties: EditorProperty[]
   }) {
@@ -54,8 +56,9 @@ export class Component implements IComponent {
     this._top = this.get("Top");
     this._width = this.get("Width");
     this._height =  this.get("Height");
-    this.labelWidth =  this.get("CaptionWidth");
+    this.labelWidth =  this.get("CaptionLength");
     this._labelPosition =  parseLabelPosition(this.get("CaptionPosition"));
+    this.parent = args.parent;
   }
 
   getLabelStyle() {
@@ -102,20 +105,27 @@ export class Component implements IComponent {
 
 export function toComponent(
   control: ApiControl,
-  parent: IComponent |  null,
-  allComponents: Component[]
-): Component[] {
-
-  const newComponent = new Component({
+  parent: Component |  null,
+): Component {
+  return new Component({
     id: control.id,
+    parent: parent,
     data: {
       type: parseComponentType(control.type),
-      name: control.name,
+      fieldName: control.name,
     },
     properties: control.properties.map(prop => new EditorProperty(prop)),
   });
+}
+
+export function toComponentRecursive(
+  control: ApiControl,
+  parent: Component |  null,
+  allComponents: Component[]
+): Component[] {
+  const newComponent = toComponent(control, parent);
   for (const childControl of control.children) {
-    toComponent(childControl, newComponent, allComponents);
+    toComponentRecursive(childControl, newComponent, allComponents);
   }
   allComponents.push(newComponent);
   return allComponents;

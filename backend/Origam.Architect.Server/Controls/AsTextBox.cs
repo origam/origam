@@ -1,7 +1,7 @@
-using Origam.Gui;
 using System.ComponentModel;
+using Origam.Gui;
 
-namespace Origam.Architect.Server.Forms;
+namespace Origam.Architect.Server.Controls;
 
 public class AsTextBox
 {
@@ -9,6 +9,7 @@ public class AsTextBox
     public Guid StyleId { get; set; }
 
     [Category("(ORIGAM)")]
+    [DefaultValue(100)]
     public int CaptionLength { get; set; }
 
     [Category("(ORIGAM)")]
@@ -26,7 +27,7 @@ public class AsTextBox
     public bool ReadOnly { get; set; }
     
     [Localizable(true)]
-    [DefaultValue(CaptionPosition.None)]
+    [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
     public CaptionPosition CaptionPosition { get; set; }
 
@@ -52,15 +53,16 @@ public class AsTextBox
     public int Top { get; set; }
 
     public bool Multiline { get; set; }
-
-    [Browsable(false)]
-    public int Height { get; set; }
-
+    
     public bool IsPassword { get; set; }
 
     public Object Value { get; set; }
 
     [Browsable(false)]
+    [DefaultValue(400)]
     public int Width { get; set; }
 
+    [Browsable(false)]
+    [DefaultValue(20)]
+    public int Height { get; set; }
 }

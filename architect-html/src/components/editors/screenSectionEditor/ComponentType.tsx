@@ -1,16 +1,14 @@
 import { OrigamDataType } from "src/API/IArchitectApi.ts";
 
 export enum ComponentType {
-  AsCombo = 'AsCombo',
-  AsTextBox = 'AsTextBox',
-  TagInput = 'TagInput',
+  AsCombo = 'Origam.Gui.Win.AsDropDown',
+  AsTextBox = 'Origam.Gui.Win.AsTextBox',
+  TagInput = 'Origam.Gui.Win.TagInput',
   AsPanel = 'AsPanel',
-  AsDateBox = 'AsDateBox',
-  AsCheckBox = 'AsCheckBox',
+  AsDateBox = 'Origam.Gui.Win.AsDateBox',
+  AsCheckBox = 'Origam.Gui.Win.AsCheckBox',
   GroupBox = 'GroupBox',
   TextArea = 'TextArea',
-  TextEditor = 'TextEditor',
-  NumericEditor = 'NumericEditor',
 }
 
 export function parseComponentType(value: string): ComponentType {
@@ -25,7 +23,7 @@ export function parseComponentType(value: string): ComponentType {
 
 export interface IComponentData {
   type: ComponentType;
-  name: string;
+  fieldName: string;
 }
 
 export function toComponentType(origamType: OrigamDataType): ComponentType {
@@ -33,16 +31,16 @@ export function toComponentType(origamType: OrigamDataType): ComponentType {
     case OrigamDataType.Date:
       return ComponentType.AsDateBox;
     case OrigamDataType.String:
-      return ComponentType.TextEditor;
+      return ComponentType.AsTextBox;
     case OrigamDataType.Memo:
       return ComponentType.TextArea;
     case OrigamDataType.Integer:
     case OrigamDataType.Float:
     case OrigamDataType.Long:
-      return ComponentType.NumericEditor;
+      return ComponentType.AsTextBox;
     case OrigamDataType.Boolean:
       return ComponentType.AsCheckBox;
     default:
-      return ComponentType.TextEditor;
+      return ComponentType.AsTextBox;
   }
 }

@@ -69,7 +69,7 @@ public class EditorPropertyFactory
     }
 
     public EditorProperty Create(PropertyInfo property,
-        PropertyValueItem valueItem)
+        object value)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description =
@@ -78,7 +78,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             Name: property.Name,
             Type: ToPropertyTypeName(property.PropertyType),
-            Value: valueItem?.TypedValue,
+            Value: value,
             DropDownValues: Array.Empty<DropDownValue>(),
             Category: category,
             Description: description,

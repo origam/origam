@@ -32,6 +32,13 @@ export interface IArchitectApi {
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
   createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
+
+  createScreenEditorItem(args:{
+    editorSchemaItemId: string,
+    parentControlSetItemId: string,
+    componentType: string,
+    fieldName: string}
+  ) : Promise<ApiControl>
 }
 
 export interface ISectionEditorData {
@@ -50,12 +57,6 @@ export interface ApiControl {
   properties: IApiEditorProperty[];
   children: ApiControl[];
 }
-
-// export interface ApiValueItem {
-//   name: string;
-//   value: string;
-//   type: string;
-// }
 
 export interface IDataSource {
   schemaItemId: string;

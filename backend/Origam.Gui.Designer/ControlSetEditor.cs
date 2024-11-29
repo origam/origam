@@ -684,7 +684,7 @@ public class ControlSetEditor : AbstractEditor
 			}
 #if DEBUG
 			string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
-			string path = Path.Combine("C:\\Repos\\origam\\backend\\Origam.Architect.Server\\Forms",cntrl.GetType().Name + ".cs" );
+			string path = Path.Combine("C:\\Repos\\origam\\backend\\Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
 			if (!File.Exists(path))
 			{
 				File.WriteAllText(path, newClass);

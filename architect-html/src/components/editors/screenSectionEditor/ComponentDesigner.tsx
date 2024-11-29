@@ -5,7 +5,6 @@ import { observer } from "mobx-react-lite";
 import {
   ComponentDesignerState,
   DesignSurfaceState,
-  IComponent,
   ResizeHandle
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
@@ -18,6 +17,9 @@ import {
   ComponentType,
   toComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+import {
+  Component
+} from "src/components/editors/screenSectionEditor/Component.tsx";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -30,7 +32,7 @@ const Toolbox: React.FC<{
   const onDragStart = (field: IEditorField) => {
     action(() => {
       surfaceState.draggedComponentData = {
-        name: field.name,
+        fieldName: field.name,
         type: toComponentType(field.type)
       };
     })();
@@ -130,6 +132,8 @@ const DesignSurface: React.FC<{
   surfaceState: DesignSurfaceState
 }> = observer(({surfaceState}) => {
   const surfaceRef = useRef<HTMLDivElement>(null);
+  const rootStore = useContext(RootStoreContext);
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -155,10 +159,10 @@ const DesignSurface: React.FC<{
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    surfaceState.createDraggedComponent(dropX, dropY);
+    run({generator: surfaceState.createDraggedComponent(dropX, dropY)});
   };
 
-  const handleComponentMouseDown = (e: React.MouseEvent, component: IComponent) => {
+  const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
     if (!surfaceRef.current) return;
 
     // Prevent dragging when clicking resize handles
@@ -200,7 +204,7 @@ const DesignSurface: React.FC<{
     }
   };
 
-  const handleComponentClick = (e: React.MouseEvent, component: IComponent) => {
+  const handleComponentClick = (e: React.MouseEvent, component: Component) => {
     e.stopPropagation();
     surfaceState.selectComponent(component.id);
   };
@@ -209,7 +213,7 @@ const DesignSurface: React.FC<{
     surfaceState.selectComponent(null);
   };
 
-  const handleResizeStart = (e: React.MouseEvent, component: IComponent, handle: ResizeHandle) => {
+  const handleResizeStart = (e: React.MouseEvent, component: Component, handle: ResizeHandle) => {
     e.stopPropagation();
     if (!surfaceRef.current) return;
 
@@ -220,12 +224,12 @@ const DesignSurface: React.FC<{
     surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
-  function getDesignSurfaceRepresentation(component: IComponent) {
+  function getDesignSurfaceRepresentation(component: Component) {
     switch (component.data.type) {
       case ComponentType.GroupBox:
         return (
           <div className={S.groupBoxContent}>
-            <div className={S.groupBoxHeader}>{component.data.name}</div>
+            <div className={S.groupBoxHeader}>{component.data.fieldName}</div>
           </div>
         );
       case ComponentType.AsCheckBox:
@@ -263,13 +267,14 @@ const DesignSurface: React.FC<{
       {surfaceState.components.map((component) => (
         <>
           <div
+            key={component.id + "_label"}
             className={S.componentLabel}
             style={component.getLabelStyle()}
           >
-            {component.data.name}
+            {component.data.fieldName}
           </div>
           <div
-            key={component.id}
+            key={component.id + "_component"}
             className={`${S.designComponent} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponentId === component.id ? S.selected : ''}`}

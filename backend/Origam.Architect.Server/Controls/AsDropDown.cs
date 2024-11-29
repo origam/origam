@@ -1,7 +1,7 @@
-using Origam.Gui;
 using System.ComponentModel;
+using Origam.Gui;
 
-namespace Origam.Architect.Server.Forms;
+namespace Origam.Architect.Server.Controls;
 
 public class AsDropDown
 {

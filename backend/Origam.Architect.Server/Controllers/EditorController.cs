@@ -132,11 +132,27 @@ public class EditorController(
         {
             screenSection.Name = changes.Name;
             screenSection.DataSourceId = changes.SelectedDataSourceId;
+            
             return Ok(sectionService.GetSectionEditorData(screenSection));
         }
 
         return BadRequest(
             $"item id: {changes.SchemaItemId} is not a PanelControlSet");
+    }
+    
+    [HttpPost("CreateScreenEditorItem")]
+    public ActionResult<ApiControl> CreateScreenEditorItem(
+        [FromBody] ScreenEditorItem itemData)
+    {
+        ISchemaItem editorItem = editorService.OpenEditor(itemData.EditorSchemaItemId);
+        if (editorItem is PanelControlSet)
+        {
+            ApiControl apiControl = sectionService.CreateNewItem(
+                itemData.ComponentType, itemData.FieldName, itemData.ParentControlSetItemId);
+            return Ok(apiControl);
+        }
+        return BadRequest(
+            $"item id: {itemData.EditorSchemaItemId} is not a PanelControlSet");
     }
 
     [HttpPost("PersistChanges")]
