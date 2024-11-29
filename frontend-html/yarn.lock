@@ -2265,12 +2265,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-basic-ssl@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@vitejs/plugin-basic-ssl@npm:1.1.0"
+"@vitejs/plugin-basic-ssl@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:1.2.0"
   peerDependencies:
-    vite: ^3.0.0 || ^4.0.0 || ^5.0.0
-  checksum: 10c0/98aadf5c7fd229995c67f973b4fb0f987a378031a4edcc5f714b412c00af12a6ecafb96659e76382ff9f8a831aac5243c74548e2807402ea8b02ec122d29f008
+    vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+  checksum: 10c0/0d360fcca01f91ade6e451edbea09a107ff9e95cd3c3766c7a069d1a168709df92d96c0bd1eccc66e2739a153e07c75a45321ec487450c0da942606200d8441d
   languageName: node
   linkType: hard
 
@@ -6011,7 +6011,7 @@ __metadata:
     "@types/react-virtualized": "npm:^9.22.0"
     "@types/string-strip-html": "npm:^5.0.0"
     "@types/uuid": "npm:^10.0.0"
-    "@vitejs/plugin-basic-ssl": "npm:^1.1.0"
+    "@vitejs/plugin-basic-ssl": "npm:^1.2.0"
     "@vitejs/plugin-react": "npm:^4.3.4"
     "@xstate/inspect": "npm:^0.8.0"
     axios: "npm:^1.7.8"
