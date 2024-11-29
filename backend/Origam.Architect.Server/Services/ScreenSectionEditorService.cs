@@ -73,7 +73,7 @@ public class ScreenSectionEditorService(
         return apiControl;
     }
 
-    private object GetFormObject(string oldFullClassName)
+    private Type GetControlType(string oldFullClassName)
     {
         try
         {
@@ -82,8 +82,7 @@ public class ScreenSectionEditorService(
                 .LastOrDefault();
             string newFullClassName =
                 "Origam.Architect.Server.Controls." + className;
-            Type type = Type.GetType(newFullClassName);
-            return Activator.CreateInstance(type);
+            return Type.GetType(newFullClassName);
         }
         catch (Exception ex)
         {
@@ -100,13 +99,13 @@ public class ScreenSectionEditorService(
                                 nameof(PanelControlSet));
         }
 
-        object controlObject = GetFormObject(controlSetItem.ControlItem.ControlType);
+        Type controlType = GetControlType(controlSetItem.ControlItem.ControlType);
         ApiControl control = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id
         };
-        control.Properties = controlObject.GetType().GetProperties()
+        control.Properties = controlType.GetProperties()
             .Select(property =>
             {
                 PropertyValueItem valueItem = controlSetItem.ChildItems
@@ -138,8 +137,8 @@ public class ScreenSectionEditorService(
         newItem.ControlItem = controlItem;
         newItem.Name = itemData.FieldName;
         
-        object controlObject = GetFormObject(newItem.ControlItem.ControlType);
-        foreach (var property in controlObject.GetType().GetProperties())
+        Type controlType = GetControlType(newItem.ControlItem.ControlType);
+        foreach (var property in controlType.GetProperties())
         {
             var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
             var propertyValueItem = newItem.NewItem<PropertyValueItem>(schemaService.ActiveSchemaExtensionId, null);
