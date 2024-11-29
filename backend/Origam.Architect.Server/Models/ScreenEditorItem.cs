@@ -7,4 +7,6 @@ public class ScreenEditorItem {
     public Guid ParentControlSetItemId { get; set; }
     public string ComponentType { get; set; }
     public string FieldName { get; set; }
+    public int Top { get; set; }
+    public int Left { get; set; }
 }

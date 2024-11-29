@@ -409,19 +409,14 @@ export class DesignSurfaceState {
         editorSchemaItemId: this.editorNodeId,
         parentControlSetItemId: this.rootControl.id,
         componentType: this.draggedComponentData!.type,
-        fieldName: this.draggedComponentData!.fieldName
+        fieldName: this.draggedComponentData!.fieldName,
+        top: y,
+        left: x
       });
 
       const newComponent = toComponent(apiControl, null);
-      newComponent.left = x;
-      newComponent.top = y;
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
-      // if (this.draggedComponentData!.type === ComponentType.AsTextBox) {
-      //   newComponent.labelPosition = LabelPosition.Left;
-      // } else {
-      //   newComponent.labelPosition = LabelPosition.None;
-      // }
       this.components.push(newComponent);
       this.draggedComponentData = null;
     }.bind(this);

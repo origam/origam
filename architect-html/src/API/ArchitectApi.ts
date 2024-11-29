@@ -145,12 +145,16 @@ export class ArchitectApi implements IArchitectApi {
     )).data;
   }
 
-  async createScreenEditorItem(args:{
-    editorSchemaItemId: string,
-    parentControlSetItemId: string,
-    componentType: string,
-    fieldName: string}
-  )  : Promise<ApiControl> {
+  async createScreenEditorItem(
+    args: {
+      editorSchemaItemId: string,
+      parentControlSetItemId: string,
+      componentType: string,
+      fieldName: string,
+      top: number,
+      left: number
+    }
+  ): Promise<ApiControl> {
     return (await this.axiosInstance.post("/Editor/CreateScreenEditorItem",
       args
     )).data;

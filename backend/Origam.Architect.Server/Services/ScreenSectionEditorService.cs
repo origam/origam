@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
+using System.Xml;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
@@ -89,27 +91,8 @@ public class ScreenSectionEditorService(
                                 oldFullClassName, ex);
         }
     }
-
-    private EditorProperty LoadEditorProperty(ControlSetItem controlSetItem, PropertyInfo property, bool loadDefaults)
-    {
-        object value;
-        if (loadDefaults)
-        {
-            var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
-            value = defaultValueAttribute?.Value;
-        }
-        else
-        {
-            PropertyValueItem valueItem = controlSetItem.ChildItems
-                .OfType<PropertyValueItem>()
-                .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
-            value = valueItem?.TypedValue;
-        }
-        return propertyFactory.Create(property, value);
-    }
-
-
-    private ApiControl LoadItem(ControlSetItem controlSetItem, bool loadDefaults=false)
+    
+    private ApiControl LoadItem(ControlSetItem controlSetItem)
     {
         if (controlSetItem.RootItem is not PanelControlSet controlSet)
         {
@@ -124,7 +107,13 @@ public class ScreenSectionEditorService(
             Id = controlSetItem.Id
         };
         control.Properties = controlObject.GetType().GetProperties()
-            .Select(prop => LoadEditorProperty(controlSetItem, prop, loadDefaults))
+            .Select(property =>
+            {
+                PropertyValueItem valueItem = controlSetItem.ChildItems
+                    .OfType<PropertyValueItem>()
+                    .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
+                return propertyFactory.Create(property, valueItem?.TypedValue);
+            })
             .ToList();
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
@@ -138,20 +127,60 @@ public class ScreenSectionEditorService(
         return control;
     }
 
-    public ApiControl CreateNewItem(string controlType, string fieldName, Guid parentControlSetItemId)
+    public ApiControl CreateNewItem(ScreenEditorItem itemData, PanelControlSet screenSection)
     {
+        ISchemaItem parent = screenSection.PanelControl.PanelControlSet.GetChildById(itemData.ParentControlSetItemId);
         ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
             .OfType<ControlItem>()
-            .FirstOrDefault(item => item.ControlType == controlType);
-        
-        ControlSetItem parent = persistenceService.SchemaProvider.RetrieveInstance<ControlSetItem>(
-            parentControlSetItemId);
+            .FirstOrDefault(item => item.ControlType == itemData.ComponentType);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId, null);
         newItem.ControlItem = controlItem;
-        newItem.Name = fieldName;
-
-        return LoadItem(newItem, loadDefaults: true);
+        newItem.Name = itemData.FieldName;
+        
+        object controlObject = GetFormObject(newItem.ControlItem.ControlType);
+        foreach (var property in controlObject.GetType().GetProperties())
+        {
+            var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
+            var propertyValueItem = newItem.NewItem<PropertyValueItem>(schemaService.ActiveSchemaExtensionId, null);
+            object value = defaultValueAttribute?.Value;
+            var propertyItem = new ControlPropertyItem(schemaService.ActiveSchemaExtensionId);
+            propertyItem.Name = property.Name;
+            propertyValueItem.ControlPropertyItem = propertyItem;
+            if (property.PropertyType == typeof(int))
+            {
+                propertyItem.PropertyType = ControlPropertyValueType.Integer;
+                if (property.Name == "Top")
+                {
+                    propertyValueItem.Value = XmlConvert.ToString(itemData.Top);
+                }
+                else if (property.Name == "Left")
+                {
+                    propertyValueItem.Value = XmlConvert.ToString(itemData.Left);
+                }
+                else
+                {
+                    propertyValueItem.Value = value == null ? null : XmlConvert.ToString((int)value);
+                }
+            }
+            else if (property.PropertyType == typeof(bool))
+            {
+                propertyItem.PropertyType = ControlPropertyValueType.Boolean;
+                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((bool)value);
+            }
+            else if (property.PropertyType == typeof(Guid))
+            {
+                propertyItem.PropertyType = ControlPropertyValueType.UniqueIdentifier;
+                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((Guid)value);
+            }
+            else
+            {
+                propertyItem.PropertyType = ControlPropertyValueType.String;
+                propertyValueItem.Value = value?.ToString();
+            }
+        }
+            
+        return LoadItem(newItem);
     }
 }
 

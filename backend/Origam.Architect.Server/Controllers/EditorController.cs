@@ -145,10 +145,9 @@ public class EditorController(
         [FromBody] ScreenEditorItem itemData)
     {
         ISchemaItem editorItem = editorService.OpenEditor(itemData.EditorSchemaItemId);
-        if (editorItem is PanelControlSet)
+        if (editorItem is PanelControlSet screenSection)
         {
-            ApiControl apiControl = sectionService.CreateNewItem(
-                itemData.ComponentType, itemData.FieldName, itemData.ParentControlSetItemId);
+            ApiControl apiControl = sectionService.CreateNewItem(itemData, screenSection);
             return Ok(apiControl);
         }
         return BadRequest(
