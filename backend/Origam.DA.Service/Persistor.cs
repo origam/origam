@@ -255,11 +255,18 @@ class Persistor
     }
     private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
     {
+        OrigamXmlDocument existingDocument = null;
         if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
         {
-            return transactionStore.Get(origamFile.Path.Relative)
+            existingDocument = transactionStore.Get(origamFile.Path.Relative)
                 .DeferredSaveDocument;
         }
+
+        if (existingDocument != null)
+        {
+            return existingDocument;
+        }
+
         return origamFile.Path.Exists 
             ? new OrigamXmlDocument(origamFile.Path.Absolute) 
             : new OrigamXmlDocument();
