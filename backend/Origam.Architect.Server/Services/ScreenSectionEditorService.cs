@@ -70,6 +70,10 @@ public class ScreenSectionEditorService(
             .ChildItemsByType<ControlSetItem>("ControlSetItem");
         foreach (var childControl in childControls)
         {
+            if (childControl.IsDeleted)
+            {
+                continue;
+            }
             var child = LoadContent(childControl);
             apiControl.Children.Add(child);
         }
@@ -192,7 +196,7 @@ public class ScreenSectionEditorService(
             .GetChildByIdRecursive(schemaItemId);
         if (schemaItem is ControlSetItem itemToUpdate)
         {
-            itemToUpdate.Delete();
+            itemToUpdate.IsDeleted = true;
         }
     }
 }
