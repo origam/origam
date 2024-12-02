@@ -40,10 +40,12 @@ public class AsDateBox
     public int CaptionLength { get; set; }
 
     [Browsable(false)]
-    public int Height { get; set; }
+    [DefaultValue(400)]
+    public int Width { get; set; }
 
     [Browsable(false)]
-    public int Width { get; set; }
+    [DefaultValue(20)]
+    public int Height { get; set; }
 
     [Browsable(false)]
     public int Top { get; set; }
