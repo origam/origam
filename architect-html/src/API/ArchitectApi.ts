@@ -1,8 +1,17 @@
 import axios, { AxiosInstance } from "axios";
 import {
-  IApiEditorProperty, IApiTreeNode,
-  IArchitectApi, IApiEditorData, IMenuItemInfo, IPropertyUpdate,
-  IPackage, ISectionEditorData, ApiControl, IModelChange, IPropertyChange
+  IApiEditorProperty,
+  IApiTreeNode,
+  IArchitectApi,
+  IApiEditorData,
+  IMenuItemInfo,
+  IPropertyUpdate,
+  IPackage,
+  ISectionEditorData,
+  ApiControl,
+  IModelChange,
+  IPropertyChange,
+  IDeleteResult
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -147,15 +156,20 @@ export class ArchitectApi implements IArchitectApi {
       args
     )).data;
   }
+  async deleteScreenEditorItem(
+    args: {
+      schemaItemId: string,
+      editorSchemaItemId: string,
+    }
+  ): Promise<IDeleteResult> {
+    return (await this.axiosInstance.post("/ScreenEditor/DeleteItem",
+      args
+    )).data;
+  }
 }
 
 export function simpleErrorHandler(error: any) {
   console.error(error);
-  alert(
-    error?.response?.data ??
-    error?.message ??
-    error?.code ??
-    "Unknown error");
 }
 
 

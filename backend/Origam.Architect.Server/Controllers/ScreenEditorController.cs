@@ -12,10 +12,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ScreenEditorController(
-    IPersistenceService persistenceService,
-    PropertyEditorService propertyService,
     ScreenSectionEditorService sectionService,
-    TreeNodeFactory treeNodeFactory,
     EditorService editorService)
     : ControllerBase
 {
@@ -56,17 +53,35 @@ public class ScreenEditorController(
             $"item id: {input.SchemaItemId} is not a PanelControlSet");
     }
     
-    [HttpPost("CreateItem")]
-    public ActionResult<ApiControl> CreateItem(
-        [FromBody] ScreenEditorItem itemData)
+    [HttpPost("DeleteItem")]
+    public ActionResult<SectionEditorModel> DeleteItem(
+        [FromBody] ScreenEditorDeleteItemModel input)
     {
-        ISchemaItem editorItem = editorService.OpenEditor(itemData.EditorSchemaItemId);
+        ISchemaItem editorItem = editorService.OpenEditor(input.EditorSchemaItemId);
         if (editorItem is PanelControlSet screenSection)
         {
-            ApiControl apiControl = sectionService.CreateNewItem(itemData, screenSection);
+            sectionService.DeleteItem(input.SchemaItemId, screenSection);
+            return Ok(new RootControlModel
+            {
+                RootControl = sectionService.LoadRootApiControl(screenSection)
+            });
+        }
+
+        return BadRequest(
+            $"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
+    }
+    
+    [HttpPost("CreateItem")]
+    public ActionResult<ApiControl> CreateItem(
+        [FromBody] ScreenEditorItemModel itemModelData)
+    {
+        ISchemaItem editorItem = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+        if (editorItem is PanelControlSet screenSection)
+        {
+            ApiControl apiControl = sectionService.CreateNewItem(itemModelData, screenSection);
             return Ok(apiControl);
         }
         return BadRequest(
-            $"item id: {itemData.EditorSchemaItemId} is not a PanelControlSet");
+            $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
     }
 }

@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { observable } from "mobx";
 import { Editor, getEditor } from "src/components/editors/GetEditor.tsx";
 import {
   IApiEditorNode,
@@ -42,7 +42,7 @@ export class EditorTabViewState {
   }
 
   openEditorById(node: TreeNode) {
-    return function * (this: EditorTabViewState)
+    return function * (this: EditorTabViewState): Generator<Promise<IApiEditorData>, void, IApiEditorData>
     {
       const apiEditorData = yield this.architectApi.openEditor(node.origamId);
       const editorData = new EditorData(apiEditorData, node);

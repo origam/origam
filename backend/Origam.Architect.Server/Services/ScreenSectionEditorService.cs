@@ -40,9 +40,7 @@ public class ScreenSectionEditorService(
                     Type = field.DataType
                 })
                 .ToList();
-            ControlSetItem controlSetItem =
-                screenSection.PanelControl.PanelControlSet.MainItem;
-            ApiControl apiControl = LoadContent(controlSetItem);
+            ApiControl apiControl = LoadRootApiControl(screenSection);
             return new SectionEditorModel
             {
                 Name = editedItem.Name,
@@ -55,6 +53,13 @@ public class ScreenSectionEditorService(
         }
 
         return null;
+    }
+    
+    public ApiControl LoadRootApiControl(PanelControlSet screenSection)
+    {
+        ControlSetItem controlSetItem =
+            screenSection.PanelControl.PanelControlSet.MainItem;
+        return LoadContent(controlSetItem);
     }
 
     private ApiControl LoadContent(ControlSetItem controlSetItem)
@@ -125,16 +130,16 @@ public class ScreenSectionEditorService(
         return control;
     }
 
-    public ApiControl CreateNewItem(ScreenEditorItem itemData, PanelControlSet screenSection)
+    public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, PanelControlSet screenSection)
     {
-        ISchemaItem parent = screenSection.PanelControl.PanelControlSet.GetChildById(itemData.ParentControlSetItemId);
+        ISchemaItem parent = screenSection.PanelControl.PanelControlSet.GetChildById(itemModelData.ParentControlSetItemId);
         ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
             .OfType<ControlItem>()
-            .FirstOrDefault(item => item.ControlType == itemData.ComponentType);
+            .FirstOrDefault(item => item.ControlType == itemModelData.ComponentType);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId, null);
         newItem.ControlItem = controlItem;
-        newItem.Name = itemData.FieldName;
+        newItem.Name = itemModelData.FieldName;
         
         Type controlType = GetControlType(newItem.ControlItem.ControlType);
         foreach (var property in controlType.GetProperties())
@@ -150,11 +155,11 @@ public class ScreenSectionEditorService(
                 propertyItem.PropertyType = ControlPropertyValueType.Integer;
                 if (property.Name == "Top")
                 {
-                    propertyValueItem.Value = XmlConvert.ToString(itemData.Top);
+                    propertyValueItem.Value = XmlConvert.ToString(itemModelData.Top);
                 }
                 else if (property.Name == "Left")
                 {
-                    propertyValueItem.Value = XmlConvert.ToString(itemData.Left);
+                    propertyValueItem.Value = XmlConvert.ToString(itemModelData.Left);
                 }
                 else
                 {
@@ -179,6 +184,16 @@ public class ScreenSectionEditorService(
         }
             
         return LoadItem(newItem);
+    }
+
+    public void DeleteItem(Guid schemaItemId, PanelControlSet screenSection)
+    {
+        ISchemaItem schemaItem = screenSection.PanelControl.PanelControlSet
+            .GetChildByIdRecursive(schemaItemId);
+        if (schemaItem is ControlSetItem itemToUpdate)
+        {
+            itemToUpdate.Delete();
+        }
     }
 }
 

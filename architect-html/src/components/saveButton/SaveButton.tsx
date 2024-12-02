@@ -21,10 +21,10 @@ export const SaveButton = observer(() => {
   return (
     <button
       onClick={handleSave}
-      disabled={!activeEditor.isDirty || activeEditor.isSaving}
+      disabled={!activeEditor.isDirty }
       style={{backgroundColor: activeEditor.isDirty ? 'red' : 'initial'}}
     >
-      {activeEditor.isSaving ? 'Saving...' : 'Save'}
+      {'Save'}
     </button>
   );
 });

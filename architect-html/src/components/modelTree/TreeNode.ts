@@ -1,7 +1,7 @@
 import {
   IApiTreeNode,
   EditorType, IArchitectApi,
-  IMenuItemInfo
+  IMenuItemInfo, IApiEditorData
 } from "src/API/IArchitectApi.ts";
 import { action, observable } from "mobx";
 import {
@@ -83,7 +83,7 @@ export class TreeNode implements IEditorNode {
   }
 
   createNode(typeName: string) {
-    return function * (this: TreeNode){
+    return function * (this: TreeNode): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
       const apiEditorData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiEditorData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);

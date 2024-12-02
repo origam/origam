@@ -2,7 +2,7 @@ import { observable } from "mobx";
 
 export class ProgressBarState {
   @observable private accessor _isWorking = false;
-  private timeout;
+  private timeout: NodeJS.Timeout | null = null;
   get isWorking(): boolean {
     return this._isWorking;
   }

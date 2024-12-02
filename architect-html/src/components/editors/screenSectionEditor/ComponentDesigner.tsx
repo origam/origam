@@ -4,7 +4,6 @@ import S
 import { observer } from "mobx-react-lite";
 import {
   ComponentDesignerState,
-  DesignSurfaceState,
   ResizeHandle
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { action } from "mobx";
@@ -139,7 +138,7 @@ const DesignSurface: React.FC<{
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Delete' && surfaceState.selectedComponentId) {
-        surfaceState.deleteComponent(surfaceState.selectedComponentId);
+        run({generator: designerState.deleteComponent(surfaceState.selectedComponentId)});
       }
     };
 
@@ -280,7 +279,7 @@ const DesignSurface: React.FC<{
               width: `${component.width}px`,
               height: `${component.height}px`,
               cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-              zIndex: component.type === 'GroupBox' ? 0 : 1
+              zIndex: component.data.type === 'GroupBox' ? 0 : 1
             }}
             onMouseDown={(e) => handleComponentMouseDown(e, component)}
             onClick={(e) => handleComponentClick(e, component)}

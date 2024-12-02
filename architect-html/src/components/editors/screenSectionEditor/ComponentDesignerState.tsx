@@ -6,7 +6,7 @@ import {
 import {
   ApiControl,
   IArchitectApi,
-  IDataSource,
+  IDataSource, IDeleteResult,
   IEditorField,
   ISectionEditorData,
 } from "src/API/IArchitectApi.ts";
@@ -17,20 +17,6 @@ import {
   Component, toComponent, toComponentRecursive
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
-
-// export interface IComponent {
-//   id: string;
-//   data: IComponentData;
-//   left: number;
-//   top: number;
-//   width: number;
-//   height: number;
-//   labelWidth: number;
-//   parentId: string | null;
-//   relativeLeft?: number;
-//   relativeTop?: number;
-//   labelPosition: LabelPosition;
-// }
 
 export enum LabelPosition {Left, Right, Top, Bottom, None}
 
@@ -93,8 +79,8 @@ export class ComponentDesignerState implements IEditorState {
   public surface: DesignSurfaceState;
   public toolbox: ToolboxState;
 
-  @observable accessor isActive: boolean;
-  @observable accessor isDirty: boolean;
+  @observable accessor isActive: boolean = false;
+  @observable accessor isDirty: boolean = false;
   @observable accessor isPersisted: boolean;
 
   get label() {
@@ -116,8 +102,18 @@ export class ComponentDesignerState implements IEditorState {
     this.surface = new DesignSurfaceState(sectionEditorData, architectApi, this.editorNode.origamId);
   }
 
+  deleteComponent(id: string) {
+    return function* (this: ComponentDesignerState): Generator<Promise<IDeleteResult>, void, IDeleteResult> {
+      const newData = yield this.architectApi.deleteScreenEditorItem({
+        editorSchemaItemId: this.toolbox.id,
+        schemaItemId: id
+      });
+      this.surface.loadComponents(newData.rootControl);
+    }.bind(this);
+  }
+
   onDesignerMouseUp(x: number, y: number) {
-    return function* () {
+    return function* (this: ComponentDesignerState) {
       if (this.surface.isDragging) {
         this.surface.endDragging(x, y);
         yield* this.updateScreenEditor();
@@ -129,7 +125,7 @@ export class ComponentDesignerState implements IEditorState {
     }.bind(this);
   }
 
-  private* updateScreenEditor() {
+  private* updateScreenEditor(): Generator<Promise<ISectionEditorData>, void, ISectionEditorData> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,
@@ -186,7 +182,7 @@ export class ToolboxState {
   }
 
   private updateTopProperties() {
-    return function* (this: ToolboxState) {
+    return function* (this: ToolboxState): Generator<Promise<ISectionEditorData>, void, ISectionEditorData> {
       const newData = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.id,
         name: this.name,
@@ -240,12 +236,12 @@ export class DesignSurfaceState {
     private architectApi: IArchitectApi,
     private editorNodeId: string
   ) {
+    this.rootControl = sectionEditorData.rootControl;
     this.loadComponents(sectionEditorData.rootControl);
   }
 
   loadComponents(rootControl: ApiControl) {
-    this.rootControl = rootControl;
-    let components = [];
+    let components: Component[] = [];
     for (const child of rootControl.children) {
       components = toComponentRecursive(child, null, components)
     }
@@ -442,7 +438,7 @@ export class DesignSurfaceState {
   }
 
   createDraggedComponent(x: number, y: number) {
-    return function* () {
+    return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
       const apiControl = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNodeId,
         parentControlSetItemId: this.rootControl.id,
@@ -469,9 +465,9 @@ export class DesignSurfaceState {
     );
   }
 
-  @action
-  deleteComponent(id: string) {
-    this.components = this.components.filter(component => component.id !== id);
-  }
+  // @action
+  // deleteComponent(id: string) {
+  //   this.components = this.components.filter(component => component.id !== id);
+  // }
 }
 

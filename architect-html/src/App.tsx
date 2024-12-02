@@ -13,8 +13,6 @@ import { ApplicationDialogStack } from "src/dialog/DialogStack.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
-import ComponentDesigner
-  from "src/components/editors/screenSectionEditor/ComponentDesigner.tsx";
 
 const App: React.FC = observer(() => {
 

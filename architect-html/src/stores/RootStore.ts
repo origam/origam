@@ -37,7 +37,7 @@ export class RootStore {
   public uiState = new UiState();
   public packagesState: PackagesState;
   public modelTreeState: ModelTreeState;
-  public architectApi: IArchitectApi = new ArchitectApi(error => {});
+  public architectApi: IArchitectApi = new ArchitectApi();
   public dialogStack: IDialogStackState = new DialogStackState();
   public errorDialogController: ErrorDialogController;
   public progressBarState= new ProgressBarState();
