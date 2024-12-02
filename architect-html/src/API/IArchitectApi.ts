@@ -18,14 +18,15 @@ export interface IArchitectApi {
 
   updateProperties(
     schemaItemId: string | undefined,
-    changedProperties: IApiEditorProperty[]
+    changes: IPropertyChange[]
   ): Promise<IPropertyUpdate[]>;
 
-  updateScreenEditor(
+  updateScreenEditor(args: {
     schemaItemId: string | undefined,
     name: string,
     selectedDataSourceId: string
-  ): Promise<ISectionEditorData[]>;
+    modelChanges: IModelChange[]
+  }): Promise<ISectionEditorData>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
@@ -41,6 +42,17 @@ export interface IArchitectApi {
     top: number,
     left: number
   }) : Promise<ApiControl>
+}
+
+export interface IModelChange {
+  schemaItemId: string;
+  changes: IPropertyChange[]
+}
+
+export interface IPropertyChange {
+  name: string;
+  controlPropertyId: string | null;
+  value: string;
 }
 
 export interface ISectionEditorData {
@@ -136,6 +148,7 @@ export type PropertyType =
 
 export interface IApiEditorProperty {
   name: string;
+  controlPropertyId: string | null;
   type: PropertyType;
   value: any;
   dropDownValues: IDropDownValue[];

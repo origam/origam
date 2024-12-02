@@ -129,8 +129,9 @@ const Toolbox: React.FC<{
 });
 
 const DesignSurface: React.FC<{
-  surfaceState: DesignSurfaceState
-}> = observer(({surfaceState}) => {
+  designerState: ComponentDesignerState
+}> = observer(({designerState}) => {
+  const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);
@@ -196,12 +197,7 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRef.current.getBoundingClientRect().left;
     const mouseY = e.clientY - surfaceRef.current.getBoundingClientRect().top;
 
-    if (surfaceState.isDragging) {
-      surfaceState.endDragging(mouseX, mouseY);
-    }
-    if (surfaceState.isResizing) {
-      surfaceState.endResizing();
-    }
+    run({generator: designerState.onDesignerMouseUp(mouseX, mouseY)});
   };
 
   const handleComponentClick = (e: React.MouseEvent, component: Component) => {
@@ -323,7 +319,7 @@ export const ComponentDesigner: React.FC<{
   return (
     <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
-      <DesignSurface surfaceState={designerState.surface}/>
+      <DesignSurface designerState={designerState}/>
     </div>
   );
 };

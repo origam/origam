@@ -9,5 +9,6 @@ public class ChangesModel
 public class PropertyChange
 {
     public string Name { get; set; }
+    public Guid? ControlPropertyId { get; set; }
     public string Value { get; set; }
 }

@@ -125,19 +125,39 @@ public class EditorController(
 
     [HttpPost("UpdateScreenEditor")]
     public ActionResult<SectionEditorModel> UpdateScreenEditor(
-        [FromBody] SectionEditorChangesModel changes)
+        [FromBody] SectionEditorChangesModel input)
     {
-        ISchemaItem editorItem = editorService.OpenEditor(changes.SchemaItemId);
+        ISchemaItem editorItem = editorService.OpenEditor(input.SchemaItemId);
         if (editorItem is PanelControlSet screenSection)
         {
-            screenSection.Name = changes.Name;
-            screenSection.DataSourceId = changes.SelectedDataSourceId;
-            
+            screenSection.Name = input.Name;
+            screenSection.DataSourceId = input.SelectedDataSourceId;
+            foreach (var changes in input.ModelChanges)
+            {
+                ControlSetItem itemToUpdate = screenSection.PanelControl.PanelControlSet.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
+                if (itemToUpdate == null)
+                {
+                    return BadRequest(
+                        $"item id: {changes.SchemaItemId} is not in the PanelControlSet");
+                }
+                foreach (var propertyChange in changes.Changes)
+                {
+                    PropertyValueItem valueItem = itemToUpdate.ChildItems
+                        .OfType<PropertyValueItem>()
+                        .FirstOrDefault(item =>
+                            item.ControlPropertyId ==
+                            propertyChange.ControlPropertyId);
+                    if (valueItem != null)
+                    {
+                        valueItem.Value = propertyChange.Value;
+                    }
+                }
+            }
             return Ok(sectionService.GetSectionEditorData(screenSection));
         }
 
         return BadRequest(
-            $"item id: {changes.SchemaItemId} is not a PanelControlSet");
+            $"item id: {input.SchemaItemId} is not a PanelControlSet");
     }
     
     [HttpPost("CreateScreenEditorItem")]

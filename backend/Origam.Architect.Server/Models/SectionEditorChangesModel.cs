@@ -1,3 +1,5 @@
+using Origam.Architect.Server.Controllers;
+
 namespace Origam.Architect.Server.Models;
 
 public class SectionEditorChangesModel
@@ -6,4 +8,5 @@ public class SectionEditorChangesModel
     public string Name { get; set; }
     public Guid SelectedDataSourceId { get; set; }
 
+    public List<ChangesModel> ModelChanges { get; set; }
 }
