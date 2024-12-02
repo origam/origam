@@ -24,6 +24,8 @@ public class AsDateBox
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
 
+    [Localizable(true)]
+    [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
     public CaptionPosition CaptionPosition { get; set; }
 

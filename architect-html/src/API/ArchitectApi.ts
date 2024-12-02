@@ -98,7 +98,7 @@ export class ArchitectApi implements IArchitectApi {
     selectedDataSourceId: string,
     modelChanges: IModelChange[]
   }): Promise<ISectionEditorData> {
-    return (await this.axiosInstance.post(`/Editor/UpdateScreenEditor`, args)).data;
+    return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
   }
 
   async deleteSchemaItem(schemaItemId: string) {
@@ -143,7 +143,7 @@ export class ArchitectApi implements IArchitectApi {
       left: number
     }
   ): Promise<ApiControl> {
-    return (await this.axiosInstance.post("/Editor/CreateScreenEditorItem",
+    return (await this.axiosInstance.post("/ScreenEditor/CreateItem",
       args
     )).data;
   }

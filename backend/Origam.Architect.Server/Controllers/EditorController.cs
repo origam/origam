@@ -4,13 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
-using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -25,7 +21,6 @@ public class EditorController(
     EditorService editorService)
     : ControllerBase
 {
-
     [HttpPost("CreateNode")]
     public EditorData CreateNode(
         [Required] [FromBody] NewItemModel input)
@@ -121,57 +116,6 @@ public class EditorController(
                         .DropDownValues ?? Array.Empty<DropDownValue>()
                 };
             });
-    }
-
-    [HttpPost("UpdateScreenEditor")]
-    public ActionResult<SectionEditorModel> UpdateScreenEditor(
-        [FromBody] SectionEditorChangesModel input)
-    {
-        ISchemaItem editorItem = editorService.OpenEditor(input.SchemaItemId);
-        if (editorItem is PanelControlSet screenSection)
-        {
-            screenSection.Name = input.Name;
-            screenSection.DataSourceId = input.SelectedDataSourceId;
-            foreach (var changes in input.ModelChanges)
-            {
-                ControlSetItem itemToUpdate = screenSection.PanelControl.PanelControlSet.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
-                if (itemToUpdate == null)
-                {
-                    return BadRequest(
-                        $"item id: {changes.SchemaItemId} is not in the PanelControlSet");
-                }
-                foreach (var propertyChange in changes.Changes)
-                {
-                    PropertyValueItem valueItem = itemToUpdate.ChildItems
-                        .OfType<PropertyValueItem>()
-                        .FirstOrDefault(item =>
-                            item.ControlPropertyId ==
-                            propertyChange.ControlPropertyId);
-                    if (valueItem != null)
-                    {
-                        valueItem.Value = propertyChange.Value;
-                    }
-                }
-            }
-            return Ok(sectionService.GetSectionEditorData(screenSection));
-        }
-
-        return BadRequest(
-            $"item id: {input.SchemaItemId} is not a PanelControlSet");
-    }
-    
-    [HttpPost("CreateScreenEditorItem")]
-    public ActionResult<ApiControl> CreateScreenEditorItem(
-        [FromBody] ScreenEditorItem itemData)
-    {
-        ISchemaItem editorItem = editorService.OpenEditor(itemData.EditorSchemaItemId);
-        if (editorItem is PanelControlSet screenSection)
-        {
-            ApiControl apiControl = sectionService.CreateNewItem(itemData, screenSection);
-            return Ok(apiControl);
-        }
-        return BadRequest(
-            $"item id: {itemData.EditorSchemaItemId} is not a PanelControlSet");
     }
 
     [HttpPost("PersistChanges")]
