@@ -7,9 +7,10 @@ import {
   LabelPosition, parseLabelPosition
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
+
 import {
   EditorProperty
-} from "src/components/editors/gridEditor/GridEditorState.ts";
+} from "src/components/editors/gridEditor/EditorProperty.ts";
 
 export class Component {
   id: string;
@@ -17,23 +18,20 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
 
-  @observable private accessor _left: number;
-  get left(): number { return this._left; }
-  set left(value: number) { this._left = value; }
+  get left(): number { return this.getProperty("Left")!.value; }
+  set left(value: number) { this.getProperty("Left")!.value = value; }
 
-  @observable private accessor _top: number;
-  get top(): number { return this._top; }
-  set top(value: number) { this._top = value; }
+  get top(): number { return this.getProperty("Top")!.value; }
+  set top(value: number) { this.getProperty("Top")!.value = value; }
 
-  @observable private accessor _width: number;
-  get width(): number { return this._width; }
-  set width(value: number) { this._width = value; }
+  get width(): number { return this.getProperty("Width")!.value; }
+  set width(value: number) { this.getProperty("Width")!.value = value; }
 
-  @observable private accessor _height: number;
-  get height(): number { return this._height; }
-  set height(value: number) { this._height = value; }
+  get height(): number { return this.getProperty("Height")!.value; }
+  set height(value: number) { this.getProperty("Height")!.value = value; }
 
-  labelWidth: number;
+  get labelWidth(): number { return this.getProperty("CaptionLength")!.value; }
+  set labelWidth(value: number) { this.getProperty("CaptionLength")!.value = value; }
 
   private _labelPosition: LabelPosition;
   get labelPosition(): LabelPosition { return this._labelPosition; }
@@ -52,11 +50,6 @@ export class Component {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
-    this._left = this.get("Left");
-    this._top = this.get("Top");
-    this._width = this.get("Width");
-    this._height =  this.get("Height");
-    this.labelWidth =  this.get("CaptionLength");
     this._labelPosition =  parseLabelPosition(this.get("CaptionPosition"));
     this.parent = args.parent;
   }
@@ -99,7 +92,11 @@ export class Component {
   }
 
   get(text: string): any {
-    return this.properties.find(p => p.name === text)?.value;
+    return this.getProperty(text)?.value;
+  }
+
+  getProperty(name: string): EditorProperty | undefined {
+    return this.properties.find(p => p.name === name);
   }
 }
 

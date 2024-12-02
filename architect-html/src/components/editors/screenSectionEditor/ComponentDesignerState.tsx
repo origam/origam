@@ -11,12 +11,12 @@ import {
   ISectionEditorData,
 } from "src/API/IArchitectApi.ts";
 import {
-  ComponentType,
   IComponentData,
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import {
   Component, toComponent, toComponentRecursive
 } from "src/components/editors/screenSectionEditor/Component.tsx";
+import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 
 // export interface IComponent {
 //   id: string;
@@ -43,8 +43,7 @@ export function parseLabelPosition(value: string | undefined | null): LabelPosit
     const validOptions = Object.keys(LabelPosition);
     if (!validOptions.includes(value)) {
       throw new Error(`Invalid LabelPosition: ${value}. Valid values are: ${validOptions.join(', ')}`);
-    }
-    else {
+    } else {
       return LabelPosition[value];
     }
   }
@@ -117,6 +116,39 @@ export class ComponentDesignerState implements IEditorState {
     this.surface = new DesignSurfaceState(sectionEditorData, architectApi, this.editorNode.origamId);
   }
 
+  onDesignerMouseUp(x: number, y: number) {
+    return function* () {
+      if (this.surface.isDragging) {
+        this.surface.endDragging(x, y);
+        yield* this.updateScreenEditor();
+      }
+      if (this.surface.isResizing) {
+        this.surface.endResizing();
+        yield* this.updateScreenEditor();
+      }
+    }.bind(this);
+  }
+
+  private* updateScreenEditor() {
+    const modelChanges = this.surface.components.map(x => {
+        return {
+          schemaItemId: x.id,
+          changes: toChanges(x.properties)
+        }
+      }
+    )
+    const newData = yield this.architectApi.updateScreenEditor({
+      schemaItemId: this.toolbox.id,
+      name: this.toolbox.name,
+      selectedDataSourceId: this.toolbox.selectedDataSourceId,
+      modelChanges: modelChanges
+    });
+    this.toolbox.name = newData.name;
+    this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
+    this.toolbox.fields = newData.fields;
+    this.surface.loadComponents(newData.rootControl);
+  }
+
   * save(): Generator<Promise<any>, void, any> {
 
   }
@@ -145,21 +177,22 @@ export class ToolboxState {
 
   selectedDataSourceIdChanged(value: string) {
     this.selectedDataSourceId = value;
-    return this.update();
+    return this.updateTopProperties();
   }
 
   nameChanged(value: string) {
     this.name = value;
-    return this.update();
+    return this.updateTopProperties();
   }
 
-  private update() {
+  private updateTopProperties() {
     return function* (this: ToolboxState) {
-      const newData = yield this.architectApi.updateScreenEditor(
-        this.id,
-        this.name,
-        this.selectedDataSourceId
-      );
+      const newData = yield this.architectApi.updateScreenEditor({
+        schemaItemId: this.id,
+        name: this.name,
+        selectedDataSourceId: this.selectedDataSourceId,
+        modelChanges: []
+      });
       this.name = newData.name;
       this.selectedDataSourceId = newData.selectedDataSourceId;
       this.fields = newData.fields;
@@ -202,13 +235,18 @@ export class DesignSurfaceState {
     return this.dragState.component?.id;
   }
 
-  constructor(sectionEditorData: ISectionEditorData,
-              private architectApi: IArchitectApi,
-              private editorNodeId: string
+  constructor(
+    sectionEditorData: ISectionEditorData,
+    private architectApi: IArchitectApi,
+    private editorNodeId: string
   ) {
-    this.rootControl = sectionEditorData.rootControl;
+    this.loadComponents(sectionEditorData.rootControl);
+  }
+
+  loadComponents(rootControl: ApiControl) {
+    this.rootControl = rootControl;
     let components = [];
-    for (const child of sectionEditorData.rootControl.children) {
+    for (const child of rootControl.children) {
       components = toComponentRecursive(child, null, components)
     }
     this.components = components;
@@ -267,9 +305,11 @@ export class DesignSurfaceState {
         // Update the absolute position to ensure it stays in the correct place
         draggingComponent.left = targetGroupBox.left + draggingComponent.relativeLeft;
         draggingComponent.top = targetGroupBox.top + draggingComponent.relativeTop;
-      } else if (!targetGroupBox && draggingComponent.parentId) {
+      } else {
         // If we're dropping outside any group box, maintain the absolute position
         draggingComponent.parentId = null;
+        draggingComponent.left = mouseX;
+        draggingComponent.top = mouseY;
         draggingComponent.relativeLeft = undefined;
         draggingComponent.relativeTop = undefined;
       }

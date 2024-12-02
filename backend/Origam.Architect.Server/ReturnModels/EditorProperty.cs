@@ -11,22 +11,36 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.ReturnModels;
 
-public class EditorProperty(
-    string Name,
-    string Type,
-    object Value,
-    DropDownValue[] DropDownValues,
-    string Category,
-    string Description,
-    bool ReadOnly)
+public class EditorProperty
 {
-    public string Name { get; } = Name;
-    public string Type { get; } = Type;
-    public object Value { get; } = Value;
-    public DropDownValue[] DropDownValues { get; } = DropDownValues;
-    public string Category { get; } = Category;
-    public string Description { get; } = Description;
-    public bool ReadOnly { get; } = ReadOnly;
+    public EditorProperty(
+        string name,
+        Guid? controlPropertyId,
+        string type,
+        object value,
+        DropDownValue[] dropDownValues,
+        string category,
+        string description,
+        bool readOnly)
+    {
+    Name  = name;
+    Type = type;
+    Value = value;
+    DropDownValues  = dropDownValues;
+    Category= category;
+    Description = description;
+    ReadOnly = readOnly;
+    ControlPropertyId = controlPropertyId;
+    }
+
+    public string Name { get; } 
+    public string Type { get; }
+    public object Value { get; } 
+    public DropDownValue[] DropDownValues { get; }
+    public string Category { get; } 
+    public string Description { get; }
+    public bool ReadOnly { get; } 
+    public Guid? ControlPropertyId { get; }
     public List<string> Errors { get; set; }
 }
 
@@ -59,30 +73,32 @@ public class EditorPropertyFactory
         object value = property.GetValue(item);
 
         return new EditorProperty(
-            Name: property.Name,
-            Type: ToPropertyTypeName(property.PropertyType),
-            Value: ToSerializableValue(value),
-            DropDownValues: GetAvailableValues(property, item),
-            Category: category,
-            Description: description,
-            ReadOnly: property.GetSetMethod() == null);
+            name: property.Name,
+            controlPropertyId: null,
+            type: ToPropertyTypeName(property.PropertyType),
+            value: ToSerializableValue(value),
+            dropDownValues: GetAvailableValues(property, item),
+            category: category,
+            description: description,
+            readOnly: property.GetSetMethod() == null);
     }
 
     public EditorProperty Create(PropertyInfo property,
-        object value)
+        PropertyValueItem valueItem)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description =
             property.GetAttribute<DescriptionAttribute>()?.Description;
         
         return new EditorProperty(
-            Name: property.Name,
-            Type: ToPropertyTypeName(property.PropertyType),
-            Value: value,
-            DropDownValues: Array.Empty<DropDownValue>(),
-            Category: category,
-            Description: description,
-            ReadOnly: property.GetSetMethod() == null);
+            name: property.Name,
+            controlPropertyId: valueItem.ControlPropertyId,
+            type: ToPropertyTypeName(property.PropertyType),
+            value: valueItem.TypedValue,
+            dropDownValues: Array.Empty<DropDownValue>(),
+            category: category,
+            description: description,
+            readOnly: property.GetSetMethod() == null);
     }
 
     private object ToSerializableValue(object value)

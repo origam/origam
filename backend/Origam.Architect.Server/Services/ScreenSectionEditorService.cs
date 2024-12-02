@@ -13,7 +13,6 @@ namespace Origam.Architect.Server.Services;
 
 public class ScreenSectionEditorService(
     SchemaService schemaService,
-    IPersistenceService persistenceService,
     EditorPropertyFactory propertyFactory)
 {
     public SectionEditorModel GetSectionEditorData(ISchemaItem editedItem)
@@ -110,8 +109,8 @@ public class ScreenSectionEditorService(
             {
                 PropertyValueItem valueItem = controlSetItem.ChildItems
                     .OfType<PropertyValueItem>()
-                    .FirstOrDefault(item => item.ControlPropertyItem.NodeText == property.Name);
-                return propertyFactory.Create(property, valueItem?.TypedValue);
+                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
+                return propertyFactory.Create(property, valueItem);
             })
             .ToList();
         var bindingInfo = controlSetItem.ChildItems

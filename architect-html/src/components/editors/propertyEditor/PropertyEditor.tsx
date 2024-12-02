@@ -1,7 +1,7 @@
 import S
   from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
 import {
-  EditorProperty, GridEditorState
+  GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
@@ -9,6 +9,9 @@ import {
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import { RootStoreContext } from "src/main.tsx";
 import { useContext } from "react";
+import {
+  EditorProperty
+} from "src/components/editors/gridEditor/EditorProperty.ts";
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];

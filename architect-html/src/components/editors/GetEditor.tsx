@@ -1,7 +1,6 @@
 import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
 import {
-  EditorProperty,
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import {
@@ -16,6 +15,9 @@ import ComponentDesigner
 import {
   ComponentDesignerState
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+import {
+  EditorProperty
+} from "src/components/editors/gridEditor/EditorProperty.ts";
 
 export function getEditor(
   args: {

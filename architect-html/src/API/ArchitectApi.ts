@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   IApiEditorProperty, IApiTreeNode,
   IArchitectApi, IApiEditorData, IMenuItemInfo, IPropertyUpdate,
-  IPackage, ISectionEditorData, ApiControl
+  IPackage, ISectionEditorData, ApiControl, IModelChange, IPropertyChange
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -85,32 +85,20 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async updateProperties(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<IPropertyUpdate[]> {
-    const changes = changedProperties
-      .filter(x => !x.readOnly)
-      .map(x => {
-        return {
-          name: x.name,
-          value: x.value === undefined || x.value === null ? null : x.value.toString(),
-        }
-      });
+  async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IPropertyUpdate[]> {
     return (await this.axiosInstance.post(`/Editor/UpdateProperties`, {
       schemaItemId,
       changes
     })).data;
   }
 
-  async updateScreenEditor(
+  async updateScreenEditor(args: {
     schemaItemId: string | undefined,
     name: string,
-    selectedDataSourceId: string
-  ): Promise<ISectionEditorData[]> {
-
-    return (await this.axiosInstance.post(`/Editor/UpdateScreenEditor`, {
-      schemaItemId,
-      name,
-      selectedDataSourceId
-    })).data;
+    selectedDataSourceId: string,
+    modelChanges: IModelChange[]
+  }): Promise<ISectionEditorData> {
+    return (await this.axiosInstance.post(`/Editor/UpdateScreenEditor`, args)).data;
   }
 
   async deleteSchemaItem(schemaItemId: string) {
