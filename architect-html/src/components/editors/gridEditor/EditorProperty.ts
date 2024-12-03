@@ -15,7 +15,6 @@ export class EditorProperty implements IApiEditorProperty {
   description: string;
   controlPropertyId: string | null;
   readOnly: boolean;
-  @observable accessor isDirty = false;
   @observable accessor errors: string[];
 
   get value(): any {
@@ -23,9 +22,6 @@ export class EditorProperty implements IApiEditorProperty {
   }
 
   set value(value: any) {
-    if (value !== this._value) {
-      this.isDirty = true;
-    }
     if (this.type === "looukup" && value === "") {
       this._value = null;
     } else {

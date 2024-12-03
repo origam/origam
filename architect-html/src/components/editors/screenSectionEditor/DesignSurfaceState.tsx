@@ -54,7 +54,8 @@ export class DesignSurfaceState {
   constructor(
     sectionEditorData: ISectionEditorData,
     private architectApi: IArchitectApi,
-    private editorNodeId: string
+    private editorNodeId: string,
+    private setDirty: (isDirty: boolean) => void
   ) {
     this.rootControl = sectionEditorData.rootControl;
     this.loadComponents(sectionEditorData.rootControl);
@@ -273,6 +274,7 @@ export class DesignSurfaceState {
       newComponent.height = newComponent.height ?? 20;
       this.components.push(newComponent);
       this.draggedComponentData = null;
+      this.setDirty(true);
     }.bind(this);
   }
 

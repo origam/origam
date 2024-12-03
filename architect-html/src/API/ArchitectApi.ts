@@ -11,7 +11,7 @@ import {
   ApiControl,
   IModelChange,
   IPropertyChange,
-  IDeleteResult
+  IDeleteResult, ISectionEditorModel, IUpdatePropertiesResult
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -94,7 +94,7 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IPropertyUpdate[]> {
+  async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IUpdatePropertiesResult> {
     return (await this.axiosInstance.post(`/Editor/UpdateProperties`, {
       schemaItemId,
       changes
@@ -106,7 +106,7 @@ export class ArchitectApi implements IArchitectApi {
     name: string,
     selectedDataSourceId: string,
     modelChanges: IModelChange[]
-  }): Promise<ISectionEditorData> {
+  }): Promise<ISectionEditorModel> {
     return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
   }
 

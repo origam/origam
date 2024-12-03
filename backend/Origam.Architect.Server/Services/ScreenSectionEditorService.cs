@@ -15,7 +15,7 @@ public class ScreenSectionEditorService(
     SchemaService schemaService,
     EditorPropertyFactory propertyFactory)
 {
-    public SectionEditorModel GetSectionEditorData(ISchemaItem editedItem)
+    public SectionEditorData GetSectionEditorData(ISchemaItem editedItem)
     {
         if (editedItem is PanelControlSet screenSection)
         {
@@ -41,7 +41,7 @@ public class ScreenSectionEditorService(
                 })
                 .ToList();
             ApiControl apiControl = LoadRootApiControl(screenSection);
-            return new SectionEditorModel
+            return new SectionEditorData
             {
                 Name = editedItem.Name,
                 SchemaExtensionId = editedItem.SchemaExtensionId,

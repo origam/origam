@@ -22,12 +22,12 @@ public class EditorController(
     : ControllerBase
 {
     [HttpPost("CreateNode")]
-    public EditorData CreateNode(
+    public OpenEditorData CreateNode(
         [Required] [FromBody] NewItemModel input)
     {
         var item =
-            editorService.OpenEditorWithNewItem(input.NodeId,
-                input.NewTypeName);
+            editorService.OpenEditorWithNewItem(
+                input.NodeId, input.NewTypeName).Item;
 
         var editorProperties = propertyService.GetEditorProperties(item)
             .Peek(property =>
@@ -35,7 +35,7 @@ public class EditorController(
                 property.Errors =
                     propertyService.GetRuleErrorsIfExist(property, item);
             });
-        return new EditorData
+        return new OpenEditorData
         {
             IsPersisted = false,
             Node = treeNodeFactory.Create(item),
@@ -44,31 +44,34 @@ public class EditorController(
     }
 
     [HttpGet("GetOpenEditors")]
-    public IEnumerable<EditorData> GetOpenEditors()
+    public IEnumerable<OpenEditorData> GetOpenEditors()
     {
         var items = editorService
             .GetOpenEditors()
-            .Select(item =>
+            .Select(editor =>
             {
+                var item = editor.Item; 
                 TreeNode treeNode = treeNodeFactory.Create(item);
-                return new EditorData
+                return new OpenEditorData
                 {
                     ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
                     IsPersisted = item.IsPersisted,
                     Node = treeNode,
-                    Data = GetData(treeNode, item)
+                    Data = GetData(treeNode, item),
+                    IsDirty = editor.IsDirty
                 };
             });
         return items;
     }
 
     [HttpPost("OpenEditor")]
-    public EditorData OpenEditor([Required] [FromBody] OpenEditorModel input)
+    public OpenEditorData OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
-        ISchemaItem item = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+        ISchemaItem item = editor.Item;
         TreeNode treeNode = treeNodeFactory.Create(item);
 
-        return new EditorData
+        return new OpenEditorData
         {
             IsPersisted = true,
             Node = treeNode,
@@ -96,14 +99,14 @@ public class EditorController(
     }
 
     [HttpPost("UpdateProperties")]
-    public IEnumerable<PropertyUpdate> UpdateProperties(
+    public UpdatePropertiesResult UpdateProperties(
         [FromBody] ChangesModel changes)
     {
-        ISchemaItem item = editorService.ChangesToSchemaItem(changes);
-        PropertyInfo[] properties = item
+        EditorData editor = editorService.ChangesToEditorData(changes);
+        PropertyInfo[] properties = editor.Item
             .GetType()
             .GetProperties();
-        return propertyService.GetEditorProperties(item)
+        IEnumerable<PropertyUpdate> propertyUpdates = propertyService.GetEditorProperties(editor.Item)
             .Select(editorProperty =>
             {
                 PropertyInfo property = properties
@@ -111,18 +114,25 @@ public class EditorController(
                 return new PropertyUpdate
                 {
                     PropertyName = editorProperty.Name,
-                    Errors = propertyService.GetRuleErrors(property, item),
+                    Errors = propertyService.GetRuleErrors(property, editor.Item),
                     DropDownValues = editorProperty
                         .DropDownValues ?? Array.Empty<DropDownValue>()
                 };
             });
+        return new UpdatePropertiesResult
+        {
+            PropertyUpdates = propertyUpdates,
+            IsDirty = editor.IsDirty
+        };
     }
 
     [HttpPost("PersistChanges")]
     public ActionResult PersistChanges([FromBody] ChangesModel input)
     {
-        ISchemaItem item = editorService.ChangesToSchemaItem(input);
+        EditorData editorData = editorService.ChangesToEditorData(input);
+        ISchemaItem item = editorData.Item;
         persistenceService.SchemaProvider.Persist(item);
+        editorData.IsDirty = false;
         return Ok();
     }
 }

@@ -19,14 +19,14 @@ export interface IArchitectApi {
   updateProperties(
     schemaItemId: string | undefined,
     changes: IPropertyChange[]
-  ): Promise<IPropertyUpdate[]>;
+  ): Promise<IUpdatePropertiesResult>;
 
   updateScreenEditor(args: {
     schemaItemId: string | undefined,
     name: string,
     selectedDataSourceId: string
     modelChanges: IModelChange[]
-  }): Promise<ISectionEditorData>;
+  }): Promise<ISectionEditorModel>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
@@ -60,6 +60,11 @@ export interface IPropertyChange {
   value: string;
 }
 
+export interface ISectionEditorModel {
+  data: ISectionEditorData,
+  isDirty: boolean;
+}
+
 export interface ISectionEditorData {
   dataSources: IDataSource[];
   name: string;
@@ -81,6 +86,10 @@ export interface ApiControl {
   children: ApiControl[];
 }
 
+export interface IUpdatePropertiesResult {
+  propertyUpdates: IPropertyUpdate[];
+  isDirty: boolean;
+}
 export interface IDataSource {
   schemaItemId: string;
   name: string;
@@ -177,6 +186,7 @@ export interface IApiEditorData {
   isPersisted: boolean;
   node: IApiEditorNode;
   data: IApiEditorProperty[] | ISectionEditorData;
+  isDirty: boolean;
 }
 
 export interface IApiEditorNode {

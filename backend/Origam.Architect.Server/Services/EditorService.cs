@@ -19,7 +19,7 @@ public class EditorService(
 
     private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems = new();
 
-    public ISchemaItem OpenEditorWithNewItem(Guid parentId, string fullTypeName)
+    public EditorData OpenEditorWithNewItem(Guid parentId, string fullTypeName)
     {
         IBrowserNode2 parentItem = persistenceProvider
             .RetrieveInstance<IBrowserNode2>(parentId);
@@ -35,11 +35,10 @@ public class EditorService(
 
         ISchemaItem item = (ISchemaItem)result;
         return editorSchemaItems
-            .GetOrAdd(item.Id, id => new EditorData(item))
-            .Item;
+            .GetOrAdd(item.Id, id => new EditorData(item));
     }
     
-    public ISchemaItem OpenEditor(Guid schemaItemId)
+    public EditorData OpenEditor(Guid schemaItemId)
     {
         return editorSchemaItems.GetOrAdd(
             schemaItemId,
@@ -48,7 +47,7 @@ public class EditorService(
                 ISchemaItem item = persistenceService.SchemaProvider
                     .RetrieveInstance<ISchemaItem>(id, false);
                 return new EditorData(item);
-            }).Item;
+            });
     }
 
     public void CloseEditor(Guid schemaItemId)
@@ -79,11 +78,10 @@ public class EditorService(
         }
     }
 
-    public ISchemaItem ChangesToSchemaItem(ChangesModel input)
+    public EditorData ChangesToEditorData(ChangesModel input)
     {
-        // We should probably make sure that a single item is not edited in multiple editors. Put the item to unsavedSchemaItems and rename it?
-        ISchemaItem item = OpenEditor(input.SchemaItemId);
-        PropertyInfo[] properties = item.GetType().GetProperties();
+        EditorData editor = OpenEditor(input.SchemaItemId);
+        PropertyInfo[] properties = editor.Item.GetType().GetProperties();
         foreach (var change in input.Changes)
         {
             PropertyInfo propertyToChange = properties
@@ -92,27 +90,32 @@ public class EditorService(
             if (propertyToChange == null)
             {
                 throw new Exception(
-                    $"Property {change.Name} not found on type {item.GetType().Name}");
+                    $"Property {change.Name} not found on type {editor.GetType().Name}");
             }
 
-            object value = propertyParser.Parse(propertyToChange, change.Value);
-            propertyToChange.SetValue(item, value);
+            object newValue = propertyParser.Parse(propertyToChange, change.Value);
+            object oldValue = propertyToChange.GetValue(editor.Item);
+            if (oldValue != newValue)
+            {
+                editor.IsDirty = true;
+            }
+            propertyToChange.SetValue(editor.Item, newValue);
         }
 
-        return item;
+        return editor;
     }
 
-    public IEnumerable<ISchemaItem> GetOpenEditors()
+    public IEnumerable<EditorData> GetOpenEditors()
     {
         return editorSchemaItems.Values
-            .OrderBy(x => x.OpenedAt)
-            .Select(x => x.Item);
+            .OrderBy(x => x.OpenedAt);
     }
     
-    private class EditorData(ISchemaItem item)
-    {
-        public ISchemaItem Item { get; } = item;
-        public DateTime OpenedAt { get; } = DateTime.Now;
-    }
 }
-
+public class EditorData(ISchemaItem item)
+{
+    public ISchemaItem Item { get; } = item;
+    public DateTime OpenedAt { get; } = DateTime.Now;
+    
+    public bool IsDirty { get; set; }
+}

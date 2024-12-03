@@ -4,7 +4,6 @@ using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -20,8 +19,8 @@ public class ScreenEditorController(
     public ActionResult<SectionEditorModel> Update(
         [FromBody] SectionEditorChangesModel input)
     {
-        ISchemaItem editorItem = editorService.OpenEditor(input.SchemaItemId);
-        if (editorItem is PanelControlSet screenSection)
+        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+        if (editor.Item is PanelControlSet screenSection)
         {
             screenSection.Name = input.Name;
             screenSection.DataSourceId = input.SelectedDataSourceId;
@@ -42,11 +41,21 @@ public class ScreenEditorController(
                             propertyChange.ControlPropertyId);
                     if (valueItem != null)
                     {
+                        if (valueItem.Value != propertyChange.Value)
+                        {
+                            editor.IsDirty = true;
+                        }
                         valueItem.Value = propertyChange.Value;
                     }
                 }
             }
-            return Ok(sectionService.GetSectionEditorData(screenSection));
+
+            SectionEditorData editorData = sectionService.GetSectionEditorData(screenSection);
+            return Ok(new SectionEditorModel
+            {
+                Data = editorData,
+                IsDirty = editor.IsDirty
+            });
         }
 
         return BadRequest(
@@ -54,13 +63,14 @@ public class ScreenEditorController(
     }
     
     [HttpPost("DeleteItem")]
-    public ActionResult<SectionEditorModel> DeleteItem(
+    public ActionResult<SectionEditorData> DeleteItem(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
-        ISchemaItem editorItem = editorService.OpenEditor(input.EditorSchemaItemId);
-        if (editorItem is PanelControlSet screenSection)
+        EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
+        if (editor.Item is PanelControlSet screenSection)
         {
             sectionService.DeleteItem(input.SchemaItemId, screenSection);
+            editor.IsDirty = true;
             return Ok(new RootControlModel
             {
                 RootControl = sectionService.LoadRootApiControl(screenSection)
@@ -75,8 +85,8 @@ public class ScreenEditorController(
     public ActionResult<ApiControl> CreateItem(
         [FromBody] ScreenEditorItemModel itemModelData)
     {
-        ISchemaItem editorItem = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
-        if (editorItem is PanelControlSet screenSection)
+        ISchemaItem editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId).Item;
+        if (editor is PanelControlSet screenSection)
         {
             ApiControl apiControl = sectionService.CreateNewItem(itemModelData, screenSection);
             return Ok(apiControl);

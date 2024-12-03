@@ -4,7 +4,7 @@ using Origam.Schema;
 
 namespace Origam.Architect.Server.Models;
 
-public class SectionEditorModel
+public class SectionEditorData
 {
     public List<DataSource> DataSources { get; set; }
     public string Name { get; set; }

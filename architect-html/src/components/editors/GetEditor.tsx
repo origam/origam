@@ -26,10 +26,10 @@ export function getEditor(
   }
 ) {
   const {editorData, architectApi } = args;
-  const {node, data, isPersisted} = editorData;
+  const {node, data, isPersisted, isDirty} = editorData;
   if (node.editorType === "GridEditor") {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
+    const editorState = new GridEditorState(node, properties, isPersisted, isDirty, architectApi);
     return new Editor(
       editorState,
       <GridEditor editorState={editorState}/>
@@ -37,7 +37,7 @@ export function getEditor(
   }
   if (node.editorType === "XslTEditor") {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new GridEditorState(node, properties, isPersisted, architectApi);
+    const editorState = new GridEditorState(node, properties, isPersisted, isDirty, architectApi);
     return new Editor(
       editorState,
       <XsltEditor editorState={editorState}/>
@@ -45,7 +45,7 @@ export function getEditor(
   }
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
-    const componentDesignerState = new ComponentDesignerState(node, isPersisted, sectionData, architectApi);
+    const componentDesignerState = new ComponentDesignerState(node, isPersisted, isDirty, sectionData, architectApi);
     return new Editor(
       componentDesignerState,
       <ComponentDesigner designerState={componentDesignerState}/>

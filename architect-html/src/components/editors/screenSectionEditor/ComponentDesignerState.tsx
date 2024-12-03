@@ -36,12 +36,15 @@ export class ComponentDesignerState implements IEditorState {
   constructor(
     private editorNode: IEditorNode,
     isPersisted: boolean,
+    isDirty: boolean,
     sectionEditorData: ISectionEditorData,
     private architectApi: IArchitectApi
   ) {
     this.isPersisted = isPersisted;
+    this.isDirty = isDirty;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
-    this.surface = new DesignSurfaceState(sectionEditorData, architectApi, this.editorNode.origamId);
+    this.surface = new DesignSurfaceState(
+      sectionEditorData, architectApi, this.editorNode.origamId, (value)=> this.isDirty = value);
   }
 
   deleteComponent(id: string) {
@@ -51,6 +54,7 @@ export class ComponentDesignerState implements IEditorState {
         schemaItemId: id
       });
       this.surface.loadComponents(newData.rootControl);
+      this.isDirty = true;
     }.bind(this);
   }
 
@@ -75,12 +79,14 @@ export class ComponentDesignerState implements IEditorState {
         }
       }
     )
-    const newData = yield this.architectApi.updateScreenEditor({
+    const updateResult = yield this.architectApi.updateScreenEditor({
       schemaItemId: this.toolbox.id,
       name: this.toolbox.name,
       selectedDataSourceId: this.toolbox.selectedDataSourceId,
       modelChanges: modelChanges
     });
+    this.isDirty = updateResult.isDirty;
+    const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.toolbox.fields = newData.fields;
@@ -88,7 +94,7 @@ export class ComponentDesignerState implements IEditorState {
   }
 
   * save(): Generator<Promise<any>, void, any> {
-
+    // this.isDirty = false;
   }
 }
 
