@@ -57,8 +57,6 @@ export class GridEditorState implements IEditorState {
         yield* this.editorNode.parent.loadChildren();
       }
       this._isDirty = false;
-    } catch (error) {
-      console.error('Failed to save content', error);
     } finally {
       this.isSaving = false;
     }
