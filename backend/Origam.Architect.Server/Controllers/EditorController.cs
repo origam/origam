@@ -1,20 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Extensions;
 using Origam.Schema;
-using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class EditorController(
-    IPersistenceService persistenceService,
     PropertyEditorService propertyService,
     ScreenSectionEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
@@ -96,43 +92,5 @@ public class EditorController(
     public void CloseEditor([Required] [FromBody] CloseEditorModel input)
     {
         editorService.CloseEditor(input.SchemaItemId);
-    }
-
-    [HttpPost("UpdateProperties")]
-    public UpdatePropertiesResult UpdateProperties(
-        [FromBody] ChangesModel changes)
-    {
-        EditorData editor = editorService.ChangesToEditorData(changes);
-        PropertyInfo[] properties = editor.Item
-            .GetType()
-            .GetProperties();
-        IEnumerable<PropertyUpdate> propertyUpdates = propertyService.GetEditorProperties(editor.Item)
-            .Select(editorProperty =>
-            {
-                PropertyInfo property = properties
-                    .FirstOrDefault(x => x.Name == editorProperty.Name);
-                return new PropertyUpdate
-                {
-                    PropertyName = editorProperty.Name,
-                    Errors = propertyService.GetRuleErrors(property, editor.Item),
-                    DropDownValues = editorProperty
-                        .DropDownValues ?? Array.Empty<DropDownValue>()
-                };
-            });
-        return new UpdatePropertiesResult
-        {
-            PropertyUpdates = propertyUpdates,
-            IsDirty = editor.IsDirty
-        };
-    }
-
-    [HttpPost("PersistChanges")]
-    public ActionResult PersistChanges([FromBody] ChangesModel input)
-    {
-        EditorData editorData = editorService.ChangesToEditorData(input);
-        ISchemaItem item = editorData.Item;
-        persistenceService.SchemaProvider.Persist(item);
-        editorData.IsDirty = false;
-        return Ok();
     }
 }

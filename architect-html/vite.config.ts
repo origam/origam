@@ -44,6 +44,9 @@ export default defineConfig({
       }, '/ScreenEditor': {
         target: "https://localhost:7099",
         secure: false
+      }, '/PropertyEditor': {
+        target: "https://localhost:7099",
+        secure: false
       },
     }
   },

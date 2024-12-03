@@ -88,14 +88,14 @@ export class ArchitectApi implements IArchitectApi {
           value: x.value === undefined || x.value === null ? null : x.value.toString(),
         }
       });
-    await this.axiosInstance.post(`/Editor/PersistChanges`, {
+    await this.axiosInstance.post(`/PropertyEditor/PersistChanges`, {
       schemaItemId,
       changes
     });
   }
 
   async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IUpdatePropertiesResult> {
-    return (await this.axiosInstance.post(`/Editor/UpdateProperties`, {
+    return (await this.axiosInstance.post(`/PropertyEditor/Update`, {
       schemaItemId,
       changes
     })).data;
