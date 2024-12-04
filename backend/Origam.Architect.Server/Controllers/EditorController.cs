@@ -101,8 +101,16 @@ public class EditorController(
     {
         EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
         ISchemaItem item = editorData.Item;
-        persistenceService.SchemaProvider.Persist(item);
-        editorData.IsDirty = false;
-        return Ok();
+        try
+        {
+            persistenceService.SchemaProvider.BeginTransaction();
+            item.Persist();
+            editorData.IsDirty = false;
+            return Ok();
+        }
+        finally
+        {
+            persistenceService.SchemaProvider.EndTransaction();
+        }
     }
 }

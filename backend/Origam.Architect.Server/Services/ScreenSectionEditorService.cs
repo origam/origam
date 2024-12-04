@@ -57,8 +57,7 @@ public class ScreenSectionEditorService(
     
     public ApiControl LoadRootApiControl(PanelControlSet screenSection)
     {
-        ControlSetItem controlSetItem =
-            screenSection.PanelControl.PanelControlSet.MainItem;
+        ControlSetItem controlSetItem = screenSection.MainItem;
         return LoadContent(controlSetItem);
     }
 
@@ -136,7 +135,7 @@ public class ScreenSectionEditorService(
 
     public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, PanelControlSet screenSection)
     {
-        ISchemaItem parent = screenSection.PanelControl.PanelControlSet.GetChildById(itemModelData.ParentControlSetItemId);
+        ISchemaItem parent = screenSection.GetChildById(itemModelData.ParentControlSetItemId);
         ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
             .OfType<ControlItem>()
             .FirstOrDefault(item => item.ControlType == itemModelData.ComponentType);
@@ -192,7 +191,7 @@ public class ScreenSectionEditorService(
 
     public void DeleteItem(Guid schemaItemId, PanelControlSet screenSection)
     {
-        ISchemaItem schemaItem = screenSection.PanelControl.PanelControlSet
+        ISchemaItem schemaItem = screenSection
             .GetChildByIdRecursive(schemaItemId);
         if (schemaItem is ControlSetItem itemToUpdate)
         {

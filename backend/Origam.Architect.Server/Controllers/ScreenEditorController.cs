@@ -26,7 +26,7 @@ public class ScreenEditorController(
             screenSection.DataSourceId = input.SelectedDataSourceId;
             foreach (var changes in input.ModelChanges)
             {
-                ControlSetItem itemToUpdate = screenSection.PanelControl.PanelControlSet.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
+                ControlSetItem itemToUpdate = screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
                 if (itemToUpdate == null)
                 {
                     return BadRequest(
@@ -85,10 +85,12 @@ public class ScreenEditorController(
     public ActionResult<ApiControl> CreateItem(
         [FromBody] ScreenEditorItemModel itemModelData)
     {
-        ISchemaItem editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId).Item;
-        if (editor is PanelControlSet screenSection)
+        EditorData editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+        ISchemaItem item = editor.Item;
+        if (item is PanelControlSet screenSection)
         {
             ApiControl apiControl = sectionService.CreateNewItem(itemModelData, screenSection);
+            editor.IsDirty = true;
             return Ok(apiControl);
         }
         return BadRequest(

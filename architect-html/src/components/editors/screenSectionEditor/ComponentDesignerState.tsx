@@ -93,8 +93,14 @@ export class ComponentDesignerState implements IEditorState {
     this.surface.loadComponents(newData.rootControl);
   }
 
+
   * save(): Generator<Promise<any>, void, any> {
-    // this.isDirty = false;
+    yield this.architectApi.persistChanges(this.editorNode.origamId);
+    this.isPersisted = true;
+    if (this.editorNode.parent) {
+      yield* this.editorNode.parent.loadChildren();
+    }
+    this.isDirty = false;
   }
 }
 
