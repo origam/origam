@@ -79,18 +79,9 @@ export class ArchitectApi implements IArchitectApi {
       {schemaItemId: schemaItemId}));
   }
 
-  async persistChanges(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<void> {
-    const changes = changedProperties
-      .filter(x => !x.readOnly)
-      .map(x => {
-        return {
-          name: x.name,
-          value: x.value === undefined || x.value === null ? null : x.value.toString(),
-        }
-      });
-    await this.axiosInstance.post(`/PropertyEditor/PersistChanges`, {
-      schemaItemId,
-      changes
+  async persistChanges(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post(`/Editor/PersistChanges`, {
+      schemaItemId
     });
   }
 

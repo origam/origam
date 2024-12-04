@@ -14,7 +14,7 @@ export interface IArchitectApi {
 
   closeEditor(schemaItemId: string): Promise<void>
 
-  persistChanges(schemaItemId: string, changedProperties: IApiEditorProperty[]): Promise<void>;
+  persistChanges(schemaItemId: string): Promise<void>;
 
   updateProperties(
     schemaItemId: string | undefined,

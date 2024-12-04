@@ -10,7 +10,6 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class PropertyEditorController(
-    IPersistenceService persistenceService,
     PropertyEditorService propertyService,
     EditorService editorService)
     : ControllerBase
@@ -43,15 +42,5 @@ public class PropertyEditorController(
             PropertyUpdates = propertyUpdates,
             IsDirty = editor.IsDirty
         };
-    }
-
-    [HttpPost("PersistChanges")]
-    public ActionResult PersistChanges([FromBody] ChangesModel input)
-    {
-        EditorData editorData = editorService.ChangesToEditorData(input);
-        ISchemaItem item = editorData.Item;
-        persistenceService.SchemaProvider.Persist(item);
-        editorData.IsDirty = false;
-        return Ok();
     }
 }

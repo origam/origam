@@ -5,6 +5,7 @@ using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -12,6 +13,7 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class EditorController(
     PropertyEditorService propertyService,
+    IPersistenceService persistenceService,
     ScreenSectionEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService)
@@ -92,5 +94,15 @@ public class EditorController(
     public void CloseEditor([Required] [FromBody] CloseEditorModel input)
     {
         editorService.CloseEditor(input.SchemaItemId);
+    }
+    
+    [HttpPost("PersistChanges")]
+    public ActionResult PersistChanges([FromBody] PersistModel input)
+    {
+        EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
+        ISchemaItem item = editorData.Item;
+        persistenceService.SchemaProvider.Persist(item);
+        editorData.IsDirty = false;
+        return Ok();
     }
 }

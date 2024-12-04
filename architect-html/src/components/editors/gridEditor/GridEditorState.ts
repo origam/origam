@@ -51,7 +51,7 @@ export class GridEditorState implements IEditorState {
   * save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;
-      yield this.architectApi.persistChanges(this.editorNode.origamId, this.properties);
+      yield this.architectApi.persistChanges(this.editorNode.origamId);
       this.isPersisted = true;
       if (this.editorNode.parent) {
         yield* this.editorNode.parent.loadChildren();
