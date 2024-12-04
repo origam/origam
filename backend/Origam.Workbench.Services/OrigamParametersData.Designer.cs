@@ -602,7 +602,6 @@ namespace Origam.Workbench.Services {
                                 this.columnId}, true));
                 this.columnFloatValue.Namespace = "";
                 this.columnStringValue.Namespace = "";
-                this.columnStringValue.MaxLength = 2000;
                 this.columnDateValue.Namespace = "";
                 this.columnBooleanValue.AllowDBNull = false;
                 this.columnBooleanValue.Namespace = "";

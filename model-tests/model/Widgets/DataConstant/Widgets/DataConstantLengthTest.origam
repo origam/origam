@@ -5,7 +5,7 @@
   xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
   <dc:DataConstant
     asi:abstract="false"
-    dc:dataType="String"
+    dc:dataType="Memo"
     x:id="36bbe708-6fa8-445b-8fc2-1220f0bf7c4b"
     asi:name="DataConstantLengthTest"
     dc:userDefinable="false"
