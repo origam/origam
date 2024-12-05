@@ -6,7 +6,7 @@ import {
 import {
   IArchitectApi,
   IDeleteResult,
-  ISectionEditorData,
+  ISectionEditorData, ISectionEditorModel,
 } from "src/API/IArchitectApi.ts";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
@@ -68,7 +68,7 @@ export class ComponentDesignerState implements IEditorState {
     }.bind(this);
   }
 
-  private* updateScreenEditor(): Generator<Promise<ISectionEditorData>, void, ISectionEditorData> {
+  private* updateScreenEditor(): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,

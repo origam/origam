@@ -1,13 +1,10 @@
 import axios, { AxiosInstance } from "axios";
 import {
-  IApiEditorProperty,
   IApiTreeNode,
   IArchitectApi,
   IApiEditorData,
   IMenuItemInfo,
-  IPropertyUpdate,
   IPackage,
-  ISectionEditorData,
   ApiControl,
   IModelChange,
   IPropertyChange,

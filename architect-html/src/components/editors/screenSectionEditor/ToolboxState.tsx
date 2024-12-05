@@ -2,7 +2,7 @@ import {
   IArchitectApi,
   IDataSource,
   IEditorField,
-  ISectionEditorData
+  ISectionEditorData, ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import { observable } from "mobx";
 
@@ -39,13 +39,14 @@ export class ToolboxState {
   }
 
   private updateTopProperties() {
-    return function* (this: ToolboxState): Generator<Promise<ISectionEditorData>, void, ISectionEditorData> {
-      const newData = yield this.architectApi.updateScreenEditor({
+    return function* (this: ToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+      const updateResult = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.id,
         name: this.name,
         selectedDataSourceId: this.selectedDataSourceId,
         modelChanges: []
       });
+      const newData = updateResult.data;
       this.name = newData.name;
       this.selectedDataSourceId = newData.selectedDataSourceId;
       this.fields = newData.fields;
