@@ -16,19 +16,16 @@ export class GridEditorState implements IEditorState {
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
-  @observable accessor isPersisted: boolean;
   @observable accessor _isDirty: boolean;
 
   constructor(
     private editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
-    isPersisted: boolean,
     isDirty: boolean,
     private architectApi: IArchitectApi
   ) {
     this._isDirty = isDirty;
     this.properties = properties ?? [];
-    this.isPersisted = isPersisted;
   }
 
   @computed
@@ -52,7 +49,6 @@ export class GridEditorState implements IEditorState {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);
-      this.isPersisted = true;
       if (this.editorNode.parent) {
         yield* this.editorNode.parent.loadChildren();
       }

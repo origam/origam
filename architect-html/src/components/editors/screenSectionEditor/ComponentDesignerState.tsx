@@ -23,7 +23,6 @@ export class ComponentDesignerState implements IEditorState {
 
   @observable accessor isActive: boolean = false;
   @observable accessor isDirty: boolean = false;
-  @observable accessor isPersisted: boolean;
 
   get label() {
     return this.toolbox.name;
@@ -35,12 +34,10 @@ export class ComponentDesignerState implements IEditorState {
 
   constructor(
     private editorNode: IEditorNode,
-    isPersisted: boolean,
     isDirty: boolean,
     sectionEditorData: ISectionEditorData,
     private architectApi: IArchitectApi
   ) {
-    this.isPersisted = isPersisted;
     this.isDirty = isDirty;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
     this.surface = new DesignSurfaceState(
@@ -96,7 +93,6 @@ export class ComponentDesignerState implements IEditorState {
 
   * save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistChanges(this.editorNode.origamId);
-    this.isPersisted = true;
     if (this.editorNode.parent) {
       yield* this.editorNode.parent.loadChildren();
     }
@@ -116,7 +112,7 @@ export function parseLabelPosition(value: string | undefined | null): LabelPosit
     if (!validOptions.includes(value)) {
       throw new Error(`Invalid LabelPosition: ${value}. Valid values are: ${validOptions.join(', ')}`);
     } else {
-      return LabelPosition[value];
+      return LabelPosition[value as any] as any;
     }
   }
 

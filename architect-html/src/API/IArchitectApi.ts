@@ -183,7 +183,6 @@ export interface IDropDownValue {
 
 export interface IApiEditorData {
   parentNodeId: string | undefined;
-  isPersisted: boolean;
   node: IApiEditorNode;
   data: IApiEditorProperty[] | ISectionEditorData;
   isDirty: boolean;

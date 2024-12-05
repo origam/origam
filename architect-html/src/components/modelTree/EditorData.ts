@@ -28,14 +28,12 @@ export class EditorNode implements IEditorNode {
 
 export class EditorData implements IApiEditorData {
   parentNodeId: string | undefined;
-  isPersisted: boolean;
   isDirty: boolean;
   node: EditorNode;
   data: IApiEditorProperty[] | ISectionEditorData;
   constructor(data: IApiEditorData, parent: TreeNode | null) {
     this.parentNodeId = data.parentNodeId;
     this.isDirty = data.isDirty;
-    this.isPersisted = data.isPersisted;
     this.node = new EditorNode(data.node, parent);
     this.data = data.data;
   }

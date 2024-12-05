@@ -22,6 +22,5 @@ export interface IEditorState {
   label: string;
   isActive: boolean;
   isDirty: boolean;
-  isPersisted: boolean;
   save(): Generator<Promise<any>, void, any>;
 }
