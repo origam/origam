@@ -46,7 +46,7 @@ export const EditorTabView: React.FC = observer(() => {
   }
 
   function getLabel(editor: IEditorState){
-    if(editor.isDirty){
+    if(!editor.isDirty){
       return editor.label;
     }
     if(!editor.label){
