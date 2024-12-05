@@ -44,7 +44,7 @@ function PackageItem(props: {
         finally {
           progressBarState.isWorking = false;
         }
-      },
+      }
     });
   }
 

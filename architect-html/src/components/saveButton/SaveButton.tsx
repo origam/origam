@@ -7,6 +7,7 @@ import {
 
 export const SaveButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
+  const progressBarState = rootStore.progressBarState;
   const editorTabViewState = rootStore.editorTabViewState;
   const activeEditor = editorTabViewState.activeEditorState;
   if (!activeEditor) {
@@ -14,7 +15,15 @@ export const SaveButton = observer(() => {
   }
   const handleSave = () => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: activeEditor.save.bind(activeEditor),
+        generator: function* () {
+          progressBarState.isWorking = true;
+          try {
+            yield* activeEditor.save();
+          }
+          finally {
+            progressBarState.isWorking = false;
+          }
+        }
     });
   };
 
