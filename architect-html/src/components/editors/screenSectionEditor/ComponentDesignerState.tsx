@@ -78,8 +78,11 @@ export class ComponentDesignerState implements IEditorState {
   onDesignerMouseUp(x: number, y: number) {
     return function* (this: ComponentDesignerState) {
       if (this.surface.isDragging) {
+        const didDrag = this.surface.dragState.didDrag;
         this.surface.endDragging(x, y);
-        yield* this.updateScreenEditor();
+        if (didDrag) {
+          yield* this.updateScreenEditor();
+        }
       }
       if (this.surface.isResizing) {
         this.surface.endResizing();

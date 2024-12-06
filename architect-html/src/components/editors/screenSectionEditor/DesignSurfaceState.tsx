@@ -26,7 +26,8 @@ export class DesignSurfaceState {
     startX: 0,
     startY: 0,
     originalLeft: 0,
-    originalTop: 0
+    originalTop: 0,
+    didDrag: false
   };
   @observable accessor resizeState: ResizeState = {
     component: null,
@@ -93,6 +94,7 @@ export class DesignSurfaceState {
     const top = this.dragState.originalTop + dy;
 
     this.updatePosition(this.dragState.component, left, top);
+    this.dragState.didDrag = true;
   }
 
   @action
@@ -103,7 +105,8 @@ export class DesignSurfaceState {
       startX: mouseX,
       startY: mouseY,
       originalLeft: component.left,
-      originalTop: component.top
+      originalTop: component.top,
+      didDrag: false
     };
   }
 
@@ -144,7 +147,8 @@ export class DesignSurfaceState {
       startX: 0,
       startY: 0,
       originalLeft: 0,
-      originalTop: 0
+      originalTop: 0,
+      didDrag: false
     };
   }
 
@@ -303,6 +307,7 @@ interface DragState {
   startY: number;
   originalLeft: number;
   originalTop: number;
+  didDrag: boolean;
 }
 
 interface ResizeState {
