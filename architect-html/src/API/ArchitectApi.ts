@@ -4,11 +4,10 @@ import {
   IArchitectApi,
   IApiEditorData,
   IMenuItemInfo,
-  IPackage,
   ApiControl,
   IModelChange,
   IPropertyChange,
-  IDeleteResult, ISectionEditorModel, IUpdatePropertiesResult
+  IDeleteResult, ISectionEditorModel, IUpdatePropertiesResult, IPackagesInfo
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -46,7 +45,7 @@ export class ArchitectApi implements IArchitectApi {
     await this.axiosInstance.post("/Package/SetActive", {id: packageId})
   }
 
-  async getPackages(): Promise<IPackage[]> {
+  async getPackages(): Promise<IPackagesInfo> {
     return (await this.axiosInstance.get("/Package/GetAll")).data
   }
 

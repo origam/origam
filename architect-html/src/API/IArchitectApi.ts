@@ -2,7 +2,7 @@ export interface IArchitectApi {
 
   getOpenEditors(): Promise<IApiEditorData[]>;
 
-  getPackages(): Promise<IPackage[]>;
+  getPackages(): Promise<IPackagesInfo>;
 
   setActivePackage(packageId: string): Promise<void>;
 
@@ -149,6 +149,11 @@ export interface IApiTreeNode extends INodeLoadData {
   editorType: EditorType;
   childrenIds: string[];
   children?: IApiTreeNode[];
+}
+
+export interface IPackagesInfo {
+  packages: IPackage[];
+  activePackageId: string;
 }
 
 export interface IPackage {

@@ -21,7 +21,7 @@ const App: React.FC = observer(() => {
 
   useEffect(() => {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: rootStore.packagesState.loadPackages.bind(rootStore.modelTreeState),
+      generator: rootStore.packagesState.loadPackages.bind(rootStore.packagesState),
     });
   }, []);
 

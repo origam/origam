@@ -28,23 +28,11 @@ function PackageItem(props: {
 }) {
   const rootStore = useContext(RootStoreContext);
   const packagesState = rootStore.packagesState;
-  const modelTreeState = rootStore.modelTreeState;
-  const progressBarState = rootStore.progressBarState;
 
   async function onPackageClick() {
 
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        progressBarState.isWorking = true;
-        try {
-          yield* packagesState.setActivePackage(props.package.id);
-          rootStore.sideBarTabViewState.showModelTree();
-          yield* modelTreeState.loadPackageNodes();
-        }
-        finally {
-          progressBarState.isWorking = false;
-        }
-      }
+      generator: packagesState.setActivePackage(props.package.id)
     });
   }
 

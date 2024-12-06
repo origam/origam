@@ -1,5 +1,6 @@
 ﻿using LibGit2Sharp;
 using Microsoft.AspNetCore.Mvc;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -16,12 +17,19 @@ public class PackageController : ControllerBase
     }
 
     [HttpGet("GetAll")]
-    public List<PackageModel> GetAll()
+    public PackagesInfo GetAll()
     {
-        return schemaService.AllPackages
+        var packages = schemaService.AllPackages
             .OrderBy(x => x.Name)
-            .Select(x => new PackageModel(x.Id, x.NodeText))
-            .ToList();
+            .Select(x => new PackageModel(x.Id, x.NodeText));
+
+        return new PackagesInfo
+        {
+            Packages = packages,
+            ActivePackageId = schemaService.ActiveSchemaExtensionId == Guid.Empty
+                ? null 
+                : schemaService.ActiveSchemaExtensionId
+        };
     }
     
     [HttpPost("SetActive")]
@@ -38,9 +46,3 @@ public class PackageController : ControllerBase
 }
 
 public record PackageIdentifier(Guid Id);
-
-public class PackageModel(Guid id, string name)
-{
-    public Guid Id { get; } = id;
-    public string Name { get; } = name;
-}

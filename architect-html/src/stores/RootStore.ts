@@ -46,9 +46,13 @@ export class RootStore {
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);
-    this.packagesState = new PackagesState(this.architectApi);
     this.editorTabViewState = new EditorTabViewState(this);
     this.modelTreeState = new ModelTreeState(this);
+    this.packagesState = new PackagesState(
+      this.progressBarState,
+      this.sideBarTabViewState,
+      this.modelTreeState,
+      this.architectApi);
   }
 }
 
