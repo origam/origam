@@ -34,4 +34,9 @@ export class UiState {
       return [];
     }
   }
+
+  clear() {
+    this.expandedNodes = [];
+    localStorage.setItem(this.storageKey, JSON.stringify(this.expandedNodes));
+  }
 }

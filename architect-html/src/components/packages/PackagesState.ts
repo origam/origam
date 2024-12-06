@@ -7,6 +7,7 @@ import {
 import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
 import { TabViewState } from "src/components/tabView/TabViewState.ts";
 import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
+import { UiState } from "src/stores/UiState.ts";
 
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
@@ -16,6 +17,7 @@ export class PackagesState {
     private progressBarState: ProgressBarState,
     private sideBarTabViewState: TabViewState,
     private modelTreeState: ModelTreeState,
+    private uiState: UiState,
     private architectApi: IArchitectApi) {
 
   }
@@ -28,7 +30,7 @@ export class PackagesState {
     }
   }
 
-  setActivePackage(packageId: string) {
+  private setActivePackage(packageId: string) {
     return function* (this: PackagesState) {
       this.progressBarState.isWorking = true;
       try {
@@ -39,6 +41,13 @@ export class PackagesState {
       } finally {
         this.progressBarState.isWorking = false;
       }
+    }.bind(this);
+  }
+
+  setActivePackageClick(packageId: string) {
+    return function* (this: PackagesState) {
+      yield * this.setActivePackage(packageId)();
+      this.uiState.clear();
     }.bind(this);
   }
 }

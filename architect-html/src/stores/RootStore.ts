@@ -52,6 +52,7 @@ export class RootStore {
       this.progressBarState,
       this.sideBarTabViewState,
       this.modelTreeState,
+      this.uiState,
       this.architectApi);
   }
 }
