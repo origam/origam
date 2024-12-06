@@ -15,6 +15,7 @@ import {
 import {
   ResizeHandle
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
@@ -54,6 +55,7 @@ export class DesignSurfaceState {
   constructor(
     sectionEditorData: ISectionEditorData,
     private architectApi: IArchitectApi,
+    private propertiesState: PropertiesState,
     private editorNodeId: string,
     private setDirty: (isDirty: boolean) => void
   ) {
@@ -70,8 +72,15 @@ export class DesignSurfaceState {
   }
 
   @action
-  selectComponent(componentId: string | null) {
-    this.selectedComponentId = componentId;
+  selectComponent(componentA: Component | null) {
+    const component = this.components.find(x =>x.id === componentA?.id);
+    if (component) {
+      this.selectedComponentId = component.id;
+      this.propertiesState.setEdited(component.data.fieldName, component.properties)
+    } else {
+      this.selectedComponentId = null;
+      this.propertiesState.setEdited("", [])
+    }
   }
 
   @action
@@ -88,7 +97,7 @@ export class DesignSurfaceState {
 
   @action
   startDragging(component: Component, mouseX: number, mouseY: number) {
-    this.selectComponent(component.id);
+    this.selectComponent(component);
     this.dragState = {
       component,
       startX: mouseX,
@@ -141,7 +150,7 @@ export class DesignSurfaceState {
 
   @action
   startResizing(component: Component, handle: ResizeHandle, mouseX: number, mouseY: number) {
-    this.selectComponent(component.id);
+    this.selectComponent(component);
     this.resizeState = {
       component,
       handle,

@@ -13,6 +13,7 @@ import { ApplicationDialogStack } from "src/dialog/DialogStack.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
+import { Properties } from "src/components/properties/Properties.tsx";
 
 const App: React.FC = observer(() => {
 
@@ -37,7 +38,6 @@ const App: React.FC = observer(() => {
 
   return (
     <>
-      {/*<ComponentDesigner/>*/}
       <TopLayout
         topToolBar={<TopBar/>}
         editorArea={<EditorTabView/>}
@@ -52,6 +52,10 @@ const App: React.FC = observer(() => {
               {
                 label: "Model",
                 node: <ModelTree/>
+              },
+              {
+                label: "Properties",
+                node: <Properties/>
               }
             ]}
           />

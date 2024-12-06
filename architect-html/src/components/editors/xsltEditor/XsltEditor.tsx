@@ -54,7 +54,7 @@ export const XsltEditor = (props: { editorState: GridEditorState; }) => {
             label: "Settings",
             node:
               <PropertyEditor
-                editorState={props.editorState}
+                propertyManager={props.editorState}
                 properties={props.editorState.properties
                   .filter(x => x.name !== "TextStore")}/>
           }

@@ -37,6 +37,7 @@ export class EditorTabViewState {
 
     return getEditor({
       editorData: editorData,
+      propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi
     });
   }
@@ -60,6 +61,7 @@ export class EditorTabViewState {
 
     const editor = getEditor({
       editorData: editorData,
+      propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi
     });
     if (!editor) {

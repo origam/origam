@@ -12,7 +12,11 @@ import {
   toChanges
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 
-export class GridEditorState implements IEditorState {
+import {
+  IPropertyManager
+} from "src/components/editors/propertyEditor/IPropertyManager.tsx";
+
+export class GridEditorState implements IEditorState, IPropertyManager {
   @observable accessor properties: EditorProperty[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;

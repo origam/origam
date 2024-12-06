@@ -30,6 +30,7 @@ import { DialogStackState } from "src/dialog/DialogStackState.tsx";
 import { IDialogStackState } from "src/dialog/types.ts";
 import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
 import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
+import { PropertiesState } from "src/components/properties/PropertiesState";
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -41,6 +42,7 @@ export class RootStore {
   public dialogStack: IDialogStackState = new DialogStackState();
   public errorDialogController: ErrorDialogController;
   public progressBarState= new ProgressBarState();
+  public propertiesState = new PropertiesState();
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);

@@ -1,8 +1,5 @@
 import S
   from "src/components/editors/propertyEditor/PropertyEditor.module.scss";
-import {
-  GridEditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
 import { observer } from "mobx-react-lite";
 import {
   runInFlowWithHandler
@@ -12,10 +9,13 @@ import { useContext } from "react";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
+import {
+  IPropertyManager
+} from "src/components/editors/propertyEditor/IPropertyManager.tsx";
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];
-  editorState: GridEditorState;
+  propertyManager: IPropertyManager;
 }> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
 
@@ -26,7 +26,7 @@ export const PropertyEditor: React.FC<{
   function onValueChange(property: EditorProperty, value: any) {
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
-        yield* props.editorState.onPropertyUpdated(property, value);
+        yield* props.propertyManager.onPropertyUpdated(property, value);
       },
     });
   }

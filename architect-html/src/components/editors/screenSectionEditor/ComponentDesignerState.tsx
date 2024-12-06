@@ -6,15 +6,19 @@ import {
 import {
   IArchitectApi,
   IDeleteResult,
-  ISectionEditorData, ISectionEditorModel,
+  ISectionEditorData, ISectionEditorModel, IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
-import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
+import {
+  EditorProperty,
+  toChanges
+} from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
   DesignSurfaceState
 } from "src/components/editors/screenSectionEditor/DesignSurfaceState.tsx";
 import {
   ToolboxState
 } from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
+import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 export class ComponentDesignerState implements IEditorState {
 
@@ -36,12 +40,28 @@ export class ComponentDesignerState implements IEditorState {
     private editorNode: IEditorNode,
     isDirty: boolean,
     sectionEditorData: ISectionEditorData,
+    propertiesState: PropertiesState,
     private architectApi: IArchitectApi
   ) {
     this.isDirty = isDirty;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
     this.surface = new DesignSurfaceState(
-      sectionEditorData, architectApi, this.editorNode.origamId, (value)=> this.isDirty = value);
+      sectionEditorData, architectApi, propertiesState, this.editorNode.origamId, (value) => this.isDirty = value);
+    propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
+  }
+
+  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+    property.value = value;
+    const selectedComponent = this.surface.components.find(x => x.id === this.surface.selectedComponentId);
+    if (!selectedComponent) {
+      return;
+    }
+    // screenEditorProperty should really be the same instance as the property
+    // parameter, but it is not the same for some reason! It looks like it got cloned somewhere.
+    // That is why both instances have to be modified here.
+    const screenEditorProperty = selectedComponent.getProperty(property.name)!;
+    screenEditorProperty.value = value;
+    yield* this.updateScreenEditor() as any
   }
 
   deleteComponent(id: string) {

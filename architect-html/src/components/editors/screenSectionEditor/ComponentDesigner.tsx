@@ -19,6 +19,7 @@ import {
 import {
   Component
 } from "src/components/editors/screenSectionEditor/Component.tsx";
+import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -128,7 +129,8 @@ const Toolbox: React.FC<{
 });
 
 const DesignSurface: React.FC<{
-  designerState: ComponentDesignerState
+  designerState: ComponentDesignerState,
+  propertiesState: PropertiesState,
 }> = observer(({designerState}) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -201,7 +203,7 @@ const DesignSurface: React.FC<{
 
   const handleComponentClick = (e: React.MouseEvent, component: Component) => {
     e.stopPropagation();
-    surfaceState.selectComponent(component.id);
+    surfaceState.selectComponent(component);
   };
 
   const handleSurfaceClick = () => {
@@ -315,10 +317,13 @@ const DesignSurface: React.FC<{
 export const ComponentDesigner: React.FC<{
   designerState: ComponentDesignerState
 }> = ({designerState}) => {
+  const rootStore = useContext(RootStoreContext);
   return (
     <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
-      <DesignSurface designerState={designerState}/>
+      <DesignSurface
+        designerState={designerState}
+        propertiesState={rootStore.propertiesState}/>
     </div>
   );
 };

@@ -18,14 +18,16 @@ import {
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
+import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 export function getEditor(
   args: {
-    editorData: EditorData
+    editorData: EditorData,
+    propertiesState: PropertiesState
     architectApi: IArchitectApi
   }
 ) {
-  const {editorData, architectApi } = args;
+  const {editorData, propertiesState, architectApi } = args;
   const {node, data, isDirty} = editorData;
   if (node.editorType === "GridEditor") {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
@@ -45,7 +47,7 @@ export function getEditor(
   }
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
-    const componentDesignerState = new ComponentDesignerState(node, isDirty, sectionData, architectApi);
+    const componentDesignerState = new ComponentDesignerState(node, isDirty, sectionData, propertiesState, architectApi);
     return new Editor(
       componentDesignerState,
       <ComponentDesigner designerState={componentDesignerState}/>
