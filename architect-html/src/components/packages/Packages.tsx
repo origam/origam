@@ -1,10 +1,11 @@
 import { useContext, useEffect } from "react";
 import { RootStoreContext } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
-import { IPackage } from "src/API/IArchitectApi.ts";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
+import { PackageItem } from "src/components/packages/PackageItem.tsx";
+import S from "src/components/packages/Packages.module.scss"
 
 export const Packages: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -17,28 +18,15 @@ export const Packages: React.FC = observer(() => {
   }, []);
 
   return (
-    <div>
-      {packagesState.packages.map(x => <PackageItem key={x.id} package={x}/>)}
+    <div className={S.root}>
+      {packagesState.packages.map(x =>
+        <PackageItem
+          key={x.id}
+          isSelected={packagesState.activePackageId === x.id}
+          package={x}
+        />)}
     </div>
   );
 });
-
-function PackageItem(props: {
-  package: IPackage
-}) {
-  const rootStore = useContext(RootStoreContext);
-  const packagesState = rootStore.packagesState;
-
-  async function onPackageClick() {
-
-    runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: packagesState.setActivePackage(props.package.id)
-    });
-  }
-
-  return (
-    <div onClick={onPackageClick}>{props.package.name}</div>
-  );
-}
 
 

@@ -34,8 +34,8 @@ export class PackagesState {
       try {
         yield this.architectApi.setActivePackage(packageId);
         this.activePackageId = packageId;
-        this.sideBarTabViewState.showModelTree();
         yield* this.modelTreeState.loadPackageNodes();
+        this.sideBarTabViewState.showModelTree();
       } finally {
         this.progressBarState.isWorking = false;
       }
