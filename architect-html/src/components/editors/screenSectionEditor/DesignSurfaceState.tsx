@@ -299,6 +299,10 @@ export class DesignSurfaceState {
       y <= component.top + component.height
     );
   }
+
+  onClose() {
+   this.propertiesState.setEdited("", []);
+  }
 }
 
 interface DragState {

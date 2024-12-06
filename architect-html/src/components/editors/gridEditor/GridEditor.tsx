@@ -12,7 +12,7 @@ export const GridEditor: React.FC<{
     <div className={S.gridEditor}>
       <h3 className={S.title}>{`Editing: ${props.editorState.label}`}</h3>
       <PropertyEditor
-        editorState={props.editorState}
+        propertyManager={props.editorState}
         properties={props.editorState.properties}/>
     </div>
   );

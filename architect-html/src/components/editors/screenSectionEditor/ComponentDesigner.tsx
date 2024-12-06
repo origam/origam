@@ -19,7 +19,6 @@ import {
 import {
   Component
 } from "src/components/editors/screenSectionEditor/Component.tsx";
-import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -129,8 +128,7 @@ const Toolbox: React.FC<{
 });
 
 const DesignSurface: React.FC<{
-  designerState: ComponentDesignerState,
-  propertiesState: PropertiesState,
+  designerState: ComponentDesignerState
 }> = observer(({designerState}) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -145,7 +143,10 @@ const DesignSurface: React.FC<{
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      surfaceState.onClose();
+    }
   }, [surfaceState]);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -317,13 +318,11 @@ const DesignSurface: React.FC<{
 export const ComponentDesigner: React.FC<{
   designerState: ComponentDesignerState
 }> = ({designerState}) => {
-  const rootStore = useContext(RootStoreContext);
   return (
     <div className={S.componentDesigner}>
       <Toolbox designerState={designerState}/>
       <DesignSurface
-        designerState={designerState}
-        propertiesState={rootStore.propertiesState}/>
+        designerState={designerState}/>
     </div>
   );
 };
