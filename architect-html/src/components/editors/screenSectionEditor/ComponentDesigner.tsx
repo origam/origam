@@ -256,6 +256,42 @@ const DesignSurface: React.FC<{
     }
   }
 
+  function getLeftCoverDimensions(){
+    return {
+      left: `0px`,
+      top: `0px`,
+      width: `${surfaceState.panel.absoluteLeft}px`,
+      height: `${surfaceState.panel.absoluteTop + surfaceState.panel.height}px`,
+    }
+  }
+
+  function getTopCoverDimensions() {
+    return {
+      left: `${surfaceState.panel.absoluteLeft}px`,
+      top: `0px`,
+      width: `${surfaceState.panel.width}px`,
+      height: `${surfaceState.panel.absoluteTop}px`,
+    }
+  }
+
+  function getRightCoverDimensions(){
+    return {
+      left: `${surfaceState.panel.absoluteLeft + surfaceState.panel.width}px`,
+      top: `0px`,
+      width: `${2000}px`,
+      height: `${surfaceState.panel.absoluteTop + surfaceState.panel.height}px`,
+    }
+  }
+
+  function getBottomCoverDimensions(){
+    return {
+      left: `${0}px`,
+      top: `${surfaceState.panel.absoluteTop + surfaceState.panel.height}px`,
+      width: `${2000}px`,
+      height: `${2000}px`,
+    }
+  }
+
   return (
     <div
       ref={surfaceRef}
@@ -275,7 +311,7 @@ const DesignSurface: React.FC<{
             style={{
               ...component.getLabelStyle(),
               zIndex: component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel ? 0 : 1
-              }
+            }
             }
           >
             {component.data.fieldName}
@@ -320,6 +356,22 @@ const DesignSurface: React.FC<{
           </div>
         </>
       ))}
+      <div
+        className={S.cover}
+        style={getLeftCoverDimensions()}
+      ></div>
+      <div
+        className={S.cover}
+        style={getTopCoverDimensions()}
+      ></div>
+      <div
+        className={S.cover}
+        style={getRightCoverDimensions()}
+      ></div>
+      <div
+        className={S.cover}
+        style={getBottomCoverDimensions()}
+      ></div>
     </div>
   );
 });

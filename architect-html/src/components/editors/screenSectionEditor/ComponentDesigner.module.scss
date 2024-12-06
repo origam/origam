@@ -48,6 +48,12 @@
   overflow: auto;
 }
 
+.cover{
+  position: absolute;
+  background-color: #fff;
+  z-index: 1000;
+}
+
 .componentLabel {
   position: absolute;
 }

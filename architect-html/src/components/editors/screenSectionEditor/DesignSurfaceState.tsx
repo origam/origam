@@ -40,7 +40,8 @@ export class DesignSurfaceState {
     originalLeft: 0,
     originalTop: 0
   };
-  rootControl: ApiControl;
+  // rootControl: ApiControl;
+  panel: Component;
 
   get isDragging() {
     return !!this.dragState.component;
@@ -61,8 +62,9 @@ export class DesignSurfaceState {
     private editorNodeId: string,
     private setDirty: (isDirty: boolean) => void
   ) {
-    this.rootControl = sectionEditorData.rootControl;
+    // this.rootControl = sectionEditorData.rootControl;
     this.loadComponents(sectionEditorData.rootControl);
+    this.panel = this.components.find(x => x.id === sectionEditorData.rootControl.id)!;
   }
 
   loadComponents(rootControl: ApiControl) {
@@ -279,7 +281,7 @@ export class DesignSurfaceState {
     return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
       const apiControl = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNodeId,
-        parentControlSetItemId: this.rootControl.id,
+        parentControlSetItemId: this.panel.id,
         componentType: this.draggedComponentData!.type,
         fieldName: this.draggedComponentData!.fieldName,
         top: y,
