@@ -1564,6 +1564,11 @@ public class FormXmlBuilder
 					switch(csi.ControlItem.Name)
 					{
 						case "ColorPicker":
+							var bindingColumn = table.Columns[bindingMember];
+							if (bindingColumn.DataType != typeof(int))
+							{
+								throw new Exception("Field '" + table.TableName + "." + bindingMember + "' must be of type int because it si bound to a color editor");
+							}
 							ColorPickerBuilder.Build(propertyElement);
 							break;
 						case "BlobControl":
