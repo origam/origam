@@ -19,6 +19,9 @@ import {
   ToolboxState
 } from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
+import {
+  Component
+} from "src/components/editors/screenSectionEditor/Component.tsx";
 
 export class ComponentDesignerState implements IEditorState {
 
@@ -52,23 +55,14 @@ export class ComponentDesignerState implements IEditorState {
 
   * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     property.value = value;
-    const selectedComponent = this.surface.components.find(x => x.id === this.surface.selectedComponentId);
-    if (!selectedComponent) {
-      return;
-    }
-    // screenEditorProperty should really be the same instance as the property
-    // parameter, but it is not the same for some reason! It looks like it got cloned somewhere.
-    // That is why both instances have to be modified here.
-    const screenEditorProperty = selectedComponent.getProperty(property.name)!;
-    screenEditorProperty.value = value;
     yield* this.updateScreenEditor() as any
   }
 
-  deleteComponent(id: string) {
+  deleteComponent(component: Component) {
     return function* (this: ComponentDesignerState): Generator<Promise<IDeleteResult>, void, IDeleteResult> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
-        schemaItemId: id
+        schemaItemId: component.id
       });
       this.surface.loadComponents(newData.rootControl);
       this.isDirty = true;

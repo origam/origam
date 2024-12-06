@@ -25,7 +25,7 @@ import { EditorProperty } from "../editors/gridEditor/EditorProperty";
 import { observable } from "mobx";
 
 export class PropertiesState implements IPropertyManager {
-  properties: EditorProperty[] = [];
+  @observable accessor properties: EditorProperty[] = [];
   @observable accessor editedItemName = "";
 
   setEdited(itemName: string, properties: EditorProperty[]): void {

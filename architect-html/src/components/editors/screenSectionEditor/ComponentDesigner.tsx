@@ -137,8 +137,8 @@ const DesignSurface: React.FC<{
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Delete' && surfaceState.selectedComponentId) {
-        run({generator: designerState.deleteComponent(surfaceState.selectedComponentId)});
+      if (e.key === 'Delete' && surfaceState.selectedComponent) {
+        run({generator: designerState.deleteComponent(surfaceState.selectedComponent)});
       }
     };
 
@@ -275,7 +275,7 @@ const DesignSurface: React.FC<{
             key={component.id + "_component"}
             className={`${S.designComponent} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
-            ${surfaceState.selectedComponentId === component.id ? S.selected : ''}`}
+            ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
             style={{
               left: `${component.left}px`,
               top: `${component.top}px`,
@@ -290,7 +290,7 @@ const DesignSurface: React.FC<{
 
             {getDesignSurfaceRepresentation(component)}
 
-            {surfaceState.selectedComponentId === component.id && [
+            {surfaceState.selectedComponent?.id === component.id && [
               'top',
               'right',
               'bottom',

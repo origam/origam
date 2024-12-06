@@ -20,7 +20,7 @@ import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
   @observable accessor draggedComponentData: IComponentData | null = null;
-  @observable accessor selectedComponentId: string | null = null;
+  @observable accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = {
     component: null,
     startX: 0,
@@ -73,13 +73,12 @@ export class DesignSurfaceState {
   }
 
   @action
-  selectComponent(componentA: Component | null) {
-    const component = this.components.find(x =>x.id === componentA?.id);
+  selectComponent(component: Component | null) {
     if (component) {
-      this.selectedComponentId = component.id;
+      this.selectedComponent = component;
       this.propertiesState.setEdited(component.data.fieldName, component.properties)
     } else {
-      this.selectedComponentId = null;
+      this.selectedComponent = null;
       this.propertiesState.setEdited("", [])
     }
   }
