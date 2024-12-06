@@ -5,6 +5,7 @@ import {
   toComponentRecursive
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 import {
+  ComponentType,
   IComponentData
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import {
@@ -66,9 +67,10 @@ export class DesignSurfaceState {
 
   loadComponents(rootControl: ApiControl) {
     let components: Component[] = [];
-    for (const child of rootControl.children) {
-      components = toComponentRecursive(child, null, components)
-    }
+    components = toComponentRecursive(rootControl, null, components)
+    // for (const child of rootControl.children) {
+    //   components = toComponentRecursive(child, null, components)
+    // }
     this.components = components;
   }
 
@@ -103,8 +105,8 @@ export class DesignSurfaceState {
       component,
       startX: mouseX,
       startY: mouseY,
-      originalLeft: component.left,
-      originalTop: component.top,
+      originalLeft: component.absoluteLeft,
+      originalTop: component.absoluteTop,
       didDrag: false
     };
   }
@@ -117,28 +119,31 @@ export class DesignSurfaceState {
 
     const draggingComponent = this.dragState.component;
 
-    if (draggingComponent.data.type !== 'GroupBox') {
-      const targetGroupBox = this.components.find(
+    if (
+      draggingComponent.data.type !== ComponentType.GroupBox &&
+      draggingComponent.data.type !== ComponentType.AsPanel
+    ) {
+      const targetParent = this.components.find(
         comp =>
-          comp.data.type === 'GroupBox' &&
+          (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel)  &&
           this.isPointInsideComponent(mouseX, mouseY, comp)
       );
-
-      if (targetGroupBox) {
-        // Calculate relative position based on the component's current position
-        draggingComponent.parentId = targetGroupBox.id;
-        draggingComponent.relativeLeft = draggingComponent.left - targetGroupBox.left;
-        draggingComponent.relativeTop = draggingComponent.top - targetGroupBox.top;
-
-        // Update the absolute position to ensure it stays in the correct place
-        draggingComponent.left = targetGroupBox.left + draggingComponent.relativeLeft;
-        draggingComponent.top = targetGroupBox.top + draggingComponent.relativeTop;
-      } else if (!targetGroupBox && draggingComponent.parentId) {
-        // If we're dropping outside any group box, maintain the absolute position
-        draggingComponent.parentId = null;
-        draggingComponent.relativeLeft = undefined;
-        draggingComponent.relativeTop = undefined;
-      }
+      draggingComponent.parent = targetParent ?? null;
+      // if (targetGroupBox) {
+      //   // Calculate relative position based on the component's current position
+      //   draggingComponent.parent = targetGroupBox;
+      //   // draggingComponent.relativeLeft = draggingComponent.absoluteLeft - targetGroupBox.absoluteLeft;
+      //   // draggingComponent.relativeTop = draggingComponent.absoluteTop - targetGroupBox.absoluteTop;
+      //   //
+      //   // // Update the absolute position to ensure it stays in the correct place
+      //   // draggingComponent.absoluteLeft = targetGroupBox.absoluteLeft + draggingComponent.relativeLeft;
+      //   // draggingComponent.absoluteTop = targetGroupBox.absoluteTop + draggingComponent.relativeTop;
+      // } else if (!targetGroupBox && draggingComponent.parentId) {
+      //   // If we're dropping outside any group box, maintain the absolute position
+      //   draggingComponent.parentId = null;
+      //   // draggingComponent.relativeLeft = undefined;
+      //   // draggingComponent.relativeTop = undefined;
+      // }
     }
 
     this.dragState = {
@@ -161,8 +166,8 @@ export class DesignSurfaceState {
       startY: mouseY,
       originalWidth: component.width,
       originalHeight: component.height,
-      originalLeft: component.left,
-      originalTop: component.top
+      originalLeft: component.absoluteLeft,
+      originalTop: component.absoluteTop
     };
   }
 
@@ -191,7 +196,7 @@ export class DesignSurfaceState {
         const newWidth = originalWidth - deltaX;
         if (newWidth >= minComponentWidth) {
           component.width = newWidth;
-          component.left = originalLeft + deltaX;
+          component.absoluteLeft = originalLeft + deltaX;
         }
         break;
       }
@@ -199,7 +204,7 @@ export class DesignSurfaceState {
         const newHeight = originalHeight - deltaY;
         if (newHeight >= minComponentHeight) {
           component.height = newHeight;
-          component.top = originalTop + deltaY;
+          component.absoluteTop = originalTop + deltaY;
         }
         break;
       }
@@ -208,11 +213,11 @@ export class DesignSurfaceState {
         const newWidthTL = originalWidth - deltaX;
         if (newHeightTL >= minComponentHeight) {
           component.height = newHeightTL;
-          component.top = originalTop + deltaY;
+          component.absoluteTop = originalTop + deltaY;
         }
         if (newWidthTL >= minComponentWidth) {
           component.width = newWidthTL;
-          component.left = originalLeft + deltaX;
+          component.absoluteLeft = originalLeft + deltaX;
         }
         break;
       }
@@ -220,7 +225,7 @@ export class DesignSurfaceState {
         const newHeightTR = originalHeight - deltaY;
         if (newHeightTR >= minComponentHeight) {
           component.height = newHeightTR;
-          component.top = originalTop + deltaY;
+          component.absoluteTop = originalTop + deltaY;
         }
         component.width = Math.max(minComponentWidth, originalWidth + deltaX);
         break;
@@ -229,7 +234,7 @@ export class DesignSurfaceState {
         const newWidthBL = originalWidth - deltaX;
         if (newWidthBL >= minComponentWidth) {
           component.width = newWidthBL;
-          component.left = originalLeft + deltaX;
+          component.absoluteLeft = originalLeft + deltaX;
         }
         component.height = Math.max(minComponentHeight, originalHeight + deltaY);
         break;
@@ -257,14 +262,14 @@ export class DesignSurfaceState {
 
   @action
   updatePosition(component: Component, left: number, top: number) {
-    component.left = left;
-    component.top = top;
+    component.absoluteLeft = left;
+    component.absoluteTop = top;
 
-    if (component.data.type === 'GroupBox') {
+    if (component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel) {
       for (const comp of this.components) {
-        if (comp.parentId === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
-          comp.left = comp.relativeLeft + component.left;
-          comp.top = comp.relativeTop + component.top;
+        if (comp.parent?.id === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
+          comp.absoluteLeft = comp.relativeLeft + component.absoluteLeft;
+          comp.absoluteTop = comp.relativeTop + component.absoluteTop;
         }
       }
     }
@@ -292,10 +297,10 @@ export class DesignSurfaceState {
 
   private isPointInsideComponent(x: number, y: number, component: Component) {
     return (
-      x >= component.left &&
-      x <= component.left + component.width &&
-      y >= component.top &&
-      y <= component.top + component.height
+      x >= component.absoluteLeft &&
+      x <= component.absoluteLeft + component.width &&
+      y >= component.absoluteTop &&
+      y <= component.absoluteTop + component.height
     );
   }
 

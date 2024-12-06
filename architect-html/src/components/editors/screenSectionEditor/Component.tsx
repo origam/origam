@@ -4,7 +4,8 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import { observable } from "mobx";
 import {
-  LabelPosition, parseLabelPosition
+  LabelPosition,
+  parseLabelPosition
 } from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
 
@@ -18,11 +19,25 @@ export class Component {
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
 
-  get left(): number { return this.getProperty("Left")!.value; }
-  set left(value: number) { this.getProperty("Left")!.value = value; }
+  get relativeLeft(): number { return this.getProperty("Left")!.value; }
+  set relativeLeft(value: number) { this.getProperty("Left")!.value = value; }
 
-  get top(): number { return this.getProperty("Top")!.value; }
-  set top(value: number) { this.getProperty("Top")!.value = value; }
+  get relativeTop(): number { return this.getProperty("Top")!.value; }
+  set relativeTop(value: number) { this.getProperty("Top")!.value = value; }
+
+  get absoluteLeft(): number {
+    return this.relativeLeft + (this.parent?.absoluteLeft ?? 0);
+  }
+  set absoluteLeft(value: number) {
+    this.relativeLeft = value - (this.parent?.absoluteLeft ?? 0);
+  }
+
+  get absoluteTop(): number {
+    return this.relativeTop + (this.parent?.absoluteTop ?? 0);
+  }
+  set absoluteTop(value: number) {
+    this.relativeTop = value -  (this.parent?.absoluteTop ?? 0);
+  }
 
   get width(): number { return this.getProperty("Width")!.value; }
   set width(value: number) { this.getProperty("Width")!.value = value; }
@@ -36,10 +51,6 @@ export class Component {
   private _labelPosition: LabelPosition;
   get labelPosition(): LabelPosition { return this._labelPosition; }
   set labelPosition(value: number) { this._labelPosition = value; }
-
-  @observable accessor parentId: string | null = null;
-  @observable accessor relativeLeft: number | undefined;
-  @observable accessor relativeTop: number | undefined;
 
   constructor(args: {
     id: string,
@@ -58,29 +69,29 @@ export class Component {
     switch (this.labelPosition) {
       case LabelPosition.Left:
         return {
-          left: `${this.left - this.labelWidth}px`,
-            top: `${this.top}px`,
+          left: `${this.absoluteLeft - this.labelWidth}px`,
+            top: `${this.absoluteTop}px`,
             width: `${this.labelWidth}px`,
             height: `${this.height}px`,
         }
         case LabelPosition.Right:
           return {
-            left: `${this.left + this.width}px`,
-            top: `${this.top}px`,
+            left: `${this.absoluteLeft + this.width}px`,
+            top: `${this.absoluteTop}px`,
             width: `${this.labelWidth}px`,
             height: `${this.height}px`,
           }
       case LabelPosition.Bottom:
         return {
-          left: `${this.left}px`,
-          top: `${this.top + this.height}px`,
+          left: `${this.absoluteLeft}px`,
+          top: `${this.absoluteTop + this.height}px`,
           width: `${this.width}px`,
           height: `${this.labelWidth}px`,
         }
       case LabelPosition.Top:
         return {
-          left: `${this.left}px`,
-          top: `${this.top + -20}px`,
+          left: `${this.absoluteLeft}px`,
+          top: `${this.absoluteTop + -20}px`,
           width: `${this.width}px`,
           height: `${this.labelWidth}px`,
         }

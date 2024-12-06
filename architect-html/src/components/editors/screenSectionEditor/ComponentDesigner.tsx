@@ -230,6 +230,11 @@ const DesignSurface: React.FC<{
             <div className={S.groupBoxHeader}>{component.data.fieldName}</div>
           </div>
         );
+      case ComponentType.AsPanel:
+        return (
+          <div className={S.panel}>
+          </div>
+        );
       case ComponentType.AsCheckBox:
         // return (
         //   <div className={S.designSurfaceEditorContainer}>
@@ -267,7 +272,11 @@ const DesignSurface: React.FC<{
           <div
             key={component.id + "_label"}
             className={S.componentLabel}
-            style={component.getLabelStyle()}
+            style={{
+              ...component.getLabelStyle(),
+              zIndex: component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel ? 0 : 1
+              }
+            }
           >
             {component.data.fieldName}
           </div>
@@ -277,12 +286,12 @@ const DesignSurface: React.FC<{
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
             style={{
-              left: `${component.left}px`,
-              top: `${component.top}px`,
+              left: `${component.absoluteLeft}px`,
+              top: `${component.absoluteTop}px`,
               width: `${component.width}px`,
               height: `${component.height}px`,
               cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-              zIndex: component.data.type === 'GroupBox' ? 0 : 1
+              zIndex: component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel ? 0 : 1
             }}
             onMouseDown={(e) => handleComponentMouseDown(e, component)}
             onClick={(e) => handleComponentClick(e, component)}

@@ -4,7 +4,7 @@ export enum ComponentType {
   AsCombo = 'Origam.Gui.Win.AsDropDown',
   AsTextBox = 'Origam.Gui.Win.AsTextBox',
   TagInput = 'Origam.Gui.Win.TagInput',
-  AsPanel = 'AsPanel',
+  AsPanel = 'Origam.Gui.Win.AsPanel',
   AsDateBox = 'Origam.Gui.Win.AsDateBox',
   AsCheckBox = 'Origam.Gui.Win.AsCheckBox',
   GroupBox = 'GroupBox',

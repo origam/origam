@@ -102,7 +102,6 @@ export class EditorTabViewState {
         const editorToActivate = this.editors[this.editors.length - 1];
         this.setActiveEditor(editorToActivate.state.schemaItemId);
       }
-
     }.bind(this);
   }
 }
