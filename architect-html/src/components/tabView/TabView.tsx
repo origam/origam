@@ -37,7 +37,10 @@ export const TabView: React.FC<{
       </div>
       <div className={S.labels}>
         {items.map((x, i) => (
-          <div key={x.label} onClick={() => action(() =>  state.activeTabIndex = i)()}>
+          <div
+            key={x.label}
+            className={S.label + " " + ( state.activeTabIndex === i ? S.activeLabel : "")}
+            onClick={() => action(() =>  state.activeTabIndex = i)()}>
             {x.label}
           </div>
         ))}

@@ -4,21 +4,32 @@
   width: 400px;
   flex: 1;
 }
+
 .content {
   display: flex;
   overflow: auto;
   flex: 1;
 }
 
-.labels{
+.labels {
   display: flex;
   gap: 10px
 }
 
-.hidden{
+.hidden {
   display: none;
 }
+
 .visible {
   display: flex;
   flex: 1;
+}
+
+.label {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.activeLabel {
+  background: var(--background3);
 }

@@ -21,6 +21,6 @@ export function PackageItem(props: {
   }
 
   return (
-    <div className={props.isSelected ? S.selected : ""} onClick={onPackageClick}>{props.package.name}</div>
+    <div className={S.root + " " + (props.isSelected ? S.selected : "")} onClick={onPackageClick}>{props.package.name}</div>
   );
 }
