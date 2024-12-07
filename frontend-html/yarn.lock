@@ -6061,7 +6061,7 @@ __metadata:
     wkt: "npm:^0.1.1"
     ws: "npm:^8.18.0"
     xml-js: "npm:^1.6.11"
-    xstate: "npm:^4.38.3"
+    xstate: "npm:^5.19.0"
   languageName: unknown
   linkType: soft
 
@@ -7382,10 +7382,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xstate@npm:^4.38.3":
-  version: 4.38.3
-  resolution: "xstate@npm:4.38.3"
-  checksum: 10c0/8a2063743517390107275113bca0e757dba99102e7d57d40cf656b5cc03a6f2c5e10fbf3752294d9d29fbe1d8757bb9a54f54c934a22f205a237956dd10dcd0f
+"xstate@npm:^5.19.0":
+  version: 5.19.0
+  resolution: "xstate@npm:5.19.0"
+  checksum: 10c0/42a55786d517462b927209cbf96e168f4e287d0248bc460e3ba05a51c4a7761c2a5b81c2e8f53d22007571933ee11f62eaa7d8303caec481bd0f47814e68ad53
   languageName: node
   linkType: hard
 
