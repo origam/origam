@@ -963,7 +963,10 @@ public class DatasetTools
 					case OnCopyActionType.PrependCopyText:
 						if(row[col] is string)
 						{
-							row[col] = ResourceUtils.GetString("CopyPrefix") + (string)row[col];
+							string valueWithCopyPrefix = ResourceUtils.GetString("CopyPrefix") + (string)row[col];
+							row[col] = valueWithCopyPrefix.Length > col.MaxLength 
+								? (string)row[col] 
+								: valueWithCopyPrefix;
 						}
 						break;
 				}
