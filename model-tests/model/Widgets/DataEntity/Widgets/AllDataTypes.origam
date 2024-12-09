@@ -454,7 +454,7 @@
       adec:label="Text 1"
       fmi:mappedColumnName="Text1"
       asi:name="Text1"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="PrependCopyText"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
