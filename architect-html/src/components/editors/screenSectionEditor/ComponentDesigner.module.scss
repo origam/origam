@@ -54,7 +54,6 @@
 
 .designComponent {
   position: absolute;
-  background-color: #fff;
   display: flex;
   align-items: center;
   user-select: none;
@@ -102,13 +101,16 @@
 
 .designSurfaceInput {
   border: 1px solid #ccc;
+  background-color: #fff;
   flex: 1;
 }
 
 .designSurfaceCheckbox {
   border: 1px solid #ccc;
-  width: 20px;
-  height: 20px;
+  background-color: #fff;
+  width: 14px;
+  height: 14px;
+  margin: 3px;
 }
 
 .groupBoxHeader {

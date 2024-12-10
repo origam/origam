@@ -236,15 +236,10 @@ const DesignSurface: React.FC<{
           </div>
         );
       case ComponentType.AsCheckBox:
-        // return (
-        //   <div className={S.designSurfaceEditorContainer}>
-        //     <div className={S.designSurfaceCheckbox}></div>
-        //     <div>{component.get("Text")}</div>
-        //   </div>
-        // );
         return (
           <div className={S.designSurfaceEditorContainer}>
-            <div className={S.designSurfaceInput}></div>
+            <div className={S.designSurfaceCheckbox}></div>
+            <div>{component.getProperty("Text")?.value}</div>
           </div>
         );
       default:
