@@ -12,6 +12,7 @@ import { UiState } from "src/stores/UiState.ts";
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
   @observable accessor activePackageId: string | undefined;
+  private activePackageChanged = false;
 
   constructor(
     private progressBarState: ProgressBarState,
@@ -27,6 +28,7 @@ export class PackagesState {
     this.packages = packagesInfo.packages ?? [];
     if (packagesInfo.activePackageId) {
       yield* this.setActivePackage(packagesInfo.activePackageId)() as any;
+      this.activePackageChanged = true;
     }
   }
 
@@ -47,7 +49,10 @@ export class PackagesState {
   setActivePackageClick(packageId: string) {
     return function* (this: PackagesState) {
       yield * this.setActivePackage(packageId)();
-      this.uiState.clear();
+      if(this.activePackageChanged){
+        this.uiState.clear();
+      }
+      this.activePackageChanged = true;
     }.bind(this);
   }
 }
