@@ -227,7 +227,7 @@ const DesignSurface: React.FC<{
       case ComponentType.GroupBox:
         return (
           <div className={S.groupBoxContent}>
-            <div className={S.groupBoxHeader}>{component.data.fieldName}</div>
+            <div className={S.groupBoxHeader}>{component.getProperty("Text")?.value}</div>
           </div>
         );
       case ComponentType.AsPanel:

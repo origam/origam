@@ -62,7 +62,7 @@ export class DesignSurfaceState {
     private propertiesState: PropertiesState,
     private editorNodeId: string,
     private setDirty: (isDirty: boolean) => void,
-    private updateScreenEditor:() => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
+    private updateScreenEditor: () => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
   ) {
     this.panelId = sectionEditorData.rootControl.id;
     this.loadComponents(sectionEditorData.rootControl);
@@ -73,10 +73,19 @@ export class DesignSurfaceState {
     components = toComponentRecursive(rootControl, null, components)
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
+    this.reselectComponent();
+  }
+
+  private reselectComponent() {
+    const selectedComponentId = this.selectedComponent?.id;
+    if (selectedComponentId) {
+      const newSelectedInstance = this.components.find(x => x.id === selectedComponentId);
+      this.selectComponent(newSelectedInstance);
+    }
   }
 
   @action
-  selectComponent(component: Component | null) {
+  selectComponent(component: Component | null | undefined) {
     if (component) {
       this.selectedComponent = component;
       this.propertiesState.setEdited(component.data.fieldName, component.properties)
@@ -126,13 +135,13 @@ export class DesignSurfaceState {
     ) {
       const targetParent = this.components.find(
         comp =>
-          (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel)  &&
+          (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
           comp.isPointInside(mouseX, mouseY)
       ) ?? this.panel;
-      if(draggingComponent.parent && draggingComponent.parent != targetParent) {
+      if (draggingComponent.parent && draggingComponent.parent != targetParent) {
         draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft - targetParent.absoluteLeft + draggingComponent.relativeLeft;
-        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop - targetParent.absoluteTop + draggingComponent.relativeTop ;
-        draggingComponent.parent = targetParent ;
+        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop - targetParent.absoluteTop + draggingComponent.relativeTop;
+        draggingComponent.parent = targetParent;
       }
       this.updatePanelSize(draggingComponent);
     }
@@ -323,7 +332,7 @@ export class DesignSurfaceState {
 
   @action
   onClose() {
-   this.propertiesState.setEdited("", []);
+    this.propertiesState.setEdited("", []);
   }
 }
 
