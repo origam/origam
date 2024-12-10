@@ -43,6 +43,7 @@ const App: React.FC = observer(() => {
         editorArea={<EditorTabView/>}
         sideBar={
           <TabView
+            width={400}
             state={rootStore.sideBarTabViewState}
             items={[
               {

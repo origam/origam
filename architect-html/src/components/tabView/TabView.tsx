@@ -25,9 +25,10 @@ import { action } from "mobx";
 export const TabView: React.FC<{
   items: ITabViewItem[];
   state: TabViewState;
-}> = observer(({ items, state }) => {
+  width: number
+}> = observer(({ items, state, width}) => {
   return (
-    <div className={S.root}>
+    <div className={S.root} style={{ width: width + "px" }}>
       <div className={S.content}>
         {items.map((x, i) => (
           <div key={x.label} className={state.activeTabIndex !== i ? S.hidden : S.visible}>

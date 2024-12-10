@@ -42,6 +42,7 @@ export const XsltEditor = (props: { editorState: GridEditorState; }) => {
   return (
     <div className={S.root}>
       <TabView
+        width={400}
         state={new TabViewState()}
         items={[
           {

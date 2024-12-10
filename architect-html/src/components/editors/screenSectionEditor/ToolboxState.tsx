@@ -5,6 +5,7 @@ import {
   ISectionEditorData, ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import { observable } from "mobx";
+import { TabViewState } from "src/components/tabView/TabViewState.ts";
 
 export class ToolboxState {
   dataSources: IDataSource[];
@@ -14,6 +15,7 @@ export class ToolboxState {
   @observable accessor selectedDataSourceId: string;
   @observable accessor fields: IEditorField[];
   @observable accessor isDirty: boolean = false;
+  tabViewState: TabViewState = new TabViewState();
 
   constructor(
     sectionEditorData: ISectionEditorData,

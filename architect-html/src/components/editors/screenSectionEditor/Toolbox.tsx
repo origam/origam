@@ -14,6 +14,7 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import S
   from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
+import { TabView } from "src/components/tabView/TabView.tsx";
 
 export const Toolbox: React.FC<{
   designerState: ComponentDesignerState
@@ -100,24 +101,37 @@ export const Toolbox: React.FC<{
           />
         </div>
       </div>
+      <TabView
+        width={260}
+        state={toolboxState.tabViewState}
+        items={[
+          {
+            label: "Fields",
+            node: <div className={S.fields}>
+              {toolboxState.fields.map(field => getToolboxComponent(field))}
+              {/*<div*/}
+              {/*  className={S.toolItem}*/}
+              {/*  draggable*/}
+              {/*  onDragStart={() => onDragStart('Label')}*/}
+              {/*>*/}
+              {/*  Label*/}
+              {/*</div>*/}
+              {/*<div*/}
+              {/*  className={S.toolItem}*/}
+              {/*  draggable*/}
+              {/*  onDragStart={() => onDragStart('GroupBox')}*/}
+              {/*>*/}
+              {/*  GroupBox*/}
+              {/*</div>*/}
+            </div>
+          },
+          {
+            label: "Widgets",
+            node: <div/>
+          }
+        ]}
+      />
 
-      <div className={S.draggableItems}>
-        {toolboxState.fields.map(field => getToolboxComponent(field))}
-        {/*<div*/}
-        {/*  className={S.toolItem}*/}
-        {/*  draggable*/}
-        {/*  onDragStart={() => onDragStart('Label')}*/}
-        {/*>*/}
-        {/*  Label*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  className={S.toolItem}*/}
-        {/*  draggable*/}
-        {/*  onDragStart={() => onDragStart('GroupBox')}*/}
-        {/*>*/}
-        {/*  GroupBox*/}
-        {/*</div>*/}
-      </div>
     </div>
   );
 });
