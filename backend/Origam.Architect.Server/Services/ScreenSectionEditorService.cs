@@ -15,6 +15,57 @@ public class ScreenSectionEditorService(
     SchemaService schemaService,
     EditorPropertyFactory propertyFactory)
 {
+    public SectionEditorModel Update(PanelControlSet screenSection, SectionEditorChangesModel input)
+    {
+        bool editorIsDirty = false;
+        screenSection.Name = input.Name;
+        screenSection.DataSourceId = input.SelectedDataSourceId;
+        foreach (var changes in input.ModelChanges)
+        {
+            ControlSetItem itemToUpdate = screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
+            if (itemToUpdate == null)
+            {
+                throw new Exception($"item id: {changes.SchemaItemId} is not in the PanelControlSet");
+            }
+
+            if (itemToUpdate.Id != screenSection.MainItem.Id &&
+                itemToUpdate.ParentItemId != (changes.ParentSchemaItemId ?? Guid.Empty))
+            {
+                itemToUpdate.ParentItem.ChildItems.Remove(itemToUpdate);
+                if (changes.ParentSchemaItemId != null)
+                {
+                    ISchemaItem newParent = screenSection.GetChildByIdRecursive(changes
+                        .ParentSchemaItemId.Value);
+                    newParent.ChildItems.Add(itemToUpdate);
+                }
+            }
+
+            foreach (var propertyChange in changes.Changes)
+            {
+                PropertyValueItem valueItem = itemToUpdate.ChildItems
+                    .OfType<PropertyValueItem>()
+                    .FirstOrDefault(item =>
+                        item.ControlPropertyId ==
+                        propertyChange.ControlPropertyId);
+                if (valueItem != null)
+                {
+                    if (valueItem.Value != propertyChange.Value)
+                    {
+                        editorIsDirty = true;
+                    }
+                    valueItem.Value = propertyChange.Value;
+                }
+            }
+        }
+
+        var editorData = GetSectionEditorData(screenSection);
+        return new SectionEditorModel
+        {
+            Data = editorData,
+            IsDirty = editorIsDirty
+        };
+    }
+
     public SectionEditorData GetSectionEditorData(ISchemaItem editedItem)
     {
         if (editedItem is PanelControlSet screenSection)
