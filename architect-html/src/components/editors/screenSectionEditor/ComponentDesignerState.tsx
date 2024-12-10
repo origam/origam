@@ -49,7 +49,13 @@ export class ComponentDesignerState implements IEditorState {
     this.isDirty = isDirty;
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
     this.surface = new DesignSurfaceState(
-      sectionEditorData, architectApi, propertiesState, this.editorNode.origamId, (value) => this.isDirty = value);
+      sectionEditorData,
+      architectApi,
+      propertiesState,
+      this.editorNode.origamId,
+      (value) => this.isDirty = value,
+      this.updateScreenEditor
+    );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
   }
 
@@ -106,7 +112,6 @@ export class ComponentDesignerState implements IEditorState {
     this.toolbox.fields = newData.fields;
     this.surface.loadComponents(newData.rootControl);
   }
-
 
   * save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistChanges(this.editorNode.origamId);

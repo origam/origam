@@ -32,11 +32,19 @@ export class Component {
     this.relativeLeft = value - (this.parent?.absoluteLeft ?? 0);
   }
 
+  get absoluteRight(): number {
+    return this.absoluteLeft + this.width;
+  }
+
   get absoluteTop(): number {
     return this.relativeTop + (this.parent?.absoluteTop ?? 0);
   }
   set absoluteTop(value: number) {
     this.relativeTop = value -  (this.parent?.absoluteTop ?? 0);
+  }
+
+  get absoluteBottom(): number {
+    return this.absoluteTop + this.height;
   }
 
   get width(): number { return this.getProperty("Width")!.value; }

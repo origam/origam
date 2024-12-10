@@ -11,7 +11,8 @@ import {
 import {
   ApiControl,
   IArchitectApi,
-  ISectionEditorData
+  ISectionEditorData,
+  ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import {
   ResizeHandle
@@ -40,7 +41,8 @@ export class DesignSurfaceState {
     originalLeft: 0,
     originalTop: 0
   };
-  rootControl: ApiControl;
+  panel: Component = null as any; // will be assigned in loadComponents
+  panelId: string;
 
   get isDragging() {
     return !!this.dragState.component;
@@ -59,19 +61,18 @@ export class DesignSurfaceState {
     private architectApi: IArchitectApi,
     private propertiesState: PropertiesState,
     private editorNodeId: string,
-    private setDirty: (isDirty: boolean) => void
+    private setDirty: (isDirty: boolean) => void,
+    private updateScreenEditor:() => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
   ) {
-    this.rootControl = sectionEditorData.rootControl;
+    this.panelId = sectionEditorData.rootControl.id;
     this.loadComponents(sectionEditorData.rootControl);
   }
 
   loadComponents(rootControl: ApiControl) {
     let components: Component[] = [];
     components = toComponentRecursive(rootControl, null, components)
-    // for (const child of rootControl.children) {
-    //   components = toComponentRecursive(child, null, components)
-    // }
     this.components = components;
+    this.panel = this.components.find(x => x.id === this.panelId)!;
   }
 
   @action
@@ -128,22 +129,8 @@ export class DesignSurfaceState {
           (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel)  &&
           this.isPointInsideComponent(mouseX, mouseY, comp)
       );
-      draggingComponent.parent = targetParent ?? null;
-      // if (targetGroupBox) {
-      //   // Calculate relative position based on the component's current position
-      //   draggingComponent.parent = targetGroupBox;
-      //   // draggingComponent.relativeLeft = draggingComponent.absoluteLeft - targetGroupBox.absoluteLeft;
-      //   // draggingComponent.relativeTop = draggingComponent.absoluteTop - targetGroupBox.absoluteTop;
-      //   //
-      //   // // Update the absolute position to ensure it stays in the correct place
-      //   // draggingComponent.absoluteLeft = targetGroupBox.absoluteLeft + draggingComponent.relativeLeft;
-      //   // draggingComponent.absoluteTop = targetGroupBox.absoluteTop + draggingComponent.relativeTop;
-      // } else if (!targetGroupBox && draggingComponent.parentId) {
-      //   // If we're dropping outside any group box, maintain the absolute position
-      //   draggingComponent.parentId = null;
-      //   // draggingComponent.relativeLeft = undefined;
-      //   // draggingComponent.relativeTop = undefined;
-      // }
+      draggingComponent.parent = targetParent ?? this.panel;
+      this.updatePanelSize(draggingComponent);
     }
 
     this.dragState = {
@@ -154,6 +141,19 @@ export class DesignSurfaceState {
       originalTop: 0,
       didDrag: false
     };
+  }
+
+  private updatePanelSize(draggingComponent: Component) {
+    let didUpdate = false;
+    if (draggingComponent.absoluteRight > this.panel.absoluteRight) {
+      this.panel.width += draggingComponent.absoluteRight - this.panel.absoluteRight + 20;
+      didUpdate = true;
+    }
+    if (draggingComponent.absoluteBottom > this.panel.absoluteBottom) {
+      this.panel.height += draggingComponent.absoluteBottom - this.panel.absoluteBottom + 20;
+      didUpdate = true;
+    }
+    return didUpdate;
   }
 
   @action
@@ -279,7 +279,7 @@ export class DesignSurfaceState {
     return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
       const apiControl = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNodeId,
-        parentControlSetItemId: this.rootControl.id,
+        parentControlSetItemId: this.panel.id,
         componentType: this.draggedComponentData!.type,
         fieldName: this.draggedComponentData!.fieldName,
         top: y,
@@ -292,6 +292,12 @@ export class DesignSurfaceState {
       this.components.push(newComponent);
       this.draggedComponentData = null;
       this.setDirty(true);
+
+      const panelSizeChanged = this.updatePanelSize(newComponent);
+      if (panelSizeChanged) {
+        yield* this.updateScreenEditor() as any;
+      }
+
     }.bind(this);
   }
 
