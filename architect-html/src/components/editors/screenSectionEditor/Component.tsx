@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   IComponentData,
   parseComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
@@ -12,6 +13,10 @@ import { ApiControl } from "src/API/IArchitectApi.ts";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
+import {
+  controlLayer,
+  panelLayer
+} from "src/components/editors/screenSectionEditor/Layers.ts";
 
 export class Component {
   id: string;
@@ -60,6 +65,16 @@ export class Component {
   get labelPosition(): LabelPosition { return this._labelPosition; }
   set labelPosition(value: number) { this._labelPosition = value; }
 
+  get zIndex(): number {
+    if(this.data.type === ComponentType.AsPanel){
+      return panelLayer;
+    }
+    if(this.data.type === ComponentType.GroupBox){
+      return this.countParents() + panelLayer;
+    }
+    return controlLayer;
+  }
+
   constructor(args: {
     id: string,
     parent: Component |  null,
@@ -80,6 +95,13 @@ export class Component {
       y >= this.absoluteTop &&
       y <= this.absoluteTop + this.height
     );
+  }
+
+  countParents(): number{
+    if(!this.parent){
+      return 0;
+    }
+    return this.parent.countParents() + 1;
   }
 
   getLabelStyle() {

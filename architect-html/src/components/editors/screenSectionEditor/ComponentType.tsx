@@ -7,7 +7,7 @@ export enum ComponentType {
   AsPanel = 'Origam.Gui.Win.AsPanel',
   AsDateBox = 'Origam.Gui.Win.AsDateBox',
   AsCheckBox = 'Origam.Gui.Win.AsCheckBox',
-  GroupBox = 'GroupBox',
+  GroupBox = 'Origam.Gui.Win.GroupBoxWithChamfer',
   TextArea = 'TextArea',
 }
 

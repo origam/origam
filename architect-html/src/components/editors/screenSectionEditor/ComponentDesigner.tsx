@@ -274,7 +274,7 @@ const DesignSurface: React.FC<{
             className={S.componentLabel}
             style={{
               ...component.getLabelStyle(),
-              zIndex: component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel ? 0 : 1
+              zIndex: component.zIndex
               }
             }
           >
@@ -291,7 +291,7 @@ const DesignSurface: React.FC<{
               width: `${component.width}px`,
               height: `${component.height}px`,
               cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-              zIndex: component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel ? 0 : 1
+              zIndex: component.zIndex
             }}
             onMouseDown={(e) => handleComponentMouseDown(e, component)}
             onClick={(e) => handleComponentClick(e, component)}
