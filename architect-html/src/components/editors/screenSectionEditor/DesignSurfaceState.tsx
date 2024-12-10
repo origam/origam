@@ -316,6 +316,8 @@ export class DesignSurfaceState {
 
     }.bind(this);
   }
+
+  @action
   onClose() {
    this.propertiesState.setEdited("", []);
   }

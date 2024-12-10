@@ -1,9 +1,10 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 
 export class ProgressBarState {
   @observable private accessor _isWorking = false;
   private timeout: NodeJS.Timeout | null = null;
   private delayOverlayByMilliseconds = 100;
+
   get isWorking(): boolean {
     return this._isWorking;
   }
@@ -14,7 +15,7 @@ export class ProgressBarState {
     }
 
     this.timeout = setTimeout(() => {
-      this._isWorking = isWorkingNow;
+      action(()=> this._isWorking = isWorkingNow)();
     }, !this._isWorking && isWorkingNow ? this.delayOverlayByMilliseconds : 0);
   }
 }

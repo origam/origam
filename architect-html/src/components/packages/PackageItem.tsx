@@ -14,7 +14,6 @@ export function PackageItem(props: {
   const packagesState = rootStore.packagesState;
 
   async function onPackageClick() {
-
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: packagesState.setActivePackageClick(props.package.id)
     });
