@@ -20,7 +20,7 @@ import {
 
 export class Component {
   id: string;
-  parent: Component |  null;
+  @observable.ref accessor parent: Component |  null;
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
 

@@ -20,46 +20,58 @@ public class ScreenEditorController(
         [FromBody] SectionEditorChangesModel input)
     {
         EditorData editor = editorService.OpenEditor(input.SchemaItemId);
-        if (editor.Item is PanelControlSet screenSection)
+        if (editor.Item is not PanelControlSet screenSection)
         {
-            screenSection.Name = input.Name;
-            screenSection.DataSourceId = input.SelectedDataSourceId;
-            foreach (var changes in input.ModelChanges)
+            return BadRequest(
+                $"item id: {input.SchemaItemId} is not a PanelControlSet");
+        }
+        screenSection.Name = input.Name;
+        screenSection.DataSourceId = input.SelectedDataSourceId;
+        foreach (var changes in input.ModelChanges)
+        {
+            ControlSetItem itemToUpdate = screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
+            if (itemToUpdate == null)
             {
-                ControlSetItem itemToUpdate = screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
-                if (itemToUpdate == null)
+                return BadRequest(
+                    $"item id: {changes.SchemaItemId} is not in the PanelControlSet");
+            }
+
+            if (itemToUpdate.Id != screenSection.MainItem.Id &&
+                itemToUpdate.ParentItemId != (changes.ParentSchemaItemId ?? Guid.Empty))
+            {
+                itemToUpdate.ParentItem.ChildItems.Remove(itemToUpdate);
+                if (changes.ParentSchemaItemId != null)
                 {
-                    return BadRequest(
-                        $"item id: {changes.SchemaItemId} is not in the PanelControlSet");
-                }
-                foreach (var propertyChange in changes.Changes)
-                {
-                    PropertyValueItem valueItem = itemToUpdate.ChildItems
-                        .OfType<PropertyValueItem>()
-                        .FirstOrDefault(item =>
-                            item.ControlPropertyId ==
-                            propertyChange.ControlPropertyId);
-                    if (valueItem != null)
-                    {
-                        if (valueItem.Value != propertyChange.Value)
-                        {
-                            editor.IsDirty = true;
-                        }
-                        valueItem.Value = propertyChange.Value;
-                    }
+                    ISchemaItem newParent = screenSection.GetChildByIdRecursive(changes
+                        .ParentSchemaItemId.Value);
+                    newParent.ChildItems.Add(itemToUpdate);
                 }
             }
 
-            SectionEditorData editorData = sectionService.GetSectionEditorData(screenSection);
-            return Ok(new SectionEditorModel
+            foreach (var propertyChange in changes.Changes)
             {
-                Data = editorData,
-                IsDirty = editor.IsDirty
-            });
+                PropertyValueItem valueItem = itemToUpdate.ChildItems
+                    .OfType<PropertyValueItem>()
+                    .FirstOrDefault(item =>
+                        item.ControlPropertyId ==
+                        propertyChange.ControlPropertyId);
+                if (valueItem != null)
+                {
+                    if (valueItem.Value != propertyChange.Value)
+                    {
+                        editor.IsDirty = true;
+                    }
+                    valueItem.Value = propertyChange.Value;
+                }
+            }
         }
 
-        return BadRequest(
-            $"item id: {input.SchemaItemId} is not a PanelControlSet");
+        SectionEditorData editorData = sectionService.GetSectionEditorData(screenSection);
+        return Ok(new SectionEditorModel
+        {
+            Data = editorData,
+            IsDirty = editor.IsDirty
+        });
     }
     
     [HttpPost("DeleteItem")]

@@ -3,6 +3,7 @@
 public class ChangesModel
 {
     public Guid SchemaItemId { get; set; }
+    public Guid? ParentSchemaItemId { get; set; }
     public List<PropertyChange> Changes { get; set; }
 }
 

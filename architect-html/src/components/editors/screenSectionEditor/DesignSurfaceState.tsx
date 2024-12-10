@@ -128,8 +128,12 @@ export class DesignSurfaceState {
         comp =>
           (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel)  &&
           comp.isPointInside(mouseX, mouseY)
-      );
-      draggingComponent.parent = targetParent ?? this.panel;
+      ) ?? this.panel;
+      if(draggingComponent.parent && draggingComponent.parent != targetParent) {
+        draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft - targetParent.absoluteLeft + draggingComponent.relativeLeft;
+        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop - targetParent.absoluteTop + draggingComponent.relativeTop ;
+        draggingComponent.parent = targetParent ;
+      }
       this.updatePanelSize(draggingComponent);
     }
 

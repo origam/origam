@@ -51,6 +51,7 @@ export interface IArchitectApi {
 
 export interface IModelChange {
   schemaItemId: string;
+  parentSchemaItemId: string | undefined;
   changes: IPropertyChange[]
 }
 

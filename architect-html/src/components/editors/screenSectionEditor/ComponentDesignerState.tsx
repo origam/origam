@@ -95,6 +95,7 @@ export class ComponentDesignerState implements IEditorState {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,
+          parentSchemaItemId: x.parent?.id,
           changes: toChanges(x.properties)
         }
       }
