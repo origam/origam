@@ -44,3 +44,8 @@ export function toComponentType(origamType: OrigamDataType): ComponentType {
       return ComponentType.AsTextBox;
   }
 }
+
+export function getComponentTypeKey(componentTypeValue: ComponentType): string | undefined {
+  return Object.entries(ComponentType)
+    .find(entry => entry[1] === componentTypeValue)?.[0];
+}

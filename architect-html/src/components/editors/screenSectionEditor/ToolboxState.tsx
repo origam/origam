@@ -15,6 +15,7 @@ export class ToolboxState {
   @observable accessor selectedDataSourceId: string;
   @observable accessor fields: IEditorField[];
   @observable accessor isDirty: boolean = false;
+  @observable accessor selectedFieldName: string | undefined;
   tabViewState: TabViewState = new TabViewState();
 
   constructor(

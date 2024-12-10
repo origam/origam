@@ -35,8 +35,8 @@
   overflow: hidden;
 }
 
-.fields {
-  background-color: #f0f0f0;
+.draggAbles {
+  background: var(--background2);
   padding: 16px;
   flex: 1;
 }
@@ -53,7 +53,9 @@
   }
 }
 
-
+.selectedField {
+  background: var(--background3);
+}
 
 
 .label {

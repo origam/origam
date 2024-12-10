@@ -10,10 +10,10 @@ import {
 import { IEditorField } from "src/API/IArchitectApi.ts";
 import { action } from "mobx";
 import {
+  ComponentType, getComponentTypeKey,
   toComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
-import S
-  from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
+import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
 import { TabView } from "src/components/tabView/TabView.tsx";
 
 export const Toolbox: React.FC<{
@@ -24,7 +24,7 @@ export const Toolbox: React.FC<{
   const surfaceState = props.designerState.surface;
   const toolboxState = props.designerState.toolbox;
 
-  const onDragStart = (field: IEditorField) => {
+  const onFieldDragStart = (field: IEditorField) => {
     action(() => {
       surfaceState.draggedComponentData = {
         fieldName: field.name,
@@ -33,13 +33,25 @@ export const Toolbox: React.FC<{
     })();
   };
 
+
+  const onControlDragStart = (type: ComponentType) => {
+    // action(() => {
+    //   surfaceState.draggedComponentData = {
+    //     fieldName: field.name,
+    //     type: toComponentType(field.type)
+    //   };
+    // })();
+  };
+
   function getToolboxComponent(field: IEditorField) {
+    const isSelected = toolboxState.selectedFieldName === field.name;
     return (
       <div
         key={field.name}
         draggable
-        onDragStart={() => onDragStart(field)}
-        className={S.toolboxField}
+        onClick={() => toolboxState.selectedFieldName = field.name}
+        onDragStart={() => onFieldDragStart(field)}
+        className={S.toolboxField + " " + (isSelected ? S.selectedField : "")}
       >
         <div className={S.toolboxFieldIcon}>
 
@@ -50,6 +62,26 @@ export const Toolbox: React.FC<{
       </div>
     );
   }
+
+
+  function getControlComponent(type: ComponentType) {
+    return (
+      <div
+        key={type}
+        draggable
+        onDragStart={() => onControlDragStart(type)}
+        className={S.toolboxField}
+      >
+        <div className={S.toolboxFieldIcon}>
+
+        </div>
+        <div>
+          {getComponentTypeKey(type)}
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className={S.toolbox}>
@@ -107,27 +139,19 @@ export const Toolbox: React.FC<{
         items={[
           {
             label: "Fields",
-            node: <div className={S.fields}>
+            node: <div className={S.draggAbles}>
               {toolboxState.fields.map(field => getToolboxComponent(field))}
-              {/*<div*/}
-              {/*  className={S.toolItem}*/}
-              {/*  draggable*/}
-              {/*  onDragStart={() => onDragStart('Label')}*/}
-              {/*>*/}
-              {/*  Label*/}
-              {/*</div>*/}
-              {/*<div*/}
-              {/*  className={S.toolItem}*/}
-              {/*  draggable*/}
-              {/*  onDragStart={() => onDragStart('GroupBox')}*/}
-              {/*>*/}
-              {/*  GroupBox*/}
-              {/*</div>*/}
             </div>
           },
           {
             label: "Widgets",
-            node: <div/>
+            node: <div className={S.draggAbles}>
+              {getControlComponent(ComponentType.AsCheckBox)}
+              {getControlComponent(ComponentType.AsCombo)}
+              {getControlComponent(ComponentType.AsDateBox)}
+              {getControlComponent(ComponentType.AsTextBox)}
+              {getControlComponent(ComponentType.GroupBox)}
+            </div>
           }
         ]}
       />
