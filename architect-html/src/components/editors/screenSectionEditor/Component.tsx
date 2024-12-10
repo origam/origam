@@ -73,6 +73,15 @@ export class Component {
     this.parent = args.parent;
   }
 
+  isPointInside(x: number, y: number) {
+    return (
+      x >= this.absoluteLeft &&
+      x <= this.absoluteLeft + this.width &&
+      y >= this.absoluteTop &&
+      y <= this.absoluteTop + this.height
+    );
+  }
+
   getLabelStyle() {
     switch (this.labelPosition) {
       case LabelPosition.Left:

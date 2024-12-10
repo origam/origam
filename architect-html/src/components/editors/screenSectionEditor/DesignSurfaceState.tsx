@@ -127,7 +127,7 @@ export class DesignSurfaceState {
       const targetParent = this.components.find(
         comp =>
           (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel)  &&
-          this.isPointInsideComponent(mouseX, mouseY, comp)
+          comp.isPointInside(mouseX, mouseY)
       );
       draggingComponent.parent = targetParent ?? this.panel;
       this.updatePanelSize(draggingComponent);
@@ -141,6 +141,22 @@ export class DesignSurfaceState {
       originalTop: 0,
       didDrag: false
     };
+  }
+
+  onDesignerMouseUp(x: number, y: number) {
+    return function* (this: DesignSurfaceState) {
+      if (this.isDragging) {
+        const didDrag = this.dragState.didDrag;
+        this.endDragging(x, y);
+        if (didDrag) {
+          yield* this.updateScreenEditor();
+        }
+      }
+      if (this.isResizing) {
+        this.endResizing();
+        yield* this.updateScreenEditor();
+      }
+    }.bind(this);
   }
 
   private updatePanelSize(draggingComponent: Component) {
@@ -300,16 +316,6 @@ export class DesignSurfaceState {
 
     }.bind(this);
   }
-
-  private isPointInsideComponent(x: number, y: number, component: Component) {
-    return (
-      x >= component.absoluteLeft &&
-      x <= component.absoluteLeft + component.width &&
-      y >= component.absoluteTop &&
-      y <= component.absoluteTop + component.height
-    );
-  }
-
   onClose() {
    this.propertiesState.setEdited("", []);
   }

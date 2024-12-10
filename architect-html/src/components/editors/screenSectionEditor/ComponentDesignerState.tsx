@@ -54,7 +54,7 @@ export class ComponentDesignerState implements IEditorState {
       propertiesState,
       this.editorNode.origamId,
       (value) => this.isDirty = value,
-      this.updateScreenEditor
+      this.updateScreenEditor.bind(this)
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
   }

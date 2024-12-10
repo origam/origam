@@ -199,7 +199,7 @@ const DesignSurface: React.FC<{
     const mouseX = e.clientX - surfaceRef.current.getBoundingClientRect().left;
     const mouseY = e.clientY - surfaceRef.current.getBoundingClientRect().top;
 
-    run({generator: designerState.onDesignerMouseUp(mouseX, mouseY)});
+    run({generator: surfaceState.onDesignerMouseUp(mouseX, mouseY)});
   };
 
   const handleComponentClick = (e: React.MouseEvent, component: Component) => {
