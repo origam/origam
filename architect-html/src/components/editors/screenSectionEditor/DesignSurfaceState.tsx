@@ -66,6 +66,7 @@ export class DesignSurfaceState {
   ) {
     this.panelId = sectionEditorData.rootControl.id;
     this.loadComponents(sectionEditorData.rootControl);
+    this.panel = this.components.find(x => x.id === sectionEditorData.rootControl.id)!;
   }
 
   loadComponents(rootControl: ApiControl) {
