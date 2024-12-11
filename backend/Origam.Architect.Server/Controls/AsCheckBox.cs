@@ -1,9 +1,14 @@
 using System.ComponentModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsCheckBox
+public class AsCheckBox: BaseIControlAdapter
 {
+    public AsCheckBox(ControlSetItem controlSetItem) : base(controlSetItem)
+    {
+    }
+
     [Browsable(false)]
     public int Top { get; set; }
 

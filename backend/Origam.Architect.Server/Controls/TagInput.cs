@@ -1,9 +1,10 @@
 using System.ComponentModel;
 using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class TagInput: LabeledEditor
+public class TagInput(ControlSetItem controlSetItem) : LabeledEditor(controlSetItem)
 {
     [Category("(ORIGAM)")]
     public string Caption { get; set; }

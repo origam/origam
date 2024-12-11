@@ -64,20 +64,20 @@ public class EditorPropertyFactory
         return Create(property, item);
     }
 
-    public EditorProperty Create(PropertyInfo property, ISchemaItem item)
+    public EditorProperty Create(PropertyInfo property, object instance)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description =
             property.GetAttribute<DescriptionAttribute>()?.Description;
 
-        object value = property.GetValue(item);
+        object value = property.GetValue(instance);
 
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
             type: ToPropertyTypeName(property.PropertyType),
             value: ToSerializableValue(value),
-            dropDownValues: GetAvailableValues(property, item),
+            dropDownValues: GetAvailableValues(property, instance),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null);
@@ -124,7 +124,7 @@ public class EditorPropertyFactory
     }
 
     public DropDownValue[] GetAvailableValues(PropertyInfo property,
-        ISchemaItem item)
+        object item)
     {
         if (property.PropertyType == typeof(string) ||
             property.PropertyType == typeof(Guid) ||

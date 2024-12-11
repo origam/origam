@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Xml;
+using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
@@ -39,7 +40,8 @@ public class ScreenSectionEditorService(
                     newParent.ChildItems.Add(itemToUpdate);
                 }
             }
-
+            
+            IControlAdapter controlAdapter = GetControl(itemToUpdate);
             foreach (var propertyChange in changes.Changes)
             {
                 PropertyValueItem valueItem = itemToUpdate.ChildItems
@@ -54,6 +56,14 @@ public class ScreenSectionEditorService(
                         editorIsDirty = true;
                     }
                     valueItem.Value = propertyChange.Value;
+                }
+
+                PropertyInfo schemaItemProperty = controlAdapter.GetSchemaItemProperties()
+                    .FirstOrDefault(x => x.Name == propertyChange.Name);
+                if (schemaItemProperty != null)
+                {
+                    schemaItemProperty.SetValue(controlAdapter, propertyChange.Value);
+                    editorIsDirty = true;
                 }
             }
         }
@@ -131,8 +141,9 @@ public class ScreenSectionEditorService(
         return apiControl;
     }
 
-    private Type GetControlType(string oldFullClassName)
+    private IControlAdapter GetControl(ControlSetItem controlSetItem)
     {
+        string oldFullClassName = controlSetItem.ControlItem.ControlType;
         try
         {
             string className = oldFullClassName
@@ -140,7 +151,13 @@ public class ScreenSectionEditorService(
                 .LastOrDefault();
             string newFullClassName =
                 "Origam.Architect.Server.Controls." + className;
-            return Type.GetType(newFullClassName);
+            Type type = Type.GetType(newFullClassName);
+            if (type == null)
+            {
+                throw new Exception("Cannot find type: " + newFullClassName);
+            }
+
+            return Activator.CreateInstance(type, new object[] { controlSetItem }) as IControlAdapter;
         }
         catch (Exception ex)
         {
@@ -157,13 +174,13 @@ public class ScreenSectionEditorService(
                                 nameof(PanelControlSet));
         }
 
-        Type controlType = GetControlType(controlSetItem.ControlItem.ControlType);
-        ApiControl control = new ApiControl
+        IControlAdapter controlAdapter = GetControl(controlSetItem);
+        ApiControl apiControl = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id
         };
-        control.Properties = controlType.GetProperties()
+        apiControl.Properties = controlAdapter.GetValueItemProperties()
             .Select(property =>
             {
                 PropertyValueItem valueItem = controlSetItem.ChildItems
@@ -172,6 +189,11 @@ public class ScreenSectionEditorService(
                 return propertyFactory.Create(property, valueItem);
             })
             .ToList();
+
+        var schemaItemProperties = controlAdapter.GetSchemaItemProperties()
+            .Select(property => propertyFactory.Create(property, controlAdapter));
+        apiControl.Properties.AddRange(schemaItemProperties);
+        
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
             .FirstOrDefault();
@@ -180,8 +202,8 @@ public class ScreenSectionEditorService(
                 .CategoryConst)
             .FirstOrDefault(x => x.Name == bindingInfo?.Value)
             ?.Caption ?? bindingInfo?.Value;
-        control.Name = caption ?? controlSetItem.Name;
-        return control;
+        apiControl.Name = caption ?? controlSetItem.Name;
+        return apiControl;
     }
 
     public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, PanelControlSet screenSection)
@@ -195,8 +217,8 @@ public class ScreenSectionEditorService(
         newItem.ControlItem = controlItem;
         newItem.Name = itemModelData.FieldName;
         
-        Type controlType = GetControlType(newItem.ControlItem.ControlType);
-        foreach (var property in controlType.GetProperties())
+        IControlAdapter controlAdapter = GetControl(newItem);
+        foreach (var property in controlAdapter.GetValueItemProperties())
         {
             var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
             var propertyValueItem = newItem.NewItem<PropertyValueItem>(schemaService.ActiveSchemaExtensionId, null);

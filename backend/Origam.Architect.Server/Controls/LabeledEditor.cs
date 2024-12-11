@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class LabeledEditor
+public abstract class LabeledEditor(ControlSetItem controlSetItem)
+    : BaseIControlAdapter(controlSetItem)
 {
     [Category("(ORIGAM)")]
     [DefaultValue(100)]
