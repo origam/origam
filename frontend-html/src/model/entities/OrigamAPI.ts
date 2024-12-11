@@ -861,7 +861,11 @@ export class OrigamAPI implements IApi {
   }
 
   async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {
-    return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
+    const result = (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
+    if (!result) {
+      throw new Error(`No MenuId was returned from GetMenuId for LookupId: ${data.LookupId}, ReferenceId: ${data.ReferenceId}` );
+    }
+    return result;
   }
 
   async getExcelFile(data: {
