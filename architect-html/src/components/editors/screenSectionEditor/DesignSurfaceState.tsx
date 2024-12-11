@@ -134,11 +134,7 @@ export class DesignSurfaceState {
       draggingComponent.data.type !== ComponentType.GroupBox &&
       draggingComponent.data.type !== ComponentType.AsPanel
     ) {
-      const targetParent = this.components.find(
-        comp =>
-          (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
-          comp.isPointInside(mouseX, mouseY)
-      ) ?? this.panel;
+      const targetParent = this.findComponentAt(mouseX, mouseY);
       if (draggingComponent.parent && draggingComponent.parent != targetParent) {
         draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft - targetParent.absoluteLeft + draggingComponent.relativeLeft;
         draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop - targetParent.absoluteTop + draggingComponent.relativeTop;
@@ -155,6 +151,15 @@ export class DesignSurfaceState {
       originalTop: 0,
       didDrag: false
     };
+  }
+
+  private findComponentAt(mouseX: number, mouseY: number) {
+    const targetParent = this.components.find(
+      comp =>
+        (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
+        comp.isPointInside(mouseX, mouseY)
+    ) ?? this.panel;
+    return targetParent;
   }
 
   onDesignerMouseUp(x: number, y: number) {
@@ -319,6 +324,7 @@ export class DesignSurfaceState {
       const newComponent = toComponent(apiControl, null);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
+      newComponent.parent = this.findComponentAt(x, y);
       this.components.push(newComponent);
       this.draggedComponentData = null;
       this.setDirty(true);
