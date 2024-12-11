@@ -33,14 +33,15 @@ export const Toolbox: React.FC<{
     })();
   };
 
-
   const onControlDragStart = (type: ComponentType) => {
-    // action(() => {
-    //   surfaceState.draggedComponentData = {
-    //     fieldName: field.name,
-    //     type: toComponentType(field.type)
-    //   };
-    // })();
+    action(() => {
+      if(toolboxState.selectedFieldName){
+        surfaceState.draggedComponentData = {
+          fieldName: toolboxState.selectedFieldName,
+          type: type
+        };
+      }
+    })();
   };
 
   function getToolboxComponent(field: IEditorField) {
@@ -54,7 +55,6 @@ export const Toolbox: React.FC<{
         className={S.toolboxField + " " + (isSelected ? S.selectedField : "")}
       >
         <div className={S.toolboxFieldIcon}>
-
         </div>
         <div>
           {field.name}
@@ -62,7 +62,6 @@ export const Toolbox: React.FC<{
       </div>
     );
   }
-
 
   function getControlComponent(type: ComponentType) {
     return (
@@ -73,7 +72,6 @@ export const Toolbox: React.FC<{
         className={S.toolboxField}
       >
         <div className={S.toolboxFieldIcon}>
-
         </div>
         <div>
           {getComponentTypeKey(type)}
@@ -81,7 +79,6 @@ export const Toolbox: React.FC<{
       </div>
     );
   }
-
 
   return (
     <div className={S.toolbox}>
@@ -155,7 +152,6 @@ export const Toolbox: React.FC<{
           }
         ]}
       />
-
     </div>
   );
 });
