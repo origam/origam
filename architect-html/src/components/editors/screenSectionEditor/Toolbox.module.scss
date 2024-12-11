@@ -18,7 +18,7 @@
 .toolboxFieldIcon {
   width: 20px;
   height: 20px;
-  background: #4C84FF;
+  background: var(--foreground1);
 }
 
 .toolboxField {
@@ -44,12 +44,12 @@
 .toolItem {
   padding: 8px;
   margin: 8px 0;
-  background-color: #fff;
+  background-color: var(--background1);
   cursor: move;
   user-select: none;
 
   &:hover {
-    background-color: #f8f8f8;
+    background-color: var(--background2);
   }
 }
 
@@ -62,14 +62,6 @@
   min-width: 50px;
   min-height: 20px;
   background-color: transparent;
-}
-
-.groupBox {
-  min-width: 100px;
-  min-height: 50px;
-  border: 2px solid #666;
-  padding: 20px 8px 8px;
-  background-color: rgba(255, 255, 255, 0.8);
 }
 
 
