@@ -111,6 +111,9 @@ export class DesignSurfaceState {
 
   @action
   startDragging(component: Component, mouseX: number, mouseY: number) {
+    if (component.id === this.panelId) {
+      return;
+    }
     this.selectComponent(component);
     this.dragState = {
       component,
