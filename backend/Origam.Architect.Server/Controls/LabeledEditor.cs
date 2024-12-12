@@ -3,7 +3,7 @@ using Origam.Gui;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class LabeledEditor
+public abstract class LabeledEditor: ControlBase
 {
     [Category("(ORIGAM)")]
     [DefaultValue(100)]
@@ -17,19 +17,5 @@ public abstract class LabeledEditor
     [Localizable(true)]
     [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
-    public CaptionPosition CaptionPosition { get; set; }
-    
-    [Browsable(false)]
-    [DefaultValue(400)]
-    public int Width { get; set; }
-
-    [Browsable(false)]
-    [DefaultValue(20)]
-    public int Height { get; set; }
-    
-    [Browsable(false)]
-    public int Left { get; set; }
-
-    [Browsable(false)]
-    public int Top { get; set; }
+    public CaptionPosition CaptionPosition { get; set; } 
 }

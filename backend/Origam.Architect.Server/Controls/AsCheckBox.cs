@@ -2,11 +2,8 @@ using System.ComponentModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsCheckBox
+public class AsCheckBox: ControlBase
 {
-    [Browsable(false)]
-    public int Top { get; set; }
-
     [Localizable(true)]
     [MergableProperty(false)]
     public int TabIndex { get; set; }
@@ -23,20 +20,10 @@ public class AsCheckBox
     [DefaultValue(false)]
     public bool ReadOnly { get; set; }
 
-    [Browsable(false)]
-    public int Width { get; set; }
-
     public Object Value { get; set; }
 
-    [Browsable(false)]
-    public int Left { get; set; }
-
     public bool HideOnForm { get; set; }
-
-    [Browsable(false)]
-    public int Height { get; set; }
-
+    
     [Browsable(false)]
     public Guid StyleId { get; set; }
-
 }

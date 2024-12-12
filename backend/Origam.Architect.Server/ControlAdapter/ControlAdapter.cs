@@ -82,7 +82,8 @@ public class ControlAdapter(
                 } 
                 if (propertyInfo.Name == nameof(MappingCondition))
                 {
-                    throw new NotImplementedException();
+                    // Don't know how to implement it yet.
+                    return false;
                 }
 
                 return true;

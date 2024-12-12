@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsPanel
+public class AsPanel: ControlBase
 {
     [Category("Map View")]
     public string MapTextColorMember { get; set; }
@@ -19,15 +19,9 @@ public class AsPanel
     [Category("Map View")]
     public string MapTextRotationMember { get; set; }
 
-    [Browsable(false)]
-    public int Top { get; set; }
-
     [DefaultValue(0)]
     public int MaxDynamicGridHeight { get; set; }
-
-    [Browsable(false)]
-    public int Width { get; set; }
-
+    
     [Category("Map View")]
     public string MapTextLocationMember { get; set; }
 
@@ -37,11 +31,6 @@ public class AsPanel
     [Category("Map View")]
     public string MapLocationMember { get; set; }
 
-    [Browsable(false)]
-    public int Height { get; set; }
-
-    [Browsable(false)]
-    public int Left { get; set; }
 
     [Category("Calendar View")]
     public string CalendarDateFromMember { get; set; }
@@ -205,5 +194,4 @@ public class AsPanel
 
     [Category("Calendar View")]
     public string CalendarIsFinishedMember { get; set; }
-
 }
