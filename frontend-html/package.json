@@ -27,7 +27,7 @@
     "@types/lodash": "^4.17.13",
     "@types/mapbox__geojson-area": "^0.2.6",
     "@types/numeral": "^2.0.5",
-    "@types/react-color": "^3.0.12",
+    "@types/react-color": "^3.0.13",
     "@types/react-draft-wysiwyg": "^1.13.8",
     "@types/react-highlight-words": "^0.20.0",
     "@types/react-inlinesvg": "^1.0.0",
