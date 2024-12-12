@@ -1,10 +1,8 @@
 using System.ComponentModel;
-using Origam.Gui;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown(ControlSetItem controlSetItem) : LabeledEditor(controlSetItem)
+public class AsDropDown: LabeledEditor
 {
     public bool HideOnForm { get; set; }
 

@@ -1,10 +1,9 @@
 using System.ComponentModel;
 using Origam.Gui;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsTextBox(ControlSetItem controlSetItem) : LabeledEditor(controlSetItem)
+public class AsTextBox: LabeledEditor
 {
     [Browsable(false)]
     public Guid StyleId { get; set; }

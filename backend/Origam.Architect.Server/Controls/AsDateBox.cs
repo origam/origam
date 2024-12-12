@@ -1,10 +1,8 @@
 using System.ComponentModel;
-using Origam.Gui;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDateBox(ControlSetItem controlSetItem) : LabeledEditor(controlSetItem)
+public class AsDateBox: LabeledEditor
 {
     public bool HideOnForm { get; set; }
     

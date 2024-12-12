@@ -1,8 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Reflection;
-using System.Xml;
-using Origam.Architect.Server.Controls;
+﻿using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Schema;
@@ -14,7 +10,7 @@ namespace Origam.Architect.Server.Services;
 
 public class ScreenSectionEditorService(
     SchemaService schemaService,
-    EditorPropertyFactory propertyFactory)
+    ControlAdapterFactory adapterFactory)
 {
     public SectionEditorModel Update(PanelControlSet screenSection, SectionEditorChangesModel input)
     {
@@ -41,31 +37,8 @@ public class ScreenSectionEditorService(
                 }
             }
             
-            IControlAdapter controlAdapter = GetControl(itemToUpdate);
-            foreach (var propertyChange in changes.Changes)
-            {
-                PropertyValueItem valueItem = itemToUpdate.ChildItems
-                    .OfType<PropertyValueItem>()
-                    .FirstOrDefault(item =>
-                        item.ControlPropertyId ==
-                        propertyChange.ControlPropertyId);
-                if (valueItem != null)
-                {
-                    if (valueItem.Value != propertyChange.Value)
-                    {
-                        editorIsDirty = true;
-                    }
-                    valueItem.Value = propertyChange.Value;
-                }
-
-                PropertyInfo schemaItemProperty = controlAdapter.GetSchemaItemProperties()
-                    .FirstOrDefault(x => x.Name == propertyChange.Name);
-                if (schemaItemProperty != null)
-                {
-                    schemaItemProperty.SetValue(controlAdapter, propertyChange.Value);
-                    editorIsDirty = true;
-                }
-            }
+            ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(itemToUpdate);
+            editorIsDirty = controlAdapter.UpdateProperties(changes);
         }
 
         var editorData = GetSectionEditorData(screenSection);
@@ -140,31 +113,6 @@ public class ScreenSectionEditorService(
 
         return apiControl;
     }
-
-    private IControlAdapter GetControl(ControlSetItem controlSetItem)
-    {
-        string oldFullClassName = controlSetItem.ControlItem.ControlType;
-        try
-        {
-            string className = oldFullClassName
-                .Split(".")
-                .LastOrDefault();
-            string newFullClassName =
-                "Origam.Architect.Server.Controls." + className;
-            Type type = Type.GetType(newFullClassName);
-            if (type == null)
-            {
-                throw new Exception("Cannot find type: " + newFullClassName);
-            }
-
-            return Activator.CreateInstance(type, new object[] { controlSetItem }) as IControlAdapter;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Cannot find a form class for " +
-                                oldFullClassName, ex);
-        }
-    }
     
     private ApiControl LoadItem(ControlSetItem controlSetItem)
     {
@@ -174,25 +122,14 @@ public class ScreenSectionEditorService(
                                 nameof(PanelControlSet));
         }
 
-        IControlAdapter controlAdapter = GetControl(controlSetItem);
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(controlSetItem);
         ApiControl apiControl = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id
         };
-        apiControl.Properties = controlAdapter.GetValueItemProperties()
-            .Select(property =>
-            {
-                PropertyValueItem valueItem = controlSetItem.ChildItems
-                    .OfType<PropertyValueItem>()
-                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
-                return propertyFactory.Create(property, valueItem);
-            })
-            .ToList();
 
-        var schemaItemProperties = controlAdapter.GetSchemaItemProperties()
-            .Select(property => propertyFactory.Create(property, controlAdapter));
-        apiControl.Properties.AddRange(schemaItemProperties);
+        apiControl.Properties = controlAdapter.GetEditorProperties();
         
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
@@ -217,48 +154,10 @@ public class ScreenSectionEditorService(
         newItem.ControlItem = controlItem;
         newItem.Name = itemModelData.FieldName;
         
-        IControlAdapter controlAdapter = GetControl(newItem);
-        foreach (var property in controlAdapter.GetValueItemProperties())
-        {
-            var defaultValueAttribute = property.GetCustomAttribute(typeof(DefaultValueAttribute)) as DefaultValueAttribute;
-            var propertyValueItem = newItem.NewItem<PropertyValueItem>(schemaService.ActiveSchemaExtensionId, null);
-            object value = defaultValueAttribute?.Value;
-            var propertyItem = new ControlPropertyItem(schemaService.ActiveSchemaExtensionId);
-            propertyItem.Name = property.Name;
-            propertyValueItem.ControlPropertyItem = propertyItem;
-            if (property.PropertyType == typeof(int))
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.Integer;
-                if (property.Name == "Top")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(itemModelData.Top);
-                }
-                else if (property.Name == "Left")
-                {
-                    propertyValueItem.Value = XmlConvert.ToString(itemModelData.Left);
-                }
-                else
-                {
-                    propertyValueItem.Value = value == null ? null : XmlConvert.ToString((int)value);
-                }
-            }
-            else if (property.PropertyType == typeof(bool))
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.Boolean;
-                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((bool)value);
-            }
-            else if (property.PropertyType == typeof(Guid))
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.UniqueIdentifier;
-                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((Guid)value);
-            }
-            else
-            {
-                propertyItem.PropertyType = ControlPropertyValueType.String;
-                propertyValueItem.Value = value?.ToString();
-            }
-        }
-            
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
+        controlAdapter.InitializeProperties(
+            top: itemModelData.Top, 
+            left: itemModelData.Left);
         return LoadItem(newItem);
     }
 

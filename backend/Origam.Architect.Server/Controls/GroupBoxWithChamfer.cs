@@ -1,14 +1,9 @@
 using System.ComponentModel;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class GroupBoxWithChamfer: BaseIControlAdapter
+public abstract class GroupBoxWithChamfer
 {
-    public GroupBoxWithChamfer(ControlSetItem controlSetItem) : base(controlSetItem)
-    {
-    }
-
     [Browsable(false)]
     public int Height { get; set; }
 

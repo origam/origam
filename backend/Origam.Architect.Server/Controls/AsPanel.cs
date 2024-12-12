@@ -1,14 +1,9 @@
 using System.ComponentModel;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsPanel: BaseIControlAdapter
+public class AsPanel
 {
-    public AsPanel(ControlSetItem controlSetItem) : base(controlSetItem)
-    {
-    }
-
     [Category("Map View")]
     public string MapTextColorMember { get; set; }
 

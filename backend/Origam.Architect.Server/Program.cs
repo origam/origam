@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
+using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Wrappers;
@@ -36,6 +37,7 @@ public class Program
         builder.Services.AddSingleton<EditorService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<ScreenSectionEditorService>();
+        builder.Services.AddSingleton<ControlAdapterFactory>();
         builder.Services.AddSingleton(schema);
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
