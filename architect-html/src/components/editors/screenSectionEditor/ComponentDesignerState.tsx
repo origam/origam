@@ -70,7 +70,7 @@ export class ComponentDesignerState implements IEditorState {
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
       });
-      this.surface.loadComponents(newData.rootControl);
+      this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
     }.bind(this);
   }

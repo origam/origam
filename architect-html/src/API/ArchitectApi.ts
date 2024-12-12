@@ -143,6 +143,7 @@ export class ArchitectApi implements IArchitectApi {
       args
     )).data;
   }
+
   async deleteScreenEditorItem(
     args: {
       schemaItemId: string,
