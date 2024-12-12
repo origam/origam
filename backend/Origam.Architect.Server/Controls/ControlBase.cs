@@ -6,10 +6,6 @@ public abstract class ControlBase
 {
     [Category("Layout")]
     [Browsable(false)]
-    public int Height { get; set; }
-
-    [Category("Layout")]
-    [Browsable(false)]
     public int Top { get; set; }
     
     [Category("Layout")]
@@ -18,5 +14,11 @@ public abstract class ControlBase
 
     [Category("Layout")]
     [Browsable(false)]
-    public int Width { get; set; }
+    [DefaultValue(200)]
+    public virtual int Height { get; set; }
+    
+    [Category("Layout")]
+    [Browsable(false)]
+    [DefaultValue(200)]
+    public virtual int Width { get; set; }
 }

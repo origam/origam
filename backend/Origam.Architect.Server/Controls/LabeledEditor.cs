@@ -18,4 +18,14 @@ public abstract class LabeledEditor: ControlBase
     [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
     public CaptionPosition CaptionPosition { get; set; } 
+    
+    [Category("Layout")]
+    [Browsable(false)]
+    [DefaultValue(20)]
+    public override int Height { get; set; }
+    
+    [Category("Layout")]
+    [Browsable(false)]
+    [DefaultValue(400)]
+    public override int Width { get; set; }
 }
