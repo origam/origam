@@ -5,7 +5,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.ControlAdapter;
 
 public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
-    SchemaService schemaService)
+    SchemaService schemaService, IPersistenceService persistenceService)
 {
     public ControlAdapter Create(ControlSetItem controlSetItem)
     {
@@ -23,7 +23,8 @@ public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
                 throw new Exception("Cannot find type: " + newFullClassName);
             }
             
-            return new ControlAdapter(controlSetItem, controlType, propertyFactory, schemaService);
+            return new ControlAdapter(controlSetItem, controlType,
+                propertyFactory, schemaService, persistenceService);
         }
         catch (Exception ex)
         {

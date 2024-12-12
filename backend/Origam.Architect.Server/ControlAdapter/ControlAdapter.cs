@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Xml;
 using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.ReturnModels;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -12,7 +14,8 @@ public class ControlAdapter(
     ControlSetItem controlSetItem,
     Type controlType,
     EditorPropertyFactory propertyFactory,
-    SchemaService schemaService)
+    SchemaService schemaService,
+    IPersistenceService persistenceService)
 {
     [Category("(ORIGAM)")]
     [SchemaItemProperty]
@@ -43,12 +46,47 @@ public class ControlAdapter(
     [SchemaItemProperty]
     public string SchemaItemId => controlSetItem.Id.ToString();
 
-    private PropertyInfo[] GetSchemaItemProperties()
+    [Category("Behavior")]
+    [Description("If set to true, client will attempt to send save request after each change, if there are no errors.")]
+    [SchemaItemProperty]
+    public bool RequestSaveAfterChange
+    {
+        get => controlSetItem.RequestSaveAfterChange;
+        set => controlSetItem.RequestSaveAfterChange = value;
+    }
+
+    [Category("Multi Column Adapter Field")]
+    [TypeConverter(typeof(DataConstantConverter))]
+    [SchemaItemProperty]
+    public DataConstant MappingCondition
+    {
+        get =>
+            persistenceService.SchemaProvider
+                .RetrieveInstance<DataConstant>(controlSetItem.MultiColumnAdapterFieldCondition);
+        set => controlSetItem.MultiColumnAdapterFieldCondition = 
+            value?.Id ?? Guid.Empty;
+    }
+    
+    private IEnumerable<PropertyInfo> GetSchemaItemProperties()
     {
         return GetType().GetProperties()
-            .Where(p =>
-                p.GetCustomAttribute<SchemaItemPropertyAttribute>() != null)
-            .ToArray();
+            .Where(propertyInfo =>
+            {
+                var attr = propertyInfo
+                    .GetCustomAttribute<SchemaItemPropertyAttribute>();
+                if (attr == null) return false;
+                if (propertyInfo.Name == nameof(RequestSaveAfterChange))
+                {
+                    return controlSetItem.ControlItem
+                        .RequestSaveAfterChangeAllowed;
+                } 
+                if (propertyInfo.Name == nameof(MappingCondition))
+                {
+                    throw new NotImplementedException();
+                }
+
+                return true;
+            });
     }
 
     public bool UpdateProperties(ChangesModel changes)
@@ -159,6 +197,7 @@ public class ControlAdapter(
     }
 }
 
+[AttributeUsage(AttributeTargets.Property)]
 public class SchemaItemPropertyAttribute : Attribute
 {
 }

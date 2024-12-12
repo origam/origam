@@ -15,6 +15,7 @@ public class AsTextBox: LabeledEditor
     public bool AllowTab { get; set; }
 
     [DefaultValue(false)]
+    [Category("Behavior")]
     public bool ReadOnly { get; set; }
     
     [Localizable(true)]
@@ -29,6 +30,7 @@ public class AsTextBox: LabeledEditor
     public string Caption { get; set; }
 
     [Localizable(true)]
+    [Category("Behavior")]
     [MergableProperty(false)]
     public int TabIndex { get; set; }
 
@@ -37,6 +39,7 @@ public class AsTextBox: LabeledEditor
     [DefaultValue(false)]
     public bool IsRichText { get; set; }
     
+    [Category("Behavior")]
     public bool Multiline { get; set; }
     
     public bool IsPassword { get; set; }
