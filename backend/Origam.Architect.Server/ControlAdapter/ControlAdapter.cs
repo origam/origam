@@ -169,6 +169,20 @@ public class ControlAdapter(
         return properties;
     }
 
+    private ControlPropertyItem FindPropertyItem(string propertyName)
+    {
+        var propertyItem = controlSetItem.ControlItem
+                .ChildItemsByType<ControlPropertyItem>(ControlPropertyItem
+                    .CategoryConst)
+                .FirstOrDefault(x => x.Name == propertyName);
+            if (propertyItem == null)
+        {
+            throw new Exception("ControlPropertyItem " + propertyName + " not found");
+        }
+
+        return propertyItem;
+    }
+
     public void InitializeProperties(int top, int left)
     {
         foreach (var property in controlType.GetProperties())
@@ -180,8 +194,7 @@ public class ControlAdapter(
                 controlSetItem.NewItem<PropertyValueItem>(
                     schemaService.ActiveSchemaExtensionId, null);
             object value = defaultValueAttribute?.Value;
-            var propertyItem =
-                new ControlPropertyItem(schemaService.ActiveSchemaExtensionId);
+            ControlPropertyItem propertyItem = FindPropertyItem(property.Name);
             propertyItem.Name = property.Name;
             propertyValueItem.ControlPropertyItem = propertyItem;
             if (property.PropertyType == typeof(int))
