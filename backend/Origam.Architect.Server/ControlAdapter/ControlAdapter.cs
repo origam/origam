@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using System.Xml;
+using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Controllers;
+using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
-using Origam.Schema;
+using Origam.Architect.Server.Services;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -15,7 +17,8 @@ public class ControlAdapter(
     Type controlType,
     EditorPropertyFactory propertyFactory,
     SchemaService schemaService,
-    IPersistenceService persistenceService)
+    IPersistenceService persistenceService,
+    PropertyParser propertyParser)
 {
     [Category("(ORIGAM)")]
     [SchemaItemProperty]
@@ -95,6 +98,21 @@ public class ControlAdapter(
         bool changesMade = false;
         foreach (var propertyChange in changes.Changes)
         {
+            PropertyBindingInfo bindingInfo = controlSetItem.ChildItems
+                .OfType<PropertyBindingInfo>()
+                .FirstOrDefault(item =>
+                    item.ControlPropertyId ==
+                    propertyChange.ControlPropertyId);
+            if (bindingInfo != null)
+            {
+                if (bindingInfo.Value != propertyChange.Value)
+                {
+                    changesMade = true;
+                }
+
+                bindingInfo.Value = propertyChange.Value;
+                continue;
+            }
             PropertyValueItem valueItem = controlSetItem.ChildItems
                 .OfType<PropertyValueItem>()
                 .FirstOrDefault(item =>
@@ -108,25 +126,36 @@ public class ControlAdapter(
                 }
 
                 valueItem.Value = propertyChange.Value;
+                continue;
             }
 
             PropertyInfo schemaItemProperty = GetSchemaItemProperties()
                 .FirstOrDefault(x => x.Name == propertyChange.Name);
             if (schemaItemProperty != null)
             {
-                schemaItemProperty.SetValue(this, propertyChange.Value);
+                object parsedValue = propertyParser.Parse(schemaItemProperty, propertyChange.Value);
+                schemaItemProperty.SetValue(this, parsedValue);
                 changesMade = true;
             }
         }
 
         return changesMade;
     }
-
-    public List<EditorProperty> GetEditorProperties()
+    
+    public List<EditorProperty> GetEditorProperties(List<EditorField> fields)
     {
         List<EditorProperty> properties = controlType.GetProperties()
             .Select(property =>
             {
+                PropertyBindingInfo bindingInfo = controlSetItem.ChildItems
+                    .OfType<PropertyBindingInfo>()
+                    .FirstOrDefault(item =>
+                        item.ControlPropertyItem.Name == property.Name);
+                if (bindingInfo != null)
+                {
+                    return propertyFactory.Create(property, bindingInfo, fields);
+                }
+
                 PropertyValueItem valueItem = controlSetItem.ChildItems
                     .OfType<PropertyValueItem>()
                     .FirstOrDefault(item =>
@@ -134,7 +163,6 @@ public class ControlAdapter(
                 return propertyFactory.Create(property, valueItem);
             })
             .ToList();
-
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
         properties.AddRange(schemaItemProperties);

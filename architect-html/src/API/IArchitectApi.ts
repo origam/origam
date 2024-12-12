@@ -46,7 +46,7 @@ export interface IArchitectApi {
   deleteScreenEditorItem(args:{
     schemaItemId: string,
     editorSchemaItemId: string,
-  }) : Promise<IDeleteResult>
+  }) : Promise<ISectionEditorModel>
 }
 
 export interface IModelChange {
@@ -73,10 +73,6 @@ export interface ISectionEditorData {
   rootControl: ApiControl;
   selectedDataSourceId: string;
   fields: IEditorField[];
-}
-
-export interface IDeleteResult {
-  rootControl: ApiControl;
 }
 
 export interface ApiControl {

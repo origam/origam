@@ -1,11 +1,13 @@
-﻿using Origam.Architect.Server.ReturnModels;
+﻿using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Services;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ControlAdapter;
 
 public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
-    SchemaService schemaService, IPersistenceService persistenceService)
+    SchemaService schemaService, IPersistenceService persistenceService,
+    PropertyParser propertyParser)
 {
     public ControlAdapter Create(ControlSetItem controlSetItem)
     {
@@ -24,7 +26,7 @@ public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
             }
             
             return new ControlAdapter(controlSetItem, controlType,
-                propertyFactory, schemaService, persistenceService);
+                propertyFactory, schemaService, persistenceService, propertyParser);
         }
         catch (Exception ex)
         {

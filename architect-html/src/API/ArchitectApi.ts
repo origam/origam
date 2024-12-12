@@ -148,7 +148,7 @@ export class ArchitectApi implements IArchitectApi {
       schemaItemId: string,
       editorSchemaItemId: string,
     }
-  ): Promise<IDeleteResult> {
+  ): Promise<ISectionEditorModel> {
     return (await this.axiosInstance.post("/ScreenEditor/DeleteItem",
       args
     )).data;

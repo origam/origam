@@ -31,7 +31,7 @@ public class ScreenEditorController(
     }
     
     [HttpPost("DeleteItem")]
-    public ActionResult<SectionEditorData> DeleteItem(
+    public ActionResult<SectionEditorModel> DeleteItem(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
         EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
@@ -39,10 +39,12 @@ public class ScreenEditorController(
         {
             sectionService.DeleteItem(input.SchemaItemId, screenSection);
             editor.IsDirty = true;
-            return Ok(new RootControlModel
+            var editorData = sectionService.GetSectionEditorData(screenSection);
+            return new SectionEditorModel
             {
-                RootControl = sectionService.LoadRootApiControl(screenSection)
-            });
+                Data = editorData,
+                IsDirty = true
+            };
         }
 
         return BadRequest(

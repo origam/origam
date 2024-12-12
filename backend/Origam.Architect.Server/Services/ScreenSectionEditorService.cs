@@ -61,20 +61,9 @@ public class ScreenSectionEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-
-            IDataEntity dataEntity = screenSection.DataEntity;
-
-            List<EditorField> fields = dataEntity
-                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
-                    .CategoryConst)
-                .OrderBy(field => field.Name)
-                .Select(field => new EditorField
-                {
-                    Name = field.Name,
-                    Type = field.DataType
-                })
-                .ToList();
-            ApiControl apiControl = LoadRootApiControl(screenSection);
+            
+            List<EditorField> fields = GetFields(screenSection);
+            ApiControl apiControl =  LoadContent(screenSection.MainItem, fields);
             return new SectionEditorData
             {
                 Name = editedItem.Name,
@@ -88,16 +77,26 @@ public class ScreenSectionEditorService(
 
         return null;
     }
-    
-    public ApiControl LoadRootApiControl(PanelControlSet screenSection)
+
+    private static List<EditorField> GetFields(PanelControlSet screenSection)
     {
-        ControlSetItem controlSetItem = screenSection.MainItem;
-        return LoadContent(controlSetItem);
+        IDataEntity dataEntity = screenSection.DataEntity;
+        return dataEntity
+            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
+                .CategoryConst)
+            .OrderBy(field => field.Name)
+            .Select(field => new EditorField
+            {
+                Name = field.Name,
+                Type = field.DataType
+            })
+            .ToList();
     }
 
-    private ApiControl LoadContent(ControlSetItem controlSetItem)
+    private ApiControl LoadContent(ControlSetItem controlSetItem,
+        List<EditorField> fields)
     {
-        ApiControl apiControl = LoadItem(controlSetItem);
+        ApiControl apiControl = LoadItem(controlSetItem, fields);
 
         var childControls = controlSetItem
             .ChildItemsByType<ControlSetItem>("ControlSetItem");
@@ -107,14 +106,15 @@ public class ScreenSectionEditorService(
             {
                 continue;
             }
-            var child = LoadContent(childControl);
+            var child = LoadContent(childControl, fields);
             apiControl.Children.Add(child);
         }
 
         return apiControl;
     }
     
-    private ApiControl LoadItem(ControlSetItem controlSetItem)
+    private ApiControl LoadItem(ControlSetItem controlSetItem,
+        List<EditorField> fields)
     {
         if (controlSetItem.RootItem is not PanelControlSet controlSet)
         {
@@ -126,10 +126,9 @@ public class ScreenSectionEditorService(
         ApiControl apiControl = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
-            Id = controlSetItem.Id
+            Id = controlSetItem.Id,
+            Properties = controlAdapter.GetEditorProperties(fields)
         };
-
-        apiControl.Properties = controlAdapter.GetEditorProperties();
         
         var bindingInfo = controlSetItem.ChildItems
             .OfType<PropertyBindingInfo>()
@@ -158,7 +157,8 @@ public class ScreenSectionEditorService(
         controlAdapter.InitializeProperties(
             top: itemModelData.Top, 
             left: itemModelData.Left);
-        return LoadItem(newItem);
+        List<EditorField> fields = GetFields(screenSection);
+        return LoadItem(newItem, fields);
     }
 
     public void DeleteItem(Guid schemaItemId, PanelControlSet screenSection)
