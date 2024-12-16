@@ -315,19 +315,28 @@ export class DesignSurfaceState {
 
   createDraggedComponent(x: number, y: number) {
     return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
+      const parent = this.findComponentAt(x, y);
+      
+      let relativeX = x;
+      let relativeY = y;
+      if (parent.id !== this.panel.id) {
+        relativeX = x - parent.relativeLeft;
+        relativeY = y - parent.relativeTop;
+      }
+
       const apiControl = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNodeId,
-        parentControlSetItemId: this.panel.id,
+        parentControlSetItemId: parent.id,
         componentType: this.draggedComponentData!.type,
         fieldName: this.draggedComponentData!.fieldName,
-        top: y,
-        left: x
+        top: relativeY,
+        left: relativeX
       });
 
       const newComponent = toComponent(apiControl, null);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
-      newComponent.parent = this.findComponentAt(x, y);
+      newComponent.parent = parent;
       this.components.push(newComponent);
       this.draggedComponentData = null;
       this.setDirty(true);

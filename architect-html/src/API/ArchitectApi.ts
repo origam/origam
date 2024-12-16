@@ -134,7 +134,7 @@ export class ArchitectApi implements IArchitectApi {
       editorSchemaItemId: string,
       parentControlSetItemId: string,
       componentType: string,
-      fieldName: string,
+      fieldName?: string,
       top: number,
       left: number
     }

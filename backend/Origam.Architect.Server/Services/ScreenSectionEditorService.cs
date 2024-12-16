@@ -144,7 +144,12 @@ public class ScreenSectionEditorService(
 
     public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, PanelControlSet screenSection)
     {
-        ISchemaItem parent = screenSection.GetChildById(itemModelData.ParentControlSetItemId);
+        ISchemaItem parent = screenSection.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
+        if (parent == null)
+        {
+            throw new Exception(
+                $"Parent object {itemModelData.ParentControlSetItemId} not found");
+        }
         ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
             .OfType<ControlItem>()
             .First(item => item.ControlType == itemModelData.ComponentType);

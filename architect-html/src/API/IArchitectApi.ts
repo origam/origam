@@ -38,7 +38,7 @@ export interface IArchitectApi {
     editorSchemaItemId: string,
     parentControlSetItemId: string,
     componentType: string,
-    fieldName: string,
+    fieldName?: string,
     top: number,
     left: number
   }) : Promise<ApiControl>
