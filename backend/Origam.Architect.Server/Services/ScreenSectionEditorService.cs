@@ -147,11 +147,11 @@ public class ScreenSectionEditorService(
         ISchemaItem parent = screenSection.GetChildById(itemModelData.ParentControlSetItemId);
         ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
             .OfType<ControlItem>()
-            .FirstOrDefault(item => item.ControlType == itemModelData.ComponentType);
+            .First(item => item.ControlType == itemModelData.ComponentType);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId, null);
         newItem.ControlItem = controlItem;
-        newItem.Name = itemModelData.FieldName;
+        newItem.Name = itemModelData.FieldName ?? controlItem.Name;
         
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
         controlAdapter.InitializeProperties(

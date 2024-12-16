@@ -5,6 +5,7 @@ namespace Origam.Architect.Server.Controls;
 public abstract class GroupBoxWithChamfer: ControlBase
 {
     [Localizable(true)]
+    [DefaultValue("Group Box")]
     public string Text { get; set; }
 
     [Localizable(true)]

@@ -35,7 +35,7 @@ export const Toolbox: React.FC<{
 
   const onControlDragStart = (type: ComponentType) => {
     action(() => {
-      if(toolboxState.selectedFieldName){
+      if(toolboxState.selectedFieldName || type === ComponentType.GroupBox){
         surfaceState.draggedComponentData = {
           fieldName: toolboxState.selectedFieldName,
           type: type
