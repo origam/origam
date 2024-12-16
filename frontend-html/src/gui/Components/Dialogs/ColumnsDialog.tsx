@@ -258,6 +258,7 @@ export class ColumnsDialog extends React.Component<{
         <div className={S.lockedColumns}>
           {T("Locked columns count", "column_config_locked_columns_count")}
           <input
+            autoComplete={"off"}
             className={S.lockedColumnsInput}
             type="number"
             min={0}

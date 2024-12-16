@@ -61,6 +61,7 @@ export class SearchView extends React.Component<{
           <input
             ref={this.viewState.refInput}
             className={S.input}
+            autoComplete={"off"}
             placeholder={T("Search for anything here", "type_search_here")}
             onChange={(event) => this.viewState.onInputChange(event)}
           />

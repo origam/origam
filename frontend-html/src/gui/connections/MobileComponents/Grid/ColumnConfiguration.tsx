@@ -64,6 +64,7 @@ export const ColumnConfiguration: React.FC<{
         <input
           className={S.input}
           type="number"
+          autoComplete={"off"}
           min={0}
           value={"" + configModel.columnsConfiguration.fixedColumnCount}
           onChange={configModel.handleFixedColumnsCountChange}
@@ -200,6 +201,7 @@ export const ColumnConfig: React.FC<{
           <input
             className={S.input}
             type="number"
+            autoComplete={"off"}
             onChange={(event: any) => props.model.setWidth(props.index, event.target.value)}
             value={props.config.width}
           />

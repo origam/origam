@@ -66,6 +66,7 @@ export class BoolEditor extends React.Component<{
             !this.props.isReadOnly &&
             this.props.onChange(event, event.target.checked);
           }}
+          autoComplete={"off"}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
           onBlur={this.props.onBlur}
