@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class ControlBase
+public abstract class ControlBase: IControl
 {
     [Category("Layout")]
     [Browsable(false)]
@@ -14,11 +15,13 @@ public abstract class ControlBase
 
     [Category("Layout")]
     [Browsable(false)]
-    [DefaultValue(200)]
-    public virtual int Height { get; set; }
-    
+    public virtual int Height { get; set; } = 200;
+
     [Category("Layout")]
     [Browsable(false)]
-    [DefaultValue(200)]
-    public virtual int Width { get; set; }
+    public virtual int Width { get; set; } = 200;
+
+    public virtual void Initialize(ControlSetItem controlSetItem)
+    {
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Services;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -25,7 +26,8 @@ public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
                 throw new Exception("Cannot find type: " + newFullClassName);
             }
             
-            return new ControlAdapter(controlSetItem, controlType,
+            IControl control = Activator.CreateInstance(controlType) as IControl;
+            return new ControlAdapter(controlSetItem, control,
                 propertyFactory, schemaService, persistenceService, propertyParser);
         }
         catch (Exception ex)

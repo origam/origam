@@ -8,8 +8,7 @@ public class AsDateBox: LabeledEditor
     
     public bool ReadOnly { get; set; }
 
-    [DefaultValue("dd.MMMM yyyy")]
-    public string CustomFormat { get; set; }
+    public string CustomFormat { get; set; } = "dd.MMMM yyyy";
 
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }

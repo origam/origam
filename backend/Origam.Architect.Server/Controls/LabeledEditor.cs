@@ -1,31 +1,25 @@
 ﻿using System.ComponentModel;
 using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
 public abstract class LabeledEditor: ControlBase
 {
     [Category("(ORIGAM)")]
-    [DefaultValue(100)]
-    public int CaptionLength { get; set; }
-    
+    public int CaptionLength { get; set; } = 100;
+
     [Category("(ORIGAM)")]
-    [DefaultValue(100)]
     [Description("Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used.")]
-    public int GridColumnWidth { get; set; }
-    
+    public int GridColumnWidth { get; set; } = 100;
+
     [Localizable(true)]
-    [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
-    public CaptionPosition CaptionPosition { get; set; } 
+    public CaptionPosition CaptionPosition { get; set; } = CaptionPosition.Left;
     
-    [Category("Layout")]
-    [Browsable(false)]
-    [DefaultValue(20)]
-    public override int Height { get; set; }
-    
-    [Category("Layout")]
-    [Browsable(false)]
-    [DefaultValue(400)]
-    public override int Width { get; set; }
+    public override void Initialize(ControlSetItem controlSetItem)
+    {
+        Height = 20;
+        Width = 400;
+    }
 }

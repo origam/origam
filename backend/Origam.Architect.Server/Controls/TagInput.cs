@@ -23,8 +23,6 @@ public class TagInput: LabeledEditor
 
     public bool ReadOnly { get; set; }
     
-
     [Browsable(false)]
     public Guid StyleId { get; set; }
-
 }

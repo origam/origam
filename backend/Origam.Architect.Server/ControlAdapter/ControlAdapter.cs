@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Xml;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Controllers;
+using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
@@ -14,7 +15,7 @@ namespace Origam.Architect.Server.ControlAdapter;
 
 public class ControlAdapter(
     ControlSetItem controlSetItem,
-    Type controlType,
+    IControl control,
     EditorPropertyFactory propertyFactory,
     SchemaService schemaService,
     IPersistenceService persistenceService,
@@ -144,7 +145,7 @@ public class ControlAdapter(
     
     public List<EditorProperty> GetEditorProperties(List<EditorField> fields)
     {
-        List<EditorProperty> properties = controlType.GetProperties()
+        List<EditorProperty> properties = control.GetType().GetProperties()
             .Select(property =>
             {
                 PropertyBindingInfo bindingInfo = controlSetItem.ChildItems
@@ -185,15 +186,14 @@ public class ControlAdapter(
 
     public void InitializeProperties(int top, int left)
     {
-        foreach (var property in controlType.GetProperties())
+        control.Initialize(controlSetItem);
+        Type type = control.GetType();
+        foreach (var property in type.GetProperties())
         {
-            var defaultValueAttribute =
-                property.GetCustomAttribute(typeof(DefaultValueAttribute)) as
-                    DefaultValueAttribute;
             var propertyValueItem =
                 controlSetItem.NewItem<PropertyValueItem>(
                     schemaService.ActiveSchemaExtensionId, null);
-            object value = defaultValueAttribute?.Value;
+            object value = property.GetValue(control);
             ControlPropertyItem propertyItem = FindPropertyItem(property.Name);
             propertyItem.Name = property.Name;
             propertyValueItem.ControlPropertyItem = propertyItem;

@@ -89,7 +89,9 @@ export class DesignSurfaceState {
   selectComponent(component: Component | null | undefined) {
     if (component) {
       this.selectedComponent = component;
-      this.propertiesState.setEdited(component.data.fieldName, component.properties)
+      this.propertiesState.setEdited(
+        component.data.fieldName ?? component.getProperty("Text")?.value ?? "",
+        component.properties)
     } else {
       this.selectedComponent = null;
       this.propertiesState.setEdited("", [])
@@ -316,7 +318,7 @@ export class DesignSurfaceState {
   createDraggedComponent(x: number, y: number) {
     return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
       const parent = this.findComponentAt(x, y);
-      
+
       let relativeX = x;
       let relativeY = y;
       if (parent.id !== this.panel.id) {

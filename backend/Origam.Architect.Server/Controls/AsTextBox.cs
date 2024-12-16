@@ -11,17 +11,14 @@ public class AsTextBox: LabeledEditor
     [Description("Valid only for numeric data types. If specified, it will override default formatting for the given data type.")]
     public string CustomNumericFormat { get; set; }
 
-    [DefaultValue(false)]
-    public bool AllowTab { get; set; }
-
-    [DefaultValue(false)]
-    [Category("Behavior")]
-    public bool ReadOnly { get; set; }
+    public bool AllowTab { get; set; } = false;
     
+    [Category("Behavior")]
+    public bool ReadOnly { get; set; } = false;
+
     [Localizable(true)]
-    [DefaultValue(CaptionPosition.Left)]
     [Category("(ORIGAM)")]
-    public CaptionPosition CaptionPosition { get; set; }
+    public CaptionPosition CaptionPosition { get; set; } = CaptionPosition.Left;
 
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
@@ -35,9 +32,8 @@ public class AsTextBox: LabeledEditor
     public int TabIndex { get; set; }
 
     public bool HideOnForm { get; set; }
-
-    [DefaultValue(false)]
-    public bool IsRichText { get; set; }
+    
+    public bool IsRichText { get; set; } = false;
     
     [Category("Behavior")]
     public bool Multiline { get; set; }

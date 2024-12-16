@@ -19,14 +19,12 @@ public class AsPanel: ControlBase
     [Category("Map View")]
     public string MapTextRotationMember { get; set; }
 
-    [DefaultValue(0)]
-    public int MaxDynamicGridHeight { get; set; }
+    public int MaxDynamicGridHeight { get; set; } = 0;
     
     [Category("Map View")]
     public string MapTextLocationMember { get; set; }
 
-    [DefaultValue(false)]
-    public bool HideNavigationPanel { get; set; }
+    public bool HideNavigationPanel { get; set; } = false;
 
     [Category("Map View")]
     public string MapLocationMember { get; set; }
@@ -46,13 +44,11 @@ public class AsPanel: ControlBase
     // public AsPanelCalendarViewEnum DefaultCalendarView { get; set; }
 
     [Category("Map View")]
-    [DefaultValue(false)]
-    public bool IsMapVisible { get; set; }
-
-    [DefaultValue(false)]
+    public bool IsMapVisible { get; set; } = false;
+    
     [Category("Behavior")]
     [Description("Indicates whether Copy Button will be hidden.")]
-    public bool HideCopyButton { get; set; }
+    public bool HideCopyButton { get; set; } = false;
 
     [Category("Calendar View")]
     public bool IsCalendarVisible { get; set; }
@@ -78,8 +74,7 @@ public class AsPanel: ControlBase
     [Category("Map View")]
     public string MapIconMember { get; set; }
 
-    [DefaultValue(false)]
-    public bool GridVisible { get; set; }
+    public bool GridVisible { get; set; } = false;
 
     [Browsable(false)]
     public Guid CalendarViewStyleId { get; set; }
@@ -110,19 +105,17 @@ public class AsPanel: ControlBase
     public string MapColorMember { get; set; }
 
     [Category("Calendar View")]
-    [DefaultValue(false)]
-    public bool CalendarShowAllResources { get; set; }
+    public bool CalendarShowAllResources { get; set; } = false;
 
     [Category("Calendar View")]
     public bool IsCalendarSupported { get; set; }
 
     [Category("Map View")]
     public int MapResolution { get; set; }
-
-    [DefaultValue(false)]
+    
     [Category("Behavior")]
     [Description("Indicates whether New Button will be shown.")]
-    public bool ShowNewButton { get; set; }
+    public bool ShowNewButton { get; set; } = false;
 
     [Category("Visual Editor View")]
     public bool IsVisualEditorVisible { get; set; }
@@ -144,10 +137,9 @@ public class AsPanel: ControlBase
     [Browsable(false)]
     public Guid IconId { get; set; }
 
-    [DefaultValue(false)]
     [Category("Behavior")]
     [Description("Indicates whether Delete Button will be shown.")]
-    public bool ShowDeleteButton { get; set; }
+    public bool ShowDeleteButton { get; set; } = false;
 
     [Category("Drag & Drop")]
     public string DraggingLabelMember { get; set; }
@@ -162,27 +154,23 @@ public class AsPanel: ControlBase
     public string CalendarCustomSortMember { get; set; }
 
     [Category("Map View")]
-    [DefaultValue(false)]
-    public bool IsMapSupported { get; set; }
-
-    [DefaultValue(false)]
-    public bool IsGridHeightDynamic { get; set; }
+    public bool IsMapSupported { get; set; } = false;
+    
+    public bool IsGridHeightDynamic { get; set; } = false;
 
     [Browsable(false)]
     public Guid IndependentDataSourceSortId { get; set; }
 
-    [DefaultValue(false)]
-    public bool NewRecordInDetailView { get; set; }
+    public bool NewRecordInDetailView { get; set; } = false;
 
     [Browsable(false)]
     public Guid IndependentDataSourceId { get; set; }
 
     [Category("Pipeline View")]
     public string PipelineStateMember { get; set; }
-
-    [DefaultValue(false)]
+    
     [Category("Drag & Drop")]
-    public bool IsDraggingEnabled { get; set; }
+    public bool IsDraggingEnabled { get; set; } = false;
 
     public string SelectionMember { get; set; }
 

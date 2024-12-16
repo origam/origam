@@ -2,11 +2,10 @@ using System.ComponentModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class GroupBoxWithChamfer: ControlBase
+public class GroupBoxWithChamfer: ControlBase
 {
     [Localizable(true)]
-    [DefaultValue("Group Box")]
-    public string Text { get; set; }
+    public string Text { get; set; } = "Group Box";
 
     [Localizable(true)]
     [MergableProperty(false)]
