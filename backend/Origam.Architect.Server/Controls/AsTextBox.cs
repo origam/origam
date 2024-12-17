@@ -15,11 +15,7 @@ public class AsTextBox: LabeledEditor
     
     [Category("Behavior")]
     public bool ReadOnly { get; set; } = false;
-
-    [Localizable(true)]
-    [Category("(ORIGAM)")]
-    public CaptionPosition CaptionPosition { get; set; } = CaptionPosition.Left;
-
+    
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 

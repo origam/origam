@@ -59,7 +59,7 @@ public class Workbench
 		{
 			parameterService.RefreshParameters();
 		}
-		catch(Exception ex)
+		catch
 		{
 			// show the error but go on
 			// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages

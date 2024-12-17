@@ -14,8 +14,7 @@ namespace Origam.Architect.Server.Controllers;
 public class ModelController(
     SchemaService schemaService,
     IPersistenceService persistenceService,
-    TreeNodeFactory treeNodeFactory,
-    ILogger<ModelController> log) : ControllerBase
+    TreeNodeFactory treeNodeFactory) : ControllerBase
 {
     private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
@@ -43,7 +42,7 @@ public class ModelController(
     }
 
     [HttpGet("GetChildren")]
-    public async Task<ActionResult<List<TreeNode>>> GetChildren(
+    public ActionResult<List<TreeNode>> GetChildren(
         [FromQuery] string id, [FromQuery] bool isNonPersistentItem, 
         [FromQuery] string nodeText)
     {
