@@ -219,7 +219,6 @@ Global
 		{ECA06542-5635-455E-B513-07F60222CA7D}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{ECA06542-5635-455E-B513-07F60222CA7D}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect Server|Any CPU
-		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -322,7 +321,6 @@ Global
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{4133A401-C886-48FC-B088-999C4591366F}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect Server|Any CPU
-		{4133A401-C886-48FC-B088-999C4591366F}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{4133A401-C886-48FC-B088-999C4591366F}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{4133A401-C886-48FC-B088-999C4591366F}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{4133A401-C886-48FC-B088-999C4591366F}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -586,7 +584,6 @@ Global
 		{FF4722B4-01F8-4062-AF39-F243A6BF336D}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{FF4722B4-01F8-4062-AF39-F243A6BF336D}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{A992112A-47F0-4588-A62B-D7C1164DC9D7}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{A992112A-47F0-4588-A62B-D7C1164DC9D7}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{A992112A-47F0-4588-A62B-D7C1164DC9D7}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{A992112A-47F0-4588-A62B-D7C1164DC9D7}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{A992112A-47F0-4588-A62B-D7C1164DC9D7}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -815,7 +812,6 @@ Global
 		{A167CB98-7655-4F6E-8B13-5633195DD12A}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{A167CB98-7655-4F6E-8B13-5633195DD12A}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -988,7 +984,6 @@ Global
 		{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -1213,7 +1208,6 @@ Global
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{3896810A-D91A-48AB-B6D8-DB2306F0B62D}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -1267,7 +1261,6 @@ Global
 		{183E889E-77AB-46B0-8D4F-30BB68671907}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{183E889E-77AB-46B0-8D4F-30BB68671907}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
 		{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
