@@ -305,6 +305,7 @@ Global
 		{54BFF654-2A00-4A8A-86B0-06F124D769A1}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{54BFF654-2A00-4A8A-86B0-06F124D769A1}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{54BFF654-2A00-4A8A-86B0-06F124D769A1}.Release|Any CPU.Build.0 = Release Server|Any CPU
+		{54BFF654-2A00-4A8A-86B0-06F124D769A1}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
@@ -355,6 +356,7 @@ Global
 		{A1087FDB-40E7-461C-8402-AF74AEFC3E51}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{A1087FDB-40E7-461C-8402-AF74AEFC3E51}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{A1087FDB-40E7-461C-8402-AF74AEFC3E51}.Release|Any CPU.Build.0 = Release Server|Any CPU
+		{A1087FDB-40E7-461C-8402-AF74AEFC3E51}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{2274C5EB-E849-4ABB-8631-D429AD2994FF}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect Server|Any CPU
 		{2274C5EB-E849-4ABB-8631-D429AD2994FF}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{2274C5EB-E849-4ABB-8631-D429AD2994FF}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
@@ -1054,6 +1056,7 @@ Global
 		{17625F1F-B028-47DB-8C76-05C8F8F4E158}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{17625F1F-B028-47DB-8C76-05C8F8F4E158}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{17625F1F-B028-47DB-8C76-05C8F8F4E158}.Release|Any CPU.Build.0 = Release Server|Any CPU
+		{17625F1F-B028-47DB-8C76-05C8F8F4E158}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{66D5ABDE-C50C-4136-BFF7-EDBC2F4198EE}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{66D5ABDE-C50C-4136-BFF7-EDBC2F4198EE}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{66D5ABDE-C50C-4136-BFF7-EDBC2F4198EE}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU

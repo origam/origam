@@ -79,10 +79,6 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
-      <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
-      <Name>Origam.Common.NetFX</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
