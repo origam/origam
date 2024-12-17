@@ -131,5 +131,11 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   onCopyRow(entity: any, gridId: string, rowId: string): any;
 }
 
+export interface IUpdateChanges {
+  dataViewId: string;
+  columnsChangedOnClient: string[];
+  columnsChangedOnServer: string[];
+}
+
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>
   o.$type_IFormScreenLifecycle;

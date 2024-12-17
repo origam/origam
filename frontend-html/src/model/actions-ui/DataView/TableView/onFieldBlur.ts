@@ -27,9 +27,9 @@ export function onFieldBlur(ctx: any) {
   return flow(function*onFieldBlur() {
     try {
       return yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
-        const updateExecuted = yield*flushCurrentRowData(ctx)();
+        const updates = yield*flushCurrentRowData(ctx)();
         getGridFocusManager(ctx).focusEditor();
-        return updateExecuted;
+        return updates;
       });
     } catch (e) {
       yield*handleError(ctx)(e);

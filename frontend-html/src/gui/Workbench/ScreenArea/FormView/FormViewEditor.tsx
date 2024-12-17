@@ -68,6 +68,7 @@ import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { makeOnAddNewRecordClick, onSaveClick } from "gui/connections/NewRecordScreen";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { IUpdateChanges } from "model/entities/types/IFormScreenLifecycle";
 
 
 @inject(({property, formPanelView}) => {
@@ -409,12 +410,12 @@ export class FormViewEditor extends React.Component<{
             return;
           }
           if (event.key === "Enter") {
-            const updateExecuted = await this.props.onEditorBlur?.();
+            const updates = (await this.props.onEditorBlur?.()) as IUpdateChanges[];
             if (openedScreen.isNewRecordScreen){
               await onSaveClick(openedScreen);
               return;
             }
-            if (!updateExecuted && dataView.firstEnabledDefaultAction) {
+            if (dataView.firstEnabledDefaultAction && !didServerChangeAdditionalFields(updates)) {
               uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
                 event,
                 dataView.firstEnabledDefaultAction
@@ -430,6 +431,25 @@ export class FormViewEditor extends React.Component<{
     return this.getEditor();
   }
 }
+
+function didServerChangeAdditionalFields(updates: IUpdateChanges[]){
+  return updates.length > 0 &&
+    updates.some(update => containsAdditionalChanges(update));
+}
+
+function containsAdditionalChanges(update: IUpdateChanges){
+  for (const column of update.columnsChangedOnServer) {
+    if (
+      !update.columnsChangedOnClient.includes(column) &&
+      column !== "RecordUpdated" &&
+      column !== "RecordUpdatedBy"
+    ) {
+        return true;
+    }
+  }
+  return false;
+}
+
 
 export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined) {
   let cellAlignment = new CellAlignment(false, "Number", customStyle);
