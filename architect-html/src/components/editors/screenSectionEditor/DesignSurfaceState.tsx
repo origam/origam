@@ -323,7 +323,7 @@ export class DesignSurfaceState {
       let currentParent: Component | null = parent;
       let relativeX = x;
       let relativeY = y;
-      while (currentParent !== null && currentParent.id !== this.panel.id) {
+      while (currentParent !== null) {
         relativeX -= currentParent.relativeLeft;
         relativeY -= currentParent.relativeTop;
         currentParent = currentParent.parent
