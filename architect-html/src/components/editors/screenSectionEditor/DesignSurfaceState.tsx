@@ -159,12 +159,13 @@ export class DesignSurfaceState {
   }
 
   private findComponentAt(mouseX: number, mouseY: number) {
-    const targetParent = this.components.find(
+    const componentsUnderPoint = this.components.filter(
       comp =>
         (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
         comp.isPointInside(mouseX, mouseY)
     ) ?? this.panel;
-    return targetParent;
+    return componentsUnderPoint
+      .sort((comp1, comp2) => comp2.countParents() - comp1.countParents())[0]
   }
 
   onDesignerMouseUp(x: number, y: number) {
@@ -319,11 +320,13 @@ export class DesignSurfaceState {
     return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
       const parent = this.findComponentAt(x, y);
 
+      let currentParent: Component | null = parent;
       let relativeX = x;
       let relativeY = y;
-      if (parent.id !== this.panel.id) {
-        relativeX = x - parent.relativeLeft;
-        relativeY = y - parent.relativeTop;
+      while (currentParent !== null && currentParent.id !== this.panel.id) {
+        relativeX -= currentParent.relativeLeft;
+        relativeY -= currentParent.relativeTop;
+        currentParent = currentParent.parent
       }
 
       const apiControl = yield this.architectApi.createScreenEditorItem({
