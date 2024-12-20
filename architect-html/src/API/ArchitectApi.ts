@@ -7,7 +7,7 @@ import {
   ApiControl,
   IModelChange,
   IPropertyChange,
-  IDeleteResult, ISectionEditorModel, IUpdatePropertiesResult, IPackagesInfo
+  ISectionEditorModel, IUpdatePropertiesResult, IPackagesInfo
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {

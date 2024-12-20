@@ -16,7 +16,7 @@ import {
 } from "src/API/IArchitectApi.ts";
 import {
   ResizeHandle
-} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 export class DesignSurfaceState {

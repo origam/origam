@@ -7,7 +7,7 @@ import { observable } from "mobx";
 import {
   LabelPosition,
   parseLabelPosition
-} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
 
 import {

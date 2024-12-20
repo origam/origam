@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef } from "react";
 import {
-  ComponentDesignerState,
+  ScreenSectionEditorState,
   ResizeHandle
-} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "src/main.tsx";
 import {
@@ -18,7 +18,7 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 
 export const DesignSurface: React.FC<{
-  designerState: ComponentDesignerState
+  designerState: ScreenSectionEditorState
 }> = observer(({designerState}) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);

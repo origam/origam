@@ -5,7 +5,6 @@ import {
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
   IArchitectApi,
-  IDeleteResult,
   ISectionEditorData, ISectionEditorModel, IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
 import {
@@ -23,7 +22,7 @@ import {
   Component
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 
-export class ComponentDesignerState implements IEditorState {
+export class ScreenSectionEditorState implements IEditorState {
 
   public surface: DesignSurfaceState;
   public toolbox: ToolboxState;
@@ -65,7 +64,7 @@ export class ComponentDesignerState implements IEditorState {
   }
 
   deleteComponent(component: Component) {
-    return function* (this: ComponentDesignerState): Generator<Promise<IDeleteResult>, void, IDeleteResult> {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
@@ -76,7 +75,7 @@ export class ComponentDesignerState implements IEditorState {
   }
 
   onDesignerMouseUp(x: number, y: number) {
-    return function* (this: ComponentDesignerState) {
+    return function* (this: ScreenSectionEditorState) {
       if (this.surface.isDragging) {
         const didDrag = this.surface.dragState.didDrag;
         this.surface.endDragging(x, y);

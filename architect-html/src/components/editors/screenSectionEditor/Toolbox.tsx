@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import {
-  ComponentDesignerState
-} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+  ScreenSectionEditorState
+} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "src/main.tsx";
 import {
@@ -17,7 +17,7 @@ import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
 import { TabView } from "src/components/tabView/TabView.tsx";
 
 export const Toolbox: React.FC<{
-  designerState: ComponentDesignerState
+  designerState: ScreenSectionEditorState
 }> = observer((props) => {
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);

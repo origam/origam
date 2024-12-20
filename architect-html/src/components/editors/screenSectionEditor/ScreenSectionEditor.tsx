@@ -1,9 +1,9 @@
 import React from 'react';
 import S
-  from 'src/components/editors/screenSectionEditor/ComponentDesigner.module.scss';
+  from 'src/components/editors/screenSectionEditor/ScreenSectionEditor.module.scss';
 import {
-  ComponentDesignerState
-} from "src/components/editors/screenSectionEditor/ComponentDesignerState.tsx";
+  ScreenSectionEditorState
+} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import {
   Toolbox
 } from "src/components/editors/screenSectionEditor/Toolbox.tsx";
@@ -11,8 +11,8 @@ import {
   DesignSurface
 } from "src/components/editors/screenSectionEditor/DesignSurface.tsx";
 
-export const ComponentDesigner: React.FC<{
-  designerState: ComponentDesignerState
+export const ScreenSectionEditor: React.FC<{
+  designerState: ScreenSectionEditorState
 }> = ({designerState}) => {
   return (
     <div className={S.componentDesigner}>
@@ -23,4 +23,4 @@ export const ComponentDesigner: React.FC<{
   );
 };
 
-export default ComponentDesigner;
+export default ScreenSectionEditor;
