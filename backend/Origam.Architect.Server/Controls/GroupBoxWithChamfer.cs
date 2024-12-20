@@ -10,7 +10,4 @@ public class GroupBoxWithChamfer: ControlBase
     [Localizable(true)]
     [MergableProperty(false)]
     public int TabIndex { get; set; }
-
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
 }

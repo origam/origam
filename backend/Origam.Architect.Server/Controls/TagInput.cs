@@ -22,7 +22,4 @@ public class TagInput: LabeledEditor
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }
-    
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
 }

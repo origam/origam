@@ -21,8 +21,4 @@ public class AsDateBox: LabeledEditor
     public int TabIndex { get; set; }
 
     public Object DateValue { get; set; }
-    
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
-
 }

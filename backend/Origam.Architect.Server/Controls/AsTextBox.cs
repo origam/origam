@@ -1,13 +1,10 @@
 using System.ComponentModel;
-using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
 public class AsTextBox: LabeledEditor
 {
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
-    
     [Description("Valid only for numeric data types. If specified, it will override default formatting for the given data type.")]
     public string CustomNumericFormat { get; set; }
 

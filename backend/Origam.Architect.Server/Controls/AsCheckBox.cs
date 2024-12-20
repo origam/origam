@@ -24,9 +24,6 @@ public class AsCheckBox: ControlBase
 
     public bool HideOnForm { get; set; }
     
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
-    
     public override void Initialize(ControlSetItem controlSetItem)
     {
         Text = controlSetItem.Name;

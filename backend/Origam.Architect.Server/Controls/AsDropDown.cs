@@ -17,9 +17,6 @@ public class AsDropDown: LabeledEditor
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
-
     public bool ReadOnly { get; set; }
     
     [Localizable(true)]

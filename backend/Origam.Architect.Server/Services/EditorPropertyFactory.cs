@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
+using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
@@ -36,7 +37,7 @@ public class EditorPropertyFactory
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: null,
-            type: ToPropertyTypeName(property.PropertyType),
+            type: ToPropertyTypeName(property),
             value: ToSerializableValue(value),
             dropDownValues: GetAvailableValues(property, instance),
             category: category,
@@ -67,12 +68,15 @@ public class EditorPropertyFactory
         string description =
             property.GetAttribute<DescriptionAttribute>()?.Description;
         
+        string name = property   
+            .GetCustomAttribute<ReferencePropertyAttribute>()?.Name ?? property.Name;
+        
         return new EditorProperty(
-            name: property.Name,
+            name: name,
             controlPropertyId: valueItem.ControlPropertyId,
-            type: ToPropertyTypeName(property.PropertyType),
+            type: ToPropertyTypeName(property),
             value: valueItem.TypedValue,
-            dropDownValues: Array.Empty<DropDownValue>(),
+            dropDownValues: GetAvailableValues(property, null),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null);
@@ -100,17 +104,20 @@ public class EditorPropertyFactory
         return value;
     }
 
-    public DropDownValue[] GetAvailableValues(PropertyInfo property,
-        object item)
+    private DropDownValue[] GetAvailableValues(PropertyInfo property,
+        object instance)
     {
-        if (property.PropertyType == typeof(string) ||
+        bool isReferenceProperty = property   
+            .GetCustomAttribute<ReferencePropertyAttribute>() != null;
+        if (!isReferenceProperty && 
+            (property.PropertyType == typeof(string) ||
             property.PropertyType == typeof(Guid) ||
             property.PropertyType == typeof(int) ||
             property.PropertyType == typeof(long) ||
             property.PropertyType == typeof(decimal) ||
             property.PropertyType == typeof(double) ||
             property.PropertyType == typeof(float) ||
-            property.PropertyType == typeof(bool))
+            property.PropertyType == typeof(bool)))
         {
             return [];
         }
@@ -140,7 +147,7 @@ public class EditorPropertyFactory
         object converterInstance = Activator.CreateInstance(type);
         MethodInfo getValuesMethod = type.GetMethod("GetStandardValues",
             new Type[] { typeof(ITypeDescriptorContext) })!;
-        var context = new Context(item);
+        var context = new Context(instance);
         var values =
             getValuesMethod.Invoke(converterInstance, new object[] { context })
                 as TypeConverter.StandardValuesCollection;
@@ -154,8 +161,9 @@ public class EditorPropertyFactory
             .ToArray();
     }
 
-    private string ToPropertyTypeName(Type type)
+    private string ToPropertyTypeName(PropertyInfo property)
     {
+        Type type = property.PropertyType;
         if (type == typeof(bool))
         {
             return "boolean";
@@ -177,7 +185,9 @@ public class EditorPropertyFactory
             return "float";
         }
 
-        if (type.IsAssignableTo(typeof(ISchemaItem)))
+        bool isReferenceProperty = property   
+            .GetCustomAttribute<ReferencePropertyAttribute>() != null;
+        if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
         {
             return "looukup";
         }

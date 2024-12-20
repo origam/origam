@@ -53,9 +53,6 @@ public class AsPanel: ControlBase
     [Category("Calendar View")]
     public bool IsCalendarVisible { get; set; }
 
-    [Browsable(false)]
-    public Guid StyleId { get; set; }
-
     [Category("Misc")]
     [Description("Member will be treated as ordered - it will be read only and a special UI components will be available.")]
     public string OrderMember { get; set; }

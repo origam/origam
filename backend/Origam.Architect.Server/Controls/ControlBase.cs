@@ -5,6 +5,10 @@ namespace Origam.Architect.Server.Controls;
 
 public abstract class ControlBase: IControl
 {
+    [ReferenceProperty("StyleId")]
+    [TypeConverter(typeof(StylesConverter))]
+    public Guid StyleId { get; set; }
+    
     [Category("Layout")]
     [Browsable(false)]
     public int Top { get; set; }
