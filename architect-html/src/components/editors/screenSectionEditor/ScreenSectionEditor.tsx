@@ -5,18 +5,18 @@ import {
   ScreenSectionEditorState
 } from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import {
-  Toolbox
-} from "src/components/editors/screenSectionEditor/Toolbox.tsx";
-import {
   DesignSurface
 } from "src/components/editors/screenSectionEditor/DesignSurface.tsx";
+import {
+  SectionToolbox
+} from "src/components/editors/screenSectionEditor/SectionToolbox.tsx";
 
 export const ScreenSectionEditor: React.FC<{
   designerState: ScreenSectionEditorState
 }> = ({designerState}) => {
   return (
     <div className={S.componentDesigner}>
-      <Toolbox designerState={designerState}/>
+      <SectionToolbox designerState={designerState}/>
       <DesignSurface
         designerState={designerState}/>
     </div>
