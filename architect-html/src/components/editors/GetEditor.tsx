@@ -11,18 +11,18 @@ import {
 import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 import { EditorData } from "src/components/modelTree/EditorData.ts";
 import ScreenSectionEditor
-  from "src/components/editors/screenSectionEditor/ScreenSectionEditor.tsx";
+  from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx";
 import {
   ScreenSectionEditorState
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
+} from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx";
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   ScreenEditorState
-} from "src/components/editors/screenEditor/ScreenEditorState.tsx";
-import ScreenEditor from "src/components/editors/screenEditor/ScreenEditor.tsx";
+} from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
+import ScreenEditor from "src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx";
 
 export function getEditor(
   args: {

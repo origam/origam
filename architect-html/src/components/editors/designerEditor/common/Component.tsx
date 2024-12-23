@@ -2,7 +2,7 @@ import {
   ComponentType,
   IComponentData,
   parseComponentType
-} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { observable } from "mobx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
 
@@ -12,10 +12,10 @@ import {
 import {
   controlLayer,
   panelLayer
-} from "src/components/editors/screenSectionEditor/Layers.ts";
+} from "src/components/editors/designerEditor/common/Layers.ts";
 import {
   LabelPosition, parseLabelPosition
-} from "src/components/editors/screenSectionEditor/LabelPosition.tsx";
+} from "src/components/editors/designerEditor/common/LabelPosition.tsx";
 
 export class Component {
   id: string;

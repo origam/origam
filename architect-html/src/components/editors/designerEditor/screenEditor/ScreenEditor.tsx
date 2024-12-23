@@ -1,15 +1,15 @@
 import React from 'react';
 import S
-  from 'src/components/editors/screenSectionEditor/ScreenSectionEditor.module.scss';
+  from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import {
   DesignSurface
-} from "src/components/editors/screenSectionEditor/DesignSurface.tsx";
+} from "src/components/editors/designerEditor/common/DesignSurface.tsx";
 import {
   ScreenEditorState
-} from "src/components/editors/screenEditor/ScreenEditorState.tsx";
+} from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
 import {
   ScreenToolbox
-} from "src/components/editors/screenEditor/ScreenToolbox.tsx";
+} from "src/components/editors/designerEditor/screenEditor/ScreenToolbox.tsx";
 
 export const ScreenEditor: React.FC<{
   designerState: ScreenEditorState

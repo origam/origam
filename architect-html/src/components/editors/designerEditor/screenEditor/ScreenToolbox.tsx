@@ -1,13 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import { IToolBoxItem } from "src/API/IArchitectApi.ts";
-import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
+import S from "src/components/editors/designerEditor/common/Toolbox.module.scss";
 import {
   Toolbox
-} from "src/components/editors/screenSectionEditor/Toolbox.tsx";
+} from "src/components/editors/designerEditor/common/Toolbox.tsx";
 import {
   ScreenEditorState
-} from "src/components/editors/screenEditor/ScreenEditorState.tsx";
+} from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
 
 export const ScreenToolbox: React.FC<{
   designerState: ScreenEditorState

@@ -4,7 +4,8 @@ import {
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
   ApiControl,
-  IArchitectApi, IScreenEditorData,
+  IArchitectApi,
+  ISectionEditorData,
   ISectionEditorModel,
   IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
@@ -14,26 +15,26 @@ import {
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
   DesignSurfaceState
-} from "src/components/editors/screenSectionEditor/DesignSurfaceState.tsx";
+} from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
 import {
   ToolboxState
-} from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
+} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   Component,
   toComponent
-} from "src/components/editors/screenSectionEditor/Component.tsx";
+} from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   IDesignerEditorState
-} from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
+} from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
 import {
-  ScreenToolboxState
-} from "src/components/editors/screenEditor/ScreenToolboxState.tsx";
+  SectionToolboxState
+} from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
 
-export class ScreenEditorState implements IDesignerEditorState {
+export class ScreenSectionEditorState implements IDesignerEditorState {
 
   public surface: DesignSurfaceState;
-  public screenToolbox: ScreenToolboxState;
+  public sectionToolbox: SectionToolboxState;
   public toolbox: ToolboxState;
 
   @observable accessor isActive: boolean = false;
@@ -50,15 +51,15 @@ export class ScreenEditorState implements IDesignerEditorState {
   constructor(
     private editorNode: IEditorNode,
     isDirty: boolean,
-    screenEditorData: IScreenEditorData,
+    sectionEditorData: ISectionEditorData,
     propertiesState: PropertiesState,
     private architectApi: IArchitectApi
   ) {
     this.isDirty = isDirty;
-    this.screenToolbox = new ScreenToolboxState(screenEditorData, editorNode.origamId, architectApi);
-    this.toolbox = this.screenToolbox.toolboxState;
+    this.sectionToolbox = new SectionToolboxState(sectionEditorData, editorNode.origamId, architectApi);
+    this.toolbox = this.sectionToolbox.toolboxState;
     this.surface = new DesignSurfaceState(
-      screenEditorData,
+      sectionEditorData,
       propertiesState,
       this.updateScreenEditor.bind(this)
     );
@@ -71,7 +72,7 @@ export class ScreenEditorState implements IDesignerEditorState {
   }
 
   deleteComponent(component: Component) {
-    return function* (this: ScreenEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
@@ -82,7 +83,7 @@ export class ScreenEditorState implements IDesignerEditorState {
   }
 
   onDesignerMouseUp(x: number, y: number) {
-    return function* (this: ScreenEditorState) {
+    return function* (this: ScreenSectionEditorState) {
       if (this.surface.isDragging) {
         const didDrag = this.surface.dragState.didDrag;
         this.surface.endDragging(x, y);
@@ -98,7 +99,7 @@ export class ScreenEditorState implements IDesignerEditorState {
   }
 
   createDraggedComponent(x: number, y: number) {
-    return function* (this: ScreenEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
       const parent = this.surface.findComponentAt(x, y);
 
       let currentParent: Component | null = parent;
@@ -154,6 +155,7 @@ export class ScreenEditorState implements IDesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
+    this.sectionToolbox.fields = newData.fields;
     this.surface.loadComponents(newData.rootControl);
   }
 
@@ -165,3 +167,4 @@ export class ScreenEditorState implements IDesignerEditorState {
     this.isDirty = false;
   }
 }
+

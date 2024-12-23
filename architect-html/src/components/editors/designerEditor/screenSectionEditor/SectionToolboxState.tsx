@@ -1,34 +1,36 @@
+import { observable } from "mobx";
 import {
-  IArchitectApi, IScreenEditorData,
-  ISectionEditorModel, IToolBoxItem
+  IArchitectApi,
+  IEditorField,
+  ISectionEditorData,
+  ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import {
   ToolboxState
-} from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
+} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
 
-export class ScreenToolboxState {
+export class SectionToolboxState {
   toolboxState: ToolboxState;
-  sections: IToolBoxItem[];
-  widgets: IToolBoxItem[];
+  @observable accessor fields: IEditorField[];
+  @observable accessor selectedFieldName: string | undefined;
 
   constructor(
-    screenEditorData: IScreenEditorData,
+    sectionEditorData: ISectionEditorData,
     id: string,
     private architectApi: IArchitectApi
   ) {
-    this.sections = screenEditorData.sections;
-    this.widgets = screenEditorData.widgets;
     this.toolboxState = new ToolboxState(
-      screenEditorData.dataSources,
-      screenEditorData.name,
-      screenEditorData.schemaExtensionId,
-      screenEditorData.selectedDataSourceId,
+      sectionEditorData.dataSources,
+      sectionEditorData.name,
+      sectionEditorData.schemaExtensionId,
+      sectionEditorData.selectedDataSourceId,
       id,
       this.updateTopProperties.bind(this))
+    this.fields = sectionEditorData.fields;
   }
 
   private updateTopProperties() {
-    return function* (this: ScreenToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+    return function* (this: SectionToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
       const updateResult = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
@@ -38,6 +40,8 @@ export class ScreenToolboxState {
       const newData = updateResult.data;
       this.toolboxState.name = newData.name;
       this.toolboxState.selectedDataSourceId = newData.selectedDataSourceId;
+      this.fields = newData.fields;
     }.bind(this);
   }
+
 }

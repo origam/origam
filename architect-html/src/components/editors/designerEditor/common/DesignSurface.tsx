@@ -6,16 +6,16 @@ import {
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import {
   Component
-} from "src/components/editors/screenSectionEditor/Component.tsx";
+} from "src/components/editors/designerEditor/common/Component.tsx";
 import S
-  from "src/components/editors/screenSectionEditor/DesignerSurface.module.scss";
+  from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
 import {
   ComponentType
-} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import {
   IDesignerEditorState
-} from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
-import { ResizeHandle } from "./DesignSurfaceState";
+} from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
+import { ResizeHandle } from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState

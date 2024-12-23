@@ -2,11 +2,11 @@ import { action, observable } from "mobx";
 import {
   Component,
   toComponentRecursive
-} from "src/components/editors/screenSectionEditor/Component.tsx";
+} from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   ComponentType,
   IComponentData
-} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import {
   ApiControl, IDesignerEditorData,
   ISectionEditorModel

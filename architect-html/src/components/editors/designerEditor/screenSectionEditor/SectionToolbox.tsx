@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ScreenSectionEditorState
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
+} from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
 import { IEditorField } from "src/API/IArchitectApi.ts";
 import { action } from "mobx";
@@ -9,11 +9,11 @@ import {
   ComponentType,
   getComponentTypeKey,
   toComponentType
-} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
-import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
+import S from "src/components/editors/designerEditor/common/Toolbox.module.scss";
 import {
   Toolbox
-} from "src/components/editors/screenSectionEditor/Toolbox.tsx";
+} from "src/components/editors/designerEditor/common/Toolbox.tsx";
 
 export const SectionToolbox: React.FC<{
   designerState: ScreenSectionEditorState

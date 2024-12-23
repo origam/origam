@@ -4,11 +4,11 @@ import { RootStoreContext } from "src/main.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
-import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
+import S from "src/components/editors/designerEditor/common/Toolbox.module.scss";
 import { ITabViewItem, TabView } from "src/components/tabView/TabView.tsx";
 import {
   ToolboxState
-} from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
+} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
 
 export const Toolbox: React.FC<{
   toolboxState: ToolboxState,
