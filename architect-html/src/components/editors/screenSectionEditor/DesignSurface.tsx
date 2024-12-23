@@ -52,7 +52,7 @@ export const DesignSurface: React.FC<{
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    run({generator: surfaceState.createDraggedComponent(dropX, dropY)});
+    run({generator: designerState.createDraggedComponent(dropX, dropY)});
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {

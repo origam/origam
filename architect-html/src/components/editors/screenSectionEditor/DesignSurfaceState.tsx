@@ -1,7 +1,6 @@
 import { action, observable } from "mobx";
 import {
   Component,
-  toComponent,
   toComponentRecursive
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 import {
@@ -10,7 +9,6 @@ import {
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import {
   ApiControl,
-  IArchitectApi,
   ISectionEditorData,
   ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
@@ -58,11 +56,8 @@ export class DesignSurfaceState {
 
   constructor(
     sectionEditorData: ISectionEditorData,
-    private architectApi: IArchitectApi,
     private propertiesState: PropertiesState,
-    private editorNodeId: string,
-    private setDirty: (isDirty: boolean) => void,
-    private updateScreenEditor: () => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
+    private updateEditor: () => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
   ) {
     this.panelId = sectionEditorData.rootControl.id;
     this.loadComponents(sectionEditorData.rootControl);
@@ -158,7 +153,7 @@ export class DesignSurfaceState {
     };
   }
 
-  private findComponentAt(mouseX: number, mouseY: number) {
+  findComponentAt(mouseX: number, mouseY: number) {
     const componentsUnderPoint = this.components.filter(
       comp =>
         (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
@@ -174,17 +169,17 @@ export class DesignSurfaceState {
         const didDrag = this.dragState.didDrag;
         this.endDragging(x, y);
         if (didDrag) {
-          yield* this.updateScreenEditor();
+          yield* this.updateEditor();
         }
       }
       if (this.isResizing) {
         this.endResizing();
-        yield* this.updateScreenEditor();
+        yield* this.updateEditor();
       }
     }.bind(this);
   }
 
-  private updatePanelSize(draggingComponent: Component) {
+  updatePanelSize(draggingComponent: Component) {
     let didUpdate = false;
     if (draggingComponent.absoluteRight > this.panel.absoluteRight) {
       this.panel.width += draggingComponent.absoluteRight - this.panel.absoluteRight + 20;
@@ -316,43 +311,6 @@ export class DesignSurfaceState {
     }
   }
 
-  createDraggedComponent(x: number, y: number) {
-    return function* (this: DesignSurfaceState): Generator<Promise<ApiControl>, void, ApiControl> {
-      const parent = this.findComponentAt(x, y);
-
-      let currentParent: Component | null = parent;
-      let relativeX = x;
-      let relativeY = y;
-      while (currentParent !== null) {
-        relativeX -= currentParent.relativeLeft;
-        relativeY -= currentParent.relativeTop;
-        currentParent = currentParent.parent
-      }
-
-      const apiControl = yield this.architectApi.createScreenEditorItem({
-        editorSchemaItemId: this.editorNodeId,
-        parentControlSetItemId: parent.id,
-        componentType: this.draggedComponentData!.type,
-        fieldName: this.draggedComponentData!.fieldName,
-        top: relativeY,
-        left: relativeX
-      });
-
-      const newComponent = toComponent(apiControl, null);
-      newComponent.width = newComponent.width ?? 400;
-      newComponent.height = newComponent.height ?? 20;
-      newComponent.parent = parent;
-      this.components.push(newComponent);
-      this.draggedComponentData = null;
-      this.setDirty(true);
-
-      const panelSizeChanged = this.updatePanelSize(newComponent);
-      if (panelSizeChanged) {
-        yield* this.updateScreenEditor() as any;
-      }
-
-    }.bind(this);
-  }
 
   @action
   onClose() {

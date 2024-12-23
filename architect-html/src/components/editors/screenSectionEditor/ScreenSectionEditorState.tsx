@@ -4,6 +4,7 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
+  ApiControl,
   IArchitectApi,
   ISectionEditorData, ISectionEditorModel, IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
@@ -19,7 +20,7 @@ import {
 } from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
-  Component
+  Component, toComponent
 } from "src/components/editors/screenSectionEditor/Component.tsx";
 
 export class ScreenSectionEditorState implements IEditorState {
@@ -49,10 +50,7 @@ export class ScreenSectionEditorState implements IEditorState {
     this.toolbox = new ToolboxState(sectionEditorData, editorNode.origamId, architectApi);
     this.surface = new DesignSurfaceState(
       sectionEditorData,
-      architectApi,
       propertiesState,
-      this.editorNode.origamId,
-      (value) => this.isDirty = value,
       this.updateScreenEditor.bind(this)
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
@@ -87,6 +85,44 @@ export class ScreenSectionEditorState implements IEditorState {
         this.surface.endResizing();
         yield* this.updateScreenEditor();
       }
+    }.bind(this);
+  }
+
+  createDraggedComponent(x: number, y: number) {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
+      const parent = this.surface.findComponentAt(x, y);
+
+      let currentParent: Component | null = parent;
+      let relativeX = x;
+      let relativeY = y;
+      while (currentParent !== null) {
+        relativeX -= currentParent.relativeLeft;
+        relativeY -= currentParent.relativeTop;
+        currentParent = currentParent.parent
+      }
+
+      const apiControl = yield this.architectApi.createScreenEditorItem({
+        editorSchemaItemId: this.editorNode.origamId,
+        parentControlSetItemId: parent.id,
+        componentType: this.surface.draggedComponentData!.type,
+        fieldName: this.surface.draggedComponentData!.fieldName,
+        top: relativeY,
+        left: relativeX
+      });
+
+      const newComponent = toComponent(apiControl, null);
+      newComponent.width = newComponent.width ?? 400;
+      newComponent.height = newComponent.height ?? 20;
+      newComponent.parent = parent;
+      this.surface.components.push(newComponent);
+      this.surface.draggedComponentData = null;
+      this.isDirty = true;
+
+      const panelSizeChanged = this.surface.updatePanelSize(newComponent);
+      if (panelSizeChanged) {
+        yield* this.updateScreenEditor() as any;
+      }
+
     }.bind(this);
   }
 
