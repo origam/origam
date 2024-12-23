@@ -24,7 +24,7 @@ export const SectionToolbox: React.FC<{
   const onFieldDragStart = (field: IEditorField) => {
     action(() => {
       surfaceState.draggedComponentData = {
-        fieldName: field.name,
+        name: field.name,
         type: toComponentType(field.type)
       };
     })();
@@ -34,7 +34,7 @@ export const SectionToolbox: React.FC<{
     action(() => {
       if (toolboxState.selectedFieldName || type === ComponentType.GroupBox) {
         surfaceState.draggedComponentData = {
-          fieldName: toolboxState.selectedFieldName,
+          name: toolboxState.selectedFieldName,
           type: type
         };
       }

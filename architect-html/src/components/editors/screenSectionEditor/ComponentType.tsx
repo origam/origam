@@ -23,7 +23,7 @@ export function parseComponentType(value: string): ComponentType {
 
 export interface IComponentData {
   type: ComponentType;
-  fieldName?: string;
+  name?: string;
 }
 
 export function toComponentType(origamType: OrigamDataType): ComponentType {

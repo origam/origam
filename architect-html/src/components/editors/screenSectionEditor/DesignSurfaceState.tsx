@@ -85,7 +85,7 @@ export class DesignSurfaceState {
     if (component) {
       this.selectedComponent = component;
       this.propertiesState.setEdited(
-        component.data.fieldName ?? component.getProperty("Text")?.value ?? "",
+        component.data.name ?? component.getProperty("Text")?.value ?? "",
         component.properties)
     } else {
       this.selectedComponent = null;
