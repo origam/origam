@@ -1,8 +1,8 @@
 .root {
   display: flex;
   flex-direction: column;
-  //width: 400px;
   flex: 1;
+  overflow: auto;
 }
 
 .content {

@@ -5,7 +5,6 @@ import {
 import {
   ApiControl,
   IArchitectApi, IScreenEditorData,
-  ISectionEditorData,
   ISectionEditorModel,
   IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
@@ -27,10 +26,14 @@ import {
 import {
   IDesignerEditorState
 } from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
+import {
+  ScreenToolboxState
+} from "src/components/editors/screenEditor/ScreenToolboxState.tsx";
 
 export class ScreenEditorState implements IDesignerEditorState {
 
   public surface: DesignSurfaceState;
+  public screenToolbox: ScreenToolboxState;
   public toolbox: ToolboxState;
 
   @observable accessor isActive: boolean = false;
@@ -52,7 +55,8 @@ export class ScreenEditorState implements IDesignerEditorState {
     private architectApi: IArchitectApi
   ) {
     this.isDirty = isDirty;
-    this.toolbox = new ToolboxState(screenEditorData, editorNode.origamId, architectApi);
+    this.screenToolbox = new ScreenToolboxState(screenEditorData, editorNode.origamId, architectApi);
+    this.toolbox = this.screenToolbox.toolboxState;
     this.surface = new DesignSurfaceState(
       screenEditorData,
       propertiesState,
@@ -150,7 +154,6 @@ export class ScreenEditorState implements IDesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
-    this.toolbox.fields = newData.fields;
     this.surface.loadComponents(newData.rootControl);
   }
 

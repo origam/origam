@@ -57,7 +57,7 @@ export function getEditor(
       <ScreenSectionEditor designerState={state}/>
     );
   }
-  if (node.editorType === "ScreenSection") {
+  if (node.editorType === "ScreenEditor") {
     const screenData = data as IScreenEditorData;
     const state = new ScreenEditorState(node, isDirty, screenData, propertiesState, architectApi);
     return new Editor(

@@ -105,7 +105,7 @@ public class ScreenSectionEditorService(
                 .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
                                !item.IsComplexType && 
                                item.ControlToolBoxVisibility is 
-                                   ControlToolBoxVisibility.PanelDesigner or 
+                                   ControlToolBoxVisibility.FormDesigner or 
                                    ControlToolBoxVisibility.PanelAndFormDesigner)
                 .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
                 .OrderBy(x => x.Name);

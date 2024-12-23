@@ -31,7 +31,7 @@ import {
   SectionToolboxState
 } from "src/components/editors/screenSectionEditor/SectionToolboxState.tsx";
 
-export class ScreenSectionEditorState implements IDesignerEditorState{
+export class ScreenSectionEditorState implements IDesignerEditorState {
 
   public surface: DesignSurfaceState;
   public sectionToolbox: SectionToolboxState;

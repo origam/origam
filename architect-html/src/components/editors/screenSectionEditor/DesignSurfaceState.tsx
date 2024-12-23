@@ -8,8 +8,7 @@ import {
   IComponentData
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import {
-  ApiControl,
-  ISectionEditorData,
+  ApiControl, IDesignerEditorData,
   ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
@@ -37,7 +36,7 @@ export class DesignSurfaceState {
     originalTop: 0
   };
   panel: Component = null as any; // will be assigned in loadComponents
-  panelId: string;
+  panelId: string | undefined;
 
   get isDragging() {
     return !!this.dragState.component;
@@ -52,13 +51,15 @@ export class DesignSurfaceState {
   }
 
   constructor(
-    sectionEditorData: ISectionEditorData,
+    editorData: IDesignerEditorData,
     private propertiesState: PropertiesState,
     private updateEditor: () => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
   ) {
-    this.panelId = sectionEditorData.rootControl.id;
-    this.loadComponents(sectionEditorData.rootControl);
-    this.panel = this.components.find(x => x.id === sectionEditorData.rootControl.id)!;
+    if (editorData.rootControl) {
+      this.panelId = editorData.rootControl.id;
+      this.loadComponents(editorData.rootControl);
+      this.panel = this.components.find(x => x.id === editorData.rootControl.id)!;
+    }
   }
 
   loadComponents(rootControl: ApiControl) {

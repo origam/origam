@@ -66,13 +66,26 @@ export interface ISectionEditorModel {
   isDirty: boolean;
 }
 
-export interface ISectionEditorData {
+export interface IDesignerEditorData {
   dataSources: IDataSource[];
   name: string;
   schemaExtensionId: string;
   rootControl: ApiControl;
   selectedDataSourceId: string;
+}
+
+export interface ISectionEditorData extends IDesignerEditorData {
   fields: IEditorField[];
+}
+
+export interface IScreenEditorData extends IDesignerEditorData {
+    sections: IToolBoxItem[];
+    widgets: IToolBoxItem[];
+}
+
+export interface IToolBoxItem {
+    id: string;
+    name: string;
 }
 
 export interface ApiControl {
@@ -195,19 +208,4 @@ export interface IApiEditorNode {
   origamId: string;
   nodeText: string;
   editorType: EditorType;
-}
-
-export interface IScreenEditorData {
-    dataSources: IDataSource[];
-    name: string;
-    schemaExtensionId: string;
-    selectedDataSourceId: string;
-    sections: ToolBoxItem[];
-    widgets: ToolBoxItem[];
-    rootControl: ApiControl;
-}
-
-export interface ToolBoxItem {
-    id: string;
-    name: string;
 }

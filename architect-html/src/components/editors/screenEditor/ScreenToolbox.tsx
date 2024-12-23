@@ -1,12 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
-import { IEditorField } from "src/API/IArchitectApi.ts";
-import { action } from "mobx";
-import {
-  ComponentType,
-  getComponentTypeKey,
-  toComponentType
-} from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+import { IToolBoxItem } from "src/API/IArchitectApi.ts";
 import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
 import {
   Toolbox
@@ -19,59 +13,30 @@ export const ScreenToolbox: React.FC<{
   designerState: ScreenEditorState
 }> = observer((props) => {
   const surfaceState = props.designerState.surface;
-  const toolboxState = props.designerState.toolbox;
+  const toolboxState = props.designerState.screenToolbox;
 
-  const onFieldDragStart = (field: IEditorField) => {
-    action(() => {
-      surfaceState.draggedComponentData = {
-        name: field.name,
-        type: toComponentType(field.type)
-      };
-    })();
+  const onFieldDragStart = (section: IToolBoxItem) => {
+    // action(() => {
+    //   surfaceState.draggedComponentData = {
+    //     name: field.name,
+    //     type: toComponentType(field.type)
+    //   };
+    // })();
   };
 
-  const onControlDragStart = (type: ComponentType) => {
-    action(() => {
-      if (toolboxState.selectedFieldName || type === ComponentType.GroupBox) {
-        surfaceState.draggedComponentData = {
-          name: toolboxState.selectedFieldName,
-          type: type
-        };
-      }
-    })();
-  };
 
-  function getToolboxComponent(field: IEditorField) {
-    const isSelected = toolboxState.selectedFieldName === field.name;
+  function getToolboxComponent(section: IToolBoxItem) {
     return (
       <div
-        key={field.name}
+        key={section.name}
         draggable
-        onClick={() => toolboxState.selectedFieldName = field.name}
-        onDragStart={() => onFieldDragStart(field)}
-        className={S.toolboxField + " " + (isSelected ? S.selectedField : "")}
-      >
-        <div className={S.toolboxFieldIcon}>
-        </div>
-        <div>
-          {field.name}
-        </div>
-      </div>
-    );
-  }
-
-  function getControlComponent(type: ComponentType) {
-    return (
-      <div
-        key={type}
-        draggable
-        onDragStart={() => onControlDragStart(type)}
+        onDragStart={() => onFieldDragStart(section)}
         className={S.toolboxField}
       >
         <div className={S.toolboxFieldIcon}>
         </div>
         <div>
-          {getComponentTypeKey(type)}
+          {section.name}
         </div>
       </div>
     );
@@ -83,17 +48,13 @@ export const ScreenToolbox: React.FC<{
       {
         label: "Fields",
         node: <div className={S.draggAbles}>
-          {toolboxState.fields.map(field => getToolboxComponent(field))}
+          {toolboxState.sections.map(section => getToolboxComponent(section))}
         </div>
       },
       {
         label: "Widgets",
         node: <div className={S.draggAbles}>
-          {getControlComponent(ComponentType.AsCheckBox)}
-          {getControlComponent(ComponentType.AsCombo)}
-          {getControlComponent(ComponentType.AsDateBox)}
-          {getControlComponent(ComponentType.AsTextBox)}
-          {getControlComponent(ComponentType.GroupBox)}
+          {toolboxState.widgets.map(widget => getToolboxComponent(widget))}
         </div>
       }
     ]}
