@@ -5,7 +5,7 @@ import {
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import {
   IApiEditorProperty,
-  IArchitectApi,
+  IArchitectApi, IScreenEditorData,
   ISectionEditorData
 } from "src/API/IArchitectApi.ts";
 import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
@@ -19,6 +19,10 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
+import {
+  ScreenEditorState
+} from "src/components/editors/screenEditor/ScreenEditorState.tsx";
+import ScreenEditor from "src/components/editors/screenEditor/ScreenEditor.tsx";
 
 export function getEditor(
   args: {
@@ -47,10 +51,18 @@ export function getEditor(
   }
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
-    const componentDesignerState = new ScreenSectionEditorState(node, isDirty, sectionData, propertiesState, architectApi);
+    const state = new ScreenSectionEditorState(node, isDirty, sectionData, propertiesState, architectApi);
     return new Editor(
-      componentDesignerState,
-      <ScreenSectionEditor designerState={componentDesignerState}/>
+      state,
+      <ScreenSectionEditor designerState={state}/>
+    );
+  }
+  if (node.editorType === "ScreenSection") {
+    const screenData = data as IScreenEditorData;
+    const state = new ScreenEditorState(node, isDirty, screenData, propertiesState, architectApi);
+    return new Editor(
+      state,
+      <ScreenEditor designerState={state}/>
     );
   }
   return null;

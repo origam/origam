@@ -186,7 +186,7 @@ export interface IDropDownValue {
 export interface IApiEditorData {
   parentNodeId: string | undefined;
   node: IApiEditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData;
+  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
   isDirty: boolean;
 }
 
@@ -195,4 +195,19 @@ export interface IApiEditorNode {
   origamId: string;
   nodeText: string;
   editorType: EditorType;
+}
+
+export interface IScreenEditorData {
+    dataSources: IDataSource[];
+    name: string;
+    schemaExtensionId: string;
+    selectedDataSourceId: string;
+    sections: ToolBoxItem[];
+    widgets: ToolBoxItem[];
+    rootControl: ApiControl;
+}
+
+export interface ToolBoxItem {
+    id: string;
+    name: string;
 }

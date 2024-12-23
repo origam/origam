@@ -1,7 +1,7 @@
 import {
   EditorType,
   IApiEditorNode,
-  IApiEditorData, IApiEditorProperty, ISectionEditorData
+  IApiEditorData, IApiEditorProperty, ISectionEditorData, IScreenEditorData
 } from "src/API/IArchitectApi.ts";
 import {
   TreeNode
@@ -30,7 +30,7 @@ export class EditorData implements IApiEditorData {
   parentNodeId: string | undefined;
   isDirty: boolean;
   node: EditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData;
+  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
   constructor(data: IApiEditorData, parent: TreeNode | null) {
     this.parentNodeId = data.parentNodeId;
     this.isDirty = data.isDirty;

@@ -1,7 +1,4 @@
 import React from "react";
-import {
-  ScreenSectionEditorState
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
 import { IEditorField } from "src/API/IArchitectApi.ts";
 import { action } from "mobx";
@@ -14,12 +11,15 @@ import S from "src/components/editors/screenSectionEditor/Toolbox.module.scss";
 import {
   Toolbox
 } from "src/components/editors/screenSectionEditor/Toolbox.tsx";
+import {
+  ScreenEditorState
+} from "src/components/editors/screenEditor/ScreenEditorState.tsx";
 
-export const SectionToolbox: React.FC<{
-  designerState: ScreenSectionEditorState
+export const ScreenToolbox: React.FC<{
+  designerState: ScreenEditorState
 }> = observer((props) => {
   const surfaceState = props.designerState.surface;
-  const sectionToolbox = props.designerState.sectionToolbox;
+  const toolboxState = props.designerState.toolbox;
 
   const onFieldDragStart = (field: IEditorField) => {
     action(() => {
@@ -32,9 +32,9 @@ export const SectionToolbox: React.FC<{
 
   const onControlDragStart = (type: ComponentType) => {
     action(() => {
-      if (sectionToolbox.selectedFieldName || type === ComponentType.GroupBox) {
+      if (toolboxState.selectedFieldName || type === ComponentType.GroupBox) {
         surfaceState.draggedComponentData = {
-          name: sectionToolbox.selectedFieldName,
+          name: toolboxState.selectedFieldName,
           type: type
         };
       }
@@ -42,12 +42,12 @@ export const SectionToolbox: React.FC<{
   };
 
   function getToolboxComponent(field: IEditorField) {
-    const isSelected = sectionToolbox.selectedFieldName === field.name;
+    const isSelected = toolboxState.selectedFieldName === field.name;
     return (
       <div
         key={field.name}
         draggable
-        onClick={() => sectionToolbox.selectedFieldName = field.name}
+        onClick={() => toolboxState.selectedFieldName = field.name}
         onDragStart={() => onFieldDragStart(field)}
         className={S.toolboxField + " " + (isSelected ? S.selectedField : "")}
       >
@@ -83,7 +83,7 @@ export const SectionToolbox: React.FC<{
       {
         label: "Fields",
         node: <div className={S.draggAbles}>
-          {sectionToolbox.fields.map(field => getToolboxComponent(field))}
+          {toolboxState.fields.map(field => getToolboxComponent(field))}
         </div>
       },
       {
@@ -99,4 +99,3 @@ export const SectionToolbox: React.FC<{
     ]}
   />;
 });
-
