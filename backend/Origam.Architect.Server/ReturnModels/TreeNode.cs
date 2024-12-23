@@ -48,8 +48,11 @@ public class TreeNodeFactory
         }
 
         string itemType = node.GetType().ToString();
-        if(itemType == "Origam.Schema.GuiModel.FormControlSet" 
-           || itemType == "Origam.Schema.GuiModel.PanelControlSet"
+        if(itemType == "Origam.Schema.GuiModel.FormControlSet")
+        {
+            return EditorType.ScreenEditor;
+        }
+        if(itemType == "Origam.Schema.GuiModel.PanelControlSet"
            || itemType == "Origam.Schema.GuiModel.ControlSetItem")
         {
             return EditorType.ScreenSectionEditor;
@@ -83,5 +86,5 @@ public class TreeNodeFactory
 
 public enum EditorType
 {
-    GridEditor, XslTEditor, ScreenSectionEditor
+    GridEditor, XslTEditor, ScreenSectionEditor, ScreenEditor
 }

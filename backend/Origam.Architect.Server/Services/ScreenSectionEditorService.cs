@@ -77,6 +77,54 @@ public class ScreenSectionEditorService(
 
         return null;
     }
+    public ScreenEditorData GetScreenEditorData(ISchemaItem editedItem)
+    {
+        if (editedItem is FormControlSet screen)
+        {
+            var dataStructureProvider =
+                schemaService.GetProvider<DataStructureSchemaItemProvider>();
+            var dataSources = dataStructureProvider.ChildItems
+                .Select(x => new DataSource
+                    { Name = x.Name, SchemaItemId = x.Id })
+                .OrderBy(x => x.Name)
+                .ToList();
+            
+            var userControlProvider =
+                schemaService.GetProvider<UserControlSchemaItemProvider>();
+            
+            var sections = userControlProvider.ChildItems
+                .OfType<ControlItem>()
+                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
+                               item.IsComplexType && 
+                               item.ControlToolBoxVisibility != ControlToolBoxVisibility.Nowhere)
+                .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
+                .OrderBy(x => x.Name);
+            
+            var widgets = userControlProvider.ChildItems
+                .OfType<ControlItem>()
+                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
+                               !item.IsComplexType && 
+                               item.ControlToolBoxVisibility is 
+                                   ControlToolBoxVisibility.PanelDesigner or 
+                                   ControlToolBoxVisibility.PanelAndFormDesigner)
+                .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
+                .OrderBy(x => x.Name);
+            
+            // ApiControl apiControl =  LoadContent(screen.MainItem, fields);
+            return new ScreenEditorData
+            {
+                Name = editedItem.Name,
+                SchemaExtensionId = editedItem.SchemaExtensionId,
+                DataSources = dataSources,
+                // RootControl = apiControl,
+                SelectedDataSourceId = screen.DataSourceId,
+                Sections = sections,
+                Widgets = widgets
+            };
+        }
+
+        return null;
+    }
 
     private static List<EditorField> GetFields(PanelControlSet screenSection)
     {

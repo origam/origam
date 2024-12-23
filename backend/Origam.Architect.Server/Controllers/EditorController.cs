@@ -84,7 +84,9 @@ public class EditorController(
             EditorType.GridEditor => propertyService.GetEditorProperties(item),
             EditorType.XslTEditor => propertyService.GetEditorProperties(item),
             EditorType.ScreenSectionEditor => sectionService
-                .GetSectionEditorData(item),
+                .GetSectionEditorData(item),           
+            EditorType.ScreenEditor => sectionService
+                .GetScreenEditorData(item),
             _ => null
         };
         return data;
