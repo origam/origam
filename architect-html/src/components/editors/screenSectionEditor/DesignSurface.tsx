@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
 import {
-  ScreenSectionEditorState,
   ResizeHandle
 } from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
@@ -16,9 +15,12 @@ import S
 import {
   ComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
+import {
+  IDesignerEditorState
+} from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
 
 export const DesignSurface: React.FC<{
-  designerState: ScreenSectionEditorState
+  designerState: IDesignerEditorState
 }> = observer(({designerState}) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -165,7 +167,7 @@ export const DesignSurface: React.FC<{
             }
             }
           >
-            {component.data.fieldName}
+            {component.data.name}
           </div>
           <div
             key={component.id + "_component"}

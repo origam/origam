@@ -1,12 +1,13 @@
 import { observable } from "mobx";
-import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
   ApiControl,
   IArchitectApi,
-  ISectionEditorData, ISectionEditorModel, IUpdatePropertiesResult,
+  ISectionEditorData,
+  ISectionEditorModel,
+  IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
 import {
   EditorProperty,
@@ -20,10 +21,14 @@ import {
 } from "src/components/editors/screenSectionEditor/ToolboxState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
-  Component, toComponent
+  Component,
+  toComponent
 } from "src/components/editors/screenSectionEditor/Component.tsx";
+import {
+  IDesignerEditorState
+} from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
 
-export class ScreenSectionEditorState implements IEditorState {
+export class ScreenSectionEditorState implements IDesignerEditorState{
 
   public surface: DesignSurfaceState;
   public toolbox: ToolboxState;
