@@ -1,7 +1,4 @@
 import React, { useContext, useEffect, useRef } from "react";
-import {
-  ResizeHandle
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "src/main.tsx";
 import {
@@ -18,6 +15,7 @@ import {
 import {
   IDesignerEditorState
 } from "src/components/editors/screenSectionEditor/IDesignerEditorState.tsx";
+import { ResizeHandle } from "./DesignSurfaceState";
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState

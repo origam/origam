@@ -4,10 +4,6 @@ import {
   parseComponentType
 } from "src/components/editors/screenSectionEditor/ComponentType.tsx";
 import { observable } from "mobx";
-import {
-  LabelPosition,
-  parseLabelPosition
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { ApiControl } from "src/API/IArchitectApi.ts";
 
 import {
@@ -17,6 +13,9 @@ import {
   controlLayer,
   panelLayer
 } from "src/components/editors/screenSectionEditor/Layers.ts";
+import {
+  LabelPosition, parseLabelPosition
+} from "src/components/editors/screenSectionEditor/LabelPosition.tsx";
 
 export class Component {
   id: string;

@@ -12,9 +12,6 @@ import {
   ISectionEditorData,
   ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
-import {
-  ResizeHandle
-} from "src/components/editors/screenSectionEditor/ScreenSectionEditorState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
 export class DesignSurfaceState {
@@ -340,3 +337,13 @@ interface ResizeState {
 
 const minComponentHeight = 20;
 const minComponentWidth = 20;
+
+export type ResizeHandle =
+  'top'
+  | 'right'
+  | 'bottom'
+  | 'left'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomRight'
+  | 'bottomLeft';
