@@ -10,8 +10,8 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
-  controlLayer,
-  panelLayer
+  controlLayer, screenLayer,
+  sectionLayer
 } from "src/components/editors/designerEditor/common/Layers.ts";
 import {
   LabelPosition, parseLabelPosition
@@ -65,11 +65,14 @@ export class Component {
   set labelPosition(value: number) { this._labelPosition = value; }
 
   get zIndex(): number {
+    if(this.data.type === ComponentType.AsForm){
+      return screenLayer;
+    }
     if(this.data.type === ComponentType.AsPanel){
-      return panelLayer;
+      return sectionLayer;
     }
     if(this.data.type === ComponentType.GroupBox){
-      return this.countParents() + panelLayer;
+      return this.countParents() + sectionLayer;
     }
     return controlLayer;
   }

@@ -145,7 +145,7 @@ public class ControlAdapter(
     
     public List<EditorProperty> GetEditorProperties(List<EditorField> fields)
     {
-        List<EditorProperty> properties = control.GetType().GetProperties()
+        IEnumerable<EditorProperty> properties = control.GetType().GetProperties()
             .Select(property =>
             {
                 PropertyBindingInfo bindingInfo = controlSetItem.ChildItems
@@ -162,12 +162,12 @@ public class ControlAdapter(
                     .FirstOrDefault(item =>
                         item.ControlPropertyItem.Name == property.Name);
                 return propertyFactory.Create(property, valueItem);
-            })
-            .ToList();
+            });
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
-        properties.AddRange(schemaItemProperties);
-        return properties;
+        return properties
+            .Concat(schemaItemProperties)
+            .ToList();
     }
 
     private ControlPropertyItem FindPropertyItem(string propertyName)

@@ -9,6 +9,8 @@ export enum ComponentType {
   AsCheckBox = 'Origam.Gui.Win.AsCheckBox',
   GroupBox = 'Origam.Gui.Win.GroupBoxWithChamfer',
   TextArea = 'TextArea',
+  AsForm = 'Origam.Gui.Win.AsForm',
+  FormPanel= 'Origam.Schema.GuiModel.PanelControlSet'
 }
 
 export function parseComponentType(value: string): ComponentType {

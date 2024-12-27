@@ -1,18 +1,17 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class ControlBase: IControl
+public class AsForm: IControl
 {
-    [ReferenceProperty("StyleId")]
-    [TypeConverter(typeof(StylesConverter))]
-    public Guid StyleId { get; set; }
-    
+    [Browsable(false)]
+    public string ExtraControlBindings { get; set; }
+
     [Category("Layout")]
     [Browsable(false)]
     public int Top { get; set; }
-    
+
     [Category("Layout")]
     [Browsable(false)]
     public int Left { get; set; }
@@ -25,7 +24,8 @@ public abstract class ControlBase: IControl
     [Browsable(false)]
     public int Width { get; set; } = 200;
 
-    public virtual void Initialize(ControlSetItem controlSetItem)
+    public void Initialize(ControlSetItem controlSetItem)
     {
+
     }
 }

@@ -122,6 +122,7 @@ export const DesignSurface: React.FC<{
             </div>
           </div>
         );
+      case ComponentType.AsForm:
       case ComponentType.AsPanel:
         return (
           <div className={S.panel}>

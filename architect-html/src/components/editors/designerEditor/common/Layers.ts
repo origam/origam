@@ -18,6 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 // zIndex of the panel
-export const panelLayer = 1;
+export const screenLayer = 5;
+// zIndex of the panel
+export const sectionLayer = 5;
 // zIndex of the individual controls
 export const controlLayer = 100;

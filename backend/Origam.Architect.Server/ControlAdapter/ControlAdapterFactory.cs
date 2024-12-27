@@ -18,6 +18,10 @@ public class ControlAdapterFactory(EditorPropertyFactory propertyFactory,
             string className = oldFullClassName
                 .Split(".")
                 .LastOrDefault();
+            if (className == "PanelControlSet")
+            {
+                className = "AsPanel";
+            }
             string newFullClassName =
                 "Origam.Architect.Server.Controls." + className;
             Type controlType = Type.GetType(newFullClassName);

@@ -133,9 +133,9 @@ export class DesignSurfaceState {
       draggingComponent.data.type !== ComponentType.AsPanel
     ) {
       const targetParent = this.findComponentAt(mouseX, mouseY);
-      if (draggingComponent.parent && draggingComponent.parent != targetParent) {
-        draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft - targetParent.absoluteLeft + draggingComponent.relativeLeft;
-        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop - targetParent.absoluteTop + draggingComponent.relativeTop;
+      if (targetParent && draggingComponent.parent != targetParent) {
+        draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft ?? 0 - targetParent.absoluteLeft + draggingComponent.relativeLeft;
+        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop ?? 0 - targetParent.absoluteTop + draggingComponent.relativeTop;
         draggingComponent.parent = targetParent;
       }
       this.updatePanelSize(draggingComponent);

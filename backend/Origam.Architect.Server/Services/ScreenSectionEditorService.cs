@@ -110,13 +110,13 @@ public class ScreenSectionEditorService(
                 .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
                 .OrderBy(x => x.Name);
             
-            // ApiControl apiControl =  LoadContent(screen.MainItem, fields);
+            ApiControl apiControl =  LoadContent(screen.MainItem, new List<EditorField>());
             return new ScreenEditorData
             {
                 Name = editedItem.Name,
                 SchemaExtensionId = editedItem.SchemaExtensionId,
                 DataSources = dataSources,
-                // RootControl = apiControl,
+                RootControl = apiControl,
                 SelectedDataSourceId = screen.DataSourceId,
                 Sections = sections,
                 Widgets = widgets
@@ -164,12 +164,6 @@ public class ScreenSectionEditorService(
     private ApiControl LoadItem(ControlSetItem controlSetItem,
         List<EditorField> fields)
     {
-        if (controlSetItem.RootItem is not PanelControlSet controlSet)
-        {
-            throw new Exception("Parent object must be " +
-                                nameof(PanelControlSet));
-        }
-
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(controlSetItem);
         ApiControl apiControl = new ApiControl
         {
@@ -177,16 +171,24 @@ public class ScreenSectionEditorService(
             Id = controlSetItem.Id,
             Properties = controlAdapter.GetEditorProperties(fields)
         };
-        
-        var bindingInfo = controlSetItem.ChildItems
-            .OfType<PropertyBindingInfo>()
-            .FirstOrDefault();
-        var caption = controlSet.DataEntity
-            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
-                .CategoryConst)
-            .FirstOrDefault(x => x.Name == bindingInfo?.Value)
-            ?.Caption ?? bindingInfo?.Value;
-        apiControl.Name = caption ?? controlSetItem.Name;
+
+        if (controlSetItem.RootItem is PanelControlSet controlSet)
+        {
+            var bindingInfo = controlSetItem.ChildItems
+                .OfType<PropertyBindingInfo>()
+                .FirstOrDefault();
+            var caption = controlSet.DataEntity
+                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
+                    .CategoryConst)
+                .FirstOrDefault(x => x.Name == bindingInfo?.Value)
+                ?.Caption ?? bindingInfo?.Value;
+            apiControl.Name = caption ?? controlSetItem.Name;
+        }
+        else
+        {
+            apiControl.Name = controlSetItem.RootItem.Name;
+        }
+
         return apiControl;
     }
 
