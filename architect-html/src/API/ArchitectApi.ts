@@ -88,15 +88,6 @@ export class ArchitectApi implements IArchitectApi {
     })).data;
   }
 
-  async updateScreenEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string,
-    modelChanges: IModelChange[]
-  }): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
-  }
-
   async deleteSchemaItem(schemaItemId: string) {
     await this.axiosInstance.post("/Model/DeleteSchemaItem",
       {schemaItemId: schemaItemId}
@@ -129,7 +120,16 @@ export class ArchitectApi implements IArchitectApi {
     )).data;
   }
 
-  async createScreenEditorItem(
+  async updateSectionEditor(args: {
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string,
+    modelChanges: IModelChange[]
+  }): Promise<ISectionEditorModel> {
+    return (await this.axiosInstance.post(`/SectionEditor/Update`, args)).data;
+  }
+
+  async createSectionEditorItem(
     args: {
       editorSchemaItemId: string,
       parentControlSetItemId: string,
@@ -139,18 +139,18 @@ export class ArchitectApi implements IArchitectApi {
       left: number
     }
   ): Promise<ApiControl> {
-    return (await this.axiosInstance.post("/ScreenEditor/CreateItem",
+    return (await this.axiosInstance.post("/SectionEditor/CreateItem",
       args
     )).data;
   }
 
-  async deleteScreenEditorItem(
+  async deleteSectionEditorItem(
     args: {
       schemaItemId: string,
       editorSchemaItemId: string,
     }
   ): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post("/ScreenEditor/DeleteItem",
+    return (await this.axiosInstance.post("/SectionEditor/DeleteItem",
       args
     )).data;
   }

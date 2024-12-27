@@ -10,7 +10,7 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ScreenEditorController(
+public class SectionEditorController(
     ScreenSectionEditorService sectionService,
     EditorService editorService)
     : ControllerBase

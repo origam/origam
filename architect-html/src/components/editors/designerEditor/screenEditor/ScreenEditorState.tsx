@@ -72,7 +72,7 @@ export class ScreenEditorState implements IDesignerEditorState {
 
   deleteComponent(component: Component) {
     return function* (this: ScreenEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
-      const newData = yield this.architectApi.deleteScreenEditorItem({
+      const newData = yield this.architectApi.deleteSectionEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
       });
@@ -110,7 +110,7 @@ export class ScreenEditorState implements IDesignerEditorState {
         currentParent = currentParent.parent
       }
 
-      const apiControl = yield this.architectApi.createScreenEditorItem({
+      const apiControl = yield this.architectApi.createSectionEditorItem({
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
         componentType: this.surface.draggedComponentData!.type,
@@ -144,7 +144,7 @@ export class ScreenEditorState implements IDesignerEditorState {
         }
       }
     )
-    const updateResult = yield this.architectApi.updateScreenEditor({
+    const updateResult = yield this.architectApi.updateSectionEditor({
       schemaItemId: this.toolbox.id,
       name: this.toolbox.name,
       selectedDataSourceId: this.toolbox.selectedDataSourceId,

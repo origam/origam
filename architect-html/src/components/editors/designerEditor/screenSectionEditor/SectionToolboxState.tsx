@@ -31,7 +31,7 @@ export class SectionToolboxState {
 
   private updateTopProperties() {
     return function* (this: SectionToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
-      const updateResult = yield this.architectApi.updateScreenEditor({
+      const updateResult = yield this.architectApi.updateSectionEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
         selectedDataSourceId: this.toolboxState.selectedDataSourceId,

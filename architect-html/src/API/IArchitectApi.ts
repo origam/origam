@@ -21,20 +21,20 @@ export interface IArchitectApi {
     changes: IPropertyChange[]
   ): Promise<IUpdatePropertiesResult>;
 
-  updateScreenEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string
-    modelChanges: IModelChange[]
-  }): Promise<ISectionEditorModel>;
-
   deleteSchemaItem(schemaItemId: string): Promise<void>;
 
   getMenuItems(node: INodeLoadData): Promise<IMenuItemInfo[]>;
 
   createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
 
-  createScreenEditorItem(args:{
+  updateSectionEditor(args: {
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string
+    modelChanges: IModelChange[]
+  }): Promise<ISectionEditorModel>;
+
+  createSectionEditorItem(args:{
     editorSchemaItemId: string,
     parentControlSetItemId: string,
     componentType: string,
@@ -43,7 +43,7 @@ export interface IArchitectApi {
     left: number
   }) : Promise<ApiControl>
 
-  deleteScreenEditorItem(args:{
+  deleteSectionEditorItem(args:{
     schemaItemId: string,
     editorSchemaItemId: string,
   }) : Promise<ISectionEditorModel>
