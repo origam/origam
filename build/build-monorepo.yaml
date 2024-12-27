@@ -300,7 +300,7 @@ jobs:
      - script: corepack enable
        displayName: 'Enable Corepack'
      - script: |
-        yarn install --frozen-lockfile
+        yarn install --immutable
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn'
      - script: |
