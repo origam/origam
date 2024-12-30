@@ -4,7 +4,7 @@ import {
   parseComponentType
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { observable } from "mobx";
-import { ApiControl } from "src/API/IArchitectApi.ts";
+import { IApiControl, IScreenEditorItem } from "src/API/IArchitectApi.ts";
 
 import {
   EditorProperty
@@ -16,12 +16,16 @@ import {
 import {
   LabelPosition, parseLabelPosition
 } from "src/components/editors/designerEditor/common/LabelPosition.tsx";
+import S
+  from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
+import { ReactElement } from "react";
 
 export class Component {
   id: string;
   @observable.ref accessor parent: Component |  null;
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
+  designerRepresentation: ReactElement;
 
   get relativeLeft(): number { return this.getProperty("Left")!.value; }
   set relativeLeft(value: number) { this.getProperty("Left")!.value = value; }
@@ -81,13 +85,15 @@ export class Component {
     id: string,
     parent: Component |  null,
     data: IComponentData,
-    properties: EditorProperty[]
+    properties: EditorProperty[],
+    designerRepresentation: ReactElement
   }) {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
     this._labelPosition =  parseLabelPosition(this.get("CaptionPosition"));
     this.parent = args.parent;
+    this.designerRepresentation = args.designerRepresentation;
   }
 
   isPointInside(x: number, y: number) {
@@ -152,30 +158,84 @@ export class Component {
   }
 }
 
-export function toComponent(
-  control: ApiControl,
+export function controlToComponent(
+  control: IApiControl,
   parent: Component |  null,
 ): Component {
+  const properties = control.properties.map(prop => new EditorProperty(prop));
+  const componentType = parseComponentType(control.type);
   return new Component({
     id: control.id,
     parent: parent,
     data: {
-      type: parseComponentType(control.type),
+      type: componentType,
       identifier: control.name,
     },
-    properties: control.properties.map(prop => new EditorProperty(prop)),
+    properties: properties,
+    designerRepresentation: getDesignerRepresentation(componentType, properties)
+  });
+}
+
+export function sectionToComponent(
+  screenEditorItem: IScreenEditorItem,
+  parent: Component |  null,
+): Component {
+  const control = screenEditorItem.screenItem;
+  const properties = control.properties.map(prop => new EditorProperty(prop));
+  const componentType = parseComponentType(control.type);
+  return new Component({
+    id: control.id,
+    parent: parent,
+    data: {
+      type: componentType,
+      identifier: control.name,
+    },
+    properties: properties,
+    designerRepresentation: getDesignerRepresentation(componentType, properties)
   });
 }
 
 export function toComponentRecursive(
-  control: ApiControl,
+  control: IApiControl,
   parent: Component |  null,
   allComponents: Component[]
 ): Component[] {
-  const newComponent = toComponent(control, parent);
+  const newComponent = controlToComponent(control, parent);
   for (const childControl of control.children) {
     toComponentRecursive(childControl, newComponent, allComponents);
   }
   allComponents.push(newComponent);
   return allComponents;
+}
+
+function getDesignerRepresentation(type: ComponentType, properties: EditorProperty[]): ReactElement {
+  switch (type) {
+    case ComponentType.GroupBox:
+      return (
+        <div className={S.groupBoxContent}>
+          <div
+            className={S.groupBoxHeader}>{properties.find(x=>x.name === "Text")?.value}
+          </div>
+        </div>
+      );
+    case ComponentType.AsForm:
+    case ComponentType.AsPanel:
+      return (
+        <div className={S.panel}>
+        </div>
+      );
+    case ComponentType.AsCheckBox:
+      return (
+        <div className={S.designSurfaceEditorContainer}>
+          <div className={S.designSurfaceCheckbox}></div>
+          <div>{properties.find(x=>x.name === "Text")?.value}</div>
+        </div>
+      );
+    default:
+      return (
+        <div className={S.designSurfaceEditorContainer}>
+          <div className={S.designSurfaceInput}></div>
+        </div>
+      );
+  }
 }

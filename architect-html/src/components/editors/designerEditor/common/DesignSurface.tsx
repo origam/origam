@@ -10,9 +10,6 @@ import {
 import S
   from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
 import {
-  ComponentType
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import {
   IDesignerEditorState
 } from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
 import { ResizeHandle } from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
@@ -112,38 +109,6 @@ export const DesignSurface: React.FC<{
     surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
-  function getDesignSurfaceRepresentation(component: Component) {
-    switch (component.data.type) {
-      case ComponentType.GroupBox:
-        return (
-          <div className={S.groupBoxContent}>
-            <div
-              className={S.groupBoxHeader}>{component.getProperty("Text")?.value}
-            </div>
-          </div>
-        );
-      case ComponentType.AsForm:
-      case ComponentType.AsPanel:
-        return (
-          <div className={S.panel}>
-          </div>
-        );
-      case ComponentType.AsCheckBox:
-        return (
-          <div className={S.designSurfaceEditorContainer}>
-            <div className={S.designSurfaceCheckbox}></div>
-            <div>{component.getProperty("Text")?.value}</div>
-          </div>
-        );
-      default:
-        return (
-          <div className={S.designSurfaceEditorContainer}>
-            <div className={S.designSurfaceInput}></div>
-          </div>
-        );
-    }
-  }
-
   return (
     <div
       ref={surfaceRef}
@@ -185,7 +150,7 @@ export const DesignSurface: React.FC<{
             onClick={(e) => handleComponentClick(e, component)}
           >
 
-            {getDesignSurfaceRepresentation(component)}
+            {component.designerRepresentation}
 
             {surfaceState.selectedComponent?.id === component.id && [
               'top',

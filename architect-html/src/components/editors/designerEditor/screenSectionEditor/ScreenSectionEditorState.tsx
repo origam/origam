@@ -2,7 +2,7 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
-  ApiControl,
+  IApiControl,
   IArchitectApi,
   ISectionEditorData,
   ISectionEditorModel,
@@ -13,7 +13,7 @@ import {
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   Component,
-  toComponent
+  controlToComponent
 } from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   SectionToolboxState
@@ -50,7 +50,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
   }
 
   create(x: number, y: number) {
-    return function* (this: ScreenSectionEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<IApiControl>, void, IApiControl> {
       const parent = this.surface.findComponentAt(x, y);
 
       let currentParent: Component | null = parent;
@@ -71,7 +71,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
         left: relativeX
       });
 
-      const newComponent = toComponent(apiControl, null);
+      const newComponent = controlToComponent(apiControl, null);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;

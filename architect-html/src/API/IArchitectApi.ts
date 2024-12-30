@@ -41,7 +41,7 @@ export interface IArchitectApi {
     fieldName?: string,
     top: number,
     left: number
-  }) : Promise<ApiControl>
+  }) : Promise<IApiControl>
 
   deleteSectionEditorItem(args:{
     schemaItemId: string,
@@ -61,7 +61,7 @@ export interface IArchitectApi {
     controlItemId: string;
     top: number,
     left: number
-  }) : Promise<ApiControl>
+  }) : Promise<IScreenEditorItem>
 
   deleteScreenEditorItem(args:{
     schemaItemId: string,
@@ -73,6 +73,10 @@ export interface IScreenEditorModel {
   isDirty: boolean;
 }
 
+export interface IScreenEditorItem {
+  screenItem: IApiControl;
+  section: IApiControl;
+}
 
 export interface IModelChange {
   schemaItemId: string;
@@ -95,7 +99,7 @@ export interface IDesignerEditorData {
   dataSources: IDataSource[];
   name: string;
   schemaExtensionId: string;
-  rootControl: ApiControl;
+  rootControl: IApiControl;
   selectedDataSourceId: string;
 }
 
@@ -113,12 +117,12 @@ export interface IToolBoxItem {
     name: string;
 }
 
-export interface ApiControl {
+export interface IApiControl {
   name: string;
   id: string;
   type: string;
   properties: IApiEditorProperty[];
-  children: ApiControl[];
+  children: IApiControl[];
 }
 
 export interface IUpdatePropertiesResult {

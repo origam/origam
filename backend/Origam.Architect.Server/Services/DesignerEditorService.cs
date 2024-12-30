@@ -217,7 +217,7 @@ public class DesignerEditorService(
         return LoadItem(newItem, dataSourceDropDownValues);
     }
 
-    public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, FormControlSet screen)
+    public ScreenEditorItem CreateNewItem(ScreenEditorItemModel itemModelData, FormControlSet screen)
     {
         ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
@@ -246,7 +246,11 @@ public class DesignerEditorService(
             left: itemModelData.Left,
             width: (int)width,
             height: (int)height);
-        return LoadItem(newItem, []);
+        return new ScreenEditorItem
+        {
+            ScreenItem = LoadItem(newItem, []),
+            Section = sectionControl,
+        };
     }
 
     public void DeleteItem(Guid schemaItemId, ISchemaItem rootItem)
@@ -258,6 +262,12 @@ public class DesignerEditorService(
             itemToUpdate.IsDeleted = true;
         }
     }
+}
+
+public class ScreenEditorItem
+{
+    public ApiControl ScreenItem { get; set; }
+    public ApiControl Section { get; set; }
 }
 
 public class ApiControl

@@ -2,16 +2,15 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
-  ApiControl,
   IArchitectApi,
-  IScreenEditorData,
+  IScreenEditorData, IScreenEditorItem,
   IScreenEditorModel,
 } from "src/API/IArchitectApi.ts";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   Component,
-  toComponent
+  controlToComponent, sectionToComponent
 } from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   ScreenToolboxState
@@ -48,7 +47,7 @@ export class ScreenEditorState extends DesignerEditorState {
   }
 
   create(x: number, y: number) {
-    return function* (this: ScreenEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
+    return function* (this: ScreenEditorState): Generator<Promise<IScreenEditorItem>, void, IScreenEditorItem> {
       const parent = this.surface.findComponentAt(x, y);
 
       let currentParent: Component | null = parent;
@@ -60,7 +59,7 @@ export class ScreenEditorState extends DesignerEditorState {
         currentParent = currentParent.parent
       }
 
-      const apiControl = yield this.architectApi.createScreenEditorItem({
+      const screenEditorItem = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
         controlItemId: this.surface.draggedComponentData!.identifier!,
@@ -68,7 +67,7 @@ export class ScreenEditorState extends DesignerEditorState {
         left: relativeX
       });
 
-      const newComponent = toComponent(apiControl, null);
+      const newComponent = sectionToComponent(screenEditorItem, null);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;

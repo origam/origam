@@ -58,7 +58,7 @@ public class ScreenEditorController(
     }
 
     [HttpPost("CreateItem")]
-    public ActionResult<ApiControl> CreateItem(
+    public ActionResult<ScreenEditorItem> CreateItem(
         [FromBody] ScreenEditorItemModel itemModelData)
     {
         EditorData editor =
@@ -66,10 +66,10 @@ public class ScreenEditorController(
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
-            ApiControl apiControl =
+            ScreenEditorItem newItem =
                 designerEditorService.CreateNewItem(itemModelData, screenSection);
             editor.IsDirty = true;
-            return Ok(apiControl);
+            return Ok(newItem);
         }
 
         return BadRequest(

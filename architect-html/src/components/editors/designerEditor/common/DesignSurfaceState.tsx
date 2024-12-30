@@ -8,7 +8,7 @@ import {
   IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import {
-  ApiControl, IDesignerEditorData,
+  IApiControl, IDesignerEditorData,
 } from "src/API/IArchitectApi.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
@@ -61,7 +61,7 @@ export class DesignSurfaceState {
     }
   }
 
-  loadComponents(rootControl: ApiControl) {
+  loadComponents(rootControl: IApiControl) {
     let components: Component[] = [];
     components = toComponentRecursive(rootControl, null, components)
     this.components = components;

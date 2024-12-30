@@ -4,13 +4,13 @@ import {
   IArchitectApi,
   IApiEditorData,
   IMenuItemInfo,
-  ApiControl,
+  IApiControl,
   IModelChange,
   IPropertyChange,
   ISectionEditorModel,
   IUpdatePropertiesResult,
   IPackagesInfo,
-  IScreenEditorModel
+  IScreenEditorModel, IScreenEditorItem
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -141,7 +141,7 @@ export class ArchitectApi implements IArchitectApi {
       top: number,
       left: number
     }
-  ): Promise<ApiControl> {
+  ): Promise<IApiControl> {
     return (await this.axiosInstance.post("/SectionEditor/CreateItem",
       args
     )).data;
@@ -175,7 +175,7 @@ export class ArchitectApi implements IArchitectApi {
       top: number,
       left: number
     }
-  ): Promise<ApiControl> {
+  ): Promise<IScreenEditorItem> {
     return (await this.axiosInstance.post("/ScreenEditor/CreateItem",
       args
     )).data;
