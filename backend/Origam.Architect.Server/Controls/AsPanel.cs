@@ -36,8 +36,7 @@ public class AsPanel: ControlBase
     [Category("Pipeline View")]
     public bool IsPipelineSupported { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
+    [Category("Behavior")]
     public int TabIndex { get; set; }
 
     // [Category("Calendar View")]
@@ -73,14 +72,8 @@ public class AsPanel: ControlBase
 
     public bool GridVisible { get; set; } = false;
 
-    [Browsable(false)]
-    public Guid CalendarViewStyleId { get; set; }
-
     [Category("Calendar View")]
     public string CalendarDateDueMember { get; set; }
-
-    [Browsable(false)]
-    public Guid CalendarRowHeightConstantId { get; set; }
 
     [Category("Calendar View")]
     public string CalendarResourceIdMember { get; set; }
@@ -91,9 +84,6 @@ public class AsPanel: ControlBase
 
     [Category("(ORIGAM)")]
     public string PanelTitle { get; set; }
-
-    [Browsable(false)]
-    public Guid PipelineStateLookupId { get; set; }
 
     [Category("Map View")]
     public string MapCenter { get; set; }
@@ -131,9 +121,6 @@ public class AsPanel: ControlBase
     [Description("This setting is only applied on the action buttons placed on the toolbar.")]
     public bool DisableActionButtons { get; set; }
 
-    [Browsable(false)]
-    public Guid IconId { get; set; }
-
     [Category("Behavior")]
     [Description("Indicates whether Delete Button will be shown.")]
     public bool ShowDeleteButton { get; set; } = false;
@@ -144,9 +131,6 @@ public class AsPanel: ControlBase
     [Category("Map View")]
     public string MapTextMember { get; set; }
 
-    [Browsable(false)]
-    public Guid IndependentDataSourceMethodId { get; set; }
-
     [Category("Calendar View")]
     public string CalendarCustomSortMember { get; set; }
 
@@ -155,13 +139,7 @@ public class AsPanel: ControlBase
     
     public bool IsGridHeightDynamic { get; set; } = false;
 
-    [Browsable(false)]
-    public Guid IndependentDataSourceSortId { get; set; }
-
     public bool NewRecordInDetailView { get; set; } = false;
-
-    [Browsable(false)]
-    public Guid IndependentDataSourceId { get; set; }
 
     [Category("Pipeline View")]
     public string PipelineStateMember { get; set; }

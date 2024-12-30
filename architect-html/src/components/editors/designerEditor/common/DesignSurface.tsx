@@ -166,7 +166,7 @@ export const DesignSurface: React.FC<{
             }
             }
           >
-            {component.data.name}
+            {component.data.identifier}
           </div>
           <div
             key={component.id + "_component"}

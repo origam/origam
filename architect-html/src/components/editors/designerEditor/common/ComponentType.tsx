@@ -25,7 +25,7 @@ export function parseComponentType(value: string): ComponentType {
 
 export interface IComponentData {
   type: ComponentType;
-  name?: string;
+  identifier?: string;
 }
 
 export function toComponentType(origamType: OrigamDataType): ComponentType {

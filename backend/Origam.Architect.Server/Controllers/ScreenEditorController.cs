@@ -7,46 +7,46 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controllers;
 
-
 [ApiController]
 [Route("[controller]")]
-public class SectionEditorController(
+public class ScreenEditorController(
     ScreenSectionEditorService sectionService,
     EditorService editorService)
     : ControllerBase
 {
     [HttpPost("Update")]
-    public ActionResult<SectionEditorModel> Update(
+    public ActionResult<ScreenEditorData> Update(
         [FromBody] SectionEditorChangesModel input)
     {
         EditorData editor = editorService.OpenEditor(input.SchemaItemId);
-        if (editor.Item is not PanelControlSet screenSection)
+        if (editor.Item is not FormControlSet screenSection)
         {
             return BadRequest(
                 $"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
+
         editor.IsDirty = sectionService.Update(screenSection, input);
-        var editorData = sectionService.GetSectionEditorData(screenSection);
+        var editorData = sectionService.GetScreenEditorData(screenSection);
         return Ok(
-            new SectionEditorModel
+            new ScreenEditorModel
             {
                 Data = editorData,
                 IsDirty = editor.IsDirty
             }
         );
     }
-    
+
     [HttpPost("DeleteItem")]
-    public ActionResult<SectionEditorModel> DeleteItem(
+    public ActionResult<ScreenEditorModel> DeleteItem(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
         EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
-        if (editor.Item is PanelControlSet screenSection)
+        if (editor.Item is FormControlSet screenSection)
         {
             sectionService.DeleteItem(input.SchemaItemId, screenSection);
             editor.IsDirty = true;
-            var editorData = sectionService.GetSectionEditorData(screenSection);
-            return new SectionEditorModel
+            var editorData = sectionService.GetScreenEditorData(screenSection);
+            return new ScreenEditorModel
             {
                 Data = editorData,
                 IsDirty = true
@@ -56,19 +56,22 @@ public class SectionEditorController(
         return BadRequest(
             $"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
     }
-    
+
     [HttpPost("CreateItem")]
     public ActionResult<ApiControl> CreateItem(
-        [FromBody] SectionEditorItemModel itemModelData)
+        [FromBody] ScreenEditorItemModel itemModelData)
     {
-        EditorData editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+        EditorData editor =
+            editorService.OpenEditor(itemModelData.EditorSchemaItemId);
         ISchemaItem item = editor.Item;
-        if (item is PanelControlSet screenSection)
+        if (item is FormControlSet screenSection)
         {
-            ApiControl apiControl = sectionService.CreateNewItem(itemModelData, screenSection);
+            ApiControl apiControl =
+                sectionService.CreateNewItem(itemModelData, screenSection);
             editor.IsDirty = true;
             return Ok(apiControl);
         }
+
         return BadRequest(
             $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
     }

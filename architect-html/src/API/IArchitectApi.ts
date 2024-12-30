@@ -47,7 +47,32 @@ export interface IArchitectApi {
     schemaItemId: string,
     editorSchemaItemId: string,
   }) : Promise<ISectionEditorModel>
+
+  updateScreenEditor(args: {
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string
+    modelChanges: IModelChange[]
+  }): Promise<IScreenEditorModel>;
+
+  createScreenEditorItem(args:{
+    editorSchemaItemId: string;
+    parentControlSetItemId: string;
+    controlItemId: string;
+    top: number,
+    left: number
+  }) : Promise<ApiControl>
+
+  deleteScreenEditorItem(args:{
+    schemaItemId: string,
+    editorSchemaItemId: string,
+  }) : Promise<IScreenEditorModel>
 }
+export interface IScreenEditorModel {
+  data: IScreenEditorData;
+  isDirty: boolean;
+}
+
 
 export interface IModelChange {
   schemaItemId: string;

@@ -8,6 +8,10 @@ import {
 import {
   ScreenEditorState
 } from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
+import {
+  ComponentType
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
+import { action } from "mobx";
 
 export const ScreenToolbox: React.FC<{
   designerState: ScreenEditorState
@@ -16,14 +20,13 @@ export const ScreenToolbox: React.FC<{
   const toolboxState = props.designerState.screenToolbox;
 
   const onFieldDragStart = (section: IToolBoxItem) => {
-    // action(() => {
-    //   surfaceState.draggedComponentData = {
-    //     name: field.name,
-    //     type: toComponentType(field.type)
-    //   };
-    // })();
+    action(() => {
+      surfaceState.draggedComponentData = {
+        identifier: section.id,
+        type: ComponentType.FormPanel
+      };
+    })();
   };
-
 
   function getToolboxComponent(section: IToolBoxItem) {
     return (

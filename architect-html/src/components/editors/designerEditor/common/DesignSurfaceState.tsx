@@ -9,7 +9,6 @@ import {
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import {
   ApiControl, IDesignerEditorData,
-  ISectionEditorModel
 } from "src/API/IArchitectApi.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 
@@ -53,7 +52,7 @@ export class DesignSurfaceState {
   constructor(
     editorData: IDesignerEditorData,
     private propertiesState: PropertiesState,
-    private updateEditor: () => Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel>
+    private updateEditor: () => Generator<Promise<any>, void, any>
   ) {
     if (editorData.rootControl) {
       this.panelId = editorData.rootControl.id;
@@ -83,7 +82,7 @@ export class DesignSurfaceState {
     if (component) {
       this.selectedComponent = component;
       this.propertiesState.setEdited(
-        component.data.name ?? component.getProperty("Text")?.value ?? "",
+        component.data.identifier ?? component.getProperty("Text")?.value ?? "",
         component.properties)
     } else {
       this.selectedComponent = null;
@@ -154,7 +153,9 @@ export class DesignSurfaceState {
   findComponentAt(mouseX: number, mouseY: number) {
     const componentsUnderPoint = this.components.filter(
       comp =>
-        (comp.data.type === ComponentType.GroupBox || comp.data.type === ComponentType.AsPanel) &&
+        (comp.data.type === ComponentType.GroupBox ||
+          comp.data.type === ComponentType.AsPanel ||
+          comp.data.type === ComponentType.AsForm) &&
         comp.isPointInside(mouseX, mouseY)
     ) ?? this.panel;
     return componentsUnderPoint

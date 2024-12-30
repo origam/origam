@@ -197,6 +197,7 @@ public class ControlAdapter(
             ControlPropertyItem propertyItem = FindPropertyItem(property.Name);
             propertyItem.Name = property.Name;
             propertyValueItem.ControlPropertyItem = propertyItem;
+            propertyValueItem.Name = property.Name;
             if (property.PropertyType == typeof(int))
             {
                 propertyItem.PropertyType = ControlPropertyValueType.Integer;

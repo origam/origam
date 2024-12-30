@@ -12,7 +12,7 @@ public class ScreenSectionEditorService(
     SchemaService schemaService,
     ControlAdapterFactory adapterFactory)
 {
-    public SectionEditorModel Update(PanelControlSet screenSection, SectionEditorChangesModel input)
+    public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {
         bool editorIsDirty = false;
         screenSection.Name = input.Name;
@@ -22,7 +22,7 @@ public class ScreenSectionEditorService(
             ControlSetItem itemToUpdate = screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
             if (itemToUpdate == null)
             {
-                throw new Exception($"item id: {changes.SchemaItemId} is not in the PanelControlSet");
+                throw new Exception($"Child with id: {changes.SchemaItemId} not found in {screenSection.Id}");
             }
 
             if (itemToUpdate.Id != screenSection.MainItem.Id &&
@@ -41,12 +41,7 @@ public class ScreenSectionEditorService(
             editorIsDirty = controlAdapter.UpdateProperties(changes);
         }
 
-        var editorData = GetSectionEditorData(screenSection);
-        return new SectionEditorModel
-        {
-            Data = editorData,
-            IsDirty = editorIsDirty
-        };
+        return editorIsDirty;
     }
 
     public SectionEditorData GetSectionEditorData(ISchemaItem editedItem)
@@ -192,7 +187,7 @@ public class ScreenSectionEditorService(
         return apiControl;
     }
 
-    public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, PanelControlSet screenSection)
+    public ApiControl CreateNewItem(SectionEditorItemModel itemModelData, PanelControlSet screenSection)
     {
         ISchemaItem parent = screenSection.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
@@ -200,7 +195,8 @@ public class ScreenSectionEditorService(
             throw new Exception(
                 $"Parent object {itemModelData.ParentControlSetItemId} not found");
         }
-        ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>().ChildItems
+        ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>()
+            .ChildItems
             .OfType<ControlItem>()
             .First(item => item.ControlType == itemModelData.ComponentType);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
@@ -216,9 +212,66 @@ public class ScreenSectionEditorService(
         return LoadItem(newItem, fields);
     }
 
-    public void DeleteItem(Guid schemaItemId, PanelControlSet screenSection)
+    public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, FormControlSet screen)
     {
-        ISchemaItem schemaItem = screenSection
+        ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
+        if (parent == null)
+        {
+            throw new Exception(
+                $"Parent object {itemModelData.ParentControlSetItemId} not found");
+        }
+        ControlItem controlItem = schemaService.GetProvider<UserControlSchemaItemProvider>()
+            .ChildItems
+            .OfType<ControlItem>()
+            .First(item => item.Id == itemModelData.ControlItemId); // This will have to be done some other way in case of a plugin. See ControlSetEditor.GetControlbyType(Type type)
+
+        ControlSetItem newItem = parent.NewItem<ControlSetItem>(
+            schemaService.ActiveSchemaExtensionId, null);
+        newItem.ControlItem = controlItem;
+        newItem.Name = controlItem.Name;
+
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
+        controlAdapter.InitializeProperties(
+            top: itemModelData.Top,
+            left: itemModelData.Left);
+        return LoadItem(newItem, new List<EditorField>());
+
+
+        // if(bind == null)
+        //     return;
+		      //
+        // Control cntrl = bind.Control;
+        // if(cntrl ==null)
+        //     return;
+        //
+        // ControlPropertyItem propItem= null;
+        // if(!(cntrl.Tag is ControlSetItem))
+        //     return;
+        // ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
+        // propItem=FindPropertyItem(cntrl,bind.PropertyName);
+			     //
+        // if(propItem==null)
+        //     throw new NullReferenceException("Property " + bind.PropertyName + " definition (control: " + cntrl.Name + ") doesn't exists");
+        // PropertyBindingInfo propertyBind=FindPropertyValueItem(cntrSetItem,propItem,true) as PropertyBindingInfo;
+		      //
+        // if(action == CollectionChangeAction.Remove)
+        // {
+        //     propertyBind.IsDeleted = true;
+        //     return;
+        // }
+        //
+        // if(propertyBind==null)
+        //     throw new NullReferenceException("Property binding value (" + bind.PropertyName + ") definition (control: " + cntrl.Name + ") doesn't exists or can't creat new one");
+        // propertyBind.ControlPropertyItem = propItem;
+        // propertyBind.Name =bind.PropertyName;
+        // propertyBind.Value=bind.BindingMemberInfo.BindingField;
+        // propertyBind.DesignDataSetPath = bind.BindingMemberInfo.BindingMember;
+
+    }
+
+    public void DeleteItem(Guid schemaItemId, ISchemaItem rootItem)
+    {
+        ISchemaItem schemaItem = rootItem
             .GetChildByIdRecursive(schemaItemId);
         if (schemaItem is ControlSetItem itemToUpdate)
         {

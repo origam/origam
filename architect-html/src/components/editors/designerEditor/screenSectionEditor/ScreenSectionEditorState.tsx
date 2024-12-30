@@ -115,7 +115,7 @@ export class ScreenSectionEditorState implements IDesignerEditorState {
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
         componentType: this.surface.draggedComponentData!.type,
-        fieldName: this.surface.draggedComponentData!.name,
+        fieldName: this.surface.draggedComponentData!.identifier,
         top: relativeY,
         left: relativeX
       });

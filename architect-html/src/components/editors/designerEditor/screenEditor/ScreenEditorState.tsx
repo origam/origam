@@ -4,8 +4,7 @@ import {
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
   ApiControl,
-  IArchitectApi, IScreenEditorData,
-  ISectionEditorModel,
+  IArchitectApi, IScreenEditorData, IScreenEditorModel,
   IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
 import {
@@ -71,8 +70,8 @@ export class ScreenEditorState implements IDesignerEditorState {
   }
 
   deleteComponent(component: Component) {
-    return function* (this: ScreenEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
-      const newData = yield this.architectApi.deleteSectionEditorItem({
+    return function* (this: ScreenEditorState): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
+      const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
       });
@@ -110,11 +109,10 @@ export class ScreenEditorState implements IDesignerEditorState {
         currentParent = currentParent.parent
       }
 
-      const apiControl = yield this.architectApi.createSectionEditorItem({
+      const apiControl = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: parent.id,
-        componentType: this.surface.draggedComponentData!.type,
-        fieldName: this.surface.draggedComponentData!.name,
+        controlItemId: this.surface.draggedComponentData!.identifier!,
         top: relativeY,
         left: relativeX
       });
@@ -135,7 +133,7 @@ export class ScreenEditorState implements IDesignerEditorState {
     }.bind(this);
   }
 
-  private* updateScreenEditor(): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+  private* updateScreenEditor(): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,
@@ -144,7 +142,7 @@ export class ScreenEditorState implements IDesignerEditorState {
         }
       }
     )
-    const updateResult = yield this.architectApi.updateSectionEditor({
+    const updateResult = yield this.architectApi.updateScreenEditor({
       schemaItemId: this.toolbox.id,
       name: this.toolbox.name,
       selectedDataSourceId: this.toolbox.selectedDataSourceId,

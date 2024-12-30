@@ -7,7 +7,10 @@ import {
   ApiControl,
   IModelChange,
   IPropertyChange,
-  ISectionEditorModel, IUpdatePropertiesResult, IPackagesInfo
+  ISectionEditorModel,
+  IUpdatePropertiesResult,
+  IPackagesInfo,
+  IScreenEditorModel
 } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -151,6 +154,40 @@ export class ArchitectApi implements IArchitectApi {
     }
   ): Promise<ISectionEditorModel> {
     return (await this.axiosInstance.post("/SectionEditor/DeleteItem",
+      args
+    )).data;
+  }
+
+  async updateScreenEditor(args: {
+    schemaItemId: string | undefined,
+    name: string,
+    selectedDataSourceId: string,
+    modelChanges: IModelChange[]
+  }): Promise<IScreenEditorModel> {
+    return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
+  }
+
+  async createScreenEditorItem(
+    args: {
+      editorSchemaItemId: string;
+      parentControlSetItemId: string;
+      controlItemId: string;
+      top: number,
+      left: number
+    }
+  ): Promise<ApiControl> {
+    return (await this.axiosInstance.post("/ScreenEditor/CreateItem",
+      args
+    )).data;
+  }
+
+  async deleteScreenEditorItem(
+    args: {
+      schemaItemId: string,
+      editorSchemaItemId: string,
+    }
+  ): Promise<IScreenEditorModel> {
+    return (await this.axiosInstance.post("/ScreenEditor/DeleteItem",
       args
     )).data;
   }

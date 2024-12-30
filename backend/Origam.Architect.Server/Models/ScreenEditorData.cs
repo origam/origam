@@ -18,3 +18,9 @@ public class ToolBoxItem
     public Guid Id { get; set; }
     public string Name { get; set; }
 }
+
+public class ScreenEditorModel
+{
+    public ScreenEditorData Data { get; set; }
+    public bool IsDirty { get; set; }
+}
