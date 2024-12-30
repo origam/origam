@@ -52,21 +52,21 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     this.surface = new DesignSurfaceState(
       editorData,
       propertiesState,
-      this.updateEditor.bind(this)
+      this.update.bind(this)
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
   }
 
   * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     property.value = value;
-    yield* this.updateEditor() as any
+    yield* this.update() as any
   }
 
-  public abstract deleteComponent(component: Component): void;
+  public abstract delete(component: Component): void;
 
-  public abstract createDraggedComponent(x: number, y: number): void;
+  public abstract create(x: number, y: number): void;
 
-  protected abstract updateEditor(): Generator<Promise<any>, void, any>;
+  protected abstract update(): Generator<Promise<any>, void, any>;
 
   onDesignerMouseUp(x: number, y: number) {
     return function* (this: DesignerEditorState) {
@@ -74,12 +74,12 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
         const didDrag = this.surface.dragState.didDrag;
         this.surface.endDragging(x, y);
         if (didDrag) {
-          yield* this.updateEditor();
+          yield* this.update();
         }
       }
       if (this.surface.isResizing) {
         this.surface.endResizing();
-        yield* this.updateEditor();
+        yield* this.update();
       }
     }.bind(this);
   }

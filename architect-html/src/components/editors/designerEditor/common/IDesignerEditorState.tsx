@@ -9,9 +9,9 @@ import {
 export interface IDesignerEditorState extends IEditorState {
   surface: DesignSurfaceState;
 
-  deleteComponent(component: Component): any;
+  delete(component: Component): any;
 
   onDesignerMouseUp(x: number, y: number): any;
 
-  createDraggedComponent(x: number, y: number): any;
+  create(x: number, y: number): any;
 }

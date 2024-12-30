@@ -161,7 +161,7 @@ export function toComponent(
     parent: parent,
     data: {
       type: parseComponentType(control.type),
-      name: control.name,
+      identifier: control.name,
     },
     properties: control.properties.map(prop => new EditorProperty(prop)),
   });

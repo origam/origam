@@ -28,7 +28,7 @@ export const DesignSurface: React.FC<{
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Delete' && surfaceState.selectedComponent) {
-        run({generator: designerState.deleteComponent(surfaceState.selectedComponent)});
+        run({generator: designerState.delete(surfaceState.selectedComponent)});
       }
     };
 
@@ -52,7 +52,7 @@ export const DesignSurface: React.FC<{
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    run({generator: designerState.createDraggedComponent(dropX, dropY)});
+    run({generator: designerState.create(dropX, dropY)});
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {

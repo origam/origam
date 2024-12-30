@@ -22,7 +22,7 @@ import {
   DesignerEditorState
 } from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
 
-export class ScreenSectionEditorState extends DesignerEditorState{
+export class ScreenSectionEditorState extends DesignerEditorState {
 
   public sectionToolbox: SectionToolboxState;
 
@@ -38,7 +38,7 @@ export class ScreenSectionEditorState extends DesignerEditorState{
     this.sectionToolbox = sectionToolboxState;
   }
 
-  deleteComponent(component: Component) {
+  delete(component: Component) {
     return function* (this: ScreenSectionEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
       const newData = yield this.architectApi.deleteSectionEditorItem({
         editorSchemaItemId: this.toolbox.id,
@@ -49,7 +49,7 @@ export class ScreenSectionEditorState extends DesignerEditorState{
     }.bind(this);
   }
 
-  createDraggedComponent(x: number, y: number) {
+  create(x: number, y: number) {
     return function* (this: ScreenSectionEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
       const parent = this.surface.findComponentAt(x, y);
 
@@ -81,17 +81,17 @@ export class ScreenSectionEditorState extends DesignerEditorState{
 
       const panelSizeChanged = this.surface.updatePanelSize(newComponent);
       if (panelSizeChanged) {
-        yield* this.updateEditor() as any;
+        yield* this.update() as any;
       }
 
     }.bind(this);
   }
 
-  protected updateEditor(): Generator<Promise<any>, void, any> {
-    return this.updateScreenEditorGenerator();
+  protected update(): Generator<Promise<any>, void, any> {
+    return this.updateGenerator();
   }
 
-  protected* updateScreenEditorGenerator(): Generator<Promise<any>, void, any> {
+  protected* updateGenerator(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,

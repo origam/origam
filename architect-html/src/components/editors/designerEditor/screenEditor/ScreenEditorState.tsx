@@ -36,7 +36,7 @@ export class ScreenEditorState extends DesignerEditorState {
     this.screenToolbox = screenToolboxState;
   }
 
-  deleteComponent(component: Component) {
+  delete(component: Component) {
     return function* (this: ScreenEditorState): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
@@ -47,7 +47,7 @@ export class ScreenEditorState extends DesignerEditorState {
     }.bind(this);
   }
 
-  createDraggedComponent(x: number, y: number) {
+  create(x: number, y: number) {
     return function* (this: ScreenEditorState): Generator<Promise<ApiControl>, void, ApiControl> {
       const parent = this.surface.findComponentAt(x, y);
 
@@ -78,17 +78,17 @@ export class ScreenEditorState extends DesignerEditorState {
 
       const panelSizeChanged = this.surface.updatePanelSize(newComponent);
       if (panelSizeChanged) {
-        yield* this.updateEditor() as any;
+        yield* this.update() as any;
       }
 
     }.bind(this);
   }
 
-  protected updateEditor(): Generator<Promise<any>, void, any> {
-    return this.updateScreenEditorGenerator();
+  protected update(): Generator<Promise<any>, void, any> {
+    return this.updateGenerator();
   }
 
-  protected* updateScreenEditorGenerator(): Generator<Promise<any>, void, any> {
+  protected* updateGenerator(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,
