@@ -142,8 +142,8 @@ public class ControlAdapter(
 
         return changesMade;
     }
-    
-    public List<EditorProperty> GetEditorProperties(List<EditorField> fields)
+
+    public List<EditorProperty> GetEditorProperties(DropDownValue[] dataSourceDropDownValues)
     {
         IEnumerable<EditorProperty> properties = control.GetType().GetProperties()
             .Select(property =>
@@ -154,7 +154,7 @@ public class ControlAdapter(
                         item.ControlPropertyItem.Name == property.Name);
                 if (bindingInfo != null)
                 {
-                    return propertyFactory.Create(property, bindingInfo, fields);
+                    return propertyFactory.Create(property, bindingInfo, dataSourceDropDownValues);
                 }
 
                 PropertyValueItem valueItem = controlSetItem.ChildItems

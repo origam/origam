@@ -56,9 +56,12 @@ public class ScreenSectionEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            
+
             List<EditorField> fields = GetFields(screenSection);
-            ApiControl apiControl =  LoadContent(screenSection.MainItem, fields);
+            DropDownValue[] dataSourceDropDownValues = fields
+                .Select(field => new DropDownValue(field.Name, field.Name))
+                .ToArray();
+            ApiControl apiControl =  LoadContent(screenSection.MainItem, dataSourceDropDownValues);
             return new SectionEditorData
             {
                 Name = editedItem.Name,
@@ -66,7 +69,7 @@ public class ScreenSectionEditorService(
                 DataSources = dataSources,
                 RootControl = apiControl,
                 SelectedDataSourceId = screenSection.DataEntity.Id,
-                Fields = fields
+                Fields = GetFields(screenSection)
             };
         }
 
@@ -105,7 +108,7 @@ public class ScreenSectionEditorService(
                 .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
                 .OrderBy(x => x.Name);
             
-            ApiControl apiControl =  LoadContent(screen.MainItem, new List<EditorField>());
+            ApiControl apiControl =  LoadContent(screen.MainItem, []);
             return new ScreenEditorData
             {
                 Name = editedItem.Name,
@@ -137,9 +140,9 @@ public class ScreenSectionEditorService(
     }
 
     private ApiControl LoadContent(ControlSetItem controlSetItem,
-        List<EditorField> fields)
+        DropDownValue[] dataSourceDropDownValues)
     {
-        ApiControl apiControl = LoadItem(controlSetItem, fields);
+        ApiControl apiControl = LoadItem(controlSetItem, dataSourceDropDownValues);
 
         var childControls = controlSetItem
             .ChildItemsByType<ControlSetItem>("ControlSetItem");
@@ -149,22 +152,22 @@ public class ScreenSectionEditorService(
             {
                 continue;
             }
-            var child = LoadContent(childControl, fields);
+            var child = LoadContent(childControl, dataSourceDropDownValues);
             apiControl.Children.Add(child);
         }
 
         return apiControl;
     }
-    
+
     private ApiControl LoadItem(ControlSetItem controlSetItem,
-        List<EditorField> fields)
+        DropDownValue[] dataSourceDropDownValues)
     {
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(controlSetItem);
         ApiControl apiControl = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id,
-            Properties = controlAdapter.GetEditorProperties(fields)
+            Properties = controlAdapter.GetEditorProperties(dataSourceDropDownValues)
         };
 
         if (controlSetItem.RootItem is PanelControlSet controlSet)
@@ -208,8 +211,10 @@ public class ScreenSectionEditorService(
         controlAdapter.InitializeProperties(
             top: itemModelData.Top, 
             left: itemModelData.Left);
-        List<EditorField> fields = GetFields(screenSection);
-        return LoadItem(newItem, fields);
+        DropDownValue[] dataSourceDropDownValues = GetFields(screenSection)
+            .Select(field => new DropDownValue(field.Name, field.Name))
+            .ToArray();
+        return LoadItem(newItem, dataSourceDropDownValues);
     }
 
     public ApiControl CreateNewItem(ScreenEditorItemModel itemModelData, FormControlSet screen)
@@ -234,39 +239,7 @@ public class ScreenSectionEditorService(
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left);
-        return LoadItem(newItem, new List<EditorField>());
-
-
-        // if(bind == null)
-        //     return;
-		      //
-        // Control cntrl = bind.Control;
-        // if(cntrl ==null)
-        //     return;
-        //
-        // ControlPropertyItem propItem= null;
-        // if(!(cntrl.Tag is ControlSetItem))
-        //     return;
-        // ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
-        // propItem=FindPropertyItem(cntrl,bind.PropertyName);
-			     //
-        // if(propItem==null)
-        //     throw new NullReferenceException("Property " + bind.PropertyName + " definition (control: " + cntrl.Name + ") doesn't exists");
-        // PropertyBindingInfo propertyBind=FindPropertyValueItem(cntrSetItem,propItem,true) as PropertyBindingInfo;
-		      //
-        // if(action == CollectionChangeAction.Remove)
-        // {
-        //     propertyBind.IsDeleted = true;
-        //     return;
-        // }
-        //
-        // if(propertyBind==null)
-        //     throw new NullReferenceException("Property binding value (" + bind.PropertyName + ") definition (control: " + cntrl.Name + ") doesn't exists or can't creat new one");
-        // propertyBind.ControlPropertyItem = propItem;
-        // propertyBind.Name =bind.PropertyName;
-        // propertyBind.Value=bind.BindingMemberInfo.BindingField;
-        // propertyBind.DesignDataSetPath = bind.BindingMemberInfo.BindingMember;
-
+        return LoadItem(newItem, []);
     }
 
     public void DeleteItem(Guid schemaItemId, ISchemaItem rootItem)
