@@ -23,6 +23,12 @@ import {
   ScreenEditorState
 } from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
 import ScreenEditor from "src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx";
+import {
+  ScreenToolboxState
+} from "src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx";
+import {
+  SectionToolboxState
+} from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
 
 export function getEditor(
   args: {
@@ -51,7 +57,8 @@ export function getEditor(
   }
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
-    const state = new ScreenSectionEditorState(node, isDirty, sectionData, propertiesState, architectApi);
+    const sectionToolboxState = new SectionToolboxState(sectionData, node.origamId, architectApi);
+    const state = new ScreenSectionEditorState(node, isDirty, sectionData, propertiesState, sectionToolboxState, architectApi);
     return new Editor(
       state,
       <ScreenSectionEditor designerState={state}/>
@@ -59,7 +66,8 @@ export function getEditor(
   }
   if (node.editorType === "ScreenEditor") {
     const screenData = data as IScreenEditorData;
-    const state = new ScreenEditorState(node, isDirty, screenData, propertiesState, architectApi);
+    const screenToolboxState = new ScreenToolboxState(screenData, node.origamId, architectApi);
+    const state = new ScreenEditorState(node, isDirty, screenData, propertiesState, screenToolboxState, architectApi);
     return new Editor(
       state,
       <ScreenEditor designerState={state}/>

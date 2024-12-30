@@ -1,4 +1,3 @@
-import { observable } from "mobx";
 import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
@@ -7,68 +6,36 @@ import {
   IArchitectApi,
   ISectionEditorData,
   ISectionEditorModel,
-  IUpdatePropertiesResult,
 } from "src/API/IArchitectApi.ts";
 import {
-  EditorProperty,
   toChanges
 } from "src/components/editors/gridEditor/EditorProperty.ts";
-import {
-  DesignSurfaceState
-} from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
-import {
-  ToolboxState
-} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   Component,
   toComponent
 } from "src/components/editors/designerEditor/common/Component.tsx";
 import {
-  IDesignerEditorState
-} from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
-import {
   SectionToolboxState
 } from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
+import {
+  DesignerEditorState
+} from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
 
-export class ScreenSectionEditorState implements IDesignerEditorState {
+export class ScreenSectionEditorState extends DesignerEditorState{
 
-  public surface: DesignSurfaceState;
   public sectionToolbox: SectionToolboxState;
-  public toolbox: ToolboxState;
-
-  @observable accessor isActive: boolean = false;
-  @observable accessor isDirty: boolean = false;
-
-  get label() {
-    return this.toolbox.name;
-  }
-
-  get schemaItemId() {
-    return this.editorNode.origamId;
-  }
 
   constructor(
-    private editorNode: IEditorNode,
+    editorNode: IEditorNode,
     isDirty: boolean,
     sectionEditorData: ISectionEditorData,
     propertiesState: PropertiesState,
-    private architectApi: IArchitectApi
+    sectionToolboxState: SectionToolboxState,
+    architectApi: IArchitectApi
   ) {
-    this.isDirty = isDirty;
-    this.sectionToolbox = new SectionToolboxState(sectionEditorData, editorNode.origamId, architectApi);
-    this.toolbox = this.sectionToolbox.toolboxState;
-    this.surface = new DesignSurfaceState(
-      sectionEditorData,
-      propertiesState,
-      this.updateScreenEditor.bind(this)
-    );
-    propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
-  }
-
-  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-    property.value = value;
-    yield* this.updateScreenEditor() as any
+    super(editorNode, isDirty, sectionEditorData, propertiesState, sectionToolboxState.toolboxState, architectApi);
+    this.sectionToolbox = sectionToolboxState;
   }
 
   deleteComponent(component: Component) {
@@ -79,22 +46,6 @@ export class ScreenSectionEditorState implements IDesignerEditorState {
       });
       this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
-    }.bind(this);
-  }
-
-  onDesignerMouseUp(x: number, y: number) {
-    return function* (this: ScreenSectionEditorState) {
-      if (this.surface.isDragging) {
-        const didDrag = this.surface.dragState.didDrag;
-        this.surface.endDragging(x, y);
-        if (didDrag) {
-          yield* this.updateScreenEditor();
-        }
-      }
-      if (this.surface.isResizing) {
-        this.surface.endResizing();
-        yield* this.updateScreenEditor();
-      }
     }.bind(this);
   }
 
@@ -130,13 +81,17 @@ export class ScreenSectionEditorState implements IDesignerEditorState {
 
       const panelSizeChanged = this.surface.updatePanelSize(newComponent);
       if (panelSizeChanged) {
-        yield* this.updateScreenEditor() as any;
+        yield* this.updateEditor() as any;
       }
 
     }.bind(this);
   }
 
-  private* updateScreenEditor(): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+  protected updateEditor(): Generator<Promise<any>, void, any> {
+    return this.updateScreenEditorGenerator();
+  }
+
+  protected* updateScreenEditorGenerator(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
         return {
           schemaItemId: x.id,
@@ -157,14 +112,6 @@ export class ScreenSectionEditorState implements IDesignerEditorState {
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.sectionToolbox.fields = newData.fields;
     this.surface.loadComponents(newData.rootControl);
-  }
-
-  * save(): Generator<Promise<any>, void, any> {
-    yield this.architectApi.persistChanges(this.editorNode.origamId);
-    if (this.editorNode.parent) {
-      yield* this.editorNode.parent.loadChildren();
-    }
-    this.isDirty = false;
   }
 }
 
