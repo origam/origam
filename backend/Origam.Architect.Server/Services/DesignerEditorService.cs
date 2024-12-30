@@ -89,15 +89,15 @@ public class DesignerEditorService(
             
             var userControlProvider =
                 schemaService.GetProvider<UserControlSchemaItemProvider>();
-            
+
             var sections = userControlProvider.ChildItems
                 .OfType<ControlItem>()
-                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
-                               item.IsComplexType && 
+                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" &&
+                               item.IsComplexType &&
                                item.ControlToolBoxVisibility != ControlToolBoxVisibility.Nowhere)
                 .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
                 .OrderBy(x => x.Name);
-            
+
             var widgets = userControlProvider.ChildItems
                 .OfType<ControlItem>()
                 .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
@@ -230,15 +230,22 @@ public class DesignerEditorService(
             .OfType<ControlItem>()
             .First(item => item.Id == itemModelData.ControlItemId); // This will have to be done some other way in case of a plugin. See ControlSetEditor.GetControlbyType(Type type)
 
+
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId, null);
         newItem.ControlItem = controlItem;
         newItem.Name = controlItem.Name;
 
+        ApiControl sectionControl =  LoadContent(controlItem.PanelControlSet.MainItem, []);
+        var height = sectionControl.Properties.Find(prop => prop.Name == "Height").Value;
+        var width = sectionControl.Properties.Find(prop => prop.Name == "Width").Value;
+
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
-            left: itemModelData.Left);
+            left: itemModelData.Left,
+            width: (int)width,
+            height: (int)height);
         return LoadItem(newItem, []);
     }
 

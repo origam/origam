@@ -184,7 +184,7 @@ public class ControlAdapter(
         return propertyItem;
     }
 
-    public void InitializeProperties(int top, int left)
+    public void InitializeProperties(int top, int left, int? height=null, int? width=null)
     {
         control.Initialize(controlSetItem);
         Type type = control.GetType();
@@ -208,6 +208,14 @@ public class ControlAdapter(
                 else if (property.Name == "Left")
                 {
                     propertyValueItem.Value = XmlConvert.ToString(left);
+                }
+                else if (height.HasValue && property.Name == "Height")
+                {
+                    propertyValueItem.Value = XmlConvert.ToString(height.Value);
+                }
+                else if (width.HasValue && property.Name == "Width")
+                {
+                    propertyValueItem.Value = XmlConvert.ToString(width.Value);
                 }
                 else
                 {
