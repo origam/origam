@@ -8,7 +8,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class ScreenSectionEditorService(
+public class DesignerEditorService(
     SchemaService schemaService,
     ControlAdapterFactory adapterFactory)
 {

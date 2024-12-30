@@ -14,7 +14,7 @@ namespace Origam.Architect.Server.Controllers;
 public class EditorController(
     PropertyEditorService propertyService,
     IPersistenceService persistenceService,
-    ScreenSectionEditorService sectionService,
+    DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService)
     : ControllerBase

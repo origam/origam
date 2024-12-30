@@ -10,7 +10,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ScreenEditorController(
-    ScreenSectionEditorService sectionService,
+    DesignerEditorService designerEditorService,
     EditorService editorService)
     : ControllerBase
 {
@@ -25,8 +25,8 @@ public class ScreenEditorController(
                 $"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
 
-        editor.IsDirty = sectionService.Update(screenSection, input);
-        var editorData = sectionService.GetScreenEditorData(screenSection);
+        editor.IsDirty = designerEditorService.Update(screenSection, input);
+        var editorData = designerEditorService.GetScreenEditorData(screenSection);
         return Ok(
             new ScreenEditorModel
             {
@@ -43,9 +43,9 @@ public class ScreenEditorController(
         EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
         if (editor.Item is FormControlSet screenSection)
         {
-            sectionService.DeleteItem(input.SchemaItemId, screenSection);
+            designerEditorService.DeleteItem(input.SchemaItemId, screenSection);
             editor.IsDirty = true;
-            var editorData = sectionService.GetScreenEditorData(screenSection);
+            var editorData = designerEditorService.GetScreenEditorData(screenSection);
             return new ScreenEditorModel
             {
                 Data = editorData,
@@ -67,7 +67,7 @@ public class ScreenEditorController(
         if (item is FormControlSet screenSection)
         {
             ApiControl apiControl =
-                sectionService.CreateNewItem(itemModelData, screenSection);
+                designerEditorService.CreateNewItem(itemModelData, screenSection);
             editor.IsDirty = true;
             return Ok(apiControl);
         }
