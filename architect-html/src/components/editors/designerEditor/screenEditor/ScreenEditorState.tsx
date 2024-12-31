@@ -2,6 +2,7 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
+  IApiControl,
   IArchitectApi,
   IScreenEditorData, IScreenEditorItem,
   IScreenEditorModel,
@@ -9,8 +10,7 @@ import {
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
-  Component,
-  controlToComponent, sectionToComponent
+  Component, controlToComponent, sectionToComponent
 } from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   ScreenToolboxState
@@ -67,7 +67,7 @@ export class ScreenEditorState extends DesignerEditorState {
         left: relativeX
       });
 
-      const newComponent = sectionToComponent(screenEditorItem, null);
+      const newComponent = controlToComponent(screenEditorItem.screenItem, null);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;
@@ -107,5 +107,19 @@ export class ScreenEditorState extends DesignerEditorState {
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.surface.loadComponents(newData.rootControl);
+  }
+
+  public loadSections(){
+    return function *(this: ScreenEditorState): Generator<Promise<Record<string, IApiControl>>, void,Record<string, IApiControl>>{
+      const sectionIdsToLoad = this.surface.components
+        .filter(x => !x.designerRepresentation)
+        .map(x => x.id);
+      const sectionControls = yield this.architectApi.loadSections(sectionIdsToLoad);
+      for (const sectionId of Object.keys(sectionControls)) {
+        const component = this.surface.components.find(x => x.id === sectionId)!;
+        component.designerRepresentation = sectionToComponent(sectionControls[sectionId]);
+      }
+      console.log(sectionControls);
+    }.bind(this);
   }
 }

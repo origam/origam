@@ -12,7 +12,9 @@ import S
 import {
   IDesignerEditorState
 } from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
-import { ResizeHandle } from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
+import {
+  ResizeHandle
+} from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState
@@ -135,7 +137,7 @@ export const DesignSurface: React.FC<{
           </div>
           <div
             key={component.id + "_component"}
-            className={`${S.designComponent} 
+            className={`${S.designComponent} ${component.id} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
             style={{
@@ -150,7 +152,11 @@ export const DesignSurface: React.FC<{
             onClick={(e) => handleComponentClick(e, component)}
           >
 
-            {component.designerRepresentation}
+            {component.designerRepresentation ??
+              <div className={S.designSurfaceEditorContainer}>
+                <div className={S.designSurfaceInput}></div>
+              </div>
+            }
 
             {surfaceState.selectedComponent?.id === component.id && [
               'top',

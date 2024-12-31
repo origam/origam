@@ -139,7 +139,7 @@ public class DesignerEditorService(
             .ToList();
     }
 
-    private ApiControl LoadContent(ControlSetItem controlSetItem,
+    public ApiControl LoadContent(ControlSetItem controlSetItem,
         DropDownValue[] dataSourceDropDownValues)
     {
         ApiControl apiControl = LoadItem(controlSetItem, dataSourceDropDownValues);
@@ -277,4 +277,13 @@ public class ApiControl
     public string Name { get; set; }
     public List<EditorProperty> Properties { get; set; }
     public List<ApiControl> Children { get; set; } = new();
+}
+public class ScreenApiControl
+{
+    public Guid Id { get; set; }
+    public string Type { get; set; }
+    public string Name { get; set; }
+    public ApiControl Section { get; set; }
+    public List<EditorProperty> Properties { get; set; }
+    public List<ScreenApiControl> Children { get; set; } = new();
 }

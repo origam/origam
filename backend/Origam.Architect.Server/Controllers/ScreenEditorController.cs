@@ -10,7 +10,7 @@ namespace Origam.Architect.Server.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ScreenEditorController(
-    DesignerEditorService designerEditorService,
+    DesignerEditorService designerService,
     EditorService editorService)
     : ControllerBase
 {
@@ -25,8 +25,8 @@ public class ScreenEditorController(
                 $"item id: {input.SchemaItemId} is not a PanelControlSet");
         }
 
-        editor.IsDirty = designerEditorService.Update(screenSection, input);
-        var editorData = designerEditorService.GetScreenEditorData(screenSection);
+        editor.IsDirty = designerService.Update(screenSection, input);
+        var editorData = designerService.GetScreenEditorData(screenSection);
         return Ok(
             new ScreenEditorModel
             {
@@ -43,9 +43,9 @@ public class ScreenEditorController(
         EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
         if (editor.Item is FormControlSet screenSection)
         {
-            designerEditorService.DeleteItem(input.SchemaItemId, screenSection);
+            designerService.DeleteItem(input.SchemaItemId, screenSection);
             editor.IsDirty = true;
-            var editorData = designerEditorService.GetScreenEditorData(screenSection);
+            var editorData = designerService.GetScreenEditorData(screenSection);
             return new ScreenEditorModel
             {
                 Data = editorData,
@@ -67,12 +67,29 @@ public class ScreenEditorController(
         if (item is FormControlSet screenSection)
         {
             ScreenEditorItem newItem =
-                designerEditorService.CreateNewItem(itemModelData, screenSection);
+                designerService.CreateNewItem(itemModelData, screenSection);
             editor.IsDirty = true;
             return Ok(newItem);
         }
 
         return BadRequest(
             $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
+    }
+
+    [HttpGet("GetSections")]
+    public Dictionary<Guid, ApiControl> CreateItem([FromQuery(Name = "sectionIds[]")] Guid[] sectionIds)
+    {
+        return sectionIds
+            .ToDictionary(
+                sectionId => sectionId,
+                sectionId =>
+                {
+                    var screenControlSet =
+                        (ControlSetItem)editorService.OpenEditor(sectionId)
+                            .Item;
+                    var screenSection = screenControlSet.ControlItem
+                        .PanelControlSet.MainItem;
+                    return designerService.LoadContent(screenSection, []);
+                });
     }
 }
