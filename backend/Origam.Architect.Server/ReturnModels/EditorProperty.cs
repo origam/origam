@@ -26,7 +26,7 @@ public class EditorProperty
 
     public string Name { get; } 
     public string Type { get; }
-    public object Value { get; } 
+    public object Value { get; set; }
     public DropDownValue[] DropDownValues { get; }
     public string Category { get; } 
     public string Description { get; }

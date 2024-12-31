@@ -4,13 +4,16 @@ import {
 import {
   IApiControl,
   IArchitectApi,
-  IScreenEditorData, IScreenEditorItem,
+  IScreenEditorData,
+  IScreenEditorItem,
   IScreenEditorModel,
 } from "src/API/IArchitectApi.ts";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
-  Component, controlToComponent, sectionToComponent
+  Component,
+  controlToComponent,
+  sectionToComponent
 } from "src/components/editors/designerEditor/common/Component.tsx";
 import {
   ScreenToolboxState
@@ -79,7 +82,7 @@ export class ScreenEditorState extends DesignerEditorState {
       if (panelSizeChanged) {
         yield* this.update() as any;
       }
-
+      yield * this.loadSections()() as any;
     }.bind(this);
   }
 
@@ -106,7 +109,14 @@ export class ScreenEditorState extends DesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
+
+    const oldComponents = this.surface.components;
     this.surface.loadComponents(newData.rootControl);
+    for (const newComponent of this.surface.components) {
+      if(!newComponent.designerRepresentation){
+        newComponent.designerRepresentation = oldComponents.find(x => x.id === newComponent.id)?.designerRepresentation ?? null;
+      }
+    }
   }
 
   public loadSections(){
@@ -114,7 +124,7 @@ export class ScreenEditorState extends DesignerEditorState {
       const sectionIdsToLoad = this.surface.components
         .filter(x => !x.designerRepresentation)
         .map(x => x.id);
-      const sectionControls = yield this.architectApi.loadSections(sectionIdsToLoad);
+      const sectionControls = yield this.architectApi.loadSections(this.editorNode.origamId, sectionIdsToLoad);
       for (const sectionId of Object.keys(sectionControls)) {
         const component = this.surface.components.find(x => x.id === sectionId)!;
         component.designerRepresentation = sectionToComponent(sectionControls[sectionId]);

@@ -77,19 +77,19 @@ public class ScreenEditorController(
     }
 
     [HttpGet("GetSections")]
-    public Dictionary<Guid, ApiControl> CreateItem([FromQuery(Name = "sectionIds[]")] Guid[] sectionIds)
+    public ActionResult<Dictionary<Guid, ApiControl>> GetSections(
+        [FromQuery(Name = "sectionIds[]")] Guid[] sectionIds, [FromQuery] Guid editorSchemaItemId)
     {
-        return sectionIds
-            .ToDictionary(
-                sectionId => sectionId,
-                sectionId =>
-                {
-                    var screenControlSet =
-                        (ControlSetItem)editorService.OpenEditor(sectionId)
-                            .Item;
-                    var screenSection = screenControlSet.ControlItem
-                        .PanelControlSet.MainItem;
-                    return designerService.LoadContent(screenSection, []);
-                });
+        EditorData editor =
+            editorService.OpenEditor(editorSchemaItemId);
+        ISchemaItem item = editor.Item;
+        if (item is FormControlSet screenSection)
+        {
+            return designerService.LoadSections(screenSection, sectionIds);
+        }
+
+        return BadRequest(
+            $"item id: {editorSchemaItemId} is not a PanelControlSet");
+
     }
 }

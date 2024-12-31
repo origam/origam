@@ -68,7 +68,7 @@ export interface IArchitectApi {
     editorSchemaItemId: string,
   }) : Promise<IScreenEditorModel>
 
-  loadSections(sectionIds: string[]): Promise<Record<string, IApiControl>>;
+  loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;

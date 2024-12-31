@@ -192,12 +192,13 @@ export class ArchitectApi implements IArchitectApi {
     )).data;
   }
 
-  async loadSections(sectionIds: string[]): Promise<Record<string, IApiControl>> {
+  async loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>> {
     return (await this.axiosInstance.get(
       `/ScreenEditor/GetSections`,
       {
         params: {
-          sectionIds: sectionIds
+          sectionIds: sectionIds,
+          editorSchemaItemId: editorSchemaItemId
         }
       })).data;
   }

@@ -9,6 +9,7 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Services;
 
 public class DesignerEditorService(
+    IPersistenceService persistenceService,
     SchemaService schemaService,
     ControlAdapterFactory adapterFactory)
 {
@@ -261,6 +262,25 @@ public class DesignerEditorService(
         {
             itemToUpdate.IsDeleted = true;
         }
+    }
+
+    public Dictionary<Guid, ApiControl> LoadSections(
+        FormControlSet formControlSet, Guid[] sectionIds)
+    {
+        return sectionIds
+            .ToDictionary(
+                sectionId => sectionId,
+                sectionId =>
+                {
+                    var screenControlSet =
+                        (ControlSetItem)formControlSet.GetChildByIdRecursive(sectionId);
+                    var screenSection = screenControlSet.ControlItem
+                        .PanelControlSet.MainItem;
+                    ApiControl sectionControl = LoadContent(screenSection, []);
+                    sectionControl.Properties.Find(x => x.Name == "Top").Value = 0;
+                    sectionControl.Properties.Find(x => x.Name == "Left").Value = 0;
+                    return sectionControl;
+                });
     }
 }
 
