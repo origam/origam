@@ -15,6 +15,9 @@ import {
 import {
   ResizeHandle
 } from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
+import {
+  ComponentType
+} from "src/components/editors/designerEditor/common/ComponentType.tsx";
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState
@@ -111,6 +114,13 @@ export const DesignSurface: React.FC<{
     surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
+  function renderDesignerRepresentation(component: Component) {
+    return component.designerRepresentation ??
+      <div className={S.designSurfaceEditorContainer}>
+        <div className={S.designSurfaceInput}></div>
+      </div>
+  }
+
   return (
     <div
       ref={surfaceRef}
@@ -141,8 +151,8 @@ export const DesignSurface: React.FC<{
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
             style={{
-              left: `${component.absoluteLeft}px`,
-              top: `${component.absoluteTop}px`,
+              left: `${component.absoluteLeft || 15}px`,
+              top: `${component.absoluteTop || 15}px`,
               width: `${component.width}px`,
               height: `${component.height}px`,
               cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
@@ -151,13 +161,19 @@ export const DesignSurface: React.FC<{
             onMouseDown={(e) => handleComponentMouseDown(e, component)}
             onClick={(e) => handleComponentClick(e, component)}
           >
-
-            {component.designerRepresentation ??
-              <div className={S.designSurfaceEditorContainer}>
-                <div className={S.designSurfaceInput}></div>
+            {component.data.type === ComponentType.FormPanel
+              ? <div
+                className={S.innerContainer}
+                style={{
+                  width: `${component.width}px`,
+                  height: `${component.height}px`,
+                  cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+                  zIndex: component.zIndex
+                }}>
+                {renderDesignerRepresentation(component)}
               </div>
+              : renderDesignerRepresentation(component)
             }
-
             {surfaceState.selectedComponent?.id === component.id && [
               'top',
               'right',
