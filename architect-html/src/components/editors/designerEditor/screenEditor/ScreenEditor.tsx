@@ -23,7 +23,7 @@ export const ScreenEditor: React.FC<{
 
   useEffect(()=> {
     run({generator: designerState.loadSections()});
-  }, [])
+  }, [...designerState.surface.components]);
 
   return (
     <div className={S.componentDesigner}>

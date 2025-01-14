@@ -135,7 +135,6 @@ export const DesignSurface: React.FC<{
       {surfaceState.components.map((component) => (
         <React.Fragment key={component.id}>
           <div
-            key={component.id + "_label"}
             className={S.componentLabel}
             style={{
               ...component.getLabelStyle(),
@@ -146,7 +145,6 @@ export const DesignSurface: React.FC<{
             {component.data.identifier}
           </div>
           <div
-            key={component.id + "_component"}
             className={`${S.designComponent} ${component.id} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
