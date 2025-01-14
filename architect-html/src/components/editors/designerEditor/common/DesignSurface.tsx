@@ -161,6 +161,9 @@ export const DesignSurface: React.FC<{
             onMouseDown={(e) => handleComponentMouseDown(e, component)}
             onClick={(e) => handleComponentClick(e, component)}
           >
+            {/* Wrapping renderDesignerRepresentation looks like something that could be in the SectionItem component.
+            I tried moving it there, but I ran into performance problems and the
+             result did not look very pretty.*/}
             {component.data.type === ComponentType.FormPanel
               ? <div
                 className={S.innerContainer}
