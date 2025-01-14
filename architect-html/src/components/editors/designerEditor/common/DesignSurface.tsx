@@ -133,7 +133,7 @@ export const DesignSurface: React.FC<{
       onClick={handleSurfaceClick}
     >
       {surfaceState.components.map((component) => (
-        <>
+        <React.Fragment key={component.id}>
           <div
             key={component.id + "_label"}
             className={S.componentLabel}
@@ -188,7 +188,7 @@ export const DesignSurface: React.FC<{
               'bottomLeft'
             ].map((handle) => (
               <div
-                key={handle}
+                key={component.id + handle}
                 className={`${S.resizeHandle} ${S[handle]}`}
                 onMouseDown={(e) =>
                   handleResizeStart(e, component, handle as ResizeHandle)
@@ -196,7 +196,7 @@ export const DesignSurface: React.FC<{
               />
             ))}
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
