@@ -115,6 +115,9 @@ export class Component {
     if (this.data.type === ComponentType.GroupBox) {
       return this.countParents() + sectionLayer;
     }
+    if (this.data.type === ComponentType.SplitPanel) {
+      return this.countParents() + screenLayer;
+    }
     return controlLayer;
   }
 
@@ -236,6 +239,7 @@ export function toComponentRecursive(
 function getDesignerRepresentation(type: ComponentType, properties: EditorProperty[]): ReactElement | null {
   switch (type) {
     case ComponentType.GroupBox:
+    case ComponentType.SplitPanel:
       return (
         <div className={S.groupBoxContent}>
           <div
