@@ -47,9 +47,11 @@ public class ClassGenerator
             sb.AppendLine(@using);
         }
         sb.AppendLine();
-        
+        sb.AppendLine("namespace Origam.Architect.Server.Controls;");
+        sb.AppendLine();
+
         // Begin class definition
-        sb.AppendLine("public class " + className);
+        sb.AppendLine("public class " + className + ": IControl");
         sb.AppendLine("{");
         
         // Add properties
@@ -88,9 +90,13 @@ public class ClassGenerator
             sb.AppendLine($"    public {typeName} {prop.Name} {{ get; set; }}");
             sb.AppendLine();
         }
-        
+
+        sb.AppendLine("    public void Initialize(ControlSetItem controlSetItem)");
+        sb.AppendLine("    {");
+        sb.AppendLine("    }");
+
         sb.AppendLine("}");
-        
+
         return sb.ToString();
     }
     
