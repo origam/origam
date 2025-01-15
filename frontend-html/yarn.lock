@@ -5896,6 +5896,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-from-dom@npm:^0.7.5":
+  version: 0.7.5
+  resolution: "react-from-dom@npm:0.7.5"
+  peerDependencies:
+    react: 16.8 - 19
+  checksum: 10c0/1f1fd17d5d08ca2a714dde9a9559c54747eefdc9d1a45d84befb4e036957f197681c0ac5ddea325ac30d0a646c070ec9bb458ebfab281f4e380023451a3a28a0
+  languageName: node
+  linkType: hard
+
 "react-highlight-words@npm:^0.21.0":
   version: 0.21.0
   resolution: "react-highlight-words@npm:0.21.0"
@@ -5919,14 +5928,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:^4.1.5":
-  version: 4.1.5
-  resolution: "react-inlinesvg@npm:4.1.5"
+"react-inlinesvg@npm:^4.1.7":
+  version: 4.1.7
+  resolution: "react-inlinesvg@npm:4.1.7"
   dependencies:
-    react-from-dom: "npm:^0.7.3"
+    react-from-dom: "npm:^0.7.5"
   peerDependencies:
     react: 16.8 - 19
-  checksum: 10c0/43393c8c74133484379667188bfc8dfec8d8276f83ca27c36eb0dd6826928bbca274c69ff2ce59a45a853fd5e6dde87ea522e9108cd5f1e9fbae2a9745fc58da
+  checksum: 10c0/44bec11899c31b4add276ce9678e8d190b3dec00a66ae8f94fd6b4a35a9fa237848fdd6730f5d6fac6c0c4a8972a86c1c3fdaeea09e439a3b9309680ae8992f3
   languageName: node
   linkType: hard
 
@@ -6071,7 +6080,7 @@ __metadata:
     react-dom: "npm:^17.0.2"
     react-draft-wysiwyg: "npm:^1.15.0"
     react-highlight-words: "npm:^0.21.0"
-    react-inlinesvg: "npm:^4.1.5"
+    react-inlinesvg: "npm:^4.1.7"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.5"
     sass: "npm:^1.83.1"
