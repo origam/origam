@@ -1,10 +1,7 @@
 import {
-  ComponentType,
-  IComponentData,
-  parseComponentType
+  IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { observable } from "mobx";
-import { IApiControl } from "src/API/IArchitectApi.ts";
 
 import {
   EditorProperty
@@ -21,11 +18,8 @@ import {
 import S
   from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
 import { ReactElement } from "react";
-import {
-  SectionItem
-} from "src/components/editors/designerEditor/common/SectionItem.tsx";
 
-export class Component {
+export abstract class Component {
   id: string;
   @observable.ref accessor parent: Component | null;
   data: IComponentData;
@@ -106,18 +100,6 @@ export class Component {
   }
 
   get zIndex(): number {
-    if (this.data.type === ComponentType.AsForm) {
-      return screenLayer;
-    }
-    if (this.data.type === ComponentType.AsPanel) {
-      return sectionLayer;
-    }
-    if (this.data.type === ComponentType.GroupBox) {
-      return this.countParents() + sectionLayer;
-    }
-    if (this.data.type === ComponentType.SplitPanel) {
-      return this.countParents() + screenLayer;
-    }
     return controlLayer;
   }
 
@@ -126,14 +108,13 @@ export class Component {
     parent: Component | null,
     data: IComponentData,
     properties: EditorProperty[],
-    designerRepresentation: ReactElement | null
   }) {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
     this._labelPosition = parseLabelPosition(this.get("CaptionPosition"));
     this.parent = args.parent;
-    this.designerRepresentation = args.designerRepresentation;
+    this.designerRepresentation = this.getDesignerRepresentation();
   }
 
   isPointInside(x: number, y: number) {
@@ -196,77 +177,115 @@ export class Component {
   getProperty(name: string): EditorProperty | undefined {
     return this.properties.find(p => p.name === name);
   }
-}
 
-export function controlToComponent(
-  control: IApiControl,
-  parent: Component | null,
-): Component {
-  const properties = control.properties.map(prop => new EditorProperty(prop));
-  const componentType = parseComponentType(control.type);
-  return new Component({
-    id: control.id,
-    parent: parent,
-    data: {
-      type: componentType,
-      identifier: control.name,
-    },
-    properties: properties,
-    designerRepresentation: getDesignerRepresentation(componentType, properties)
-  });
-}
-
-export function sectionToComponent(
-  sectionRootControl: IApiControl
-):  ReactElement {
-  const sectionComponents = toComponentRecursive(sectionRootControl, null, [])
-  return <SectionItem components={sectionComponents}/>
-}
-
-export function toComponentRecursive(
-  control: IApiControl,
-  parent: Component | null,
-  allComponents: Component[]
-): Component[] {
-  const newComponent = controlToComponent(control, parent);
-  for (const childControl of control.children) {
-    toComponentRecursive(childControl, newComponent, allComponents);
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.designSurfaceEditorContainer}>
+        <div className={S.designSurfaceInput}></div>
+      </div>
+    );
   }
-  allComponents.push(newComponent);
-  return allComponents;
-}
 
-function getDesignerRepresentation(type: ComponentType, properties: EditorProperty[]): ReactElement | null {
-  switch (type) {
-    case ComponentType.GroupBox:
-    case ComponentType.SplitPanel:
-      return (
-        <div className={S.groupBoxContent}>
-          <div
-            className={S.groupBoxHeader}>{properties.find(x => x.name === "Text")?.value}
-          </div>
-        </div>
-      );
-    case ComponentType.AsForm:
-    case ComponentType.AsPanel:
-      return (
-        <div className={S.panel}>
-        </div>
-      );
-    case ComponentType.AsCheckBox:
-      return (
-        <div className={S.designSurfaceEditorContainer}>
-          <div className={S.designSurfaceCheckbox}></div>
-          <div>{properties.find(x => x.name === "Text")?.value}</div>
-        </div>
-      );
-    case ComponentType.FormPanel:
-      return null;
-    default:
-      return (
-        <div className={S.designSurfaceEditorContainer}>
-          <div className={S.designSurfaceInput}></div>
-        </div>
-      );
+  get canHaveChildren(): boolean {
+    return false;
   }
 }
+
+
+export class GroupBox extends Component {
+  get canHaveChildren(): boolean {
+      return true;
+  }
+
+  get zIndex(): number {
+    return this.countParents() + sectionLayer;
+  }
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.groupBoxContent}>
+        <div
+          className={S.groupBoxHeader}>{this.properties.find(x => x.name === "Text")?.value}
+        </div>
+      </div>
+    );
+  }
+}
+
+export class SplitPanel extends Component {
+  get canHaveChildren(): boolean {
+    return true;
+  }
+
+  get zIndex(): number {
+      return this.countParents() + screenLayer;
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.groupBoxContent}>
+        <div
+          className={S.groupBoxHeader}>{this.properties.find(x => x.name === "Text")?.value}
+        </div>
+      </div>
+    );
+  }
+}
+
+export class AsForm extends Component {
+  get canHaveChildren(): boolean {
+    return true;
+  }
+
+  get zIndex(): number {
+      return screenLayer;
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.panel}>
+      </div>
+    );
+  }
+}
+
+export class AsPanel extends Component {
+  get canHaveChildren(): boolean {
+    return true;
+  }
+
+  get zIndex(): number {
+      return sectionLayer;
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.panel}>
+      </div>
+    );
+  }
+}
+
+export class AsCheckBox extends Component {
+}
+
+export class FormPanel extends Component {
+  getDesignerRepresentation(): ReactElement | null {
+    return null;
+  }
+}
+
+export class AsCombo extends Component {
+}
+
+export class AsTextBox extends Component {
+}
+
+export class TagInput extends Component {
+}
+
+export class AsDateBox extends Component {
+}
+
+export class TextArea extends Component {
+}
+

@@ -4,7 +4,7 @@ import {
 } from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
 import {
   Component
-} from "src/components/editors/designerEditor/common/Component.tsx";
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 
 export interface IDesignerEditorState extends IEditorState {
   surface: DesignSurfaceState;

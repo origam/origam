@@ -6,7 +6,7 @@ import {
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import {
   Component
-} from "src/components/editors/designerEditor/common/Component.tsx";
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import S
   from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
 import {

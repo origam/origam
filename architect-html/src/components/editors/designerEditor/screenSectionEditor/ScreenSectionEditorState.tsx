@@ -12,15 +12,17 @@ import {
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
-  Component,
-  controlToComponent
-} from "src/components/editors/designerEditor/common/Component.tsx";
+  Component
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import {
   SectionToolboxState
 } from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
 import {
   DesignerEditorState
 } from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
+import {
+  controlToComponent
+} from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
 
 export class ScreenSectionEditorState extends DesignerEditorState {
 

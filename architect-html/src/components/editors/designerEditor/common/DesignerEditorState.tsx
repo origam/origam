@@ -21,7 +21,7 @@ import {
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
   Component
-} from "src/components/editors/designerEditor/common/Component.tsx";
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 
 export abstract class DesignerEditorState implements IDesignerEditorState {
 

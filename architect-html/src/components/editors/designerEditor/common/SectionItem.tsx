@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Component
-} from "src/components/editors/designerEditor/common/Component.tsx";
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import { observer } from "mobx-react-lite";
 import SD
   from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";

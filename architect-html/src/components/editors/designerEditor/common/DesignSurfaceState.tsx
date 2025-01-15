@@ -1,8 +1,7 @@
 import { action, observable } from "mobx";
 import {
   Component,
-  toComponentRecursive
-} from "src/components/editors/designerEditor/common/Component.tsx";
+} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import {
   ComponentType,
   IComponentData
@@ -11,6 +10,9 @@ import {
   IApiControl, IDesignerEditorData,
 } from "src/API/IArchitectApi.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
+import {
+  toComponentRecursive
+} from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
@@ -153,9 +155,7 @@ export class DesignSurfaceState {
   findComponentAt(mouseX: number, mouseY: number) {
     const componentsUnderPoint = this.components.filter(
       comp =>
-        (comp.data.type === ComponentType.GroupBox ||
-          comp.data.type === ComponentType.AsPanel ||
-          comp.data.type === ComponentType.AsForm) &&
+        comp.canHaveChildren &&
         comp.isPointInside(mouseX, mouseY)
     ) ?? this.panel;
     return componentsUnderPoint
@@ -300,7 +300,7 @@ export class DesignSurfaceState {
     component.absoluteLeft = left;
     component.absoluteTop = top;
 
-    if (component.data.type === ComponentType.GroupBox || component.data.type === ComponentType.AsPanel) {
+    if (component.canHaveChildren) {
       for (const comp of this.components) {
         if (comp.parent?.id === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
           comp.absoluteLeft = comp.relativeLeft + component.absoluteLeft;
