@@ -67,7 +67,7 @@
     "react-highlight-words": "^0.21.0",
     "react-inlinesvg": "^4.1.8",
     "react-measure": "^2.5.2",
-    "react-virtualized": "^9.22.5",
+    "react-virtualized": "^9.22.6",
     "sass": "^1.83.4",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.4.8",
