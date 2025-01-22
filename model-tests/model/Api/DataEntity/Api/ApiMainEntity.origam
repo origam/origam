@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de1="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0">
+  <de1:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="eb3abda0-f5ed-4c69-a25c-29492f0b4ffc"
+    asi:name="ApiMainEntity"
+    ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      x:id="47e77430-5cd9-431b-adc5-c5216e75f7ef"
+      adec:isPrimaryKey="false"
+      asi:name="Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="100"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      x:id="d16337fc-82ed-4b26-96a1-7167c93a1b30"
+      adec:isPrimaryKey="false"
+      asi:name="s2"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="100"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      x:id="fadd998e-02f3-4634-afc4-3000506d4db9"
+      adec:isPrimaryKey="false"
+      asi:name="s1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="b4f4d668-39c0-4afb-b6dd-0f0aee2c27ad"
+      asi:name="ApiDetailEntity"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Api/DataEntity/Api/ApiDetailEntity.origam#ApiDetailEntity/a980f96a-1785-4f56-8c8b-6b388256dc6b"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Api/DataEntity/Api/ApiMainEntity.origam#ApiMainEntity/Id/47e77430-5cd9-431b-adc5-c5216e75f7ef"
+        x:id="0d907127-19fb-49c7-a4d3-6fee6f5cdaea"
+        asi:name="ApiDetailEntityKey1"
+        ercpi:relatedEntityField="Api/DataEntity/Api/ApiDetailEntity.origam#ApiDetailEntity/refApiMainEntityId/c6d264d6-ccb1-44c2-8479-6aa97000b675" />
+    </eri:EntityRelation>
+  </de1:DataEntity>
+</x:file>
