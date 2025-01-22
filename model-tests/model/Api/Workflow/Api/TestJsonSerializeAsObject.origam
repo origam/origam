@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="d37ecb25-5bcf-4f07-8097-a8480eb7773e"
+    asi:name="TestJsonSerializeAsObject"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="5692be65-69bc-4410-8a09-fe12b1b17370"
+      cs:isReturnValue="true"
+      asi:name="ApiMasterDetailTest"
+      cs:structure="Api/DataStructure/Api/ApiMasterDetailTest.origam#ApiMasterDetailTest/721bd324-c8ae-458b-8e0a-21a0a9b90450" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="9b85d7c0-9a4e-42b8-9e10-f2541e14cc63"
+      asi:name="Transform_ApiMasterDetailTest"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Api/Workflow/Api/TestJsonSerializeAsObject.origam#TestJsonSerializeAsObject/ApiMasterDetailTest/5692be65-69bc-4410-8a09-fe12b1b17370"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="65405648-bcec-4196-8e6e-975f304c77da"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="7b263d94-fd4d-4587-a7e9-43cf32d37025"
+          asi:name="ApiMasterDetailTest"
+          tr:transformation="Api/Transformation/Api/ApiMasterDetailTest.origam#ApiMasterDetailTest/dcf0d2c0-8427-414e-af67-13d9886c7aa2" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="bae86588-909d-4028-9a35-d0aa7aa0de89"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="e449d4b3-bad1-4865-9681-960879737ac5"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Api/Workflow/Api/TestJsonSerializeAsObject.origam#TestJsonSerializeAsObject/ApiMasterDetailTest/5692be65-69bc-4410-8a09-fe12b1b17370"
+          x:id="0f2c135c-5545-4858-a23f-dbf0d3789de8"
+          asi:name="ApiMasterDetailTest"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

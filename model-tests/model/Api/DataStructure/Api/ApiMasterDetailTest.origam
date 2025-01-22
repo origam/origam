@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dswm="http://schemas.origam.com/Origam.Schema.WorkflowModel.DataStructureWorkflowMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="721bd324-c8ae-458b-8e0a-21a0a9b90450"
+    ds1:localized="false"
+    asi:name="ApiMasterDetailTest">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Api/DataEntity/Api/ApiMainEntity.origam#ApiMainEntity/eb3abda0-f5ed-4c69-a25c-29492f0b4ffc"
+      x:id="bb875160-40f2-486b-8de8-a394cf12ca58"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="ApiMainEntity"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Api/DataEntity/Api/ApiMainEntity.origam#ApiMainEntity/ApiDetailEntity/b4f4d668-39c0-4afb-b6dd-0f0aee2c27ad"
+        x:id="9adc9a55-9610-4506-8a9b-ec54525f968a"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="ApiDetailEntity"
+        dse:relationType="Normal"
+        dse:serializeAsJsonObject="true"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dswm:DataStructureFilterSet
+      asi:abstract="false"
+      x:id="3ba7cfcc-ef5b-4045-9397-ae64bee03d57"
+      dswm:loadWorkflow="Api/Workflow/Api/TestJsonSerializeAsObject.origam#TestJsonSerializeAsObject/d37ecb25-5bcf-4f07-8097-a8480eb7773e"
+      asi:name="TestJsonSerializeAsObject" />
+  </ds1:DataStructure>
+</x:file>

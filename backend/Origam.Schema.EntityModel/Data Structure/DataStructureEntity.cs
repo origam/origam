@@ -210,7 +210,16 @@ public class DataStructureEntity : AbstractSchemaItem
 		get => _conditionEntityParameterName;
 		set => _conditionEntityParameterName = (value == "") ? null : value;
 	}
-	private bool _useUpsert = false;
+    private bool _serializeAsJsonObject = false;
+    [DefaultValue(false)]
+    [Description("It controls JSON serialization to API. If false it always serialize as array of objects. If true it searialize as JSON object and return an error if there are more objects.")]
+    [XmlAttribute("serializeAsJsonObject")]
+    public bool SerializeAsJsonObject
+    {
+        get => _serializeAsJsonObject;
+        set => _serializeAsJsonObject = value;
+    }
+    private bool _useUpsert = false;
 	[Category("Update"), DefaultValue(false)]
     [XmlAttribute("useUpsert")]
     public bool UseUpsert
