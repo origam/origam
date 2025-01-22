@@ -57,19 +57,19 @@ class DataRowConverter : JsonConverter
                 writer.WritePropertyName((resolver != null) 
                     ? resolver.GetResolvedPropertyName(childTableName) 
                     : childTableName);
-                bool serializeAsJsonObject = relation.ChildTable
+                bool serializeAsSingleJsonObject = relation.ChildTable
                     .ExtendedProperties.ContainsKey(
-                        Constants.SerializeAsJsonObject)
+                        Constants.SerializeAsSingleJsonObject)
                     ? relation.ChildTable.ExtendedProperties
-                        .Get<bool>(Constants.SerializeAsJsonObject)
+                        .Get<bool>(Constants.SerializeAsSingleJsonObject)
                     : false;
-                if (serializeAsJsonObject && row.GetChildRows(relation).Length > 1)
+                if (serializeAsSingleJsonObject && row.GetChildRows(relation).Length > 1)
                 {
                     throw new OrigamException("JSON Serialization failed. "
                         + $"Table '{childTableName}' is defined to serialize to a "
                         + $"single object, but multiple objects came ({row.GetChildRows(relation).Length}).");
                 }
-                if (!serializeAsJsonObject)
+                if (!serializeAsSingleJsonObject)
                 {
                     writer.WriteStartArray();
                 }
@@ -77,7 +77,7 @@ class DataRowConverter : JsonConverter
                 {
                     this.WriteJson(writer, childRow, serializer);
                 }
-                if (!serializeAsJsonObject)
+                if (!serializeAsSingleJsonObject)
                 {
                     writer.WriteEndArray();
                 }

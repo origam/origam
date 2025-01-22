@@ -6,6 +6,6 @@ namespace Origam
 {
     public class Constants
     {
-        public static string SerializeAsJsonObject = "SerializeAsJsonObject";
+        public static string SerializeAsSingleJsonObject = "SerializeAsSingleJsonObject";
     }
 }
