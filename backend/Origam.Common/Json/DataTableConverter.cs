@@ -36,14 +36,9 @@ class DataTableConverter : newton.DataTableConverter
         DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
         bool serializeAsJsonObject = table.ExtendedProperties
             .Contains(Constants.SerializeAsJsonObject)
-            ? table.ExtendedProperties[Constants.SerializeAsJsonObject]
-                .ToString().Equals("True")
+            ? table.ExtendedProperties.Get<bool>
+                (Constants.SerializeAsJsonObject)
             : false;
-        writer.WriteComment(table.ExtendedProperties.Get<string>(Constants.SerializeAsJsonObject));
-        writer.WriteComment("ggg");
-        writer.WriteComment(table.ExtendedProperties[Constants.SerializeAsJsonObject].ToString());
-        writer.WriteComment("hhh");
-        writer.WriteComment((string)table.ExtendedProperties[Constants.SerializeAsJsonObject]);
         if (serializeAsJsonObject && table.Rows.Count > 1)
         {
             throw new OrigamException("JSON Serialization failed. "

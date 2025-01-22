@@ -24,6 +24,7 @@ using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Origam.Service.Core;
 
 namespace Origam.JSON;
 class DataRowConverter : JsonConverter
@@ -56,12 +57,30 @@ class DataRowConverter : JsonConverter
                 writer.WritePropertyName((resolver != null) 
                     ? resolver.GetResolvedPropertyName(childTableName) 
                     : childTableName);
-                writer.WriteStartArray();
+                bool serializeAsJsonObject = relation.ChildTable
+                    .ExtendedProperties.ContainsKey(
+                        Constants.SerializeAsJsonObject)
+                    ? relation.ChildTable.ExtendedProperties
+                        .Get<bool>(Constants.SerializeAsJsonObject)
+                    : false;
+                if (serializeAsJsonObject && row.GetChildRows(relation).Length > 1)
+                {
+                    throw new OrigamException("JSON Serialization failed. "
+                        + $"Table '{childTableName}' is defined to serialize to a "
+                        + $"single object, but multiple objects came ({row.GetChildRows(relation).Length}).");
+                }
+                if (!serializeAsJsonObject)
+                {
+                    writer.WriteStartArray();
+                }
                 foreach (DataRow childRow in row.GetChildRows(relation))
                 {
                     this.WriteJson(writer, childRow, serializer);
                 }
-                writer.WriteEndArray();
+                if (!serializeAsJsonObject)
+                {
+                    writer.WriteEndArray();
+                }
             }
         }            
         writer.WriteEndObject();
