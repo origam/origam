@@ -1,5 +1,4 @@
-﻿using LibGit2Sharp;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Workbench.Services;
 
