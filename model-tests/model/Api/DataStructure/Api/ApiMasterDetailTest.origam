@@ -22,6 +22,7 @@
       dse:ignoreImplicitFilters="false"
       asi:name="ApiMainEntity"
       dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
       dse:useUpsert="false">
       <dse:DataStructureEntity
         asi:abstract="false"
@@ -33,7 +34,7 @@
         dse:ignoreImplicitFilters="false"
         asi:name="ApiDetailEntity"
         dse:relationType="Normal"
-        dse:serializeAsJsonObject="true"
+        dse:serializeAsSingleJsonObject="true"
         dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dswm:DataStructureFilterSet
