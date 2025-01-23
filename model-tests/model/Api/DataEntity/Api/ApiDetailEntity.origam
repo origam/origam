@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de1="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
+  <de1:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="a980f96a-1785-4f56-8c8b-6b388256dc6b"
+    asi:name="ApiDetailEntity"
+    ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="802e3d22-1447-42fe-a427-4ff29d718e53"
+      adec:isPrimaryKey="false"
+      asi:name="i2"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="a408dfb6-f851-40a3-bbec-38197fd579fe"
+      adec:isPrimaryKey="false"
+      asi:name="i1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      adec:foreignKeyEntity="Api/DataEntity/Api/ApiMainEntity.origam#ApiMainEntity/eb3abda0-f5ed-4c69-a25c-29492f0b4ffc"
+      adec:foreignKeyField="Api/DataEntity/Api/ApiMainEntity.origam#ApiMainEntity/Id/47e77430-5cd9-431b-adc5-c5216e75f7ef"
+      x:id="c6d264d6-ccb1-44c2-8479-6aa97000b675"
+      adec:isPrimaryKey="false"
+      asi:name="refApiMainEntityId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+  </de1:DataEntity>
+</x:file>

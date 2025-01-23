@@ -743,7 +743,9 @@ public class DatasetGenerator
 	{
 		AddExtendedProperties(table.ExtendedProperties, entity.PrimaryKey);
 		AddTableExtendedProperties(table, entity.EntityDefinition);
-	}
+		table.ExtendedProperties.Add(Origam.Constants.SerializeAsSingleJsonObject,
+			entity.SerializeAsSingleJsonObject);
+    }
 	private void AddTableExtendedProperties(DataTable table, IDataEntity entity)
 	{
 		table.ExtendedProperties.Add("EntityId", entity.PrimaryKey["Id"]);
