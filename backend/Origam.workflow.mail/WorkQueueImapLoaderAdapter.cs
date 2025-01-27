@@ -204,7 +204,6 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             return true;
         }
         return !InvalidXmlCharacterRegex.IsMatch(body);
-
     }
     
     private static string GetMessageBody(MimeMessage lastMessage)
