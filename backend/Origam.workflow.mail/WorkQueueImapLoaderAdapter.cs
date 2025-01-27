@@ -261,12 +261,19 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
                     fileName += extension;
                 }
             }
-            AppendAttachment(
-                attachments, fileName, GetAttachmentData(attachment));
+            attachments.Add(new WorkQueueAttachment
+            {
+                Data = GetAttachmentData(attachment),
+                Name = fileName
+            });
         }
         if (htmlAttachment != null)
         {
-            AppendAttachment(attachments, "original.html", htmlAttachment);
+            attachments.Add(new WorkQueueAttachment
+            {
+                Data = htmlAttachment,
+                Name = "original.html"
+            });
         }
         return attachments;
     }
@@ -320,18 +327,6 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             part.Content.DecodeTo(stream);
         }
         return stream.ToArray();
-    }
-    private static void AppendAttachment(
-        List<WorkQueueAttachment> attachments, 
-        string fileName, 
-        byte[] data)
-    {
-        var attachment = new WorkQueueAttachment
-        {
-            Data = data,
-            Name = fileName
-        };
-        attachments.Add(attachment);
     }
     private static string GetDefaultExtension(string mimeType)
     {
