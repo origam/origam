@@ -111,8 +111,6 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             }
         }
         client = new ImapClient();
-        // accept all SSL certificates!
-        client.ServerCertificateValidationCallback = (s, c, h, e) => true;
         client.Connect(url, port, ssl);
         client.Authenticate(userName, password);
         client.Inbox.GetSubfolders();
