@@ -410,7 +410,9 @@ public class FormXmlBuilder
 			// binding from the parent grid to the memo grid (same entity)
 			CreateComponentBinding(doc, bindingsElement, queueId.ToString(), "Id", "WorkQueueEntry", "65DF44F9-C050-4554-AD9A-896445314279", "Id", "WorkQueueEntry", false);
 		}
-		foreach(DataRow cmdRow in commandRows)
+		IOrderedEnumerable<DataRow> orderedCommands = commandRows
+			.OrderBy(x => x["SortOrder"]);
+		foreach(DataRow cmdRow in orderedCommands)
 		{
 			Hashtable cmdParams = new Hashtable();
 			string confirmationMessage = null;
