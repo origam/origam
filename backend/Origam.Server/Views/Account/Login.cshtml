@@ -77,7 +77,8 @@
 {
     <div class="centered">
         <div class="reset-password-statement">
-            @SharedLocalizer["ToResetPassword1"]<a class="in-page-link" href="/account/forgotpassword">@SharedLocalizer["ToResetPassword2"]</a>@SharedLocalizer["ToResetPassword3"]
+            @SharedLocalizer["ToResetPassword1"]<a asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">
+                @SharedLocalizer["ToResetPassword2"]</a>@SharedLocalizer["ToResetPassword3"]
         </div>
     </div>
 }
