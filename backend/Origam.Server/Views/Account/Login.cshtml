@@ -17,7 +17,11 @@
 
 @{
     var currentCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
-    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    var returnUrl = !string.IsNullOrEmpty(Model.ReturnUrl)
+        ? Model.ReturnUrl
+        : string.IsNullOrEmpty(Context.Request.Path)
+            ? "~/"
+            : $"~{Context.Request.Path}";
 }
 
 @if (Model.EnableLocalLogin)
@@ -47,7 +51,7 @@
     </div>
     <div class="centered">
         <form id="languageSelectForm" asp-controller="Account"
-              asp-action="SetLanguage" asp-route-returnUrl="@Model.ReturnUrl"
+              asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
               method="post" class="form-horizontal" role="form">
             @if (languageConfig.CultureItems.Length > 1)
             {
