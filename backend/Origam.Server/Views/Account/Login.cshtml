@@ -47,7 +47,7 @@
     </div>
     <div class="centered">
         <form id="languageSelectForm" asp-controller="Account"
-              asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
+              asp-action="SetLanguage" asp-route-returnUrl="@Model.ReturnUrl"
               method="post" class="form-horizontal" role="form">
             @if (languageConfig.CultureItems.Length > 1)
             {
