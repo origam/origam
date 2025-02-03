@@ -72,7 +72,7 @@ class MailService : IMailService
                 FirstOrDefault();
     }
     public void SendPasswordResetToken(IOrigamUser user, string token,
-        int tokenValidityHours)
+        string returnUrl, int tokenValidityHours)
     {
         SetResetPasswordItems();
         mailSender.SendPasswordResetToken(
@@ -81,6 +81,7 @@ class MailService : IMailService
             email: user.Email,
             languageId: user.LanguageId.ToString(),
             firstName: user.FirstName,
+            returnUrl: returnUrl,
             token: token,
             tokenValidityHours: tokenValidityHours,
             resultMessage: out string _);

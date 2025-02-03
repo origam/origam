@@ -257,10 +257,14 @@ public class AccountMailSender
             mail.Dispose();
         }
     }
-    public bool SendPasswordResetToken(string username,
+    public void SendPasswordResetToken(string username,
         string name,
-        string email, string languageId,
-        string firstName, string token, int tokenValidityHours,
+        string email,
+        string languageId,
+        string firstName,
+        string returnUrl,
+        string token,
+        int tokenValidityHours,
         out string resultMessage)
     {
         string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
@@ -269,36 +273,25 @@ public class AccountMailSender
             userLangIETF = System.Threading.Thread.CurrentThread.CurrentUICulture
                 .IetfLanguageTag;
         }
-        List<KeyValuePair<string, string>> replacements
-            = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("<%Token%>",
-                    Uri.EscapeDataString(token)),
-                new KeyValuePair<string, string>("<%TokenValidityHours%>",
-                    tokenValidityHours.ToString()),
-                new KeyValuePair<string, string>("<%UserName%>",
-                    username),
-                new KeyValuePair<string, string>("<%EscapedUserName%>",
-                    Uri.EscapeDataString(username)),
-                new KeyValuePair<string, string>("<%Name%>", name),
-                new KeyValuePair<string, string>("<%EscapedName%>",
-                    Uri.EscapeDataString(name)),
-                new KeyValuePair<string, string>("<%UserEmail%>",
-                    email),
-                new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-                    Uri.EscapeDataString(email)),
-                new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-                    portalBaseUrl)
+        var replacements = new List<KeyValuePair<string, string>> {
+                new("<%Token%>", Uri.EscapeDataString(token)),
+                new("<%TokenValidityHours%>", tokenValidityHours.ToString()),
+                new("<%UserName%>", username),
+                new("<%EscapedUserName%>", Uri.EscapeDataString(username)),
+                new("<%Name%>", name),
+                new("<%EscapedName%>", Uri.EscapeDataString(name)),
+                new("<%UserEmail%>", email),
+                new("<%EscapedUserEmail%>", Uri.EscapeDataString(email)),
+                new("<%PortalBaseUrl%>", portalBaseUrl),
+                new("<%ReturnUrl%>", Uri.EscapeDataString(returnUrl))
             };
         if (firstName != null)
         {
             replacements.AddRange(
                 new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("<%FirstName%>",
-                        firstName),
-                    new KeyValuePair<string, string>("<%EscapedFirstName%>",
-                        Uri.EscapeDataString(firstName))
+                    new("<%FirstName%>", firstName),
+                    new("<%EscapedFirstName%>", Uri.EscapeDataString(firstName))
                 }
             );
         }
@@ -339,7 +332,7 @@ public class AccountMailSender
                         username, email, ex);
                 }
                 resultMessage = Resources.FailedToSendPasswordResetToken;
-                return false;
+                return;
             }
         }
         try
@@ -355,7 +348,7 @@ public class AccountMailSender
                     username, email), ex);
             }
             resultMessage = Resources.FailedToSendPassword;
-            return false;
+            return;
         }
         finally
         {
@@ -369,9 +362,8 @@ public class AccountMailSender
                 , username, email);
         }
         resultMessage = Resources.PasswordResetMailSent;
-        return true;
     }
- /// <summary>
+    /// <summary>
 	/// Generates and return MailMessage ready to send with smtp.
 	/// Firstly try to use a template from configured filename.
 	/// It searches the most accurate language version of filename
