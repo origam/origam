@@ -115,10 +115,11 @@ export const DesignSurface: React.FC<{
   };
 
   function renderDesignerRepresentation(component: Component) {
-    return component.designerRepresentation ??
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceInput}></div>
-      </div>
+    return component.designerRepresentation;
+      // ??
+      // <div className={S.designSurfaceEditorContainer}>
+      //   <div className={S.designSurfaceInput}></div>
+      // </div>
   }
 
   return (

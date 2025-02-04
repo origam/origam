@@ -16,7 +16,7 @@ import {
   Component,
   FormPanel,
   GroupBox,
-  SplitPanel,
+  SplitPanel, TabControl, TabPage,
   TagInput,
   TextArea
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
@@ -144,6 +144,28 @@ export function controlToComponent(
 
     case ComponentType.SplitPanel:
       return new SplitPanel({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties
+      })
+
+    case ComponentType.TabPage:
+      return new TabPage({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties
+      })
+
+    case ComponentType.TabControl:
+      return new TabControl({
         id: control.id,
         parent: parent,
         data: {

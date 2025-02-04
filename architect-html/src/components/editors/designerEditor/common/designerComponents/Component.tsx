@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { observable } from "mobx";
@@ -16,15 +17,31 @@ import {
   parseLabelPosition
 } from "src/components/editors/designerEditor/common/LabelPosition.tsx";
 import S
-  from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
+  from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
 import { ReactElement } from "react";
+import { observer } from "mobx-react-lite";
 
 export abstract class Component {
   id: string;
   @observable.ref accessor parent: Component | null;
   data: IComponentData;
   @observable accessor properties: EditorProperty[];
-  @observable.ref accessor designerRepresentation: ReactElement | null;
+  @observable.ref private accessor _designerRepresentation: ReactElement | null = null;
+  accessor hideChildren = false;
+
+  get designerRepresentation(): ReactElement | null {
+    if(this.parent?.hideChildren){
+      return null;
+    }
+    if (!this._designerRepresentation) {
+      this._designerRepresentation = this.getDesignerRepresentation()
+    }
+    return this._designerRepresentation;
+  }
+
+  set designerRepresentation(value: ReactElement | null) {
+    this._designerRepresentation = value;
+  }
 
   get relativeLeft(): number {
     return this.getProperty("Left")!.value;
@@ -114,7 +131,6 @@ export abstract class Component {
     this.properties = args.properties;
     this._labelPosition = parseLabelPosition(this.get("CaptionPosition"));
     this.parent = args.parent;
-    this.designerRepresentation = this.getDesignerRepresentation();
   }
 
   isPointInside(x: number, y: number) {
@@ -194,12 +210,13 @@ export abstract class Component {
 
 export class GroupBox extends Component {
   get canHaveChildren(): boolean {
-      return true;
+    return true;
   }
 
   get zIndex(): number {
     return this.countParents() + sectionLayer;
   }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.groupBoxContent}>
@@ -217,7 +234,7 @@ export class SplitPanel extends Component {
   }
 
   get zIndex(): number {
-      return this.countParents() + screenLayer;
+    return this.countParents() + screenLayer;
   }
 
   getDesignerRepresentation(): ReactElement | null {
@@ -237,7 +254,7 @@ export class AsForm extends Component {
   }
 
   get zIndex(): number {
-      return screenLayer;
+    return screenLayer;
   }
 
   getDesignerRepresentation(): ReactElement | null {
@@ -254,7 +271,7 @@ export class AsPanel extends Component {
   }
 
   get zIndex(): number {
-      return sectionLayer;
+    return sectionLayer;
   }
 
   getDesignerRepresentation(): ReactElement | null {
@@ -288,4 +305,99 @@ export class AsDateBox extends Component {
 
 export class TextArea extends Component {
 }
+
+export class TabControl extends Component {
+
+  private tabs: TabPage[] = [];
+
+  get zIndex(): number {
+    return this.countParents() + screenLayer;
+  }
+
+  constructor(args: {
+    id: string,
+    parent: Component | null,
+    data: IComponentData,
+    properties: EditorProperty[],
+  }) {
+    super(args);
+  }
+
+  registerTab(tab: TabPage) {
+    if (this.tabs.length === 0) {
+      tab.hideChildren = true;
+    }
+    this.tabs.push(tab);
+  }
+
+  setVisible(tabId: string){
+    for (const tab of this.tabs){
+      tab.hideChildren = tab.id !== tabId;
+    }
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.tabPageContainer}>
+        <div className={S.tabs}>
+          {this.tabs.map(tab =>
+            <div
+              key={tab.id}
+              onClick={()=> this.setVisible(tab.id)}
+            >
+              {tab.get("Text")}
+            </div>)
+          }
+        </div>
+        {/*<div className={S.designSurfaceInput}></div>*/}
+      </div>
+    );
+  }
+}
+
+export class TabPage extends Component {
+
+  @observable accessor hideChildren: boolean = false;
+
+  constructor(args: {
+    id: string,
+    parent: Component | null,
+    data: IComponentData,
+    properties: EditorProperty[],
+  }) {
+    super(args);
+
+    if (!args.parent || args.parent.data.type !== ComponentType.TabControl) {
+      throw new Error("Parent of TabPage must be a TabControl");
+    }
+    (args.parent as TabControl).registerTab(this);
+  }
+
+  get zIndex(): number {
+    return this.countParents() + screenLayer;
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    // return <TabControlComponent tab={this}/>
+    return (
+      null
+      // <div className={S.designSurfaceEditorContainer}>
+      //   <div className={S.designSurfaceInput}></div>
+      // </div>
+    );
+  }
+}
+
+
+export const TabControlComponent = observer(({tab}: { tab: TabPage }) => {
+  return (
+    <>
+      {/*{tab.isVisible &&*/}
+        <div className={S.designSurfaceEditorContainer}>
+          {/*<div className={S.designSurfaceInput}></div>*/}
+        </div>
+      {/*}*/}
+    </>
+  );
+});
 
