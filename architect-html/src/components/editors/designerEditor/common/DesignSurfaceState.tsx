@@ -25,7 +25,8 @@ export class DesignSurfaceState {
     startY: 0,
     originalLeft: 0,
     originalTop: 0,
-    didDrag: false
+    didDrag: false,
+    startedAt: undefined
   };
   @observable accessor resizeState: ResizeState = {
     component: null,
@@ -119,15 +120,32 @@ export class DesignSurfaceState {
       startY: mouseY,
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
-      didDrag: false
+      didDrag: false,
+      startedAt: new Date()
     };
   }
 
   @action
   endDragging(mouseX: number, mouseY: number) {
-    if (!this.dragState.component) {
+    if (!this.dragState.component || !this.dragState.startedAt) {
       return;
     }
+    const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt.getTime();
+    if(dragTimeMilliSeconds < 1000 )
+    {
+      this.dragState = {
+        component: null,
+        startX: 0,
+        startY: 0,
+        originalLeft: 0,
+        originalTop: 0,
+        didDrag: false,
+        startedAt: undefined
+      };
+      return;
+    }
+
+    console.log("dragTimeMilliSeconds: " + dragTimeMilliSeconds);
 
     const draggingComponent = this.dragState.component;
 
@@ -150,7 +168,8 @@ export class DesignSurfaceState {
       startY: 0,
       originalLeft: 0,
       originalTop: 0,
-      didDrag: false
+      didDrag: false,
+      startedAt: undefined
     };
   }
 
@@ -326,6 +345,7 @@ interface DragState {
   originalLeft: number;
   originalTop: number;
   didDrag: boolean;
+  startedAt: Date | undefined;
 }
 
 interface ResizeState {
