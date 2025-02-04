@@ -103,7 +103,7 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a lookup with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Name: \t\t");

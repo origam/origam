@@ -172,12 +172,12 @@
     <value>Create Field With Lookup Entity</value>
   </data>
   <data name="CreateFieldWithRelationshipEntityWizardDescription" xml:space="preserve">
-    <value>This Wizard create Field With Relationship Entity.</value>
+    <value>This Wizard creates a Field With a Relationship Entity.</value>
   </data>
   <data name="CreateFieldWithRelationshipEntityWizardTitle" xml:space="preserve">
     <value>Create Field With Relationship Entity.</value>
   </data>
   <data name="CreateLookupWizDescription" xml:space="preserve">
-    <value>This Wizard create Lookup on Entity.</value>
+    <value>This Wizard creates a Lookup on an Entity.</value>
   </data>
 </root>

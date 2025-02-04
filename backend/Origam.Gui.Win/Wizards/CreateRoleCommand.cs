@@ -88,7 +88,7 @@ class CreateRoleCommand : AbstractMenuCommand
 	public override void SetSummaryText(object summary)
 	{
 		RichTextBox richTextBoxSummary = (RichTextBox)summary;
-		richTextBoxSummary.Text = "This Wizard create Role with this parameters:";
+		richTextBoxSummary.Text = "This Wizard will create a Role with these parameters:";
 		richTextBoxSummary.AppendText("");
 		richTextBoxSummary.AppendText("Create Role ");
 		richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
