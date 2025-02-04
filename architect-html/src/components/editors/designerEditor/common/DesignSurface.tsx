@@ -5,7 +5,7 @@ import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
 import {
-  Component
+  Component,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import S
   from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
@@ -114,14 +114,6 @@ export const DesignSurface: React.FC<{
     surfaceState.startResizing(component, handle, mouseX, mouseY);
   };
 
-  function renderDesignerRepresentation(component: Component) {
-    return component.designerRepresentation;
-      // ??
-      // <div className={S.designSurfaceEditorContainer}>
-      //   <div className={S.designSurfaceInput}></div>
-      // </div>
-  }
-
   return (
     <div
       ref={surfaceRef}
@@ -133,70 +125,72 @@ export const DesignSurface: React.FC<{
       onMouseLeave={handleMouseUp}
       onClick={handleSurfaceClick}
     >
-      {surfaceState.components.map((component) => (
-        <React.Fragment key={component.id}>
-          <div
-            className={S.componentLabel}
-            style={{
-              ...component.getLabelStyle(),
-              zIndex: component.zIndex
-            }
-            }
-          >
-            {component.data.identifier}
-          </div>
-          <div
-            className={`${S.designComponent} ${component.id} 
+      {surfaceState.components
+        .filter(component => component.designerRepresentation)
+        .map((component) => (
+          <React.Fragment key={component.id}>
+            <div
+              className={S.componentLabel}
+              style={{
+                ...component.getLabelStyle(),
+                zIndex: component.zIndex
+              }
+              }
+            >
+              {component.data.identifier}
+            </div>
+            <div
+              className={`${S.designComponent} ${component.id} 
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
-            style={{
-              left: `${component.absoluteLeft || 15}px`,
-              top: `${component.absoluteTop || 15}px`,
-              width: `${component.width}px`,
-              height: `${component.height}px`,
-              cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-              zIndex: component.zIndex
-            }}
-            onMouseDown={(e) => handleComponentMouseDown(e, component)}
-            onClick={(e) => handleComponentClick(e, component)}
-          >
-            {/* Wrapping renderDesignerRepresentation looks like something that could be in the SectionItem component.
+              style={{
+                left: `${component.absoluteLeft || 15}px`,
+                top: `${component.absoluteTop || 15}px`,
+                width: `${component.width}px`,
+                height: `${component.height}px`,
+                cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+                zIndex: component.zIndex
+              }}
+              onMouseDown={(e) => handleComponentMouseDown(e, component)}
+              onClick={(e) => handleComponentClick(e, component)}
+            >
+              {/* Wrapping renderDesignerRepresentation looks like something that could be in the SectionItem component.
             I tried moving it there, but I ran into performance problems and the
              result did not look very pretty.*/}
-            {component.data.type === ComponentType.FormPanel
-              ? <div
-                className={S.innerContainer}
-                style={{
-                  width: `${component.width}px`,
-                  height: `${component.height}px`,
-                  cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-                  zIndex: component.zIndex
-                }}>
-                {renderDesignerRepresentation(component)}
-              </div>
-              : renderDesignerRepresentation(component)
-            }
-            {surfaceState.selectedComponent?.id === component.id && [
-              'top',
-              'right',
-              'bottom',
-              'left',
-              'topLeft',
-              'topRight',
-              'bottomRight',
-              'bottomLeft'
-            ].map((handle) => (
-              <div
-                key={component.id + handle}
-                className={`${S.resizeHandle} ${S[handle]}`}
-                onMouseDown={(e) =>
-                  handleResizeStart(e, component, handle as ResizeHandle)
-                }
-              />
-            ))}
-          </div>
-        </React.Fragment>
-      ))}
+              {component.data.type === ComponentType.FormPanel
+                ? <div
+                  className={S.innerContainer}
+                  style={{
+                    width: `${component.width}px`,
+                    height: `${component.height}px`,
+                    cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
+                    zIndex: component.zIndex
+                  }}>
+                  {component.designerRepresentation}
+                </div>
+                : component.designerRepresentation
+              }
+              {surfaceState.selectedComponent?.id === component.id && [
+                'top',
+                'right',
+                'bottom',
+                'left',
+                'topLeft',
+                'topRight',
+                'bottomRight',
+                'bottomLeft'
+              ].map((handle) => (
+                <div
+                  key={component.id + handle}
+                  className={`${S.resizeHandle} ${S[handle]}`}
+                  onMouseDown={(e) =>
+                    handleResizeStart(e, component, handle as ResizeHandle)
+                  }
+                />
+              ))}
+            </div>
+          </React.Fragment>
+        ))}
     </div>
   );
 });

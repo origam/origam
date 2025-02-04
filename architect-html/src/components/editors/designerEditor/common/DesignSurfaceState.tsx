@@ -13,6 +13,7 @@ import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   toComponentRecursive
 } from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
+import { ReactElement } from "react";
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
@@ -54,7 +55,8 @@ export class DesignSurfaceState {
   constructor(
     editorData: IDesignerEditorData,
     private propertiesState: PropertiesState,
-    private updateEditor: () => Generator<Promise<any>, void, any>
+    private updateEditor: () => Generator<Promise<any>, void, any>,
+    private loadComponent?: (componentId: string) => Promise<ReactElement>
   ) {
     if (editorData.rootControl) {
       this.panelId = editorData.rootControl.id;
@@ -63,9 +65,9 @@ export class DesignSurfaceState {
     }
   }
 
-  loadComponents(rootControl: IApiControl) {
+  async loadComponents(rootControl: IApiControl) {
     let components: Component[] = [];
-    components = toComponentRecursive(rootControl, null, components)
+    components = await toComponentRecursive(rootControl, null, components, this.loadComponent)
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();

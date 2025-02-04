@@ -21,14 +21,12 @@ import {
   TextArea
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import { ReactElement } from "react";
-import {
-  SectionItem
-} from "src/components/editors/designerEditor/common/SectionItem.tsx";
 
-export function controlToComponent(
+export async function controlToComponent(
   control: IApiControl,
   parent: Component | null,
-): Component {
+  loadComponent?: (componentId: string) => Promise<ReactElement>
+): Promise<Component> {
   const properties = control.properties.map(prop => new EditorProperty(prop));
   const componentType = parseComponentType(control.type);
   switch (componentType) {
@@ -131,7 +129,11 @@ export function controlToComponent(
         properties: properties
       })
 
-    case ComponentType.FormPanel:
+    case ComponentType.FormPanel: {
+      if (!loadComponent) {
+        throw new Error("loadComponent parameter is missing");
+      }
+      const reactElement = await loadComponent(control.id);
       return new FormPanel({
         id: control.id,
         parent: parent,
@@ -139,8 +141,10 @@ export function controlToComponent(
           type: componentType,
           identifier: control.name,
         },
-        properties: properties
+        properties: properties,
+        reactElement: reactElement
       })
+    }
 
     case ComponentType.SplitPanel:
       return new SplitPanel({
@@ -180,21 +184,15 @@ export function controlToComponent(
   }
 }
 
-export function sectionToComponent(
-  sectionRootControl: IApiControl
-): ReactElement {
-  const sectionComponents = toComponentRecursive(sectionRootControl, null, [])
-  return <SectionItem components={sectionComponents}/>
-}
-
-export function toComponentRecursive(
+export async function toComponentRecursive(
   control: IApiControl,
   parent: Component | null,
-  allComponents: Component[]
-): Component[] {
-  const newComponent = controlToComponent(control, parent);
+  allComponents: Component[],
+  loadComponent?: (componentId: string) => Promise<ReactElement>
+): Promise<Component[]> {
+  const newComponent = await controlToComponent(control, parent, loadComponent);
   for (const childControl of control.children) {
-    toComponentRecursive(childControl, newComponent, allComponents);
+    await toComponentRecursive(childControl, newComponent, allComponents, loadComponent);
   }
   allComponents.push(newComponent);
   return allComponents;

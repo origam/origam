@@ -19,7 +19,6 @@ import {
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
 import { ReactElement } from "react";
-import { observer } from "mobx-react-lite";
 
 export abstract class Component {
   id: string;
@@ -286,8 +285,22 @@ export class AsCheckBox extends Component {
 }
 
 export class FormPanel extends Component {
+
+  reactElement: ReactElement;
+
+  constructor(args: {
+    id: string,
+    parent: Component | null,
+    data: IComponentData,
+    properties: EditorProperty[],
+    reactElement: ReactElement,
+  }){
+    super(args);
+    this.reactElement = args.reactElement;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
-    return null;
+    return this.reactElement;
   }
 }
 
@@ -378,26 +391,6 @@ export class TabPage extends Component {
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    // return <TabControlComponent tab={this}/>
-    return (
-      null
-      // <div className={S.designSurfaceEditorContainer}>
-      //   <div className={S.designSurfaceInput}></div>
-      // </div>
-    );
+    return null;
   }
 }
-
-
-export const TabControlComponent = observer(({tab}: { tab: TabPage }) => {
-  return (
-    <>
-      {/*{tab.isVisible &&*/}
-        <div className={S.designSurfaceEditorContainer}>
-          {/*<div className={S.designSurfaceInput}></div>*/}
-        </div>
-      {/*}*/}
-    </>
-  );
-});
-

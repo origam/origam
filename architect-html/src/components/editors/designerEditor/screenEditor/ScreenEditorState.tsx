@@ -2,10 +2,8 @@ import {
   IEditorNode
 } from "src/components/editorTabView/EditorTabViewState.ts";
 import {
-  IApiControl,
   IArchitectApi,
   IScreenEditorData,
-  IScreenEditorItem,
   IScreenEditorModel,
 } from "src/API/IArchitectApi.ts";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
@@ -20,8 +18,12 @@ import {
   DesignerEditorState
 } from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
 import {
-  controlToComponent, sectionToComponent
+  controlToComponent, toComponentRecursive,
 } from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
+import {
+  SectionItem
+} from "src/components/editors/designerEditor/common/SectionItem.tsx";
+import { ReactElement } from "react";
 
 
 export class ScreenEditorState extends DesignerEditorState {
@@ -35,7 +37,14 @@ export class ScreenEditorState extends DesignerEditorState {
     screenToolboxState: ScreenToolboxState,
     architectApi: IArchitectApi
   ) {
-    super(editorNode, isDirty, screenEditorData, propertiesState,screenToolboxState.toolboxState, architectApi );
+    super(
+      editorNode,
+      isDirty,
+      screenEditorData,
+      propertiesState,
+      screenToolboxState.toolboxState,
+      architectApi,
+      getSectionLoader(architectApi, editorNode.origamId));
     this.screenToolbox = screenToolboxState;
   }
 
@@ -50,8 +59,8 @@ export class ScreenEditorState extends DesignerEditorState {
     }.bind(this);
   }
 
-  create(x: number, y: number) {
-    return function* (this: ScreenEditorState): Generator<Promise<IScreenEditorItem>, void, IScreenEditorItem> {
+  async create(x: number, y: number) {
+    return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const parent = this.surface.findComponentAt(x, y);
 
       let currentParent: Component | null = parent;
@@ -71,7 +80,8 @@ export class ScreenEditorState extends DesignerEditorState {
         left: relativeX
       });
 
-      const newComponent = controlToComponent(screenEditorItem.screenItem, null);
+      const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
+      const newComponent = yield controlToComponent(screenEditorItem.screenItem, null, sectionLoader);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;
@@ -83,7 +93,6 @@ export class ScreenEditorState extends DesignerEditorState {
       if (panelSizeChanged) {
         yield* this.update() as any;
       }
-      yield * this.loadSections()() as any;
     }.bind(this);
   }
 
@@ -110,27 +119,14 @@ export class ScreenEditorState extends DesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
-
-    const oldComponents = this.surface.components;
-    this.surface.loadComponents(newData.rootControl);
-    for (const newComponent of this.surface.components) {
-      if(!newComponent.designerRepresentation){
-        newComponent.designerRepresentation = oldComponents.find(x => x.id === newComponent.id)?.designerRepresentation ?? null;
-      }
-    }
+    yield this.surface.loadComponents(newData.rootControl);
   }
+}
 
-  public loadSections(){
-    return function *(this: ScreenEditorState): Generator<Promise<Record<string, IApiControl>>, void,Record<string, IApiControl>>{
-      const sectionIdsToLoad = this.surface.components
-        .filter(x => !x.designerRepresentation)
-        .map(x => x.id);
-      const sectionControls = yield this.architectApi.loadSections(this.editorNode.origamId, sectionIdsToLoad);
-      for (const sectionId of Object.keys(sectionControls)) {
-        const component = this.surface.components.find(x => x.id === sectionId)!;
-        component.designerRepresentation = sectionToComponent(sectionControls[sectionId]);
-      }
-      console.log(sectionControls);
-    }.bind(this);
+function getSectionLoader(architectApi: IArchitectApi, editorNodeId: string): any {
+  return async function loadSection(sectionId: string): Promise<ReactElement> {
+    const sectionControls = await architectApi.loadSections(editorNodeId, [sectionId]);
+    const sectionComponents = await toComponentRecursive(sectionControls[sectionId], null, [])
+    return <SectionItem components={sectionComponents}/>
   }
 }

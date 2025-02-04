@@ -22,6 +22,7 @@ import {
 import {
   Component
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
+import { ReactElement } from "react";
 
 export abstract class DesignerEditorState implements IDesignerEditorState {
 
@@ -45,14 +46,16 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     editorData: IDesignerEditorData,
     propertiesState: PropertiesState,
     toolbox: ToolboxState,
-    protected architectApi: IArchitectApi
+    protected architectApi: IArchitectApi,
+    loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
     this.isDirty = isDirty;
     this.toolbox = toolbox;
     this.surface = new DesignSurfaceState(
       editorData,
       propertiesState,
-      this.update.bind(this)
+      this.update.bind(this),
+      loadComponent,
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
   }
