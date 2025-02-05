@@ -73,7 +73,7 @@ public class LookupHelper
         string listDisplayMember)
 	{
 		var dataStructure = EntityHelper.CreateDataStructure(
-            fromEntity, "Lookup" + name, true);
+            fromEntity, GetDataStructureName(name), true);
 		var dataStructureEntity 
 			= dataStructure.Entities[0] as DataStructureEntity;
 		dataStructureEntity.AllFields = false;
@@ -122,5 +122,10 @@ public class LookupHelper
             dataStructure, dataStructureFilterSetId, idColumn.Name, 
             nameColumn.Name, true);
 		return dataServiceLookup;
+	}
+
+	public static string GetDataStructureName(string lookupName)
+	{
+		return "Lookup" + lookupName;
 	}
 }

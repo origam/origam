@@ -119,7 +119,7 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Field With Relationship Entity with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Field With a Relationship Entity with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Table: \t\t\t");

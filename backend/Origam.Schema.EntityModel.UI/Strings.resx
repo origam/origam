@@ -340,19 +340,19 @@
     <value>Sort set item is invalid. FieldName `{0}' was found neither in a  data structure not in an entity.</value>
   </data>
   <data name="CreateChildEntityWizardDescription" xml:space="preserve">
-    <value>This Wizard create child entity</value>
+    <value>This Wizard creates a child entity</value>
   </data>
   <data name="CreateChildEntityWizardTitle" xml:space="preserve">
     <value>Create Child Entity Wizard</value>
   </data>
   <data name="CreateDataStructureFromEntityWizardDescription" xml:space="preserve">
-    <value>This wizard create Data Structure</value>
+    <value>This wizard creats a Data Structure</value>
   </data>
   <data name="CreateDataStructureFromEntityWizardTitle" xml:space="preserve">
     <value>Create Data Structure Wizard</value>
   </data>
   <data name="CreateForeignKeyWizardDescription" xml:space="preserve">
-    <value>This wizard create Foreign key</value>
+    <value>This wizard creates a Foreign key</value>
   </data>
   <data name="CreateForeignKeyWizardTitle" xml:space="preserve">
     <value>Create Foreign Key Wizard</value>

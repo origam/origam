@@ -502,25 +502,25 @@
     <value>Create Complete UI Wizard</value>
   </data>
   <data name="CreateFormFromPanelWizardDescription" xml:space="preserve">
-    <value>This Wizard Create Screen. </value>
+    <value>This Wizard Creates a Screen. </value>
   </data>
   <data name="CreateFormFromPanelWizardTitle" xml:space="preserve">
     <value>Create Screen Command Wizard</value>
   </data>
   <data name="CreateMenuFromDataConstantWizardDescription" xml:space="preserve">
-    <value>This Wizard create menu for Dataconstant.</value>
+    <value>This Wizard creates a menu for a Dataconstant.</value>
   </data>
   <data name="CreateMenuFromDataConstantWizardTitle" xml:space="preserve">
     <value>Create Menu from Dataconstant Wizard</value>
   </data>
   <data name="CreateMenuFromFormWizardDescription" xml:space="preserve">
-    <value>This Wizard create Menu Item from Screen.</value>
+    <value>This Wizard creates a Menu Item from a Screen.</value>
   </data>
   <data name="CreateMenuFromFormWizardTitle" xml:space="preserve">
     <value>Create Menu from Form Command Wizard</value>
   </data>
   <data name="CreateMenuFromSequentialWorkflowWizardDescription" xml:space="preserve">
-    <value>This Wizard create menu for Sequential Workflow.</value>
+    <value>This Wizard creates a menu for a Sequential Workflow.</value>
   </data>
   <data name="CreateMenuFromSequentialWorkflowWizardTitle" xml:space="preserve">
     <value>Create Menu from Sequential Workflow Wizard</value>
@@ -532,19 +532,19 @@
     <value>Create Screen Wizard</value>
   </data>
   <data name="CreateLanguageTranslationEntityWizardDescription" xml:space="preserve">
-    <value>This wizard create language translation Entity.</value>
+    <value>This wizard creates a language translation Entity.</value>
   </data>
   <data name="CreateLanguageTranslationEntityWizardTitle" xml:space="preserve">
     <value>Create Language Translation Entity Wizard</value>
   </data>
   <data name="CreatePanelFromEntityWizardDescription" xml:space="preserve">
-    <value>This Wizard create panel from Entity.</value>
+    <value>This Wizard creates a panel from an Entity.</value>
   </data>
   <data name="CreatePanelFromEntityWizardTitle" xml:space="preserve">
     <value>Create Panel From Entity</value>
   </data>
   <data name="CreateWorkQueueClassFromEntityWizardDescription" xml:space="preserve">
-    <value>This Wizard create Work Queue class from entity.</value>
+    <value>This Wizard creates a Work Queue class from an entity.</value>
   </data>
   <data name="CreateWorkQueueClassFromEntityWizardTitle" xml:space="preserve">
     <value>Create Work Queue Class From Entity Wizard</value>
