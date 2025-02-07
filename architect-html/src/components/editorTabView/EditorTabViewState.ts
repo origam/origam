@@ -12,14 +12,21 @@ import {
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
 import { RootStore } from "src/stores/RootStore.ts";
 import { askYesNoQuestion, YesNoResult } from "src/dialog/DialogUtils.tsx";
+import {
+  FlowHandlerInput,
+  runInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 
 export class EditorTabViewState {
   @observable accessor editors: Editor[] = [];
   architectApi: IArchitectApi;
+  runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 
   constructor(private rootStore: RootStore) {
     this.architectApi = this.rootStore.architectApi;
+    this.runGeneratorHandled = runInFlowWithHandler(rootStore.errorDialogController);
   }
 
   * initializeOpenEditors(): Generator<Promise<IApiEditorData[]>, void, IApiEditorData[]> {
@@ -38,7 +45,8 @@ export class EditorTabViewState {
     return getEditor({
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
-      architectApi: this.architectApi
+      architectApi: this.architectApi,
+      runGeneratorHandled: this.runGeneratorHandled
     });
   }
 
@@ -62,7 +70,8 @@ export class EditorTabViewState {
     const editor = getEditor({
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
-      architectApi: this.architectApi
+      architectApi: this.architectApi,
+      runGeneratorHandled: this.runGeneratorHandled
     });
     if (!editor) {
       return;

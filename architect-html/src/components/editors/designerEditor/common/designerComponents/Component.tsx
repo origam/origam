@@ -2,7 +2,7 @@ import {
   ComponentType,
   IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 
 import {
   EditorProperty
@@ -33,7 +33,9 @@ export abstract class Component {
       return null;
     }
     if (!this._designerRepresentation) {
-      this._designerRepresentation = this.getDesignerRepresentation()
+      action(()=>{
+        this._designerRepresentation = this.getDesignerRepresentation()
+      })();
     }
     return this._designerRepresentation;
   }
@@ -343,6 +345,7 @@ export class TabControl extends Component {
     this.tabs.push(tab);
   }
 
+  @action
   setVisible(tabId: string){
     for (const tab of this.tabs){
       tab.hideChildren = tab.id !== tabId;

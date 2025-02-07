@@ -29,12 +29,15 @@ import {
 import {
   SectionToolboxState
 } from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
+import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 export function getEditor(
   args: {
     editorData: EditorData,
     propertiesState: PropertiesState
-    architectApi: IArchitectApi
+    architectApi: IArchitectApi,
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
   }
 ) {
   const {editorData, propertiesState, architectApi } = args;
@@ -58,7 +61,8 @@ export function getEditor(
   if (node.editorType === "ScreenSectionEditor") {
     const sectionData = data as ISectionEditorData;
     const sectionToolboxState = new SectionToolboxState(sectionData, node.origamId, architectApi);
-    const state = new ScreenSectionEditorState(node, isDirty, sectionData, propertiesState, sectionToolboxState, architectApi);
+    const state = new ScreenSectionEditorState(node, isDirty, sectionData,
+      propertiesState, sectionToolboxState, architectApi, args.runGeneratorHandled);
     return new Editor(
       state,
       <ScreenSectionEditor designerState={state}/>
@@ -67,7 +71,9 @@ export function getEditor(
   if (node.editorType === "ScreenEditor") {
     const screenData = data as IScreenEditorData;
     const screenToolboxState = new ScreenToolboxState(screenData, node.origamId, architectApi);
-    const state = new ScreenEditorState(node, isDirty, screenData, propertiesState, screenToolboxState, architectApi);
+    const state = new ScreenEditorState(
+      node, isDirty, screenData, propertiesState,
+      screenToolboxState, architectApi, args.runGeneratorHandled);
     return new Editor(
       state,
       <ScreenEditor designerState={state}/>

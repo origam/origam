@@ -14,6 +14,8 @@ import {
   toComponentRecursive
 } from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
 import { ReactElement } from "react";
+import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
@@ -57,18 +59,19 @@ export class DesignSurfaceState {
     editorData: IDesignerEditorData,
     private propertiesState: PropertiesState,
     private updateEditor: () => Generator<Promise<any>, void, any>,
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
     private loadComponent?: (componentId: string) => Promise<ReactElement>
   ) {
     if (editorData.rootControl) {
       this.panelId = editorData.rootControl.id;
-      this.loadComponents(editorData.rootControl);
+      runGeneratorHandled({generator: this.loadComponents(editorData.rootControl)});
       this.panel = this.components.find(x => x.id === editorData.rootControl.id)!;
     }
   }
 
-  async loadComponents(rootControl: IApiControl) {
+  * loadComponents(rootControl: IApiControl) {
     let components: Component[] = [];
-    components = await toComponentRecursive(rootControl, null, components, this.loadComponent)
+    components = yield toComponentRecursive(rootControl, null, components, this.loadComponent)
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
@@ -131,8 +134,7 @@ export class DesignSurfaceState {
       return;
     }
     const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt.getTime();
-    if(dragTimeMilliSeconds < 1000 )
-    {
+    if (dragTimeMilliSeconds < 1000) {
       this.dragState = {
         component: null,
         startX: 0,

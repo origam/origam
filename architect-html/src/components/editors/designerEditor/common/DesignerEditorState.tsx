@@ -23,6 +23,8 @@ import {
   Component
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import { ReactElement } from "react";
+import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 export abstract class DesignerEditorState implements IDesignerEditorState {
 
@@ -47,7 +49,8 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     propertiesState: PropertiesState,
     toolbox: ToolboxState,
     protected architectApi: IArchitectApi,
-    loadComponent?: (componentId: string) => Promise<ReactElement>,
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
+    loadComponent?: (componentId: string) => Promise<ReactElement>
   ) {
     this.isDirty = isDirty;
     this.toolbox = toolbox;
@@ -55,7 +58,8 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
       editorData,
       propertiesState,
       this.update.bind(this),
-      loadComponent,
+      runGeneratorHandled,
+      loadComponent
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
   }

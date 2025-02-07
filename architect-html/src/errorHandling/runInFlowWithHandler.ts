@@ -6,7 +6,7 @@ type GeneratorFunction = (...args: any[]) => Generator;
 type GeneratorInput = Generator | GeneratorFunction;
 type ActionInput = (() => Promise<any>) | (() => void);
 
-type FlowHandlerInput =
+export type FlowHandlerInput =
   | { action: ActionInput }
   | { generator: GeneratorInput };
 
@@ -37,7 +37,7 @@ export function runInFlowWithHandler(controller: ErrorDialogController){
       generator: args.generator
     });
   } else {
-    throw new Error('Invalid input, need an action of a generator to run.');
+    throw new Error('Invalid input, need an action or a generator to run.');
   }
   }
 }

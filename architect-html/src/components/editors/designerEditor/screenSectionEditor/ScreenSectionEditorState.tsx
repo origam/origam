@@ -4,7 +4,6 @@ import {
 import {
   IArchitectApi,
   ISectionEditorData,
-  ISectionEditorModel,
 } from "src/API/IArchitectApi.ts";
 import {
   toChanges
@@ -22,6 +21,8 @@ import {
 import {
   controlToComponent
 } from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
+import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 export class ScreenSectionEditorState extends DesignerEditorState {
 
@@ -33,19 +34,21 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     sectionEditorData: ISectionEditorData,
     propertiesState: PropertiesState,
     sectionToolboxState: SectionToolboxState,
-    architectApi: IArchitectApi
+    architectApi: IArchitectApi,
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
-    super(editorNode, isDirty, sectionEditorData, propertiesState, sectionToolboxState.toolboxState, architectApi);
+    super(editorNode, isDirty, sectionEditorData, propertiesState,
+      sectionToolboxState.toolboxState, architectApi, runGeneratorHandled);
     this.sectionToolbox = sectionToolboxState;
   }
 
   delete(component: Component) {
-    return function* (this: ScreenSectionEditorState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+    return function* (this: ScreenSectionEditorState): Generator<Promise<any>, void, any> {
       const newData = yield this.architectApi.deleteSectionEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
       });
-      this.surface.loadComponents(newData.data.rootControl);
+      yield* this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
     }.bind(this);
   }
@@ -112,7 +115,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
     this.sectionToolbox.fields = newData.fields;
-    this.surface.loadComponents(newData.rootControl);
+    yield* this.surface.loadComponents(newData.rootControl);
   }
 }
 

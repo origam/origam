@@ -4,7 +4,6 @@ import {
 import {
   IArchitectApi,
   IScreenEditorData,
-  IScreenEditorModel,
 } from "src/API/IArchitectApi.ts";
 import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
@@ -24,6 +23,8 @@ import {
   SectionItem
 } from "src/components/editors/designerEditor/common/SectionItem.tsx";
 import { ReactElement } from "react";
+import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
+import { CancellablePromise } from "mobx/dist/api/flow";
 
 
 export class ScreenEditorState extends DesignerEditorState {
@@ -35,7 +36,8 @@ export class ScreenEditorState extends DesignerEditorState {
     screenEditorData: IScreenEditorData,
     propertiesState: PropertiesState,
     screenToolboxState: ScreenToolboxState,
-    architectApi: IArchitectApi
+    architectApi: IArchitectApi,
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>
   ) {
     super(
       editorNode,
@@ -44,17 +46,18 @@ export class ScreenEditorState extends DesignerEditorState {
       propertiesState,
       screenToolboxState.toolboxState,
       architectApi,
+      runGeneratorHandled,
       getSectionLoader(architectApi, editorNode.origamId));
     this.screenToolbox = screenToolboxState;
   }
 
   delete(component: Component) {
-    return function* (this: ScreenEditorState): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
+    return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
         schemaItemId: component.id
       });
-      this.surface.loadComponents(newData.data.rootControl);
+      yield*this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
     }.bind(this);
   }
@@ -119,7 +122,7 @@ export class ScreenEditorState extends DesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
-    yield this.surface.loadComponents(newData.rootControl);
+    yield* this.surface.loadComponents(newData.rootControl);
   }
 }
 
