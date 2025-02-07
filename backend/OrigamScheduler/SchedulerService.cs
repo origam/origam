@@ -38,7 +38,7 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
 
         try
         {
-            OrigamEngine.ConnectRuntime();
+            OrigamEngine.ConnectRuntime(runRestartTimer: false);
             schema = ServiceManager.Services.GetService<ISchemaService>();
             persistence = ServiceManager.Services.GetService<IPersistenceService>();
             schedules = schema.GetProvider<WorkflowScheduleSchemaItemProvider>();
