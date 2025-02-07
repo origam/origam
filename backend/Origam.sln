@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Workbench.Services",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Diagram", "Origam.Workbench.Diagram\Origam.Workbench.Diagram.csproj", "{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security", "Origam.Security\Origam.Security.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Security", "Origam.Security\Origam.Security.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.MenuModel", "Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
 EndProject
@@ -179,9 +179,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{68F9E56E-13CE-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.WorkflowTests", "Origam.WorkflowTests\Origam.WorkflowTests.csproj", "{911951B0-9953-4C69-8FDF-4C0A13621860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleTimer", "ScheduleTimer\ScheduleTimer.csproj", "{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleTimer", "ScheduleTimer\ScheduleTimer.csproj", "{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamScheduler", "OrigamScheduler\OrigamScheduler.csproj", "{2B07768F-739B-4EC1-8529-B964307F19EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrigamScheduler", "OrigamScheduler\OrigamScheduler.csproj", "{2B07768F-739B-4EC1-8529-B964307F19EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1258,7 +1258,6 @@ Global
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1266,15 +1265,12 @@ Global
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Client|Any CPU.Build.0 = Debug|Any CPU
-		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1282,11 +1278,9 @@ Global
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Client|Any CPU.Build.0 = Debug|Any CPU
-		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B07768F-739B-4EC1-8529-B964307F19EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
