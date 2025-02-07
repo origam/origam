@@ -75,22 +75,6 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
 
   protected abstract update(): Generator<Promise<any>, void, any>;
 
-  onDesignerMouseUp(x: number, y: number) {
-    return function* (this: DesignerEditorState) {
-      if (this.surface.isDragging) {
-        const didDrag = this.surface.dragState.didDrag;
-        this.surface.endDragging(x, y);
-        if (didDrag) {
-          yield* this.update();
-        }
-      }
-      if (this.surface.isResizing) {
-        this.surface.endResizing();
-        yield* this.update();
-      }
-    }.bind(this);
-  }
-
   * save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistChanges(this.editorNode.origamId);
     if (this.editorNode.parent) {

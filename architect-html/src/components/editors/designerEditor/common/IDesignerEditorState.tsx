@@ -11,7 +11,5 @@ export interface IDesignerEditorState extends IEditorState {
 
   delete(component: Component): any;
 
-  onDesignerMouseUp(x: number, y: number): any;
-
   create(x: number, y: number): any;
 }
