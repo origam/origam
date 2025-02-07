@@ -1253,6 +1253,8 @@ Global
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release|Any CPU.Build.0 = Release|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC650E9F-30F9-4725-A0D0-70F81ADFCC2F}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
