@@ -16,6 +16,7 @@
         <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj" />
         <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj" />
         <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+        <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
         <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
         <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
         <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
