@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ws="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowSchedule/6.0.0">
+  <ws:WorkflowSchedule
+    asi:abstract="false"
+    x:id="32febc2e-6a3a-4a4c-a661-7e37d2e9663a"
+    asi:name="DummyDoNothingEveryMinute"
+    ws:scheduleTime="Widgets/ScheduleTime/EveryMinute.origam#EveryMinute/4f0c0497-d0b3-40d2-b5e4-0fc995701cef"
+    ws:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNothing.origam#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a" />
+</x:file>

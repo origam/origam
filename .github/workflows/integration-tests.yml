@@ -109,7 +109,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: workflowbuild
-        path: "backend/Origam.WorkflowTests/bin/Release Server/net8.0/publish"
+        path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
         
   integration-tests:
     needs: [build-frontend,build-server]
