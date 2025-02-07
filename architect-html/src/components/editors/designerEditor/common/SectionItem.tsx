@@ -13,9 +13,8 @@ export const SectionItem: React.FC<{
   return (
     <div className={SD.designSurface + S.sectionRoot}>
       {props.components.map((component) => (
-        <>
+        <React.Fragment key={component.id}>
           <div
-            key={component.id + "_label"}
             className={SD.componentLabel}
             style={{
               ...component.getLabelStyle(),
@@ -26,7 +25,6 @@ export const SectionItem: React.FC<{
             {component.data.identifier}
           </div>
           <div
-            key={component.id + "_component"}
             className={SD.designComponent}
             style={{
               left: `${component.absoluteLeft}px`,
@@ -40,7 +38,7 @@ export const SectionItem: React.FC<{
             {component.designerRepresentation}
 
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
