@@ -12,6 +12,7 @@
         <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
         <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
         <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+        <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
         <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj" />
         <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj" />
         <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
