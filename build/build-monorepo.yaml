@@ -140,17 +140,6 @@ jobs:
          configuration: 'Release Client'
          msbuildArchitecture: 'x64'
      - task: CopyFiles@2
-       displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-client'
-       inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\'
-         Contents: |
-           **\*.dll
-           **\*.exe
-           **\*.pdb
-           **\*.exe.config
-         TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
-       condition: succeededOrFailed()
-     - task: CopyFiles@2
        displayName: 'Copy client to: $(build.artifactstagingdirectory)\origam-client'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamArchitect\bin\Release\'
