@@ -133,22 +133,6 @@ export class DesignSurfaceState {
     if (!this.dragState.component || !this.dragState.startedAt) {
       return;
     }
-    const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt.getTime();
-    if (dragTimeMilliSeconds < 1000) {
-      this.dragState = {
-        component: null,
-        startX: 0,
-        startY: 0,
-        originalLeft: 0,
-        originalTop: 0,
-        didDrag: false,
-        startedAt: undefined
-      };
-      return;
-    }
-
-    console.log("dragTimeMilliSeconds: " + dragTimeMilliSeconds);
-
     const draggingComponent = this.dragState.component;
 
     if (
@@ -188,6 +172,21 @@ export class DesignSurfaceState {
   onDesignerMouseUp(x: number, y: number) {
     return function* (this: DesignSurfaceState) {
       if (this.isDragging) {
+        const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt!.getTime();
+        if (dragTimeMilliSeconds < 300) {
+          this.dragState.component.absoluteTop = this.dragState.originalTop;
+          this.dragState.component.absoluteLeft = this.dragState.originalLeft;
+          this.dragState = {
+            component: null,
+            startX: 0,
+            startY: 0,
+            originalLeft: 0,
+            originalTop: 0,
+            didDrag: false,
+            startedAt: undefined
+          };
+          return;
+        }
         const didDrag = this.dragState.didDrag;
         this.endDragging(x, y);
         if (didDrag) {
