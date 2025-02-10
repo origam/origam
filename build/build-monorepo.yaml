@@ -93,6 +93,7 @@ jobs:
          testSelector: 'testAssemblies'
          testAssemblyVer2: |
            **\*Tests.dll
+           !**\Origam.WorkflowTests.dll
            !**\*TestAdapter.dll
            !**\obj\**
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
