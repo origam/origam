@@ -114,7 +114,7 @@ public class CreatePanelFromEntityCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Screen from an Entity with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Datastructure: \t\t");

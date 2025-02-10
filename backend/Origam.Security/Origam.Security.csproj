@@ -1,141 +1,67 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>7.10.6030</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{93B972C4-D58D-4681-A8B8-95A34C7C2980}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon />
     <AssemblyKeyContainerName />
-    <AssemblyName>Origam.Security</AssemblyName>
     <AssemblyOriginatorKeyFile />
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Origam.Security</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <OldToolsVersion>0.0</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
     <LangVersion>10</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <Configurations>Debug Architect;Debug Client;Debug Server;Debug;Release Architect;Release Client;Release Server;Release</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
-      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
-      <Name>Origam.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
-      <Name>Origam.DA.Common</Name>
-      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
-      <Project>{976F3ABA-938D-4242-A93B-7D7A1861A66E}</Project>
-      <Name>Origam.Schema</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
-      <Name>Origam.Services</Name>
-      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <Reference Include="System">
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
+    <Reference Update="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Data">
+    <Reference Update="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.DirectoryServices">
-      <Name>System.DirectoryServices</Name>
-    </Reference>
-    <Reference Include="System.Xml">
+    <Reference Update="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AbstractProfileProvider.cs">
-    </Compile>
-    <Compile Include="Credential.cs" />
-    <Compile Include="OrigamDatabaseAuthorizationProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OrigamDatabaseTenantAuthorizationProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OrigamProfileProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OrigamTenantProfileProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ProfileNotFoundException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WindowsGroupsAuthorizationProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="Strings.cs-CZ.resx">
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.de.resx">
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.resx">
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -144,11 +70,17 @@
     <PackageReference Include="log4net">
       <Version>2.0.17</Version>
     </PackageReference>
+    <PackageReference Include="System.DirectoryServices" Version="9.0.1" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
-  </Import>
+  <ItemGroup>
+    <Compile Remove="Interfaces\IAuthorizationContextContainer.cs" />
+  </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent />
-    <PostBuildEvent />
+    <AssemblyTitle>ORIGAM Security Infrastructure</AssemblyTitle>
+    <Company>Advantage Solutions, s. r. o.</Company>
+    <Product>ORIGAM</Product>
+    <Copyright>%28c%29 2005 - 2021 Advantage Solutions, s. r. o.</Copyright>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
   </PropertyGroup>
 </Project>

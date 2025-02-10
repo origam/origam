@@ -111,7 +111,7 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Screen from an Entity with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Datastructure: \t\t");
@@ -208,7 +208,7 @@ public class CreateCompleteUICommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Menu from Entity with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Menu from an Entity with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Datastructure: \t\t");
@@ -295,7 +295,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Screen from ScreenSection with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Screen from a ScreenSection with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Datastructure: \t");
@@ -370,7 +370,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Menu for Screen with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Menu for a Screen with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Menu: \t");
@@ -443,7 +443,7 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Menu for DataConstant with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Menu for a DataConstant with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Menu: \t");
@@ -517,7 +517,7 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create Menu for Workflow with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a Menu for a Workflow with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Menu: \t");
