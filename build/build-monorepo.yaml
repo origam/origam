@@ -162,7 +162,7 @@ jobs:
          RemoveSourceFolder: true
        displayName: 'origam-setup clean up'
   - job: build_server
-    displayName: Build Server
+    displayName: Build Server and Scheduler
     pool:
       vmImage: windows-2022
     steps:
@@ -305,13 +305,6 @@ jobs:
          artifactName: 'origam-setup'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
-       displayName: Download origam-client artifact
-       inputs:
-         buildType: 'current'
-         downloadType: 'single'
-         artifactName: 'origam-client'
-         downloadPath: '$(build.artifactstagingdirectory)'
-     - task: DownloadBuildArtifacts@0
        displayName: Download origam-html-server artifact
        inputs:
          buildType: 'current'
@@ -404,7 +397,6 @@ jobs:
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
-        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-desktop-client.zip"); }
        displayName: Zip files for release
      # ------------------------------------
      # RELEASE ORIGAM_ORIGAM - TAG
