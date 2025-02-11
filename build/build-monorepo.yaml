@@ -209,7 +209,7 @@ jobs:
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        displayName: 'Build HTML Server'
      - task: CopyFiles@2
-       displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
+       displayName: 'Copy Server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
          Contents: |
@@ -222,6 +222,21 @@ jobs:
        inputs:
          PathtoPublish: '$(build.artifactstagingdirectory)\origam-html'
          ArtifactName: origam-html-server
+       condition: succeededOrFailed()
+     - task: CopyFiles@2
+       displayName: 'Copy Scheduler to: $(build.artifactstagingdirectory)\scheduler'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\net8.0\'
+         Contents: |
+           **\*.*
+           !*.config
+         TargetFolder: '$(build.artifactstagingdirectory)\scheduler'
+       condition: succeededOrFailed()
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-scheduler'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\scheduler'
+         ArtifactName: origam-scheduler
        condition: succeededOrFailed()
   - job: build_html
     displayName: Build HTML Frontend
@@ -312,6 +327,13 @@ jobs:
          artifactName: 'origam-html-server'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
+       displayName: Download origam-scheduler artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-scheduler'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
        displayName: Download origam-html-client artifact
        inputs:
          buildType: 'current'
@@ -397,6 +419,7 @@ jobs:
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-scheduler", "$(build.artifactstagingdirectory)\origam-scheduler.zip"); }
        displayName: Zip files for release
      # ------------------------------------
      # RELEASE ORIGAM_ORIGAM - TAG
@@ -427,6 +450,7 @@ jobs:
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
@@ -461,6 +485,7 @@ jobs:
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
@@ -568,9 +593,17 @@ jobs:
          downloadType: 'single'
          artifactName: 'origam-html'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-scheduler artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
         Move-Item -Path origam-html -Destination HTML5 -force
+        Move-Item -Path origam-scheduler -Destination Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Download origam-html and source artifact
      - task: Docker@2
