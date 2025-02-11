@@ -99,16 +99,6 @@ jobs:
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
          runInParallel: false
      - task: CopyFiles@2
-       displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
-       inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\'
-         Contents: |
-           **\*.dll
-           **\*.exe
-           **\*.pdb
-         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
-       condition: succeededOrFailed()
-     - task: CopyFiles@2
        displayName: 'Copy architect to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamArchitect\bin\Release\'
@@ -152,7 +142,6 @@ jobs:
        condition: succeededOrFailed()
      - powershell: |
         ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
-        ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
        displayName: 'Rename Config files'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-client'
@@ -623,17 +612,9 @@ jobs:
          downloadType: 'single'
          artifactName: 'origam-html'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
-     - task: DownloadBuildArtifacts@0
-       displayName: 'Download origam-client artifact'
-       inputs:
-         buildType: 'current'
-         downloadType: 'single'
-         artifactName: 'origam-client'
-         downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
         Move-Item -Path origam-html -Destination HTML5 -force
-        Move-Item -Path origam-client -Destination Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Download origam-html and source artifact
      - task: Docker@2
