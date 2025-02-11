@@ -599,7 +599,7 @@ jobs:
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html'
+         artifactName: 'origam-scheduler'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
