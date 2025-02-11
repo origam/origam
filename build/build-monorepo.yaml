@@ -123,9 +123,6 @@ jobs:
          ArtifactName: origam-architect
        condition: succeededOrFailed()
      - powershell: |
-        ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
-       displayName: 'Rename Config files'
-     - powershell: |
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@product_version@", "$(PRODUCT_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
        displayName: 'Prepare ArchitectSetup.wxs'
