@@ -6433,6 +6433,7 @@ __metadata:
     "@types/lodash": "npm:^4.17.15"
     "@types/mapbox__geojson-area": "npm:^0.2.6"
     "@types/numeral": "npm:^2.0.5"
+    "@types/react": "npm:^19.0.8"
     "@types/react-beautiful-dnd": "npm:^13.1.8"
     "@types/react-color": "npm:^3.0.13"
     "@types/react-dom": "npm:^18.3.1"
