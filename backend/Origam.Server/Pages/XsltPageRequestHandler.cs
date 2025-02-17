@@ -213,7 +213,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                             response.Write("<!DOCTYPE html>");
                         }
                         response.WriteToOutput(textWriter 
-                            => result.Xml.Save(textWriter));
+                            => textWriter.Write(result.Xml.InnerXml));
                     }
                 }
             }
