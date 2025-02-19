@@ -32,19 +32,21 @@ public class AsPanelActionButtonBuilder
 {
 	public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
 		ActionButtonPlacement placement, string actionId, string groupId, string caption,
-		string iconUrl, bool isDefault, Hashtable parameters, string confirmationMessage)
+		string iconUrl, bool isDefault, Hashtable parameters, string confirmationMessage, bool showAlways)
 	{
-		Build(actionsElement, type, mode, placement, actionId, groupId, caption, iconUrl, isDefault, parameters,
-			false, false, false, 0, "", 0, confirmationMessage);
+		Build(actionsElement, type, mode, placement, actionId, groupId, caption,
+			iconUrl, isDefault, parameters, false, false, false,
+			0, "", 0, confirmationMessage, showAlways);
 	}
 	public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
 		ActionButtonPlacement placement, string actionId, string groupId, string caption,
 		string iconUrl, bool isDefault, Hashtable parameters, bool shortcutIsShift, 
 		bool shortcutIsControl,	bool shortcutIsAlt, int shortcutKeyCode, string scannerParameter,
-		int terminatorCharCode, string confirmationMessage)
+		int terminatorCharCode, string confirmationMessage, bool showAlways)
 	{
 		XmlElement actionElement = actionsElement.OwnerDocument.CreateElement("Action");
 		actionsElement.AppendChild(actionElement);
+		actionElement.SetAttribute("ShowAlways", XmlConvert.ToString(showAlways));
 		actionElement.SetAttribute("Type", type.ToString());
 		actionElement.SetAttribute("Id", actionId);
 		actionElement.SetAttribute("GroupId", groupId);

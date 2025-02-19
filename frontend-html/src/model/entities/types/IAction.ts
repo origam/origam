@@ -53,6 +53,7 @@ export interface IActionData {
   isDefault: boolean;
   parameters: IActionParameter[];
   confirmationMessage?: string;
+  showAlways: boolean;
 }
 
 export interface IAction extends IActionData {

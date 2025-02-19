@@ -40,9 +40,10 @@ export class Action implements IAction {
   mode: IActionMode = null as any;
   isDefault: boolean = false;
   parameters: IActionParameter[] = [];
+  showAlways: boolean = false;
 
   get isEnabled() {
-    if (this.mode === IActionMode.Always) {
+    if (this.mode === IActionMode.Always || this.showAlways) {
       return true;
     }
 

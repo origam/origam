@@ -422,7 +422,7 @@ public class FormXmlBuilder
                 AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.QueueAction, cmd.Mode, 
 					cmd.Placement, cmdRow["Id"].ToString(), "", (string)cmdRow["Text"], 
 					(cmd.ButtonIcon == null ? null : cmd.ButtonIcon.Name), 
-					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage);
+					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage, false);
 			}
 			else
 			{
@@ -439,7 +439,7 @@ public class FormXmlBuilder
 				AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.QueueAction,
 					PanelActionMode.MultipleCheckboxes,	ActionButtonPlacement.Toolbar, 
 					cmdRow["Id"].ToString(), "", (string)cmdRow["Text"], iconName, 
-					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage);
+					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage, true);
 			}
 		}
 //			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.Report, PanelActionMode.MultipleCheckboxes, "testReport", "Test Report", "report.png", new Hashtable());
@@ -1303,7 +1303,7 @@ public class FormXmlBuilder
                 action.IsDefault, parameters,
                 shShift, shCtrl, shAlt, shKey,
                 action.ScannerInputParameter, terminator,
-                confirmationMessage);
+                confirmationMessage, false);
         }
     }
 	private static void SetUserConfig(XmlDocument doc, XmlNode parentNode, string defaultConfiguration, Guid objectId, Guid workflowId)

@@ -108,7 +108,11 @@ public class SelectionDialogSessionStore : SessionStore
         //windowElement.SetAttribute("ShowWorkflowNextButton", "true");
         list = formXml.SelectNodes("//Actions");
         XmlElement actionsElement = list[0] as XmlElement;
-        AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.SelectionDialogAction, PanelActionMode.ActiveRecord, ActionButtonPlacement.Toolbar, ACTION_NEXT, "", "OK", "", true, new Hashtable(), null);
+        AsPanelActionButtonBuilder.Build(
+            actionsElement, PanelActionType.SelectionDialogAction, 
+            PanelActionMode.ActiveRecord, ActionButtonPlacement.Toolbar, 
+            ACTION_NEXT, "", "OK", "", true,
+            new Hashtable(), null, false);
         return formXml;
     }
     public override string Title
