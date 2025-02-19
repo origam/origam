@@ -65,7 +65,7 @@
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.15.0",
     "react-highlight-words": "^0.21.0",
-    "react-inlinesvg": "^4.1.8",
+    "react-inlinesvg": "^4.2.0",
     "react-measure": "^2.5.2",
     "react-virtualized": "^9.22.6",
     "sass": "^1.85.0",
