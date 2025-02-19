@@ -398,6 +398,7 @@ export function*interpretScreenXml(
             caption: action.attributes.Caption,
             groupId: action.attributes.GroupId,
             type: action.attributes.Type,
+            showAlways: action.attributes.ShowAlways === "true",
             iconUrl: action.attributes.IconUrl,
             mode: action.attributes.Mode,
             isDefault: action.attributes.IsDefault === "true",
