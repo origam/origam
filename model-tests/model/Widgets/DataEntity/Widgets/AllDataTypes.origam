@@ -14,6 +14,7 @@
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
   xmlns:esr1="http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0"
   xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
   xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
   xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
   xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
@@ -59,6 +60,12 @@
       asi:name="VirtualTest"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="Array"
+      x:id="78cddd1d-44e7-470e-93d9-878c62516c5d"
+      asi:name="parIdList" />
     <dp:Parameter
       asi:abstract="false"
       sip:allowNulls="true"
@@ -219,6 +226,47 @@
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="edb7e242-435b-4c8f-8022-8613fdd4a441"
+      asi:name="GetByIdList">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="UniqueIdentifier"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/In.origam#In/ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
+        x:id="41333304-a366-4853-9ca1-a04444df7a60"
+        adec:isPrimaryKey="false"
+        asi:name="In"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="35282448-b640-4a39-bc90-620eaa2361ef"
+          asi:name="FilterExpression"
+          fcp:parameter="Root/Function/In.origam#In/FilterExpression/32e47284-2c22-4aa8-b9d5-445012257b52">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+            x:id="961cfc70-961a-44ea-b663-67fd090744f1"
+            asi:name="Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="83d3b8c8-f65d-46e5-a4a4-da6e27c74155"
+          asi:name="List"
+          fcp:parameter="Root/Function/In.origam#In/List/06ad3693-55ff-404c-a813-16b41cd5751b">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="fd5aa6b9-cc9a-4e75-a540-3b2509324ae9"
+            asi:name="parIdList"
+            pr1:parameter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/parIdList/78cddd1d-44e7-470e-93d9-878c62516c5d" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
       x:id="9a7b8c2c-f8a8-4fed-8470-895d2618499a"
@@ -258,6 +306,36 @@
       aesr:type="Permit"
       esr1:updateCredential="true"
       aesr:valueType="SavedValue" />
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="18a531da-d49c-4846-93e0-ac9b57c8048e"
+      euia:label="ArrayParameterTest"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="ArrayParameterTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/ArrayParameterTest_Input.origam#ArrayParameterTest_Input/a0506116-547f-430f-a557-9c9603c040c7">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="Id"
+        x:id="8f204d29-a00b-4c21-93f2-9145ce1937c8"
+        asi:name="IN_AllDataTypesId"
+        euiapm:type="Current" />
+    </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
       euia:actionType="OpenForm"

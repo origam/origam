@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="33abd4b5-6049-4853-9148-eb5afe57a722"
+    ci:isComplex="true"
+    asi:name="SD_ArrayParameterTest"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Widgets/PanelControlSet/Widgets/SD_ArrayParameterTest.origam#SD_ArrayParameterTest/196e39de-dc99-4498-8ac0-9d67e19780a3"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="4b5e1701-e88c-4b20-bcae-d25e3bd76700" />
+  </ci:Control>
+</x:file>

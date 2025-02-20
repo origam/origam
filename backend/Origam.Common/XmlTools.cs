@@ -90,6 +90,10 @@ public class XmlTools
         {
             return Convert.ToBase64String((byte[])val);
         }
+        else if(val is IList)
+        {
+	        throw new ArgumentException("Array cannot be converted to string.");
+        }
         else
 		{
 			return val.ToString();
