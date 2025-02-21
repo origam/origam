@@ -4,6 +4,15 @@
   height: 100%;
 }
 
+.designSurfaceCheckbox {
+  border: 1px solid var(--background4);
+  background-color: var(--background1);
+  width: 14px;
+  height: 14px;
+  margin: 3px;
+}
+
+
 .designSurfaceInput {
   border: 1px solid var(--background4);
   background-color: var(--background1);

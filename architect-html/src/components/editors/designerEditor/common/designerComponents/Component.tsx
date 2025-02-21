@@ -284,6 +284,14 @@ export class AsPanel extends Component {
 }
 
 export class AsCheckBox extends Component {
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.designSurfaceEditorContainer}>
+        <div className={S.designSurfaceCheckbox}></div>
+        <div>{this.properties.find(x=>x.name === "Text")?.value}</div>
+      </div>
+    );
+  }
 }
 
 export class FormPanel extends Component {
