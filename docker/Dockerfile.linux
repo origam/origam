@@ -61,8 +61,7 @@ linux/updateEnvironment.sh \
 linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
 WORKDIR /home/origam/HTML5
-RUN mkdir data \
-&& mkdir logs \
+RUN mkdir logs \
 && chmod +x configureServer.sh \
 && chmod +x entrypoint.sh \
 && chmod +x updateEnvironment.sh \

@@ -5,7 +5,7 @@
       <OrigamSettings>
         <BaseFolder></BaseFolder>
         <SchemaConnectionString />
-        <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
+        <ModelSourceControlLocation>OrigamSettings_ModelSourceControlLocation</ModelSourceControlLocation>
         <DataConnectionString>Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
         <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>

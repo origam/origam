@@ -11,8 +11,8 @@ run_silently() {
     fi
 }
 
-cd /home/origam/HTML5
-DIR="data"
+cd /home/origam
+DIR="projectData"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   # Directory data
 	   gitcredentials=""
@@ -132,7 +132,7 @@ fi
 
 cd /home/origam/HTML5
 
-if [ ! -d "$DIR/origam" ]; then 
+if [ ! -d "$DIR" ]; then
 	echo “Server has no model!!! Review the instance setup.”;
 	echo "Mandatory: gitPullOnStart(true)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
@@ -193,8 +193,7 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
-		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
-		sed -i "s|OrigamSettings_ModelName|data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
+		sed -i "s|OrigamSettings_ModelSourceControlLocation|/home/origam/projectData/model|" OrigamSettings.config
 		sed -i "s/OrigamSettings_Title/${OrigamSettings_Title}/" OrigamSettings.config
 		sed -i "s|OrigamSettings_ReportDefinitionsPath|${OrigamSettings_ReportDefinitionsPath}|" OrigamSettings.config
 		sed -i "s|OrigamSettings_RuntimeModelConfigurationPath|${OrigamSettings_RuntimeModelConfigurationPath}|" OrigamSettings.config
