@@ -41,6 +41,7 @@ function Update-ConfigFromTemplate {
 
 $ErrorActionPreference = 'Stop'
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+$projectDataPath = "C:\home\origam\projectData"
 
 # First generate the HTTPS SSL certificate
 Write-Host "Generating HTTPS SSL certificate..."
@@ -55,13 +56,13 @@ if ($Env:gitPullOnStart -eq "true") {
     Write-Host "Git pull on start is enabled. Cloning/pulling repository..."
 
     # Remove existing data directory if it exists
-    if (Test-Path "data") {
-        Remove-Item data -Recurse -Force
+    if (Test-Path $projectDataPath) {
+        Remove-Item $projectDataPath -Recurse -Force
     }
 
     # Create new data directory
-    New-Item -Name "data" -ItemType Directory
-    Set-Location data
+    New-Item -Name $projectDataPath -ItemType Directory
+    Set-Location $projectDataPath
 
     # Clone the repository
     if ($Env:gitUsername -and $Env:gitPassword -and $Env:gitUrl) {
@@ -74,7 +75,7 @@ if ($Env:gitPullOnStart -eq "true") {
         Write-Host "Error: Git credentials or URL not provided"
         exit 1
     }
-    Set-Location ..
+    Set-Location C:\home\origam\HTML5
 } else {
     Write-Host "Git pull on start is disabled. Skipping repository clone."
 }
@@ -139,9 +140,8 @@ try {
         "OrigamSettings_Title" = $Env:OrigamSettings_TitleName
         "OrigamSettings_ReportDefinitionsPath" = $Env:OrigamSettings_ReportDefinitionsPath
         "OrigamSettings_RuntimeModelConfigurationPath" = $Env:OrigamSettings_RuntimeModelConfigurationPath
-        "OrigamSettings_ModelName" = "data\$Env:OrigamSettings_ModelSubDirectory"
+        "OrigamSettings_ModelSourceControlLocation" = "C:\home\origam\projectData"
     }
-
 
     Update-ConfigFromTemplate -TemplateFile ".\_OrigamSettings.mssql.template" `
                         -OutputFile ".\OrigamSettings.config" `
