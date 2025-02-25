@@ -1,37 +1,43 @@
-function Update-ConfigFromTemplate {
+function Update-ConfigFromTemplate
+{
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$TemplateFile,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$OutputFile,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [hashtable]$Replacements,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [boolean]$PrintResult = $false
     )
 
-    if (-not (Test-Path $TemplateFile)) {
+    if (-not (Test-Path $TemplateFile))
+    {
         throw "Template file $TemplateFile not found!"
     }
 
     $templateContent = Get-Content $TemplateFile -Raw
-    if ([string]::IsNullOrEmpty($templateContent)) {
+    if ( [string]::IsNullOrEmpty($templateContent))
+    {
         throw "Template file is empty!"
     }
     Write-Host "Successfully read template file"
 
-    foreach ($key in $Replacements.Keys) {
-        if ([string]::IsNullOrEmpty($Replacements[$key])) {
+    foreach ($key in $Replacements.Keys)
+    {
+        if ( [string]::IsNullOrEmpty($Replacements[$key]))
+        {
             Write-Host "Warning: Value for $key is empty" -ForegroundColor Yellow
         }
         $templateContent = $templateContent -replace $key, $Replacements[$key]
     }
 
     Write-Host "Configuration file generation completed successfully"
-    if ($PrintResult) {
+    if ($PrintResult)
+    {
         Write-Host "Final $OutputFile content:"
         Write-Host $templateContent
     }
@@ -40,23 +46,26 @@ function Update-ConfigFromTemplate {
 }
 
 $ErrorActionPreference = 'Stop'
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 $projectDataPath = "C:\home\origam\projectData"
 
 # First generate the HTTPS SSL certificate
 Write-Host "Generating HTTPS SSL certificate..."
 & './createSslCertificate.ps1'
-if ($LASTEXITCODE -ne 0) {
+if ($LASTEXITCODE -ne 0)
+{
     Write-Host "HTTPS SSL certificate generation failed"
     exit $LASTEXITCODE
 }
 
 # Git operations
-if ($Env:gitPullOnStart -eq "true") {
+if ($Env:gitPullOnStart -eq "true")
+{
     Write-Host "Git pull on start is enabled. Cloning/pulling repository..."
 
     # Remove existing data directory if it exists
-    if (Test-Path $projectDataPath) {
+    if (Test-Path $projectDataPath)
+    {
         Remove-Item $projectDataPath -Recurse -Force
     }
 
@@ -65,22 +74,29 @@ if ($Env:gitPullOnStart -eq "true") {
     Set-Location $projectDataPath
 
     # Clone the repository
-    if ($Env:gitUsername -and $Env:gitPassword -and $Env:gitUrl) {
-        & git clone "https://$Env:gitUsername:$Env:gitPassword@$Env:gitUrl"
-        if ($LASTEXITCODE -ne 0) {
+    if ($Env:gitUsername -and $Env:gitPassword -and $Env:gitUrl)
+    {
+        & git clone "https://$($env:gitUsername):$($env:gitPassword)@$($env:gitUrl)"
+        if ($LASTEXITCODE -ne 0)
+        {
             Write-Host "Error: Git clone failed"
             exit 1
         }
-    } else {
+    }
+    else
+    {
         Write-Host "Error: Git credentials or URL not provided"
         exit 1
     }
     Set-Location C:\home\origam\HTML5
-} else {
+}
+else
+{
     Write-Host "Git pull on start is disabled. Skipping repository clone."
 }
 
-try {
+try
+{
     Write-Host "Starting appsettings generation..."
 
     # Generate SSL certificate for jwt tokens
@@ -99,7 +115,14 @@ try {
         "ExternalDomain" = $Env:ExternalDomain_SetOnStart
         "pathchatapp" = $Env:pathchatapp
         "certpassword" = $JwtcertificatePassword
-        "chatinterval" = if ([string]::IsNullOrEmpty($Env:chatinterval)) { "0" } else { $Env:chatinterval }
+        "chatinterval" = if ( [string]::IsNullOrEmpty($Env:chatinterval))
+        {
+            "0"
+        }
+        else
+        {
+            $Env:chatinterval
+        }
         '"Kestrel": \{\}' = @"
   "Kestrel": {
     "Endpoints": {
@@ -123,32 +146,28 @@ try {
                         -Replacements $replacements `
                         -PrintResult ($Env:OrigamDockerDebug -eq "true")
 
-} catch {
+}
+catch
+{
     Write-Host "Error during configuration generation: $_" -ForegroundColor Red
     throw $_
 }
 
-try {
+try
+{
     Write-Host "Starting OrigamSettings generation..."
-    $replacements = @{
-        "OrigamSettings_SchemaExtensionGuid" = $Env:OrigamSettings_SchemaExtensionGuid
-        "OrigamSettings_DbHost" = $Env:OrigamSettings_DbHost
-        "OrigamSettings_DbPort" = if ([string]::IsNullOrEmpty($Env:OrigamSettings_DbPort)) { "1433" } else { $Env:OrigamSettings_DbPort }
-        "OrigamSettings_DbUsername" = $Env:OrigamSettings_DbUsername
-        "OrigamSettings_DatabaseName" = $Env:DatabaseName
-        "OrigamSettings_DbPassword" = $Env:OrigamSettings_DbPassword
-        "OrigamSettings_Title" = $Env:OrigamSettings_TitleName
-        "OrigamSettings_ReportDefinitionsPath" = $Env:OrigamSettings_ReportDefinitionsPath
-        "OrigamSettings_RuntimeModelConfigurationPath" = $Env:OrigamSettings_RuntimeModelConfigurationPath
-        "OrigamSettings_ModelSourceControlLocation" = "C:\home\origam\projectData"
+    if (-not $env:OrigamSettings__ModelSourceControlLocation)
+    {
+        $env:OrigamSettings__ModelSourceControlLocation = "C:\home\origam\projectData\model"
     }
 
-    Update-ConfigFromTemplate -TemplateFile ".\_OrigamSettings.mssql.template" `
-                        -OutputFile ".\OrigamSettings.config" `
-                        -Replacements $replacements `
-                        -PrintResult ($Env:OrigamDockerDebug -eq "true")
+    . "./Fill-OrigamSettingsConfig.ps1"
+    Copy-Item -Path "_OrigamSettings.mssql.template" -Destination "OrigamSettings.config"
+    Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config"
 
-} catch {
+}
+catch
+{
     Write-Host "Error during database configuration: $_" -ForegroundColor Red
     throw $_
 }
