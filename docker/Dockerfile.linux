@@ -58,7 +58,7 @@ COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
 linux/configureServer.sh \
-linux/update_origam_config.sh \
+linux/fill_origam_settings_config.sh \
 linux/entrypoint.sh \
 log4net.config \
 linux/updateEnvironment.sh \
@@ -67,7 +67,7 @@ linux/updateEnvironmentRoot.sh \
 WORKDIR /home/origam/HTML5
 RUN mkdir logs \
 && chmod +x configureServer.sh \
-&& chmod +x update_origam_config.sh \
+&& chmod +x fill_origam_settings_config.sh \
 && chmod +x entrypoint.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh

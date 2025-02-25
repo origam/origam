@@ -13,8 +13,8 @@ run_silently() {
 
 # ENV variable default values specific to linux
 # OrigamSettings.config
-if [ -z "${ORIGAM_SETTINGS__MODEL_SOURCE_CONTROL_LOCATION}" ]; then
-  export ORIGAM_SETTINGS__MODEL_SOURCE_CONTROL_LOCATION="/home/origam/projectData/model"
+if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
+  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
 fi
 
 
@@ -179,8 +179,8 @@ else
     exit 1
 fi
 
-source update_origam_config.sh
-update_origam_config "$ORIGAM_SETTINGS_FILE"
+source fill_origam_settings_config.sh
+fill_origam_settings_config "$ORIGAM_SETTINGS_FILE"
 
 export gitUrl
 export gitBranch
