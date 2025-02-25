@@ -129,6 +129,7 @@ jobs:
      - powershell: |
         xcopy $(Agent.BuildDirectory)\s\model-root\l10n model_template\l10n /i /e /y
         xcopy $(Agent.BuildDirectory)\s\model-root\model model_template\model /i /e /y
+        xcopy $(Agent.BuildDirectory)\s\model-root\model model_template\customAssets /i /e /y
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory('model_template', '$(Agent.BuildDirectory)\s\backend\OrigamSetup\model_root_source\DefaultModel.zip'); }
         xcopy model_template $(build.artifactstagingdirectory)\origam-model /i /e /y
         xcopy $(build.artifactstagingdirectory)\origam-architect $(Agent.BuildDirectory)\s\backend\OrigamSetup\source /i /e /y

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.Extensions;
 using System.Collections.Generic;
 using System.IO;
@@ -35,13 +36,19 @@ public class DockerBuilder : AbstractBuilder
     public override void Execute(Project project)
     {
         newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
-        project.DockerEnvPath = Path.Combine(newProjectFolder, project.Name + ".env");
-        project.DockerCmdPath = Path.Combine(newProjectFolder, project.Name + ".cmd");
+        project.DockerEnvPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.env");
+        project.DockerCmdPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.cmd");
+        project.DockerEnvPathWindows = Path.Combine(newProjectFolder, project.Name + "_Windows.env");
+        project.DockerCmdPathWindows = Path.Combine(newProjectFolder, project.Name + "_Windows.cmd");
         Directory.CreateDirectory(newProjectFolder);
-        CreateEnvFile(project);
-        CreateCmdFile(project);
+        DockerConfig dockerConfigLinux = GetDockerConfig(Platform.Linux, project);
+        CreateEnvFile(project, dockerConfigLinux);
+        CreateCmdFile(project, dockerConfigLinux);        
+        DockerConfig dockerConfigWindows = GetDockerConfig(Platform.Windows, project);
+        CreateEnvFile(project, dockerConfigWindows);
+        CreateCmdFile(project, dockerConfigWindows);
     }
-    private void CreateEnvFile(Project project)
+    private void CreateEnvFile(Project project, DockerConfig config)
     {
         string dbType = project.DatabaseType == DatabaseType.PgSql 
             ? "postgresql" :
@@ -53,34 +60,63 @@ public class DockerBuilder : AbstractBuilder
             ? project.UserPassword
             : project.DatabasePassword;
         string content =
-            $"OrigamSettings_SetOnStart=true\n" +
-            $"OrigamSettings_SchemaExtensionGuid={project.NewPackageId}\n" +
-            $"OrigamSettings_DbHost={GetDbHost(project)}\n" +
-            $"OrigamSettings_DbPort={project.DatabasePort}\n" +
-            $"OrigamSettings_DbUsername={dbUserName}\n" +
-            $"OrigamSettings_DbPassword={dbPassword}\n" +
-            $"DatabaseName={project.DataDatabaseName.ToLower()}\n" +
+            $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}\n" +
+            $"OrigamSettings__DatabaseHost={GetDbHost(project)}\n" +
+            $"OrigamSettings__DatabasePort={project.DatabasePort}\n" +
+            $"OrigamSettings__DatabaseUsername={dbUserName}\n" +
+            $"OrigamSettings__DatabasePassword={dbPassword}\n" +
+            $"OrigamSettings__Name={project.Name}\n" +
+            $"OrigamSettings__DatabaseName={project.DataDatabaseName.ToLower()}\n" +
+            $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}\n" +
+            $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets\n" +
             $"DatabaseType={dbType}\n" +
             $"ExternalDomain_SetOnStart={WebSiteUrl(project)}\n" +
             "TZ=Europe/Prague";
-        File.WriteAllText(project.DockerEnvPath, content);
+        File.WriteAllText(config.EnvFilePath, content);
     }
-    private void CreateCmdFile(Project project)
+    private void CreateCmdFile(Project project, DockerConfig config)
     {
         string content =
-            $"docker run --env-file \"{project.DockerEnvPath}\" ^\n" +
+            $"docker run --env-file \"{config.EnvFilePath}\" ^\n" +
             $"    -it --name {project.Name} ^\n" +
-            $"    -v \"{project.SourcesFolder}\\model\":/home/origam/HTML5/data/origam ^\n" +
+            $"    -v \"{project.SourcesFolder}\\model\":{config.ModelPath} ^\n" +
+            $"    -v \"{project.SourcesFolder}\\customAssets\":{config.CustomAssetsPath} ^\n" +
             $"    -p {project.DockerPort}:443 ^\n" +
-            $"    origam/server:master-latest.linux\n" +
+            $"    {config.BaseImage}\n" +
             "\n" +
             "REM After you run the above command go to https://localhost to open the client web application.\n" +
             "\n" +
-            "REM origam/server:master-latest.linux is the latest version, that may not be what you want.\n" +
+            $"REM {config.BaseImage} is the latest version, that may not be what you want.\n" +
             "REM Here you can find current releases and their docker images:\n" +
             "REM https://github.com/origam/origam/releases";
-        File.WriteAllText(project.DockerCmdPath, content);
+        File.WriteAllText(config.CmdFilePath, content);
     }
+    
+    private static DockerConfig GetDockerConfig(Platform platform, Project project)
+    {
+        return platform switch
+        {
+            Platform.Linux => new DockerConfig
+            {
+                EnvFilePath = project.DockerEnvPathLinux,
+                CustomAssetsPath = "/home/origam/projectData/customAssets",
+                ModelPath = "/home/origam/projectData/model",
+                CmdFilePath = project.DockerCmdPathLinux,
+                BaseImage = "origam/server:master-latest.linux"
+            },
+            Platform.Windows => new DockerConfig
+            {
+                EnvFilePath = project.DockerEnvPathWindows,
+                CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
+                ModelPath = @"C:\home\origam\projectData\model",
+                CmdFilePath = project.DockerCmdPathWindows,
+                BaseImage = "origam/server:master-latest.win"
+            },
+            _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform")
+        };
+    }
+
+    
     private string GetDbHost(Project project)
     {
         if (project.DatabaseServerName.Equals("localhost") ||
@@ -102,4 +138,18 @@ public class DockerBuilder : AbstractBuilder
         }
         return "https://localhost:" + project.DockerPort;
     }
+}
+
+enum Platform
+{
+    Windows, Linux
+}
+
+public class DockerConfig
+{
+    public string EnvFilePath { get; init; }
+    public string CustomAssetsPath { get; init; }
+    public string ModelPath { get; init; }
+    public string CmdFilePath { get; init; }
+    public string BaseImage { get; init; }
 }
