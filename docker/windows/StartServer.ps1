@@ -51,7 +51,7 @@ $projectDataPath = "C:\home\origam\projectData"
 
 # First generate the HTTPS SSL certificate
 Write-Host "Generating HTTPS SSL certificate..."
-& './createSslCertificate.ps1'
+& './CreateSslCertificate.ps1'
 if ($LASTEXITCODE -ne 0)
 {
     Write-Host "HTTPS SSL certificate generation failed"
@@ -145,7 +145,6 @@ try
                         -OutputFile ".\appsettings.json" `
                         -Replacements $replacements `
                         -PrintResult ($Env:OrigamDockerDebug -eq "true")
-
 }
 catch
 {
