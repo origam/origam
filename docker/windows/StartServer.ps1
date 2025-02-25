@@ -1,50 +1,5 @@
-function Update-ConfigFromTemplate
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$TemplateFile,
 
-        [Parameter(Mandatory = $true)]
-        [string]$OutputFile,
-
-        [Parameter(Mandatory = $true)]
-        [hashtable]$Replacements,
-
-        [Parameter(Mandatory = $false)]
-        [boolean]$PrintResult = $false
-    )
-
-    if (-not (Test-Path $TemplateFile))
-    {
-        throw "Template file $TemplateFile not found!"
-    }
-
-    $templateContent = Get-Content $TemplateFile -Raw
-    if ( [string]::IsNullOrEmpty($templateContent))
-    {
-        throw "Template file is empty!"
-    }
-    Write-Host "Successfully read template file"
-
-    foreach ($key in $Replacements.Keys)
-    {
-        if ( [string]::IsNullOrEmpty($Replacements[$key]))
-        {
-            Write-Host "Warning: Value for $key is empty" -ForegroundColor Yellow
-        }
-        $templateContent = $templateContent -replace $key, $Replacements[$key]
-    }
-
-    Write-Host "Configuration file generation completed successfully"
-    if ($PrintResult)
-    {
-        Write-Host "Final $OutputFile content:"
-        Write-Host $templateContent
-    }
-
-    $templateContent | Set-Content $OutputFile
-}
-
+. "./Utils.ps1"
 $ErrorActionPreference = 'Stop'
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 $projectDataPath = "C:\home\origam\projectData"
@@ -141,7 +96,7 @@ try
 "@
     }
 
-    Update-ConfigFromTemplate -TemplateFile ".\_appsettings.template" `
+    Fill-ConfigFromTemplate -TemplateFile ".\_appsettings.template" `
                         -OutputFile ".\appsettings.json" `
                         -Replacements $replacements `
                         -PrintResult ($Env:OrigamDockerDebug -eq "true")
@@ -159,11 +114,8 @@ try
     {
         $env:OrigamSettings__ModelSourceControlLocation = "C:\home\origam\projectData\model"
     }
-
-    . "./Fill-OrigamSettingsConfig.ps1"
     Copy-Item -Path "_OrigamSettings.mssql.template" -Destination "OrigamSettings.config"
     Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config"
-
 }
 catch
 {

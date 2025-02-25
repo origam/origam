@@ -35,7 +35,7 @@ COPY _OrigamSettings.postgres.template .
 COPY log4net.config .
 COPY windows/StartServer.ps1 .
 COPY windows/Install.ps1 .
-COPY windows/Fill-OrigamSettingsConfig.ps1 .
+COPY windows/Utils.ps1 .
 COPY windows/CreateSslCertificate.ps1 .
 
 # Install dependencies
