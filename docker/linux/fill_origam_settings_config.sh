@@ -41,44 +41,18 @@ fill_origam_settings_config() {
         key="${env_entry%%=*}"
         value="${env_entry#*=}"
 
-        echo "Processing env entry: $env_entry"
-        echo "Key: $key, Value: $value"
-
         node_name="${key#OrigamSettings__}"
-        echo "Raw node name: $raw_node_name, CamelCased: $node_name"
-
         xpath="${OrigamSettingNodeXpath}/${node_name}"
-        echo "Constructed XPath: $xpath"
 
         # Check if the node exists; if it does, update its value, otherwise create it.
         if xmlstarlet sel -t -v "$xpath" "$config_file" &>/dev/null; then
-            echo "Node exists at $xpath. Updating value to: ${value}"
             xmlstarlet ed -L -u "$xpath" -v "${value}" "$config_file"
         else
-            echo "Node not found at $xpath. Creating node '${node_name}' with value: ${value}"
             xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "${node_name}" -v "${value}" "$config_file"
         fi
 
         echo "---------------------------------------"
     done
-
-
-
-#    for env_entry in $(env | grep '^OrigamSettings__' | grep -v '^OrigamSettings__Database'); do
-#        key="${env_entry%%=*}"
-#        value="${env_entry#*=}"
-#
-#        raw_node_name="${key#OrigamSettings__}"
-#        node_name=$(toCamelCase "$raw_node_name")
-#        xpath="${OrigamSettingNodeXpath}/${node_name}"
-#
-#        # Check if the node exists; if it does, update its value, otherwise create it.
-#        if xmlstarlet sel -t -v "$xpath" "$config_file" &>/dev/null; then
-#            xmlstarlet ed -L -u "$xpath" -v "${value}" "$config_file"
-#        else
-#            xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "${node_name}" -v "${value}" "$config_file"
-#        fi
-#    done
 
     echo "${config_file} file updated successfully."
 }
