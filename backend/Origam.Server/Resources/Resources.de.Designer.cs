@@ -60,6 +60,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datei ist nicht verfügbar..
+        /// </summary>
+        public static string BlobFileNotAvailable {
+            get {
+                return ResourceManager.GetString("BlobFileNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximale Dateigrösse hat ({0} kB) überschritten..
         /// </summary>
         public static string BlobMaxSizeError {
@@ -177,6 +186,24 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; kann nicht geöffnet werden, während andere Daten bearbeitet werden. Bitte schließen Sie zuerst alle Bildschirme..
+        /// </summary>
+        public static string ErrorCannotOpenFormExclusively {
+            get {
+                return ResourceManager.GetString("ErrorCannotOpenFormExclusively", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schließen Sie &apos;{0}&apos;, bevor Sie neue Bildschirme öffnen..
+        /// </summary>
+        public static string ErrorCannotOpenScreenWhenExclusiveIsOpen {
+            get {
+                return ResourceManager.GetString("ErrorCannotOpenScreenWhenExclusiveIsOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Eingabe nicht gespeichert. Nicht gespeicherte Daten können nicht aktualisert werden..
         /// </summary>
         public static string ErrorCannotRefreshFormNotSaved {
@@ -209,6 +236,15 @@ namespace Origam.Server {
         public static string ErrorCommandInProgress {
             get {
                 return ResourceManager.GetString("ErrorCommandInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unbekannte Aktion..
+        /// </summary>
+        public static string ErrorContextUnknownAction {
+            get {
+                return ResourceManager.GetString("ErrorContextUnknownAction", resourceCulture);
             }
         }
         
@@ -416,6 +452,78 @@ namespace Origam.Server {
         public static string ErrorTreeItemUsedCannotDelete {
             get {
                 return ResourceManager.GetString("ErrorTreeItemUsedCannotDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unbekannter Seitentyp..
+        /// </summary>
+        public static string ErrorUnknownPageType {
+            get {
+                return ResourceManager.GetString("ErrorUnknownPageType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unbekannter Zeilenänderungszustand..
+        /// </summary>
+        public static string ErrorUnknownRowChangeState {
+            get {
+                return ResourceManager.GetString("ErrorUnknownRowChangeState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sitzungstyp konnte nicht aufgelöst werden..
+        /// </summary>
+        public static string ErrorUnknownSessionType {
+            get {
+                return ResourceManager.GetString("ErrorUnknownSessionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unbekannte WorkflowPage-Aktion..
+        /// </summary>
+        public static string ErrorUnknownWorkflowPageAction {
+            get {
+                return ResourceManager.GetString("ErrorUnknownWorkflowPageAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unbekannter Befehlwerttyp in der Arbeitswarteschlange..
+        /// </summary>
+        public static string ErrorUnknownWorkQueueCommandValueType {
+            get {
+                return ResourceManager.GetString("ErrorUnknownWorkQueueCommandValueType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nicht unterstützter Menüelementtyp.
+        /// </summary>
+        public static string ErrorUnsupportedMenuItemType {
+            get {
+                return ResourceManager.GetString("ErrorUnsupportedMenuItemType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow-Sitzung ungültig.
+        /// </summary>
+        public static string ErrorWorkflowSessionInvalid {
+            get {
+                return ResourceManager.GetString("ErrorWorkflowSessionInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Befehl nicht gefunden..
+        /// </summary>
+        public static string ErrorWorkQueueCommandNotFound {
+            get {
+                return ResourceManager.GetString("ErrorWorkQueueCommandNotFound", resourceCulture);
             }
         }
         

@@ -177,20 +177,29 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entita &apos;{0}&apos; nepodporuje přílohy..
-        /// </summary>
-        public static string ErrorAttachmentsNotSupported {
-            get {
-                return ResourceManager.GetString("ErrorAttachmentsNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Záznam je prázdný, není možné uložit soubor..
         /// </summary>
         public static string ErrorBlobRecordEmpty {
             get {
                 return ResourceManager.GetString("ErrorBlobRecordEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; nelze otevřít protože jsou rozeditována jiná data. Nejprve prosím zavřete ostatní obrazovky..
+        /// </summary>
+        public static string ErrorCannotOpenFormExclusively {
+            get {
+                return ResourceManager.GetString("ErrorCannotOpenFormExclusively", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zavřete &apos;{0}&apos;, než otevřete nové obrazovky..
+        /// </summary>
+        public static string ErrorCannotOpenScreenWhenExclusiveIsOpen {
+            get {
+                return ResourceManager.GetString("ErrorCannotOpenScreenWhenExclusiveIsOpen", resourceCulture);
             }
         }
         
@@ -209,6 +218,15 @@ namespace Origam.Server {
         public static string ErrorChangeUIMultipleRecords {
             get {
                 return ResourceManager.GetString("ErrorChangeUIMultipleRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pokoušíte se přistupovat ke sloupci {0}, ale ten v datasetu není přítomen..
+        /// </summary>
+        public static string ErrorColumnNotFound {
+            get {
+                return ResourceManager.GetString("ErrorColumnNotFound", resourceCulture);
             }
         }
         
@@ -254,6 +272,15 @@ namespace Origam.Server {
         public static string ErrorDataNotSavedWhileChangingRow {
             get {
                 return ResourceManager.GetString("ErrorDataNotSavedWhileChangingRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nepodařilo se aktualizovat závislý sloupec {0} u sloupce {1} v entitě {2}, ({3}).
+        /// </summary>
+        public static string ErrorDependentColumnNotFound {
+            get {
+                return ResourceManager.GetString("ErrorDependentColumnNotFound", resourceCulture);
             }
         }
         
@@ -330,20 +357,11 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nebyl nastaven aktivní uživatel (Principal). Není možné načíst profil uživatele..
+        ///   Looks up a localized string similar to Pseudoparametr &apos;body&apos; nebyl definován jako parametr datové stránky API, ale byl použit během volání PUT..
         /// </summary>
-        public static string ErrorPrincipalNotSet {
+        public static string ErrorPseudoparameterBodyNotDefined {
             get {
-                return ResourceManager.GetString("ErrorPrincipalNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Nebyl nastaven poskytovatel profilů. Není možné načíst profil uživatele..
-        /// </summary>
-        public static string ErrorProfileProviderNotSet {
-            get {
-                return ResourceManager.GetString("ErrorProfileProviderNotSet", resourceCulture);
+                return ResourceManager.GetString("ErrorPseudoparameterBodyNotDefined", resourceCulture);
             }
         }
         
@@ -447,15 +465,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Neznámý druh výstupní sestavy..
-        /// </summary>
-        public static string ErrorUnknownReportType {
-            get {
-                return ResourceManager.GetString("ErrorUnknownReportType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Neznámý RowChangeState.
         /// </summary>
         public static string ErrorUnknownRowChangeState {
@@ -497,15 +506,6 @@ namespace Origam.Server {
         public static string ErrorUnsupportedMenuItemType {
             get {
                 return ResourceManager.GetString("ErrorUnsupportedMenuItemType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Nepodporovaná akce workflow..
-        /// </summary>
-        public static string ErrorWorkflowActionNotSupported {
-            get {
-                return ResourceManager.GetString("ErrorWorkflowActionNotSupported", resourceCulture);
             }
         }
         

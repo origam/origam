@@ -156,9 +156,6 @@
   <data name="ErrorAttachmentRetrieval" xml:space="preserve">
     <value>Error occured while retrieving the attachment.</value>
   </data>
-  <data name="ErrorAttachmentsNotSupported" xml:space="preserve">
-    <value>Entity '{0}' does not support attachments.</value>
-  </data>
   <data name="ErrorBlobRecordEmpty" xml:space="preserve">
     <value>Record empty, cannot download file.</value>
   </data>
@@ -198,12 +195,6 @@
   <data name="ErrorOpenFormMultipleRecords" xml:space="preserve">
     <value>Selecting multiple records for OpenForm is not supported.</value>
   </data>
-  <data name="ErrorPrincipalNotSet" xml:space="preserve">
-    <value>Principal not set. Cannot load user profile.</value>
-  </data>
-  <data name="ErrorProfileProviderNotSet" xml:space="preserve">
-    <value>Profile provider not set. Cannot load user profile.</value>
-  </data>
   <data name="ErrorRecordNotFound" xml:space="preserve">
     <value>Data row not found by the provided ID.</value>
   </data>
@@ -228,9 +219,6 @@
   <data name="ErrorUnknownPageType" xml:space="preserve">
     <value>Unknown page type.</value>
   </data>
-  <data name="ErrorUnknownReportType" xml:space="preserve">
-    <value>Unknown report type.</value>
-  </data>
   <data name="ErrorUnknownRowChangeState" xml:space="preserve">
     <value>Unknown row change state.</value>
   </data>
@@ -245,9 +233,6 @@
   </data>
   <data name="ErrorUnsupportedMenuItemType" xml:space="preserve">
     <value>Unsupported menu item type.</value>
-  </data>
-  <data name="ErrorWorkflowActionNotSupported" xml:space="preserve">
-    <value>Unsupported workflow action.</value>
   </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
     <value>Workflow session invalid.</value>
@@ -302,9 +287,6 @@
   </data>
   <data name="ErrorCannotOpenScreenWhenExclusiveIsOpen" xml:space="preserve">
     <value>Close '{0}' before opening new screens.</value>
-  </data>
-  <data name="ContactAdmin" xml:space="preserve">
-    <value>Please contact admin.</value>
   </data>
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>

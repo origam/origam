@@ -96,15 +96,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please contact admin..
-        /// </summary>
-        public static string ContactAdmin {
-            get {
-                return ResourceManager.GetString("ContactAdmin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Record has not been changed yet..
         /// </summary>
         public static string DefaultTooltipNoChange {
@@ -182,15 +173,6 @@ namespace Origam.Server {
         public static string ErrorAttachmentRetrieval {
             get {
                 return ResourceManager.GetString("ErrorAttachmentRetrieval", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Entity &apos;{0}&apos; does not support attachments..
-        /// </summary>
-        public static string ErrorAttachmentsNotSupported {
-            get {
-                return ResourceManager.GetString("ErrorAttachmentsNotSupported", resourceCulture);
             }
         }
         
@@ -375,24 +357,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Principal not set. Cannot load user profile..
-        /// </summary>
-        public static string ErrorPrincipalNotSet {
-            get {
-                return ResourceManager.GetString("ErrorPrincipalNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Profile provider not set. Cannot load user profile..
-        /// </summary>
-        public static string ErrorProfileProviderNotSet {
-            get {
-                return ResourceManager.GetString("ErrorProfileProviderNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Pseudoparameter &apos;body&apos; not defined as a parametr of a API data page but attempted to use during PUT call..
         /// </summary>
         public static string ErrorPseudoparameterBodyNotDefined {
@@ -501,15 +465,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown report type..
-        /// </summary>
-        public static string ErrorUnknownReportType {
-            get {
-                return ResourceManager.GetString("ErrorUnknownReportType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unknown row change state..
         /// </summary>
         public static string ErrorUnknownRowChangeState {
@@ -551,15 +506,6 @@ namespace Origam.Server {
         public static string ErrorUnsupportedMenuItemType {
             get {
                 return ResourceManager.GetString("ErrorUnsupportedMenuItemType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unsupported workflow action..
-        /// </summary>
-        public static string ErrorWorkflowActionNotSupported {
-            get {
-                return ResourceManager.GetString("ErrorWorkflowActionNotSupported", resourceCulture);
             }
         }
         

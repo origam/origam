@@ -156,9 +156,6 @@
   <data name="ErrorAttachmentRetrieval" xml:space="preserve">
     <value>Nastala chyba při načítání přílohy.</value>
   </data>
-  <data name="ErrorAttachmentsNotSupported" xml:space="preserve">
-    <value>Entita '{0}' nepodporuje přílohy.</value>
-  </data>
   <data name="ErrorBlobRecordEmpty" xml:space="preserve">
     <value>Záznam je prázdný, není možné uložit soubor.</value>
   </data>
@@ -198,12 +195,6 @@
   <data name="ErrorOpenFormMultipleRecords" xml:space="preserve">
     <value>Pro metodu OpenForm není podporováno označení více záznamů.</value>
   </data>
-  <data name="ErrorPrincipalNotSet" xml:space="preserve">
-    <value>Nebyl nastaven aktivní uživatel (Principal). Není možné načíst profil uživatele.</value>
-  </data>
-  <data name="ErrorProfileProviderNotSet" xml:space="preserve">
-    <value>Nebyl nastaven poskytovatel profilů. Není možné načíst profil uživatele.</value>
-  </data>
   <data name="ErrorRecordNotFound" xml:space="preserve">
     <value>Záznam nenalezen.</value>
   </data>
@@ -228,9 +219,6 @@
   <data name="ErrorUnknownPageType" xml:space="preserve">
     <value>Neznámý druh stránky.</value>
   </data>
-  <data name="ErrorUnknownReportType" xml:space="preserve">
-    <value>Neznámý druh výstupní sestavy.</value>
-  </data>
   <data name="ErrorUnknownRowChangeState" xml:space="preserve">
     <value>Neznámý RowChangeState</value>
   </data>
@@ -245,9 +233,6 @@
   </data>
   <data name="ErrorUnsupportedMenuItemType" xml:space="preserve">
     <value>Druh položky menu není podporován.</value>
-  </data>
-  <data name="ErrorWorkflowActionNotSupported" xml:space="preserve">
-    <value>Nepodporovaná akce workflow.</value>
   </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
     <value>Neexistující relace.</value>
@@ -293,5 +278,20 @@
   </data>
   <data name="PasswordsDontMatch" xml:space="preserve">
     <value>Hesla nejsou stajná</value>
+  </data>
+  <data name="ErrorCannotOpenFormExclusively" xml:space="preserve">
+    <value>'{0}' nelze otevřít protože jsou rozeditována jiná data. Nejprve prosím zavřete ostatní obrazovky.</value>
+  </data>
+  <data name="ErrorCannotOpenScreenWhenExclusiveIsOpen" xml:space="preserve">
+    <value>Zavřete '{0}', než otevřete nové obrazovky.</value>
+  </data>
+  <data name="ErrorColumnNotFound" xml:space="preserve">
+    <value>Pokoušíte se přistupovat ke sloupci {0}, ale ten v datasetu není přítomen.</value>
+  </data>
+  <data name="ErrorDependentColumnNotFound" xml:space="preserve">
+    <value>Nepodařilo se aktualizovat závislý sloupec {0} u sloupce {1} v entitě {2}, ({3})</value>
+  </data>
+  <data name="ErrorPseudoparameterBodyNotDefined" xml:space="preserve">
+    <value>Pseudoparametr 'body' nebyl definován jako parametr datové stránky API, ale byl použit během volání PUT.</value>
   </data>
 </root>
