@@ -241,7 +241,7 @@
     <value>Passwort zurücksetzen</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Setzen Sie Ihr Passwort zurück.</value>
+    <value>Setzen Sie ein neues Passwort</value>
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Anfordern</value>
@@ -435,7 +435,7 @@
     <value>Benutzername ist erforderlich</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
+    <value>Zurücksetzen</value>
   </data>
   <data name="SignInWithMicrosoftAccount" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Microsoft-Konto an</value>

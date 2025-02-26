@@ -225,9 +225,6 @@
   <data name="ErrorSessionNotFound" xml:space="preserve">
     <value>Nebyla nalezena relace: {0}</value>
   </data>
-  <data name="ErrorUnknownMenuType" xml:space="preserve">
-    <value>Neznámý druh položky nabídky.</value>
-  </data>
   <data name="ErrorUnknownPageType" xml:space="preserve">
     <value>Neznámý druh stránky.</value>
   </data>
@@ -293,5 +290,8 @@
   </data>
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>Nemáte přístup k menu {0}</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Hesla nejsou stajná</value>
   </data>
 </root>

@@ -285,9 +285,6 @@
   <data name="ErrorCreateRecordNotAllowed" xml:space="preserve">
     <value>You are not allowed to create new records.</value>
   </data>
-  <data name="ErrorWorkflowNotSet" xml:space="preserve">
-    <value>Workflow not set for the UIWorkflowAction.</value>
-  </data>
   <data name="ErrorTooManyTabsOpen" xml:space="preserve">
     <value>Too many screens are open. You have to close some tabs before opening new screens.</value>
   </data>
@@ -300,9 +297,6 @@
   <data name="ErrorDependentColumnNotFound" xml:space="preserve">
     <value>Couldn't update dependent column `{0}' on column `{1}' at entity `{2}', ({3})</value>
   </data>
-  <data name="FilePathPartParameterNull" xml:space="preserve">
-    <value>File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path.</value>
-  </data>
   <data name="ErrorCannotOpenFormExclusively" xml:space="preserve">
     <value>Cannot open '{0}' while editing other data. Please close all screens first.</value>
   </data>
@@ -312,10 +306,10 @@
   <data name="ContactAdmin" xml:space="preserve">
     <value>Please contact admin.</value>
   </data>
-  <data name="SearchError" xml:space="preserve">
-    <value>Search Error</value>
-  </data>
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Passwords don't match</value>
   </data>
 </root>

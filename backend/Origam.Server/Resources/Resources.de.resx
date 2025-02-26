@@ -240,9 +240,6 @@
   <data name="ErrorCreateRecordNotAllowed" xml:space="preserve">
     <value>Fehlende Berechtigung zum Anlegen neuer Datensätze.</value>
   </data>
-  <data name="ErrorWorkflowNotSet" xml:space="preserve">
-    <value>Workflow für die UIWorkflowAction nicht definiert.</value>
-  </data>
   <data name="ErrorTooManyTabsOpen" xml:space="preserve">
     <value>Zu viele Fenster geöffnet. Bitte schliessen Sie unbenötigte Reiter vor dem Öffnen neuer Fenster.</value>
   </data>
@@ -257,5 +254,8 @@
   </data>
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>Sie haben keinen Zugriff auf {0}</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Die eingegebenen Passwörter stimmen nicht überein</value>
   </data>
 </root>
