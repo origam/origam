@@ -104,9 +104,6 @@
     <Content Include="assets\identity\css\main.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="assets\identity\icons\origam.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="assets\identity\icons\user.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
