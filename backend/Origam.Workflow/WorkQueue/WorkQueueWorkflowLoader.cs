@@ -29,13 +29,12 @@ using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
-using core=Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow.WorkQueue;
 /// <summary>
 /// Connection string:
-/// name - name of the workflowLoader defined at the WorkQueueClass. The worklow called must implement
-///		   IWorkQueueLoder workflow defined in the OrigamRoot model.
+/// name - name of the workflowLoader defined at the WorkQueueClass.
+/// The workflow called must implement IWorkQueueLoader workflow defined in the OrigamRoot model.
 /// anything else - input workflow parameters - constant text values as defined in the connection string
 /// </summary>
 public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
@@ -156,7 +155,7 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 			}
 			throw workflowEngine.WorkflowException;
 		}
-		XmlContainer resultData = workflowEngine.ReturnValue as XmlContainer;
+		var resultData = workflowEngine.ReturnValue as IXmlContainer;
 		_resultState = (string)workflowEngine.RuleEngine.GetContext(new ModelElementKey(new Guid("f405cef2-2fad-4d58-a71c-10df3831e966")));
 		_attachmentSource = (IDataDocument)workflowEngine.RuleEngine.GetContext((new ModelElementKey(new Guid("b0caa6ec-8a54-4524-8387-8504e34d206c"))));
 		if(log.IsDebugEnabled)
@@ -170,7 +169,7 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 			{
 				log.Debug("Workflow loader result was null.");
 			}
-			throw new Exception("Result of work queue loader must be an XMLContainer.");
+			throw new Exception("Result of work queue loader must be an IXmlContainer.");
 		}
 		else if(resultData.Xml.DocumentElement == null)
 		{
