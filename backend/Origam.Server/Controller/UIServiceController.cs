@@ -1240,7 +1240,7 @@ public class UIServiceController : AbstractController
     private void AddConfigData(PortalResult result)
     {
         result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.Html5ClientLogoUrl)
-            ? "./img/origamLogo.svg"
+            ? "./img/origam-logo.svg"
             : customAssetsConfig.Html5ClientLogoUrl;
         result.ChatRefreshInterval = string.IsNullOrEmpty(chatConfig.PathToChatApp)
             ? 0
