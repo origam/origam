@@ -444,4 +444,10 @@
   <data name="ExcelExportForbidden" xml:space="preserve">
     <value>Export to excel is forbidden.</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Passwords don't match</value>
+  </data>
 </root>
