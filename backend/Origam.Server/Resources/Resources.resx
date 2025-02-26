@@ -291,7 +291,4 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>
   </data>
-  <data name="PasswordsDontMatch" xml:space="preserve">
-    <value>Passwords don't match</value>
-  </data>
 </root>

@@ -546,15 +546,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die eingegebenen Passwörter stimmen nicht überein.
-        /// </summary>
-        public static string PasswordsDontMatch {
-            get {
-                return ResourceManager.GetString("PasswordsDontMatch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fehler im Arbeitsablauf.
         /// </summary>
         public static string WorkflowErrorTitle {

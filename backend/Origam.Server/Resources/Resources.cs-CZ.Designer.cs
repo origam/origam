@@ -546,15 +546,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hesla nejsou stajná.
-        /// </summary>
-        public static string PasswordsDontMatch {
-            get {
-                return ResourceManager.GetString("PasswordsDontMatch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Chyba průvodce.
         /// </summary>
         public static string WorkflowErrorTitle {

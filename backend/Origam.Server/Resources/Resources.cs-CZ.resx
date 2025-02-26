@@ -276,9 +276,6 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>Nemáte přístup k menu {0}</value>
   </data>
-  <data name="PasswordsDontMatch" xml:space="preserve">
-    <value>Hesla nejsou stajná</value>
-  </data>
   <data name="ErrorCannotOpenFormExclusively" xml:space="preserve">
     <value>'{0}' nelze otevřít protože jsou rozeditována jiná data. Nejprve prosím zavřete ostatní obrazovky.</value>
   </data>

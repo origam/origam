@@ -255,9 +255,6 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>Sie haben keinen Zugriff auf {0}</value>
   </data>
-  <data name="PasswordsDontMatch" xml:space="preserve">
-    <value>Die eingegebenen Passwörter stimmen nicht überein</value>
-  </data>
   <data name="BlobFileNotAvailable" xml:space="preserve">
     <value>Datei ist nicht verfügbar.</value>
   </data>
