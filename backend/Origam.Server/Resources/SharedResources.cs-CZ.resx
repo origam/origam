@@ -447,4 +447,10 @@
   <data name="ExcelExportForbidden" xml:space="preserve">
     <value>Export do excelu je zakázán.</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Hesla nejsou stajná</value>
+  </data>
 </root>
