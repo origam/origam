@@ -20,19 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Extensions;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation.Builders;
 public class DockerBuilder : AbstractBuilder
 {
-    public static readonly string DockerFolderName = "Docker";
+    private static readonly string DockerFolderName = "Docker";
     public override string Name => "Create Docker run script";
     private string newProjectFolder;
+    
     public override void Execute(Project project)
     {
         newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
@@ -48,6 +45,7 @@ public class DockerBuilder : AbstractBuilder
         CreateEnvFile(project, dockerConfigWindows);
         CreateCmdFile(project, dockerConfigWindows);
     }
+    
     private void CreateEnvFile(Project project, DockerConfig config)
     {
         string dbType = project.DatabaseType == DatabaseType.PgSql 
@@ -74,6 +72,7 @@ public class DockerBuilder : AbstractBuilder
             "TZ=Europe/Prague";
         File.WriteAllText(config.EnvFilePath, content);
     }
+    
     private void CreateCmdFile(Project project, DockerConfig config)
     {
         string content =
@@ -115,7 +114,6 @@ public class DockerBuilder : AbstractBuilder
             _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform")
         };
     }
-
     
     private string GetDbHost(Project project)
     {
@@ -127,9 +125,11 @@ public class DockerBuilder : AbstractBuilder
         }
         return project.DatabaseServerName;
     }
+    
     public override void Rollback()
     {
     }
+    
     public string WebSiteUrl (Project project)
     {
         if (project.DockerPort == Constants.DefaultHttpsPort)
@@ -138,18 +138,18 @@ public class DockerBuilder : AbstractBuilder
         }
         return "https://localhost:" + project.DockerPort;
     }
-}
-
-enum Platform
-{
-    Windows, Linux
-}
-
-public class DockerConfig
-{
-    public string EnvFilePath { get; init; }
-    public string CustomAssetsPath { get; init; }
-    public string ModelPath { get; init; }
-    public string CmdFilePath { get; init; }
-    public string BaseImage { get; init; }
+    
+    enum Platform
+    {
+        Windows, Linux
+    }
+    
+    class DockerConfig
+    {
+        public string EnvFilePath { get; init; }
+        public string CustomAssetsPath { get; init; }
+        public string ModelPath { get; init; }
+        public string CmdFilePath { get; init; }
+        public string BaseImage { get; init; }
+    }
 }
