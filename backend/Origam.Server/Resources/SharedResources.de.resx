@@ -118,46 +118,46 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
-    <value>Invalid data returned by {0} for action {1}.</value>
+    <value>Ungültige Daten, die von {0} für Aktion {1} zurückgegeben wurden.</value>
   </data>
   <data name="ErrorReportNotAvailable" xml:space="preserve">
-    <value>Report no longer available.</value>
+    <value>Bericht nicht mehr verfügbar.</value>
   </data>
   <data name="ErrorBlobNotAvailable" xml:space="preserve">
-    <value>BLOB no longer available.</value>
+    <value>BLOB ist nicht mehr verfügbar.</value>
   </data>
   <data name="ErrorBlobMemberBlobLookupNotSpecified" xml:space="preserve">
-    <value>Both BlobMember and BlobLookupId are not specified. Cannot download blob.</value>
+    <value>Sowohl BlobMember als auch BlobLookupId sind nicht angegeben. Blob kann nicht heruntergeladen werden.</value>
   </data>
   <data name="ErrorBlobNoData" xml:space="preserve">
-    <value>Data source did not return any data.</value>
+    <value>Die Datenquelle lieferte keine Daten.</value>
   </data>
   <data name="ErrorBlobNotBlob" xml:space="preserve">
-    <value>Data source returned data that is not BLOB.</value>
+    <value>Die Datenquelle gab Daten zurück, die kein BLOB sind.</value>
   </data>
   <data name="ErrorBlobRecordEmpty" xml:space="preserve">
-    <value>Record empty, cannot download file.</value>
+    <value>Datensatz leer, Datei kann nicht heruntergeladen werden.</value>
   </data>
   <data name="ErrorBlobFileNotAvailable" xml:space="preserve">
-    <value>File is not available.</value>
+    <value>Datei ist nicht verfügbar.</value>
   </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
-    <value>Workflow session invalid.</value>
+    <value>Workflow-Sitzung ungültig.</value>
   </data>
   <data name="FilePathPartParameterNull" xml:space="preserve">
-    <value>File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path.</value>
+    <value>Der Dateipfadteil soll durch einen Parameterwert ersetzt werden, aber der angegebene Wert ist NULL. Der Dateipfad kann nicht erstellt werden</value>
   </data>
   <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
-    <value>Could not load work queue list.</value>
+    <value>Die Arbeitswarteschlangenliste konnte nicht geladen werden.</value>
   </data>
   <data name="DefaultTooltipNoChange" xml:space="preserve">
-    <value>Record has not been changed yet.</value>
+    <value>Der Datensatz wurde noch nicht geändert.</value>
   </data>
   <data name="DefaultTooltipRecordCreated" xml:space="preserve">
-    <value>Created by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
+    <value>Erstellt von &lt;b&gt;{0}&lt;/b&gt; am &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="DefaultTooltipRecordUpdated" xml:space="preserve">
-    <value>Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
+    <value>Zuletzt aktualisiert von &lt;b&gt;{0}&lt;/b&gt; am &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="RegistrationNotAllowed" xml:space="preserve">
     <value>Die Registration ist auf dieser Seite nicht erlaubt.</value>
@@ -241,7 +241,7 @@
     <value>Passwort zurücksetzen</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Setzen Sie Ihr Passwort zurück.</value>
+    <value>Setzen Sie ein neues Passwort</value>
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Anfordern</value>
@@ -414,7 +414,7 @@
     <value>Fehler</value>
   </data>
   <data name="Required" xml:space="preserve">
-    <value>{0} is required</value>
+    <value>{0} ist erforderlich</value>
   </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>Email ist erforderlich</value>
@@ -435,7 +435,7 @@
     <value>Benutzername ist erforderlich</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
+    <value>Zurücksetzen</value>
   </data>
   <data name="SignInWithMicrosoftAccount" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Microsoft-Konto an</value>
@@ -457,5 +457,11 @@
   </data>
   <data name="ExcelExportForbidden" xml:space="preserve">
     <value>Der Export nach Excel ist verboten.</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Die eingegebenen Passwörter stimmen nicht überein</value>
   </data>
 </root>

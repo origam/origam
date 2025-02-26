@@ -346,7 +346,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 controllerName:"Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl)
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
                 });
         }
         user.EmailConfirmed = true;
@@ -358,7 +358,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 controllerName:"Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl)
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
                 });
         }
         AddErrors(result);
