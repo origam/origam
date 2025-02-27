@@ -45,7 +45,9 @@ public class XslTransformationScriptContainer : UpgradeScriptContainer
                 transformation: (node, doc) =>
                 {
                     XNamespace newNameSpace= "http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1";
-                    var xAttributes = node.Attributes().FirstOrDefault(x => x.Name.LocalName == "engineType");
+                    node.Attributes()
+                        .FirstOrDefault(x => x.Name.LocalName == "engineType")
+                        ?.Remove();
                 }));
     }
 }
