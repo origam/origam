@@ -28,14 +28,10 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
-public enum XsltEngineType
-{
-    XslTransform,
-    XslCompiledTransform
-}
+
 [SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
 [HelpTopic("Transformations")]
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion("6.0.1")]
 public class XslTransformation : AbstractTransformation
 {
     public XslTransformation() : base()
@@ -86,20 +82,6 @@ public class XslTransformation : AbstractTransformation
 	{
         get => text.Get();
         set => text.Set(value);
-    }
-    private XsltEngineType _xsltEngineType = XsltEngineType.XslTransform;
-    [DefaultValue(XsltEngineType.XslTransform)]
-    [XmlAttribute("engineType")]
-    public XsltEngineType XsltEngineType
-    {
-        get
-        {
-            return _xsltEngineType;
-        }
-        set
-        {
-            _xsltEngineType = value;
-        }
     }
 	#endregion
 }

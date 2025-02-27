@@ -76,7 +76,7 @@ public class TransformationAgent : AbstractServiceAgent
 					throw new InvalidCastException(ResourceUtils.GetString("ErrorXslScriptNotGuid"));
 				if(! (this.Parameters["Parameters"] == null || this.Parameters["Parameters"] is Hashtable))
 					throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
-                InitializeTransformer((Guid)Parameters["XslScript"]);
+                InitializeTransformer();
 				_result = 
 					_transformer.Transform(this.Parameters["Data"] as IXmlContainer, 
 					(Guid)this.Parameters["XslScript"],
@@ -100,16 +100,7 @@ public class TransformationAgent : AbstractServiceAgent
     private void TransformText()
     {
         ValidateTransformTextParameters();
-        if(Parameters.Contains("XsltEngineType") 
-        && (Parameters["XsltEngineType"] is int))
-        {
-            InitializeTransformer(
-                (XsltEngineType)Parameters["XsltEngineType"]);
-        }
-        else
-        {
-            InitializeTransformer(Guid.Empty);
-        }
+        InitializeTransformer();
         bool validateOnly = false;
         if(Parameters.Contains("ValidateOnly") 
         && ((bool)Parameters["ValidateOnly"] == true))
@@ -155,7 +146,7 @@ public class TransformationAgent : AbstractServiceAgent
             {
                 log.Debug("Initializing transformation...");
             }
-            InitializeTransformer((Guid)Parameters["XslScript"]);
+            InitializeTransformer();
             _transformer.Transform(navigator, (Guid)Parameters["XslScript"],
                     Parameters["XslParameters"] as Hashtable,
                     (RuleEngine as RuleEngine).TransactionId,
@@ -284,33 +275,12 @@ public class TransformationAgent : AbstractServiceAgent
 		return null;
 	}
 	#endregion
-    private void InitializeTransformer(XsltEngineType xsltEngineType)
+    private void InitializeTransformer()
     {
         IPersistenceService persistence 
             = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
-        _transformer = AsTransform.GetXsltEngine(
-            xsltEngineType, persistence.SchemaProvider);
-		_transformer.Trace = this.Trace;
-		_transformer.TraceStepName = this.TraceStepName;
-		_transformer.TraceWorkflowId = this.TraceWorkflowId;
-		_transformer.TraceStepId = this.TraceStepId;
-    }
-    private void InitializeTransformer(Guid transformationId)
-    {
-        IPersistenceService persistence 
-            = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-        if(transformationId == Guid.Empty)
-        {
-            _transformer = AsTransform.GetXsltEngine(
-                XsltEngineType.XslTransform, persistence.SchemaProvider);
-        }
-        else
-        {
-            _transformer = AsTransform.GetXsltEngine(
-                persistence.SchemaProvider, transformationId);
-        }
+	    _transformer = new CompiledXsltEngine(persistence.SchemaProvider);
 		_transformer.Trace = this.Trace;
 		_transformer.TraceStepName = this.TraceStepName;
 		_transformer.TraceWorkflowId = this.TraceWorkflowId;

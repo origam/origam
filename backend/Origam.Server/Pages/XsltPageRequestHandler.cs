@@ -154,8 +154,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             }
             else
             {
-                var transformer = AsTransform.GetXsltEngine(
-                    persistenceService.SchemaProvider, xsltPage.TransformationId);
+                var transformer =
+                    new CompiledXsltEngine(persistenceService.SchemaProvider);
                 result = transformer.Transform(xmlData,
                     xsltPage.TransformationId,
                     retransformationId:new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
@@ -225,8 +225,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         xmlData ??= DataDocumentFactory.New(data);
         Type type = GetType();
-        IXsltEngine logTransformer = AsTransform.GetXsltEngine(
-            persistenceService.SchemaProvider, xsltPage.LogTransformationId);
+        IXsltEngine logTransformer =
+            new CompiledXsltEngine(persistenceService.SchemaProvider);
         IXmlContainer log = logTransformer.Transform(
             xmlData, 
             xsltPage.LogTransformationId, 

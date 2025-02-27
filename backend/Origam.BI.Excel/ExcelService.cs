@@ -277,8 +277,7 @@ public class ExcelService : IReportService
             var outputDataStructure = persistence.SchemaProvider
                     .RetrieveInstance<DataStructure>(
                         new Guid("c131aa04-6310-455d-a7cd-4e19dd012241"));
-            IXsltEngine transformer = AsTransform.GetXsltEngine(
-                persistence.SchemaProvider, report.TransformationId);
+            IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
             IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
                 report.TransformationId, parameters, transactionId: null, 
                 outputDataStructure, validateOnly: false)

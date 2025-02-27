@@ -2,11 +2,9 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:at="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractTransformation/6.0.0"
-  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="4e7a349d-6e6c-4307-b0e6-828acba1e7c2"
     asi:name="AllDataTypes_New_record_fail"
     xt:text="-***-ExternalFile:AllDataTypes_New_record_fail.origam___text___4e7a349d-6e6c-4307-b0e6-828acba1e7c2.xslt" />
