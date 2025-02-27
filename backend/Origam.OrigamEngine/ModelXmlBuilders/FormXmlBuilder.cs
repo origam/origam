@@ -463,10 +463,6 @@ public class FormXmlBuilder
 				AsPanelActionButtonBuilder.Build(actionsElement, config);
 			}
 		}
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.Report, PanelActionMode.MultipleCheckboxes, "testReport", "Test Report", "report.png", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.Workflow, PanelActionMode.MultipleCheckboxes, "testWorkflow", "Test Workflow", "", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.ChangeUI, PanelActionMode.MultipleCheckboxes, "testChangeUI", "Test Change UI", "", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.OpenForm, PanelActionMode.MultipleCheckboxes, "testOpenForm", "Test Open Form", "", new Hashtable());
 		RenderDataSources(windowElement, dataSources);
 		return doc;
 	}
@@ -536,10 +532,15 @@ public class FormXmlBuilder
 					case OrigamDataType.Currency:
 					case OrigamDataType.Memo:
 					case OrigamDataType.String:
-						TextBoxBuildDefinition buildDefinition 
-							= new TextBoxBuildDefinition(col.Field.DataType);
-						buildDefinition.Multiline 
-							= col.Field.DataType == OrigamDataType.Memo;
+						var buildDefinition = new TextBoxBuildDefinition(
+							col.Field.DataType) 
+						{
+							Multiline = col.Field.DataType == OrigamDataType.Memo
+						};
+						if (!string.IsNullOrEmpty(formatPattern))
+						{
+							buildDefinition.CustomNumberFormat = formatPattern;
+						}
 						TextBoxBuilder.Build(propertyElement, buildDefinition);
 						break;
 					case OrigamDataType.UniqueIdentifier:
@@ -557,7 +558,7 @@ public class FormXmlBuilder
                         }
                         break;
 					case OrigamDataType.Date:
-						if(formatPattern == null || formatPattern == "")
+						if (string.IsNullOrEmpty(formatPattern))
 						{
 							formatPattern = "dd. MM. yyyy HH:mm:ss";
 						}
