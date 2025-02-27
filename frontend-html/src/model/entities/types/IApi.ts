@@ -458,6 +458,14 @@ export interface IApi {
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
+
+  loadRowData(
+    data: {
+      SessionFormIdentifier: string;
+      Entity: string;
+      RowIds: any[]
+    }
+   ): Promise<any[]>;
 }
 
 export interface ILazyLoadedEntityInput {

@@ -385,6 +385,16 @@ public class ServerCoreUIService : IBasicUIService
         return sessionStore.GetRowData(
             input.Entity, input.RowId, false);
     } 
+    public List<ChangeInfo> GetRowData(LoadRowsInput input)
+    {
+        SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
+        if(sessionStore == null)
+        {
+            return new List<ChangeInfo>();
+        }
+        return sessionStore.GetRowData(
+            input.Entity, input.RowIds);
+    } 
     public ChangeInfo GetRow(MasterRecordInput input)
     {
         return 

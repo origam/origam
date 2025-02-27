@@ -295,6 +295,24 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post("/Session/ChangeMasterRecord", data)).data;
   }
 
+  async loadRowData(
+    data: {
+      SessionFormIdentifier: string;
+      Entity: string;
+      RowIds: any[]
+    },
+    canceller?: any
+  ) {
+    return (
+      (
+        await this.axiosInstance.post("/UIService/LoadRowData", data, {
+          headers: this.httpAuthHeader,
+          cancelToken: canceller && canceller.token,
+        })
+      )?.data ?? []
+    );
+  }
+
   async sessionDeleteEntity(data: {
     SessionFormIdentifier: string;
     Entity: string;

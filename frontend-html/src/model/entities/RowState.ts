@@ -22,10 +22,16 @@ import { action, computed, createAtom, flow, IAtom, observable } from "mobx";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IRowState, IRowStateColumnItem, IRowStateItem } from "./types/IRowState";
+import {
+  IRowState,
+  IRowStateColumnItem,
+  IRowStateItem
+} from "./types/IRowState";
 import { FlowBusyMonitor } from "utils/flow";
 import { handleError } from "model/actions/handleError";
-import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
+import {
+  visibleRowsChanged
+} from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
 
@@ -187,13 +193,33 @@ export class RowState implements IRowState {
     }
   }
 
-  async loadValues(rowIds: string[]) {
+  *loadValues(rowIds: string[]): Generator<Promise<any>, void, any> {
+    let rewIdsToLoad = [];
     for (const rowId of rowIds) {
-      if (!this.requests.has(rowId)) {
+      if (!this.requests.has(rowId) || !this.requests.get(rowId)?.rowStateItem?.disabledActions) {
         this.requests.set(rowId, new RowStateRequest(rowId));
+        rewIdsToLoad.push(rowId);
       }
     }
-    await flow(() => this.triggerLoad(true))();
+    if (rewIdsToLoad.length > 0) {
+      const api = getApi(this);
+      const result = yield api.loadRowData(
+        {
+          SessionFormIdentifier: getSessionId(this),
+          Entity: getEntity(this),
+          RowIds: rewIdsToLoad
+        }
+      );
+      for (let element of result) {
+        if(element.state){
+          this.putValue(element.state);
+          // It may seem like the requests could be created here instead of
+          // creating them above. But that causes some actions to disappear
+          // after clicking on the selection checkbox.
+          this.requests.get(element.state.id)!.processingSate = undefined;
+        }
+      }
+    }
   }
 
   hasValue(rowId: string): boolean {

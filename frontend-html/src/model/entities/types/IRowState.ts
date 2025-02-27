@@ -29,7 +29,7 @@ export interface IRowState extends IRowStateData {
 
   getValue(key: string): IRowStateItem | undefined;
 
-  loadValues(keys: string[]): Promise<any>;
+  loadValues(keys: string[]): Generator<Promise<any>, void, any>;
 
   clearValue(rowId: string): void;
 

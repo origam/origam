@@ -186,6 +186,12 @@ public class UIServiceController : AbstractController
     {
         return RunWithErrorHandler(() 
             => Ok(sessionObjects.UIService.GetRowData(input)));
+    }        
+    [HttpPost("[action]")]
+    public IActionResult LoadRowData([FromBody]LoadRowsInput input)
+    {
+        return RunWithErrorHandler(() 
+            => Ok(sessionObjects.UIService.GetRowData(input)));
     }
     [HttpPost("[action]")]
     public IActionResult GetData([FromBody]GetDataInput input)

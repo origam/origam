@@ -57,6 +57,7 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { hasSelectedRowId, setSelectedStateRowId } from "model/actions-tree/selectionCheckboxes";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -318,6 +319,7 @@ export class TablePanelView implements ITablePanelView {
   *onSelectionCellClick(event: any, row: any[], rowId: any) {
     const dataTable = getDataTable(this);
     const rowsToSelect: {id: any, row: any[]}[] = [];
+    yield* getRowStates(this).loadValues([rowId]);
     if(this.isMultiSelectEnabled && event.shiftKey && this.lastSelectedRowId !== undefined) {
         const rowRangeStart = dataTable.getExistingRowIdxById(this.lastSelectedRowId);
         const rowRangeEnd = dataTable.getExistingRowIdxById(rowId);

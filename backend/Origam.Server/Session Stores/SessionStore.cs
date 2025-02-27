@@ -1190,6 +1190,15 @@ public abstract class SessionStore : IDisposable
     {
         var result = new List<RowSecurityState>();
         RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
+        // if (rowSearchResult.Rows.Count == 0)
+        // {
+        //     foreach (var id in ids)
+        //     {
+        //         GetRowData(entity, id);
+        //     }
+        // }
+        // rowSearchResult = GetRowsFromStore(entity, ids);
+        
         foreach (var row in rowSearchResult.Rows)
         {
             result.Add(RowSecurityStateBuilder.BuildFull(RuleEngine, row, profileId, FormId));
@@ -1879,6 +1888,10 @@ public abstract class SessionStore : IDisposable
     public virtual List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
         throw new Exception("GetRowData not available for " + this.GetType().Name);
+    }          
+    public virtual List<ChangeInfo> GetRowData(string entity, List<Guid> ids)
+    {
+        return new List<ChangeInfo>();
     }        
     
     public virtual ChangeInfo GetRow(string entity, object id)

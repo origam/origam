@@ -321,6 +321,40 @@ public class FormSessionStore : SaveableSessionStore
         return result;
     } 
     
+    public override List<ChangeInfo> GetRowData(string entity,  List<Guid> ids)
+    {
+        var result = new List<ChangeInfo>();
+        if (ids == null || ids.Count == 0)
+        {
+            return result;
+        }
+        lock (_getRowDataLock)
+        {
+            foreach (var id in ids)
+            {
+                DataRow row = GetSessionRow(entity, id);
+                // for new rows we don't even try to load the data from the database
+                if (row == null || row.RowState != DataRowState.Added)
+                {
+                    if (Data.HasChanges())
+                    {
+                        throw new Exception("Cannot load data for dirty row");
+                    }
+                    SetDataSource(LoadDataPiece(id));
+                }
+                DataRow actualDataRow = GetSessionRow(entity, id);
+                UpdateListRow(actualDataRow);
+                ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
+                result.Add(ci);
+                if (actualDataRow.RowState == DataRowState.Unchanged)
+                {
+                    result.Add(ChangeInfo.SavedChangeInfo());
+                }
+            }
+        }
+        return result;
+    } 
+    
     public override ChangeInfo GetRow(string entity, object id)
     {
         lock (_getRowDataLock)
