@@ -78,9 +78,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private TabPage settingsTab;
     private TextBox txtPackage;
     private TextBox txtId;
-    private Label lblXsltEngineType;
     private ModelComboBox cboDataStructure;
-    private ComboBox cboXsltEngineType;
     private ModelComboBox cboSourceStructure;
     private Label lblId;
     private Label label1;
@@ -110,11 +108,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 		txtName.Click += txtName_TextChanged;
 		cboSourceStructure.SelectedValueChanged +=
 			cboSourceStructure_SelectedValueChanged;
-		cboXsltEngineType.SelectedIndexChanged += 
-			xsltEngineType_SelectedIndexChanged;
 		
 		this.BackColor = OrigamColorScheme.FormBackgroundColor;
-	    InitEngineTypeComboBox();
 		InitParameterTypeComboBox();
 		paremeterEditor.Text = "";
 		txtResult.Text = "";
@@ -151,19 +146,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 		parameterTypeComboBox.Items.AddRange(allAdapDataTypes);
 		parameterTypeComboBox.SelectedIndex = 0;
 	}
-	private void InitEngineTypeComboBox()
-    {
-	    this.cboXsltEngineType.Items.AddRange(new object[]
-	    {
-		    XsltEngineType.XslTransform,
-		    XsltEngineType.XslCompiledTransform
-	    });
-        this.cboXsltEngineType.DataSource = new []
-        {
-            XsltEngineType.XslTransform,
-            XsltEngineType.XslCompiledTransform
-        };
-    }
     #region Overriden AbstractViewContent Members
 	public override void SaveObject()
 	{
@@ -182,8 +164,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 		else if(ModelContent is XslTransformation)
 		{
 			(ModelContent as XslTransformation).TextStore = txtText.Text;
-			(ModelContent as XslTransformation).XsltEngineType 
-                = (XsltEngineType)cboXsltEngineType.SelectedItem;
 		}
 		else
 		{
@@ -218,9 +198,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.settingsTab = new System.Windows.Forms.TabPage();
         this.txtPackage = new System.Windows.Forms.TextBox();
         this.txtId = new System.Windows.Forms.TextBox();
-        this.lblXsltEngineType = new System.Windows.Forms.Label();
         this.cboDataStructure = new Origam.UI.ModelComboBox();
-        this.cboXsltEngineType = new System.Windows.Forms.ComboBox();
         this.cboSourceStructure = new Origam.UI.ModelComboBox();
         this.lblId = new System.Windows.Forms.Label();
         this.label1 = new System.Windows.Forms.Label();
@@ -479,9 +457,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.settingsTab.Controls.Add(this.lblTraceLevel);
         this.settingsTab.Controls.Add(this.txtPackage);
         this.settingsTab.Controls.Add(this.txtId);
-        this.settingsTab.Controls.Add(this.lblXsltEngineType);
         this.settingsTab.Controls.Add(this.cboDataStructure);
-        this.settingsTab.Controls.Add(this.cboXsltEngineType);
         this.settingsTab.Controls.Add(this.cboSourceStructure);
         this.settingsTab.Controls.Add(this.lblId);
         this.settingsTab.Controls.Add(this.label1);
@@ -515,15 +491,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.txtId.Size = new System.Drawing.Size(204, 20);
         this.txtId.TabIndex = 1;
         // 
-        // lblXsltEngineType
-        // 
-        this.lblXsltEngineType.AutoSize = true;
-        this.lblXsltEngineType.Location = new System.Drawing.Point(7, 33);
-        this.lblXsltEngineType.Name = "lblXsltEngineType";
-        this.lblXsltEngineType.Size = new System.Drawing.Size(60, 13);
-        this.lblXsltEngineType.TabIndex = 16;
-        this.lblXsltEngineType.Text = "XsltEngine:";
-        // 
         // cboDataStructure
         // 
         this.cboDataStructure.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -535,17 +502,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         this.cboDataStructure.Size = new System.Drawing.Size(491, 21);
         this.cboDataStructure.Sorted = true;
         this.cboDataStructure.TabIndex = 6;
-        // 
-        // cboXsltEngineType
-        // 
-        this.cboXsltEngineType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-        | System.Windows.Forms.AnchorStyles.Right)));
-        this.cboXsltEngineType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        this.cboXsltEngineType.FormattingEnabled = true;
-        this.cboXsltEngineType.Location = new System.Drawing.Point(125, 33);
-        this.cboXsltEngineType.Name = "cboXsltEngineType";
-        this.cboXsltEngineType.Size = new System.Drawing.Size(491, 21);
-        this.cboXsltEngineType.TabIndex = 4;
         // 
         // cboSourceStructure
         // 
@@ -791,7 +747,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			cboDataStructure.Enabled = false;
 			cboSourceStructure.Enabled = false;
 			cboRuleSet.Enabled = false;
-            cboXsltEngineType.Enabled = false;
 		}
 		if(ModelContent is XslRule)
 		{
@@ -801,7 +756,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			txtText.Text = _xslRule.Xsl ?? "";
 			txtId.Text = _xslRule.Id.ToString();
             txtPackage.Text = _xslRule.PackageName;
-            cboXsltEngineType.Enabled = false;
 			if(_xslRule.Structure != null)
 			{
 				cboDataStructure.SelectedItem = _xslRule.Structure;
@@ -845,7 +799,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			txtText.Text = _XslTransformation.TextStore == null ? "" : _XslTransformation.TextStore;
 			txtId.Text = _XslTransformation.Id.ToString();
             txtPackage.Text = _XslTransformation.PackageName;
-            cboXsltEngineType.SelectedItem = _XslTransformation.XsltEngineType;
 			if(txtText.Text == "") txtText.Text = 
 									   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 									   "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
@@ -933,8 +886,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			transformer.Parameters.Add("XslScript", xslt);
 			transformer.Parameters.Add("Data", doc);
 			transformer.Parameters.Add("ValidateOnly", validateOnly);
-            transformer.Parameters.Add("XsltEngineType", 
-                (int)cboXsltEngineType.SelectedValue);
 			transformer.TransactionId = transactionId;
 			transformer.OutputStructure = cboDataStructure.SelectedItem as IDataStructure;
 			// resolve transformation input parameters and try to put an empty xml document to each just
@@ -1098,18 +1049,6 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void cboSourceStructure_SelectedValueChanged(object sender, EventArgs e)
     {
         txtSource.ResultSchema = GetSchema(cboSourceStructure.SelectedItem);
-    }
-    private void xsltEngineType_SelectedIndexChanged(object sender, EventArgs e)
-    {
-		if((ModelContent != null) && !(this.IsViewOnly))
-		{
-			if(!_isEditing && (ModelContent is XslTransformation))
-			{
-                (ModelContent as XslTransformation).XsltEngineType
-                    = (XsltEngineType)cboXsltEngineType.SelectedItem;
-				this.IsDirty = true;
-			}
-		}
     }
     private void paremeterList_SelectedIndexChanged(object sender, EventArgs e)
     {

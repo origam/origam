@@ -52,8 +52,7 @@ public class PrintItService : IReportService
 			if (report.Transformation != null)
 			{
 				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-				IXsltEngine transformer = AsTransform.GetXsltEngine(
-                    persistence.SchemaProvider, report.TransformationId);
+				IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
 				//Hashtable transformParams = new Hashtable();
 				//QueryParameterCollection qparams = new QueryParameterCollection();
 				//Hashtable preprocessorParams = GetPreprocessorParameters(request);

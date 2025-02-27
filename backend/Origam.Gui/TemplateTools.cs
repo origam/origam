@@ -83,8 +83,7 @@ public static class TemplateTools
     {
         XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
         IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
-        IXsltEngine transform = AsTransform.GetXsltEngine(
-            xslt.XsltEngineType, template.PersistenceProvider);
+        IXsltEngine transform = new CompiledXsltEngine(template.PersistenceProvider);
         IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, null, outputStructure, false);
         if (result is IDataDocument)
         {

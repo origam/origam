@@ -463,8 +463,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             string template = (string)templateData.Tables[0].Rows[0]["Template"];
             // transform
             DataStructure resultStructure = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(new Guid("2f5e1853-e885-4177-ab6d-9da52123ae82"))) as DataStructure;
-            IXsltEngine transform = AsTransform.GetXsltEngine(
-                XsltEngineType.XslCompiledTransform, persistence.SchemaProvider);
+            IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
             Hashtable parameters = new Hashtable();
             if (recipient != null)
             {
