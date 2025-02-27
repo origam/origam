@@ -1190,15 +1190,6 @@ public abstract class SessionStore : IDisposable
     {
         var result = new List<RowSecurityState>();
         RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
-        // if (rowSearchResult.Rows.Count == 0)
-        // {
-        //     foreach (var id in ids)
-        //     {
-        //         GetRowData(entity, id);
-        //     }
-        // }
-        // rowSearchResult = GetRowsFromStore(entity, ids);
-        
         foreach (var row in rowSearchResult.Rows)
         {
             result.Add(RowSecurityStateBuilder.BuildFull(RuleEngine, row, profileId, FormId));
