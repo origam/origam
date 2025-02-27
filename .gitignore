@@ -5,3 +5,5 @@
 /plugins/pluginmanager_config.json
 /test/HTML5_TESTS/
 RuntimeModelConfiguration.json
+/docker/runLinux.cmd
+/docker/runWin.cmd

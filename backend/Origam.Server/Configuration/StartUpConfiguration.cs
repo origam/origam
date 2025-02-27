@@ -67,9 +67,7 @@ public class StartUpConfiguration
     public string Html5ClientLogoUrl => 
         configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
     public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
-                                   !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
-                                   (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
-                                    !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
+                                   !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder);
     public string PathToClientApp
     {
         get
