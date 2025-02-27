@@ -2,10 +2,9 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="3199ad86-4ebf-4d7d-8378-aaa73f583f1b"
     asi:name="WQ_Unlock"
     xt:text="-***-ExternalFile:WQ_Unlock.origam___text___3199ad86-4ebf-4d7d-8378-aaa73f583f1b.xslt" />
