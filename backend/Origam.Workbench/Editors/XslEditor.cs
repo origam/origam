@@ -497,7 +497,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         | System.Windows.Forms.AnchorStyles.Right)));
         this.cboDataStructure.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboDataStructure.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboDataStructure.Location = new System.Drawing.Point(125, 84);
+        this.cboDataStructure.Location = new System.Drawing.Point(125, 60);
         this.cboDataStructure.Name = "cboDataStructure";
         this.cboDataStructure.Size = new System.Drawing.Size(491, 21);
         this.cboDataStructure.Sorted = true;
@@ -509,7 +509,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         | System.Windows.Forms.AnchorStyles.Right)));
         this.cboSourceStructure.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboSourceStructure.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboSourceStructure.Location = new System.Drawing.Point(125, 59);
+        this.cboSourceStructure.Location = new System.Drawing.Point(125, 35);
         this.cboSourceStructure.Name = "cboSourceStructure";
         this.cboSourceStructure.Size = new System.Drawing.Size(491, 21);
         this.cboSourceStructure.Sorted = true;
@@ -525,7 +525,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         // 
         // label1
         // 
-        this.label1.Location = new System.Drawing.Point(5, 59);
+        this.label1.Location = new System.Drawing.Point(5, 35);
         this.label1.Name = "label1";
         this.label1.Size = new System.Drawing.Size(120, 17);
         this.label1.TabIndex = 4;
@@ -537,7 +537,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         | System.Windows.Forms.AnchorStyles.Right)));
         this.cboRuleSet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboRuleSet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboRuleSet.Location = new System.Drawing.Point(125, 108);
+        this.cboRuleSet.Location = new System.Drawing.Point(125, 84);
         this.cboRuleSet.Name = "cboRuleSet";
         this.cboRuleSet.Size = new System.Drawing.Size(491, 21);
         this.cboRuleSet.Sorted = true;
@@ -545,7 +545,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         // 
         // lblDataStructure
         // 
-        this.lblDataStructure.Location = new System.Drawing.Point(5, 84);
+        this.lblDataStructure.Location = new System.Drawing.Point(5, 60);
         this.lblDataStructure.Name = "lblDataStructure";
         this.lblDataStructure.Size = new System.Drawing.Size(120, 16);
         this.lblDataStructure.TabIndex = 6;
@@ -561,7 +561,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         // 
         // lblRuleSet
         // 
-        this.lblRuleSet.Location = new System.Drawing.Point(7, 108);
+        this.lblRuleSet.Location = new System.Drawing.Point(7, 84);
         this.lblRuleSet.Name = "lblRuleSet";
         this.lblRuleSet.Size = new System.Drawing.Size(110, 20);
         this.lblRuleSet.TabIndex = 13;
@@ -607,7 +607,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         | System.Windows.Forms.AnchorStyles.Right)));
         this.cboTraceLevel.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
         this.cboTraceLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cboTraceLevel.Location = new System.Drawing.Point(125, 132);
+        this.cboTraceLevel.Location = new System.Drawing.Point(125, 111);
         this.cboTraceLevel.Name = "cboTraceLevel";
         this.cboTraceLevel.Size = new System.Drawing.Size(491, 21);
         this.cboTraceLevel.Sorted = true;
@@ -616,7 +616,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         // 
         // lblTraceLevel
         // 
-        this.lblTraceLevel.Location = new System.Drawing.Point(7, 135);
+        this.lblTraceLevel.Location = new System.Drawing.Point(7, 111);
         this.lblTraceLevel.Name = "lblTraceLevel";
         this.lblTraceLevel.Size = new System.Drawing.Size(110, 20);
         this.lblTraceLevel.TabIndex = 18;
