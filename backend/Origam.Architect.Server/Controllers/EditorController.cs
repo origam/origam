@@ -16,8 +16,10 @@ public class EditorController(
     IPersistenceService persistenceService,
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
-    EditorService editorService)
-    : ControllerBase
+    EditorService editorService,
+    IWebHostEnvironment environment,
+    ILogger<OrigamController> log)
+    : OrigamController(environment, log)
 {
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode(
@@ -42,39 +44,48 @@ public class EditorController(
     }
 
     [HttpGet("GetOpenEditors")]
-    public IEnumerable<OpenEditorData> GetOpenEditors()
+    public IActionResult GetOpenEditors()
     {
-        var items = editorService
-            .GetOpenEditors()
-            .Select(editor =>
-            {
-                var item = editor.Item; 
-                TreeNode treeNode = treeNodeFactory.Create(item);
-                return new OpenEditorData
+        return RunWithErrorHandler(() =>
+        {
+            var items = editorService
+                .GetOpenEditors()
+                .Select(editor =>
                 {
-                    ParentNodeId = TreeNode.ToTreeNodeId(item.ParentItem),
-                    IsPersisted = item.IsPersisted,
-                    Node = treeNode,
-                    Data = GetData(treeNode, item),
-                    IsDirty = editor.IsDirty
-                };
-            });
-        return items;
+                    var item = editor.Item;
+                    TreeNode treeNode = treeNodeFactory.Create(item);
+                    return new OpenEditorData
+                    {
+                        ParentNodeId =
+                            TreeNode.ToTreeNodeId(item.ParentItem),
+                        IsPersisted = item.IsPersisted,
+                        Node = treeNode,
+                        Data = GetData(treeNode, item),
+                        IsDirty = editor.IsDirty
+                    };
+                })
+                .ToList();
+            return Ok(items);
+        });
     }
 
     [HttpPost("OpenEditor")]
-    public OpenEditorData OpenEditor([Required] [FromBody] OpenEditorModel input)
+    public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
-        ISchemaItem item = editor.Item;
-        TreeNode treeNode = treeNodeFactory.Create(item);
-
-        return new OpenEditorData
+        return RunWithErrorHandler(() =>
         {
-            IsPersisted = true,
-            Node = treeNode,
-            Data = GetData(treeNode, item)
-        };
+            EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+            ISchemaItem item = editor.Item;
+            TreeNode treeNode = treeNodeFactory.Create(item);
+
+            var openEditorData = new OpenEditorData
+            {
+                IsPersisted = true,
+                Node = treeNode,
+                Data = GetData(treeNode, item)
+            };
+            return Ok(openEditorData);
+        });
     }
 
     private object GetData(TreeNode treeNode, ISchemaItem item)
@@ -84,7 +95,7 @@ public class EditorController(
             EditorType.GridEditor => propertyService.GetEditorProperties(item),
             EditorType.XslTEditor => propertyService.GetEditorProperties(item),
             EditorType.ScreenSectionEditor => sectionService
-                .GetSectionEditorData(item),           
+                .GetSectionEditorData(item),
             EditorType.ScreenEditor => sectionService
                 .GetScreenEditorData(item),
             _ => null
@@ -97,7 +108,7 @@ public class EditorController(
     {
         editorService.CloseEditor(input.SchemaItemId);
     }
-    
+
     [HttpPost("PersistChanges")]
     public ActionResult PersistChanges([FromBody] PersistModel input)
     {
