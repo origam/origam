@@ -22,6 +22,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { IAction, IActionData, IActionMode, IActionPlacement, IActionType } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getRowStateById } from "model/selectors/RowState/getRowStateById";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
@@ -56,7 +57,7 @@ export class Action implements IAction {
         const selectedIds = getDataView(this).selectedRowIds;
         return selectedIds.size > 0
           ? !Array.from(selectedIds)
-            .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
+            .map((rowId) => IsDisabledMultipleCheckboxAction(this, rowId, this.id))
             .some((item) => item)
           : this.placement === IActionPlacement.Toolbar;
       }
@@ -65,4 +66,11 @@ export class Action implements IAction {
   }
 
   parent?: any;
+}
+
+export function IsDisabledMultipleCheckboxAction(ctx: any, rowId: string, actionId: string) {
+  const rowState = getRowStateById(ctx, rowId);
+  return rowState && rowState.disabledActions
+    ? rowState.disabledActions.has(actionId)
+    : false;
 }
