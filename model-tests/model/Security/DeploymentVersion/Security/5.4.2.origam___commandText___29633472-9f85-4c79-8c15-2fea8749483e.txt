@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamApplicationRole] ALTER COLUMN [UserRemarks] nvarchar(max) NULL
