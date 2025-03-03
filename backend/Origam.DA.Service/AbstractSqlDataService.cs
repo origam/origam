@@ -2420,8 +2420,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
                 else
                 {
-	                result.Remark = ResourceUtils.GetString(
-		                "ViewCantBeScripted");
+	               continue;
                 }
                 results.Add(result);
                 // foreign key
@@ -2585,6 +2584,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            }
 	            result.SchemaItem = entity;
             }
+            else
+            {
+	            continue;
+            }
             results.Add(result);
         }
     }
@@ -2629,8 +2632,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            }
 	            else
 	            {
-		            result.Remark 
-			            = "View cannot be scripted to the database.";
+		            continue;
 	            }
             }
             if(schemaItemType == typeof(DataEntityIndex))
