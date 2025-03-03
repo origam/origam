@@ -78,6 +78,7 @@
       <Compile Update="CounterDataset.Designer.cs">
         <SubType>Code</SubType>
       </Compile>
+      <Compile Remove="Xslt\ExsltNamespaces.cs" />
     </ItemGroup> 
     
     <ItemGroup>
