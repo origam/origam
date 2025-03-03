@@ -34,7 +34,7 @@
     "@types/react-measure": "^2.0.12",
     "@types/react-virtualized": "^9.22.2",
     "@types/string-strip-html": "^5.0.0",
-    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@xstate/inspect": "^0.8.0",
     "axios": "^1.8.1",
     "bind-decorator": "^1.0.11",
