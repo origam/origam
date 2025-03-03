@@ -1326,8 +1326,7 @@ public class ServerCoreUIService : IBasicUIService
             Guid.Empty, Guid.Empty, null, qparams);
         IPersistenceService persistence = 
             ServiceManager.Services.GetService<IPersistenceService>();
-        IXsltEngine transformer = AsTransform.GetXsltEngine(
-            XsltEngineType.XslTransform, persistence.SchemaProvider);
+        IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
         IXmlContainer result = transformer.Transform(
             DataDocumentFactory.New(data), 
             tooltip.TooltipTransformationId, 

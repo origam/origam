@@ -35,7 +35,7 @@ namespace Origam.Rule.Xslt;
 public class OrigamXsltContext : XsltContext
 {
     private Dictionary<string, object> _xslFunctionsDict;
-    private ExsltContext _exslt;
+    private XsltContext _exslt;
     public static OrigamXsltContext Create(
         XmlNameTable nameTable, string transactionId)
     {

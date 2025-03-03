@@ -27,8 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Mvp.Xml.Common.Xsl;
-using Mvp.Xml.Exslt;
+using System.Xml.Xsl;
 using Origam.DA.Service;
 using Origam.Gui;
 using Origam.Schema;
@@ -45,7 +44,7 @@ public class DocProcessor
     private IDocumentationService documentation;
     private MenuSchemaItemProvider menuprovider;
     private readonly IPersistenceService ps;
-    private readonly string XsltPath, RootFile,xmlsourcefile, DirectoryPath;
+    private readonly string XsltPath, RootFile, xmlsourcefile, DirectoryPath;
     private MemoryStream mstream;
     public DocProcessor(string path, string xslt, string rootfile, FileStorageDocumentationService documentation, MenuSchemaItemProvider menuprovider, FilePersistenceService persprovider, string xmlfile)
     {
@@ -57,7 +56,7 @@ public class DocProcessor
         RootFile = rootfile;
         XsltPath = xslt;
         ps = persprovider ?? throw new Exception("Persprovider  is not set!"); 
-        DirectoryPath = string.Join("", path.Split(Path.GetInvalidPathChars())); ;
+        DirectoryPath = string.Join("", path.Split(Path.GetInvalidPathChars()));
         this.documentation = documentation ?? throw new Exception("Documentation  is not set!");
         this.menuprovider = menuprovider ?? throw new Exception("MenuSchemaItemProvider is not set!");
         CreateWriter();
@@ -187,15 +186,19 @@ public class DocProcessor
         MakeXmlSections(form);
         WriteEndElement();
         CloseXml();
-        MvpXslTransform xsltTransform = new MvpXslTransform();
-        xsltTransform.Load(new XmlTextReader(new StringReader(xsltdoc)));
-        SaveXslt(xsltTransform, new XmlOutput(XmlwriterSource));
+        XslCompiledTransform xslt = new XslCompiledTransform();
+        using (StringReader sr = new StringReader(xsltdoc))
+        using (XmlReader xslReader = XmlReader.Create(sr))
+        {
+            xslt.Load(xslReader);
+        }
+        SaveXslt(xslt, XmlwriterSource);
     }
     public void Run()
     {
         if (!string.IsNullOrEmpty(XsltPath))
         {
-            MvpXslTransform processor = new MvpXslTransform(false);
+            XslCompiledTransform processor = new XslCompiledTransform();
             processor.Load(XsltPath);
         }
         List<ISchemaItem> menulist = menuprovider.ChildItems.ToList();
@@ -210,13 +213,18 @@ public class DocProcessor
         }
         if (!string.IsNullOrEmpty(XsltPath) && !string.IsNullOrEmpty(RootFile))
         {
-            MvpXslTransform xslttransform = new MvpXslTransform();
-            xslttransform.Load(XsltPath);
-            MultiXmlTextWriter multiWriter = new MultiXmlTextWriter(Path.Combine(DirectoryPath, RootFile), new UTF8Encoding(false))
+            XslCompiledTransform xslt = new XslCompiledTransform();
+            xslt.Load(XsltPath);
+            XmlWriterSettings settings = new XmlWriterSettings
             {
-                Formatting = Formatting.Indented
+                Encoding = new UTF8Encoding(false),
+                Indent = true
             };
-            SaveXslt(xslttransform,new XmlOutput(multiWriter));
+            string outputPath = Path.Combine(DirectoryPath, RootFile);
+            using (XmlWriter writer = XmlWriter.Create(outputPath, settings))
+            {
+                SaveXslt(xslt, writer);
+            }
         }
     }
     private void SaveSchemaXml()
@@ -226,11 +234,11 @@ public class DocProcessor
         file.Close();
         mstream.Close();
     }
-    private void SaveXslt( MvpXslTransform xslTransform, XmlOutput xmlOutput)
+    private void SaveXslt(XslCompiledTransform xslTransform, XmlWriter xmlWriter)
     {
         mstream.Seek(0, SeekOrigin.Begin);
         XPathDocument doc = new XPathDocument(mstream);
-        xslTransform.Transform(new XmlInput(doc), null, xmlOutput);
+        xslTransform.Transform(doc, null, xmlWriter);
     }
     private void CreateXml(ISchemaItem menuSublist)
     {

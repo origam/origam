@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="0a03450f-b2d8-4293-a4d6-04a463ea033b"
     asi:name="Clock"
     xt:text="-***-ExternalFile:Clock.origam___text___0a03450f-b2d8-4293-a4d6-04a463ea033b.xslt" />
