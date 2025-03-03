@@ -2349,6 +2349,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
 			return false;
         }
+        if((columnType == "GEOGRAPHY(MAX)" && modelType == "GEOGRAPHY") ||
+           (columnType == "NVARCHAR(MAX)" && modelType == "NVARCHAR"))
+        {
+	        return false;
+        }
 		return columnType != modelType;
 	}
     private string GetColumnType(DataRow row)
