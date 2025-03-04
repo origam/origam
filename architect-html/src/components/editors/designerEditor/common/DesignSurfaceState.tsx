@@ -69,7 +69,12 @@ export class DesignSurfaceState {
 
   * loadComponents(rootControl: IApiControl) {
     let components: Component[] = [];
-    components = yield toComponentRecursive(rootControl, null, components, this.loadComponent)
+    components = yield toComponentRecursive(
+      rootControl,
+      null,
+      components,
+      this.getChildren.bind(this),
+      this.loadComponent)
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
@@ -149,12 +154,13 @@ export class DesignSurfaceState {
       draggingComponent.data.type !== ComponentType.GroupBox &&
       draggingComponent.data.type !== ComponentType.AsPanel
     ) {
-      const targetParent = this.findComponentAt(mouseX, mouseY);
+      const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent.id);
       if (targetParent && draggingComponent.parent != targetParent) {
         draggingComponent.relativeLeft = (draggingComponent.parent?.absoluteLeft ?? 0) - targetParent.absoluteLeft + draggingComponent.relativeLeft;
         draggingComponent.relativeTop = (draggingComponent.parent?.absoluteTop ?? 0) - targetParent.absoluteTop + draggingComponent.relativeTop;
         draggingComponent.parent = targetParent;
       }
+      targetParent.update();
       this.updatePanelSize(draggingComponent);
     }
 
@@ -169,9 +175,10 @@ export class DesignSurfaceState {
     };
   }
 
-  findComponentAt(mouseX: number, mouseY: number) {
+  findComponentAt(mouseX: number, mouseY: number, excludeId: string) {
     const componentsUnderPoint = this.components.filter(
       comp =>
+        comp.id !== excludeId &&
         comp.canHaveChildren &&
         comp.isActive &&
         comp.isPointInside(mouseX, mouseY)
@@ -211,6 +218,10 @@ export class DesignSurfaceState {
         yield* this.updateEditor();
       }
     }.bind(this);
+  }
+
+  getChildren(component: Component){
+    return this.components.filter(x => x.parent?.id === component.id)!;
   }
 
   updatePanelSize(draggingComponent: Component) {
@@ -318,6 +329,7 @@ export class DesignSurfaceState {
 
   @action
   endResizing() {
+    this.resizeState.component?.update();
     this.resizeState = {
       component: null,
       handle: null,

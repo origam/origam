@@ -64,7 +64,7 @@ export class ScreenEditorState extends DesignerEditorState {
 
   create(x: number, y: number) {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
-      const parent = this.surface.findComponentAt(x, y);
+      const parent = this.surface.findComponentAt(x, y, draggingComponent.id);
 
       let currentParent: Component | null = parent;
       let relativeX = x;
@@ -84,7 +84,11 @@ export class ScreenEditorState extends DesignerEditorState {
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
-      const newComponent = yield controlToComponent(screenEditorItem.screenItem, null, sectionLoader);
+      const newComponent = yield controlToComponent(
+        screenEditorItem.screenItem,
+        null,
+        this.surface.getChildren.bind(this.surface),
+        sectionLoader);
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       newComponent.parent = parent;

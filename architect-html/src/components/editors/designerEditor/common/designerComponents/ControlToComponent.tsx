@@ -16,16 +16,20 @@ import {
   Component,
   FormPanel,
   GroupBox,
-  SplitPanel, TabControl, TabPage,
+  TabControl, TabPage,
   TagInput,
   TextArea
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import { ReactElement } from "react";
+import {
+  SplitPanel
+} from "src/components/editors/designerEditor/common/designerComponents/SplitPanel.tsx";
 
 export async function controlToComponent(
   control: IApiControl,
   parent: Component | null,
-  loadComponent?: (componentId: string) => Promise<ReactElement>
+  getChildren?: (component: Component) => Component[],
+  loadComponent?: (componentId: string) => Promise<ReactElement>,
 ): Promise<Component> {
   const properties = control.properties.map(prop => new EditorProperty(prop));
   const componentType = parseComponentType(control.type);
@@ -147,9 +151,13 @@ export async function controlToComponent(
     }
 
     case ComponentType.SplitPanel:
+      if (!getChildren) {
+        throw new Error("getChildren parameter is missing");
+      }
       return new SplitPanel({
         id: control.id,
         parent: parent,
+        getChildren: getChildren,
         data: {
           type: componentType,
           identifier: control.name,
@@ -160,7 +168,7 @@ export async function controlToComponent(
     case ComponentType.TabPage:
       return new TabPage({
         id: control.id,
-        parent: parent,
+        parent: parent as TabControl,
         data: {
           type: componentType,
           identifier: control.name,
@@ -188,11 +196,17 @@ export async function toComponentRecursive(
   control: IApiControl,
   parent: Component | null,
   allComponents: Component[],
+  getChildren?: (component: Component) => Component[],
   loadComponent?: (componentId: string) => Promise<ReactElement>
 ): Promise<Component[]> {
-  const newComponent = await controlToComponent(control, parent, loadComponent);
+  const newComponent = await controlToComponent(
+    control,
+    parent,
+    getChildren,
+    loadComponent);
   for (const childControl of control.children) {
-    await toComponentRecursive(childControl, newComponent, allComponents, loadComponent);
+    await toComponentRecursive(
+      childControl, newComponent, allComponents, getChildren, loadComponent);
   }
   allComponents.push(newComponent);
   return allComponents;

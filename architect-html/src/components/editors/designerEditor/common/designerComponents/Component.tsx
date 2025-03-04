@@ -30,11 +30,11 @@ export abstract class Component {
   accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
-    if(this.parent?.hideChildren){
+    if (this.parent?.hideChildren) {
       return null;
     }
     if (!this._designerRepresentation) {
-      action(()=>{
+      action(() => {
         this._designerRepresentation = this.getDesignerRepresentation()
       })();
     }
@@ -211,6 +211,8 @@ export abstract class Component {
   get canHaveChildren(): boolean {
     return false;
   }
+
+  update() {}
 }
 
 
@@ -221,26 +223,6 @@ export class GroupBox extends Component {
 
   get zIndex(): number {
     return this.countParents() + sectionLayer;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.groupBoxContent}>
-        <div
-          className={S.groupBoxHeader}>{this.properties.find(x => x.name === "Text")?.value}
-        </div>
-      </div>
-    );
-  }
-}
-
-export class SplitPanel extends Component {
-  get canHaveChildren(): boolean {
-    return true;
-  }
-
-  get zIndex(): number {
-    return this.countParents() + screenLayer;
   }
 
   getDesignerRepresentation(): ReactElement | null {
@@ -293,7 +275,7 @@ export class AsCheckBox extends Component {
     return (
       <div className={S.designSurfaceEditorContainer}>
         <div className={S.designSurfaceCheckbox}></div>
-        <div>{this.properties.find(x=>x.name === "Text")?.value}</div>
+        <div>{this.properties.find(x => x.name === "Text")?.value}</div>
       </div>
     );
   }
@@ -309,7 +291,7 @@ export class FormPanel extends Component {
     data: IComponentData,
     properties: EditorProperty[],
     reactElement: ReactElement,
-  }){
+  }) {
     super(args);
     this.reactElement = args.reactElement;
   }
@@ -359,8 +341,8 @@ export class TabControl extends Component {
   }
 
   @action
-  setVisible(tabId: string){
-    for (const tab of this.tabs){
+  setVisible(tabId: string) {
+    for (const tab of this.tabs) {
       tab.hideChildren = tab.id !== tabId;
     }
   }
