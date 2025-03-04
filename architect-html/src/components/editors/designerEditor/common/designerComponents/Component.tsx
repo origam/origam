@@ -19,6 +19,7 @@ import {
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
 import { ReactElement } from "react";
+import { Observer } from "mobx-react-lite";
 
 export abstract class Component {
   id: string;
@@ -119,6 +120,10 @@ export abstract class Component {
 
   get zIndex(): number {
     return controlLayer;
+  }
+
+  get isActive(): boolean {
+    return true;
   }
 
   constructor(args: {
@@ -360,17 +365,25 @@ export class TabControl extends Component {
     }
   }
 
+  get canHaveChildren(): boolean {
+    return false;
+  }
+
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.tabPageContainer}>
         <div className={S.tabs}>
           {this.tabs.map(tab =>
-            <div
-              key={tab.id}
-              onClick={()=> this.setVisible(tab.id)}
-            >
-              {tab.get("Text")}
-            </div>)
+            <Observer key={tab.id}>
+              {() => (
+                <div
+                  className={tab.isActive ? S.activeTab : ""}
+                  onClick={() => this.setVisible(tab.id)}
+                >
+                  {tab.get("Text")}
+                </div>
+              )}
+            </Observer>)
           }
         </div>
         {/*<div className={S.designSurfaceInput}></div>*/}
@@ -385,7 +398,7 @@ export class TabPage extends Component {
 
   constructor(args: {
     id: string,
-    parent: Component | null,
+    parent: TabControl,
     data: IComponentData,
     properties: EditorProperty[],
   }) {
@@ -395,6 +408,24 @@ export class TabPage extends Component {
       throw new Error("Parent of TabPage must be a TabControl");
     }
     (args.parent as TabControl).registerTab(this);
+
+    // TabPages' width and height properties always come with default values from the server.
+    // That is ok. They have to be the same size as the parent TabControl anyway.
+    const parentWidth = this.parent!.properties!.find(x => x.name == "Width")!.value;
+    const widthProperty = this.properties.find(x => x.name == "Width")!
+    widthProperty.value = parentWidth;
+
+    const parentHeight = this.parent!.properties!.find(x => x.name == "Height")!.value;
+    const heightProperty = this.properties.find(x => x.name == "Height")!
+    heightProperty.value = parentHeight;
+  }
+
+  get isActive(): boolean {
+    return !this.hideChildren;
+  }
+
+  get canHaveChildren(): boolean {
+    return true;
   }
 
   get zIndex(): number {

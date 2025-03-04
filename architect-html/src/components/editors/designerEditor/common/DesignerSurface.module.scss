@@ -24,8 +24,10 @@
   align-items: center;
   user-select: none;
 
+  border: 1px solid var(--background8);
+
   &.selected {
-    border: 1px solid var(--foreground3);;
+    border: 1px solid var(--foreground3);
   }
 
   &.dragging {

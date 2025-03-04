@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import {
-  Component,
+  Component, TabPage,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import {
   ComponentType,
@@ -141,8 +141,8 @@ export class DesignSurfaceState {
     ) {
       const targetParent = this.findComponentAt(mouseX, mouseY);
       if (targetParent && draggingComponent.parent != targetParent) {
-        draggingComponent.relativeLeft = draggingComponent.parent?.absoluteLeft ?? 0 - targetParent.absoluteLeft + draggingComponent.relativeLeft;
-        draggingComponent.relativeTop = draggingComponent.parent?.absoluteTop ?? 0 - targetParent.absoluteTop + draggingComponent.relativeTop;
+        draggingComponent.relativeLeft = (draggingComponent.parent?.absoluteLeft ?? 0) - targetParent.absoluteLeft + draggingComponent.relativeLeft;
+        draggingComponent.relativeTop = (draggingComponent.parent?.absoluteTop ?? 0) - targetParent.absoluteTop + draggingComponent.relativeTop;
         draggingComponent.parent = targetParent;
       }
       this.updatePanelSize(draggingComponent);
@@ -163,17 +163,20 @@ export class DesignSurfaceState {
     const componentsUnderPoint = this.components.filter(
       comp =>
         comp.canHaveChildren &&
+        comp.isActive &&
         comp.isPointInside(mouseX, mouseY)
     ) ?? this.panel;
-    return componentsUnderPoint
-      .sort((comp1, comp2) => comp2.countParents() - comp1.countParents())[0]
+    const components1 = componentsUnderPoint
+      .sort((comp1, comp2) => comp2.countParents() - comp1.countParents());
+    console.log(components1[0])
+    return components1[0]
   }
 
   onDesignerMouseUp(x: number, y: number) {
     return function* (this: DesignSurfaceState) {
       if (this.isDragging) {
         const dragTimeMilliSeconds = new Date().getTime() - this.dragState.startedAt!.getTime();
-        if (dragTimeMilliSeconds < 300) {
+        if (dragTimeMilliSeconds < 300 && this.dragState.component) {
           this.dragState.component.absoluteTop = this.dragState.originalTop;
           this.dragState.component.absoluteLeft = this.dragState.originalLeft;
           this.dragState = {

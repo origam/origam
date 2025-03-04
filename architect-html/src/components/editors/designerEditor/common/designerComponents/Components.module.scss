@@ -48,4 +48,8 @@
 .tabs {
   display: flex;
   gap: 10px;
+
+  .activeTab{
+    font-weight: bold;
+  }
 }
