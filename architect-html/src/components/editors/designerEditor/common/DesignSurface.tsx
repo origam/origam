@@ -88,8 +88,9 @@ export const DesignSurface: React.FC<{
   const handleMouseUp = (e: React.MouseEvent) => {
     if (!surfaceRef.current) return;
 
-    const mouseX = e.clientX - surfaceRef.current.getBoundingClientRect().left;
-    const mouseY = e.clientY - surfaceRef.current.getBoundingClientRect().top;
+    const rect = surfaceRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left + surfaceRef.current.scrollLeft;
+    const mouseY = e.clientY - rect.top + surfaceRef.current.scrollTop;
 
     run({generator: surfaceState.onDesignerMouseUp(mouseX, mouseY)});
   };
