@@ -62,7 +62,7 @@ export class ScreenEditorState extends DesignerEditorState {
     }.bind(this);
   }
 
-  async create(x: number, y: number) {
+  create(x: number, y: number) {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const parent = this.surface.findComponentAt(x, y);
 
@@ -122,7 +122,7 @@ export class ScreenEditorState extends DesignerEditorState {
     const newData = updateResult.data;
     this.toolbox.name = newData.name;
     this.toolbox.selectedDataSourceId = newData.selectedDataSourceId;
-    yield* this.surface.loadComponents(newData.rootControl);
+    this.surface.updateComponents(newData.rootControl);
   }
 }
 

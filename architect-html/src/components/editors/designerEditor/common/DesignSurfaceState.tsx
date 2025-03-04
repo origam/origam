@@ -1,14 +1,12 @@
 import { action, observable } from "mobx";
 import {
-  Component, TabPage,
+  Component,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
 import {
   ComponentType,
   IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import {
-  IApiControl, IDesignerEditorData,
-} from "src/API/IArchitectApi.ts";
+import { IApiControl, IDesignerEditorData, } from "src/API/IArchitectApi.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState.ts";
 import {
   toComponentRecursive
@@ -75,6 +73,18 @@ export class DesignSurfaceState {
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
+  }
+
+  updateComponents(
+    control: IApiControl
+  ) {
+    const currentComponent = this.components.find(x =>x.id === control.id)!;
+    for (const property of currentComponent.properties) {
+      property.value =  control.properties.find(x => x.name === property.name)!.value;
+    }
+    for (const childControl of control.children) {
+      this.updateComponents(childControl);
+    }
   }
 
   private reselectComponent() {
