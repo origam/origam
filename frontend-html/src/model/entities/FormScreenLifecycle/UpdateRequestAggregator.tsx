@@ -17,10 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createMachine, interpret } from "xstate";
+import { createActor, createMachine, fromPromise } from "xstate";
 import { IUpdateData } from "../types/IApi";
 import _ from "lodash";
-
 
 interface IUpdateObjectData {
   SessionFormIdentifier: string;
@@ -30,19 +29,18 @@ interface IUpdateObjectData {
 
 interface IExtPromise<T> extends Promise<T> {
   resolve(result?: T): void;
-
   reject(error?: any): void;
 }
 
-function ExtPromise<T>() {
-  let resolveFn;
-  let rejectFn;
+function ExtPromise<T>(): IExtPromise<T> {
+  let resolveFn: (value: T | PromiseLike<T>) => void;
+  let rejectFn: (reason?: any) => void;
   const promise = new Promise<T>((resolve, reject) => {
     resolveFn = resolve;
     rejectFn = reject;
   });
-  (promise as any).resolve = resolveFn;
-  (promise as any).reject = rejectFn;
+  (promise as any).resolve = resolveFn!;
+  (promise as any).reject = rejectFn!;
   return promise as IExtPromise<T>;
 }
 
@@ -53,17 +51,21 @@ export class UpdateRequestAggregator {
     this.interpreter.start();
   }
 
-  registeredRequests: Array<IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean }> = [];
+  registeredRequests: Array<
+    IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean }
+  > = [];
 
-  itemJustEnqueued?: IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean };
+  itemJustEnqueued?: IUpdateObjectData & {
+    promise: IExtPromise<any>;
+    isRunning: boolean;
+  };
 
   currentRequest?: IUpdateObjectData & { promise: IExtPromise<any> };
 
-  interpreter = interpret(
+  interpreter = createActor(
     createMachine(
       {
         /** @xstate-layout N4IgpgJg5mDOIC5QFcAOECGAXMB5ARgFZgDGWAdAJIAiAMgKIDEAqgArUCCAKvQPoBK9AIrN6AZR7UA2gAYAuolCoA9rACWWNcoB2ikAA9EATgAsJ8gFYA7CaMyZARgBMRi06sA2ADQgAnogAOCwBmcgCPIyMPAKjgmSsAhwBfJJ80TBwCYjJyNk4eXmp6ACFcZgA5AGFKcoBxFnZuPkERcUlZBSQQFXVNHT1DBABaB2CHcmDojxMHDysrVytggJ9-BFMjSydHCwcLDwsggICUtPRsPCJSCjymwpKyqpr6-VgsC-IMADMcACcACgcVhkAEpGOkLllrrlGgUiqUKtU6h09D0NFpdF1Bk5gqF9nNgsCPNEnKNvH5jNFyEZgqYHCYnKSrM5TiAIZkrjkiq1RIwUV00X1MaBBkNjuQFpEAvMjC5olYLKtEAcrNTIlFTAEnAyHEZWezLtkbrDnowIDowOQ3h8DVCcrcuM9+UpVOj+ljEDMLBN7LNiUyPITyWs5h5yMT1TiLDIDlF9ecOUaYflTebtJbrThyLbOcaU8iHJ0Xb0MQNEFZSRL7PYFnFgtZFRSEKHw8CZCZwh54o4PPGMoboQ7TQ7msJRBJ6NJ5KjXUKywg4psTGMxhYLEYbLjtUrhvSwgFfV2Zg524yrH3Ibnk9xnuQOKxKAIKuVUxbyGptAA3ZQAa0tOaTIc6jvB8n3KF86gQD9vxIbAMQ6Z1ulnUsPQXdtyHpQlowjGR1yMHdtVVDxthkKIZkcIwDycC9E0HE1gPvR9+GfU0wF+X5lF+chUAAG2wL5OIAW2zBMB3tejahApiWMg6DlFgoUEOnAVkPdEVEHcTZSScddiPXZYTHbHcTEDcNdUo5kTDXYFtRSVIQG0ZQIDgPQAOuGcSzUgxEBGBYJimGY5gWaxlh3EYZCcCYDx7dsHBPBlghosSKBoBgPLdYVvIQE9SImGwaXsZc10DHc5m9IFq2CbUsJxJK7TzO54UeJFanSudULXMJqw7LVEh0nd4u9Dcdko6MHACXE6qvblRFENqUPUhdpXIGZCNcRI4tcHcglCFxbFpaZmXPey3PE-NWpUzzMuxfCmzi0JnBrbVnH2TwpsAiSpLAiCLuLDL53mHdV2pNtcIOaUDl7E7RPq69HQY0DBDEXBaAANUneavMGaNVTXX1GWWCIFSB+wVrbOIYx00Z3ro86vsEAApehKkkTHrsQHHLGjRwCfCDdGzWQyAhWiJKPG3FYpMuykiAA */
-        predictableActionArguments: true,
         id: "updateObject",
         initial: "IDLE",
         states: {
@@ -115,21 +117,28 @@ export class UpdateRequestAggregator {
               },
             },
             onDone: [
-              {cond: "hasMoreItems", target: "#updateObject.DEQUEUE"},
-              {target: "#updateObject.IDLE"},
+              { guard: "hasMoreItems", target: "#updateObject.DEQUEUE" },
+              { target: "#updateObject.IDLE" },
             ],
             exit: ["resetCurrentRequest"],
           },
         },
       },
       {
-        services: {
-          apiUpdateObject: (ctx, event) => {
+        // Updated for XState v5: use 'actors' instead of 'services'
+        // actors: {
+        //   apiUpdateObject: (ctx: any, event: any) => {
+        //     return this.api.updateObject(this.currentRequest!);
+        //   },
+        // },
+
+        actors: {
+          apiUpdateObject: fromPromise(input => {
             return this.api.updateObject(this.currentRequest!);
-          },
+          }),
         },
         actions: {
-          enqueueRequest: (ctx, event) => {
+          enqueueRequest: (ctx, event: any) => {
             const updateObjectItem = this.mergeToQueue(event.payload);
             this.itemJustEnqueued = updateObjectItem;
           },
@@ -137,10 +146,10 @@ export class UpdateRequestAggregator {
             const item = this.registeredRequests.shift();
             this.currentRequest = item;
           },
-          resolveCurrentPromise: (ctx, event) => {
+          resolveCurrentPromise: (ctx, event: any) => {
             this.currentRequest?.promise.resolve(event.data);
           },
-          rejectCurrentPromise: (ctx, event) => {
+          rejectCurrentPromise: (ctx, event: any) => {
             this.currentRequest?.promise.reject(event.data);
           },
           resetCurrentRequest: (ctx, event) => {
@@ -154,7 +163,7 @@ export class UpdateRequestAggregator {
         },
       }
     ),
-    {devTools: true}
+    // { devTools: true }
   );
 
   enqueue(data: IUpdateObjectData): Promise<any | null> {
@@ -167,7 +176,7 @@ export class UpdateRequestAggregator {
       type: "UPDATE_REQUESTED",
       payload: data,
     });
-    const {itemJustEnqueued} = this;
+    const { itemJustEnqueued } = this;
     this.itemJustEnqueued = undefined;
     return itemJustEnqueued!.promise;
   }
@@ -224,10 +233,10 @@ export class UpdateRequestAggregator {
         (item) => item.RowId === inputRow.RowId
       );
       if (!existingRow) {
-        existingRow = {RowId: inputRow.RowId, Values: {}};
+        existingRow = { RowId: inputRow.RowId, Values: {} };
         updateObjectItem.UpdateData.push(existingRow);
       }
-      existingRow.Values = {...existingRow.Values, ...inputRow.Values};
+      existingRow.Values = { ...existingRow.Values, ...inputRow.Values };
     }
     return updateObjectItem;
   }
