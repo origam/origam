@@ -2,10 +2,9 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="95c6b19b-71c8-4f83-9fa6-15a4b3147786"
     asi:name="AddUser_CreateBusinessPartner"
     xt:text="-***-ExternalFile:AddUser_CreateBusinessPartner.origam___text___95c6b19b-71c8-4f83-9fa6-15a4b3147786.xslt" />

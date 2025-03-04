@@ -142,13 +142,7 @@ public class RuleEngine
 		{
 			throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 		}
-#if NETSTANDARD
-        XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
-#else
-        XsltEngineType xsltEngineType = XsltEngineType.XslTransform;
-#endif
-        _transformer = AsTransform.GetXsltEngine(
-            xsltEngineType, _persistence.SchemaProvider);
+        _transformer = new CompiledXsltEngine(_persistence.SchemaProvider);
 	}
 	#region Properties
     public static string ValidationNotMetMessage()
