@@ -64,7 +64,7 @@ export class ScreenEditorState extends DesignerEditorState {
 
   create(x: number, y: number) {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
-      const parent = this.surface.findComponentAt(x, y, draggingComponent.id);
+      const parent = this.surface.findComponentAt(x, y);
 
       let currentParent: Component | null = parent;
       let relativeX = x;

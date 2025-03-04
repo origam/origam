@@ -175,10 +175,10 @@ export class DesignSurfaceState {
     };
   }
 
-  findComponentAt(mouseX: number, mouseY: number, excludeId: string) {
+  findComponentAt(mouseX: number, mouseY: number, excludeId?: string) {
     const componentsUnderPoint = this.components.filter(
       comp =>
-        comp.id !== excludeId &&
+        (!excludeId || comp.id !== excludeId) &&
         comp.canHaveChildren &&
         comp.isActive &&
         comp.isPointInside(mouseX, mouseY)
