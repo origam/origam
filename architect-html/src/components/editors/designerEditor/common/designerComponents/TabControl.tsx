@@ -70,7 +70,10 @@ export class TabControl extends Component {
     return (
       <div className={S.tabPageContainer}>
         <div className={S.tabs}>
-          {this.tabs.map(tab =>
+          {this.tabs
+            .slice()
+            .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
+            .map(tab =>
             <Observer key={tab.id}>
               {() => (
                 <div
