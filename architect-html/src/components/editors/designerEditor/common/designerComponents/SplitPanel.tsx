@@ -96,7 +96,7 @@ export class SplitPanel extends Component {
         lowerChild: undefined
       }
     }
-    if (children[0].relativeTop > children[1].relativeTop) {
+    if (children[0].relativeTop < children[1].relativeTop) {
       return {
         upperChild: children[0],
         lowerChild: children[1]
