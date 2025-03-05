@@ -9,7 +9,7 @@ import { computed, observable } from "mobx";
 export class EditorProperty implements IApiEditorProperty {
   name: string;
   type: PropertyType;
-  @observable private accessor _value: any;
+  @observable protected accessor _value: any;
   @observable.shallow accessor dropDownValues: IDropDownValue[];
   category: string | null;
   description: string;

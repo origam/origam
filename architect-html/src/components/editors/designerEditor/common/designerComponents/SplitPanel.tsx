@@ -13,8 +13,28 @@ import {
 import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
+import { IApiEditorProperty } from "src/API/IArchitectApi.ts";
 
-const ChildGap = 10;
+const childGap = 10;
+
+class OrientationProperty extends EditorProperty {
+
+  constructor(
+    apiProperty: IApiEditorProperty,
+    private splitPanel: SplitPanel
+  ) {
+    super(apiProperty);
+  }
+
+  get value(){
+    return super.value;
+  }
+
+  set value(value: any) {
+    super.value = value;
+    this.splitPanel.update();
+  }
+}
 
 export class SplitPanel extends Component {
 
@@ -34,10 +54,15 @@ export class SplitPanel extends Component {
     data: IComponentData,
     properties: EditorProperty[],
     getChildren: (component: Component) => Component[]
-  })
-  {
+  }) {
     super(args);
     this.getChildren = args.getChildren;
+
+    const originalOrientationProperty = this.getProperty("Orientation")!;
+    const index = this.properties.indexOf(originalOrientationProperty);
+    this.properties.splice(index, 1);
+    const newOrientationProperty = new OrientationProperty(originalOrientationProperty, this);
+    this.properties.push(newOrientationProperty)
   }
 
   update() {
@@ -52,20 +77,32 @@ export class SplitPanel extends Component {
     switch (orientation) {
       case Orientation.Horizontal: {
         const {upperChild, lowerChild} = this.getUpperAndLowerChild(children);
-        upperChild.relativeTop = ChildGap;
-        upperChild.relativeLeft = ChildGap;
-        upperChild.width = Math.round(this.width - ChildGap * 2);
-        upperChild.height = Math.round(this.height / 2 - ChildGap * 1.5);
+        upperChild.relativeTop = childGap;
+        upperChild.relativeLeft = childGap;
+        upperChild.width = Math.round(this.width - childGap * 2);
+        upperChild.height = Math.round(this.height / 2 - childGap * 1.5);
         if (lowerChild) {
-          lowerChild.relativeTop = Math.round(this.height /2 + ChildGap * 0.5);
-          lowerChild.relativeLeft = ChildGap;
-          lowerChild.width = Math.round(this.width - ChildGap * 2);
-          lowerChild.height = Math.round(this.height / 2 - ChildGap * 1.5);
+          lowerChild.relativeTop = Math.round(this.height / 2 + childGap * 0.5);
+          lowerChild.relativeLeft = childGap;
+          lowerChild.width = Math.round(this.width - childGap * 2);
+          lowerChild.height = Math.round(this.height / 2 - childGap * 1.5);
         }
         break;
       }
-      case Orientation.Vertical:
-        return;
+      case Orientation.Vertical: {
+        const {leftChild, rightChild} = this.getLeftAndRightChild(children)
+        leftChild.relativeLeft = childGap;
+        leftChild.relativeTop = childGap;
+        leftChild.width = Math.round(this.width / 2 - childGap * 1.5);
+        leftChild.height = Math.round(this.height - childGap * 2);
+        if (rightChild) {
+          rightChild.relativeTop = childGap;
+          rightChild.relativeLeft = Math.round(this.width / 2 + childGap * 0.5);
+          rightChild.width = Math.round(this.width / 2 - childGap * 1.5);
+          rightChild.height = Math.round(this.height - childGap * 2);
+        }
+        break;
+      }
       default:
         throw new Error(`Unknown split panel orientation "${orientation}"`);
     }
@@ -78,7 +115,7 @@ export class SplitPanel extends Component {
         lowerChild: undefined
       }
     }
-    if (children[0].relativeTop > children[1].relativeLeft) {
+    if (children[0].relativeTop > children[1].relativeTop) {
       return {
         upperChild: children[0],
         lowerChild: children[1]
@@ -87,6 +124,25 @@ export class SplitPanel extends Component {
     return {
       upperChild: children[1],
       lowerChild: children[0]
+    }
+  }
+
+  getLeftAndRightChild(children: Component[]) {
+    if (children.length == 1) {
+      return {
+        leftChild: children[0],
+        rightChild: undefined
+      }
+    }
+    if (children[0].relativeLeft > children[1].relativeLeft) {
+      return {
+        leftChild: children[0],
+        rightChild: children[1]
+      }
+    }
+    return {
+      leftChild: children[1],
+      rightChild: children[0]
     }
   }
 

@@ -26,7 +26,10 @@ export const PropertyEditor: React.FC<{
   function onValueChange(property: EditorProperty, value: any) {
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
-        yield* props.propertyManager.onPropertyUpdated(property, value);
+        const parsedValue = property.type === "enum"
+          ? parseInt(value)
+          : value;
+        yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
       },
     });
   }
