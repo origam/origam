@@ -140,6 +140,13 @@ export class TabPage extends Component {
     }
   }
 
+  isPointInside(x: number, y: number) {
+    // Delegating to the parent - TabControl solves the case when the point
+    // is in the tab label area. This method would return false (which is wrong)
+    // if not overridden.
+    return this.parent!.isPointInside(x, y);
+  }
+
   get canHaveChildren(): boolean {
     return true;
   }
