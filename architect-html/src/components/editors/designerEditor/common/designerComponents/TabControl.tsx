@@ -32,19 +32,12 @@ export class TabControl extends Component {
     properties: EditorProperty[],
   }) {
     super(args);
-    console.log("TabControl.id: " + this.id);
-    console.log("TabControl.isActive: " + this.isActive);
-    console.log("TabControl.hideChildren: " + this.hideChildren);
   }
 
   registerTab(tab: TabPage) {
     const isActive = this.tabs.length === 0; // i.e.  the first registered tab will be active
     tab.initializeVisibility(isActive, isActive ? this.hideChildren : true); // We need to recursively hide children of inactive tabs
     this.tabs.push(tab);
-
-    console.log("tab.id: " + tab.id);
-    console.log("tab.isActive: " + tab.isActive);
-    console.log("tab.hideChildren: " + tab.hideChildren);
   }
 
   @action
@@ -141,7 +134,6 @@ export class TabPage extends Component {
 
   showHideChildrenRecursive(component: Component, hideChildren: boolean) {
     component.hideChildren = hideChildren;
-    console.log("component: " + component.id + ", hideChildren: " + this.hideChildren);
     const children = this.getChildren(component);
     for (const child of children) {
       this.showHideChildrenRecursive(child, hideChildren);
