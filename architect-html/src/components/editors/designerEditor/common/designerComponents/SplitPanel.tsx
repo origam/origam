@@ -17,25 +17,6 @@ import { IApiEditorProperty } from "src/API/IArchitectApi.ts";
 
 const childGap = 10;
 
-class OrientationProperty extends EditorProperty {
-
-  constructor(
-    apiProperty: IApiEditorProperty,
-    private splitPanel: SplitPanel
-  ) {
-    super(apiProperty);
-  }
-
-  get value(){
-    return super.value;
-  }
-
-  set value(value: any) {
-    super.value = value;
-    this.splitPanel.update();
-  }
-}
-
 export class SplitPanel extends Component {
 
   get canHaveChildren(): boolean {
@@ -151,6 +132,25 @@ export class SplitPanel extends Component {
       <div className={S.groupBoxContent}>
       </div>
     );
+  }
+}
+
+class OrientationProperty extends EditorProperty {
+
+  constructor(
+    apiProperty: IApiEditorProperty,
+    private splitPanel: SplitPanel
+  ) {
+    super(apiProperty);
+  }
+
+  get value(){
+    return super.value;
+  }
+
+  set value(value: any) {
+    super.value = value;
+    this.splitPanel.update();
   }
 }
 

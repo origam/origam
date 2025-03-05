@@ -141,6 +141,7 @@ export class TabPage extends Component {
 
   showHideChildrenRecursive(component: Component, hideChildren: boolean) {
     component.hideChildren = hideChildren;
+    console.log("component: " + component.id + ", hideChildren: " + this.hideChildren);
     const children = this.getChildren(component);
     for (const child of children) {
       this.showHideChildrenRecursive(child, hideChildren);
@@ -158,6 +159,4 @@ export class TabPage extends Component {
   getDesignerRepresentation(): ReactElement | null {
     return null;
   }
-
-
 }

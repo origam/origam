@@ -136,7 +136,7 @@ export abstract class Component {
   }
 
   get isActive(): boolean {
-    return true;
+    return !this.hideChildren;
   }
 
   constructor(args: {
