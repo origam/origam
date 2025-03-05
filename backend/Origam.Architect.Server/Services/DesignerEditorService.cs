@@ -84,7 +84,7 @@ public class DesignerEditorService(
                 schemaService.GetProvider<DataStructureSchemaItemProvider>();
             if (dataStructureProvider == null)
             {
-                throw new UserOrigamException($"No package is active. reload the page and select a package first.");
+                throw new UserOrigamException($"No package is active. Select a package first.");
             }
             var dataSources = dataStructureProvider.ChildItems
                 .Select(x => new DataSource
