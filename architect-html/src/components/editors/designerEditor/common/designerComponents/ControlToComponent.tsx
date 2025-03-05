@@ -7,16 +7,11 @@ import {
   parseComponentType
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import {
-  AsCheckBox,
   AsCombo,
   AsDateBox,
-  AsForm,
-  AsPanel,
   AsTextBox,
   Component,
-  FormPanel,
   GroupBox,
-  TabControl, TabPage,
   TagInput,
   TextArea
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
@@ -24,6 +19,21 @@ import { ReactElement } from "react";
 import {
   SplitPanel
 } from "src/components/editors/designerEditor/common/designerComponents/SplitPanel.tsx";
+import {
+  AsForm
+} from "src/components/editors/designerEditor/common/designerComponents/AsForm.tsx";
+import {
+  AsPanel
+} from "src/components/editors/designerEditor/common/designerComponents/AsPanel.tsx";
+import {
+  FormPanel
+} from "src/components/editors/designerEditor/common/designerComponents/FormPanel.tsx";
+import {
+  AsCheckBox
+} from "src/components/editors/designerEditor/common/designerComponents/AsCheckBox.tsx";
+import {
+  TabControl, TabPage
+} from "src/components/editors/designerEditor/common/designerComponents/TabControl.tsx";
 
 export async function controlToComponent(
   control: IApiControl,
@@ -166,6 +176,9 @@ export async function controlToComponent(
       })
 
     case ComponentType.TabPage:
+      if (!getChildren) {
+        throw new Error("getChildren parameter is missing");
+      }
       return new TabPage({
         id: control.id,
         parent: parent as TabControl,
@@ -173,7 +186,8 @@ export async function controlToComponent(
           type: componentType,
           identifier: control.name,
         },
-        properties: properties
+        properties: properties,
+        getChildren: getChildren,
       })
 
     case ComponentType.TabControl:

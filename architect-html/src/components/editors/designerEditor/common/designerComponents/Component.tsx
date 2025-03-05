@@ -1,5 +1,4 @@
 import {
-  ComponentType,
   IComponentData
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { action, observable } from "mobx";
@@ -9,7 +8,6 @@ import {
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import {
   controlLayer,
-  screenLayer,
   sectionLayer
 } from "src/components/editors/designerEditor/common/Layers.ts";
 import {
@@ -19,7 +17,6 @@ import {
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
 import { ReactElement } from "react";
-import { Observer } from "mobx-react-lite";
 
 export abstract class Component {
   id: string;
@@ -30,7 +27,7 @@ export abstract class Component {
   accessor hideChildren = false;
 
   get designerRepresentation(): ReactElement | null {
-    if (this.parent?.hideChildren) {
+    if (this.parent && !this.parent.isActive) {
       return null;
     }
     if (!this._designerRepresentation) {
@@ -62,11 +59,15 @@ export abstract class Component {
   }
 
   get absoluteLeft(): number {
-    return this.relativeLeft + (this.parent?.absoluteLeft ?? 0);
+    return this.relativeLeft
+      + (this.parent?.absoluteLeft ?? 0)
+      + (this.parent?.childOffsetLeft ?? 0);
   }
 
   set absoluteLeft(value: number) {
-    this.relativeLeft = value - (this.parent?.absoluteLeft ?? 0);
+    this.relativeLeft = value
+      - (this.parent?.absoluteLeft ?? 0)
+      - (this.parent?.childOffsetLeft ?? 0);
   }
 
   get absoluteRight(): number {
@@ -74,11 +75,23 @@ export abstract class Component {
   }
 
   get absoluteTop(): number {
-    return this.relativeTop + (this.parent?.absoluteTop ?? 0);
+    return this.relativeTop
+      + (this.parent?.absoluteTop ?? 0)
+      + (this.parent?.childOffsetTop ?? 0);
   }
 
   set absoluteTop(value: number) {
-    this.relativeTop = value - (this.parent?.absoluteTop ?? 0);
+    this.relativeTop = value
+      - (this.parent?.absoluteTop ?? 0)
+      - (this.parent?.childOffsetTop ?? 0);
+  }
+
+  get childOffsetLeft() {
+    return 0;
+  }
+
+  get childOffsetTop() {
+    return 0;
   }
 
   get absoluteBottom(): number {
@@ -137,6 +150,9 @@ export abstract class Component {
     this.properties = args.properties;
     this._labelPosition = parseLabelPosition(this.get("CaptionPosition"));
     this.parent = args.parent;
+    if(this.parent){
+      this.hideChildren = this.parent.hideChildren;
+    }
   }
 
   isPointInside(x: number, y: number) {
@@ -212,7 +228,8 @@ export abstract class Component {
     return false;
   }
 
-  update() {}
+  update() {
+  }
 }
 
 
@@ -236,71 +253,6 @@ export class GroupBox extends Component {
   }
 }
 
-export class AsForm extends Component {
-  get canHaveChildren(): boolean {
-    return true;
-  }
-
-  get zIndex(): number {
-    return screenLayer;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.panel}>
-      </div>
-    );
-  }
-}
-
-export class AsPanel extends Component {
-  get canHaveChildren(): boolean {
-    return true;
-  }
-
-  get zIndex(): number {
-    return sectionLayer;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.panel}>
-      </div>
-    );
-  }
-}
-
-export class AsCheckBox extends Component {
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.designSurfaceEditorContainer}>
-        <div className={S.designSurfaceCheckbox}></div>
-        <div>{this.properties.find(x => x.name === "Text")?.value}</div>
-      </div>
-    );
-  }
-}
-
-export class FormPanel extends Component {
-
-  reactElement: ReactElement;
-
-  constructor(args: {
-    id: string,
-    parent: Component | null,
-    data: IComponentData,
-    properties: EditorProperty[],
-    reactElement: ReactElement,
-  }) {
-    super(args);
-    this.reactElement = args.reactElement;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return this.reactElement;
-  }
-}
-
 export class AsCombo extends Component {
 }
 
@@ -316,105 +268,3 @@ export class AsDateBox extends Component {
 export class TextArea extends Component {
 }
 
-export class TabControl extends Component {
-
-  private tabs: TabPage[] = [];
-
-  get zIndex(): number {
-    return this.countParents() + screenLayer;
-  }
-
-  constructor(args: {
-    id: string,
-    parent: Component | null,
-    data: IComponentData,
-    properties: EditorProperty[],
-  }) {
-    super(args);
-  }
-
-  registerTab(tab: TabPage) {
-    if (this.tabs.length === 0) {
-      tab.hideChildren = true;
-    }
-    this.tabs.push(tab);
-  }
-
-  @action
-  setVisible(tabId: string) {
-    for (const tab of this.tabs) {
-      tab.hideChildren = tab.id !== tabId;
-    }
-  }
-
-  get canHaveChildren(): boolean {
-    return false;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.tabPageContainer}>
-        <div className={S.tabs}>
-          {this.tabs.map(tab =>
-            <Observer key={tab.id}>
-              {() => (
-                <div
-                  className={tab.isActive ? S.activeTab : ""}
-                  onClick={() => this.setVisible(tab.id)}
-                >
-                  {tab.get("Text")}
-                </div>
-              )}
-            </Observer>)
-          }
-        </div>
-        {/*<div className={S.designSurfaceInput}></div>*/}
-      </div>
-    );
-  }
-}
-
-export class TabPage extends Component {
-
-  @observable accessor hideChildren: boolean = false;
-
-  constructor(args: {
-    id: string,
-    parent: TabControl,
-    data: IComponentData,
-    properties: EditorProperty[],
-  }) {
-    super(args);
-
-    if (!args.parent || args.parent.data.type !== ComponentType.TabControl) {
-      throw new Error("Parent of TabPage must be a TabControl");
-    }
-    (args.parent as TabControl).registerTab(this);
-
-    // TabPages' width and height properties always come with default values from the server.
-    // That is ok. They have to be the same size as the parent TabControl anyway.
-    const parentWidth = this.parent!.properties!.find(x => x.name == "Width")!.value;
-    const widthProperty = this.properties.find(x => x.name == "Width")!
-    widthProperty.value = parentWidth;
-
-    const parentHeight = this.parent!.properties!.find(x => x.name == "Height")!.value;
-    const heightProperty = this.properties.find(x => x.name == "Height")!
-    heightProperty.value = parentHeight;
-  }
-
-  get isActive(): boolean {
-    return !this.hideChildren;
-  }
-
-  get canHaveChildren(): boolean {
-    return true;
-  }
-
-  get zIndex(): number {
-    return this.countParents() + screenLayer;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return null;
-  }
-}
