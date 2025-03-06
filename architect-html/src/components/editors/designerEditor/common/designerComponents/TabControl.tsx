@@ -12,10 +12,11 @@ import { action, observable } from "mobx";
 import { ReactElement } from "react";
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
-import { Observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import {
   Component,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
+import { Item, Menu, TriggerEvent, useContextMenu } from "react-contexify";
 
 export class TabControl extends Component {
 
@@ -67,16 +68,11 @@ export class TabControl extends Component {
             .slice()
             .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
             .map(tab =>
-            <Observer key={tab.id}>
-              {() => (
-                <div
-                  className={tab.isActive ? S.activeTab : ""}
+                <TabLabel
                   onClick={() => this.setVisible(tab.id)}
-                >
-                  {tab.get("Text")}
-                </div>
-              )}
-            </Observer>)
+                  tabPage={tab}
+                />
+             )
           }
         </div>
         {/*<div className={S.designSurfaceInput}></div>*/}
@@ -84,6 +80,52 @@ export class TabControl extends Component {
     );
   }
 }
+
+const TabLabel = observer((
+  {
+    tabPage,
+    onClick,
+  }: {
+    tabPage: TabPage;
+    onClick: () => void;
+  }) => {
+
+  const onDelete =(id: string) => { }
+
+  const { show } = useContextMenu({
+    id: tabPage.id,
+  });
+
+  function handleContextMenu(event: TriggerEvent) {
+    event.preventDefault();
+    show({ event, props: { tabId: tabPage.id } });
+
+    setTimeout(() => {
+      document.querySelector(".react-contexify")?.classList.add("keep-open");
+    }, 10);
+  }
+
+
+  return (
+    <>
+      <div
+        className={tabPage.isActive ? S.activeTab : ""}
+        onClick={onClick}
+        onContextMenu={handleContextMenu}
+      >
+        {tabPage.get("Text")}
+      </div>
+      <Menu id={tabPage.id} animation="fade">
+        <Item
+          closeOnClick={false}
+          onClick={({ props }) => onDelete(props?.tabId)}
+        >
+          Delete
+        </Item>
+      </Menu>
+    </>
+  );
+});
 
 export class TabPage extends Component {
 
