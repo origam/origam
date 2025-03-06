@@ -134,7 +134,10 @@ const TabLabel = observer((
     <>
       <div
         className={tabPage.isActive ? S.activeTab : ""}
-        onClick={onClick}
+        onClick={event => {
+          (event as any).clickedComponent = tabPage;
+          onClick();
+        }}
         onContextMenu={handleContextMenu}
       >
         {tabPage.get("Text")}

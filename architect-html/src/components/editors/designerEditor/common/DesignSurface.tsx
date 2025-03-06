@@ -96,9 +96,12 @@ export const DesignSurface: React.FC<{
     run({generator: surfaceState.onDesignerMouseUp(mouseX, mouseY)});
   };
 
-  const handleComponentClick = (e: React.MouseEvent, component: Component) => {
-    e.stopPropagation();
-    surfaceState.selectComponent(component);
+  const handleComponentClick = (event: React.MouseEvent, component: Component) => {
+    event.stopPropagation();
+    const componentToSelect = (event as any).clickedComponent
+      ? (event as any).clickedComponent
+      : component
+    surfaceState.selectComponent(componentToSelect);
   };
 
   const handleSurfaceClick = () => {
