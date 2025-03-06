@@ -25,6 +25,9 @@ import {
 import { ReactElement } from "react";
 import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
 import { CancellablePromise } from "mobx/dist/api/flow";
+import {
+  TabControl
+} from "src/components/editors/designerEditor/common/designerComponents/TabControl.tsx";
 
 
 export class ScreenEditorState extends DesignerEditorState {
@@ -59,6 +62,36 @@ export class ScreenEditorState extends DesignerEditorState {
       });
       yield*this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
+    }.bind(this);
+  }
+
+  createTabPage(tabControl: TabControl) {
+    return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
+      const tabPageControlItemId = "6d13ec20-3b17-456e-ae43-3021cb067a70";
+      const screenEditorItem = yield this.architectApi.createScreenEditorItem({
+        editorSchemaItemId: this.editorNode.origamId,
+        parentControlSetItemId: tabControl.id,
+        controlItemId: tabPageControlItemId,
+        top: 10,
+        left: 10
+      });
+
+      const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
+      const newComponent = yield controlToComponent(
+        screenEditorItem.screenItem,
+        tabControl,
+        this.surface.getChildren.bind(this.surface),
+        sectionLoader);
+      newComponent.width = newComponent.width ?? 400;
+      newComponent.height = newComponent.height ?? 20;
+      this.surface.components.push(newComponent);
+      this.surface.draggedComponentData = null;
+      this.isDirty = true;
+
+      const panelSizeChanged = this.surface.updatePanelSize(newComponent);
+      if (panelSizeChanged) {
+        yield* this.update() as any;
+      }
     }.bind(this);
   }
 

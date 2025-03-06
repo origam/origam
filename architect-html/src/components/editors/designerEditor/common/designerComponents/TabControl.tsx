@@ -12,7 +12,7 @@ import { action, observable } from "mobx";
 import { ReactElement, useContext } from "react";
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
-import { observer } from "mobx-react-lite";
+import { Observer, observer } from "mobx-react-lite";
 import {
   Component,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
@@ -27,7 +27,7 @@ import {
 
 export class TabControl extends Component {
 
-  private tabs: TabPage[] = [];
+  @observable private accessor tabs: TabPage[] = [];
 
   get zIndex(): number {
     return this.countParents() + screenLayer;
@@ -69,21 +69,25 @@ export class TabControl extends Component {
 
   getDesignerRepresentation(): ReactElement | null {
     return (
-      <div className={S.tabPageContainer}>
-        <div className={S.tabs}>
-          {this.tabs
-            .slice()
-            .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
-            .map(tab =>
-                <TabLabel
-                  onClick={() => this.setVisible(tab.id)}
-                  tabPage={tab}
-                />
-             )
-          }
-        </div>
-        {/*<div className={S.designSurfaceInput}></div>*/}
-      </div>
+      <Observer>
+        {() => (
+          <div className={S.tabPageContainer}>
+            <div className={S.tabs}>
+              {this.tabs
+                .slice()
+                .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
+                .map(tab =>
+                  <TabLabel
+                    onClick={() => this.setVisible(tab.id)}
+                    tabPage={tab}
+                  />
+                )
+              }
+            </div>
+            {/*<div className={S.designSurfaceInput}></div>*/}
+          </div>
+        )}
+      </Observer>
     );
   }
 }
@@ -101,8 +105,8 @@ const TabLabel = observer((
   const run = runInFlowWithHandler(rootStore.errorDialogController);
   const designerState = useContext(DesignerStateContext);
 
-  const { show } = useContextMenu({
-     id: "TAB_LABEL_MENU"
+  const {show} = useContextMenu({
+    id: "TAB_LABEL_MENU"
   });
 
   function handleContextMenu(event: TriggerEvent) {
@@ -113,8 +117,13 @@ const TabLabel = observer((
         tabId: tabPage.id,
         rootStore: rootStore,
         onDelete: () => {
-          if(designerState){
+          if (designerState) {
             run({generator: designerState.delete(tabPage.getAllChildren())})
+          }
+        },
+        onAdd: () => {
+          if (designerState) {
+            run({generator: designerState.createTabPage(tabPage.parent! as TabControl)})
           }
         }
       }

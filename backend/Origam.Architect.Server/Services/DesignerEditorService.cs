@@ -234,23 +234,28 @@ public class DesignerEditorService(
             .ChildItems
             .OfType<ControlItem>()
             .First(item => item.Id == itemModelData.ControlItemId); // This will have to be done some other way in case of a plugin. See ControlSetEditor.GetControlbyType(Type type)
-
-
+        
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId, null);
         newItem.ControlItem = controlItem;
         newItem.Name = controlItem.Name;
 
-        ApiControl sectionControl =  LoadContent(controlItem.PanelControlSet.MainItem, []);
-        var height = sectionControl.Properties.Find(prop => prop.Name == "Height").Value;
-        var width = sectionControl.Properties.Find(prop => prop.Name == "Width").Value;
+        ApiControl sectionControl = null;
+        object height = null;
+        object width = null;
+        if (controlItem.PanelControlSet != null)
+        {
+            sectionControl = LoadContent(controlItem.PanelControlSet.MainItem, []);
+            height = sectionControl.Properties.Find(prop => prop.Name == "Height").Value;
+            width = sectionControl.Properties.Find(prop => prop.Name == "Width").Value;
+        }
 
         ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left,
-            width: (int)width,
-            height: (int)height);
+            width: (int?)width,
+            height: (int?)height);
         return new ScreenEditorItem
         {
             ScreenItem = LoadItem(newItem, []),

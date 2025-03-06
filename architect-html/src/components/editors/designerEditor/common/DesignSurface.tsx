@@ -197,6 +197,9 @@ export const DesignSurface: React.FC<{
         <Item onClick={({ props }) => props.onDelete()}>
           Delete
         </Item>
+        <Item onClick={({ props }) => props.onAdd()}>
+          Add New
+        </Item>
       </Menu>
     </div>
   );
