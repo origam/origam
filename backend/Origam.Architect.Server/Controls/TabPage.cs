@@ -47,7 +47,9 @@ public class TabPage: IControl
                 return match.Groups[1].Value == ""
                     ? 0 
                     : int.Parse(match.Groups[1].Value);
-            }).Max();
+            })
+            .DefaultIfEmpty(0)
+            .Max();
         
         Text = $"TabPage{maxTabPageNumber + 1}";
         string height = tabs.First().ChildItems

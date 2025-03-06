@@ -117,19 +117,23 @@ export class ScreenEditorState extends DesignerEditorState {
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
-      const newComponent = yield controlToComponent(
+
+      const components: Component[] = yield toComponentRecursive(
         screenEditorItem.screenItem,
-        null,
+        parent,
+        [],
         this.surface.getChildren.bind(this.surface),
         sectionLoader);
-      newComponent.width = newComponent.width ?? 400;
-      newComponent.height = newComponent.height ?? 20;
-      newComponent.parent = parent;
-      this.surface.components.push(newComponent);
+      for (const newComponent of components) {
+        newComponent.width = newComponent.width ?? 400;
+        newComponent.height = newComponent.height ?? 20;
+        this.surface.components.push(newComponent);
+      }
+      const rootComponent = components[0];
       this.surface.draggedComponentData = null;
       this.isDirty = true;
 
-      const panelSizeChanged = this.surface.updatePanelSize(newComponent);
+      const panelSizeChanged = this.surface.updatePanelSize(rootComponent);
       if (panelSizeChanged) {
         yield* this.update() as any;
       }
