@@ -197,7 +197,10 @@ export const DesignSurface: React.FC<{
           </React.Fragment>
         ))}
       <Menu id={"TAB_LABEL_MENU"} animation="fade">
-        <Item onClick={({ props }) => props.onDelete()}>
+        <Item
+          disabled={({ props }) => props.deleteDisabled}
+          onClick={({ props }) => props.onDelete()}
+        >
           Delete
         </Item>
         <Item onClick={({ props }) => props.onAdd()}>
@@ -207,3 +210,8 @@ export const DesignSurface: React.FC<{
     </div>
   );
 });
+
+// function isItemDisabled({ props, data, triggerEvent }) {
+//
+//   return props.deleteDisabled;;
+// }

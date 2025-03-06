@@ -33,6 +33,10 @@ export class TabControl extends Component {
     return this.countParents() + screenLayer;
   }
 
+  get numberOfTabs() {
+    return this.tabs.length;
+  }
+
   constructor(args: {
     id: string,
     parent: Component | null,
@@ -116,6 +120,7 @@ const TabLabel = observer((
       props: {
         tabId: tabPage.id,
         rootStore: rootStore,
+        deleteDisabled: (tabPage.parent as TabControl).numberOfTabs === 1,
         onDelete: () => {
           if (designerState) {
             run({generator: designerState.delete(tabPage.getAllChildren())})
