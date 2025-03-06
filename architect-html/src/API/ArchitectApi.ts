@@ -149,11 +149,11 @@ export class ArchitectApi implements IArchitectApi {
 
   async deleteSectionEditorItem(
     args: {
-      schemaItemId: string,
+      schemaItemIds: string[],
       editorSchemaItemId: string,
     }
   ): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post("/SectionEditor/DeleteItem",
+    return (await this.axiosInstance.post("/SectionEditor/Delete",
       args
     )).data;
   }
@@ -183,11 +183,11 @@ export class ArchitectApi implements IArchitectApi {
 
   async deleteScreenEditorItem(
     args: {
-      schemaItemId: string,
+      schemaItemIds: string[],
       editorSchemaItemId: string,
     }
   ): Promise<IScreenEditorModel> {
-    return (await this.axiosInstance.post("/ScreenEditor/DeleteItem",
+    return (await this.axiosInstance.post("/ScreenEditor/Delete",
       args
     )).data;
   }

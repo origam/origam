@@ -9,14 +9,21 @@ import {
   EditorProperty
 } from "src/components/editors/gridEditor/EditorProperty.ts";
 import { action, observable } from "mobx";
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import S
   from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
 import { observer } from "mobx-react-lite";
 import {
   Component,
 } from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import { Item, Menu, TriggerEvent, useContextMenu } from "react-contexify";
+import { TriggerEvent, useContextMenu } from "react-contexify";
+import { RootStoreContext } from "src/main.tsx";
+import {
+  runInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
+import {
+  DesignerStateContext
+} from "src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx";
 
 export class TabControl extends Component {
 
@@ -90,21 +97,29 @@ const TabLabel = observer((
     onClick: () => void;
   }) => {
 
-  const onDelete =(id: string) => { }
+  const rootStore = useContext(RootStoreContext);
+  const run = runInFlowWithHandler(rootStore.errorDialogController);
+  const designerState = useContext(DesignerStateContext);
 
   const { show } = useContextMenu({
-    id: tabPage.id,
+     id: "TAB_LABEL_MENU"
   });
 
   function handleContextMenu(event: TriggerEvent) {
     event.preventDefault();
-    show({ event, props: { tabId: tabPage.id } });
-
-    setTimeout(() => {
-      document.querySelector(".react-contexify")?.classList.add("keep-open");
-    }, 10);
+    show({
+      event,
+      props: {
+        tabId: tabPage.id,
+        rootStore: rootStore,
+        onDelete: () => {
+          if(designerState){
+            run({generator: designerState.delete(tabPage.getAllChildren())})
+          }
+        }
+      }
+    });
   }
-
 
   return (
     <>
@@ -115,14 +130,6 @@ const TabLabel = observer((
       >
         {tabPage.get("Text")}
       </div>
-      <Menu id={tabPage.id} animation="fade">
-        <Item
-          closeOnClick={false}
-          onClick={({ props }) => onDelete(props?.tabId)}
-        >
-          Delete
-        </Item>
-      </Menu>
     </>
   );
 });
@@ -180,6 +187,17 @@ export class TabPage extends Component {
     for (const child of children) {
       this.showHideChildrenRecursive(child, hideChildren);
     }
+  }
+
+  getAllChildren(component?: Component, otherChildren?: Component[]) {
+    const currentComponent = component ?? this;
+    let allChildren = otherChildren ?? [];
+    allChildren.push(currentComponent);
+    const currentComponentChildren = this.getChildren(currentComponent);
+    for (const child of currentComponentChildren) {
+      allChildren = [...this.getAllChildren(child, allChildren)];
+    }
+    return allChildren;
   }
 
   isPointInside(x: number, y: number) {

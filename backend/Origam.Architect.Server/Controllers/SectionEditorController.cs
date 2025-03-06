@@ -36,14 +36,14 @@ public class SectionEditorController(
         );
     }
     
-    [HttpPost("DeleteItem")]
-    public ActionResult<SectionEditorModel> DeleteItem(
+    [HttpPost("Delete")]
+    public ActionResult<SectionEditorModel> Delete(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
         EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
         if (editor.Item is PanelControlSet screenSection)
         {
-            designerEditorService.DeleteItem(input.SchemaItemId, screenSection);
+            designerEditorService.DeleteItem(input.SchemaItemIds, screenSection);
             editor.IsDirty = true;
             var editorData = designerEditorService.GetSectionEditorData(screenSection);
             return new SectionEditorModel

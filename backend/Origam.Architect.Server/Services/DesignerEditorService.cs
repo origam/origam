@@ -258,13 +258,16 @@ public class DesignerEditorService(
         };
     }
 
-    public void DeleteItem(Guid schemaItemId, ISchemaItem rootItem)
+    public void DeleteItem(List<Guid> schemaItemIds, ISchemaItem rootItem)
     {
-        ISchemaItem schemaItem = rootItem
-            .GetChildByIdRecursive(schemaItemId);
-        if (schemaItem is ControlSetItem itemToUpdate)
+        foreach (var schemaItemId in schemaItemIds)
         {
-            itemToUpdate.IsDeleted = true;
+            ISchemaItem schemaItem = rootItem
+                .GetChildByIdRecursive(schemaItemId);
+            if (schemaItem is ControlSetItem itemToUpdate)
+            {
+                itemToUpdate.IsDeleted = true;
+            }
         }
     }
 

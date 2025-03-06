@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import S
   from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import {
@@ -11,14 +11,18 @@ import {
   ScreenToolbox
 } from "src/components/editors/designerEditor/screenEditor/ScreenToolbox.tsx";
 
+export const DesignerStateContext = createContext<ScreenEditorState | null>(null);
+
 export const ScreenEditor: React.FC<{
   designerState: ScreenEditorState
 }> = ({designerState}) => {
   return (
+    <DesignerStateContext.Provider value={designerState}>
     <div className={S.componentDesigner}>
       <ScreenToolbox designerState={designerState}/>
       <DesignSurface designerState={designerState}/>
     </div>
+    </DesignerStateContext.Provider>
   );
 };
 

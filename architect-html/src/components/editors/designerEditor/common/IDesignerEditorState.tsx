@@ -9,7 +9,7 @@ import {
 export interface IDesignerEditorState extends IEditorState {
   surface: DesignSurfaceState;
 
-  delete(component: Component): any;
+  delete(components: Component[]): any;
 
   create(x: number, y: number): any;
 }

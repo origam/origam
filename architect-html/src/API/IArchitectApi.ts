@@ -44,7 +44,7 @@ export interface IArchitectApi {
   }) : Promise<IApiControl>
 
   deleteSectionEditorItem(args:{
-    schemaItemId: string,
+    schemaItemIds: string[],
     editorSchemaItemId: string,
   }) : Promise<ISectionEditorModel>
 
@@ -64,7 +64,7 @@ export interface IArchitectApi {
   }) : Promise<IScreenEditorItem>
 
   deleteScreenEditorItem(args:{
-    schemaItemId: string,
+    schemaItemIds: string[],
     editorSchemaItemId: string,
   }) : Promise<IScreenEditorModel>
 

@@ -18,6 +18,7 @@ import {
 import {
   ComponentType
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
+import { Item, Menu } from "react-contexify";
 
 export const DesignSurface: React.FC<{
   designerState: IDesignerEditorState
@@ -30,7 +31,7 @@ export const DesignSurface: React.FC<{
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Delete' && surfaceState.selectedComponent) {
-        run({generator: designerState.delete(surfaceState.selectedComponent)});
+        run({generator: designerState.delete([surfaceState.selectedComponent])});
       }
     };
 
@@ -192,6 +193,11 @@ export const DesignSurface: React.FC<{
             </div>
           </React.Fragment>
         ))}
+      <Menu id={"TAB_LABEL_MENU"} animation="fade">
+        <Item onClick={({ props }) => props.onDelete()}>
+          Delete
+        </Item>
+      </Menu>
     </div>
   );
 });

@@ -69,7 +69,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     yield* this.update() as any
   }
 
-  public abstract delete(component: Component): void;
+  public abstract delete(components: Component[]): void;
 
   public abstract create(x: number, y: number): void;
 
