@@ -268,3 +268,6 @@ export class AsDateBox extends Component {
 export class TextArea extends Component {
 }
 
+export class AsTree extends Component {
+}
+

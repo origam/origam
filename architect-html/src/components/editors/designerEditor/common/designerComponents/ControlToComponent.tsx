@@ -9,7 +9,7 @@ import {
 import {
   AsCombo,
   AsDateBox,
-  AsTextBox,
+  AsTextBox, AsTree,
   Component,
   GroupBox,
   TagInput,
@@ -46,6 +46,17 @@ export async function controlToComponent(
   switch (componentType) {
     case ComponentType.AsCombo:
       return new AsCombo({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties
+      })
+
+    case ComponentType.AsTree:
+      return new AsTree({
         id: control.id,
         parent: parent,
         data: {

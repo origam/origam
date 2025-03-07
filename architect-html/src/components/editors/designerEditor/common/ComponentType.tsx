@@ -14,6 +14,7 @@ export enum ComponentType {
   SplitPanel = 'Origam.Gui.Win.SplitPanel',
   TabControl = 'Origam.Gui.Win.AsTabControl',
   TabPage = 'System.Windows.Forms.TabPage',
+  AsTree= 'Origam.Gui.Win.AsTreeView'
 }
 
 export function parseComponentType(value: string): ComponentType {
