@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
-using Origam.Extensions;
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -28,18 +28,14 @@ public class EditorController(
         var item =
             editorService.OpenEditorWithNewItem(
                 input.NodeId, input.NewTypeName).Item;
-
-        var editorProperties = propertyService.GetEditorProperties(item)
-            .Peek(property =>
-            {
-                property.Errors =
-                    propertyService.GetRuleErrorsIfExist(property, item);
-            });
+        
+        TreeNode treeNode = treeNodeFactory.Create(item);
         return new OpenEditorData
         {
+            IsDirty = true,
             IsPersisted = false,
-            Node = treeNodeFactory.Create(item),
-            Data = editorProperties
+            Node = treeNode,
+            Data = GetData(treeNode, item)
         };
     }
 
@@ -114,6 +110,11 @@ public class EditorController(
     {
         EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
         ISchemaItem item = editorData.Item;
+        if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
+        {
+            return BadRequest("No Datasource selected can't save");
+        }
+
         try
         {
             persistenceService.SchemaProvider.BeginTransaction();

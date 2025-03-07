@@ -4,6 +4,7 @@ using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Controllers;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -17,7 +18,8 @@ public class EditorService(
     private readonly IPersistenceProvider persistenceProvider =
         persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems = new();
+    private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems =
+        new();
 
     public EditorData OpenEditorWithNewItem(Guid parentId, string fullTypeName)
     {
@@ -33,11 +35,69 @@ public class EditorService(
             .Invoke(factory,
                 new object[] { schemaService.ActiveSchemaExtensionId, null });
 
+        if (result is FormControlSet formControlSet)
+        {
+            var rootControl = formControlSet.NewItem<ControlSetItem>(
+                schemaService.ActiveSchemaExtensionId, null);
+            ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsForm");
+            SetControlItem(rootControl, controlItem);
+            rootControl.GetProperty("Height").Value = "500";
+            rootControl.GetProperty("Width").Value = "500";
+        } 
+        else if (result is PanelControlSet panelControlSet)
+        {
+            var rootControl = panelControlSet.NewItem<ControlSetItem>(
+                schemaService.ActiveSchemaExtensionId, null);
+            ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsPanel");
+            SetControlItem(rootControl, controlItem);
+            rootControl.GetProperty("Height").Value = "500";
+            rootControl.GetProperty("Width").Value = "500";
+        }
+
         ISchemaItem item = (ISchemaItem)result;
         return editorSchemaItems
             .GetOrAdd(item.Id, id => new EditorData(item));
     }
     
+    private void SetControlItem (ControlSetItem controlSetItem, ControlItem controlItem)
+    {
+        controlSetItem.ControlItem = controlItem;
+        List<ControlPropertyItem> controlProperties = controlItem
+            .ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst);
+        
+        foreach (ControlPropertyItem controlProperty in controlProperties)
+        {
+            PropertyValueItem valueItem = controlSetItem.NewItem<PropertyValueItem>(
+                schemaService.ActiveSchemaExtensionId, null);
+            valueItem.ControlPropertyItem = controlProperty;
+            valueItem.Name = controlProperty.Name;
+        }
+    }
+
+    private ControlItem GetControlByType(string fullTypeName)
+    {
+        var items = schemaService
+            .GetProvider<UserControlSchemaItemProvider>()
+            .ChildItems
+            .OfType<ControlItem>();
+        foreach (ControlItem item in items)
+        {
+            // ControlItem dynamicTypeControlItem =
+            //     DynamicTypeFactory.GetAssociatedControlItem(type);
+            // if (dynamicTypeControlItem != null)
+            // {
+            //     return dynamicTypeControlItem;
+            // }
+
+            if (item.ControlType == fullTypeName)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
     public EditorData OpenEditor(Guid schemaItemId)
     {
         return editorSchemaItems.GetOrAdd(
@@ -52,14 +112,16 @@ public class EditorService(
 
     public void CloseEditor(Guid schemaItemId)
     {
-        bool success = editorSchemaItems.TryRemove(schemaItemId, out EditorData removedData);
+        bool success =
+            editorSchemaItems.TryRemove(schemaItemId,
+                out EditorData removedData);
         if (!success)
         {
             return;
         }
 
         ISchemaItem removedItem = removedData.Item;
-        if(removedItem.IsPersisted)
+        if (removedItem.IsPersisted)
         {
             // in case we edited some of the children we invalidate their cache
             removedItem.InvalidateChildrenPersistenceCache();
@@ -67,7 +129,8 @@ public class EditorService(
         }
         else
         {
-            ISchemaItemProvider provider = removedItem.ParentItem ?? removedItem.RootProvider ;
+            ISchemaItemProvider provider =
+                removedItem.ParentItem ?? removedItem.RootProvider;
             if (provider != null)
             {
                 if (provider.ChildItems.Contains(removedItem))
@@ -93,12 +156,14 @@ public class EditorService(
                     $"Property {change.Name} not found on type {editor.GetType().Name}");
             }
 
-            object newValue = propertyParser.Parse(propertyToChange, change.Value);
+            object newValue =
+                propertyParser.Parse(propertyToChange, change.Value);
             object oldValue = propertyToChange.GetValue(editor.Item);
             if (oldValue != newValue)
             {
                 editor.IsDirty = true;
             }
+
             propertyToChange.SetValue(editor.Item, newValue);
         }
 
@@ -110,12 +175,12 @@ public class EditorService(
         return editorSchemaItems.Values
             .OrderBy(x => x.OpenedAt);
     }
-    
 }
+
 public class EditorData(ISchemaItem item)
 {
     public ISchemaItem Item { get; } = item;
     public DateTime OpenedAt { get; } = DateTime.Now;
-    
+
     public bool IsDirty { get; set; }
 }

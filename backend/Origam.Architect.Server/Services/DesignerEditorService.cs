@@ -67,6 +67,7 @@ public class DesignerEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
+            dataSources.Insert(0,  DataSource.Empty);
 
             List<EditorField> fields = GetFields(screenSection);
             DropDownValue[] dataSourceDropDownValues = fields
@@ -80,7 +81,7 @@ public class DesignerEditorService(
                 SchemaExtensionId = editedItem.SchemaExtensionId,
                 DataSources = dataSources,
                 RootControl = apiControl,
-                SelectedDataSourceId = screenSection.DataEntity.Id,
+                SelectedDataSourceId = screenSection.DataEntity?.Id ?? Guid.Empty,
                 Fields = GetFields(screenSection)
             };
         }
@@ -105,6 +106,7 @@ public class DesignerEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
+            dataSources.Insert(0,  DataSource.Empty);
 
             var userControlProvider =
                 schemaService.GetProvider<UserControlSchemaItemProvider>();
@@ -149,6 +151,11 @@ public class DesignerEditorService(
     private static List<EditorField> GetFields(PanelControlSet screenSection)
     {
         IDataEntity dataEntity = screenSection.DataEntity;
+        if (screenSection.DataEntity == null)
+        {
+            return [];
+        }
+
         return dataEntity
             .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
                 .CategoryConst)
@@ -202,9 +209,9 @@ public class DesignerEditorService(
                 .OfType<PropertyBindingInfo>()
                 .FirstOrDefault();
             var caption = controlSet.DataEntity
-                .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
+                ?.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn
                     .CategoryConst)
-                .FirstOrDefault(x => x.Name == bindingInfo?.Value)
+                ?.FirstOrDefault(x => x.Name == bindingInfo?.Value)
                 ?.Caption ?? bindingInfo?.Value;
             apiControl.Name = caption ?? controlSetItem.Name;
         }

@@ -34,10 +34,7 @@ public class TabPage: IControl
             .OfType<ControlSetItem>()
             .ToList();
         var labelTexts = tabs
-            .Select(tab => 
-                tab.ChildItems
-                    .OfType<PropertyValueItem>()
-                    .FirstOrDefault(prop => prop.Name == "Text")?.Value)
+            .Select(tab => tab.GetPropertyOrNull("Text")?.Value)
             .Where(labelText => labelText != null);
 
         int maxTabPageNumber =  labelTexts.Where(labelText => labelText.StartsWith("TabPage"))
@@ -52,16 +49,12 @@ public class TabPage: IControl
             .Max();
         
         Text = $"TabPage{maxTabPageNumber + 1}";
-        string height = tabs.First().ChildItems
-            .OfType<PropertyValueItem>()
-            .FirstOrDefault(prop => prop.Name == "Height")?.Value;
+        string height = tabs.First().GetPropertyOrNull("Height")?.Value;
         if (!string.IsNullOrEmpty(height))
         {
             Height = int.Parse(height);
         }
-        string width = tabs.First().ChildItems
-            .OfType<PropertyValueItem>()
-            .FirstOrDefault(prop => prop.Name == "Width")?.Value;
+        string width = tabs.First().GetPropertyOrNull("Width")?.Value;
         if (!string.IsNullOrEmpty(width))
         {
             Width = int.Parse(width);
