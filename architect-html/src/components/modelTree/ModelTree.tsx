@@ -32,7 +32,7 @@ const ModelTreeNode: React.FC<{
   });
 
   async function handleContextMenu(event: TriggerEvent) {
-    await node.getMenuItems();
+    run({generator: node.getMenuItems.bind(node)});
     show({event, props: {}});
   }
 

@@ -3,7 +3,7 @@ import {
   EditorType, IArchitectApi,
   IMenuItemInfo, IApiEditorData
 } from "src/API/IArchitectApi.ts";
-import { action, observable } from "mobx";
+import { observable } from "mobx";
 import {
   EditorData,
 } from "src/components/modelTree/EditorData.ts";
@@ -77,9 +77,8 @@ export class TreeNode implements IEditorNode {
     }
   }
 
-  @action
-  async getMenuItems() {
-    this.contextMenuItems = await this.architectApi.getMenuItems(this);
+  * getMenuItems() {
+    this.contextMenuItems = yield this.architectApi.getMenuItems(this);
   }
 
   createNode(typeName: string) {
