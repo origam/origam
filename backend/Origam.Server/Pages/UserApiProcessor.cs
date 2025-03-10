@@ -186,7 +186,7 @@ public class UserApiProcessor
         }
         if (environment.IsProduction())
         {
-            return "There was en error, check log for details";
+            return "There was an error, check log for details";
         }
         return JsonConvert.SerializeObject(ex);
     }
