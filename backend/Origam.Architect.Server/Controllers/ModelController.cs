@@ -124,12 +124,12 @@ public class ModelController(
     public IActionResult DeleteSchemaItem(
         [Required] [FromBody] DeleteModel input)
     {
+        var instance =
+            persistenceProvider.RetrieveInstance<IBrowserNode2>(
+                input.SchemaItemId);
         try
         {
             persistenceProvider.BeginTransaction();
-            var instance =
-                persistenceProvider.RetrieveInstance<IBrowserNode2>(
-                    input.SchemaItemId);
             instance.Delete();
         }
         catch (InvalidOperationException ex)

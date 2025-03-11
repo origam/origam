@@ -1,6 +1,5 @@
 import {
-  IArchitectApi, IScreenEditorData,
-  ISectionEditorModel, IToolBoxItem
+  IArchitectApi, IScreenEditorData, IScreenEditorModel, IToolBoxItem
 } from "src/API/IArchitectApi.ts";
 import {
   ToolboxState
@@ -28,8 +27,8 @@ export class ScreenToolboxState {
   }
 
   private updateTopProperties() {
-    return function* (this: ScreenToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
-      const updateResult = yield this.architectApi.updateSectionEditor({
+    return function* (this: ScreenToolboxState): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
+      const updateResult = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
         selectedDataSourceId: this.toolboxState.selectedDataSourceId,
