@@ -214,23 +214,43 @@ public class ForEachBlockEngineTask : BlockEngineTask
 			    // Merge data back after success
 			    foreach(DictionaryEntry entry in _call.ParentContexts)
 			    {
-				    var debugInfo = new Dictionary<string, object>();
+				    var debugInfo = log.IsDebugEnabled 
+					    ? new Dictionary<string, object>() 
+					    : null;
 				    try
 				    {
-					    debugInfo["entry.Key"] = entry.Key;
+					    if (log.IsDebugEnabled)
+					    {
+							debugInfo!["entry.Key"] = entry.Key;
+					    }
+
 					    if (entry.Key.Equals(
 						        block.SourceContextStore.PrimaryKey))
 					    {
 						    Key castKey = entry.Key as Key;
-						    debugInfo["castKey"] = castKey;
+						    if (log.IsDebugEnabled)
+						    {
+							    debugInfo!["castKey"] = castKey;
+						    }
+
 						    bool fullMerge =
 							    (!entry.Key.Equals(block.SourceContextStore
 								    .PrimaryKey));
-						    debugInfo["fullMerge"] = fullMerge;
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["fullMerge"] = fullMerge;
+						    }
 						    object inputContext = _call.RuleEngine.GetContext(castKey);
-						    debugInfo["inputContext"] = inputContext;
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["inputContext"] = inputContext;
+						    }
+
 						    string contextStoreName = this.Engine.ContextStoreName(castKey);
-						    debugInfo["contextStoreName"] = contextStoreName;
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["contextStoreName"] = contextStoreName;
+						    }
 
 						    sourceContextChanged = Engine.MergeContext(
 							    castKey,
@@ -240,15 +260,17 @@ public class ForEachBlockEngineTask : BlockEngineTask
 							    (fullMerge
 								    ? ServiceOutputMethod.FullMerge
 								    : ServiceOutputMethod.AppendMergeExisting));
-						    //					}
 					    }
 				    }
 				    catch (Exception innerEx)
 				    {
 					    log.Error("Exception while processing _call.ParentContexts entry.", innerEx);
-					    foreach (var valuePair in debugInfo)
+					    if (log.IsDebugEnabled)
 					    {
-						    log.Error($"{valuePair.Key} is Null: {valuePair.Value == null}");
+						    foreach (var valuePair in debugInfo)
+						    {
+							    log.Error($"{valuePair.Key} is Null: {valuePair.Value == null}");
+						    }
 					    }
 					    throw;
 				    }
