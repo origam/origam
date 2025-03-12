@@ -94,6 +94,7 @@ jobs:
         max-annotations: '0'
     
     - name: Delete artifact
-      uses: geekyeggo/delete-artifact@v2
+      uses: geekyeggo/delete-artifact@v5
       with:
           name: test-dlls
+          failOnError: false
