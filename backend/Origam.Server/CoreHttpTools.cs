@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.Server;
 using Origam.Server.Pages;
 using System.Net;
@@ -49,17 +50,14 @@ public class CoreHttpTools : IHttpTools
     }
     public string GetFileDisposition(string userAgent, string fileName)
     {
+        fileName = fileName.Replace(",", "");
+        var encodedFileName = Uri.EscapeDataString(fileName);
         bool isFirefox 
             = (userAgent != null) 
             && (userAgent.IndexOf("Firefox") >= 0);
-        string dispositionLeft = "filename=";
-        if(isFirefox)
-        {
-            dispositionLeft = "filename*=utf-8''";
-        }
-        // no commas allowed in the file name
-        fileName = fileName.Replace(",", "");
-        string disposition = dispositionLeft + WebUtility.UrlEncode(fileName);
-        return disposition;
+
+        return isFirefox
+            ? "filename*=UTF-8''" + encodedFileName 
+            :  $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
     }
 }
