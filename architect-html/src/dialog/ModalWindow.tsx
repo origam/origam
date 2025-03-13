@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from "./ModalWindow.module.scss";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { requestFocus } from "src/utils/focus.ts";
 
@@ -34,51 +34,8 @@ interface ModalWindowProps {
 }
 
 export const ModalWindow = observer((props: ModalWindowProps) => {
-  const [position, setPosition] = useState({
-    top: window.screen.height / 2 -200,
-    left: window.screen.width / 2 -300
-  });
-
-  const dragInfo = useRef({
-    reportingWindowMove: false,
-    dragStartMouseX: 0,
-    dragStartMouseY: 0,
-    dragStartPosX: 0,
-    dragStartPosY: 0
-  });
-
   const footerRef = useRef<HTMLDivElement | null>(null);
   const focusHookRef = useRef(false);
-
-  const handleTitleMouseDown = useCallback((event: React.MouseEvent) => {
-    const drag = dragInfo.current;
-    if (!drag.reportingWindowMove) {
-      drag.reportingWindowMove = true;
-    }
-
-    drag.dragStartMouseX = event.screenX;
-    drag.dragStartMouseY = event.screenY;
-    drag.dragStartPosX = position.left;
-    drag.dragStartPosY = position.top;
-
-    window.addEventListener("mousemove", handleWindowMouseMove);
-    window.addEventListener("mouseup", handleWindowMouseUp);
-  }, [position]);
-
-  const handleWindowMouseMove = useCallback((event: MouseEvent) => {
-    const drag = dragInfo.current;
-    setPosition({
-      top: drag.dragStartPosY + event.screenY - drag.dragStartMouseY,
-      left: drag.dragStartPosX + event.screenX - drag.dragStartMouseX
-    });
-    event.preventDefault();
-    event.stopPropagation();
-  }, []);
-
-  const handleWindowMouseUp = useCallback(() => {
-    window.removeEventListener("mousemove", handleWindowMouseMove);
-    window.removeEventListener("mouseup", handleWindowMouseUp);
-  }, [handleWindowMouseMove]);
 
   const footerFocusHookEnsureOn = useCallback(() => {
     const footerElement = footerRef.current;
@@ -132,15 +89,13 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
     <div
       className={S.modalWindow}
       style={{
-        top: position.top,
-        left: position.left,
         minWidth: props.width,
         minHeight: props.height,
       }}
       tabIndex={0}
     >
       {props.title && (
-        <div className={S.title} onMouseDown={handleTitleMouseDown}>
+        <div className={S.title}>
           <div className={S.label}>
             <div className={S.labelText}>{props.title}</div>
           </div>
