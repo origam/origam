@@ -43,6 +43,7 @@ jobs:
         name: test-dlls
         path: "backend/**Tests/bin/Release"
         include-hidden-files: true
+        retention-days: 1
      
   tests:
     needs: buildArchitect
