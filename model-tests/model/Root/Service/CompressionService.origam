@@ -48,7 +48,7 @@
         smp:allowContextReference="true"
         smp:allowDataConstantReference="true"
         smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
+        sip:allowNulls="true"
         smp:allowReportReference="false"
         smp:allowSystemFunctionCall="false"
         smp:allowTransformationReference="false"

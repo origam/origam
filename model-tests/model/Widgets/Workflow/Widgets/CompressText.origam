@@ -52,7 +52,7 @@
           cr:contextStore="Widgets/Workflow/Widgets/CompressText.origam#CompressText/_any/832ca80f-0894-4a02-a6f9-84aa3f755e89"
           x:id="fad05137-3d90-4ef5-959e-f10bc1ea16bd"
           asi:name="_any"
-          cr:xPath="'zip'" />
+          cr:xPath="'bzip2'" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -65,7 +65,7 @@
           cr:contextStore="Widgets/Workflow/Widgets/CompressText.origam#CompressText/_any/832ca80f-0894-4a02-a6f9-84aa3f755e89"
           x:id="30b42c3f-fd63-48c6-afae-1d0bda1f335d"
           asi:name="_any"
-          cr:xPath="'test.txt'" />
+          cr:xPath="''" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -126,7 +126,7 @@
           cr:contextStore="Widgets/Workflow/Widgets/CompressText.origam#CompressText/_any/832ca80f-0894-4a02-a6f9-84aa3f755e89"
           x:id="caa25034-52cb-4eef-a2e9-cc683e80131e"
           asi:name="_any"
-          cr:xPath="'C:\temp\test.zip'" />
+          cr:xPath="'C:\temp\test.txt.bz2'" />
       </smcp:ServiceMethodCallParameter>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
