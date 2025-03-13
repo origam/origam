@@ -124,9 +124,22 @@ public class ModelController(
     public IActionResult DeleteSchemaItem(
         [Required] [FromBody] DeleteModel input)
     {
-        var instance =
-            persistenceProvider.RetrieveInstance<IBrowserNode2>(
-                input.SchemaItemId);
+        ISchemaItem instance = null;
+        foreach (ISchemaItemProvider provider in schemaService.Providers)
+        {
+            instance = provider.ChildItemsRecursive
+                .FirstOrDefault(x => x.Id == input.SchemaItemId);
+            if (instance != null)
+            {
+                break;
+            }
+        }
+
+        if (instance == null)
+        {
+            return NotFound();
+        }
+
         try
         {
             persistenceProvider.BeginTransaction();
