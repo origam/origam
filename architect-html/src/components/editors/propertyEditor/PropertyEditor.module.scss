@@ -48,14 +48,6 @@
   input,
   select {
     width: 200px;
-    height: 25px;
-    padding-left: 5px;
-    border: 1px solid var(--background4);
-    border-radius: 4px;
-    background-color: var(--background1);
-    color: var(--background8);
-    box-sizing: border-box;
-
     &:disabled {
       background-color: var(--background3);
       cursor: not-allowed;
