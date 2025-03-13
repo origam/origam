@@ -23,6 +23,7 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using Origam.Rule;
@@ -185,42 +186,174 @@ public class ForEachBlockEngineTask : BlockEngineTask
 	}
 
 	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-	{
-		if(this.Engine == null) return;	// finished already
-		ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-		if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
-		{
-			if(e.Exception != null)
-			{
-				UnsubscribeEvents();
-				OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
-				return;
-			}
-			if(!block.IgnoreSourceContextChanges)
-			{
-				// Merge data back after success
-				foreach(DictionaryEntry entry in _call.ParentContexts)
-				{
-					if(entry.Key.Equals(block.SourceContextStore.PrimaryKey))
-					{
-						bool fullMerge = (! entry.Key.Equals(block.SourceContextStore.PrimaryKey));
-						sourceContextChanged = Engine.MergeContext(
-							(Key)entry.Key,
-							_call.RuleEngine.GetContext(entry.Key as Key), 
-							block, 
-							this.Engine.ContextStoreName((Key)entry.Key), 
-							(fullMerge ? ServiceOutputMethod.FullMerge : ServiceOutputMethod.AppendMergeExisting));
-						//					}
-					}
-				}
-			}
-			if(log.IsInfoEnabled)
-			{
-				log.Info("Finishing iteration no. " + _iter.CurrentPosition);
-			}
-			ResumeIteration();
+{
+    try
+    {
+	    if(this.Engine == null || e?.Engine == null || _call == null) {
+		    return;	// finished already
 		}
-	}
+	    ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+	    if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+	    {
+		    if(e.Exception != null)
+		    {
+			    UnsubscribeEvents();
+			    OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+			    return;
+		    }
+		    if(!block.IgnoreSourceContextChanges)
+		    {
+			    // Merge data back after success
+			    foreach(DictionaryEntry entry in _call.ParentContexts)
+			    {
+				    var debugInfo = log.IsDebugEnabled 
+					    ? new Dictionary<string, object>() 
+					    : null;
+				    try
+				    {
+					    if (log.IsDebugEnabled)
+					    {
+							debugInfo!["entry.Key"] = entry.Key;
+					    }
+
+					    if (entry.Key.Equals(
+						        block.SourceContextStore.PrimaryKey))
+					    {
+						    Key castKey = entry.Key as Key;
+						    if (log.IsDebugEnabled)
+						    {
+							    debugInfo!["castKey"] = castKey;
+						    }
+
+						    bool fullMerge =
+							    (!entry.Key.Equals(block.SourceContextStore
+								    .PrimaryKey));
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["fullMerge"] = fullMerge;
+						    }
+						    object inputContext = _call.RuleEngine.GetContext(castKey);
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["inputContext"] = inputContext;
+						    }
+
+						    string contextStoreName = this.Engine.ContextStoreName(castKey);
+						    if (log.IsDebugEnabled)
+						    {
+								debugInfo!["contextStoreName"] = contextStoreName;
+						    }
+
+						    sourceContextChanged = Engine.MergeContext(
+							    castKey,
+							    inputContext,
+							    block,
+							    contextStoreName,
+							    (fullMerge
+								    ? ServiceOutputMethod.FullMerge
+								    : ServiceOutputMethod.AppendMergeExisting));
+					    }
+				    }
+				    catch (Exception innerEx)
+				    {
+					    log.Error("Exception while processing _call.ParentContexts entry.", innerEx);
+					    if (log.IsDebugEnabled)
+					    {
+						    foreach (var valuePair in debugInfo)
+						    {
+							    log.Error($"{valuePair.Key} is Null: {valuePair.Value == null}");
+						    }
+					    }
+					    throw;
+				    }
+
+			    }
+		    }
+		    if(log.IsInfoEnabled)
+		    {
+			    log.Info("Finishing iteration no. " + _iter.CurrentPosition);
+		    }
+		    ResumeIteration();
+	    }
+    }
+    catch (Exception ex)
+    {
+        // Log all potentially problematic values here for diagnostic purposes
+        log.Error("Exception in Host_WorkflowFinished.", ex);
+
+        log.Error($"ex.Source: {ex.Source}");
+
+        // Log state of 'this' and related objects
+        log.Error($"this: {this}");
+        log.Error($"this.Engine is null: {this.Engine == null}");
+        log.Error($"this.Step is null: {this.Step == null}");
+        log.Error($"this.Step type: {this.Step?.GetType().FullName}");
+
+        // Attempt to log details about 'block'
+        ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+        if (block == null)
+        {
+	        log.Error("Unable to cast this.Step to ForeachWorkflowBlock.");
+        }
+        else
+        {
+            log.Error($"block.IgnoreSourceContextChanges: {block.IgnoreSourceContextChanges}");
+            log.Error($"block.SourceContextStore is null: {block.SourceContextStore == null}");
+            if (block.SourceContextStore != null)
+            {
+                log.Error($"block.SourceContextStore.PrimaryKey is null: {block.SourceContextStore.PrimaryKey == null}");
+            }
+        }
+
+        // Log details from 'e' and its engine
+        if (e == null)
+        {
+            log.Error("e (WorkflowHostEventArgs) is null.");
+        }
+        else
+        {
+            log.Error($"e.Engine is null: {e.Engine == null}");
+            if (e.Engine != null)
+            {
+                log.Error($"e.Engine.WorkflowUniqueId: {e.Engine.WorkflowUniqueId}");
+            }
+
+            log.Error($"e.Exception is null: {e.Exception == null}");
+        }
+
+        // Log details about _call
+        if (_call == null)
+        {
+            log.Error("_call is null.");
+        }
+        else
+        {
+            log.Error($"_call.WorkflowUniqueId: {_call.WorkflowUniqueId}");
+            log.Error($"_call.RuleEngine is null: {_call.RuleEngine == null}");
+            log.Error($"_call.DisposeCallStackTraces: {_call.GetDisposeCallStackTraces()}");
+            if (_call.ParentContexts != null)
+            {
+                log.Error($"_call.ParentContexts count: {_call.ParentContexts.Count}");
+            }
+            else
+            {
+                log.Error("_call.ParentContexts is null.");
+            }
+        }
+
+        // Log iteration data if available
+        if (_iter == null)
+        {
+            log.Error("_iter is null.");
+        }
+        else
+        {
+            log.Error($"_iter.CurrentPosition: {_iter.CurrentPosition}");
+        }
+        throw;
+    }
+}
+
 	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
 	{
 		if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
