@@ -28,7 +28,7 @@
         smp:callElements="3"
         sip:dataType="String"
         x:id="915de599-bda7-4685-9c81-747f56dcb416"
-        asi:name="CoompressionAlghoritm" />
+        asi:name="CompressionAlgorithm" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -56,7 +56,7 @@
         smp:callElements="3"
         sip:dataType="String"
         x:id="cfa81bb8-7b31-4715-bf89-b04cca6df146"
-        asi:name="InternalFilename" />
+        asi:name="InternalFileName" />
     </sm1:ServiceMethod>
   </s1:Service>
 </x:file>

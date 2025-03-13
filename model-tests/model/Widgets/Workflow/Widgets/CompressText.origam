@@ -44,21 +44,21 @@
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="068f2e0d-231f-4518-9115-f4c9e10f92a3"
-        asi:name="CoompressionAlghoritm"
-        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/CoompressionAlghoritm/915de599-bda7-4685-9c81-747f56dcb416">
+        asi:name="CompressionAlgorithm"
+        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/CompressionAlgorithm/915de599-bda7-4685-9c81-747f56dcb416">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
           cr:contextStore="Widgets/Workflow/Widgets/CompressText.origam#CompressText/_any/832ca80f-0894-4a02-a6f9-84aa3f755e89"
           x:id="fad05137-3d90-4ef5-959e-f10bc1ea16bd"
           asi:name="_any"
-          cr:xPath="'bzip2'" />
+          cr:xPath="'zip'" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="54538d4a-84ab-47db-afd6-6749548be8a4"
-        asi:name="InternalFilename"
-        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InternalFilename/cfa81bb8-7b31-4715-bf89-b04cca6df146">
+        asi:name="InternalFileName"
+        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InternalFileName/cfa81bb8-7b31-4715-bf89-b04cca6df146">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
