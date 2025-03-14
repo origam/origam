@@ -54,7 +54,7 @@ export class SplitPanel extends Component {
     if (children.length > 2) {
       throw new Error("Split panel cannot have more than 2 children");
     }
-    const orientation = this.get("Orientation");
+    const orientation = this.getOrientation();
     switch (orientation) {
       case Orientation.Horizontal: {
         const {upperChild, lowerChild} = this.getUpperAndLowerChild(children);
@@ -86,6 +86,17 @@ export class SplitPanel extends Component {
       }
       default:
         throw new Error(`Unknown split panel orientation "${orientation}"`);
+    }
+  }
+
+  private getOrientation(){
+    const propertyValue = this.get("Orientation");
+    switch (propertyValue) {
+      case "0":
+      case "Horizontal": return Orientation.Horizontal;
+      case "1":
+      case "Vertical": return Orientation.Vertical;
+      default: return propertyValue;
     }
   }
 
