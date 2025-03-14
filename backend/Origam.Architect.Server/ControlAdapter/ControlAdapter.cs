@@ -239,6 +239,11 @@ public class ControlAdapter(
                     ? null
                     : XmlConvert.ToString((Guid)value);
             }
+            else if(property.PropertyType.IsEnum)
+            {
+                propertyItem.PropertyType = ControlPropertyValueType.String;
+                propertyValueItem.Value = Convert.ToInt32(value).ToString();
+            }
             else
             {
                 propertyItem.PropertyType = ControlPropertyValueType.String;
