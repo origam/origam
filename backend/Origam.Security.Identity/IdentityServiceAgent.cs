@@ -620,7 +620,7 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
 		}
 		else if (!task.Result.Succeeded)
 		{
-			throw new Exception(string.Join(" ", task.Result.Errors));
+			throw new OrigamValidationException(string.Join(" ", task.Result.Errors));
 		} 
         OrigamUserContext.Reset(Parameters["Username"].ToString());
 		result = user.UserName;            
