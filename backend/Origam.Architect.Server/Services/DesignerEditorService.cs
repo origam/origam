@@ -20,8 +20,16 @@ public class DesignerEditorService(
         SectionEditorChangesModel input)
     {
         bool editorIsDirty = false;
-        screenSection.Name = input.Name;
-        screenSection.DataSourceId = input.SelectedDataSourceId;
+        if (screenSection.Name != input.Name)
+        {
+            screenSection.Name = input.Name;
+            editorIsDirty = true;
+        }
+        if (screenSection.DataSourceId != input.SelectedDataSourceId)
+        {
+            screenSection.DataSourceId = input.SelectedDataSourceId;
+            editorIsDirty = true;
+        }
         foreach (var changes in input.ModelChanges)
         {
             ControlSetItem itemToUpdate =

@@ -62,6 +62,7 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
       loadComponent
     );
     propertiesState.onPropertyUpdated = this.onPropertyUpdated.bind(this);
+    toolbox.onNameTopPropertiesChanged = ()=> this.isDirty = true;
   }
 
   * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {

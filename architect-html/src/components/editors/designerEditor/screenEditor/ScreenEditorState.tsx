@@ -58,9 +58,9 @@ export class ScreenEditorState extends DesignerEditorState {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
-        schemaItemIds: components.map(x =>x.id)
+        schemaItemIds: components.map(x => x.id)
       });
-      yield*this.surface.loadComponents(newData.data.rootControl);
+      yield* this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
     }.bind(this);
   }

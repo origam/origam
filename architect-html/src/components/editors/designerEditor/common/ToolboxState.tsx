@@ -7,6 +7,7 @@ export class ToolboxState {
   @observable accessor selectedDataSourceId: string;
   @observable accessor isDirty: boolean = false;
   tabViewState: TabViewState = new TabViewState();
+  onNameTopPropertiesChanged: (() => void) | undefined = undefined;
 
   constructor(
     public dataSources: IDataSource[],
@@ -21,12 +22,22 @@ export class ToolboxState {
   }
 
   selectedDataSourceIdChanged(value: string) {
-    this.selectedDataSourceId = value;
-    return this.updateTopProperties();
+    return function*  (this: ToolboxState){
+      this.selectedDataSourceId = value;
+      yield * this.updateTopProperties()();
+      if(this.onNameTopPropertiesChanged){
+        this.onNameTopPropertiesChanged();
+      }
+    }.bind(this);
   }
 
   nameChanged(value: string) {
-    this.name = value;
-    return this.updateTopProperties();
+    return function*  (this: ToolboxState){
+      this.name = value;
+      yield * this.updateTopProperties()();
+      if(this.onNameTopPropertiesChanged){
+        this.onNameTopPropertiesChanged();
+      }
+    }.bind(this);
   }
 }
