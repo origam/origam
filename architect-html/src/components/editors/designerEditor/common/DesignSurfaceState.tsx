@@ -154,7 +154,7 @@ export class DesignSurfaceState {
       draggingComponent.data.type !== ComponentType.GroupBox &&
       draggingComponent.data.type !== ComponentType.AsPanel
     ) {
-      const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent.id);
+      const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent);
       if (targetParent && draggingComponent.parent != targetParent) {
         draggingComponent.relativeLeft = (draggingComponent.parent?.absoluteLeft ?? 0) - targetParent.absoluteLeft + draggingComponent.relativeLeft;
         draggingComponent.relativeTop = (draggingComponent.parent?.absoluteTop ?? 0) - targetParent.absoluteTop + draggingComponent.relativeTop;
@@ -175,10 +175,13 @@ export class DesignSurfaceState {
     };
   }
 
-  findComponentAt(mouseX: number, mouseY: number, excludeId?: string) {
+  findComponentAt(mouseX: number, mouseY: number, excludeComponent?: Component) {
+    const excludeIds = excludeComponent
+      ? [...this.getChildren(excludeComponent).map(x => x.id), excludeComponent.id]
+      : [];
     const componentsUnderPoint = this.components.filter(
       comp =>
-        (!excludeId || comp.id !== excludeId) &&
+        (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
         comp.canHaveChildren &&
         comp.isActive &&
         comp.isPointInside(mouseX, mouseY)
