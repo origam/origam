@@ -59,6 +59,30 @@ export class TabControl extends Component {
     }
   }
 
+  // The TapPage children derive their position from the TapPage's position.
+  // The TabPage itself cannot be moved but its position has to be kept in
+  // sync with the TabControl's position
+  set absoluteLeft(value: number) {
+    super.absoluteLeft = value;
+    for (const tab of this.tabs) {
+      tab.absoluteLeft = value;
+    }
+  }
+
+  get absoluteLeft(){
+    return super.absoluteLeft;
+  }
+
+  set absoluteTop(value: number) {
+    super.absoluteTop = value;
+    for (const tab of this.tabs) {
+      tab.absoluteTop = value;
+    }
+  }
+  get absoluteTop(){
+    return super.absoluteTop;
+  }
+
   get canHaveChildren(): boolean {
     return false;
   }
@@ -89,7 +113,6 @@ export class TabControl extends Component {
                 )
               }
             </div>
-            {/*<div className={S.designSurfaceInput}></div>*/}
           </div>
         )}
       </Observer>
@@ -173,19 +196,25 @@ export class TabPage extends Component {
     }
     (args.parent as TabControl).registerTab(this);
 
-    // TabPages' width and height properties always come with default values from the server.
-    // That is ok. They have to be the same size as the parent TabControl anyway.
-    const parentWidth = this.parent!.properties!.find(x => x.name == "Width")!.value;
-    const widthProperty = this.properties.find(x => x.name == "Width")!
-    widthProperty.value = parentWidth;
-
-    const parentHeight = this.parent!.properties!.find(x => x.name == "Height")!.value;
-    const heightProperty = this.properties.find(x => x.name == "Height")!
-    heightProperty.value = parentHeight;
+    // TabPages' dimension properties always come with default values from the server.
+    // That is ok. They have to be the same size and ath the same location as
+    // the parent TabControl anyway.
+    this.absoluteLeft = this.parent!.absoluteLeft;
+    this.absoluteTop = this.parent!.absoluteTop;
+    this.width = this.parent!.width;
+    this.height = this.parent!.height;
   }
 
   get isActive(): boolean {
     return !this.hideChildren && this._isActive;
+  }
+
+  get childOffsetLeft() {
+    return 5;
+  }
+
+  get childOffsetTop() {
+    return 20;
   }
 
   set isActive(value: boolean) {

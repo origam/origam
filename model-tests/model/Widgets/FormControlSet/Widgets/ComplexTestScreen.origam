@@ -144,13 +144,13 @@
               x:id="65067122-b92a-48bb-bc5e-006412b61e1a"
               asi:name="Left"
               apvi:propertyId="b117b110-17c9-49f0-90b1-91d6d9abb472"
-              pvi1:value="-58" />
+              pvi1:value="3" />
             <pvi1:PropertyValueItem
               asi:abstract="false"
               x:id="726cafdb-3d0e-4835-981c-eadb6fe4b460"
               asi:name="Top"
               apvi:propertyId="91bb273b-c998-4207-ad1a-6772847220b5"
-              pvi1:value="-66" />
+              pvi1:value="12" />
             <pvi1:PropertyValueItem
               asi:abstract="false"
               x:id="b72298bf-9864-46c5-9110-7ac96be45ee8"
@@ -472,7 +472,7 @@
               x:id="6038c309-4f36-4e2a-9cee-98698c1b3251"
               asi:name="Top"
               apvi:propertyId="52d8fcdd-1ec5-4ed4-89c6-6f9c9bc71705"
-              pvi1:value="-66" />
+              pvi1:value="16" />
             <pvi1:PropertyValueItem
               asi:abstract="false"
               x:id="83fa90e5-566f-457a-a8e8-77eedec39bff"
@@ -502,12 +502,13 @@
               x:id="d2edd34c-217d-48d4-a101-879a176f94a0"
               asi:name="Left"
               apvi:propertyId="9168475b-8aad-4278-9e41-19f0cf0f60cd"
-              pvi1:value="-58" />
+              pvi1:value="6" />
             <pvi1:PropertyValueItem
               asi:abstract="false"
               x:id="f17ba309-861d-490b-873b-ec22a410499e"
               asi:name="Orientation"
-              apvi:propertyId="97ac8865-099a-488a-874c-f6a5a14a052d" />
+              apvi:propertyId="97ac8865-099a-488a-874c-f6a5a14a052d"
+              pvi1:value="0" />
           </csi:ControlSetItem>
           <pvi1:PropertyValueItem
             asi:abstract="false"
@@ -587,30 +588,31 @@
         x:id="051a50f7-1102-4f50-949d-f8dac7b346d4"
         asi:name="Left"
         apvi:propertyId="fde5e452-b2a4-4f38-968a-29e20625b699"
-        pvi1:value="0" />
+        pvi1:value="15" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="067681a7-98d4-4162-924b-606e953a81c9"
         asi:name="Width"
         apvi:propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
-        pvi1:value="537" />
+        pvi1:value="932" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="9f3cee90-70d9-465f-95ab-f8294e4404d0"
         asi:name="Height"
         apvi:propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
-        pvi1:value="538" />
+        pvi1:value="816" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="a2092c74-1dd7-40e8-ab0c-341fcd05d4b1"
         asi:name="Top"
         apvi:propertyId="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
-        pvi1:value="0" />
+        pvi1:value="15" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="d9bb7bce-2a99-4db3-b3a7-823340fa1050"
         asi:name="ExtraControlBindings"
-        apvi:propertyId="3cd32bca-fad9-49b4-8641-3ff4e77e567a" />
+        apvi:propertyId="3cd32bca-fad9-49b4-8641-3ff4e77e567a"
+        pvi1:value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;string&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&amp;gt;&#xD;&#xA;&amp;lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&amp;gt;&lt;/string&gt;" />
     </csi:ControlSetItem>
   </fcs:FormControlSet>
 </x:file>
