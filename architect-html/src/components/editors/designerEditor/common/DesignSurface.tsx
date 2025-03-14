@@ -210,8 +210,3 @@ export const DesignSurface: React.FC<{
     </div>
   );
 });
-
-// function isItemDisabled({ props, data, triggerEvent }) {
-//
-//   return props.deleteDisabled;;
-// }

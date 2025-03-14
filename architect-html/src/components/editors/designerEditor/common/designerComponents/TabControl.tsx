@@ -82,6 +82,7 @@ export class TabControl extends Component {
                 .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
                 .map(tab =>
                   <TabLabel
+                    key={tab.id}
                     onClick={() => this.setVisible(tab.id)}
                     tabPage={tab}
                   />
