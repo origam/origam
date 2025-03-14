@@ -52,12 +52,6 @@ public class CoreHttpTools : IHttpTools
     {
         fileName = fileName.Replace(",", "");
         var encodedFileName = Uri.EscapeDataString(fileName);
-        bool isFirefox 
-            = (userAgent != null) 
-            && (userAgent.IndexOf("Firefox") >= 0);
-
-        return isFirefox
-            ? "filename*=UTF-8''" + encodedFileName 
-            :  $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
+        return  $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
     }
 }
