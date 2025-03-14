@@ -78,8 +78,8 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
 
   * save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistChanges(this.editorNode.origamId);
-    if (this.editorNode.parent) {
-      yield* this.editorNode.parent.loadChildren();
+    if (this.editorNode.parent?.parent) {
+      yield* this.editorNode.parent.parent.loadChildren();
     }
     this.isDirty = false;
   }
