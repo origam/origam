@@ -4034,10 +4034,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flexsearch@npm:^0.7.43":
-  version: 0.7.43
-  resolution: "flexsearch@npm:0.7.43"
-  checksum: 10c0/797dc474ed97750b8e85c118b1af63eb2709da5fc05defcb13e96515774f28743ccb2448b63f3b703cf1ca571928c006069503dacf7d177bc07b9ee15e1f85d0
+"flexsearch@npm:^0.8.103":
+  version: 0.8.103
+  resolution: "flexsearch@npm:0.8.103"
+  checksum: 10c0/2528811e34e5a906fcb841d887d86994b5298992c96e4dade22bc421108f47d9ede312417bfa185b3d09f6924a8ddbaa29e17c431a1db20f532454ff622b3432
   languageName: node
   linkType: hard
 
@@ -6506,7 +6506,7 @@ __metadata:
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
     esbuild: "npm:^0.25.1"
-    flexsearch: "npm:^0.7.43"
+    flexsearch: "npm:^0.8.103"
     html-to-draftjs: "npm:^1.5.0"
     identity-obj-proxy: "npm:^3.0.0"
     immer: "npm:^10.1.1"
