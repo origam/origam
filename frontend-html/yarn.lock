@@ -4034,13 +4034,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flexsearch@npm:^0.7.43":
-  version: 0.7.43
-  resolution: "flexsearch@npm:0.7.43"
-  checksum: 10c0/797dc474ed97750b8e85c118b1af63eb2709da5fc05defcb13e96515774f28743ccb2448b63f3b703cf1ca571928c006069503dacf7d177bc07b9ee15e1f85d0
-  languageName: node
-  linkType: hard
-
 "follow-redirects@npm:^1.15.6":
   version: 1.15.6
   resolution: "follow-redirects@npm:1.15.6"
@@ -6506,7 +6499,6 @@ __metadata:
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
     esbuild: "npm:^0.25.1"
-    flexsearch: "npm:^0.7.43"
     html-to-draftjs: "npm:^1.5.0"
     identity-obj-proxy: "npm:^3.0.0"
     immer: "npm:^10.1.1"
