@@ -39,13 +39,13 @@
       wt:outputContextStore="Widgets/Workflow/Widgets/CompressText.origam#CompressText/BlobOutput/ba3fed8b-5625-416c-b9ba-4f0a1981ebbf"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
-      smct:service="Root/Service/CompressionService.origam#CompressionService/05148c75-edb0-4ca6-8d0f-f038669b6657"
-      smct:serviceMethod="Root/Service/CompressionService.origam#CompressionService/CompressText/f9bf753c-d15f-4cee-bdea-7919bd048583">
+      smct:service="Root/Service/CompressionService.origam#CompressionService/b30aa150-5a0e-4d17-883f-176637348f96"
+      smct:serviceMethod="Root/Service/CompressionService.origam#CompressionService/CompressText/913d89e4-5f7a-41f1-92aa-50ce93bf2b27">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="068f2e0d-231f-4518-9115-f4c9e10f92a3"
         asi:name="CompressionAlgorithm"
-        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/CompressionAlgorithm/915de599-bda7-4685-9c81-747f56dcb416">
+        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/CompressionAlgorithm/4f01a592-b92d-4ac3-b73a-ac613b8da7e3">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
@@ -58,7 +58,7 @@
         asi:abstract="false"
         x:id="54538d4a-84ab-47db-afd6-6749548be8a4"
         asi:name="InternalFileName"
-        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InternalFileName/cfa81bb8-7b31-4715-bf89-b04cca6df146">
+        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InternalFileName/3573a4c3-7f3f-4a90-9860-7a38e35eb8f2">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
@@ -71,7 +71,7 @@
         asi:abstract="false"
         x:id="ce572b2f-bac7-4033-bbef-88c0c4544ac6"
         asi:name="InputText"
-        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InputText/cf079855-267e-4d96-9785-ee9b4a938496">
+        smcp:serviceMethodParameter="Root/Service/CompressionService.origam#CompressionService/CompressText/InputText/2159072c-f420-48a5-9567-f0b5a28fa504">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
