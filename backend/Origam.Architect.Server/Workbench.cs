@@ -129,8 +129,9 @@ public class Workbench
 
     private bool LoadConfiguration(string configurationName)
     {
+        string origamSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OrigamSettings.config");
         OrigamSettingsCollection configurations =
-            ConfigurationManager.GetAllUserHomeConfigurations();
+            ConfigurationManager.GetAllUserHomeConfigurations(origamSettingsPath);
         if (configurationName == null)
         {
             return false;
