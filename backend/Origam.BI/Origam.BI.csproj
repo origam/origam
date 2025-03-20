@@ -13,10 +13,11 @@
     <StartupObject />
     <LangVersion>10</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Architect Server;Debug Architect;Debug Client;Debug Server;Debug;Release Architect;Release Client;Release Server;Release</Configurations>
+    <Configurations>Debug Architect Server;Debug Architect;Debug Client;Debug Server;Debug;Release Architect;Release Client;Release Server;Release;Release Architect Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -50,9 +51,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Architect Server|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug Architect Server\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <LangVersion>10</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Architect Server|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
