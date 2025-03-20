@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="a3a73317-61c3-4c0c-9b87-3f4d42914928"
     asi:name="TestApiBodyInputRequest"
     xt:text="-***-ExternalFile:TestApiBodyInputRequest.origam___text___a3a73317-61c3-4c0c-9b87-3f4d42914928.xslt" />

@@ -2,10 +2,9 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="f7fa737b-f895-4d80-b71c-8801172b078a"
     asi:name="_listDays"
     xt:text="-***-ExternalFile:_listDays.origam___text___f7fa737b-f895-4d80-b71c-8801172b078a.xslt" />

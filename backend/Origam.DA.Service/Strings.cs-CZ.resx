@@ -174,9 +174,6 @@
   <data name="UpdateFieldUpdate" xml:space="preserve">
     <value>Update field can only update tables.</value>
   </data>
-  <data name="ViewCantBeScripted" xml:space="preserve">
-    <value>View cannot be scripted to the database.</value>
-  </data>
   <data name="NoDataRowAfterUpdate" xml:space="preserve">
     <value>Data row does not exist after update. Row has been deleted by another user.</value>
   </data>

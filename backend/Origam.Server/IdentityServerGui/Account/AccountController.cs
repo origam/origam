@@ -6,9 +6,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using IdentityModel;
-using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -97,13 +97,29 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult ForgotPassword()
+    public IActionResult ForgotPassword(string returnUrl = null)
     {
         if (!_configOptions.AllowPasswordReset)
         {
             return RedirectToAction(nameof(Login), "Account");
         }
-        return View();
+        var model = new ForgotPasswordViewModel
+        {
+            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl)
+        };
+        return View(model);
+    }
+
+    private string ExtractRedirectUriFromReturnUrl(string returnUrl)
+    {
+        if (string.IsNullOrEmpty(returnUrl))
+        {
+            return "/";
+        }
+        string decodedUrl = Uri.UnescapeDataString(returnUrl);
+        string pattern = @"redirect_uri=([^&#]+)";
+        Match match = Regex.Match(decodedUrl, pattern);
+        return match.Success ? match.Groups[1].Value : "/";
     }
     
     // POST: /Account/ForgotPassword
@@ -129,7 +145,8 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             // Send an email with this link
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.BusinessPartnerId, code = passwordResetToken }, protocol: HttpContext.Request.Scheme);
-            _mailService.SendPasswordResetToken( user, passwordResetToken, 24 );
+            _mailService.SendPasswordResetToken(user, passwordResetToken, 
+                model.ReturnUrl, tokenValidityHours: 24);
             _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
             return View("ForgotPasswordConfirmation");
         }
@@ -279,7 +296,8 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     // GET: /Account/ResetPassword
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult ResetPassword(string code = null, string mail = null)
+    public IActionResult ResetPassword(
+        string code = null, string mail = null, string returnUrl = null)
     {
         if (!_configOptions.AllowPasswordReset)
         {
@@ -290,19 +308,19 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
             return View("Error");
         }
-        else if (mail == null)
+        if (mail == null)
         {
             _logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
             return View("Error");
         }
-        else
+        var model = new ResetPasswordViewModel
         {
-            var model = new ResetPasswordViewModel
-            {
-                Email = mail
-            };
-            return  View(model);
-        }
+            Email = mail,
+            ReturnUrl = string.IsNullOrEmpty(returnUrl)
+                ? null
+                : Uri.UnescapeDataString(returnUrl)
+        };
+        return  View(model);
     }
     
     // POST: /Account/ResetPassword
@@ -323,13 +341,25 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         if (user == null)
         {
             // Don't reveal that the user does not exist
-            return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            return RedirectToAction(
+                nameof(ResetPasswordConfirmation), 
+                controllerName:"Account",
+                routeValues: new
+                {
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
+                });
         }
         user.EmailConfirmed = true;
         var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
         if (result.Succeeded)
         {
-            return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            return RedirectToAction(
+                nameof(ResetPasswordConfirmation), 
+                controllerName:"Account",
+                routeValues: new
+                {
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
+                });
         }
         AddErrors(result);
         return View();
@@ -338,9 +368,15 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     // GET: /Account/ResetPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult ResetPasswordConfirmation()
+    public IActionResult ResetPasswordConfirmation(string returnUrl = null)
     {
-        return View();
+        var model = new ResetPasswordConfirmationViewModel
+        {
+            ReturnUrl = string.IsNullOrEmpty(returnUrl)
+                ? null
+                : Uri.UnescapeDataString(returnUrl)
+        };
+        return View(model);
     }
     
     /// <summary>

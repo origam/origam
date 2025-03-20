@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="String"
+    x:id="898fe44c-0728-423f-8b00-5ff8806c03c9"
+    asi:name="CompressionAlgorithm_bzip2"
+    dc:userDefinable="false"
+    dc:value="bzip2" />
+</x:file>

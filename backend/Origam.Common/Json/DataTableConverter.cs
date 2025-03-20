@@ -22,6 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
+using Origam.Extensions;
+using System.Linq;
+using Origam.Service.Core;
 
 namespace Origam.JSON;
 class DataTableConverter : newton.DataTableConverter
@@ -29,13 +32,30 @@ class DataTableConverter : newton.DataTableConverter
     public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
         Newtonsoft.Json.JsonSerializer serializer)
     {
-        DataTable table = (DataTable)value;
+        DataTable table = (DataTable)value;        
         DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-        writer.WriteStartArray();
+        bool serializeAsSingleJsonObject = table.ExtendedProperties
+            .Contains(Constants.SerializeAsSingleJsonObject)
+            ? table.ExtendedProperties.Get<bool>
+                (Constants.SerializeAsSingleJsonObject)
+            : false;
+        if (serializeAsSingleJsonObject && table.Rows.Count > 1)
+        {
+            throw new OrigamException("JSON Serialization failed. "
+                + $"Table '{table.TableName}' is defined to serialize to a "
+                + $"single object, but multiple objects came ({table.Rows.Count}).");
+        }
+        if (!serializeAsSingleJsonObject)
+        {
+            writer.WriteStartArray();
+        } 
         foreach (DataRow row in table.Rows)
         {
             serializer.Serialize(writer, row);
         }
-        writer.WriteEndArray();
+        if (!serializeAsSingleJsonObject)
+        {
+            writer.WriteEndArray();
+        }
     }
 }

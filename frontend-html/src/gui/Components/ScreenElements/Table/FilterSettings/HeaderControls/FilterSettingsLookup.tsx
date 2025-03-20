@@ -162,6 +162,7 @@ class OpEditors extends React.Component<{
             id={this.props.id}
             value={this.props.setting.val2 ?? ""}
             className={CS.input}
+            autoComplete={"off"}
             onChange={this.handleTermChange}
           />
         );

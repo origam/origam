@@ -15,7 +15,7 @@ RUN apt-get update \
 && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
 && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list \
 && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
+&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
 && apt-get update \
 && apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git nginx ssh yarn nodejs \
 && git clone https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
@@ -30,6 +30,9 @@ RUN apt-get update \
 && useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+RUN apt-get update && apt-get install -y -qq xmlstarlet
+
 WORKDIR /root
 COPY linux/updateTimezone.sh \
 linux/reverse-proxy.conf \
@@ -54,15 +57,18 @@ COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
-linux/startServer.sh \
+linux/configureServer.sh \
+linux/fill_origam_settings_config.sh \
+linux/entrypoint.sh \
 log4net.config \
 linux/updateEnvironment.sh \
 linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
 WORKDIR /home/origam/HTML5
-RUN mkdir data \
-&& mkdir logs \
-&& chmod +x startServer.sh \
+RUN mkdir logs \
+&& chmod +x configureServer.sh \
+&& chmod +x fill_origam_settings_config.sh \
+&& chmod +x entrypoint.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh
-CMD cd /etc/nginx/ssl && sudo /etc/nginx/ssl/createSslCertificate.sh && sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh && ./startServer.sh
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

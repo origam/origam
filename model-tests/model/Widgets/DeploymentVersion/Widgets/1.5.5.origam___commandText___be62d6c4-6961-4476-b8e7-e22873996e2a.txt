@@ -1,0 +1,8 @@
+﻿CREATE TABLE [UserName] (
+	[FirstName] NVarChar(50) NULL,
+	[Surname] NVarChar(50) NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);

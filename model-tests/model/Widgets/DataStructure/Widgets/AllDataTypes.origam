@@ -13,7 +13,8 @@
   xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
   xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0"
   xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
-  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0"
+  xmlns:dswm="http://schemas.origam.com/Origam.Schema.WorkflowModel.DataStructureWorkflowMethod/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="31791c3b-7265-439e-ac96-ddd57aa82579"
@@ -55,6 +56,19 @@
         dse:relationType="Normal"
         dse:useUpsert="false" />
     </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="26450535-2aad-489f-a275-aa8acbcb5139"
+      asi:name="GetByIdList">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByIdList/edb7e242-435b-4c8f-8022-8613fdd4a441"
+        x:id="cd3ee7e5-a986-40ef-8de6-03fea9b0ec8e"
+        asi:name="AllDataTypes_GetByIdList"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -113,5 +127,10 @@
         asi:name="AllDataTypes_0_Date1"
         dsssi:sortDirection="Ascending" />
     </dsss:DataStructureSortSet>
+    <dswm:DataStructureFilterSet
+      asi:abstract="false"
+      x:id="bcc840f2-a3ea-4bab-aa84-7cc4c0afebf2"
+      dswm:loadWorkflow="Widgets/Workflow/Widgets/ArrayParameterTest.origam#ArrayParameterTest/f3cee170-f68d-4ee2-a08b-cfc2ab3f5f2f"
+      asi:name="ArrayParameterTest" />
   </ds:DataStructure>
 </x:file>

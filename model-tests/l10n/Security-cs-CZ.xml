@@ -140,6 +140,9 @@
   <Element Id="af140737-9dee-48e9-b6ae-29347a1f334b" Path="PasswordIsMandatory">
     <String OriginalText="Password is a mandatory field. Please fill in a password.">Heslo je povinné. Prosím vyplňte jej.</String>
   </Element>
+  <Element Id="6db335b0-8644-4574-a2cf-51a4feb67147" Path="OldPasswordIsMandatory">
+    <String OriginalText="Password (old) is a mandatory field. Please fill in a password.">Heslo (původní) je povinné. Prosím vyplňte jej.</String>
+  </Element>
   <Element Id="86381c0e-6c5c-479c-89f3-4a6cb6139c96" Path="UsernameAlreadyExists">
     <String OriginalText="Username already exists in the system, please fill in a different one.">Uživatelské jméno již v systému existuje, zvolte jiné.</String>
   </Element>

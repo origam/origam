@@ -18,22 +18,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
+import {
+  action,
+  autorun,
+  comparer,
+  flow,
+  observable,
+  reaction,
+  when
+} from "mobx";
 import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
-import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import {
+  ICRUDResult,
+  IResponseOperation,
+  processCRUDResult
+} from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
-import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
-import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
-import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
-import { getAutorefreshPeriod as getAutoRefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
+import {
+  getBindingParametersFromParent
+} from "model/selectors/DataView/getBindingParametersFromParent";
+import {
+  getColumnNamesToLoad
+} from "model/selectors/DataView/getColumnNamesToLoad";
+import {
+  getDataStructureEntityId
+} from "model/selectors/DataView/getDataStructureEntityId";
+import {
+  getDataViewByGridId
+} from "model/selectors/DataView/getDataViewByGridId";
+import {
+  getDataViewsByEntity
+} from "model/selectors/DataView/getDataViewsByEntity";
+import {
+  getAutorefreshPeriod as getAutoRefreshPeriod
+} from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
-import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
+import {
+  getIsFormScreenDirty
+} from "model/selectors/FormScreen/getisFormScreenDirty";
+import {
+  getIsSuppressSave
+} from "model/selectors/FormScreen/getIsSuppressSave";
 import { showDialog } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import { map2obj } from "utils/objects";
@@ -43,41 +71,76 @@ import { getApi } from "../../selectors/getApi";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
-import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
+import {
+  IFormScreenLifecycle02,
+  IUpdateChanges
+} from "../types/IFormScreenLifecycle";
 import { IDataView } from "../types/IDataView";
 import { IAggregationInfo } from "../types/IAggregationInfo";
-import { SCROLL_ROW_CHUNK } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import { IQueryInfo, processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
+import {
+  SCROLL_ROW_CHUNK
+} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {
+  IQueryInfo,
+  processActionQueryInfo
+} from "model/actions/Actions/processActionQueryInfo";
 import { assignIIds, find } from "xmlInterpreters/xmlUtils";
 import { IOrderByDirection, IOrdering } from "../types/IOrderingConfiguration";
-import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingConfiguration";
-import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
+import {
+  getOrderingConfiguration
+} from "../../selectors/DataView/getOrderingConfiguration";
+import {
+  getFilterConfiguration
+} from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
 import { FlowBusyMonitor } from "utils/flow";
 import { IScreenEvents } from "modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "dic/Container";
-import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
+import {
+  getUserFilterLookups
+} from "../../selectors/DataView/getUserFilterLookups";
 import _, { isArray } from "lodash";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstCell";
-import { getFormFocusManager } from "model/selectors/DataView/getFormFocusManager";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import {
+  shouldProceedToChangeRow
+} from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+import {
+  getGroupingConfiguration
+} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {
+  startEditingFirstCell
+} from "model/actions/DataView/startEditingFirstCell";
+import {
+  getFormFocusManager
+} from "model/selectors/DataView/getFormFocusManager";
+import {
+  getDataSourceFieldByName
+} from "model/selectors/DataSources/getDataSourceFieldByName";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
-import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
+import {
+  getAllBindingChildren
+} from "model/selectors/DataView/getAllBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
+import {
+  isInfiniteScrollingActive
+} from "model/selectors/isInfiniteScrollingActive";
 import { AggregationType } from "../types/AggregationType";
 import { calcAggregations, parseAggregations } from "../Aggregatioins";
 import { UpdateRequestAggregator } from "./UpdateRequestAggregator";
 import { IGroupingSettings } from "../types/IGroupingConfiguration";
 import { groupingUnitToString } from "../types/GroupingUnit";
-import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
-import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import {
+  getTablePanelView
+} from "../../selectors/TablePanelView/getTablePanelView";
+import {
+  getFormScreenLifecycle
+} from "../../selectors/FormScreen/getFormScreenLifecycle";
+import {
+  runGeneratorInFlowWithHandler,
+  runInFlowWithHandler
+} from "utils/runInFlowWithHandler";
 import { onFieldBlur } from "../../actions-ui/DataView/TableView/onFieldBlur";
 import { getRowStates } from "../../selectors/RowState/getRowStates";
 import { pluginLibrary } from "plugins/tools/PluginLibrary";
@@ -85,13 +148,20 @@ import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import { T } from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import {
+  getConfigurationManager
+} from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { isISectionPlugin } from "plugins/interfaces/ISectionPlugin";
 import { isIScreenPlugin } from "plugins/interfaces/IScreenPlugin";
-import { questionCancelWorkflow } from "model/entities/FormScreenLifecycle/QuestionCancelWorkflow";
+import {
+  questionCancelWorkflow
+} from "model/entities/FormScreenLifecycle/QuestionCancelWorkflow";
+import {
+  getChangedColumns
+} from "model/selectors/DataSources/getChangedColumns";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -801,16 +871,19 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.flushDataEntered++;
       this.monitor.inFlow++;
-      let updateObjectDidRun = false;
+      const updateList = [];
       const formScreen = getFormScreen(this);
       const dataViews = formScreen.dataViews;
       for (let dataView of dataViews) {
-        updateObjectDidRun = updateObjectDidRun || (yield*this.runUpdateObject(dataView));
+        const updates = yield*this.runUpdateObject(dataView);
+        if(updates) {
+          updateList.push(updates);
+        }
       }
-      if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
+      if (formScreen.requestSaveAfterUpdate && updateList.length > 0) {
         yield*this.saveSession();
       }
-      return updateObjectDidRun;
+      return updateList;
     } finally {
       this.flushDataEntered--;
       this.monitor.inFlow--;
@@ -819,23 +892,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   _processedUpdateObjectResults = new WeakSet<any>();
 
-  private*runUpdateObject(dataView: IDataView): any {
-    const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
+  private*runUpdateObject(dataView: IDataView): Generator<Promise<IUpdateChanges>, null | IUpdateChanges, IUpdateChanges> {
+    const dirtyValueRows = dataView.dataTable.getDirtyValueRows();
+    const updateData = dirtyValueRows.map((row) => {
       return {
         RowId: dataView.dataTable.getRowId(row),
         Values: map2obj(dataView.dataTable.getDirtyValues(row)),
       };
     });
     if (!updateData || updateData.length === 0) {
-      return false;
+      return null;
     }
-    const updateObjectResult = yield this.updateRequestAggregator.enqueue({
+    const updateObjectResult = (yield this.updateRequestAggregator.enqueue({
       SessionFormIdentifier: getSessionId(this),
       Entity: dataView.entity,
       UpdateData: updateData,
-    });
+    })) as any;
     if (updateObjectResult === null){
-      return false;
+      return null;
     }
     dataView.formFocusManager.stopAutoFocus();
 
@@ -843,9 +917,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
-      yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
+      yield*processCRUDResult(dataView, updateObjectResult, false, dataView) as any;
+      return {
+        dataViewId: dataView.id,
+        columnsChangedOnClient: updateData.flatMap(x => Object.keys(x.Values)),
+        columnsChangedOnServer: getChangedColumns(dataView, dirtyValueRows)
+      };
     }
-    return true;
+    return null;
   }
 
   *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): any {

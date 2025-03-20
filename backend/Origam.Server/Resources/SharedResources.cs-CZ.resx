@@ -118,46 +118,43 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
-    <value>Invalid data returned by {0} for action {1}.</value>
+    <value>Neplatná data vrácená od {0} pro akci {1}.</value>
   </data>
   <data name="ErrorReportNotAvailable" xml:space="preserve">
-    <value>Report no longer available.</value>
+    <value>Report již není k dispozici.</value>
   </data>
   <data name="ErrorBlobNotAvailable" xml:space="preserve">
-    <value>BLOB no longer available.</value>
+    <value>BLOB již není k dispozici.</value>
   </data>
   <data name="ErrorBlobMemberBlobLookupNotSpecified" xml:space="preserve">
-    <value>Both BlobMember and BlobLookupId are not specified. Cannot download blob.</value>
-  </data>
-  <data name="ErrorBlobNoData" xml:space="preserve">
-    <value>Data source did not return any data.</value>
+    <value>Ani BlobMember, ani BlobLookupId nejsou specifikovány. Nelze stáhnout blob.</value>
   </data>
   <data name="ErrorBlobNotBlob" xml:space="preserve">
-    <value>Data source returned data that is not BLOB.</value>
+    <value> Datový zdroj vrátil data, která nejsou BLOB.</value>
   </data>
   <data name="ErrorBlobRecordEmpty" xml:space="preserve">
-    <value>Record empty, cannot download file.</value>
+    <value>Záznam je prázdný, soubor nelze stáhnout.</value>
   </data>
   <data name="ErrorBlobFileNotAvailable" xml:space="preserve">
-    <value>File is not available.</value>
+    <value>Soubor není k dispozici.</value>
   </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
-    <value>Workflow session invalid.</value>
+    <value>Relace workflow je neplatná.</value>
   </data>
   <data name="FilePathPartParameterNull" xml:space="preserve">
-    <value>File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path.</value>
+    <value>Část cesty k souboru má být nahrazena hodnotou parametru, ale poskytnutá hodnota je NULL. Nelze vytvořit cestu k souboru.</value>
   </data>
   <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
-    <value>Could not load work queue list.</value>
+    <value>Nepodařilo se načíst seznam fronty úloh.</value>
   </data>
   <data name="DefaultTooltipNoChange" xml:space="preserve">
-    <value>Record has not been changed yet.</value>
+    <value>Záznam ještě nebyl změněn.</value>
   </data>
   <data name="DefaultTooltipRecordCreated" xml:space="preserve">
-    <value>Created by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
+    <value>Vytvořil(a) &lt;b&gt;{0}&lt;/b&gt; dne &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="DefaultTooltipRecordUpdated" xml:space="preserve">
-    <value>Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
+    <value>Naposledy změněno &lt;b&gt;{0}&lt;/b&gt; dne &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="RegistrationNotAllowed" xml:space="preserve">
     <value>Registrace na této stránce není povolena.</value>
@@ -446,5 +443,14 @@
   </data>
   <data name="ExcelExportForbidden" xml:space="preserve">
     <value>Export do excelu je zakázán.</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Hesla nejsou stajná</value>
+  </data>
+  <data name="ErrorBlobNoData" xml:space="preserve">
+    <value>Zdroj dat nevrátil žádná data.</value>
   </data>
 </root>

@@ -70,19 +70,18 @@ export class ErrorDialogController implements IErrorDialogController {
           return "";
         }
         let exception = errItem.error.response.data;
-        let message = "";
+        const messages: string[] = [];
         do {
           const exMessage = _.get(exception, "message") || _.get(exception, "Message");
             if (errItem.error?.request?.status === 420) {
               return exMessage;
             }
-          if (exMessage) {
-            message += exMessage;
-            message += "\n";
+          if (exMessage && !messages.includes(exMessage)) {
+            messages.push(exMessage);
           }
           exception = exception.innerException || exception.InnerException;
         } while (exception);
-        return message;
+        return messages.join("\n");
       };
 
       const handleRuntimeException = () => "" + errItem.error;
@@ -98,12 +97,6 @@ export class ErrorDialogController implements IErrorDialogController {
         handleMessageField() ||
         handleLoginValidation() ||
         handleRuntimeException();
-
-      if (errItem.error?.request?.status === 500 || errItem.error?.request?.status === 409) {
-        errorMessage = T(
-          "Server error occurred. Please check server log for more details.",
-          "server_error")
-      }
 
       return {
         message: errorMessage,

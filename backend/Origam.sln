@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Workbench.Services",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Diagram", "Origam.Workbench.Diagram\Origam.Workbench.Diagram.csproj", "{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security", "Origam.Security\Origam.Security.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Security", "Origam.Security\Origam.Security.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.MenuModel", "Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
 EndProject

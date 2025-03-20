@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:sds="http://schemas.origam.com/Origam.Schema.MenuModel.SearchDataSource/6.0.0">
+  <sds:SearchDataSource
+    asi:abstract="false"
+    sds:dataStructure="Widgets/DataStructure/Widgets/SearchAllDataTypes.origam#SearchAllDataTypes/91012afa-dae2-4a74-bacf-25c665916795"
+    sds:filterParameter="AllDataTypes_parText1"
+    sds:groupLabel="AllDataTypes"
+    x:id="9e1a05cb-f7b6-43ad-81be-3a60b38a3190"
+    sds:lookup="Widgets/DataLookup/Widgets/AllDataTypes.origam#AllDataTypes/4b72f11a-4513-4e19-a8f5-addf40a277b1"
+    sds:method="Widgets/DataStructure/Widgets/SearchAllDataTypes.origam#SearchAllDataTypes/GetLikeText1/0e1312e3-f492-4e1b-8632-c6673737bb72"
+    asi:name="AllDataTypesLikeText1"
+    sds:roles="*" />
+</x:file>

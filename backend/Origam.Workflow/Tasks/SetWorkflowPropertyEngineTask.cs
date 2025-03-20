@@ -46,8 +46,7 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
 		if(setProperty.Transformation != null)
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			IXsltEngine transform = AsTransform.GetXsltEngine(
-                persistence.SchemaProvider, setProperty.TransformationId);
+			IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
 			data = transform.Transform(data, setProperty.TransformationId, new Hashtable(), Engine.TransactionId, null, false);
 		}
 		string propertyValue = (string)this.Engine.RuleEngine.EvaluateContext(setProperty.XPath, data, OrigamDataType.String, null);

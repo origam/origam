@@ -17,6 +17,7 @@
   "sign_out_data_lost_question": "Some data has not been saved yet. Do you still wish to log out?",
   "save_tool_tip": "Save",
   "refresh_tool_tip": "Refresh",
+  "refresh_dropdown": "Refresh",
   "sign_out_tool_tip": "Log Out",
   "user": "User",
   "help_button": "Help",

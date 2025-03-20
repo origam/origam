@@ -52,8 +52,15 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         DataServiceDataLookup dd = new DataServiceDataLookup();
-        var list = new List<ListViewItem>();
-        list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
+        var dataStructure = new DataStructure();
+        var list = new List<ListViewItem>
+        {
+	        new ListViewItem(dd.GetType().SchemaItemDescription().Name,
+		        dd.Icon),
+	        new ListViewItem(
+		        dataStructure.GetType().SchemaItemDescription().Name,
+		        dataStructure.Icon)
+        };
         Stack stackPage = new Stack();
         stackPage.Push(PagesList.Finish);
         stackPage.Push(PagesList.SummaryPage);
@@ -96,7 +103,7 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
+        richTextBoxSummary.Text = "This Wizard will create a lookup with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Name: \t\t");
@@ -111,5 +118,11 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
         richTextBoxSummary.AppendText("Id Filter: \t\t");
         richTextBoxSummary.AppendText(lookupForm.IdFilter.Name);
         richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText("And this data structure:");
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText("Data structure: \t");
+        richTextBoxSummary.AppendText(LookupHelper.GetDataStructureName(lookupForm.LookupName));
     }
 }

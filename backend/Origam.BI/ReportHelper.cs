@@ -81,9 +81,7 @@ public static class ReportHelper
             {
                 continue;
             }
-            IXsltEngine transformer = AsTransform.GetXsltEngine(
-                persistence.SchemaProvider,
-                xsltParameter.transformationId);
+            IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
             IXmlContainer xmlData = new XmlContainer("<ROOT/>");
             if (traceTaskInfo != null)
             {

@@ -86,6 +86,7 @@ function DropDownControl(props: {
       onMouseDown={() => props.onMouseDown()}
       className={CS.control + " " + props.className}>
       <input
+        autoComplete={"off"}
         className={S.input}
         value={props.value}
         disabled={true}
@@ -126,6 +127,7 @@ function FullScreenEditor<T>(props: {
     <div className={cx(CS.table, S.root)}>
       <div className={cx(CS.control, S.inputContainer)}>
         <input
+          autoComplete={"off"}
           className={cx("input", CS.input)}
           value={value}
           onChange={event => setValue(event.target.value)}

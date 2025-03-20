@@ -76,8 +76,10 @@ public class Project
     public string WebSurname { get;  set; }
     public string WebEmail { get;  set; }
     public int ActiveConfigurationIndex { get; set; }
-    public string DockerEnvPath { get; internal set; }
-    public string DockerCmdPath { get; set; }
+    public string DockerEnvPathLinux { get; internal set; }
+    public string DockerCmdPathLinux { get; set; }
+    public string DockerEnvPathWindows { get; internal set; }
+    public string DockerCmdPathWindows { get; set; }
 
     #endregion
 }

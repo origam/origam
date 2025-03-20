@@ -112,34 +112,25 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     
     private ISchemaItem GetItem(Key key)
     {
-        if (nonPersistedItems != null &&
-            nonPersistedItems.TryGetValue(key, out var persistedItem))
-        {
-            return persistedItem;
-        }
-
-        var item =
-            persistence.RetrieveInstance(typeof(ISchemaItem), key,
-                true, false) as ISchemaItem;
+        ISchemaItem item = null;
+        nonPersistedItems?.TryGetValue(key, out item);
         if (item == null)
         {
-            if (nonPersistedItems != null &&
-                nonPersistedItems.TryGetValue(key, out var nonPersistedItem))
+            item =
+                persistence.RetrieveInstance(typeof(ISchemaItem), key,
+                    true, false) as ISchemaItem;
+            if (item == null)
             {
-                item = nonPersistedItem;
+                nonPersistedItems?.TryGetValue(key, out item);
+                if (item == null)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        "Item not found by primary key");
+                }
             }
             else
             {
-                throw new ArgumentOutOfRangeException(
-                    "Item not found by primary key");
-            }
-        }
-        else
-        {
-            if (nonPersistedItems != null &&
-                nonPersistedItems.ContainsKey(key))
-            {
-                nonPersistedItems.Remove(key);
+                nonPersistedItems?.Remove(key);
             }
         }
 

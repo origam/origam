@@ -88,6 +88,9 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import {TabIndex} from "./TabIndexOwner";
+import {
+  openScreenIgnoreSelectionDialog
+} from "model/actions/Workbench/openScreenIgnoreSelectionDialog";
 
 class SavedViewState {
   constructor(
@@ -661,23 +664,7 @@ export class DataView implements IDataView {
       return;
     }
     const menuId = yield selectors.column.getLinkMenuId(property, value);
-    let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
-    if (menuItem) {
-      menuItem = {...menuItem, parent: undefined, elements: []};
-      menuItem = produce(menuItem, (draft: any) => {
-        if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
-          draft.attributes.type = "FormReferenceMenuItem";
-        }
-        draft.attributes.lazyLoading = "false";
-      });
-
-      yield onMainMenuItemClick(this)({
-        event: undefined,
-        item: menuItem,
-        idParameter: value,
-        isSingleRecordEdit: true,
-      });
-    }
+    yield *openScreenIgnoreSelectionDialog(menuId, value, this);
   }
 
   @action.bound onFieldChange(

@@ -463,8 +463,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             string template = (string)templateData.Tables[0].Rows[0]["Template"];
             // transform
             DataStructure resultStructure = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(new Guid("2f5e1853-e885-4177-ab6d-9da52123ae82"))) as DataStructure;
-            IXsltEngine transform = AsTransform.GetXsltEngine(
-                XsltEngineType.XslCompiledTransform, persistence.SchemaProvider);
+            IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
             Hashtable parameters = new Hashtable();
             if (recipient != null)
             {
@@ -496,7 +495,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             // anything else - we execute the workflow in order to get the addresses
             QueryParameterCollection pms = new QueryParameterCollection();
             pms.Add(new QueryParameter("workQueueNotificationContactTypeId", workQueueNotificationContactTypeId));
-            pms.Add(new QueryParameter("origamNotificationChannelTypeId", origamNotificationChannelTypeId));
+            pms.Add(new QueryParameter("OrigamNotificationChannelTypeId", origamNotificationChannelTypeId));
             pms.Add(new QueryParameter("value", value));
             pms.Add(new QueryParameter("context", context));
             if (workQueueRow != null)

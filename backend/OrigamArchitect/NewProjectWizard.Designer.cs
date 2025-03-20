@@ -685,8 +685,9 @@ namespace OrigamArchitect
             this.finalMessageLabel.Location = new System.Drawing.Point(21, 43);
             this.finalMessageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.finalMessageLabel.Name = "finalMessageLabel";
-            this.finalMessageLabel.Size = new System.Drawing.Size(1038, 158);
+            this.finalMessageLabel.Size = new System.Drawing.Size(1038, 250);
             this.finalMessageLabel.TabIndex = 1;
+            this.finalMessageLabel.AutoSize  = false;
             // 
             // NewProjectWizard
             // 

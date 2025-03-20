@@ -32,10 +32,10 @@ jobs:
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect" -v:m
     - name: Build Architect
       run: |
-       msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect" -v:m
+       msbuild backend/Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 /p:Configuration="Release Architect" -v:m
     - name: Build Origam.CommonTests
       run: |
-       msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
+       msbuild backend/Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
@@ -43,6 +43,7 @@ jobs:
         name: test-dlls
         path: "backend/**Tests/bin/Release"
         include-hidden-files: true
+        retention-days: 1
      
   tests:
     needs: buildArchitect
@@ -94,6 +95,7 @@ jobs:
         max-annotations: '0'
     
     - name: Delete artifact
-      uses: geekyeggo/delete-artifact@v2
+      uses: geekyeggo/delete-artifact@v5
       with:
           name: test-dlls
+          failOnError: false

@@ -456,7 +456,7 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<WorkflowTask> steps;
+		List<IWorkflowStep> steps;
 		// Get our parent block
 		ISchemaItem currentItem = (context.Instance as ISchemaItem).ParentItem.ParentItem;
         // Get our parent step to filter it out
@@ -473,11 +473,11 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 		}
 		else
 		{
-			steps = wf.ChildItemsByType<WorkflowTask>(WorkflowTask.CategoryConst);
+			steps = wf.ChildItemsByType<IWorkflowStep>(AbstractWorkflowStep.CategoryConst);
 		}
-		var stepArray = new List<WorkflowTask>(steps.Count);
+		var stepArray = new List<IWorkflowStep>(steps.Count);
 		
-		foreach(WorkflowTask step in steps)
+		foreach(IWorkflowStep step in steps)
 		{
             if(step.Id != parentStep?.Id)
             {

@@ -63,7 +63,7 @@
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="Origam.Service.Core" Version="2.3.1" />
+    <PackageReference Include="Origam.Service.Core" Version="2.3.2" />
     <PackageReference Include="SoapCore" Version="1.1.0.44" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
@@ -103,9 +103,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\identity\css\main.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="assets\identity\icons\origam.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\identity\icons\user.svg">
