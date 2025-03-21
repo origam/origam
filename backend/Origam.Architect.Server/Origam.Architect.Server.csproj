@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
     <ProjectReference Include="..\Origam.Server.Common\Origam.Server.Common.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
   </ItemGroup>
