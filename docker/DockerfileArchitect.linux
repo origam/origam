@@ -33,42 +33,26 @@ RUN apt-get update \
 
 RUN apt-get update && apt-get install -y -qq xmlstarlet
 
-WORKDIR /root
-COPY linux/updateTimezone.sh \
-linux/reverse-proxy.conf \
-/root/
-RUN mv reverse-proxy.conf /etc/nginx/sites-available \
-&& unlink /etc/nginx/sites-enabled/default \
-&& ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf \
-&& nginx -t \
-&& chmod +x updateTimezone.sh \
-&& cd /home \
-&& su origam 
 USER origam
 
-# nginx and SSL setup
-COPY linux/createSslCertificate.sh /etc/nginx/ssl/createSslCertificate.sh
-RUN sudo chmod +x /etc/nginx/ssl/createSslCertificate.sh
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /root
+COPY server/linux/updateTimezone.sh \
+/root/
 
 WORKDIR /home/origam
-RUN mkdir HTML5 HTML5-SOURCE
-COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
-COPY --chown=origam:origam HTML5 _appsettings.template \
-_OrigamSettings.mssql.template \
-_OrigamSettings.postgres.template \
-linux/configureServer.sh \
-linux/fill_origam_settings_config.sh \
-linux/entrypoint.sh \
-log4net.config \
-linux/updateEnvironment.sh \
-linux/updateEnvironmentRoot.sh \
-/home/origam/HTML5/
-WORKDIR /home/origam/HTML5
+RUN mkdir Architect
+COPY --chown=origam:origam architect/bin /home/origam/Architect/
+COPY --chown=origam:origam architect/bin architect/appsettings.json \
+server/_OrigamSettings.mssql.template \
+server/_OrigamSettings.postgres.template \
+architect/linux/configureServer.sh \
+server/linux/fill_origam_settings_config.sh \
+architect/linux/entrypoint.sh \
+server/log4net.config \
+/home/origam/Architect/
+WORKDIR /home/origam/Architect
 RUN mkdir logs \
 && chmod +x configureServer.sh \
 && chmod +x fill_origam_settings_config.sh \
-&& chmod +x entrypoint.sh \
-&& chmod +x updateEnvironment.sh \
-&& chmod +x updateEnvironmentRoot.sh
+&& chmod +x entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
