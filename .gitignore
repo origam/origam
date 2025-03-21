@@ -8,3 +8,4 @@ RuntimeModelConfiguration.json
 /docker/runLinux.cmd
 /docker/runWin.cmd
 /docker/HTML5/
+/docker/architect/bin/
