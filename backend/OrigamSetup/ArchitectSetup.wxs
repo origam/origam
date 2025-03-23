@@ -19,7 +19,7 @@
     </Property>
     <Property Id="InfoIcon" Value="info">
     </Property>
-    <SetProperty Id="PREREQUISITES_OK" Value="1" After="AppSearch">NETFRAMEWORK45 &gt;= "#394254"</SetProperty>
+    <SetProperty Id="PREREQUISITES_OK" Value="1" After="AppSearch">NETFRAMEWORK45 &gt;= "#461808"</SetProperty>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="origam" Name="ORIGAM">
@@ -1121,7 +1121,7 @@
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
           <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
         </Control>
-        <Control Type="Text" Id="CheckNetFxLabel" Width="223" Height="17" X="49" Y="45" Text=".NET Framework 4.6.1" Transparent="yes">
+        <Control Type="Text" Id="CheckNetFxLabel" Width="223" Height="17" X="49" Y="45" Text=".NET Framework 4.7.2" Transparent="yes">
         </Control>
         <Control Type="CheckBox" Id="CheckNetFxAuth" Width="10" Height="10" X="19" Y="45" Disabled="yes" Property="PREREQUISITES_OK" TabSkip="yes">
         </Control>
