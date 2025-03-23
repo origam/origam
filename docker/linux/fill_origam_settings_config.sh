@@ -34,8 +34,12 @@ fill_origam_settings_config() {
 
     # Compose the DataConnectionString using the required connection string variables.
     local CONNECTION_STRING="Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
-    xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataConnectionString" -v "${CONNECTION_STRING}" "$config_file"
 
+    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/DataConnectionString" "$config_file" &>/dev/null; then
+        xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataConnectionString" -v "${CONNECTION_STRING}" "$config_file"
+    else
+        xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataConnectionString" -v "${CONNECTION_STRING}" "$config_file"
+    fi
 
     for env_entry in $(env | grep '^OrigamSettings__' | grep -v '^OrigamSettings__Database'); do
         key="${env_entry%%=*}"
