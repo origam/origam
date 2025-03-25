@@ -30,11 +30,9 @@ using System.Xml;
 using Newtonsoft.Json;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 using System.Linq;
 using System.Web;
@@ -44,9 +42,6 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Processing;
-using Image = System.Drawing.Image;
 
 namespace Origam.Server.Pages;
 public class UserApiProcessor
@@ -633,8 +628,7 @@ public class UserApiProcessor
             // get a thumbnail
             try
             {
-                using SixLabors.ImageSharp.Image image = 
-                    SixLabors.ImageSharp.Image.Load(file.InputStream);
+                using Image image = Image.Load(file.InputStream);
                 fileBytes = BlobUploadHandler.FixedSizeBytes(
                     image, fileMapping.ThumbnailWidth, fileMapping.ThumbnailHeight);
             }

@@ -237,7 +237,8 @@ public class BlobController : AbstractController
             {
                 try
                 {
-                    // The image is loaded to check that the input actually repsents an image
+                    // The image is loaded to check that the input actually
+                    // represents an image
                     using var image = Image.Load(input);
                     var parameterService = ServiceManager.Services
                         .GetService<IParameterService>();
