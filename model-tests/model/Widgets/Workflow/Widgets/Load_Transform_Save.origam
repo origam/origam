@@ -8,6 +8,7 @@
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
@@ -89,7 +90,13 @@
         asi:abstract="false"
         x:id="32924ad2-803b-4c72-bcbf-b4bff617a3ef"
         asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd" />
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="d23a127a-5e5b-47dd-8f5a-ee50b4088bb7"
+          asi:name="WF_Load_Transform_Save"
+          tr:transformation="Widgets/Transformation/Widgets/WF_Load_Transform_Save.origam#WF_Load_Transform_Save/71a4dead-95d7-42fc-9b61-d18d036e001b" />
+      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="613477f2-f73f-4c01-8b45-2678e27b7c3e"
