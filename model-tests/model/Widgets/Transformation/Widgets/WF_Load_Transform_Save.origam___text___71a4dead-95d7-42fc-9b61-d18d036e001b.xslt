@@ -11,8 +11,8 @@
 
 	<xsl:template match="AllDataTypes">
 		<xsl:copy>
-			<xsl:copy-of select="@*"/>
-			<xsl:attribute name="Text1">HelloHi</xsl:attribute>
+			<xsl:copy-of select="@*[name() != 'Text1']"/>
+			<xsl:attribute name="Text1"><xsl:value-of select="concat(@Text1, 'hi')"/></xsl:attribute>
 			<xsl:attribute name="Long1"><xsl:value-of select="123456"/></xsl:attribute>
 			<xsl:copy-of select="*"/>
 		</xsl:copy>
