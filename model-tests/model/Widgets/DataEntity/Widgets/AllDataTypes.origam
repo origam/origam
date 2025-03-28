@@ -269,6 +269,21 @@
     </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
+      x:id="17dd194e-70a6-4a48-b98d-9fddba73e51e"
+      asi:name="AllDataTypesAttachment"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/AllDataTypesAttachment.origam#AllDataTypesAttachment/ddcb649a-a23d-45e3-9987-7076f02825f1"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="00557971-97fb-42ef-be6f-ca13cfa69983"
+        asi:name="AllDataTypesAttachmentKey1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/AllDataTypesAttachment.origam#AllDataTypesAttachment/refAllDataTypesId/8e78d900-f102-4587-bb9d-ae0b30cdb81f" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
       x:id="9a7b8c2c-f8a8-4fed-8470-895d2618499a"
       asi:name="TagInputBinding"
       eri:or="false"
@@ -389,7 +404,7 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNothing.origam#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="74dc7285-c0df-483f-b71f-90660e7d0776"
@@ -418,7 +433,7 @@
       euia:roles="*"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNothing.origam#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="81add448-6e02-4621-9421-a85079f206b3"
