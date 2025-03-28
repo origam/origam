@@ -20,30 +20,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.IO;
-using ImageMagick;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
 
-namespace Origam.Server;
-public class BlobUploadHandler
+public class BlobUploadHandler 
 {
-    public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
+    public static byte[] FixedSizeBytes(Image image, int width, int height)
     {
-        using MagickImage thumbnail = FixedSize(img, width, height);
-        var memoryStream = new MemoryStream();
-        try
-        {
-            thumbnail.Write(memoryStream);
-            return memoryStream.GetBuffer();
-        }
-        finally
-        {
-            if (memoryStream != null) memoryStream.Close();
-        }
+        using Image thumbnail = FixedSize(image, width, height);
+        using var memoryStream = new MemoryStream();
+        thumbnail.SaveAsPng(memoryStream, new PngEncoder());
+        return memoryStream.ToArray();
     }
-    public static MagickImage FixedSize(
-        MagickImage imgPhoto, int width, int height)
+    private static Image FixedSize(Image sourceImage, int width, int height)
     {
-        int sourceWidth = imgPhoto.Width;
-        int sourceHeight = imgPhoto.Height;
+        int sourceWidth = sourceImage.Width;
+        int sourceHeight = sourceImage.Height;
         int destX = 0;
         int destY = 0;
         float nPercent;
@@ -63,11 +58,13 @@ public class BlobUploadHandler
         }
         int destWidth = (int)(sourceWidth * nPercent);
         int destHeight = (int)(sourceHeight * nPercent);
-        var blackMarginPhoto = new MagickImage(
-            MagickColors.Black, width, height);
-        blackMarginPhoto.Format = MagickFormat.Png;
-        imgPhoto.Resize(destWidth, destHeight);
-        blackMarginPhoto.Composite(imgPhoto, destX, destY);
-        return blackMarginPhoto;
+        Image backgroundImage = new Image<Rgba32>(width, height);
+        backgroundImage.Mutate(
+            x => x.Fill(Color.Black));
+        using Image resizedImage = sourceImage
+            .Clone(ctx => ctx.Resize(destWidth, destHeight));
+        backgroundImage.Mutate(
+            x => x.DrawImage(resizedImage, new Point(destX, destY), 1f));
+        return backgroundImage;
     }
 }
