@@ -353,7 +353,6 @@ public class DatasetTools
 		DataColumnCollection colsSource, colsTarget;
 		colsSource = in_dtSource.Columns;
 		colsTarget = inout_dtTarget.Columns;
-		Hashtable changedColumns = new Hashtable();
 		// Find position of PK columns (from source table, assumed same PK on target table)
 		bool hasPrimaryKeys = true;
 		//int iPk0 = 0, iPk1;// optim
@@ -372,6 +371,7 @@ public class DatasetTools
 		// for each row in source, fetch matching target row with same PK and update
 		for (int iRowSource = 0 ; nbRowSource > iRowSource ; ++iRowSource) 
 		{
+			Hashtable changedColumns = new Hashtable();
 			drSource = in_dtSource.Rows[iRowSource];
 			drTarget = null;
 			if(hasPrimaryKeys)
