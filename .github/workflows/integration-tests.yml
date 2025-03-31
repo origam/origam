@@ -64,7 +64,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: htmlfrontendbuild
-        path: "frontend-html/dist"   
+        path: "frontend-html/dist"
+        retention-days: 1
 
   build-server:
     name: build-server
@@ -104,12 +105,14 @@ jobs:
       with:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net8.0/publish"
+        retention-days: 1
 
     - name: Upload workflow integration tests artifact
       uses: actions/upload-artifact@v4
       with:
         name: workflowbuild
         path: "backend/Origam.WorkflowTests/bin/Release Server/net8.0/publish"
+        retention-days: 1
         
   integration-tests:
     needs: [build-frontend,build-server]
@@ -185,9 +188,10 @@ jobs:
         max-annotations: '0'
      
     - name: Delete artifacts
-      uses: geekyeggo/delete-artifact@v2
+      uses: geekyeggo/delete-artifact@v5
       with:
           name: |
               htmlserverbuild
               htmlfrontendbuild
               workflowbuild
+          failOnError: false

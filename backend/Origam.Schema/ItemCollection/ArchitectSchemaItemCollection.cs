@@ -114,26 +114,28 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     {
         ISchemaItem item = null;
         nonPersistedItems?.TryGetValue(key, out item);
+        if (item != null)
+        {
+            item.RootProvider = rootProvider;
+            return item;
+        }
+        
+        item = persistence.RetrieveInstance(typeof(ISchemaItem), key,
+                true, false) as ISchemaItem;
         if (item == null)
         {
-            item =
-                persistence.RetrieveInstance(typeof(ISchemaItem), key,
-                    true, false) as ISchemaItem;
+            nonPersistedItems?.TryGetValue(key, out item);
             if (item == null)
             {
-                nonPersistedItems?.TryGetValue(key, out item);
-                if (item == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        "Item not found by primary key");
-                }
-            }
-            else
-            {
-                nonPersistedItems?.Remove(key);
+                throw new ArgumentOutOfRangeException(
+                    "Item not found by primary key");
             }
         }
-
+        else
+        {
+            nonPersistedItems?.Remove(key);
+        }
+        
         SetDerivedFrom(item);
         item.RootProvider = rootProvider;
         return item;
