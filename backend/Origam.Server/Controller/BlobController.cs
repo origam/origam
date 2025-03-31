@@ -253,8 +253,7 @@ public class BlobController : AbstractController
                     var row = blobUploadRequest.Row;
                     var thumbnailMember 
                         = blobUploadRequest.ThumbnailMember;
-                    row[thumbnailMember] 
-                        = FixedSizeBytes(input, width, height);
+                    row[thumbnailMember] = ResizeImage(input, width, height);
                 }
                 catch
                 {
@@ -316,7 +315,7 @@ public class BlobController : AbstractController
         }
         return false;
     }
-    private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
+    private static byte[] ResizeImage(byte[] byteArrayImage, int width, int height)
     {
         IImageFormat format = Image.DetectFormat(byteArrayImage);
         if (format == null)
