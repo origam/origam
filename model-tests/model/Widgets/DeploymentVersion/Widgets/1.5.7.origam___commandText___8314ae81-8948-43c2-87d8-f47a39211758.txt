@@ -1,9 +1,0 @@
-﻿
-ALTER TABLE [AllDataTypesAttachment] ADD CONSTRAINT [FK_AllDataTypesAttachment_refAllDataTypesId_AllDataTypes]
-	FOREIGN KEY (
-		[refAllDataTypesId]
-	)
-
-	REFERENCES [AllDataTypes] (
-		[Id]
-	);
