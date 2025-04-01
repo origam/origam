@@ -532,7 +532,7 @@ jobs:
     displayName: Build Linux Docker
     dependsOn: build_release
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ubuntu-24.04
     steps:
      - checkout: origam
        fetchDepth: 1
