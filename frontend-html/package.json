@@ -92,7 +92,7 @@
     "esbuild": "^0.25.2",
     "identity-obj-proxy": "^3.0.0",
     "ts-jest": "^29.3.1",
-    "vite": "^6.2.3",
+    "vite": "^6.2.4",
     "ws": "^8.18.1"
   },
   "resolutions": {
