@@ -6526,7 +6526,7 @@ __metadata:
     react-inlinesvg: "npm:^4.2.0"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
-    sass: "npm:^1.86.1"
+    sass: "npm:^1.86.3"
     stream-browserify: "npm:^3.0.0"
     string-strip-html: "npm:^13.4.12"
     ts-jest: "npm:^29.3.1"
@@ -6854,9 +6854,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.86.1":
-  version: 1.86.1
-  resolution: "sass@npm:1.86.1"
+"sass@npm:^1.86.3":
+  version: 1.86.3
+  resolution: "sass@npm:1.86.3"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -6867,7 +6867,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/16733c7cd7ebb180d12c7aa8fdf4647de857901ab55c369f810b3654aa1c4cd61bb0274981d7792f0ccdfb29755aab17afc13c9daad69d8ffc4d761a8314c93a
+  checksum: 10c0/ba819a0828f732adf7a94cd8ca017bce92bc299ffb878836ed1da80a30612bfbbf56a5e42d6dff3ad80d919c2025afb42948fc7b54a7bc61a9a2d58e1e0c558a
   languageName: node
   linkType: hard
 
