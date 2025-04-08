@@ -7,7 +7,7 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: master
+  value: windows-server-core-docker
 - name: VERSION_NUMBER # version number of the build
   value: 2025.4.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
