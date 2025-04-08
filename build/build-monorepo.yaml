@@ -30,7 +30,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: $(BRANCH)
+     ref: master
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
