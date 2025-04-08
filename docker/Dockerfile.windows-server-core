@@ -5,8 +5,6 @@ USER ContainerAdministrator
 WORKDIR /home/origam
 
 # Create required directories
-RUN mkdir HTML5 && mkdir HTML5-SOURCE && mkdir C:\\ssl && mkdir Scheduler
-# Create required directories
 RUN mkdir HTML5 && \
     mkdir HTML5-SOURCE && \
     mkdir "C:\\ssl" && \
