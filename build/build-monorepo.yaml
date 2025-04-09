@@ -586,7 +586,7 @@ jobs:
     displayName: Build Windows Nano Docker
     dependsOn: build_release
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
