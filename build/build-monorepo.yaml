@@ -7,7 +7,7 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: windows-server-core-docker
+  value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2025.4.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
@@ -30,7 +30,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: master
+     ref: $(BRANCH)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
