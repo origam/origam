@@ -445,7 +445,8 @@ jobs:
            Server Docker Images
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId).linux
-           docker pull origam/server:$(TAG).$(Build.BuildId).win
+           docker pull origam/server:$(TAG).$(Build.BuildId).win-nano
+           docker pull origam/server:$(TAG).$(Build.BuildId).win-core
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
@@ -480,7 +481,8 @@ jobs:
            Server Docker Images
            ```
            docker pull origam/server:$(TAG_LATEST).linux
-           docker pull origam/server:$(TAG_LATEST).win
+           docker pull origam/server:$(TAG_LATEST).win-nano
+           docker pull origam/server:$(TAG_LATEST).win-core
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
@@ -578,13 +580,13 @@ jobs:
            $(TAG).$(Build.BuildId).linux
            $(TAG_LATEST).linux
   # ------------------------------------
-  # DOCKER WINDOWS
+  # DOCKER WINDOWS NANO
   # ------------------------------------
-  - job: build_docker_windows
-    displayName: Build Windows Docker
+  - job: build_docker_windows_nano
+    displayName: Build Windows Nano Docker
     dependsOn: build_release
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -613,8 +615,49 @@ jobs:
        inputs:
          containerRegistry: dockerhub
          repository: origam/server
-         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.windows'
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.windows-nano'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           $(TAG).$(Build.BuildId).win
-           $(TAG_LATEST).win
+           $(TAG).$(Build.BuildId).win-nano
+           $(TAG_LATEST).win-nano
+  # ------------------------------------
+  # DOCKER WINDOWS SERVER CORE
+  # ------------------------------------
+  - job: build_docker_windows_core
+    displayName: Build Windows Server Core Docker
+    dependsOn: build_release
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-html artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-html'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-scheduler artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-scheduler'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - powershell: |
+        Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
+        Move-Item -Path origam-html -Destination HTML5 -force
+        Move-Item -Path origam-scheduler -Destination Scheduler -force
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Download origam-html and source artifact
+     - task: Docker@2
+       displayName: 'Build and publish docker windows image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/server
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.windows-server-core'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).win-core
+           $(TAG_LATEST).win-core
