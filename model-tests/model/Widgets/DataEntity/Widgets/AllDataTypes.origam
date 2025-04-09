@@ -387,9 +387,10 @@
       ewa:refreshPortalAfterFinish="false"
       ewa:requestSaveBeforeWorkflow="false"
       euia:roles="*"
+      euia:rule="Widgets/Rule/Widgets/AllDataTypes_Text1_bla2.origam#AllDataTypes_Text1_bla2/6b7c91f8-c37e-41c4-892f-346bdadae1f2"
       ewa:saveAfterWorkflow="false"
       euia:valueType="SavedValue"
-      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNothing.origam#DummyWorkflowDoingNothing/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
       <sc2:ScreenCondition
         asi:abstract="false"
         x:id="74dc7285-c0df-483f-b71f-90660e7d0776"

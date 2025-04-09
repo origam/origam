@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:er2="http://schemas.origam.com/Origam.Schema.RuleModel.EntityRule/6.0.0"
+  xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
+  <er2:Rule
+    asi:abstract="false"
+    ar1:dataType="Boolean"
+    x:id="6b7c91f8-c37e-41c4-892f-346bdadae1f2"
+    xpr:isPathRelative="false"
+    asi:name="AllDataTypes_Text1_bla2"
+    xpr:xPath="/row/@Text1 = &quot;bla2&quot;" />
+</x:file>
