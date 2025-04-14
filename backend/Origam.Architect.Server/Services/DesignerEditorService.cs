@@ -9,7 +9,6 @@ using Origam.Workbench.Services;
 namespace Origam.Architect.Server.Services;
 
 public class DesignerEditorService(
-    IPersistenceService persistenceService,
     SchemaService schemaService,
     ControlAdapterFactory adapterFactory)
 {

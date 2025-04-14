@@ -6,7 +6,6 @@ using Origam.Service.Core;
 namespace Origam.Architect.Server.Controllers;
 
 public abstract class OrigamController(
-    IWebHostEnvironment environment,
     ILogger<OrigamController> log)
     : ControllerBase
 {
