@@ -48,9 +48,6 @@ public class EditorPropertyFactory
     public EditorProperty Create(PropertyInfo property,
         PropertyBindingInfo bindingInfo, DropDownValue[] dropDownValues)
     {
-        // DropDownValue[] dropDownValues = fields
-        //     .Select(field => new DropDownValue(field.Name, field.Name))
-        //     .ToArray();
         return new EditorProperty(
             name: property.Name,
             controlPropertyId: bindingInfo.ControlPropertyId,
