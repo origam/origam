@@ -34,12 +34,15 @@ using Microsoft.Net.Http.Headers;
 using Origam.DA;
 using Origam.Schema;
 using Origam.Workbench.Services;
-using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace Origam.Server.Controller;
 [Controller]
@@ -232,44 +235,32 @@ public class BlobController : AbstractController
             }
             if(CheckMember(blobUploadRequest.ThumbnailMember, false))
             {
-                MagickImage image = null;
                 try
                 {
-                    image = new MagickImage(new MemoryStream(input));
+                    // The image is loaded to check that the input actually
+                    // represents an image
+                    using var image = Image.Load(input);
+                    var parameterService = ServiceManager.Services
+                        .GetService<IParameterService>();
+                    var width = (int) parameterService
+                        .GetParameterValue(
+                            blobUploadRequest.ThumbnailWidthConstantId,
+                            OrigamDataType.Integer);
+                    var height = (int) parameterService
+                        .GetParameterValue(
+                            blobUploadRequest.ThumbnailHeightConstantId,
+                            OrigamDataType.Integer);
+                    var row = blobUploadRequest.Row;
+                    var thumbnailMember 
+                        = blobUploadRequest.ThumbnailMember;
+                    row[thumbnailMember] = ResizeImage(input, width, height);
                 }
                 catch
                 {
-                    blobUploadRequest.Row[blobUploadRequest.ThumbnailMember] 
-                        = DBNull.Value;
-                }
-                if(image != null)
-                {
-                    try
-                    {
-                        var parameterService = ServiceManager.Services
-                            .GetService<IParameterService>();
-                        var width = (int) parameterService
-                            .GetParameterValue(
-                                blobUploadRequest.ThumbnailWidthConstantId,
-                                OrigamDataType.Integer);
-                        var height = (int) parameterService
-                            .GetParameterValue(
-                            blobUploadRequest.ThumbnailHeightConstantId,
-                            OrigamDataType.Integer);
-                        var row = blobUploadRequest.Row;
-                        var thumbnailMember 
-                            = blobUploadRequest.ThumbnailMember;
-                        row[thumbnailMember] 
-                            = FixedSizeBytes(input, width, height);
-                    }
-                    finally
-                    {
-                        image.Dispose();
-                    }
+                    blobUploadRequest.Row[blobUploadRequest.ThumbnailMember] = DBNull.Value;
                 }
             }
-            DatasetTools.UpdateOrigamSystemColumns(
-                blobUploadRequest.Row, false, profile.Id);
+            DatasetTools.UpdateOrigamSystemColumns(blobUploadRequest.Row, false, profile.Id);
             blobUploadRequest.Row[blobUploadRequest.Property] = filename;
             return Ok();
         }
@@ -324,17 +315,22 @@ public class BlobController : AbstractController
         }
         return false;
     }
-    private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
+    private static byte[] ResizeImage(byte[] byteArrayImage, int width, int height)
     {
-        MagickImageInfo imageInfo = new MagickImageInfo(byteArrayImage);
-        var sourceWidth = imageInfo.Width;
-        var sourceHeight = imageInfo.Height;
+        IImageFormat format = Image.DetectFormat(byteArrayImage);
+        if (format == null)
+        {
+            throw new InvalidOperationException("Unable to detect image format.");
+        }
+        using Image image = Image.Load(byteArrayImage);
+        var sourceWidth = image.Width;
+        var sourceHeight = image.Height;
         var destX = 0;
         var destY = 0;
         float percent;
         var percentWidth = width / (float)sourceWidth;
         var percentHeight = height / (float)sourceHeight;
-        if(percentHeight < percentWidth)
+        if (percentHeight < percentWidth)
         {
             percent = percentHeight;
             destX = Convert.ToInt16((width - (sourceWidth * percent)) / 2);
@@ -347,11 +343,12 @@ public class BlobController : AbstractController
         }
         var destWidth = (int)(sourceWidth * percent);
         var destHeight = (int)(sourceHeight * percent);
-        var backgroundImage = new MagickImage(MagickColors.Black, width, height);
-        backgroundImage.Resize(width, height);
-        var pictureBitmap = new MagickImage(byteArrayImage);
-        pictureBitmap.Resize(destWidth,destHeight);
-        backgroundImage.Composite(pictureBitmap, destX, destY);
-        return backgroundImage.ToByteArray(imageInfo.Format);
+        using var backgroundImage = new Image<Rgba32>(width, height, Color.Black);
+        image.Mutate(x => x.Resize(destWidth, destHeight));
+        backgroundImage.Mutate(x => 
+            x.DrawImage(image, new Point(destX, destY), 1f));
+        using var memoryStream = new MemoryStream();
+        backgroundImage.Save(memoryStream, format);
+        return memoryStream.ToArray();
     }
 }

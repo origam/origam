@@ -1,0 +1,38 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-windowsservercore-ltsc2022
+
+USER ContainerAdministrator
+
+WORKDIR /home/origam
+
+# Create required directories
+RUN mkdir HTML5 && \
+    mkdir HTML5-SOURCE && \
+    mkdir "C:\\ssl" && \
+    mkdir Scheduler
+
+# Copy application files
+COPY HTML5 HTML5/
+COPY HTML5-SOURCE HTML5-SOURCE/
+COPY Scheduler Scheduler/
+
+WORKDIR /home/origam/HTML5
+
+# Copy configuration templates and scripts
+COPY _appsettings.template .
+COPY _OrigamSettings.mssql.template .
+COPY _OrigamSettings.postgres.template .
+COPY log4net.config .
+COPY windows/StartServer.ps1 .
+COPY windows/Install.ps1 .
+COPY windows/Utils.ps1 .
+COPY windows/CreateSslCertificate.ps1 .
+
+# Install dependencies
+RUN powershell.exe -ExecutionPolicy Bypass -File install.ps1
+
+WORKDIR /home/origam/HTML5-SOURCE
+WORKDIR /home/origam/HTML5
+
+EXPOSE 8080 443
+
+ENTRYPOINT ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "startServer.ps1"]

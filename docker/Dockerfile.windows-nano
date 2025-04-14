@@ -1,8 +1,8 @@
 # PowerShell stage
-FROM mcr.microsoft.com/powershell:nanoserver-1809 AS powershell
+FROM mcr.microsoft.com/powershell:nanoserver-ltsc2022 AS powershell
 
 # Final image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-ltsc2022
 
 # Copy PowerShell from the powershell stage, should work better that installing it...
 ARG src="C:/Program Files/PowerShell/"
@@ -44,6 +44,5 @@ RUN pwsh.exe -ExecutionPolicy Bypass -File install.ps1
 WORKDIR /home/origam/HTML5-SOURCE
 WORKDIR /home/origam/HTML5
 
-# Set the entry point to use PowerShell
 EXPOSE 8080 443
 ENTRYPOINT ["pwsh.exe", "-ExecutionPolicy", "Bypass", "-File", "startServer.ps1"]
