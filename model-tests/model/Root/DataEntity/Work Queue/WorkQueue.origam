@@ -11,7 +11,6 @@
   xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
   xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
-  xmlns:efd1="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldDependency/6.0.0"
   xmlns:efsr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldSecurityRule/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
@@ -332,11 +331,6 @@
       asi:name="ThrottlingIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
-      <efd1:EntityFieldDependency
-        asi:abstract="false"
-        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
-        x:id="b5e20094-2b88-4b8e-9dfa-321f92d4706b"
-        asi:name="EnableThrottling" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="b06cfddb-ebf7-429d-aa8d-70f7e31a2733"
@@ -428,11 +422,6 @@
       asi:name="ThrottlingItemsPerInterval"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
-      <efd1:EntityFieldDependency
-        asi:abstract="false"
-        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
-        x:id="b140fd18-e148-495d-b29b-b68b01688460"
-        asi:name="EnableThrottling" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="e1fb78bc-e2c7-4e5d-b333-325d88c01bf6"
@@ -460,11 +449,6 @@
       asi:name="RetryIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
-      <efd1:EntityFieldDependency
-        asi:abstract="false"
-        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
-        x:id="05a440dd-7b11-4527-86a8-8b2d0af3cb0b"
-        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="2bfb9408-48a4-4086-bf0a-636742156d4b"
@@ -517,11 +501,6 @@
       asi:name="ExponentialRetryBase"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
-      <efd1:EntityFieldDependency
-        asi:abstract="false"
-        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
-        x:id="1f1ef3fe-9ddb-4128-805e-25fe67195a42"
-        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="cc9a4ef7-7e47-4b89-87cf-dc13dd0ea1a8"
@@ -814,11 +793,6 @@
       asi:name="MaxRetries"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
-      <efd1:EntityFieldDependency
-        asi:abstract="false"
-        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
-        x:id="0dcfa03d-5d9d-491b-943c-29d63a3cb99b"
-        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="85a3b727-89f8-43d2-ade2-1c9a58be4728"
