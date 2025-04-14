@@ -5,6 +5,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
+	<EnableWindowsTargeting>false</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>
