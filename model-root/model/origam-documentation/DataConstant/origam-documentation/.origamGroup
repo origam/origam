@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="6cb7ef37-f0f1-46f1-bdd7-bb120f9ca8c1"
+    x:isFolder="true"
+    g:name="origam-documentation"
+    g:rootItemType="DataConstant" />
+</x:file>
