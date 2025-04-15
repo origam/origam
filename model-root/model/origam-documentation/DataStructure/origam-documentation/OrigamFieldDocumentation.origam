@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dswm="http://schemas.origam.com/Origam.Schema.WorkflowModel.DataStructureWorkflowMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="214c9cf7-5459-45e2-b3ff-7ee813bb85f4"
+    ds1:localized="false"
+    asi:name="OrigamFieldDocumentation">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="origam-documentation/DataEntity/origam-documentation/OrigamFieldDocumentation.origam#OrigamFieldDocumentation/bdc405c3-f146-44aa-80c5-8a6fa8a3a973"
+      x:id="d2bfc032-8069-401e-a5b4-0c8d51d99eca"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamFieldDocumentation"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false" />
+    <dswm:DataStructureFilterSet
+      asi:abstract="false"
+      x:id="0bdb410a-9e60-4fc2-ac96-8f24c6377922"
+      dswm:loadWorkflow="origam-documentation/Workflow/origam-documentation/GenerateFieldDocumentation.origam#GenerateFieldDocumentation/22c88a92-4cc1-46fa-9ace-81420a9ba723"
+      asi:name="GenerateFieldDocumentation" />
+  </ds1:DataStructure>
+</x:file>
