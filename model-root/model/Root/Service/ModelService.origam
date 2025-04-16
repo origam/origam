@@ -138,5 +138,10 @@
         x:id="2b0fefc8-cf58-45f1-a9f6-e4cacec6af82"
         asi:name="Enabled" />
     </sm1:ServiceMethod>
+    <sm1:ServiceMethod
+      asi:abstract="false"
+      x:id="ea57fd1a-d89f-474f-83ae-720052afb30c"
+      asi:name="GetDatabaseFieldsMetaData"
+      sm1:returnValueDataType="Xml" />
   </s:Service>
 </x:file>

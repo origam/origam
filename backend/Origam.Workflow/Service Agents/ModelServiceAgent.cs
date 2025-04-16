@@ -28,6 +28,7 @@ using Origam.Services;
 using Origam.Workbench.Services;
 using System.Data;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
@@ -116,6 +117,9 @@ public class ModelServiceAgent : AbstractServiceAgent
             case "GenerateSimpleModel":
                 _result = GenerateSimpleModel(
                     Parameters.Get<IDataDocument>("Data"));
+                break;  
+            case "GetDatabaseFieldsMetaData":
+                _result = GetDatabaseFieldsMetaData();
                 break;
             case "ElementAttribute":
                 _result = ElementAttribute(
@@ -156,6 +160,47 @@ public class ModelServiceAgent : AbstractServiceAgent
                 throw new ArgumentOutOfRangeException("MethodName",
                     MethodName, ResourceUtils.GetString("InvalidMethodName"));
         }
+    }
+    private IDataDocument GetDatabaseFieldsMetaData()
+    {
+        Guid fieldDocStructureId = Guid.Parse("214c9cf7-5459-45e2-b3ff-7ee813bb85f4");
+        var persistence = ServiceManager.Services.GetService
+            <IPersistenceService>();
+        var documentationService = ServiceManager.Services.GetService
+            <IDocumentationService>();
+        DataStructure fieldDocStructure = persistence.SchemaProvider
+            .RetrieveInstance<DataStructure>(fieldDocStructureId);
+        DataSet dataSet = new DatasetGenerator(false)
+            .CreateDataSet(fieldDocStructure);
+        DataTable table = dataSet.Tables["OrigamFieldDocumentation"];
+        var allFields = persistence.SchemaProvider.RetrieveList
+            <FieldMappingItem>();
+        foreach (var field in allFields)
+        {
+            DataRow row = table.NewRow();
+            row["AllowNulls"] = field.AllowNulls;
+            row["Caption"] = field.Caption;
+            row["DataLength"] = field.DataLength;
+            row["DataType"] = field.DataType;
+            row["DefaultValue"] = field.DefaultValue;
+            row["ForeignKeyEntity"] = 
+                (field.ForeignKeyEntity as TableMappingItem)
+                ?.MappedObjectName ?? "";
+            row["ForeignKeyField"] = 
+                (field.ForeignKeyField as FieldMappingItem)
+                ?.MappedColumnName ?? "";
+            row["IsPrimaryKey"] = field.IsPrimaryKey;
+            row["Name"] = field.MappedColumnName;
+            row["ParentEntityName"] = 
+                (field.ParentItem as TableMappingItem)
+                ?.MappedObjectName ?? "";
+            row["UserShortHelp"] = documentationService.GetDocumentation(
+                field.Id, DocumentationType.USER_SHORT_HELP);
+            row["UserLongHelp"] = documentationService.GetDocumentation(
+                field.Id, DocumentationType.USER_LONG_HELP);
+            table.Rows.Add(row);
+        }
+        return DataDocumentFactory.New(dataSet);
     }
     private string ElementAttribute(Guid id, string attributeName)
     {
