@@ -1,0 +1,17 @@
+﻿IF OBJECT_ID('OrigamIdentityGrantCleanup', 'P') IS NOT NULL
+    DROP PROCEDURE OrigamIdentityGrantCleanup;
+GO
+
+CREATE PROCEDURE OrigamIdentityGrantCleanup
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @CurrentDateTime AS datetime2 = GETDATE();
+    WHILE (@@ROWCOUNT > 0)
+    BEGIN
+        DELETE TOP (1000)
+        FROM OrigamIdentityGrant
+        WHERE Expiration < @CurrentDateTime;
+    END
+END
+GO
