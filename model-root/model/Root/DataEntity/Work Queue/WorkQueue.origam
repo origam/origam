@@ -11,6 +11,7 @@
   xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
   xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:efd1="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldDependency/6.0.0"
   xmlns:efsr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldSecurityRule/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
@@ -321,7 +322,7 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_60.origam#_Number_60/6d2b3bb0-bb7a-4caf-a26e-394dca636e68"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="0f9ce7d6-47e4-4a13-931d-faf98fb33ae3"
@@ -331,6 +332,11 @@
       asi:name="ThrottlingIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b5e20094-2b88-4b8e-9dfa-321f92d4706b"
+        asi:name="EnableThrottling" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="b06cfddb-ebf7-429d-aa8d-70f7e31a2733"
@@ -412,7 +418,7 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_10.origam#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1d0a083e-6c93-4b6b-acda-6d62d6efbb57"
@@ -422,6 +428,11 @@
       asi:name="ThrottlingItemsPerInterval"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b140fd18-e148-495d-b29b-b68b01688460"
+        asi:name="EnableThrottling" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="e1fb78bc-e2c7-4e5d-b333-325d88c01bf6"
@@ -439,7 +450,7 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_30.origam#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1dbc7efc-428f-47fe-9fc3-d7adb3ef3e52"
@@ -449,6 +460,11 @@
       asi:name="RetryIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="05a440dd-7b11-4527-86a8-8b2d0af3cb0b"
+        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="2bfb9408-48a4-4086-bf0a-636742156d4b"
@@ -491,7 +507,7 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Float"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="2f880296-cb4b-41ec-b65c-b240630eb679"
@@ -501,6 +517,11 @@
       asi:name="ExponentialRetryBase"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="1f1ef3fe-9ddb-4128-805e-25fe67195a42"
+        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="cc9a4ef7-7e47-4b89-87cf-dc13dd0ea1a8"
@@ -783,7 +804,7 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="e35ae850-878e-4e54-a4ac-94559e6d6218"
@@ -793,6 +814,11 @@
       asi:name="MaxRetries"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="0dcfa03d-5d9d-491b-943c-29d63a3cb99b"
+        asi:name="refWorkQueueRetryTypeId" />
       <efsr:EntitySecurityRule
         asi:abstract="false"
         x:id="85a3b727-89f8-43d2-ade2-1c9a58be4728"
