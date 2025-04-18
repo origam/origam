@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -60,17 +61,20 @@ public class OrigamGeoContainer
     private static Coordinates ToWgsCoordinates(string xString,
         string yString)
     {
-        if (!double.TryParse(xString, out double x))
+        if (!double.TryParse(xString, NumberStyles.Float,
+                CultureInfo.InvariantCulture, out double x))
         {
             throw new Exception(
                 $"Cannot parse polygon coordinate \"{xString}\" to double");
         }
 
-        if (!double.TryParse(yString, out double y))
+        if (!double.TryParse(yString, NumberStyles.Float,
+                CultureInfo.InvariantCulture, out double y))
         {
             throw new Exception(
                 $"Cannot parse polygon coordinate \"{yString}\" to double");
         }
+
         return CoordinateConverter.JtskToWgs(x, y);
     }
 
