@@ -132,7 +132,7 @@ public static class CoordinateConverter
 
         // Final formatting
         B = B * 180 / Math.PI;
-        coord.Latitude = B;
+        coord.Latitude = Math.Round(B, 12); // Rounding makes the results consistent, 12 decimal places corresponds to about 1.1132e-7 meters.
         string latitudeDir = B < 0 ? "S" : "N";
         B = Math.Abs(B);
         int degLat = (int)Math.Floor(B);
@@ -142,7 +142,7 @@ public static class CoordinateConverter
         coord.Wgs84Latitude = $"{degLat}°{minLat}'{secLat}{latitudeDir}";
 
         L = L * 180 / Math.PI;
-        coord.Longitude = L;
+        coord.Longitude = Math.Round(L, 12);
         string longitudeDir = L < 0 ? "W" : "E";
         L = Math.Abs(L);
         int degLon = (int)Math.Floor(L);
