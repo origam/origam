@@ -1510,7 +1510,7 @@ public class XsltTests
     public void ShouldTestPointFromJtsk()
     {
         string xsltCall = "AS:PointFromJtsk(-740614.4101, -1030989.305)";
-        string expectedResult = "POINT(14.428757007606093 50.19725187906694)";
+        string expectedResult = "POINT(14.428757007606 50.197251879067)";
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
