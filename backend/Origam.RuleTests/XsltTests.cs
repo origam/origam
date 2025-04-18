@@ -75,6 +75,7 @@ public class XsltTests
         "	xmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"\n" +
         "    xmlns:fs=\"http://xsl.origam.com/filesystem\"\n" +
         "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
+        "    xmlns:GE=\"http://xsl.origam.com/geo\"\n" +
         "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
         "	<xsl:template match=\"ROOT\">\n" +
         "		<ROOT>\n" +
@@ -107,17 +108,25 @@ public class XsltTests
         httpToolsMock = new Mock<IHttpTools>();
         resourceToolsMock = new Mock<IResourceTools>();
 
-        var functionCollection = new XsltFunctionCollection();
-        functionCollection.AssemblyName = "Origam.Rule";
-        functionCollection.FullClassName =
+        var asCollection = new XsltFunctionCollection();
+        asCollection.AssemblyName = "Origam.Rule";
+        asCollection.FullClassName =
             "Origam.Rule.XsltFunctions.LegacyXsltFunctionContainer";
-        functionCollection.XslNameSpaceUri =
+        asCollection.XslNameSpaceUri =
             "http://schema.advantages.cz/AsapFunctions";
-        functionCollection.XslNameSpacePrefix = "AS";
+        asCollection.XslNameSpacePrefix = "AS";
+        
+        var geCollection = new XsltFunctionCollection();
+        geCollection.AssemblyName = "Origam.Rule";
+        geCollection.FullClassName =
+            "Origam.Rule.XsltFunctions.OrigamGeoContainer";
+        geCollection.XslNameSpaceUri =
+            "http://xsl.origam.com/geo";
+        geCollection.XslNameSpacePrefix = "GE";
         functionSchemaItemProvider
             .Setup(x =>
                 x.ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst))
-            .Returns(new List<XsltFunctionCollection> { functionCollection });
+            .Returns(new List<XsltFunctionCollection> { asCollection, geCollection });
 
         xsltFunctionDefinitions = XsltFunctionContainerFactory.Create(
             businessServiceMock.Object,
@@ -1500,12 +1509,68 @@ public class XsltTests
     [Test]
     public void ShouldTestPointFromJtsk()
     {
-        string xsltCall = "AS:PointFromJtsk(1, 1)";
-        string expectedResult = "POINT(19.55554477337343 54.55554477337342)";
+        string xsltCall = "AS:PointFromJtsk(-740614.4101, -1030989.305)";
+        string expectedResult = "POINT(14.428757007606093 50.19725187906694)";
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+    
+    [Test]
+    public void ShouldTestPolygonFromJstk()
+    {
+        string xsltCall = 
+            "GE:PolygonFromJstk(\"POLYGON ((" +
+                "-740614.4101 -1030989.305, " +
+                "-741540.4803 -1030921.8493, " +
+                "-741540.4149 -1030920.9517, " +
+                "-741542.3916 -1030936.2522, " +
+                "-741555.0577 -1031034.2896, " +
+                "-741583.5733 -1031255.006, " +
+                "-741589.2724 -1031299.1183, " +
+                "-741588.2768 -1031299.2164, " +
+                "-740960.9255 -1031344.9745, " +
+                "-740959.4536 -1031345.103, " +
+                "-740897.274 -1031297.208, " +
+                "-740851.0788 -1031262.415, " +
+                "-740803.977 -1031228.374, " +
+                "-740769.1989 -1031197.8036, " +
+                "-740738.9305 -1031169.0874, " +
+                "-740729.4307 -1031158, " +
+                "-740720.3038 -1031147.3563, " +
+                "-740682.2743 -1031090.7, " +
+                "-740643.6627 -1031028.611, " +
+                "-740623.6778 -1031000.671, " +
+                "-740614.4101 -1030989.305))\")";
+        string expectedResult =
+            "POLYGON(" +
+                "14.428757007606093 50.19725187906694, " +
+                "14.415778426263619 50.196717768985266, " +
+                "14.41577761895431 50.196725844024392, " +
+                "14.415779421293756 50.196587139861592, " +
+                "14.415790963027417 50.195698397276146, " +
+                "14.41581694902767 50.193697527126695, " +
+                "14.415822142590597 50.193297633846626, " +
+                "14.415836143327407 50.19329798099433, " +
+                "14.424627734010691 50.19365941360428, " +
+                "14.424648401463061 50.193660072511761, " +
+                "14.425419720667575 50.194162859586832, " +
+                "14.42599427575694 50.194529358652666, " +
+                "14.426582853845908 50.194890267330422, " +
+                "14.42700706928014 50.19520516388355, " +
+                "14.427372254891152 50.195498019247964, " +
+                "14.427482911079323 50.195608412367946, " +
+                "14.427589240292358 50.195714396531024, " +
+                "14.428008810211223 50.19626562168056, " +
+                "14.428426101023456 50.196865947850505, " +
+                "14.428650096847109 50.197139289958649, " +
+                "14.428757007606093 50.19725187906694)";
+       
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall.Replace("\"", "&quot;"));
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
