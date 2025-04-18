@@ -257,6 +257,7 @@
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
           ami:roles="FRM_WorkQueue"
+          frmi:ruleSet="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/Default/5a2136b2-cb60-4044-85ba-57260d6629a2"
           frmi:screen="Root/FormControlSet/Work Queue/WorkQueue.origam#WorkQueue/a634efc2-456e-4b46-ad13-9f63eaaed357"
           frmi:sortSet="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/Sort/37dbbb2b-6068-44a7-8765-826f15ca061e" />
         <frmi:MenuItem
