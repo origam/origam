@@ -1,8 +1,4 @@
-﻿IF OBJECT_ID('OrigamIdentityGrantCleanup', 'P') IS NOT NULL
-    DROP PROCEDURE OrigamIdentityGrantCleanup;
-GO
-
-CREATE PROCEDURE OrigamIdentityGrantCleanup
+﻿CREATE OR ALTER PROCEDURE OrigamIdentityGrantCleanup
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -14,4 +10,3 @@ BEGIN
         WHERE Expiration < @CurrentDateTime;
     END
 END
-GO
