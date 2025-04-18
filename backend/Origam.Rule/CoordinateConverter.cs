@@ -47,7 +47,6 @@ public static class CoordinateConverter
             x=-x;
             y=-y;
         }
-
         if (y > x) {
             (x, y) = (y, x);
         };
@@ -93,7 +92,7 @@ public static class CoordinateConverter
             sinB = pom;
             pom = t * Math.Exp(e * Math.Log((1 + e * sinB) / (1 - e * sinB)));
             pom = (pom - 1) / (pom + 1);
-        } while (Math.Abs(pom - sinB) > 1e-15);
+        } while (Math.Abs(pom - sinB) > 1e-14);
 
         double Bjtsk = Math.Atan(pom / Math.Sqrt(1 - pom * pom));
 
