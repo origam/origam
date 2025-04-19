@@ -72,6 +72,31 @@ public class PropertyValueItem : AbstractPropertyValueItem
             UseXmlPersistedValue();
         }
     }
+
+    public object TypedValue {
+	    get
+	    {
+		    if (ControlPropertyItem == null)
+		    {
+			    return null;
+		    }
+		    switch (ControlPropertyItem.PropertyType)
+		    {
+			    case ControlPropertyValueType.Integer:
+				    return IntValue;
+			    case ControlPropertyValueType.Boolean:
+				    return BoolValue;
+			    case ControlPropertyValueType.Xml:
+			    case ControlPropertyValueType.String:
+				    return StringValue;
+			    case ControlPropertyValueType.UniqueIdentifier:
+				    return GuidValue;
+			    default:
+				    throw new ArgumentOutOfRangeException("PropertyType");
+		    } 
+	    }
+    }
+
     public override void AfterControlPropertySet()
     {
         // while building schema from XML, we don't know in what order

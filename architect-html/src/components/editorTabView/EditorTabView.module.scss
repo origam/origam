@@ -1,0 +1,43 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  flex: 1;
+}
+
+.content {
+  display: flex;
+  overflow: auto;
+  flex: 1;
+}
+
+.labels {
+  display: flex;
+  gap: 10px
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: flex;
+  flex: 1;
+}
+
+.labelContainer {
+  display: flex;
+  justify-content: space-between;
+  min-width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.closeSymbol {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.activeTab {
+  font-weight: bold;
+}

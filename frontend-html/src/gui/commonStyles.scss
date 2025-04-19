@@ -72,7 +72,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,73b1e7+34,0a77d5+50,73b1e7+66,73b1e7+66,ffffff+100 */
     background: var(--background1); /* Old browsers */
     background: -moz-linear-gradient(
-      left,
+      to right,
       var(--background1) 0%,
       var(--foreground2) 34%,
       var(--foreground3) 50%,
@@ -81,7 +81,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       var(--background1) 100%
     ); /* FF3.6-15 */
     background: -webkit-linear-gradient(
-      left,
+      to right,
       var(--background1) 0%,
       var(--foreground2) 34%,
       var(--foreground3) 50%,
@@ -101,7 +101,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
   }
 }
-
 $textColorNoHover: var(--background7);
 $textColorHover: var(--background8);
 

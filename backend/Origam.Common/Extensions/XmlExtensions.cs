@@ -249,9 +249,13 @@ public static class XmlExtensions
          {
              Indent = true,
              NewLineOnAttributes = true,
+             DoNotEscapeUriAttributes = false
          };
-         xmlWriterSettings.DoNotEscapeUriAttributes = false;
-         return ToBeautifulString(document, xmlWriterSettings);
+         // The Replace is necessary because extra new lines were added after
+         // each attribute in the first node (the one with the namespaces).
+         // This seems to only happen in .net8.0 not .net4.7.1
+         return ToBeautifulString(document, xmlWriterSettings)
+             .Replace("\r\n \r\n ", "\r\n ");
      }
     public static string ToBeautifulString(this XDocument document)
     {
