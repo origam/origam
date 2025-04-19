@@ -1502,6 +1502,7 @@ Global
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
 		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
 		{B4299208-8C10-4D67-8E33-67FFDB2A373C}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
