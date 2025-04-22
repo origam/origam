@@ -183,6 +183,7 @@ public class ModelServiceAgent : AbstractServiceAgent
             row["DataLength"] = field.DataLength;
             row["DataType"] = field.DataType;
             row["DefaultValue"] = field.DefaultValue;
+            row["PackageName"] = field.PackageName;
             row["ForeignKeyEntity"] = 
                 (field.ForeignKeyEntity as TableMappingItem)
                 ?.MappedObjectName ?? "";
