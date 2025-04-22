@@ -89,6 +89,7 @@
     <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj" />
     <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
+    <ProjectReference Include="..\Origam.Server.Common\Origam.Server.Common.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
     <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj" />

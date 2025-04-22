@@ -1,0 +1,97 @@
+
+/// Should fail because the schema item does not exist
+POST https://localhost:7099/Editor/PersistChanges
+content-type: application/json
+
+{
+  "schemaItemId": "f5997d8d-384f-4a20-9dc3-490bdc05f795",
+  "changes": [ ]
+}
+
+###
+
+/// Should make changes
+POST https://localhost:7099/Editor/PersistChanges
+content-type: application/json
+
+{
+  "schemaItemId": "f5997d8d-384f-4a20-9dc3-490bdc05f791",
+  "changes": [
+    {
+      "name": "Name",
+      "value": "Boolean1"
+    },
+    {
+      "name": "MappedColumnName",
+      "value": "Boolean1"
+    },
+    {
+      "name": "MappedDataType",
+      "value": null
+    },
+    {
+      "name": "ExcludeFromAuditing",
+      "value": "false"
+    },
+    {
+      "name": "DataType",
+      "value": "0"
+    },
+    {
+      "name": "DataLength",
+      "value": "0"
+    },
+    {
+      "name": "AllowNulls",
+      "value": "true"
+    },
+    {
+      "name": "IsPrimaryKey",
+      "value": "false"
+    },
+    {
+      "name": "Caption",
+      "value": "Boolean 1"
+    },
+    {
+      "name": "ExcludeFromAllFields",
+      "value": "false"
+    },
+    {
+      "name": "AutoIncrement",
+      "value": "false"
+    },
+    {
+      "name": "DefaultLookup",
+      "value": null
+    },
+    {
+      "name": "ForeignKeyEntity",
+      "value": null
+    },
+    {
+      "name": "ForeignKeyField",
+      "value": null
+    },
+    {
+      "name": "DefaultValue",
+      "value": null
+    },
+    {
+      "name": "DefaultValueParameter",
+      "value": null
+    },
+    {
+      "name": "XmlMappingType",
+      "value": "1"
+    },
+    {
+      "name": "OnCopyAction",
+      "value": "0"
+    },
+    {
+      "name": "Inheritable",
+      "value": "false"
+    }
+  ]
+}

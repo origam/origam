@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+#if !NETSTANDARD
 using Origam.Git;
+#endif
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -90,8 +92,9 @@ public class AbstractPersistent : IPersistent
 	        OnDeleted(EventArgs.Empty);
 	        PersistenceProvider.OnTransactionEnded(this);
         }
-        GitManager.PersistPath(Files);
-        //HasGitChange = null;
+#if !NETSTANDARD
+		GitManager.PersistPath(Files);
+#endif
         if (isNew) OnChanged(EventArgs.Empty);
 	}
 	private bool _isPersisted = false;

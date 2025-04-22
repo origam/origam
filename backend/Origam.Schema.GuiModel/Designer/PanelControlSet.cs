@@ -48,7 +48,6 @@ public class PanelControlSet : AbstractControlSet
 	public PanelControlSet(Key primaryKey) : base(primaryKey) {}
     //refDataSource means for PanelCOntolSet reference on DataEntity object
     // (for FormControlSet refDataSource means reference on DataStructure object
-    public Guid DataSourceId;
     [XmlReference("entity", "DataSourceId")]
     public IDataEntity DataEntity
 	{
