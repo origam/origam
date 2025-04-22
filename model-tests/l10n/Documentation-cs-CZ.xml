@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<OrigamLocalization>
+  <Element Id="6dc2a3cd-fefd-4320-94dc-69980dff0d87" Path="OrigamFieldDocumentation/OrigamFieldDocumentationRootControl/AsCheckBox1/Text">
+    <Value OriginalText="Is Primary Key">Je primární klíč</Value>
+  </Element>
+  <Element Id="14011890-ad7a-45e4-ae5f-016224958be8" Path="OrigamFieldDocumentation/OrigamFieldDocumentationRootControl/AsCheckBox/Text">
+    <Value OriginalText="Allow Nulls">Povolit nulové hodnoty</Value>
+  </Element>
+  <Element Id="121a61fd-9384-4e19-bd02-7caed8d901e0" Path="Menu/Settings/Documentation">
+    <Order OriginalText="100">100</Order>
+    <DisplayName OriginalText="Documentation">Dokumentace</DisplayName>
+  </Element>
+  <Element Id="d4556c53-4af4-48fd-87f0-0ba9ae2df559" Path="Menu/Settings/Documentation/DatabaseFieldDescription">
+    <Order OriginalText="100">100</Order>
+    <DisplayName OriginalText="Database Field Description">Popis databázových polí</DisplayName>
+  </Element>
+  <Element Id="bdc405c3-f146-44aa-80c5-8a6fa8a3a973" Path="OrigamFieldDocumentation">
+    <Caption OriginalText="Documentation">Dokumentace</Caption>
+  </Element>
+  <Element Id="14d16b19-60f2-48bc-90dc-0622fc288a04" Path="OrigamFieldDocumentation/UserShortHelp">
+    <Caption OriginalText="User Short Help">Krátká nápověda</Caption>
+  </Element>
+  <Element Id="2691632e-9829-4bc1-b9b4-17bff1827649" Path="OrigamFieldDocumentation/Caption">
+    <Caption OriginalText="Caption">Titulek</Caption>
+  </Element>
+  <Element Id="43ed942c-d202-44e8-b457-2eef95a9b0d9" Path="OrigamFieldDocumentation/ForeignKeyEntity">
+    <Caption OriginalText="Foreign Key Entity">Entita cizího klíče</Caption>
+  </Element>
+  <Element Id="50b1f75a-6882-44f0-9659-5d8cdf138d65" Path="OrigamFieldDocumentation/ForeignKeyField">
+    <Caption OriginalText="Foreign Key Field">Pole cizího klíče</Caption>
+  </Element>
+  <Element Id="7e7d24ab-2b2c-4dbe-9bb5-a4a5c3ba3420" Path="OrigamFieldDocumentation/DataLength">
+    <Caption OriginalText="Data Length">Délka dat</Caption>
+  </Element>
+  <Element Id="90eb983b-85c0-4d42-988c-b7dff49e6d4e" Path="OrigamFieldDocumentation/Name">
+    <Caption OriginalText="Field Name">Název pole</Caption>
+  </Element>
+  <Element Id="a345f339-e747-40c0-8f6e-7edb1c5e7d4d" Path="OrigamFieldDocumentation/IsPrimaryKey">
+    <Caption OriginalText="Is Primary Key">Je primární klíč</Caption>
+  </Element>
+  <Element Id="a50991ff-949f-4920-bd85-61ff26ac12be" Path="OrigamFieldDocumentation/UserLongHelp">
+    <Caption OriginalText="User Long Help">Dlouhá nápověda</Caption>
+  </Element>
+  <Element Id="bfa84892-195d-49af-bbc7-8af2037c9a2b" Path="OrigamFieldDocumentation/AllowNulls">
+    <Caption OriginalText="Allow Nulls">Povolit nulové hodnoty</Caption>
+  </Element>
+  <Element Id="c421befb-9b82-4c87-b0e0-2ceaa2bc8be9" Path="OrigamFieldDocumentation/DataType">
+    <Caption OriginalText="Data Type">Datový typ</Caption>
+  </Element>
+  <Element Id="d42de96f-e3e9-4d88-9b91-265129da8f51" Path="OrigamFieldDocumentation/PackageName">
+    <Caption OriginalText="Package">Balíček</Caption>
+  </Element>
+  <Element Id="db387e36-fda4-4341-861e-50946cdf1fe4" Path="OrigamFieldDocumentation/DefaultValue">
+    <Caption OriginalText="Default Value">Výchozí hodnota</Caption>
+  </Element>
+  <Element Id="ef0a85dc-d301-43cd-b45e-7bd8565ed744" Path="OrigamFieldDocumentation/ParentEntityName">
+    <Caption OriginalText="Entity">Entita</Caption>
+  </Element>
+</OrigamLocalization>

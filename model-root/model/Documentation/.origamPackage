@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
+  <p:package
+    x:id="469a6305-c0d9-4869-ba9d-4c4439981dfc"
+    x:isFolder="true"
+    p:name="Documentation"
+    p:version="1.0.0">
+    <pr:packageReference
+      x:id="0e73b74f-caae-42c0-9204-8258cc2c6236"
+      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
+    <pr:packageReference
+      x:id="2b8b076e-5339-4250-80d7-a5ceddb20491"
+      pr:referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
+  </p:package>
+</x:file>
