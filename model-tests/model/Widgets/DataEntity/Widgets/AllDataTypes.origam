@@ -283,6 +283,21 @@
         asi:name="TagInputBindingKey1"
         ercpi:relatedEntityField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
     </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="f8f1b85f-54ff-4107-933a-3bb178048523"
+      asi:name="TagInputSource"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        x:id="3fca4f51-ca4c-411f-872c-5d9b9184284d"
+        asi:name="TagInputSourceKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
+    </eri:EntityRelation>
     <esr1:EntitySecurityRule
       asi:abstract="false"
       esr1:createCredential="false"
