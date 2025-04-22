@@ -17,7 +17,7 @@ public class Program
         var schema = new SchemaService();
         var workbench = new Workbench(schema);
         workbench.InitializeDefaultServices();
-        workbench.Connect("Demo");
+        workbench.Connect();
             
         IPersistenceService persistence = ServiceManager.Services
             .GetService<IPersistenceService>();
@@ -26,8 +26,7 @@ public class Program
             .AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            // options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        });;
+        });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddSingleton<ConfigManager>();
@@ -51,11 +50,10 @@ public class Program
             .Get<SpaConfig>();
         builder.Services.AddSpaStaticFiles(configuration =>
         {
-            configuration.RootPath = Path.Combine(spaConfig.SourcePath, "dist");
+            configuration.RootPath = spaConfig.PathToClientApplication;
         });
         
         var app = builder.Build();
-            
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -68,7 +66,7 @@ public class Program
         app.MapControllers();
         app.UseSpa(spa =>
         {
-            spa.Options.SourcePath = spaConfig.SourcePath;
+            spa.Options.SourcePath = spaConfig.PathToClientApplication;
         });
         app.Run();
     }

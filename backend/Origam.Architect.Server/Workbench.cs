@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using System.Reflection;
+﻿using System.Reflection;
 using MoreLinq.Extensions;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
@@ -44,43 +43,26 @@ public class Workbench
 			= ServiceManager.Services.GetService<IParameterService>();
 
         bool isEmpty = deployment.IsEmptyDatabase();
-        // data database is empty and we are not supposed to ask for running init scripts
-        // that means the new project wizard is running and will take care
-        if (isEmpty && !PopulateEmptyDatabaseOnLoad)
+        switch (isEmpty)
         {
-            return;
-        }
-        if (isEmpty)
-        {
-            deployment.Deploy();
+            // data database is empty and we are not supposed to ask for running init scripts
+            // that means the new project wizard is running and will take care
+            case true when !PopulateEmptyDatabaseOnLoad:
+                return;
+            case true:
+                deployment.Deploy();
+                break;
         }
         RunDeploymentScripts(deployment, isInteractive);
-		try
-		{
-			parameterService.RefreshParameters();
-		}
-		catch
-		{
-			// show the error but go on
-			// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
-			// AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
-		}
-
+        parameterService.RefreshParameters();
         // we have to initialize the new user after parameter service gets loaded
         // otherwise it would fail generating SQL statements
         if (isEmpty)
         {
             string userName = SecurityManager.CurrentPrincipal.Identity.Name;
-            // if (MessageBox.Show(string.Format(strings.AddUserToUserList_Question,
-            //     userName),
-            //     strings.DatabaseEmptyTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-            //     MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            // {
                 IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
                 profileProvider.AddUser("Architect (" + userName + ")", userName);
-            // }
         }
-        // UpdateTitle();
 	}
     
     private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive)
@@ -88,36 +70,15 @@ public class Workbench
        
     }
     
-    public void Connect(string configurationName)
+    public void Connect()
     {
-        if (!LoadConfiguration(configurationName))
+        if (!LoadConfiguration())
         {
             return;
         }
-
-        try
-        {
-            // _statusBarService.SetStatusText(strings
-            //     .ConnectingToModelRepository_StatusText);
-            InitPersistenceService();
-            // _schema.SchemaBrowser = _schemaBrowserPad;
-            // Init services
-            InitializeConnectedServices();
-            // Initialize model-connected user interface
-            // InitializeConnectedPads();
-            // CreateMainMenuConnect();
-            // IsConnected = true;
-            RunBackgroundInitializationTasks();
-            // UpdateTitle();
-        }
-        finally
-        {
-            // _statusBarService.SetStatusText("");
-            // this.WindowState = FormWindowState.Maximized;
-        }
-
-        // ViewExtensionPad cmd = new ViewExtensionPad();
-        // cmd.Run();
+        InitPersistenceService();
+        InitializeConnectedServices();
+        RunBackgroundInitializationTasks();
     }
 
     private void InitPersistenceService()
@@ -127,29 +88,20 @@ public class Workbench
         ServiceManager.Services.AddService(persistence);
     }
 
-    private bool LoadConfiguration(string configurationName)
+    private bool LoadConfiguration()
     {
         string origamSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OrigamSettings.config");
         OrigamSettingsCollection configurations =
             ConfigurationManager.GetAllUserHomeConfigurations(origamSettingsPath);
-        if (configurationName == null)
-        {
-            return false;
-        }
-        var newConfiguration = configurations
+        var configuration = configurations
             .Cast<OrigamSettings>()
-            .FirstOrDefault(x => x.Name == configurationName);
-        if (newConfiguration != null)
+            .FirstOrDefault();
+        if (configuration != null)
         {
-            ConfigurationManager.SetActiveConfiguration(newConfiguration);
+            ConfigurationManager.SetActiveConfiguration(configuration);
             return true;
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(nameof(configurationName),
-                configurationName,
-                "Configuartion not found");
-        }
+        throw new Exception("Configuration not found");
     }
 
     private void InitializeConnectedServices()
@@ -162,7 +114,6 @@ public class Workbench
             .CreateDocumentationService());
         ServiceManager.Services.AddService(new TracingService());
         ServiceManager.Services.AddService(new DataLookupService());
-        // ServiceManager.Services.AddService(new ControlsLookUpService());
         ServiceManager.Services.AddService(new DeploymentService());
         ServiceManager.Services.AddService(new ParameterService());
         ServiceManager.Services.AddService(
@@ -247,30 +198,5 @@ public class Workbench
                 independentPersistenceService: independentPersistenceService, 
                 cancellationToken: cancellationToken); 
         var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
-        var errorSections = persistenceProvider.GetFileErrors(
-            ignoreDirectoryNames: new []{ ".git","l10n"},
-            cancellationToken: cancellationToken);
-        if (errorFragments.Count != 0)
-        {
-            // FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
-
-            // DialogResult dialogResult = MessageBox.Show(
-            //     "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
-            //     "Model Errors",
-            //     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-            // if (dialogResult == DialogResult.Yes)
-            // {
-            //     resultsPad.DisplayResults(errorFragments);
-            // }
-
-        }
-        // if (errorSections.Count != 0)
-        // {
-        //     this.RunWithInvoke(() =>
-        //     {
-        //         var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
-        //         modelCheckResultWindow.Show(this);
-        //     });
-        // }
     }
 }
