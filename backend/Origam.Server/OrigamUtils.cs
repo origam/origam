@@ -22,11 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Origam.DA;
 using Origam.DA.Common;
 using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
 
 namespace Origam.Server;
 public static class OrigamUtils
@@ -72,24 +74,8 @@ public static class OrigamUtils
 
     public static void CleanUpDatabase()
     {
-        IBusinessServicesService service = ServiceManager.Services.GetService<IBusinessServicesService>();
-        IServiceAgent agent = service.GetAgent("DataService", null, null);
-        Enums.DatabaseType platform = ((AbstractSqlDataService)DataServiceFactory.GetDataService())
-            .PlatformName;
-        switch (platform)
-        {
-            case Enums.DatabaseType.MsSql:
-            {
-                agent.ExecuteUpdate("Exec OrigamIdentityGrantCleanup", null);
-                break;
-            }
-            case Enums.DatabaseType.PgSql:
-            {
-                agent.ExecuteUpdate("CALL \"OrigamIdentityGrantCleanup\"();", null);
-                break;
-            }
-            default: 
-                throw new Exception("Platform not supported " + platform);
-        }
+        IDataService dataService = DataServiceFactory.GetDataService();
+        dataService.ExecuteProcedure(
+            "OrigamIdentityGrantCleanup", "", new DataStructureQuery(), null);
     }
 }
