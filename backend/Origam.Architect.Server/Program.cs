@@ -6,6 +6,7 @@ using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Wrappers;
+using Origam.Extensions;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server;
@@ -46,7 +47,7 @@ public class Program
         });
         
         var spaConfig = builder.Configuration
-            .GetSection("SpaConfig")
+            .GetSectionOrThrow("SpaConfig")
             .Get<SpaConfig>();
         builder.Services.AddSpaStaticFiles(configuration =>
         {
