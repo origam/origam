@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="05b95e7a-de87-446d-aff5-8a7003f72fca"
+    ds1:localized="false"
+    asi:name="AllDataTypesInnerJoinTaginputSource_mockPk">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="fc37aaed-ec53-4ac8-9e90-caa5fd0d0f1b"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:entity="Widgets/DataStructure/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/AllDataTypes/TagInputSource/1b65c77c-dda2-4b03-87b2-d272f0084136"
+        dsc:field="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/Label/25ba0ff2-4452-40be-a748-4428bce1c18f"
+        dsc:hideInOutput="false"
+        x:id="2becafaa-e03a-40b3-9ccb-7a3a810c9f3e"
+        asi:name="TagInputSource_Label"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Selected/de0d5266-6200-4775-87aa-e151815fb23c"
+        dsc:hideInOutput="false"
+        x:id="92e304eb-2226-43d2-a42b-8daa9828babc"
+        asi:name="Selected"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Text1/8954ae10-e0db-49b8-b04c-351e03249c36"
+        dsc:hideInOutput="false"
+        x:id="a8c00be9-f8a1-4adc-8aea-be375204d7ca"
+        asi:name="Text1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/_mockPk/ed4f4e2d-04e1-4fc6-9999-7f81e1b38931"
+        dsc:hideInOutput="false"
+        x:id="c18e9e3b-3cef-4989-8eb8-4ca86fa3eaea"
+        asi:name="_mockPk"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/TagInputSource/f8f1b85f-54ff-4107-933a-3bb178048523"
+        x:id="1b65c77c-dda2-4b03-87b2-d272f0084136"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputSource"
+        dse:relationType="InnerJoin"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+  </ds1:DataStructure>
+</x:file>
