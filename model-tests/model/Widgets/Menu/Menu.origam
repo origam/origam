@@ -683,6 +683,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow - UI in Loop Test"
+    x:id="4c58920f-47f9-447d-b530-38e13cfc26ce"
+    asi:name="UiInLoopTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/04a46742-b288-42ba-910e-232e40c89fa6" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Check Tls Version"
     x:id="4f825c40-8349-4533-b25f-0a592484977d"
     asi:name="NewWorkflow"
