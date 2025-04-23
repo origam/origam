@@ -140,6 +140,11 @@ export class ScreenEditorState extends DesignerEditorState {
     }.bind(this);
   }
 
+  * save(): Generator<Promise<any>, void, any> {
+    yield this.architectApi.persistChanges(this.editorNode.origamId);
+    yield* super.save();
+  }
+
   protected update(): Generator<Promise<any>, void, any> {
     return this.updateGenerator();
   }

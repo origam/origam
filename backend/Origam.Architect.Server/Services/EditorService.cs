@@ -74,7 +74,7 @@ public class EditorService(
         }
     }
 
-    private ControlItem GetControlByType(string fullTypeName)
+    public ControlItem GetControlByType(string fullTypeName)
     {
         var items = schemaService
             .GetProvider<UserControlSchemaItemProvider>()

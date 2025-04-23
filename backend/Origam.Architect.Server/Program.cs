@@ -20,8 +20,10 @@ public class Program
         workbench.InitializeDefaultServices();
         workbench.Connect();
             
-        IPersistenceService persistence = ServiceManager.Services
-            .GetService<IPersistenceService>();
+        var persistence = ServiceManager.Services
+            .GetService<IPersistenceService>();            
+        var documentation = ServiceManager.Services
+            .GetService<IDocumentationService>();
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers()    
             .AddJsonOptions(options =>
@@ -41,6 +43,7 @@ public class Program
         builder.Services.AddSingleton(schema);
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
+        builder.Services.AddSingleton(documentation);
         builder.Services.AddLogging(logging =>
         {
             logging.AddLog4Net();

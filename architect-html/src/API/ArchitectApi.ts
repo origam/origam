@@ -84,6 +84,12 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
+  async persistSectionEditorChanges(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post(`/SectionEditor/Save`, {
+      schemaItemId
+    });
+  }
+
   async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IUpdatePropertiesResult> {
     return (await this.axiosInstance.post(`/PropertyEditor/Update`, {
       schemaItemId,

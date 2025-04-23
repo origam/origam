@@ -10,11 +10,15 @@ namespace Origam.Architect.Server.Services;
 
 public class DesignerEditorService(
     SchemaService schemaService,
+    IPersistenceService persistenceService,
+    IDocumentationService documentationService,
+    EditorService editorService,
     ControlAdapterFactory adapterFactory)
 {
-    private readonly Guid tabControlControlItemId = new ("2e39362b-80a6-4430-a9bd-b3013583a2fe");
-    private readonly Guid tabPageControlItemId = new ("6d13ec20-3b17-456e-ae43-3021cb067a70");
+    private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
+    private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
     private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
+
     public bool Update(AbstractControlSet screenSection,
         SectionEditorChangesModel input)
     {
@@ -24,11 +28,13 @@ public class DesignerEditorService(
             screenSection.Name = input.Name;
             editorIsDirty = true;
         }
+
         if (screenSection.DataSourceId != input.SelectedDataSourceId)
         {
             screenSection.DataSourceId = input.SelectedDataSourceId;
             editorIsDirty = true;
         }
+
         foreach (var changes in input.ModelChanges)
         {
             ControlSetItem itemToUpdate =
@@ -74,7 +80,7 @@ public class DesignerEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            dataSources.Insert(0,  DataSource.Empty);
+            dataSources.Insert(0, DataSource.Empty);
 
             List<EditorField> fields = GetFields(screenSection);
             DropDownValue[] dataSourceDropDownValues = fields
@@ -113,7 +119,7 @@ public class DesignerEditorService(
                     { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
-            dataSources.Insert(0,  DataSource.Empty);
+            dataSources.Insert(0, DataSource.Empty);
 
             var userControlProvider =
                 schemaService.GetProvider<UserControlSchemaItemProvider>();
@@ -130,13 +136,13 @@ public class DesignerEditorService(
 
             var widgets = userControlProvider.ChildItems
                 .OfType<ControlItem>()
-                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" && 
-                               !item.IsComplexType && 
-                               item.ControlToolBoxVisibility is 
-                                   ControlToolBoxVisibility.FormDesigner or 
+                .Where(item => item.ControlType != "Origam.Gui.Win.AsForm" &&
+                               !item.IsComplexType &&
+                               item.ControlToolBoxVisibility is
+                                   ControlToolBoxVisibility.FormDesigner or
                                    ControlToolBoxVisibility.PanelAndFormDesigner)
                 .Where(item => implementedScreenWidgets.Contains(item.Name))
-                .Select(item => new ToolBoxItem{Name = item.Name, Id = item.Id})
+                .Select(item => new ToolBoxItem { Name = item.Name, Id = item.Id })
                 .OrderBy(x => x.Name);
 
             ApiControl apiControl = LoadContent(screen.MainItem, []);
@@ -267,7 +273,7 @@ public class DesignerEditorService(
         FormControlSet screen)
     {
         var (newItem, sectionControl) = LoadControl(itemModelData, screen);
-        
+
         if (itemModelData.ControlItemId == tabControlControlItemId)
         {
             for (int i = 0; i < 2; i++)
@@ -375,6 +381,53 @@ public class DesignerEditorService(
                         .Value = 0;
                     return sectionControl;
                 });
+    }
+
+    public bool SaveScreenSection(PanelControlSet screenSection)
+    {
+        var controlSchemaItemProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
+        try
+        {
+            persistenceService.SchemaListProvider.BeginTransaction();
+            screenSection.ClearCacheOnPersist = false;
+            screenSection.Persist();
+            // If the controlset was cloned, we clone its documentation, too.
+            if (screenSection.OldPrimaryKey != null)
+            {
+                List<ISchemaItem> items = screenSection.ChildItemsRecursive;
+                items.Add(screenSection);
+                documentationService.CloneDocumentation(items);
+            }
+
+            screenSection.OldPrimaryKey = null;
+            if (!screenSection.IsPersisted)
+            {
+                ControlItem newControl = controlSchemaItemProvider.NewItem<ControlItem>(
+                    schemaService.ActiveSchemaExtensionId, null);
+                newControl.Name = screenSection.Name;
+                newControl.IsComplexType = true;
+                Type t = typeof(PanelControlSet);
+                newControl.ControlType = t.ToString();
+                newControl.ControlNamespace = t.Namespace;
+                newControl.PanelControlSet = screenSection;
+                newControl.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
+                SchemaItemAncestor ancestor = new SchemaItemAncestor();
+                ancestor.SchemaItem = newControl;
+                ancestor.Ancestor = editorService.GetControlByType("Origam.Gui.Win.AsPanel");
+                ancestor.PersistenceProvider = newControl.PersistenceProvider;
+                newControl.ThrowEventOnPersist = false;
+                newControl.Persist();
+                ancestor.Persist();
+                newControl.ThrowEventOnPersist = true;
+                return true;
+            }
+        }
+        finally
+        {
+            persistenceService.SchemaListProvider.EndTransaction();
+        }
+
+        return false;
     }
 }
 
