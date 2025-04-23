@@ -6,6 +6,8 @@ This repository contains the entire code base of the [ORIGAM platform](https://w
 
 Content of all main folders:
 
+- architect-html - JS code of web Architect
+  
 - backend – ORIGAM Server & Architect
 
 - build – Azure build configuration
@@ -18,7 +20,7 @@ Content of all main folders:
 
 - model-tests – Model including screens used for testing
 
-- pluggins – Frontend pluggin scripts
+- plugins – Plugin manager for frontend plugins
 
 - test – Automatic tests file definitions
 
