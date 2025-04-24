@@ -264,6 +264,10 @@ public class DesignerEditorService(
         ControlAdapter.ControlAdapter controlAdapter =
             adapterFactory.Create(newItem);
 
+        IDataEntity dataEntity = persistenceService.SchemaProvider
+            .RetrieveInstance<IDataEntity>(screenSection.DataSourceId);
+        DataSet dataSet = new DatasetGenerator(false).CreateDataSet(dataEntity);
+        string caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
         if (controlAdapter.Control is IAsControl asControl)
         {
             string boundPropertyName = asControl.DefaultBindableProperty;
@@ -272,16 +276,23 @@ public class DesignerEditorService(
             propertyBinding.ControlPropertyItem = propertyItem;
             propertyBinding.Name = boundPropertyName;
             propertyBinding.Value = itemModelData.FieldName;
-
-            IDataEntity dataEntity = persistenceService.SchemaProvider
-                    .RetrieveInstance<IDataEntity>(screenSection.DataSourceId);
-            DataSet dataSet = new DatasetGenerator(false).CreateDataSet(dataEntity);
             propertyBinding.DesignDataSetPath = dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
+            // The line dataSet.Tables[0].TableName + "." + itemModelData.FieldName was taken from
+            // class Origam.Gui.Designer.DesignerHostImpl method TryCreateComponent. It does say there Tables[0] 
+            // Looks strange, we will have to see how well it works.
         }
 
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left);
+        PropertyValueItem textValueItem = newItem
+            .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
+            .FirstOrDefault(x => x.Name == "Text");
+        if (textValueItem != null && caption != null)
+        {
+            textValueItem.Value = caption;
+        }
+
         DropDownValue[] dataSourceDropDownValues = GetFields(screenSection)
             .Select(field => new DropDownValue(field.Name, field.Name))
             .ToArray();
@@ -313,12 +324,13 @@ public class DesignerEditorService(
             .ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
             .FirstOrDefault(propItem =>
                 string.Equals(propItem.Name, propertyName, StringComparison.CurrentCultureIgnoreCase));
-        
+
         if (propertyItem == null)
         {
             throw new Exception(
                 $"Property {propertyName} was not found on ControlItem {controlSetItem.ControlItem.Id}");
         }
+
         return propertyItem;
     }
 
