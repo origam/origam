@@ -18,7 +18,7 @@ along with ORIGAM. If notL, see <http://www.gnu.org/licenses/>.
 */
 
 import S from "src/components/editors/xsltEditor/XsltEditor.module.scss";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { TabView } from "src/components/tabView/TabView.tsx";
 import {
   PropertyEditor
@@ -33,10 +33,21 @@ import { TabViewState } from "src/components/tabView/TabViewState.ts";
 import {
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
+import {
+  runInFlowWithHandler
+} from "src/errorHandling/runInFlowWithHandler.ts";
+import { RootStoreContext } from "src/main.tsx";
 
 export const XsltEditor = (props: { editorState: GridEditorState; }) => {
+  const rootStore = useContext(RootStoreContext);
+
   const handleInputChange = (value: any) => {
-    props.editorState.properties.find(x => x.name === "TextStore")!.value = value;
+    const textProperty = props.editorState.properties.find(x => x.name === "TextStore")!;
+    runInFlowWithHandler(rootStore.errorDialogController)({
+      generator: function* () {
+        yield* props.editorState.onPropertyUpdated(textProperty, value);
+      },
+    });
   };
 
   return (
