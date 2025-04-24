@@ -1,6 +1,9 @@
-﻿using Origam.Architect.Server.ControlAdapter;
+﻿using System.Data;
+using Origam.Architect.Server.ControlAdapter;
+using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
+using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -260,6 +263,22 @@ public class DesignerEditorService(
 
         ControlAdapter.ControlAdapter controlAdapter =
             adapterFactory.Create(newItem);
+
+        if (controlAdapter.Control is IAsControl asControl)
+        {
+            string boundPropertyName = asControl.DefaultBindableProperty;
+            ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
+            PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
+            propertyBinding.ControlPropertyItem = propertyItem;
+            propertyBinding.Name = boundPropertyName;
+            propertyBinding.Value = itemModelData.FieldName;
+
+            IDataEntity dataEntity = persistenceService.SchemaProvider
+                    .RetrieveInstance<IDataEntity>(screenSection.DataSourceId);
+            DataSet dataSet = new DatasetGenerator(false).CreateDataSet(dataEntity);
+            propertyBinding.DesignDataSetPath = dataSet.Tables[0].TableName + "." + itemModelData.FieldName;
+        }
+
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left);
@@ -267,6 +286,40 @@ public class DesignerEditorService(
             .Select(field => new DropDownValue(field.Name, field.Name))
             .ToArray();
         return LoadItem(newItem, dataSourceDropDownValues);
+    }
+
+    private PropertyBindingInfo FindOrMakeBindingInfo(ControlSetItem controlSetItem,
+        ControlPropertyItem propertyToFind)
+    {
+        PropertyBindingInfo result = controlSetItem
+            .ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst)
+            .FirstOrDefault(item => Equals(item.ControlPropertyItem?.PrimaryKey, propertyToFind.PrimaryKey));
+
+        if (result == null)
+        {
+            result =
+                controlSetItem.NewItem<PropertyBindingInfo>(
+                    schemaService.ActiveSchemaExtensionId, null);
+            result.ControlPropertyItem = propertyToFind;
+            result.Name = propertyToFind.Name;
+        }
+
+        return result;
+    }
+
+    private ControlPropertyItem FindPropertyItem(ControlSetItem controlSetItem, string propertyName)
+    {
+        ControlPropertyItem propertyItem = controlSetItem.ControlItem
+            .ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
+            .FirstOrDefault(propItem =>
+                string.Equals(propItem.Name, propertyName, StringComparison.CurrentCultureIgnoreCase));
+        
+        if (propertyItem == null)
+        {
+            throw new Exception(
+                $"Property {propertyName} was not found on ControlItem {controlSetItem.ControlItem.Id}");
+        }
+        return propertyItem;
     }
 
     public ScreenEditorItem CreateNewItem(ScreenEditorItemModel itemModelData,
