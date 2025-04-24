@@ -82,15 +82,15 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({value, onChange}) => {
     };
   }, []);
 
-  const initVim = () => {
-    if (editorRef.current && vimStatusBarRef.current && !vimModeRef.current) {
-      vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
-    }
-  };
+  // const initVim = () => {
+  //   if (editorRef.current && vimStatusBarRef.current && !vimModeRef.current) {
+  //     vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
+  //   }
+  // };
 
   const handleEditorDidMount: EditorProps['onMount'] = (editor) => {
     editorRef.current = editor;
-    initVim();
+    // initVim();
   };
 
   const handleEditorChange = (value: string | undefined) => {
