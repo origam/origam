@@ -82,12 +82,9 @@ public class EditorService(
             .OfType<ControlItem>();
         foreach (ControlItem item in items)
         {
-            // ControlItem dynamicTypeControlItem =
-            //     DynamicTypeFactory.GetAssociatedControlItem(type);
-            // if (dynamicTypeControlItem != null)
-            // {
-            //     return dynamicTypeControlItem;
-            // }
+           // When we decide to implement the plugin support we have to extend this method.
+           // The original is here should look here for more 
+           // https://github.com/origam/origam/blob/b5f3cc1dfe853de4082e41c594eb8f6c59451a9c/backend/Origam.Gui.Designer/ControlSetEditor.cs#L940
 
             if (item.ControlType == fullTypeName)
             {

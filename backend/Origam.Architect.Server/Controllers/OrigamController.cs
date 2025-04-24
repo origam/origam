@@ -6,7 +6,8 @@ using Origam.Service.Core;
 namespace Origam.Architect.Server.Controllers;
 
 public abstract class OrigamController(
-    ILogger<OrigamController> log)
+    ILogger<OrigamController> log,
+    IWebHostEnvironment environment)
     : ControllerBase
 {
     protected readonly ILogger<OrigamController> log = log;
@@ -22,15 +23,9 @@ public abstract class OrigamController(
     {
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {
-            // return environment.IsDevelopment()
-            //     ? ex
-            //     : new
-            //     {
-            //         message = defaultMessage ??
-            //                   "An error has occured. There may be some details in the log file."
-            //     };
-            
-            return new
+            return environment.IsDevelopment()
+                ? ex
+                : new
                 {
                     message = defaultMessage ??
                               "An error has occured. There may be some details in the log file."
