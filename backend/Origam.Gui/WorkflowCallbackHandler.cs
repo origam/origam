@@ -106,7 +106,8 @@ public class WorkflowCallbackHandler
     {
         if(e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
         {
-            if(e.Engine.CallingWorkflow == null)
+            if( _result is not WorkflowHostFormEventArgs)
+            // if(e.Engine.CallingWorkflow == null && _result is not WorkflowHostFormEventArgs)
             {
 #if DEBUG
                 System.Diagnostics.Debug.WriteLine("WorkflowFinished");
@@ -115,6 +116,10 @@ public class WorkflowCallbackHandler
                 _result = e;
                 _manualEvent.Set();
             }
+            // else if (e.Engine.CallingWorkflow != null)
+            // {
+            //     
+            // }
         }
     }
     void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)

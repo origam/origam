@@ -44,6 +44,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 	XPathNodeIterator _iter;
 	WorkflowEngine _call;
 	bool sourceContextChanged;
+	private int currentPosition = 1;
 	public ForEachBlockEngineTask() : base()
 	{
 	}
@@ -61,7 +62,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 	protected override void MeasuredExecution()
 	{
 		base.MeasuredExecution();
-		CleanUp();		
+		// CleanUp();		
 	}
 	protected override void OnExecute()
 	{
@@ -88,9 +89,9 @@ public class ForEachBlockEngineTask : BlockEngineTask
 		ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
 		_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
 		_call.IterationTotal = _iter.Count;
-		for (int currentPosition = 1; currentPosition <= _call.IterationTotal;
-			currentPosition++)
-		{
+		// for (int currentPosition = 1; currentPosition <= _call.IterationTotal;
+		// 	currentPosition++)
+		// {
 			if (!block.IgnoreSourceContextChanges && this.sourceContextChanged)
             {
                 // reinitialize _iter to updated context store and wind up
@@ -104,7 +105,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 _iter = navigator.Select(expr);
                 if (!WindUpTo(currentPosition))
 				{
-					break;
+					return;
 				}
             }
             else
@@ -112,7 +113,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 				bool moved = _iter.MoveNext();
 				if (!moved || _iter.CurrentPosition > _iter.Count)
 				{
-					break;
+					return;
 				}
 			}
 			// if workflow finished with an exception, we don't proceed
@@ -155,7 +156,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
 				}
 			}
 			Engine.Host.ExecuteWorkflow(_call);
-		}
+			currentPosition++;
+			// }
 	}
     private bool WindUpTo(int currentPosition)
     {
@@ -226,6 +228,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 			{
 				log.Info("Finishing iteration no. " + _iter.CurrentPosition);
 			}
+			ResumeIteration();
 		}
 	}
 	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
