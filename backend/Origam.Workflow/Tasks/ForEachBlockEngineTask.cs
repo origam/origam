@@ -44,7 +44,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
 	XPathNodeIterator _iter;
 	WorkflowEngine _call;
 	bool sourceContextChanged;
-	private int currentPosition = 1;
+	private int currentIteration = 1;
+	private int maxIterations = 1;
 	public ForEachBlockEngineTask() : base()
 	{
 	}
@@ -82,13 +83,18 @@ public class ForEachBlockEngineTask : BlockEngineTask
 		// and will interfer with other workflow invocations
 		this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
 		_iter = navigator.Select(expr);
+		maxIterations = _iter.Count;
 		ResumeIteration();
 	}
 	private void ResumeIteration()
 	{
+		if (currentIteration > maxIterations)
+		{
+			return;
+		}
 		ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
 		_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
-		_call.IterationTotal = _iter.Count;
+		_call.IterationTotal = maxIterations;
 		// for (int currentPosition = 1; currentPosition <= _call.IterationTotal;
 		// 	currentPosition++)
 		// {
@@ -103,7 +109,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 XPathExpression expr = navigator.Compile(block.IteratorXPath);
                 expr.SetContext(ctx);
                 _iter = navigator.Select(expr);
-                if (!WindUpTo(currentPosition))
+                if (!WindUpTo(currentIteration))
 				{
 					return;
 				}
@@ -156,7 +162,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 				}
 			}
 			Engine.Host.ExecuteWorkflow(_call);
-			currentPosition++;
+			currentIteration++;
 			// }
 	}
     private bool WindUpTo(int currentPosition)
