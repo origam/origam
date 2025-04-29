@@ -1965,9 +1965,13 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public static string PointFromJtsk(double x, double y)
     {
-        Coordinates coordinates = CoordinateConverter.JtskToWgs(x, y);
-        return
-            $"POINT({XmlConvert.ToString(coordinates.Longitude)} {XmlConvert.ToString(coordinates.Latitude)})";			
+        Origam.Geo.JtskConverter.Wgs84 wgs;
+        Origam.Geo.JtskConverter.Jtsk jtsk = new Origam.Geo.JtskConverter.Jtsk();
+        jtsk.X = x;
+        jtsk.Y = y;
+        wgs = Origam.Geo.JtskConverter.JTSKtoWGS84(jtsk);
+
+        return string.Format("POINT({0} {1})", XmlConvert.ToString(wgs.Longitude), XmlConvert.ToString(wgs.Latitude));			
     }
     
     public static string abs(string num)
