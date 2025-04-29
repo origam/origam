@@ -386,6 +386,5 @@ public class Startup
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
         OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
-        OrigamUtils.CleanUpDatabase();
     }
 }
