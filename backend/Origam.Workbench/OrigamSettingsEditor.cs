@@ -49,7 +49,7 @@ public class OrigamSettingsEditor :  AbstractViewContent
 		// Required for Windows Form Designer support
 		//
 		InitializeComponent();
-		StatusText = $"Origam Settings loaded from: {ConfigurationManager.UserProfileOrigamSettings}";
+		StatusText = $"Origam Settings loaded from: {ConfigurationManager.UserProfileFolder}";
 		this.Icon = Icon.FromHandle(new Bitmap(Images.ConnectionConfiguration).GetHicon());
 		if(_propertyPad == null)
 		{

@@ -27,7 +27,7 @@ using System.Reflection;
 namespace Origam;
 public class ConfigurationManager
 {
-	public static string UserProfileOrigamSettings =>
+	public static string UserProfileFolder =>
                   Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                   "ORIGAM", GetVersion(), "OrigamSettings.config");
     private static OrigamSettings _activeConfiguration;
@@ -48,9 +48,9 @@ public class ConfigurationManager
 	{
 		return _activeConfiguration;
 	}
-    public static OrigamSettingsCollection GetAllUserHomeConfigurations(string origamSettingsPath=null)
+    public static OrigamSettingsCollection GetAllUserHomeConfigurations()
     {
-        CreateUserProfileConfigFile(origamSettingsPath);
+        CreateUserProfileConfigFile();
         return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
     }
     public static OrigamSettingsCollection GetAllConfigurations()
@@ -74,25 +74,23 @@ public class ConfigurationManager
 		}
         new OrigamSettingsReader(_pathToOrigamSettings).Write(configuration);
 	}
-    private static void CreateUserProfileConfigFile(string origamSettingsPath=null)
+    private static void CreateUserProfileConfigFile()
     {
-	    string origamSettings = origamSettingsPath ?? UserProfileOrigamSettings;
-	    
-        if (!File.Exists(origamSettings))
+        if (!File.Exists(UserProfileFolder))
         {
-            FileInfo file = new(origamSettings);
+            FileInfo file = new(UserProfileFolder);
             file.Directory.Create();
-            OrigamSettingsReader origamSetting = new(origamSettings);
+            OrigamSettingsReader origamSetting = new(UserProfileFolder);
             if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
             {
-                File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), origamSettings);
+                File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), UserProfileFolder);
             }
             else
             {
-                new OrigamSettingsReader(origamSettings).Write(new OrigamSettingsCollection());
+                new OrigamSettingsReader(UserProfileFolder).Write(new OrigamSettingsCollection());
             }
         }
-        SetPathOrigamSettings(origamSettings);
+        SetPathOrigamSettings(UserProfileFolder);
     }
     private static string GetVersion()
     {

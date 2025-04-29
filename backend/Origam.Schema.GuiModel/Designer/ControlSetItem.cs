@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
@@ -271,19 +271,6 @@ public class ControlSetItem  : AbstractSchemaItem
 		return base.NewItem<T>(schemaExtensionId, group, itemName);
 	}
 	#endregion
-
-	public PropertyValueItem GetProperty(string propertyName)
-	{
-		return ChildItems
-			.OfType<PropertyValueItem>()
-			.First(x => x.Name == propertyName);
-	}	
-	public PropertyValueItem GetPropertyOrNull(string propertyName)
-	{
-		return ChildItems
-			.OfType<PropertyValueItem>()
-			.FirstOrDefault(x => x.Name == propertyName);
-	}
 }
 public class ControlSetItemComparer : IComparer<ISchemaItem>
 {

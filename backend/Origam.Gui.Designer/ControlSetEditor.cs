@@ -26,7 +26,6 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Services;
@@ -659,13 +658,12 @@ public class ControlSetEditor : AbstractEditor
 		if(cntrl.Tag is ControlSetItem)
 		{
 			ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
-			var properties = new List<PropertyInfo>();
+			
 			foreach(var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 			{
 				//addinng default properties to control set item
 				Type t = cntrl.GetType();
 				PropertyInfo property = t.GetProperty(propItem.Name);
-				properties.Add(property);
 				if(property == null) throw new ArgumentOutOfRangeException("Name", propItem.Name, "Property '" + propItem.Name + "' not found in the control '" + t.ToString() + "'");
 				PropertyValueItem propValItem = FindPropertyValueItem(cntrSetItem, propItem, false) as PropertyValueItem;
 				if(propValItem !=null)
@@ -682,14 +680,6 @@ public class ControlSetEditor : AbstractEditor
 					}
 				}
 			}
-#if DEBUG
-			string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
-			string path = Path.Combine("C:\\Repos\\origam\\backend\\Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
-			if (!File.Exists(path))
-			{
-				File.WriteAllText(path, newClass);
-			}
-#endif
 		}
 	}
 	private void LoadControlBindings(Control cntrl)
@@ -1529,7 +1519,6 @@ public class ControlSetEditor : AbstractEditor
         }
         else
         {
-	        
 			_isEditingMainVersion = true;
             // we are editing the main version of the screen/section
             if (controlSet.ChildItems.Count == 0)

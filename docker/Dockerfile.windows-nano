@@ -22,21 +22,21 @@ RUN mkdir HTML5 && \
 RUN mkdir Scheduler
 
 # Copy application files
-COPY server/HTML5 HTML5/
-COPY server/HTML5-SOURCE HTML5-SOURCE/
-COPY server/Scheduler Scheduler/
+COPY HTML5 HTML5/
+COPY HTML5-SOURCE HTML5-SOURCE/
+COPY Scheduler Scheduler/
 
 WORKDIR /home/origam/HTML5
 
 # Copy configuration templates and scripts
-COPY server/_appsettings.template .
-COPY server/_OrigamSettings.mssql.template .
-COPY server/_OrigamSettings.postgres.template .
-COPY server/log4net.config .
-COPY server/windows/StartServer.ps1 .
-COPY server/windows/Install.ps1 .
-COPY server/windows/Utils.ps1 .
-COPY server/windows/CreateSslCertificate.ps1 .
+COPY _appsettings.template .
+COPY _OrigamSettings.mssql.template .
+COPY _OrigamSettings.postgres.template .
+COPY log4net.config .
+COPY windows/StartServer.ps1 .
+COPY windows/Install.ps1 .
+COPY windows/Utils.ps1 .
+COPY windows/CreateSslCertificate.ps1 .
 
 # Install dependencies
 RUN pwsh.exe -ExecutionPolicy Bypass -File install.ps1

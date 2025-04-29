@@ -76,14 +76,6 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Architect Server|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug Architect Server\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>10</LangVersion>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
       <Project>{54bff654-2a00-4a8a-86b0-06f124d769a1}</Project>

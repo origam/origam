@@ -214,17 +214,12 @@ class Persistor
     {
         PersistedObjectInfo objInfo;
         OrigamFile origamFile;
-        if (IsInTransaction)
+        if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
         {
-            origamFile = transactionStore.TryGet(instance.RelativeFilePath);
-            if (origamFile != null)
-            {
-                origamFile.ContainedObjects.TryGetValue(instance.Id, out objInfo);
-                if (objInfo != null)
-                {
-                    return origamFile;
-                }
-            }
+            Guid id = instance.Id;
+            origamFile = transactionStore.Get(instance.RelativeFilePath);
+            origamFile.ContainedObjects.TryGetValue(id, out objInfo);
+            if(objInfo != null) return origamFile;
         }
         objInfo = index.GetById(instance.Id);
         origamFile = objInfo?.OrigamFile;
@@ -234,13 +229,9 @@ class Persistor
     private OrigamFile FindFileWhereInstanceShouldBeStored(
         IFilePersistent instance)
     {
-        if (IsInTransaction)
+        if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
         {
-            OrigamFile fileFromTransaction = transactionStore.TryGet(instance.RelativeFilePath);
-            if (fileFromTransaction != null)
-            {
-                return fileFromTransaction;
-            }
+            return transactionStore.Get(instance.RelativeFilePath);
         }
         PersistedObjectInfo parentObjInfo = index.GetParent(instance);
         if (parentObjInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
@@ -264,17 +255,11 @@ class Persistor
     }
     private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
     {
-        if (IsInTransaction )
+        if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
         {
-            OrigamXmlDocument existingDocument = transactionStore
-                .TryGet(origamFile.Path.Relative)
-                ?.DeferredSaveDocument;
-            if (existingDocument != null)
-            {
-                return existingDocument;
-            }
+            return transactionStore.Get(origamFile.Path.Relative)
+                .DeferredSaveDocument;
         }
-
         return origamFile.Path.Exists 
             ? new OrigamXmlDocument(origamFile.Path.Absolute) 
             : new OrigamXmlDocument();
@@ -415,16 +400,14 @@ internal class TransactionStore
             pathFileDict[file.Path.Relative] = file;
          });
     }
-     
-     public OrigamFile TryGet(string relativePath)
-     {
-         return readWriteLock.RunReader(
-             () => pathFileDict.TryGetValue(relativePath, out var origamFile) 
-                 ? origamFile 
-                 : null
-         );
-     }
-     
+    public OrigamFile Get(string relativePath)
+    {
+       return readWriteLock.RunReader(() => pathFileDict[relativePath]);
+    }
+    public bool Contains(string relativePath)
+    {
+        return readWriteLock.RunReader(() => pathFileDict.ContainsKey(relativePath));
+    }
     public void Clear()
     {
         readWriteLock.RunWriter(() =>

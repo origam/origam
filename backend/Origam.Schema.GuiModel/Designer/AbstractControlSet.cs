@@ -28,7 +28,6 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
 	public AbstractControlSet() {}
 	public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
-	public Guid DataSourceId;
 	public BrowserNodeCollection Alternatives
 	{
 		get {

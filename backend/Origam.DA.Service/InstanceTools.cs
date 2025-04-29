@@ -23,8 +23,8 @@ using System;
 using System.Reflection;
 using System.Xml;
 
-namespace Origam;
-public static class InstanceTools
+namespace Origam.DA.Service;
+static class InstanceTools
 {
     public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
     {
@@ -68,5 +68,5 @@ public static class InstanceTools
             correctlyTypedValue = value;
         }
         return correctlyTypedValue;
-    }  
+    }       
 }

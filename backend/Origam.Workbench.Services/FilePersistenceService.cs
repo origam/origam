@@ -32,9 +32,7 @@ using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
-#if !NETSTANDARD
 using Origam.Git;
-#endif
 using Origam.OrigamEngine;
 
 namespace Origam.Workbench.Services;
@@ -126,16 +124,12 @@ public class FilePersistenceService : IPersistenceService
         if (string.IsNullOrWhiteSpace(pathCandidate))
         {
             string configFileName = "RuntimeModelConfiguration.json";
-#if !NETSTANDARD
             IgnoreFileTools.TryAdd(topDirectory.FullName, configFileName);
-#endif
             return Path.Combine(topDirectory.FullName, configFileName);
         }
         if(!Path.IsPathRooted(pathCandidate))
         {
-#if !NETSTANDARD
             IgnoreFileTools.TryAdd(topDirectory.FullName, pathCandidate);
-#endif
             return Path.Combine(topDirectory.FullName, pathCandidate);
         }
         return pathCandidate;

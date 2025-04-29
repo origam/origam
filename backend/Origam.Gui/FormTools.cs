@@ -88,13 +88,11 @@ public static class FormTools
         // everything valid
         // there's even question, wheter this validation is necessary 
         // when designing in architect
-#if !NETSTANDARD
         if ((WorkbenchSingleton.Workbench != null) 
         && WorkbenchSingleton.Workbench.ApplicationDataDisconnectedMode)
         {
             return true;
         }
-#endif
         IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         if (!parameterService.IsFeatureOn(features)) return false;
         if (roles != null && roles != String.Empty)
