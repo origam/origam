@@ -563,12 +563,12 @@ jobs:
          buildType: 'current'
          downloadType: 'single'
          artifactName: 'origam-html'
-         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker/server'
      - bash: |
-        cp -R ../frontend-html server/HTML5-SOURCE
-        mv origam-html server/HTML5
+        cp -R ../frontend-html HTML5-SOURCE
+        mv origam-html HTML5
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
-       displayName: Place resources in correct positions
+       displayName: Download origam-html and source artifact
      - task: Docker@2
        displayName: 'Build and publish docker image'
        inputs:
@@ -596,20 +596,20 @@ jobs:
          buildType: 'current'
          downloadType: 'single'
          artifactName: 'origam-html'
-         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker/server'
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-scheduler artifact'
        inputs:
          buildType: 'current'
          downloadType: 'single'
          artifactName: 'origam-scheduler'
-         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker/server'
      - powershell: |
-        Copy-Item -Path ..\frontend-html -Destination server\HTML5-SOURCE -Recurse
-        Move-Item -Path origam-html -Destination server\HTML5 -force
-        Move-Item -Path origam-scheduler -Destination server\Scheduler -force
+        Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
+        Move-Item -Path origam-html -Destination HTML5 -force
+        Move-Item -Path origam-scheduler -Destination Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
-       displayName: Place resources in correct positions
+       displayName: Download origam-html and source artifact
      - task: Docker@2
        displayName: 'Build and publish docker windows image'
        inputs:
@@ -646,11 +646,11 @@ jobs:
          artifactName: 'origam-scheduler'
          downloadPath: '$(Agent.BuildDirectory)/s/docker/server'
      - powershell: |
-        Copy-Item -Path ..\frontend-html -Destination server\HTML5-SOURCE -Recurse
-        Move-Item -Path origam-html -Destination server\HTML5 -force
-        Move-Item -Path origam-scheduler -Destination server\Scheduler -force
+        Copy-Item -Path ..\frontend-html -Destination HTML5-SOURCE -Recurse
+        Move-Item -Path origam-html -Destination HTML5 -force
+        Move-Item -Path origam-scheduler -Destination Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
-       displayName: Place resources in correct positions
+       displayName: Download origam-html and source artifact
      - task: Docker@2
        displayName: 'Build and publish docker windows image'
        inputs:
