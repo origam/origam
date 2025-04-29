@@ -269,22 +269,6 @@
       s2:isHidden="false"
       asi:name="WfTests"
       ami:order="100">
-      <frmi:MenuItem
-        asi:abstract="false"
-        ami:alwaysOpenNew="false"
-        frmi:autoSaveOnListRecordChange="false"
-        ami:displayName="Two tables flattend with mockPk selection test"
-        x:id="89fe1262-d009-4d92-83ee-6225abcb7a30"
-        asi:name="AllDataTypesInnerJoinTaginputSource_mockPk"
-        ami:openExclusively="false"
-        ami:order="100"
-        frmi:readOnlyAccess="false"
-        frmi:refreshAfterSaveType="RefreshChangedRecords"
-        frmi:refreshOnFocus="false"
-        frmi:refreshPortalAfterSave="false"
-        frmi:requestSaveAfterUpdate="false"
-        ami:roles="*"
-        frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/eb1aa80e-3c57-4bfa-815a-a2aeea460774" />
       <wrmi:MenuItem
         asi:abstract="false"
         ami:alwaysOpenNew="false"
