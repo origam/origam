@@ -1499,6 +1499,8 @@ Global
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
+		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
+		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
