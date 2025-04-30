@@ -58,33 +58,10 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 	public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
 	{
 		OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-		
-		//			System.Windows.Forms.MessageBox.Show("Authorizing identity: '" + principal.Identity.Name + "'");
 		if(context == null) return false;
 		if(context.Trim() == "") return false;
 		if(context == "*") return true;
 		string[] roles = context.Split(";".ToCharArray());
-//			string[] winRoles = GetWindowsIdentityRoles(principal.Identity as WindowsIdentity);
-//			DirectoryEntry entry = new DirectoryEntry("WinNT://" + principal.Identity.Name.Replace("\\", "/"));
-//			//System.DirectoryServices.DirectoryEntry entry = new DirectoryEntry("WinNT://AS/tvavrda");
-//
-//			object groups = entry.Invoke("Groups");
-//
-//			foreach (object ob in (IEnumerable)groups)
-//			{
-//				// Create object for each group.
-//				DirectoryEntry group = new DirectoryEntry(ob);
-//
-//				foreach(string role in roles)
-//				{
-////					System.Windows.Forms.MessageBox.Show("Comparing role '" + role + "' with group '" + group.Name + "'");
-//					if(group.Name.Trim().ToUpper().CompareTo(role.Trim().ToUpper()) == 0)
-//					{
-////						System.Windows.Forms.MessageBox.Show("Success");
-//						return true;
-//					}
-//				}
-//			}
 		foreach(string roleTest in roles)
 		{
 			string[] rolePart = roleTest.Split("|".ToCharArray());

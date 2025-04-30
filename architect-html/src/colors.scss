@@ -1,0 +1,87 @@
+/*
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@function hexToRGB($hex) {
+    @return red($hex), green($hex), blue($hex);
+}
+
+$background1: #FFFFFF;
+$background2: #F7F6FA;
+$background3: #E9E8F0;
+$background4: #D3D3D3;
+$background5: #B0AFB7;
+$background6: #77767E;
+$background7: #3E3D45;
+$background8: #0D0D0D;
+$foreground1: #4C84FF;
+$foreground2: #73b1e7;
+$foreground3: #0a77d5;
+$foreground4: #ACC6FF;
+$foreground5: #EDF2FF;
+$foreground6: #8998C5;
+$foreground7: #435BA3;
+$ok1: #69D07F;
+$warning1: #FFBF05;
+$warning2: #FE8933;
+$warning3: #FFFF00;
+$error1: #FE5461;
+
+:root {
+    --background1: #{$background1};
+    --background2: #{$background2};
+    --background3: #{$background3};
+    --background4: #{$background4};
+    --background5: #{$background5};
+    --background6: #{$background6};
+    --background7: #{$background7};
+    --background8: #{$background8};
+    --foreground1: #{$foreground1};
+    --foreground2: #{$foreground2};
+    --foreground3: #{$foreground3};
+    --foreground4: #{$foreground4};
+    --foreground5: #{$foreground5};
+    --foreground6: #{$foreground6};
+    --foreground7: #{$foreground7};
+    --ok1: #{$ok1};
+    --warning1: #{$warning1};
+    --warning2: #{$warning2};
+    --warning3: #{$warning3};
+    --error1: #{$error1};
+
+    --background1-rgb: #{hexToRGB($background1)};
+    --background2-rgb: #{hexToRGB($background2)};
+    --background3-rgb: #{hexToRGB($background3)};
+    --background4-rgb: #{hexToRGB($background4)};
+    --background5-rgb: #{hexToRGB($background5)};
+    --background6-rgb: #{hexToRGB($background6)};
+    --background7-rgb: #{hexToRGB($background7)};
+    --background8-rgb: #{hexToRGB($background8)};
+    --foreground1-rgb: #{hexToRGB($foreground1)};
+    --foreground2-rgb: #{hexToRGB($foreground2)};
+    --foreground3-rgb: #{hexToRGB($foreground3)};
+    --foreground4-rgb: #{hexToRGB($foreground4)};
+    --foreground5-rgb: #{hexToRGB($foreground5)};
+    --foreground6-rgb: #{hexToRGB($foreground6)};
+    --foreground7-rgb: #{hexToRGB($foreground7)};
+    --ok1-rgb: #{hexToRGB($ok1)};
+    --warning1-rgb: #{hexToRGB($warning1)};
+    --warning2-rgb: #{hexToRGB($warning2)};
+    --warning3-rgb: #{hexToRGB($warning3)};
+    --error1-rgb: #{hexToRGB($error1)};
+}

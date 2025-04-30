@@ -86,13 +86,13 @@
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18.3.1",
     "@types/uuid": "^10.0.0",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^4.4.1",
     "browserslist": "^4.24.4",
     "browserslist-useragent-regexp": "^4.1.3",
     "esbuild": "^0.25.2",
     "identity-obj-proxy": "^3.0.0",
-    "ts-jest": "^29.3.1",
-    "vite": "^6.2.5",
+    "ts-jest": "^29.3.2",
+    "vite": "^6.3.2",
     "ws": "^8.18.1"
   },
   "resolutions": {
