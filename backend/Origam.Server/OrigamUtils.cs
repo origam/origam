@@ -22,9 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Origam.DA;
+using Origam.DA.Common;
 using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
 
 namespace Origam.Server;
 public static class OrigamUtils
@@ -66,5 +70,12 @@ public static class OrigamUtils
                 }
             };
         }
+    }
+
+    public static void CleanUpDatabase()
+    {
+        IDataService dataService = DataServiceFactory.GetDataService();
+        dataService.ExecuteProcedure(
+            "OrigamIdentityGrantCleanup", "", new DataStructureQuery(), null);
     }
 }
