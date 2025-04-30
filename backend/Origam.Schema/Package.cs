@@ -49,11 +49,11 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 	}
 	public Package(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
 	{
-		this._childNodes.Add(_dataModelGroup);
-		this._childNodes.Add(_businessLogicModelGroup);
-		this._childNodes.Add(_userInterfaceModelGroup);
-		this._childNodes.Add(_apiModelGroup);
 		this._childNodes.Add(_commonModelGroup);
+		this._childNodes.Add(_dataModelGroup);
+		this._childNodes.Add(_userInterfaceModelGroup);
+		this._childNodes.Add(_businessLogicModelGroup);
+		this._childNodes.Add(_apiModelGroup);
 	}
 	public override void Persist()
 	{

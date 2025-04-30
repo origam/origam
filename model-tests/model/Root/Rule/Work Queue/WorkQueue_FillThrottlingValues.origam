@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:cdr="http://schemas.origam.com/Origam.Schema.RuleModel.ComplexDataRule/6.0.0"
+  xmlns:xr="http://schemas.origam.com/Origam.Schema.RuleModel.XslRule/6.0.0">
+  <cdr:Rule
+    asi:abstract="false"
+    ar1:dataStructure="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/132fc504-ec51-4a2f-95d3-8c7c775b224c"
+    ar1:dataType="Boolean"
+    x:id="bd5d2105-f93b-4efc-b73a-b39872647f14"
+    asi:name="WorkQueue_FillThrottlingValues"
+    xr:xsl="-***-ExternalFile:WorkQueue_FillThrottlingValues.origam___xsl___bd5d2105-f93b-4efc-b73a-b39872647f14.xslt" />
+</x:file>
