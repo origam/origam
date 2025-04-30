@@ -127,21 +127,20 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 							log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
 							foreach(DictionaryEntry entry in paramList)
 							{
-								object v = entry.Value;
-								if(v == null) v = "null";
-								if(v is ArrayList)
+								object v = entry.Value ?? "null";
+								if(v is IList list)
 								{
 									v = "array: {";
-									for(int i = 0; i < (entry.Value as ArrayList).Count; i++)
+									for(int i = 0; i < list.Count; i++)
 									{
-										object av = (entry.Value as ArrayList)[i];
+										object av = list[i];
 										if(i != 0) v+= ", ";
 										if(av == null) av = "null";
 										v += av.ToString();
 									}
 									v += "}";
 								}
-								log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
+								log.Debug("     Key: '" + entry.Key + "' Value: '" + v + "'");
 							}
 						});
 					}

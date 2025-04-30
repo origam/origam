@@ -2,10 +2,9 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
   <xt:Transformation
     asi:abstract="false"
-    xt:engineType="XslCompiledTransform"
     x:id="693db72d-a400-4df3-b4b7-e0487e7ce8d6"
     asi:name="SD_Empty"
     xt:text="-***-ExternalFile:SD_Empty.origam___text___693db72d-a400-4df3-b4b7-e0487e7ce8d6.xslt" />

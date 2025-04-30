@@ -404,12 +404,12 @@ public class StylesConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
         object control = context.Instance;
-        string classPath = control.GetType().FullName;
+        string classPath = control?.GetType()?.FullName;
 		StylesSchemaItemProvider styles = _schema.GetProvider(typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
 		var dsArray = new List<UIStyle>(styles.ChildItems.Count);
 		foreach(UIStyle st in styles.ChildItems)
 		{
-            if (st.Widget.ControlType == classPath)
+            if (classPath == null || st.Widget.ControlType == classPath)
             {
                 dsArray.Add(st);
             }

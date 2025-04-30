@@ -92,6 +92,9 @@ public class ServiceAgentFactory : IBusinessServicesService
             case "EDIFACT2XMLService":
                 result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.EDIFACT2XMLServiceAgent", "Origam.Workflow");
                 break;
+            case "CompressionService":
+                result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.CompressionServiceAgent", "Origam.Workflow");
+                break;
             default:
 				SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 				ServiceSchemaItemProvider services = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;

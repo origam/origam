@@ -1326,8 +1326,7 @@ public class ServerCoreUIService : IBasicUIService
             Guid.Empty, Guid.Empty, null, qparams);
         IPersistenceService persistence = 
             ServiceManager.Services.GetService<IPersistenceService>();
-        IXsltEngine transformer = AsTransform.GetXsltEngine(
-            XsltEngineType.XslTransform, persistence.SchemaProvider);
+        IXsltEngine transformer = new CompiledXsltEngine(persistence.SchemaProvider);
         IXmlContainer result = transformer.Transform(
             DataDocumentFactory.New(data), 
             tooltip.TooltipTransformationId, 
@@ -1351,7 +1350,7 @@ public class ServerCoreUIService : IBasicUIService
     private static XmlDocument DefaultNotificationBoxContent()
     {
         XmlDocument doc = new XmlDocument();
-        doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/logo-left.png\"/></div>");
+        doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/origam-logo.svg\"/></div>");
         return doc;
     }
     public void RevertChanges(RevertChangesInput input)

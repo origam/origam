@@ -72,7 +72,7 @@
     <Caption OriginalText="OK">OK</Caption>
   </Element>
   <Element Id="36b724a0-ee28-465f-935f-bfbfdf527a47" Path="BusinessPartner/Identity_ForceConfirmEmail">
-    <Caption OriginalText="Confirm Email">Potvrzovací email</Caption>
+    <Caption OriginalText="Confirm Email">Potvrdit email</Caption>
   </Element>
   <Element Id="7494a972-168e-4af5-8825-5efa3e44a623" Path="confirmUserEmail.json">
     <Url OriginalText="confirmUserEmail.json">confirmUserEmail.json</Url>

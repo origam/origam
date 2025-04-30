@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xfc="http://schemas.origam.com/Origam.Schema.EntityModel.XsltFunctionCollection/6.0.0">
+  <xfc:XsltFunctionCollection
+    asi:abstract="false"
+    xfc:assemblyName="Origam.Rule"
+    xfc:fullClassName="Origam.Rule.XsltFunctions.OrigamGeoContainer"
+    x:id="d08d5d5b-79a9-4f05-b181-dcb4c1697d4a"
+    asi:name="XsltGeoFunctions"
+    xfc:xslNameSpacePrefix="GE"
+    xfc:xslNameSpaceUri="http://xsl.origam.com/geo" />
+</x:file>

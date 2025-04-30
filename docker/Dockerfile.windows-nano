@@ -1,0 +1,48 @@
+# PowerShell stage
+FROM mcr.microsoft.com/powershell:nanoserver-ltsc2022 AS powershell
+
+# Final image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-ltsc2022
+
+# Copy PowerShell from the powershell stage, should work better that installing it...
+ARG src="C:/Program Files/PowerShell/"
+ARG target="C:/Program Files/PowerShell/"
+COPY --from=powershell ${src} ${target}
+
+# Set PowerShell path
+USER ContainerAdministrator
+RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
+
+WORKDIR /home/origam
+
+# Create required directories
+RUN mkdir HTML5 && \
+    mkdir HTML5-SOURCE && \
+    mkdir "C:\\ssl"
+RUN mkdir Scheduler
+
+# Copy application files
+COPY server/HTML5 HTML5/
+COPY server/HTML5-SOURCE HTML5-SOURCE/
+COPY server/Scheduler Scheduler/
+
+WORKDIR /home/origam/HTML5
+
+# Copy configuration templates and scripts
+COPY server/_appsettings.template .
+COPY server/_OrigamSettings.mssql.template .
+COPY server/_OrigamSettings.postgres.template .
+COPY server/log4net.config .
+COPY server/windows/StartServer.ps1 .
+COPY server/windows/Install.ps1 .
+COPY server/windows/Utils.ps1 .
+COPY server/windows/CreateSslCertificate.ps1 .
+
+# Install dependencies
+RUN pwsh.exe -ExecutionPolicy Bypass -File install.ps1
+
+WORKDIR /home/origam/HTML5-SOURCE
+WORKDIR /home/origam/HTML5
+
+EXPOSE 8080 443
+ENTRYPOINT ["pwsh.exe", "-ExecutionPolicy", "Bypass", "-File", "startServer.ps1"]

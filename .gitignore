@@ -1,7 +1,11 @@
-/backend/Origam.Server/serverCore.pfx
+﻿/backend/Origam.Server/serverCore.pfx
 .idea
 .DS_Store
 /plugins/__pycache__
 /plugins/pluginmanager_config.json
 /test/HTML5_TESTS/
 RuntimeModelConfiguration.json
+/docker/runLinux.cmd
+/docker/runWin.cmd
+/docker/HTML5/
+/docker/architect/bin/

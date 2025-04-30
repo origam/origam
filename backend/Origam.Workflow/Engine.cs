@@ -702,11 +702,13 @@ public class WorkflowEngine : IDisposable
 
 	private Exception GetStepException(Exception exception, string stepName)
 	{
-		return 
-			exception is WorkflowCancelledByUserException or RuleException 
-				? exception 
-				: new OrigamException(
-					exception.Message, stepName, exception);
+		bool shouldBeDisplayedToUser = exception is WorkflowCancelledByUserException
+			or RuleException 
+			or OrigamValidationException;
+		return shouldBeDisplayedToUser
+					? exception 
+					: new OrigamException(
+						exception.Message, stepName, exception);
 	}
 	#endregion
 

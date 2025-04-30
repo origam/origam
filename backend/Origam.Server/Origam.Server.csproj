@@ -60,10 +60,11 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" NoWarn="NU1902"/>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="Origam.Service.Core" Version="2.3.1" />
+    <PackageReference Include="Origam.Service.Core" Version="2.3.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
     <PackageReference Include="SoapCore" Version="1.1.0.44" />
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
@@ -88,6 +89,7 @@
     <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj" />
     <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
+    <ProjectReference Include="..\Origam.Server.Common\Origam.Server.Common.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
     <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj" />
@@ -102,9 +104,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\identity\css\main.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="assets\identity\icons\origam.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\identity\icons\user.svg">
@@ -203,6 +202,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TemplateFiles\testUserUnlockNotificationFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\identity\icons\origam-logo.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

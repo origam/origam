@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -31,20 +30,18 @@ using System.Xml;
 using Newtonsoft.Json;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 using System.Linq;
 using System.Web;
 using Origam.Extensions;
 using Origam.Service.Core;
-using ImageMagick;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using SixLabors.ImageSharp;
 
 namespace Origam.Server.Pages;
 public class UserApiProcessor
@@ -186,7 +183,7 @@ public class UserApiProcessor
         }
         if (environment.IsProduction())
         {
-            return "There was en error, check log for details";
+            return "There was an error, check log for details";
         }
         return JsonConvert.SerializeObject(ex);
     }
@@ -622,30 +619,22 @@ public class UserApiProcessor
         if (fileMapping.ThumbnailHeight == 0 && fileMapping.ThumbnailWidth == 0)
         {
             // get the original file
-            fileBytes = StreamTools.ReadToEnd(file.InputStream);
+            using var memoryStream = new MemoryStream();
+            file.InputStream.CopyTo(memoryStream);
+            fileBytes = memoryStream.ToArray();
         }
         else
         {
             // get a thumbnail
-            MagickImage img = null;
             try
             {
-                img = new MagickImage(file.InputStream);
+                using Image image = Image.Load(file.InputStream);
+                fileBytes = BlobUploadHandler.FixedSizeBytes(
+                    image, fileMapping.ThumbnailWidth, fileMapping.ThumbnailHeight);
             }
             catch
             {
-                // file is not an image, we return null
-            }
-            if (img != null)
-            {
-                try
-                {
-                    fileBytes = BlobUploadHandler.FixedSizeBytes(img, fileMapping.ThumbnailWidth, fileMapping.ThumbnailHeight);
-                }
-                finally
-                {
-                    if (img != null) img.Dispose();
-                }
+                fileBytes = null;
             }
         }
         return fileBytes;

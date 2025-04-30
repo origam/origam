@@ -142,13 +142,7 @@ public class RuleEngine
 		{
 			throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 		}
-#if NETSTANDARD
-        XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
-#else
-        XsltEngineType xsltEngineType = XsltEngineType.XslTransform;
-#endif
-        _transformer = AsTransform.GetXsltEngine(
-            xsltEngineType, _persistence.SchemaProvider);
+        _transformer = new CompiledXsltEngine(_persistence.SchemaProvider);
 	}
 	#region Properties
     public static string ValidationNotMetMessage()
@@ -1850,13 +1844,13 @@ public class RuleEngine
 		{
 			return new XmlContainer("<ROOT/>");
 		}
-		else if (data is ArrayList)
+		else if (data is IList)
 		{
 			doc = new XmlContainer();
 			XmlElement root =
 				(XmlElement)doc.Xml.AppendChild(
 					doc.Xml.CreateElement("ROOT"));
-			foreach (object item in data as ArrayList)
+			foreach (object item in data as IList)
 			{
 				root.AppendChild(doc.Xml.CreateElement("value")).InnerText =
 					item.ToString();

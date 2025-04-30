@@ -58,8 +58,6 @@ public class TransformationSchemaItemProvider : AbstractSchemaItemProvider
 		}
 		var item = base.NewItem<T>(schemaExtensionId, 
 			group, "NewXslTransformation");
-		(item as XslTransformation).XsltEngineType =
-			XsltEngineType.XslCompiledTransform;
 		return item;
 	}
 	#endregion

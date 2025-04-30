@@ -41,15 +41,20 @@ export async function ensureLogin() {
     return {access_token: authOvr};
   }
   if (window.location.hash.startsWith("#origamClientCallback/")) {
-    const user = await userManager.signinRedirectCallback(
-      window.location.hash.replace("#origamClientCallback/", "")
-    );
-    const [urlpart] = window.location.href.split("#");
-    window.history.replaceState(null, "", urlpart);
-    if(!user.access_token){
+    try {
+      const user = await userManager.signinRedirectCallback(
+        window.location.hash.replace("#origamClientCallback/", "")
+      );
+      const [urlpart] = window.location.href.split("#");
+      window.history.replaceState(null, "", urlpart);
+      if (!user.access_token) {
+        await userManager.signinRedirect();
+      } else {
+        return user;
+      }
+    } catch (err) {
+      console.warn(err);
       await userManager.signinRedirect();
-    }else{
-      return user;
     }
   } else {
     const user = await userManager.getUser();

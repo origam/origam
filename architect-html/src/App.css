@@ -1,0 +1,8 @@
+body {
+  place-items: unset;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+}

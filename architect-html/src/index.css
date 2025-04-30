@@ -1,0 +1,45 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    /*color: rgba(255, 255, 255, 0.87);*/
+    /*background-color: #242424;*/
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    min-width: 320px;
+    min-height: 100vh;
+    height: 100%;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+select, input {
+    height: 25px;
+    border: 1px solid var(--background4);
+    border-radius: 4px;
+    background-color: var(--background1);
+    color: var(--background8);
+    box-sizing: border-box;
+}
+
+select {
+    padding-left: 2px;
+}
+
+input {
+    padding-left: 5px;
+}

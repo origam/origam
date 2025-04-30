@@ -269,6 +269,22 @@
       s2:isHidden="false"
       asi:name="WfTests"
       ami:order="100">
+      <frmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Two tables flattend with mockPk selection test"
+        x:id="89fe1262-d009-4d92-83ee-6225abcb7a30"
+        asi:name="AllDataTypesInnerJoinTaginputSource_mockPk"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="*"
+        frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/eb1aa80e-3c57-4bfa-815a-a2aeea460774" />
       <wrmi:MenuItem
         asi:abstract="false"
         ami:alwaysOpenNew="false"
@@ -669,6 +685,17 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     ami:roles="*"
     wrmi:workflow="Widgets/Workflow/Widgets/TestParametrizedReportFilename.origam#TestParametrizedReportFilename/8df10756-8355-442e-b557-2839f7ecce3f" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="Load - Transform - Save"
+    x:id="44b600ac-e17f-4ba3-8e96-cb25912a939a"
+    asi:name="Load_Transform_Save"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/Load_Transform_Save.origam#Load_Transform_Save/c152fc4b-65c0-4408-ba5e-af0ff1e3f3cf" />
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"

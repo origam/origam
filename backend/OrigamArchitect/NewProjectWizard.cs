@@ -117,9 +117,14 @@ public partial class NewProjectWizard : Form
     private void pageSuccess_Initialize(object sender, WizardPageInitEventArgs e)
     {
         finalMessageLabel.Text =
-            $"The new project has been generated. Review the created env file {_project.DockerEnvPath} and" +
-            $" run the command generated at {_project.DockerCmdPath} to create and run" +
-            $" the client web application docker container.";
+            $"The new project has been generated. Review the created env file and comand file for Linux: {Environment.NewLine}" +
+            $"{_project.DockerEnvPathLinux}{Environment.NewLine}" +
+            $"{_project.DockerCmdPathLinux}{Environment.NewLine}{Environment.NewLine}" +
+            $"And the same files for windows if you prefer windows containers:{Environment.NewLine}" +
+            $"{_project.DockerEnvPathWindows}{Environment.NewLine}" +
+            $"{_project.DockerCmdPathWindows}{Environment.NewLine}{Environment.NewLine}" +
+            $"The command files contain info about running the container with{Environment.NewLine}" +
+            $"the application for each docker platform.";
     }
     private void InitTaskList()
     {

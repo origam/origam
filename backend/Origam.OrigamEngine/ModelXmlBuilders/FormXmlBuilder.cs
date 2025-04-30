@@ -419,10 +419,20 @@ public class FormXmlBuilder
 			if((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand"))
 			{
 				WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
-                AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.QueueAction, cmd.Mode, 
-					cmd.Placement, cmdRow["Id"].ToString(), "", (string)cmdRow["Text"], 
-					(cmd.ButtonIcon == null ? null : cmd.ButtonIcon.Name), 
-					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage);
+                var config = new ActionConfiguration
+                {
+	                Type = PanelActionType.QueueAction,
+	                Mode = cmd.Mode,
+	                Placement = cmd.Placement,
+	                ActionId = cmdRow["Id"].ToString(),
+	                GroupId = "",
+	                Caption = (string)cmdRow["Text"],
+	                IconUrl = cmd.ButtonIcon == null ? null : cmd.ButtonIcon.Name,
+	                IsDefault = (bool)cmdRow["IsDefault"],
+	                ConfirmationMessage = confirmationMessage,
+	                Parameters = cmdParams
+                };
+                AsPanelActionButtonBuilder.Build(actionsElement, config);
 			}
 			else
 			{
@@ -436,16 +446,23 @@ public class FormXmlBuilder
 				{
 					iconName = "queue_statechange.png";
 				}
-				AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.QueueAction,
-					PanelActionMode.MultipleCheckboxes,	ActionButtonPlacement.Toolbar, 
-					cmdRow["Id"].ToString(), "", (string)cmdRow["Text"], iconName, 
-					(bool)cmdRow["IsDefault"], cmdParams, confirmationMessage);
+				var config = new ActionConfiguration
+				{
+					Type = PanelActionType.QueueAction,
+					Mode = PanelActionMode.MultipleCheckboxes,
+					Placement = ActionButtonPlacement.Toolbar,
+					ActionId = cmdRow["Id"].ToString(),
+					GroupId = "",
+					Caption = (string)cmdRow["Text"],
+					IconUrl = iconName,
+					IsDefault = (bool)cmdRow["IsDefault"],
+					Parameters = cmdParams,
+					ConfirmationMessage = confirmationMessage,
+					ShowAlways = true
+				};
+				AsPanelActionButtonBuilder.Build(actionsElement, config);
 			}
 		}
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.Report, PanelActionMode.MultipleCheckboxes, "testReport", "Test Report", "report.png", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.Workflow, PanelActionMode.MultipleCheckboxes, "testWorkflow", "Test Workflow", "", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.ChangeUI, PanelActionMode.MultipleCheckboxes, "testChangeUI", "Test Change UI", "", new Hashtable());
-//			AsPanelActionButtonBuilder.Build(actionsElement, PanelActionType.OpenForm, PanelActionMode.MultipleCheckboxes, "testOpenForm", "Test Open Form", "", new Hashtable());
 		RenderDataSources(windowElement, dataSources);
 		return doc;
 	}
@@ -515,10 +532,15 @@ public class FormXmlBuilder
 					case OrigamDataType.Currency:
 					case OrigamDataType.Memo:
 					case OrigamDataType.String:
-						TextBoxBuildDefinition buildDefinition 
-							= new TextBoxBuildDefinition(col.Field.DataType);
-						buildDefinition.Multiline 
-							= col.Field.DataType == OrigamDataType.Memo;
+						var buildDefinition = new TextBoxBuildDefinition(
+							col.Field.DataType) 
+						{
+							Multiline = col.Field.DataType == OrigamDataType.Memo
+						};
+						if (!string.IsNullOrEmpty(formatPattern))
+						{
+							buildDefinition.CustomNumberFormat = formatPattern;
+						}
 						TextBoxBuilder.Build(propertyElement, buildDefinition);
 						break;
 					case OrigamDataType.UniqueIdentifier:
@@ -536,7 +558,7 @@ public class FormXmlBuilder
                         }
                         break;
 					case OrigamDataType.Date:
-						if(formatPattern == null || formatPattern == "")
+						if (string.IsNullOrEmpty(formatPattern))
 						{
 							formatPattern = "dd. MM. yyyy HH:mm:ss";
 						}
@@ -1296,14 +1318,32 @@ public class FormXmlBuilder
                 confirmationMessage = parameterService.GetString(
                     action.ConfirmationMessage.Name);
             }
-            AsPanelActionButtonBuilder.Build(actionsElement,
-                action.ActionType, action.Mode, action.Placement,
-                action.Id.ToString(), groupId, action.Caption,
-                action.ButtonIcon == null ? "" : action.ButtonIcon.Name,
-                action.IsDefault, parameters,
-                shShift, shCtrl, shAlt, shKey,
-                action.ScannerInputParameter, terminator,
-                confirmationMessage);
+            var builderConfiguration = new ActionConfiguration
+            {
+	            Type = action.ActionType,
+	            Mode = action.Mode,
+	            Placement = action.Placement,
+	            ActionId = action.Id.ToString(),
+	            GroupId = groupId,
+	            Caption = action.Caption,
+	            IconUrl = action.ButtonIcon == null ? "" : action.ButtonIcon.Name,
+	            IsDefault = action.IsDefault,
+	            ConfirmationMessage = confirmationMessage,
+	            Parameters = parameters,
+	            Shortcut = new KeyShortcut
+	            {
+		            IsShift = shShift,
+		            IsControl = shCtrl,
+		            IsAlt = shAlt,
+		            KeyCode = shKey
+	            },
+	            Scanner = new ScannerSettings
+	            {
+		            Parameter = action.ScannerInputParameter,
+		            TerminatorCharCode = terminator
+	            }
+            };
+            AsPanelActionButtonBuilder.Build(actionsElement, builderConfiguration);
         }
     }
 	private static void SetUserConfig(XmlDocument doc, XmlNode parentNode, string defaultConfiguration, Guid objectId, Guid workflowId)
