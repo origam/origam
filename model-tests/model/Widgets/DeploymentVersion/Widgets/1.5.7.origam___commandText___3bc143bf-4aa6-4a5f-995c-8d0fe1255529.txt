@@ -1,0 +1,9 @@
+﻿CREATE TABLE [RuleSetChildDependencyTest_Child] (
+	[Name] NVarChar(30) NULL,
+	[refRuleSetChildDependencyTestId] UniqueIdentifier NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE  INDEX  [ix_RuleSetChildDependencyTest] ON [RuleSetChildDependencyTest_Child] ([refRuleSetChildDependencyTestId] ASC);

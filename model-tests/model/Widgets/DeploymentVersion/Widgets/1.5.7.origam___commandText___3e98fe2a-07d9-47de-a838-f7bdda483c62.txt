@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [RuleSetChildDependencyTest_Child] ADD CONSTRAINT [FK_RuleSetChildDependencyTest_Child_refRuleSetChildDependencyTestId_RuleSetChildDependencyTest]
+	FOREIGN KEY (
+		[refRuleSetChildDependencyTestId]
+	)
+
+	REFERENCES [RuleSetChildDependencyTest] (
+		[Id]
+	);

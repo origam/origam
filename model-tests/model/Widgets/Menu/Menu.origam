@@ -21,6 +21,24 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     dcrmi:refreshPortalAfterSave="false"
     ami:roles="*" />
+  <frmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    frmi:autoSaveOnListRecordChange="false"
+    ami:displayName="Rule Set Child Dependency Test"
+    x:id="942d37cf-3717-48e8-8eea-e00b8e30b4e3"
+    asi:name="RuleSetChildDependencyTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    frmi:readOnlyAccess="false"
+    frmi:refreshAfterSaveType="RefreshChangedRecords"
+    frmi:refreshOnFocus="false"
+    frmi:refreshPortalAfterSave="false"
+    frmi:requestSaveAfterUpdate="false"
+    ami:roles="*"
+    frmi:ruleSet="Widgets/DataStructure/Widgets/RuleSetChildDependencyTest.origam#RuleSetChildDependencyTest/DefaultRule/7020a0a3-c1a8-4e92-a698-e86ec005b783"
+    frmi:screen="Widgets/FormControlSet/Widgets/RuleSetChildDependencyTest.origam#RuleSetChildDependencyTest/17af1b9b-1e7e-4f4f-85a3-7ea7521cfc91" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"

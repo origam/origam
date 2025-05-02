@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="88607771-18ff-410d-9186-9c5de8e08d9f"
+    tmi:mappedObjectName="RuleSetChildDependencyTest_Child"
+    asi:name="RuleSetChildDependencyTest_Child"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="43122c8b-985b-41f9-8826-489c85a80aa1"
+      asi:name="ix_RuleSetChildDependencyTest"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Widgets/DataEntity/Widgets/RuleSetChildDependencyTest_Child.origam#RuleSetChildDependencyTest_Child/refRuleSetChildDependencyTestId/e803a642-7d47-4035-a9d9-a49d4abfe82d"
+        x:id="d7252690-c463-490e-afa8-297a8765c1a0"
+        asi:name="0_refRuleSetChildDependencyTestId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="30"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="0ee3d72b-2cc7-47cf-a473-6818a080dbf1"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/RuleSetChildDependencyTest.origam#RuleSetChildDependencyTest/ac63d210-54dc-49cc-b4ba-961bc92188b2"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="e803a642-7d47-4035-a9d9-a49d4abfe82d"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refRuleSetChildDependencyTestId"
+      asi:name="refRuleSetChildDependencyTestId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="405d3c1e-6c73-4b08-b934-23006ea9fcea" />
+  </tmi:DataEntity>
+</x:file>
