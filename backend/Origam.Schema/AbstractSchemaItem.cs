@@ -1564,7 +1564,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	#region ISchemaItemConvertible Members
 	public virtual ISchemaItem ConvertTo(Type type)
 	{
-		var methodInfo = typeof(ISchemaItem).GetMethod(
+		var methodInfo = typeof(AbstractSchemaItem).GetMethod(
 			"ConvertTo", BindingFlags.NonPublic | BindingFlags.Instance);
 		var genericMethodInfo = methodInfo.MakeGenericMethod(type);
 		return (ISchemaItem)genericMethodInfo.Invoke(this, null);
