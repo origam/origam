@@ -1,0 +1,5 @@
+﻿INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('75ea360a-9f6a-4fae-b53c-84fb3e9563fc', 'FRM_Documentation', '', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly, IsInitialScreen)
+VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '75ea360a-9f6a-4fae-b53c-84fb3e9563fc', getdate(), 0, 0)

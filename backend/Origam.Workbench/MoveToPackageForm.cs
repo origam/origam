@@ -165,7 +165,10 @@ public partial class MoveToPackageForm : Form
                         GroupContainer.Create(group).ToArray<object>();
                     groupComboBox.Items.AddRange(containers);
                 });
-        groupComboBox.SelectedIndex = 0;
+        if (groupComboBox.Items.Count > 0)
+        {
+            groupComboBox.SelectedIndex = 0;
+        }
     }
 
     private static void CheckCanBeMovedOrThrow(ISchemaItem activeItem,

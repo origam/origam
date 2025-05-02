@@ -263,7 +263,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             .SelectMany(RetrieveAll)
             .Distinct()
             .Where(x=> x != null)
-            .Cast<T>()
+            .OfType<T>()
             .ToList();
     }
     private IEnumerable<object> RetrieveAll(Type type)
