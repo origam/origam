@@ -1944,17 +1944,17 @@ react-dom@^18.3.1:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-from-dom@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.7.3.tgz#60e75fde2369ceb0a8f87d88f9cfbeb67b730e43"
-  integrity sha512-9IK6R7+eD1wOAMC2ZCrENev0eK1625cb7vX+cnnOR9LBRNbjKiaJk4ij2zQbcefEXTWjXFhA7CTO1cd8wMONnw==
+react-from-dom@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.7.5.tgz#2d2d2bf6d80149c053bcf71bb6615e5e7f6d23db"
+  integrity sha512-CO92PmMKo/23uYPm6OFvh5CtZbMgHs/Xn+o095Lz/TZj9t8DSDhGdSOMLxBxwWI4sr0MF17KUn9yJWc5Q00R/w==
 
-react-inlinesvg@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.1.4.tgz#68a60aba2a040e4ba31b6f817c69f618794cd31d"
-  integrity sha512-V7x3YGqG7LNeHpsIx90HDa2qhYCOPkzjIMToPWALyvOTI3kzicKF2O2PNZDaVqAVhwRbijLIUoQN5STleTO2rg==
+react-inlinesvg@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.2.0.tgz#79e41579459a0a535d0f7674050a252085cdf157"
+  integrity sha512-V59P6sFU7NACIbvoay9ikYKVFWyIIZFGd7w6YT1m+H7Ues0fOI6B6IftE6NPSYXXv7RHVmrncIyJeYurs3OJcA==
   dependencies:
-    react-from-dom "^0.7.3"
+    react-from-dom "^0.7.5"
 
 react-is@^16.7.0:
   version "16.13.1"
