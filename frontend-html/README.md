@@ -5,7 +5,7 @@
 To build the app you need:
 
 - nodejs 14.*
-- yarn (any recent version should be fine)
+- yarn 4.5.0 (newer will probably be fine too)
 
 ### How to build
 
