@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.25.9",
+    "@babel/plugin-proposal-decorators": "^7.27.1",
     "@monaco-editor/react": "^4.6.0",
     "axios": "^1.7.2",
     "lodash": "^4.17.21",
