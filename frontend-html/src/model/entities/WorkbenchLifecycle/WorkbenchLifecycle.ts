@@ -58,6 +58,9 @@ import { hexToRgb } from "utils/colorUtils";
 import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 import { EventHandler } from "utils/EventHandler";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import {
+  processAutoWorkflowNext
+} from "model/actions-ui/ScreenHeader/processAutoWorkflowNext";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -463,9 +466,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const rowIdToSelect = args.parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
-      if (formScreen?.autoWorkflowNext) {
-        yield onWorkflowNextClick(formScreen!)(undefined);
-      }
+      yield*processAutoWorkflowNext(formScreen)
     } catch (e) {
       yield*handleError(this)(e);
       yield*this.closeForm(newScreen);

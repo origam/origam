@@ -318,9 +318,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   
 
   *onWorkflowNextClick(event: any): Generator {
-    if(this.workflowNextActive > 0) return;
+    if(this.workflowNextActive > 0) {
+      return false;
+    }
     this.workflowNextActive++;
-    while(this.flushDataEntered > 0) yield when(() => !this.flushDataEntered);
+    while(this.flushDataEntered > 0) {
+      yield when(() => !this.flushDataEntered);
+    }
     this.workflowNextEntered++;
     this.monitor.inFlow++;
     try {
@@ -334,7 +338,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         actionQueryInfo,
         formScreen.title
       );
-      if (!processQueryInfoResult.canContinue) return;
+      if (!processQueryInfoResult.canContinue) {
+        return false;
+      }
       let uiResult;
       try {
         yield*formScreen.dataUpdateCRS.enterGenerator();
@@ -347,6 +353,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.killForm();
       yield*this.start({initUIResult: uiResult});
+      const hasNextTask = uiResult.workflowTaskId !== '00000000-0000-0000-0000-000000000000';
+      return hasNextTask
     } finally {
       this.workflowNextEntered--;
       this.workflowNextActive--;

@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {
+  getFormScreenLifecycle
+} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function onWorkflowNextClick(ctx: any) {
   return flow(function*onWorkflowNextClick(event: any) {
@@ -27,7 +29,7 @@ export function onWorkflowNextClick(ctx: any) {
       const lifecycle = getFormScreenLifecycle(ctx);
       if(lifecycle.workflowNextActive > 0) return;
       yield*lifecycle.onFlushData();
-      yield*lifecycle.onWorkflowNextClick(event);
+      return yield*lifecycle.onWorkflowNextClick(event);
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;
