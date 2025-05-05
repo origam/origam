@@ -677,6 +677,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow - For Each Test"
+    x:id="1eddc3ac-c548-4552-a06d-3f98d03edd77"
+    asi:name="ForEachTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/f0439218-d309-417e-9856-151a4f5f5a5b" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="ParametrizedReportFilename"
     x:id="37723fa7-7a4a-4ebe-97ab-2b10877b3aa7"
     asi:name="ParametrizedReportFilename"
@@ -699,9 +710,9 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
-    ami:displayName="Workflow - UI in Loop Test"
+    ami:displayName="Workflow - UI in For Each Test"
     x:id="4c58920f-47f9-447d-b530-38e13cfc26ce"
-    asi:name="UiInLoopTest"
+    asi:name="UiInForEachTest"
     ami:openExclusively="false"
     ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"

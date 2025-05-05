@@ -17,7 +17,7 @@
   <w:Workflow
     asi:abstract="false"
     x:id="04a46742-b288-42ba-910e-232e40c89fa6"
-    asi:name="UiInLoopTest"
+    asi:name="UiInForEachTest"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -43,17 +43,17 @@
       asi:name="0200_ForEachIteration"
       aws:onFailure="WorkflowFails"
       aws:roles="*"
-      fwb:sourceContextStore="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4">
+      fwb:sourceContextStore="Widgets/Workflow/Widgets/UiInForEachTest.origam#UiInForEachTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4">
       <uift:WorkflowTask
         asi:abstract="false"
         uift:allowSave="false"
-        uift:autoNext="false"
+        uift:autoNext="true"
         x:id="486ef22f-75f5-4b11-ae54-9121767c0b35"
         uift:isFinalForm="false"
         uift:isRefreshSuppressedBeforeFirstSave="true"
         asi:name="0210_UI"
         aws:onFailure="WorkflowFails"
-        wt:outputContextStore="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/AllDataTypes/92119b16-6a6b-4622-8aba-fbb46cdd9e24"
+        wt:outputContextStore="Widgets/Workflow/Widgets/UiInForEachTest.origam#UiInForEachTest/AllDataTypes/92119b16-6a6b-4622-8aba-fbb46cdd9e24"
         wt:outputMethod="FullMerge"
         uift:refreshPortalAfterSave="False"
         aws:roles="*"
@@ -63,14 +63,14 @@
         x:id="777bf5fa-82ca-4fc1-b03a-449bfb51f45f"
         asi:name="After_0100_InitializeIterationSource"
         wtd:startEvent="Success"
-        wtd:task="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/0100_InitializeIterationSource/879c1e9c-301a-4f9e-8544-c1b35c537f37" />
+        wtd:task="Widgets/Workflow/Widgets/UiInForEachTest.origam#UiInForEachTest/0100_InitializeIterationSource/879c1e9c-301a-4f9e-8544-c1b35c537f37" />
     </fwb:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="879c1e9c-301a-4f9e-8544-c1b35c537f37"
       asi:name="0100_InitializeIterationSource"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4"
+      wt:outputContextStore="Widgets/Workflow/Widgets/UiInForEachTest.origam#UiInForEachTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
@@ -99,7 +99,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="Xml"
-          cr:contextStore="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4"
+          cr:contextStore="Widgets/Workflow/Widgets/UiInForEachTest.origam#UiInForEachTest/IterationSource/8352c73a-0907-4b48-aa4b-40af76383aa4"
           x:id="3169d570-1b5f-4106-b9de-1b9acdf3dac2"
           asi:name="IterationSource"
           cr:xPath="/" />
