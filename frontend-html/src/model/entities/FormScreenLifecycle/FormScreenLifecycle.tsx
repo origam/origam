@@ -162,6 +162,9 @@ import {
 import {
   getChangedColumns
 } from "model/selectors/DataSources/getChangedColumns";
+import {
+  processAutoWorkflowNext
+} from "model/actions-ui/ScreenHeader/processAutoWorkflowNext";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -353,6 +356,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.killForm();
       yield*this.start({initUIResult: uiResult});
+      const nextFormScreen = getFormScreen(this);
+      nextFormScreen.autoWorkflowNext =
+        nextFormScreen.autoWorkflowNext || formScreen.autoWorkflowNext;
       const hasNextTask = uiResult.workflowTaskId !== '00000000-0000-0000-0000-000000000000';
       return hasNextTask
     } finally {
@@ -406,6 +412,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.killForm();
       yield*this.start({initUIResult: uiResult});
+      yield*processAutoWorkflowNext(formScreen)
     } finally {
       this.monitor.inFlow--;
     }
