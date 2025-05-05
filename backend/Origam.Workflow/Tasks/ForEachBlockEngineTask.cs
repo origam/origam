@@ -155,8 +155,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
 				_call.ParentContexts.Add(key, context);
 			}
 		}
-		Engine.Host.ExecuteWorkflow(_call);
 		currentIteration++;
+		Engine.Host.ExecuteWorkflow(_call);
 	}
     private bool WindUpTo(int currentPosition)
     {
