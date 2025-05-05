@@ -52,6 +52,8 @@ public class EditorService(
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
+            rootControl.GetProperty("Top").Value = "15";
+            rootControl.GetProperty("Left").Value = "15";
         }
 
         ISchemaItem item = (ISchemaItem)result;
