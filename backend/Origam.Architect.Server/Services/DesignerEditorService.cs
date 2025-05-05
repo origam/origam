@@ -453,6 +453,7 @@ public class DesignerEditorService(
         var controlSchemaItemProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
         try
         {
+            bool createWidget = !screenSection.IsPersisted;
             persistenceService.SchemaListProvider.BeginTransaction();
             screenSection.ClearCacheOnPersist = false;
             screenSection.Persist();
@@ -465,7 +466,7 @@ public class DesignerEditorService(
             }
 
             screenSection.OldPrimaryKey = null;
-            if (!screenSection.IsPersisted)
+            if (createWidget)
             {
                 ControlItem newControl = controlSchemaItemProvider.NewItem<ControlItem>(
                     schemaService.ActiveSchemaExtensionId, null);
