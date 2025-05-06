@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="407f6d90-d8a9-4a50-a708-b1e9856e4705"
+    ds1:localized="false"
+    asi:name="OrigamMapLayerTest">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/70ab17d0-8f89-41af-a348-85dfed1330e3"
+      x:id="0be59a20-52bf-4022-942f-6b7fe526dde1"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamMapLayer"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="64bf2d04-9fe6-4d96-8418-706bc0272acd"
+      asi:name="GetByList">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Api/DataStructure/Api/OrigamMapLayerTest.origam#OrigamMapLayerTest/OrigamMapLayer/0be59a20-52bf-4022-942f-6b7fe526dde1"
+        dsfsf:filter="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/GetCodes/c96fd175-4da1-4541-ab6b-ce7e7147b5b8"
+        x:id="0b62bb15-6e85-4350-928f-f03e4d3a7df7"
+        asi:name="OrigamMapLayer_GetCodes"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

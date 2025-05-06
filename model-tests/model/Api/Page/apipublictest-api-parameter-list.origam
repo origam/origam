@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.1"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="Api/DataStructure/Api/OrigamMapLayerTest.origam#OrigamMapLayerTest/407f6d90-d8a9-4a50-a708-b1e9856e4705"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="c9ee8a1c-2f1c-4c6a-9e06-2421afbb0c6c"
+    xdp:method="Api/DataStructure/Api/OrigamMapLayerTest.origam#OrigamMapLayerTest/GetByList/64bf2d04-9fe6-4d96-8418-706bc0272acd"
+    ap:mimeType="xml/text"
+    asi:name="api/public/test-api-parameter-list"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    xdp:transformation="Root/Transformation/_copyAll.origam#_copyAll/dcf49d56-62a7-4d29-adc9-c664fb65cf06"
+    ap:url="api/public/test-api-parameter-list">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      ppm:defaultValue="Root/DataConstant/_guids/_guid_empty.origam#_guid_empty/3d973b7e-7594-4e7d-999a-a6356776a028"
+      x:id="01e7f5e7-db25-4fa0-8ace-5a5041c50eb5"
+      ppm:isList="true"
+      ppm:listSeparator="Api/DataConstant/Api/Comma.origam#Comma/26332e2b-2b07-44b2-b697-ba35ec9deca9"
+      ppm:mappedParameter="listid"
+      asi:name="OrigamMapLayer_parReferenceCodeList" />
+  </xdp:Page>
+</x:file>
