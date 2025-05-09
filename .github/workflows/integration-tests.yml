@@ -66,6 +66,58 @@ jobs:
           name: htmlfrontendbuild
           path: "frontend-html/dist"
           retention-days: 1
+          
+  build-html-architect:
+    name: build-html-architect
+    runs-on: windows-2019
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
+
+      - name: Log versions
+        run: |
+          yarn --version
+          node --version
+        shell: bash
+
+      - name: Build Html Architect
+        env:
+          CI: true
+        run: |
+          cd architect-html
+          yarn install --immutable --check-cache
+          yarn build --check-cache
+        shell: bash
+
+      - name: Run  Html Architect Tests
+        env:
+          CI: true
+        run: |
+          cd architect-html
+          yarn test
+        shell: bash
 
   build-server:
     name: build-server
