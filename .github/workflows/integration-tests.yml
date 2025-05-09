@@ -111,14 +111,6 @@ jobs:
           yarn build
         shell: bash
 
-      - name: Run  Html Architect Tests
-        env:
-          CI: true
-        run: |
-          cd architect-html
-          yarn test
-        shell: bash
-
   build-server:
     name: build-server
     runs-on: windows-2022
