@@ -18,54 +18,98 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['csharp']
-        node-version: [18.x]
-        
+        language: [ 'csharp' ]
+        node-version: [ 18.x ]
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Enable Corepack
-      run: corepack enable
+      - name: Enable Corepack
+        run: corepack enable
 
-    - name: Prepare Yarn
-      run: corepack prepare yarn@stable --activate
-      shell: bash
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
 
-    - name: Log versions
-      run: |
-        yarn --version
-        node --version
-      shell: bash
+      - name: Log versions
+        run: |
+          yarn --version
+          node --version
+        shell: bash
 
-    - name: Build Frontend
-      env:
-        CI: true
-      run: |
-        cd frontend-html
-        yarn install --immutable --check-cache
-        yarn build --check-cache
-      shell: bash
+      - name: Build Frontend
+        env:
+          CI: true
+        run: |
+          cd frontend-html
+          yarn install --immutable --check-cache
+          yarn build --check-cache
+        shell: bash
 
-    - name: Run Frontend Tests
-      env:
-        CI: true
-      run: |
-        cd frontend-html
-        yarn test
-      shell: bash
+      - name: Run Frontend Tests
+        env:
+          CI: true
+        run: |
+          cd frontend-html
+          yarn test
+        shell: bash
 
-    - name: Upload frontend artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: htmlfrontendbuild
-        path: "frontend-html/dist"
-        retention-days: 1
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: "frontend-html/dist"
+          retention-days: 1
+          
+  build-html-architect:
+    name: build-html-architect
+    runs-on: windows-2019
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
+
+      - name: Log versions
+        run: |
+          yarn --version
+          node --version
+        shell: bash
+
+      - name: Build Html Architect
+        env:
+          CI: true
+        run: |
+          cd architect-html
+          yarn install --immutable --check-cache
+          yarn build
+        shell: bash
 
   build-server:
     name: build-server
@@ -78,44 +122,44 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['csharp']
+        language: [ 'csharp' ]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
 
-    - name: Restore Packages
-      run: |
-       cd backend
-       msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
-    - name: Build Server
-      run: |
-       cd backend
-       msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
-    - name: Build Origam.WorkflowTests
-      run: |
-       cd backend
-       msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
-       
-    - name: Upload server artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: htmlserverbuild
-        path: "backend/Origam.Server/bin/Release/net8.0/publish"
-        retention-days: 1
+      - name: Restore Packages
+        run: |
+          cd backend
+          msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
+      - name: Build Server
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+      - name: Build Origam.WorkflowTests
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
 
-    - name: Upload workflow integration tests artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: workflowbuild
-        path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
-        retention-days: 1
-        
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: "backend/Origam.Server/bin/Release/net8.0/publish"
+          retention-days: 1
+
+      - name: Upload workflow integration tests artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflowbuild
+          path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
+          retention-days: 1
+
   integration-tests:
-    needs: [build-frontend,build-server]
+    needs: [ build-frontend,build-server ]
     name: integration-tests
     runs-on: ubuntu-latest
     permissions:
@@ -128,70 +172,70 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['csharp']
-        
+        language: [ 'csharp' ]
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Download HTML5 artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: htmlserverbuild
-        path: test/HTML5
-        
-    - name: Download Frontend artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: htmlfrontendbuild
-        path: test/HTML5/clients/origam
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: test/HTML5
 
-    - name: Download workflow integration tests artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: workflowbuild
-        path: test/HTML5_TESTS
-        
-    - name: Copy model to test directory
-      run: |
-        mkdir test/model
-        cp -r model-tests test/model
-        
-    - name: Run Tests
-      run: |
-        cd test
-        mkdir output
-        docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
-      
-    - name: Clean up
-      if: always()
-      run: |
-        cd test
-        docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
-    
-    - name: Produce frontend integration test report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: Frontend Integration Test Results
-        path: test/output/frontend-integration-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
+      - name: Download Frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: test/HTML5/clients/origam
 
-    - name: Produce workflow integration test report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: Workflow Integration Test Results
-        path: test/output/workflow-integration-test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
-     
-    - name: Delete artifacts
-      uses: geekyeggo/delete-artifact@v5
-      with:
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/HTML5_TESTS
+
+      - name: Copy model to test directory
+        run: |
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Run Tests
+        run: |
+          cd test
+          mkdir output
+          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
+
+      - name: Clean up
+        if: always()
+        run: |
+          cd test
+          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+
+      - name: Produce frontend integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Integration Test Results
+          path: test/output/frontend-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Produce workflow integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Workflow Integration Test Results
+          path: test/output/workflow-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
           name: |
-              htmlserverbuild
-              htmlfrontendbuild
-              workflowbuild
+            htmlserverbuild
+            htmlfrontendbuild
+            workflowbuild
           failOnError: false

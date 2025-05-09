@@ -26,6 +26,9 @@ export default defineConfig({
       generateScopedName: "[name]__[local]__[hash:base64:2]"
     }
   },
+  build: {
+    chunkSizeWarningLimit: 4000, // size in kB
+  },
   server: {
     https: {},
     proxy: {
