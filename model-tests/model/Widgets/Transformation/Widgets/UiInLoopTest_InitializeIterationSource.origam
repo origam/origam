@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:at="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractTransformation/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
+  <xt:Transformation
+    asi:abstract="false"
+    x:id="1277ce60-3694-4284-b555-be6928f301cf"
+    asi:name="UiInLoopTest_InitializeIterationSource"
+    xt:text="-***-ExternalFile:UiInLoopTest_InitializeIterationSource.origam___text___1277ce60-3694-4284-b555-be6928f301cf.xslt" />
+</x:file>
