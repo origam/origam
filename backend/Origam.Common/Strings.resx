@@ -180,4 +180,7 @@ under certain conditions.</value>
   <data name="CantSaveConfigDuplicateName" xml:space="preserve">
     <value>Cannot save configuration. Configuration names must be unique.</value>
   </data>
+  <data name="ArrayCannotBeConverted" xml:space="preserve">
+    <value>Array cannot be converted to string.</value>
+  </data>
 </root>
