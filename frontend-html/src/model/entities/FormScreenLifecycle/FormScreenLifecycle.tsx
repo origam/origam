@@ -163,8 +163,8 @@ import {
   getChangedColumns
 } from "model/selectors/DataSources/getChangedColumns";
 import {
-  processAutoWorkflowNext
-} from "model/actions-ui/ScreenHeader/processAutoWorkflowNext";
+  onWorkflowNextClick
+} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -318,11 +318,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   @observable workflowNextActive = 0;
   @observable workflowAbortEntered = 0;
   @observable workflowAbortActive = 0;
-  
+
+  firstStepAutoWorkflowNext: null | boolean = null;
 
   *onWorkflowNextClick(event: any): Generator {
     if(this.workflowNextActive > 0) {
-      return false;
+      return;
     }
     this.workflowNextActive++;
     while(this.flushDataEntered > 0) {
@@ -337,12 +338,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         sessionFormIdentifier: sessionId,
       })) as IQueryInfo[];
       const formScreen = getFormScreen(this);
+      if (this.firstStepAutoWorkflowNext === null) {
+        this.firstStepAutoWorkflowNext = formScreen.autoWorkflowNext;
+      }
       const processQueryInfoResult = yield*processActionQueryInfo(this)(
         actionQueryInfo,
         formScreen.title
       );
       if (!processQueryInfoResult.canContinue) {
-        return false;
+        return;
       }
       let uiResult;
       try {
@@ -357,10 +361,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield*this.start({initUIResult: uiResult});
       const nextFormScreen = getFormScreen(this);
-      nextFormScreen.autoWorkflowNext =
-        nextFormScreen.autoWorkflowNext || formScreen.autoWorkflowNext;
-      const hasNextTask = uiResult.workflowTaskId !== '00000000-0000-0000-0000-000000000000';
-      return hasNextTask
+      if (nextFormScreen.autoWorkflowNext) {
+        this.workflowNextActive--;
+        yield *this.onWorkflowNextClick(event);
+      }
     } finally {
       this.workflowNextEntered--;
       this.workflowNextActive--;
@@ -412,7 +416,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.killForm();
       yield*this.start({initUIResult: uiResult});
-      yield*processAutoWorkflowNext(formScreen)
+      if (
+        formScreen?.autoWorkflowNext ||
+        this.firstStepAutoWorkflowNext === true)
+      {
+        yield onWorkflowNextClick(formScreen!)(undefined);
+      }
     } finally {
       this.monitor.inFlow--;
     }
