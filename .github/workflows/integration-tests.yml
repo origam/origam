@@ -108,7 +108,7 @@ jobs:
         run: |
           cd architect-html
           yarn install --immutable --check-cache
-          yarn build --check-cache
+          yarn build
         shell: bash
 
       - name: Run  Html Architect Tests
