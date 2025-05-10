@@ -37,13 +37,16 @@ public class ModelController(
                 HasChildNodes = x.HasChildNodes,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()
-                    .Select(treeNodeFactory.Create).ToList()
-            }).ToList();
+                    .OrderBy(child => child.NodeText, StringComparer.OrdinalIgnoreCase)
+                    .Select(treeNodeFactory.Create)
+                    .ToList()
+            })
+            .ToList();
     }
 
     [HttpGet("GetChildren")]
     public ActionResult<List<TreeNode>> GetChildren(
-        [FromQuery] string id, [FromQuery] bool isNonPersistentItem, 
+        [FromQuery] string id, [FromQuery] bool isNonPersistentItem,
         [FromQuery] string nodeText)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -81,12 +84,12 @@ public class ModelController(
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode
-                {
-                    NodeText = nodeText,
-                    ParentNode = provider
-                };
+            {
+                NodeText = nodeText,
+                ParentNode = provider
+            };
         }
-        
+
         return provider
             .ChildNodes().Cast<IBrowserNode2>()
             .OrderBy(x => x.NodeText)
@@ -150,14 +153,15 @@ public class ModelController(
             persistenceProvider.EndTransactionDontSave();
             return StatusCode(400, ex.Message);
         }
+
         persistenceProvider.EndTransaction();
         return Ok();
     }
-    
+
     // Inspired by class Origam.Workbench.Commands.SchemaItemEditorsMenuBuilder, 
     // method public AsMenuCommand[] BuildSubmenu(object owner)
     [HttpGet("GetMenuItems")]
-    public IEnumerable<MenuItemInfo> GetMenuItems( [FromQuery] string id, 
+    public IEnumerable<MenuItemInfo> GetMenuItems([FromQuery] string id,
         [FromQuery] bool isNonPersistentItem, [FromQuery] string nodeText)
     {
         if (!Guid.TryParse(id, out Guid schemaItemId))
@@ -167,22 +171,24 @@ public class ModelController(
             {
                 return new List<MenuItemInfo>();
             }
+
             return provider.NewItemTypes.Select(GetMenuInfo);
         }
-        
+
         IBrowserNode2 instance = persistenceProvider
             .RetrieveInstance<IBrowserNode2>(schemaItemId);
-        
-        ISchemaItemFactory factory = isNonPersistentItem 
+
+        ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode
-                {
-                    NodeText = nodeText,
-                    ParentNode = instance
-                }
+            {
+                NodeText = nodeText,
+                ParentNode = instance
+            }
             : (ISchemaItemFactory)instance;
-        
-         return factory.NewItemTypes.Select(GetMenuInfo);
+
+        return factory.NewItemTypes.Select(GetMenuInfo);
     }
+
     private MenuItemInfo GetMenuInfo(Type type)
     {
         SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
@@ -190,14 +196,15 @@ public class ModelController(
         {
             return new MenuItemInfo(
                 caption: type.Name,
-                typeName: type.FullName, 
-                iconName: null, 
+                typeName: type.FullName,
+                iconName: null,
                 iconIndex: null);
         }
+
         return new MenuItemInfo(
             caption: attr.Name,
-            typeName: type.FullName, 
-            iconName: attr.Icon is string iconName ? iconName : null, 
+            typeName: type.FullName,
+            iconName: attr.Icon is string iconName ? iconName : null,
             iconIndex: attr.Icon is int iconIndex ? iconIndex : null);
     }
 }

@@ -1,8 +1,9 @@
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDateBox: LabeledEditor
+public class AsDateBox: LabeledEditor, IAsControl
 {
     public bool HideOnForm { get; set; }
     
@@ -21,4 +22,7 @@ public class AsDateBox: LabeledEditor
     public int TabIndex { get; set; }
 
     public Object DateValue { get; set; }
+    
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "DateValue";
 }

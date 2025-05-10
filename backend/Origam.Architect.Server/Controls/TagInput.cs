@@ -1,8 +1,9 @@
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 
 namespace Origam.Architect.Server.Controls;
 
-public class TagInput: LabeledEditor
+public class TagInput: LabeledEditor, IAsControl
 {
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
@@ -22,4 +23,7 @@ public class TagInput: LabeledEditor
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }
+    
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
 }

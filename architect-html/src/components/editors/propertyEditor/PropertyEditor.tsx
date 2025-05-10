@@ -12,6 +12,9 @@ import {
 import {
   IPropertyManager
 } from "src/components/editors/propertyEditor/IPropertyManager.tsx";
+import {
+  NumericPropertyInput
+} from "src/components/editors/propertyEditor/NumericPropertyInput.tsx";
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];
@@ -67,45 +70,15 @@ export const PropertyEditor: React.FC<{
         </div>
       )
     }
-    if (property.type === "integer") {
+    if (property.type === "integer" || property.type === "float") {
       return (
-        <input
-          type="number"
-          step="1"
-          disabled={property.readOnly}
-          value={property.value ?? ""}
-          onChange={(e) => {
-            const value = e.target.value === "" ? null : parseInt(e.target.value, 10);
-            onValueChange(property, value);
-          }}
-          onBlur={(e) => {
-            if (e.target.value === "") {
-              onValueChange(property, null);
-            }
-          }}
+        <NumericPropertyInput
+          property={property}
+          type={property.type}
+          onChange={(value) => onValueChange(property, value)}
         />
-      )
+      );
     }
-    if (property.type === "float") {
-      return (
-        <input
-          type="number"
-          step="any"
-          disabled={property.readOnly}
-          value={property.value ?? ""}
-          onChange={(e) => {
-            const value = e.target.value === "" ? null : parseFloat(e.target.value);
-            onValueChange(property, value);
-          }}
-          onBlur={(e) => {
-            if (e.target.value === "") {
-              onValueChange(property, null);
-            }
-          }}
-        />
-      )
-    }
-
     return (
       <input
         type="text"
@@ -149,10 +122,10 @@ function getSortedProperties(properties: EditorProperty[]) {
 
   const sortedCategories = Object.keys(groupedProperties).sort();
   for (const category of sortedCategories) {
-      groupedProperties[category].sort(
-        category === "Layout"
-          ? sortLayoutProperties
-          : sortProperties);
+    groupedProperties[category].sort(
+      category === "Layout"
+        ? sortLayoutProperties
+        : sortProperties);
   }
   return {groupedProperties, sortedCategories};
 }

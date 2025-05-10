@@ -49,7 +49,7 @@ export const ScreenToolbox: React.FC<{
     toolboxState={props.designerState.toolbox}
     tabViewItems={[
       {
-        label: "Fields",
+        label: "Screen Sections",
         node: <div className={S.draggAbles}>
           {toolboxState.sections.map(section => getToolboxComponent(section))}
         </div>

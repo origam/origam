@@ -17,8 +17,9 @@ public class EditorController(
     DesignerEditorService sectionService,
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
+    IWebHostEnvironment environment,
     ILogger<OrigamController> log)
-    : OrigamController(log)
+    : OrigamController(log, environment)
 {
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode(

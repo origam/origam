@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsCheckBox: ControlBase
+public class AsCheckBox: ControlBase, IAsControl
 {
     [Localizable(true)]
     [MergableProperty(false)]
@@ -24,6 +25,9 @@ public class AsCheckBox: ControlBase
 
     public bool HideOnForm { get; set; }
     
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
+
     public override void Initialize(ControlSetItem controlSetItem)
     {
         Text = controlSetItem.Name;
