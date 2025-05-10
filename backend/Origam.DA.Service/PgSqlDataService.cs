@@ -274,7 +274,7 @@ tc.constraint_name as ""Constraint"",
 (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 13 LIMIT 1) as cRefCol14,
 (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 14 LIMIT 1) as cRefCol15,
 (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 15 LIMIT 1) as cRefCol16
-ROM
+FROM
 information_schema.table_constraints AS tc
 JOIN information_schema.constraint_column_usage AS ccu
   ON ccu.constraint_name = tc.constraint_name
