@@ -92,7 +92,7 @@ public class XmlTools
         }
         else if(val is IList)
         {
-	        throw new ArgumentException("Array cannot be converted to string.");
+	        return Strings.ArrayCannotBeConverted;
         }
         else
 		{
