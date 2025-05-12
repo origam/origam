@@ -2,11 +2,13 @@
 using System.Reflection;
 using System.Xml;
 using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.Attributes;
 using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.Controls;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -21,6 +23,8 @@ public class ControlAdapter(
     IPersistenceService persistenceService,
     PropertyParser propertyParser)
 {
+    public IControl Control { get; } = control;
+
     [Category("(ORIGAM)")]
     [SchemaItemProperty]
     public string SchemaItemName
@@ -145,7 +149,8 @@ public class ControlAdapter(
 
     public List<EditorProperty> GetEditorProperties(DropDownValue[] dataSourceDropDownValues)
     {
-        IEnumerable<EditorProperty> properties = control.GetType().GetProperties()
+        IEnumerable<EditorProperty> properties = Control.GetType().GetProperties()
+            .Where(property => property.GetAttribute<NotAModelPropertyAttribute>() == null)
             .Select(property =>
             {
                 PropertyBindingInfo bindingInfo = controlSetItem.ChildItems
@@ -186,14 +191,18 @@ public class ControlAdapter(
 
     public void InitializeProperties(int top, int left, int? height=null, int? width=null)
     {
-        control.Initialize(controlSetItem);
-        Type type = control.GetType();
+        Control.Initialize(controlSetItem);
+        Type type = Control.GetType();
         foreach (var property in type.GetProperties())
         {
+            if (property.GetAttribute<NotAModelPropertyAttribute>() != null)
+            {
+                continue;
+            }
             var propertyValueItem =
                 controlSetItem.NewItem<PropertyValueItem>(
                     schemaService.ActiveSchemaExtensionId, null);
-            object value = property.GetValue(control);
+            object value = property.GetValue(Control);
             ControlPropertyItem propertyItem = FindPropertyItem(property.Name);
             propertyItem.Name = property.Name;
             propertyValueItem.ControlPropertyItem = propertyItem;

@@ -39,9 +39,6 @@ public class AsPanel: ControlBase
     [Category("Behavior")]
     public int TabIndex { get; set; }
 
-    // [Category("Calendar View")]
-    // public AsPanelCalendarViewEnum DefaultCalendarView { get; set; }
-
     [Category("Map View")]
     public bool IsMapVisible { get; set; } = false;
     

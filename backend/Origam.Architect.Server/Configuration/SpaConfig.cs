@@ -3,5 +3,5 @@
 
 public class SpaConfig
 {
-    public string SourcePath { get; set; }
+    public string PathToClientApplication { get; set; }
 }

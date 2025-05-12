@@ -16,6 +16,8 @@ export interface IArchitectApi {
 
   persistChanges(schemaItemId: string): Promise<void>;
 
+  persistSectionEditorChanges(schemaItemId: string): Promise<void>;
+
   updateProperties(
     schemaItemId: string | undefined,
     changes: IPropertyChange[]

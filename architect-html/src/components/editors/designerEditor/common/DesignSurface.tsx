@@ -149,8 +149,8 @@ export const DesignSurface: React.FC<{
             ${surfaceState.draggingComponentId === component.id ? S.dragging : ''} 
             ${surfaceState.selectedComponent?.id === component.id ? S.selected : ''}`}
               style={{
-                left: `${component.absoluteLeft || 15}px`,
-                top: `${component.absoluteTop || 15}px`,
+                left: `${component.absoluteLeft}px`,
+                top: `${component.absoluteTop}px`,
                 width: `${component.width}px`,
                 height: `${component.height}px`,
                 cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',

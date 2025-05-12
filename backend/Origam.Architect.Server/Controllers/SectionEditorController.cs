@@ -72,4 +72,19 @@ public class SectionEditorController(
         return BadRequest(
             $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
     }
+        
+    [HttpPost("Save")]
+    public ActionResult<Dictionary<Guid, ApiControl>> Save([FromBody] PersistModel input)
+    {
+        EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
+        ISchemaItem item = editorData.Item;
+        if (item is PanelControlSet screenSection)
+        {
+            editorData.IsDirty = designerEditorService.SaveScreenSection(screenSection);
+            return Ok();
+        }
+
+        return BadRequest(
+            $"item id: {input.SchemaItemId} is not a PanelControlSet");
+    }
 }

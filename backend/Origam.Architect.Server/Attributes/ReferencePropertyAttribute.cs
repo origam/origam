@@ -1,4 +1,4 @@
-﻿namespace Origam.Architect.Server.Controls;
+﻿namespace Origam.Architect.Server.Attributes;
 
 public class ReferencePropertyAttribute(string name) : Attribute
 {

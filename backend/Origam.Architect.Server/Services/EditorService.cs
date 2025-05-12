@@ -43,6 +43,8 @@ public class EditorService(
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
+            rootControl.GetProperty("Top").Value = "15";
+            rootControl.GetProperty("Left").Value = "15";
         } 
         else if (result is PanelControlSet panelControlSet)
         {
@@ -52,6 +54,8 @@ public class EditorService(
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
+            rootControl.GetProperty("Top").Value = "15";
+            rootControl.GetProperty("Left").Value = "15";
         }
 
         ISchemaItem item = (ISchemaItem)result;
@@ -74,7 +78,7 @@ public class EditorService(
         }
     }
 
-    private ControlItem GetControlByType(string fullTypeName)
+    public ControlItem GetControlByType(string fullTypeName)
     {
         var items = schemaService
             .GetProvider<UserControlSchemaItemProvider>()
@@ -82,12 +86,9 @@ public class EditorService(
             .OfType<ControlItem>();
         foreach (ControlItem item in items)
         {
-            // ControlItem dynamicTypeControlItem =
-            //     DynamicTypeFactory.GetAssociatedControlItem(type);
-            // if (dynamicTypeControlItem != null)
-            // {
-            //     return dynamicTypeControlItem;
-            // }
+           // When we decide to implement the plugin support we have to extend this method.
+           // The original is here should look here for more 
+           // https://github.com/origam/origam/blob/b5f3cc1dfe853de4082e41c594eb8f6c59451a9c/backend/Origam.Gui.Designer/ControlSetEditor.cs#L940
 
             if (item.ControlType == fullTypeName)
             {

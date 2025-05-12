@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;

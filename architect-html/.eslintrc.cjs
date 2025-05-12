@@ -15,6 +15,5 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    // 'import/no-unresolved': [2, { ignore: ['\\.scss$'] }],
   },
 }

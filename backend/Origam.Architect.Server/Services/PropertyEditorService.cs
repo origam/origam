@@ -39,7 +39,7 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
             IEnumerable<EditorProperty> xsltProperties =
                 GetEditorPropertiesByName(
                     xsltTransformation,
-                    new[] { "Id", "Package", "TextStore", "XsltEngineType" }
+                    ["Id", "Package", "TextStore", "XsltEngineType", "Name"]
                 );
             return xsltProperties;
         }

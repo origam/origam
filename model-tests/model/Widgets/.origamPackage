@@ -21,6 +21,9 @@
       x:id="d1a45ba3-2e86-4097-a2f5-71908475aa81"
       pr:referencedPackage="Chat/.origamPackage#261b7cd5-4ba1-46a0-8963-27793379ac11" />
     <pr:packageReference
+      x:id="d3b3204a-b301-4e3c-be91-6a2b5501ff54"
+      pr:referencedPackage="Api/.origamPackage#dc245ea1-d7d1-4405-a2e8-a7ca9d6a1946" />
+    <pr:packageReference
       x:id="e3000c9f-0d78-426c-9506-de91a6a56164"
       pr:referencedPackage="Attachments/.origamPackage#bb8c67fb-44c1-4b41-8fce-4d50cd5a759d" />
     <pr:packageReference

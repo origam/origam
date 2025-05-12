@@ -1,9 +1,10 @@
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsTextBox: LabeledEditor
+public class AsTextBox: LabeledEditor, IAsControl
 {
     [Description("Valid only for numeric data types. If specified, it will override default formatting for the given data type.")]
     public string CustomNumericFormat { get; set; }
@@ -34,4 +35,7 @@ public class AsTextBox: LabeledEditor
     public bool IsPassword { get; set; }
 
     public Object Value { get; set; }
+    
+    [NotAModelProperty]
+    public string DefaultBindableProperty => "Value";
 }
