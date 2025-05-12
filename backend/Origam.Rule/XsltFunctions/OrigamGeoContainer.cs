@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -32,30 +33,46 @@ namespace Origam.Rule.XsltFunctions;
 
 public class OrigamGeoContainer
 {
-    private static readonly Regex polygonCoordinatePair =
-        new Regex("(-?\\d+\\.?\\d+)\\s(-?\\d+\\.?\\d+)");
+    private static readonly Regex Polygon =
+        new Regex(
+            @"^(?<prefix>[^0-9-]*)
+              (?:
+                (?<x>-?\d+\.?\d+)   
+                \s+
+                (?<y>-?\d+\.?\d+)  
+                [,\s]*              
+              )+
+              (?<suffix>.*)$", 
+            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
     public static string PolygonFromJstk(string jstkPolygon)
     {
-        MatchCollection matches = polygonCoordinatePair.Matches(jstkPolygon);
-
-        if (matches.Count == 0)
+        var match = Polygon.Match(jstkPolygon);
+        if (!match.Success)
         {
             return "";
         }
 
-        IEnumerable<string> wgsCoordinates = matches
-            .Cast<Match>()
-            .Select(match =>
-            {
-                string xString = match.Groups[1].Value;
-                string yString = match.Groups[2].Value;
-                Coordinates wgs = ToWgsCoordinates(xString, yString);
-                return
-                    $"{XmlConvert.ToString(wgs.Longitude)} {XmlConvert.ToString(wgs.Latitude)}";
-            });
+        var xCoordinates = match.Groups["x"].Captures;
+        var yCoordinates = match.Groups["y"].Captures;
 
-        return $"POLYGON({string.Join(", ", wgsCoordinates)})";
+        var stringBuilder = new StringBuilder(match.Groups["prefix"].Value);
+        for (int i = 0; i < xCoordinates.Count; i++)
+        {
+            Coordinates wgs = ToWgsCoordinates(
+                xCoordinates[i].Value, 
+                yCoordinates[i].Value);
+            stringBuilder.Append(XmlConvert.ToString(wgs.Longitude));
+            stringBuilder.Append(" ");
+            stringBuilder.Append(XmlConvert.ToString(wgs.Latitude));
+            if (i != xCoordinates.Count - 1)
+            {
+                stringBuilder.Append(", ");
+            }
+        }
+
+        stringBuilder.Append(match.Groups["suffix"].Value);
+        return stringBuilder.ToString();
     }
 
     private static Coordinates ToWgsCoordinates(string xString,
