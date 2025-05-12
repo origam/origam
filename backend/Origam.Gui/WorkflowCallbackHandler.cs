@@ -104,17 +104,13 @@ public class WorkflowCallbackHandler
     }
     void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if(e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
+        if(e.Engine.WorkflowInstanceId == WorkflowInstanceId &&
+           _result is not WorkflowHostFormEventArgs)
         {
-            if(e.Engine.CallingWorkflow == null)
-            {
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine("WorkflowFinished");
-#endif
-                this.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
-                _result = e;
-                _manualEvent.Set();
-            }
+            System.Diagnostics.Debug.WriteLine("WorkflowFinished");
+            Host.WorkflowFinished -= Host_WorkflowFinished;
+            _result = e;
+            _manualEvent.Set();
         }
     }
     void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)

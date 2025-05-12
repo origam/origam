@@ -677,6 +677,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow - For Each Test"
+    x:id="1eddc3ac-c548-4552-a06d-3f98d03edd77"
+    asi:name="ForEachTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/f0439218-d309-417e-9856-151a4f5f5a5b" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="ParametrizedReportFilename"
     x:id="37723fa7-7a4a-4ebe-97ab-2b10877b3aa7"
     asi:name="ParametrizedReportFilename"
@@ -696,6 +707,17 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     ami:roles="*"
     wrmi:workflow="Widgets/Workflow/Widgets/Load_Transform_Save.origam#Load_Transform_Save/c152fc4b-65c0-4408-ba5e-af0ff1e3f3cf" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="Workflow - UI in For Each Test"
+    x:id="4c58920f-47f9-447d-b530-38e13cfc26ce"
+    asi:name="UiInForEachTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/UiInLoopTest.origam#UiInLoopTest/04a46742-b288-42ba-910e-232e40c89fa6" />
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
