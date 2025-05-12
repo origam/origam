@@ -30,7 +30,7 @@ export const NumericPropertyInput: React.FC<{
     setInputValue(property.value != null ? String(property.value) : "");
   }, [property.value]);
 
-  const debounceRef = useRef<number>();
+  const debounceRef = useRef<number>(undefined);
 
   function onValueChange(value: string) {
     setInputValue(value)

@@ -17,8 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@use "sass:color";
+
 @function hexToRGB($hex) {
-    @return red($hex), green($hex), blue($hex);
+  @return color.channel($hex, "red", $space: rgb),
+  color.channel($hex, "green", $space: rgb),
+  color.channel($hex, "blue", $space: rgb);
 }
 
 $background1: #FFFFFF;
@@ -43,45 +47,45 @@ $warning3: #FFFF00;
 $error1: #FE5461;
 
 :root {
-    --background1: #{$background1};
-    --background2: #{$background2};
-    --background3: #{$background3};
-    --background4: #{$background4};
-    --background5: #{$background5};
-    --background6: #{$background6};
-    --background7: #{$background7};
-    --background8: #{$background8};
-    --foreground1: #{$foreground1};
-    --foreground2: #{$foreground2};
-    --foreground3: #{$foreground3};
-    --foreground4: #{$foreground4};
-    --foreground5: #{$foreground5};
-    --foreground6: #{$foreground6};
-    --foreground7: #{$foreground7};
-    --ok1: #{$ok1};
-    --warning1: #{$warning1};
-    --warning2: #{$warning2};
-    --warning3: #{$warning3};
-    --error1: #{$error1};
+  --background1: #{$background1};
+  --background2: #{$background2};
+  --background3: #{$background3};
+  --background4: #{$background4};
+  --background5: #{$background5};
+  --background6: #{$background6};
+  --background7: #{$background7};
+  --background8: #{$background8};
+  --foreground1: #{$foreground1};
+  --foreground2: #{$foreground2};
+  --foreground3: #{$foreground3};
+  --foreground4: #{$foreground4};
+  --foreground5: #{$foreground5};
+  --foreground6: #{$foreground6};
+  --foreground7: #{$foreground7};
+  --ok1: #{$ok1};
+  --warning1: #{$warning1};
+  --warning2: #{$warning2};
+  --warning3: #{$warning3};
+  --error1: #{$error1};
 
-    --background1-rgb: #{hexToRGB($background1)};
-    --background2-rgb: #{hexToRGB($background2)};
-    --background3-rgb: #{hexToRGB($background3)};
-    --background4-rgb: #{hexToRGB($background4)};
-    --background5-rgb: #{hexToRGB($background5)};
-    --background6-rgb: #{hexToRGB($background6)};
-    --background7-rgb: #{hexToRGB($background7)};
-    --background8-rgb: #{hexToRGB($background8)};
-    --foreground1-rgb: #{hexToRGB($foreground1)};
-    --foreground2-rgb: #{hexToRGB($foreground2)};
-    --foreground3-rgb: #{hexToRGB($foreground3)};
-    --foreground4-rgb: #{hexToRGB($foreground4)};
-    --foreground5-rgb: #{hexToRGB($foreground5)};
-    --foreground6-rgb: #{hexToRGB($foreground6)};
-    --foreground7-rgb: #{hexToRGB($foreground7)};
-    --ok1-rgb: #{hexToRGB($ok1)};
-    --warning1-rgb: #{hexToRGB($warning1)};
-    --warning2-rgb: #{hexToRGB($warning2)};
-    --warning3-rgb: #{hexToRGB($warning3)};
-    --error1-rgb: #{hexToRGB($error1)};
+  --background1-rgb: #{hexToRGB($background1)};
+  --background2-rgb: #{hexToRGB($background2)};
+  --background3-rgb: #{hexToRGB($background3)};
+  --background4-rgb: #{hexToRGB($background4)};
+  --background5-rgb: #{hexToRGB($background5)};
+  --background6-rgb: #{hexToRGB($background6)};
+  --background7-rgb: #{hexToRGB($background7)};
+  --background8-rgb: #{hexToRGB($background8)};
+  --foreground1-rgb: #{hexToRGB($foreground1)};
+  --foreground2-rgb: #{hexToRGB($foreground2)};
+  --foreground3-rgb: #{hexToRGB($foreground3)};
+  --foreground4-rgb: #{hexToRGB($foreground4)};
+  --foreground5-rgb: #{hexToRGB($foreground5)};
+  --foreground6-rgb: #{hexToRGB($foreground6)};
+  --foreground7-rgb: #{hexToRGB($foreground7)};
+  --ok1-rgb: #{hexToRGB($ok1)};
+  --warning1-rgb: #{hexToRGB($warning1)};
+  --warning2-rgb: #{hexToRGB($warning2)};
+  --warning3-rgb: #{hexToRGB($warning3)};
+  --error1-rgb: #{hexToRGB($error1)};
 }
