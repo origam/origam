@@ -9,15 +9,15 @@ variables:
 - name: BRANCH # branch to be used
   value: 2025.2
 - name: VERSION_NUMBER # version number of the build
-  value: 2025.2.4.$(Build.BuildId)
+  value: 2025.2.5.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 25.2.4.$(Build.BuildId)
+  value: 25.2.5.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2025.2.4
+  value: 2025.2.5
 - name: TAG_LATEST # tag to be used
-  value: 2025.2.4
+  value: 2025.2.5
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2025.2.3
+  value: 2025.2.4
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
