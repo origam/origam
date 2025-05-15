@@ -50,8 +50,9 @@ public class OrigamGeoContainer
         var numberRegex = new Regex(@"-?\d+\.?\d+", RegexOptions.Compiled);
         var matches = numberRegex.Matches(jstkPolygon);
         if (matches.Count == 0 || matches.Count % 2 != 0)
+        {
             return "";
-
+        }
         var converted = new List<string>(matches.Count);
         for (int i = 0; i < matches.Count; i += 2)
         {
@@ -67,7 +68,6 @@ public class OrigamGeoContainer
             converted.Add(XmlConvert.ToString(wgs.Longitude));
             converted.Add(XmlConvert.ToString(wgs.Latitude));
         }
-
         var stringBuilder = new StringBuilder();
         int lastIndex = 0;
         for (int i = 0; i < matches.Count; i++)
@@ -77,9 +77,7 @@ public class OrigamGeoContainer
             stringBuilder.Append(converted[i]);
             lastIndex = match.Index + match.Length;
         }
-
         stringBuilder.Append(jstkPolygon, lastIndex, jstkPolygon.Length - lastIndex);
-
         return stringBuilder.ToString();
     }
 
