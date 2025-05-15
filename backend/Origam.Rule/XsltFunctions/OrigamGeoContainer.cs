@@ -33,66 +33,54 @@ namespace Origam.Rule.XsltFunctions;
 
 public class OrigamGeoContainer
 {
-    private static readonly Regex Polygon =
-        new Regex(
-            @"^(?<prefix>[^0-9-]*)
-              (?:
-                (?<x>-?\d+\.?\d+)   
-                \s+
-                (?<y>-?\d+\.?\d+)  
-                [,\s]*              
-              )+
-              (?<suffix>.*)$", 
-            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
     public static string PolygonFromJstk(string jstkPolygon)
     {
-        var match = Polygon.Match(jstkPolygon);
-        if (!match.Success)
+        if (string.IsNullOrWhiteSpace(jstkPolygon))
         {
             return "";
         }
 
-        var xCoordinates = match.Groups["x"].Captures;
-        var yCoordinates = match.Groups["y"].Captures;
-
-        var stringBuilder = new StringBuilder(match.Groups["prefix"].Value);
-        for (int i = 0; i < xCoordinates.Count; i++)
+        var emptyRegex = new Regex(@"POLYGON\s+EMPTY",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        if (emptyRegex.Match(jstkPolygon).Success)
         {
-            Coordinates wgs = ToWgsCoordinates(
-                xCoordinates[i].Value, 
-                yCoordinates[i].Value);
-            stringBuilder.Append(XmlConvert.ToString(wgs.Longitude));
-            stringBuilder.Append(" ");
-            stringBuilder.Append(XmlConvert.ToString(wgs.Latitude));
-            if (i != xCoordinates.Count - 1)
+            return jstkPolygon;
+        }
+
+        var numberRegex = new Regex(@"-?\d+\.?\d+", RegexOptions.Compiled);
+        var matches = numberRegex.Matches(jstkPolygon);
+        if (matches.Count == 0 || matches.Count % 2 != 0)
+            return "";
+
+        var converted = new List<string>(matches.Count);
+        for (int i = 0; i < matches.Count; i += 2)
+        {
+            var xString = matches[i].Value;
+            var yString = matches[i + 1].Value;
+            if (!double.TryParse(xString, NumberStyles.Float, CultureInfo.InvariantCulture, out double x) ||
+                !double.TryParse(yString, NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
             {
-                stringBuilder.Append(", ");
+                return "";
             }
+
+            Coordinates wgs = CoordinateConverter.JtskToWgs(x, y);
+            converted.Add(XmlConvert.ToString(wgs.Longitude));
+            converted.Add(XmlConvert.ToString(wgs.Latitude));
         }
 
-        stringBuilder.Append(match.Groups["suffix"].Value);
+        var stringBuilder = new StringBuilder();
+        int lastIndex = 0;
+        for (int i = 0; i < matches.Count; i++)
+        {
+            var match = matches[i];
+            stringBuilder.Append(jstkPolygon, lastIndex, match.Index - lastIndex);
+            stringBuilder.Append(converted[i]);
+            lastIndex = match.Index + match.Length;
+        }
+
+        stringBuilder.Append(jstkPolygon, lastIndex, jstkPolygon.Length - lastIndex);
+
         return stringBuilder.ToString();
-    }
-
-    private static Coordinates ToWgsCoordinates(string xString,
-        string yString)
-    {
-        if (!double.TryParse(xString, NumberStyles.Float,
-                CultureInfo.InvariantCulture, out double x))
-        {
-            throw new Exception(
-                $"Cannot parse polygon coordinate \"{xString}\" to double");
-        }
-
-        if (!double.TryParse(yString, NumberStyles.Float,
-                CultureInfo.InvariantCulture, out double y))
-        {
-            throw new Exception(
-                $"Cannot parse polygon coordinate \"{yString}\" to double");
-        }
-
-        return CoordinateConverter.JtskToWgs(x, y);
     }
 
     public static string PointFromJtsk(double x, double y)
