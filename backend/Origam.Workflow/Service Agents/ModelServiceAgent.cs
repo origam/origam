@@ -144,28 +144,20 @@ public class ModelServiceAgent : AbstractServiceAgent
     }
     private OrigamDataType ConvertType(string origamDataTypeId)
     {
-        switch (origamDataTypeId)
+        return origamDataTypeId switch
         {
-            case "0dcc6797-c46e-4774-89fe-113eef732651":
-                return OrigamDataType.String;
-            case "d51c8102-d783-44fa-93bd-c2b0851ee5f3":
-                return OrigamDataType.Boolean;
-            case "1c8ad59a-9e65-4668-9436-6e6438e8d841":
-                return OrigamDataType.Integer;
-            case "2831895e-ae66-4e43-814c-ba09d0b2a2d5":
-                return OrigamDataType.Float;
-            case "6b7a4139-0eb8-43cd-87cf-368bb404217a":
-                return OrigamDataType.Currency;
-            case "15813764-c677-4207-8543-61f5edaf27a1":
-                return OrigamDataType.Date;
-            case "cb4d42d9-ce9e-4824-b0e8-d45b7b77e8a3":
-                return OrigamDataType.UniqueIdentifier;
-            case "d7483b5f-cb08-4691-a886-67eb548cb3c2":
-                return OrigamDataType.Memo;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(origamDataTypeId),
-                    origamDataTypeId, "Invalid type");
-        }
+            "0dcc6797-c46e-4774-89fe-113eef732651" => OrigamDataType.String,
+            "d51c8102-d783-44fa-93bd-c2b0851ee5f3" => OrigamDataType.Boolean,
+            "1c8ad59a-9e65-4668-9436-6e6438e8d841" => OrigamDataType.Integer,
+            "2831895e-ae66-4e43-814c-ba09d0b2a2d5" => OrigamDataType.Float,
+            "6b7a4139-0eb8-43cd-87cf-368bb404217a" => OrigamDataType.Currency,
+            "15813764-c677-4207-8543-61f5edaf27a1" => OrigamDataType.Date,
+            "cb4d42d9-ce9e-4824-b0e8-d45b7b77e8a3" => OrigamDataType
+                .UniqueIdentifier,
+            "d7483b5f-cb08-4691-a886-67eb548cb3c2" => OrigamDataType.Memo,
+            _ => throw new ArgumentOutOfRangeException(nameof(origamDataTypeId),
+                origamDataTypeId, "Invalid type")
+        };
     }
     private IDataDocument GetDatabaseFieldsMetaData()
     {
