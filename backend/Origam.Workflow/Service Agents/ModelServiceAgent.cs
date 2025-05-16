@@ -191,13 +191,14 @@ public class ModelServiceAgent : AbstractServiceAgent
                 {
                     DatabaseObjectType: DatabaseMappingObjectType.View
                 }:
+                {
                     continue;
+                }
                 default:
                 {
                     AddDatabaseFieldToResultTable(
                         resultTable, field, field.ParentItem as TableMappingItem, 
                         documentationService);
-
                     break;
                 }
             }
@@ -224,6 +225,7 @@ public class ModelServiceAgent : AbstractServiceAgent
                 {
                     AddDatabaseFieldToResultTable(resultTable, fieldMappingItem, 
                         tableMappingItem, documentationService);
+                    break;
                 }
             }
         }
