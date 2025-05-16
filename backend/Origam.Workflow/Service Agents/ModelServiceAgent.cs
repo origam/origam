@@ -20,8 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
-using Origam.Workflow;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Services;
@@ -29,119 +28,66 @@ using Origam.Workbench.Services;
 using System.Data;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
-using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
 namespace Origam.Workflow;
-/// <summary>
-/// Summary description for WorkflowServiceAgent.
-/// </summary>
 public class ModelServiceAgent : AbstractServiceAgent
 {
     const string GENERATED_PACKAGE_ID = "3cfc0308-fd23-454c-9d7a-a00054e0b9b1";
-    const string GENERATED_PACKAGE_NAME = "_generated";
-    public ModelServiceAgent()
-    {
-        persistenceService = ServiceManager
-            .Services
-            .GetService<IPersistenceService>();
-        tracingService = ServiceManager
-            .Services
-            .GetService<TracingService>();
-    }
-    #region Private Methods
-    private object GenerateSimpleModel(IDataDocument dataDocument)
-    {
-        ISchemaService schemaService = ServiceManager.Services.GetService(
-            typeof(ISchemaService)) as ISchemaService;
-        schemaService.StorageSchemaExtensionId = new Guid(GENERATED_PACKAGE_ID);
-        SimpleModelData model = dataDocument.DataSet as SimpleModelData;
-        if (model == null)
-        {
-            throw new ArgumentOutOfRangeException("Data", dataDocument, "Unknown data");
-        }
-        SchemaItemGroup entityGroup = null;
-        foreach (var entity in model.OrigamEntity)
-        {
-            var table = EntityHelper.CreateTable(entity.Name, entityGroup, true);
-            foreach (var field in entity.GetOrigamFieldRows())
-            {
-                var column = EntityHelper.CreateColumn(table, field.Name,
-                    !field.IsMandatory, ConvertType(field.refOrigamDataTypeId.ToString()),
-                    field.IsTextLengthNull() ? 0 : field.TextLength, field.Label, null, null, true);
-            }
-        }
-        return null;
-    }
-    private OrigamDataType ConvertType(string origamDataTypeId)
-    {
-        switch (origamDataTypeId)
-        {
-            case "0dcc6797-c46e-4774-89fe-113eef732651":
-                return OrigamDataType.String;
-            case "d51c8102-d783-44fa-93bd-c2b0851ee5f3":
-                return OrigamDataType.Boolean;
-            case "1c8ad59a-9e65-4668-9436-6e6438e8d841":
-                return OrigamDataType.Integer;
-            case "2831895e-ae66-4e43-814c-ba09d0b2a2d5":
-                return OrigamDataType.Float;
-            case "6b7a4139-0eb8-43cd-87cf-368bb404217a":
-                return OrigamDataType.Currency;
-            case "15813764-c677-4207-8543-61f5edaf27a1":
-                return OrigamDataType.Date;
-            case "cb4d42d9-ce9e-4824-b0e8-d45b7b77e8a3":
-                return OrigamDataType.UniqueIdentifier;
-            case "d7483b5f-cb08-4691-a886-67eb548cb3c2":
-                return OrigamDataType.Memo;
-            default:
-                throw new ArgumentOutOfRangeException("origamDataTypeId",
-                    origamDataTypeId, "Invalid type");
-        }
-    }
-    #endregion
+    
+    private readonly TracingService tracingService = ServiceManager
+        .Services
+        .GetService<TracingService>();
+    private readonly IPersistenceService persistenceService = ServiceManager
+        .Services
+        .GetService<IPersistenceService>();
+
     #region IServiceAgent Members
-    private object _result;
-    private readonly TracingService tracingService;
-    private IPersistenceService persistenceService;
-    public override object Result
-    {
-        get
-        {
-            return _result;
-        }
-    }
+    private object result;
+    public override object Result => result;
+
     public override void Run()
     {
         switch (MethodName)
         {
             case "GenerateSimpleModel":
-                _result = GenerateSimpleModel(
+            {
+                result = GenerateSimpleModel(
                     Parameters.Get<IDataDocument>("Data"));
                 break;  
+            }
             case "GetDatabaseFieldsMetaData":
-                _result = GetDatabaseFieldsMetaData();
+            {
+                result = GetDatabaseFieldsMetaData();
                 break;
+            }
             case "ElementAttribute":
-                _result = ElementAttribute(
+            {
+                result = ElementAttribute(
                     Parameters.Get<Guid>("Id"),
                     Parameters.Get<string>("AttributeName"));
                 break;
+            }
             case "ElementListByParent":
-                _result = ElementList(
+            {
+                result = ElementList(
                     Parameters.Get<Guid>("ParentId"),
                     Parameters.Get<string>("ItemType"));
                 break;  
-            
+            }
             case "SetTrace":
+            {
                 tracingService.Enabled = Parameters.Get<bool>("Enabled");
-                _result = tracingService.Enabled;
+                result = tracingService.Enabled;
                 break;  
-            
+            }
             case "GetTrace":
-                _result = tracingService.Enabled;
+            {
+                result = tracingService.Enabled;
                 break;             
-            
+            }
             case "TraceObject":
+            {
                 Guid objectId = Parameters.Get<Guid>("ObjectId");
                 var traceable = persistenceService.SchemaProvider
                     .RetrieveInstance<ITraceable>(
@@ -153,55 +99,164 @@ public class ModelServiceAgent : AbstractServiceAgent
                     throw new ArgumentException($"\"{traceType}\" cannot be parsed to {nameof(Trace)}");
                 }
                 traceable.TraceLevel = trace;
-                persistenceService.SchemaProvider.Persist(traceable as IPersistent);
-                _result = traceable.TraceLevel;
+                persistenceService.SchemaProvider.Persist(
+                    traceable as IPersistent);
+                result = traceable.TraceLevel;
                 break;
+            }
             default:
-                throw new ArgumentOutOfRangeException("MethodName",
+                throw new ArgumentOutOfRangeException(nameof(MethodName),
                     MethodName, ResourceUtils.GetString("InvalidMethodName"));
         }
     }
+    #endregion
+    #region Private Methods
+    private object GenerateSimpleModel(IDataDocument dataDocument)
+    {
+        ISchemaService schemaService
+            = ServiceManager.Services.GetService<ISchemaService>();
+        schemaService.StorageSchemaExtensionId = new Guid(GENERATED_PACKAGE_ID);
+        SimpleModelData model = dataDocument.DataSet as SimpleModelData;
+        if (model == null)
+        {
+            throw new ArgumentOutOfRangeException(
+                "Data", dataDocument, "Unknown data");
+        }
+        foreach (var entity in model.OrigamEntity)
+        {
+            var table = EntityHelper.CreateTable(
+                entity.Name, group: null, persist: true);
+            foreach (var field in entity.GetOrigamFieldRows())
+            {
+                EntityHelper.CreateColumn(
+                    table, 
+                    field.Name,
+                    allowNulls: !field.IsMandatory, 
+                    ConvertType(field.refOrigamDataTypeId.ToString()),
+                    field.IsTextLengthNull() ? 0 : field.TextLength, 
+                    caption: field.Label, 
+                    foreignKeyEntity: null, 
+                    foreignKeyField: null, 
+                    persist: true);
+            }
+        }
+        return null;
+    }
+    private OrigamDataType ConvertType(string origamDataTypeId)
+    {
+        return origamDataTypeId switch
+        {
+            "0dcc6797-c46e-4774-89fe-113eef732651" => OrigamDataType.String,
+            "d51c8102-d783-44fa-93bd-c2b0851ee5f3" => OrigamDataType.Boolean,
+            "1c8ad59a-9e65-4668-9436-6e6438e8d841" => OrigamDataType.Integer,
+            "2831895e-ae66-4e43-814c-ba09d0b2a2d5" => OrigamDataType.Float,
+            "6b7a4139-0eb8-43cd-87cf-368bb404217a" => OrigamDataType.Currency,
+            "15813764-c677-4207-8543-61f5edaf27a1" => OrigamDataType.Date,
+            "cb4d42d9-ce9e-4824-b0e8-d45b7b77e8a3" => OrigamDataType
+                .UniqueIdentifier,
+            "d7483b5f-cb08-4691-a886-67eb548cb3c2" => OrigamDataType.Memo,
+            _ => throw new ArgumentOutOfRangeException(nameof(origamDataTypeId),
+                origamDataTypeId, "Invalid type")
+        };
+    }
     private IDataDocument GetDatabaseFieldsMetaData()
     {
-        Guid fieldDocStructureId = Guid.Parse("214c9cf7-5459-45e2-b3ff-7ee813bb85f4");
-        var persistence = ServiceManager.Services.GetService
-            <IPersistenceService>();
         var documentationService = ServiceManager.Services.GetService
             <IDocumentationService>();
-        DataStructure fieldDocStructure = persistence.SchemaProvider
-            .RetrieveInstance<DataStructure>(fieldDocStructureId);
-        DataSet dataSet = new DatasetGenerator(false)
-            .CreateDataSet(fieldDocStructure);
-        DataTable table = dataSet.Tables["OrigamFieldDocumentation"];
-        var allFields = persistence.SchemaProvider.RetrieveList
+        DataStructure fieldDocumentationStructure = persistenceService
+            .SchemaProvider.RetrieveInstance<DataStructure>(
+                new Guid("214c9cf7-5459-45e2-b3ff-7ee813bb85f4"));
+        DataSet fieldDocumentationDataSet 
+            = new DatasetGenerator(userDefinedParameters:false)
+                .CreateDataSet(fieldDocumentationStructure);
+        DataTable resultTable 
+            = fieldDocumentationDataSet.Tables["OrigamFieldDocumentation"];
+        var allFields = persistenceService.SchemaProvider.RetrieveList
             <FieldMappingItem>();
         foreach (var field in allFields)
         {
-            DataRow row = table.NewRow();
-            row["AllowNulls"] = field.AllowNulls;
-            row["Caption"] = field.Caption;
-            row["DataLength"] = field.DataLength;
-            row["DataType"] = field.DataType;
-            row["DefaultValue"] = field.DefaultValue;
-            row["PackageName"] = field.PackageName;
-            row["ForeignKeyEntity"] = 
-                (field.ForeignKeyEntity as TableMappingItem)
-                ?.MappedObjectName ?? "";
-            row["ForeignKeyField"] = 
-                (field.ForeignKeyField as FieldMappingItem)
-                ?.MappedColumnName ?? "";
-            row["IsPrimaryKey"] = field.IsPrimaryKey;
-            row["Name"] = field.MappedColumnName;
-            row["ParentEntityName"] = 
-                (field.ParentItem as TableMappingItem)
-                ?.MappedObjectName ?? "";
-            row["UserShortHelp"] = documentationService.GetDocumentation(
-                field.Id, DocumentationType.USER_SHORT_HELP);
-            row["UserLongHelp"] = documentationService.GetDocumentation(
-                field.Id, DocumentationType.USER_LONG_HELP);
-            table.Rows.Add(row);
+            switch (field.ParentItem)
+            {
+                case DetachedEntity { Inheritable: false }:
+                {
+                    continue;
+                }
+                case DetachedEntity { Inheritable: true }:
+                {
+                    HandleFieldInInheritableEntity(
+                        resultTable, field, documentationService);
+                    continue;
+                }
+                case TableMappingItem
+                {
+                    DatabaseObjectType: DatabaseMappingObjectType.View
+                }:
+                {
+                    continue;
+                }
+                default:
+                {
+                    AddDatabaseFieldToResultTable(
+                        resultTable, field, field.ParentItem as TableMappingItem, 
+                        documentationService);
+                    break;
+                }
+            }
         }
-        return DataDocumentFactory.New(dataSet);
+        return DataDocumentFactory.New(fieldDocumentationDataSet);
+    }
+    private void HandleFieldInInheritableEntity(
+        DataTable resultTable,
+        FieldMappingItem fieldMappingItem,
+        IDocumentationService documentationService)
+    {
+        List<TableMappingItem> tableMappingItems 
+            = persistenceService.SchemaProvider.RetrieveList<TableMappingItem>();
+        foreach (TableMappingItem tableMappingItem in tableMappingItems)
+        {
+            if (tableMappingItem.DatabaseObjectType
+                == DatabaseMappingObjectType.View)
+            {
+                continue;
+            }
+            foreach (SchemaItemAncestor ancestor in tableMappingItem.Ancestors)
+            {
+                if (ancestor.AncestorId.Equals(fieldMappingItem.ParentItem.Id))
+                {
+                    AddDatabaseFieldToResultTable(resultTable, fieldMappingItem, 
+                        tableMappingItem, documentationService);
+                    break;
+                }
+            }
+        }
+    }
+    private void AddDatabaseFieldToResultTable(
+        DataTable resultTable,
+        FieldMappingItem fieldMappingItem,
+        TableMappingItem parentTableMappingItem,
+        IDocumentationService documentationService)
+    {
+        DataRow row = resultTable.NewRow();
+        row["AllowNulls"] = fieldMappingItem.AllowNulls;
+        row["Caption"] = fieldMappingItem.Caption;
+        row["DataLength"] = fieldMappingItem.DataLength;
+        row["DataType"] = fieldMappingItem.DataType;
+        row["DefaultValue"] = fieldMappingItem.DefaultValue;
+        row["PackageName"] = fieldMappingItem.PackageName;
+        row["ForeignKeyEntity"] = 
+            (fieldMappingItem.ForeignKeyEntity as TableMappingItem)
+            ?.MappedObjectName ?? "";
+        row["ForeignKeyField"] = 
+            (fieldMappingItem.ForeignKeyField as FieldMappingItem)
+            ?.MappedColumnName ?? "";
+        row["IsPrimaryKey"] = fieldMappingItem.IsPrimaryKey;
+        row["Name"] = fieldMappingItem.MappedColumnName;
+        row["ParentEntityName"] = parentTableMappingItem.MappedObjectName;
+        row["UserShortHelp"] = documentationService.GetDocumentation(
+            fieldMappingItem.Id, DocumentationType.USER_SHORT_HELP);
+        row["UserLongHelp"] = documentationService.GetDocumentation(
+            fieldMappingItem.Id, DocumentationType.USER_LONG_HELP);
+        resultTable.Rows.Add(row);
     }
     private string ElementAttribute(Guid id, string attributeName)
     {
