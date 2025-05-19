@@ -36,8 +36,19 @@ public class TreeNodeFactory
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
-            EditorType = GetEditorType(node)
+            EditorType = GetEditorType(node),
+            IconUrl = GetIcon(node)
         };
+    }
+
+    private string GetIcon(IBrowserNode2 node)
+    {
+        if (node is SchemaItemGroup)
+        {
+            return "/Icons/directory.svg";
+        }
+
+        return null;
     }
 
     private EditorType? GetEditorType(IBrowserNode2 node)

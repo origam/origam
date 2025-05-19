@@ -32,10 +32,7 @@ export default defineConfig({
   server: {
     https: {},
     proxy: {
-      '/WeatherForecast': {
-        target: "https://localhost:7099",
-        secure: false
-      }, '/Model': {
+      '/Model': {
         target: "https://localhost:7099",
         secure: false
       }, '/Package': {
@@ -52,6 +49,9 @@ export default defineConfig({
         secure: false
       }, '/PropertyEditor': {
         target: "https://localhost:7099",
+        secure: false
+      }, '/Icons': {
+        target: "http://localhost:5003",
         secure: false
       },
     }

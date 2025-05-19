@@ -26,6 +26,7 @@ export class TreeNode implements IEditorNode {
     this.isNonPersistentItem = apiNode.isNonPersistentItem;
     this.editorType = apiNode.editorType;
     this.childrenIds = apiNode.childrenIds;
+    this.iconUrl = apiNode.iconUrl;
     this.children = apiNode.children
       ? apiNode.children.map(child =>
         new TreeNode(child, this.rootStore, this))
@@ -42,6 +43,7 @@ export class TreeNode implements IEditorNode {
   editorType: EditorType;
   children: TreeNode[];
   childrenIds: string[];
+  iconUrl?: string;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];

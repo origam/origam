@@ -18,11 +18,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .treeNode {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .treeNodeTitle {
-    display: flex;
-    cursor: pointer;
-    gap: 5px;
+  display: flex;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.iconContaioner {
+  height: 20px;
+  display: flex;
+  align-items: center;
+
+  .symbol {
+    width: 20px;
+    font-size: 12px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 18px;
+  }
 }

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import S from "src/components/modelTree/ModelTree.module.scss"
 import {
   Menu,
@@ -12,6 +12,7 @@ import { observer } from "mobx-react-lite";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
+import { Icon } from "src/components/icon/Icon.tsx";
 
 const ModelTreeNode: React.FC<{
   node: TreeNode;
@@ -60,11 +61,22 @@ const ModelTreeNode: React.FC<{
     run({generator: node.delete.bind(node)});
   }
 
+  function getSymbol(){
+    if (node.children.length > 0 || !node.childrenInitialized) {
+      return node.isExpanded ? '▼' : '▶'
+    }
+  }
+
   return (
     <div className={S.treeNode}>
       <div className={S.treeNodeTitle}>
-        <div onClick={onToggle}>
-          {(node.children.length > 0 || !node.childrenInitialized) ? (node.isExpanded ? '▼' : '▶') : '•'}
+        <div className={S.iconContaioner} onClick={onToggle}>
+          <div className={S.symbol}>
+            {getSymbol()}
+          </div>
+          <div className={S.icon}>
+            <Icon src={node.iconUrl ?? '/Icons/generic.svg'}/>
+          </div>
         </div>
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
