@@ -61,7 +61,7 @@ const ModelTreeNode: React.FC<{
     run({generator: node.delete.bind(node)});
   }
 
-  function getSymbol(){
+  function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶'
     }
@@ -70,18 +70,17 @@ const ModelTreeNode: React.FC<{
   return (
     <div className={S.treeNode}>
       <div className={S.treeNodeTitle}>
-        <div className={S.iconContaioner} onClick={onToggle}>
-          <div className={S.symbol}>
-            {getSymbol()}
-          </div>
-          <div className={S.icon}>
-            <Icon src={node.iconUrl ?? '/Icons/generic.svg'}/>
-          </div>
+        <div className={S.symbol} onClick={onToggle}>
+          {getSymbol()}
         </div>
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
           onContextMenu={handleContextMenu}
+          className={S.iconAndText}
         >
+          <div className={S.icon}>
+            <Icon src={node.iconUrl ?? '/Icons/generic.svg'}/>
+          </div>
           {node.nodeText}
         </div>
         <Menu
@@ -120,7 +119,7 @@ const ModelTreeNode: React.FC<{
         {node.isLoading && ' Loading...'}
       </div>
       {node.isExpanded && node.children.length > 0 && (
-        <div>
+        <div className={S.children}>
           {node.children.map((childNode) => (
             <ModelTreeNode
               key={childNode.id + childNode.nodeText}

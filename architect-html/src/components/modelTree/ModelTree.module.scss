@@ -22,23 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .treeNodeTitle {
-  display: flex;
-  cursor: pointer;
-  gap: 5px;
-}
-
-.iconContaioner {
   height: 20px;
   display: flex;
+  cursor: pointer;
+}
+
+.iconAndText{
+  display: flex;
   align-items: center;
+  gap: 4px;
+}
 
-  .symbol {
-    width: 20px;
-    font-size: 12px;
-  }
+.symbol {
+  width: 20px;
+  font-size: 12px;
+}
 
-  .icon {
-    width: 20px;
-    height: 18px;
-  }
+.icon {
+  width: 20px;
+  height: 18px;
+}
+
+.children{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
