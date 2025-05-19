@@ -31,6 +31,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   gap: 4px;
+  text-wrap-mode: nowrap;
 }
 
 .symbol {
