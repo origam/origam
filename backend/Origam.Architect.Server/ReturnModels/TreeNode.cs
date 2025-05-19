@@ -77,19 +77,19 @@ public class TreeNodeFactory
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if (node is EntityUIAction)
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if (itemType == "Origam.Schema.WorkflowModel.Workflow")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         return EditorType.GridEditor;
     }
