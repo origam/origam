@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
-  <g:group
-    x:id="fe1f4152-a38a-47a1-84af-c3a4412a798c"
-    x:isFolder="true"
-    g:name="origam-sms"
-    g:rootItemType="DatabaseDataType" />
-</x:file>

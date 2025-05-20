@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
-  <g:group
-    x:id="520dbd8a-f1a3-46a1-9a4c-a05632493f61"
-    x:isFolder="true"
-    g:name="origam-sms"
-    g:rootItemType="Workflow" />
-</x:file>
