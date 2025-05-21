@@ -31,4 +31,13 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\Icons\directory.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\generic.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

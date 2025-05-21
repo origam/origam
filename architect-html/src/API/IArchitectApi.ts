@@ -192,6 +192,7 @@ export interface IApiTreeNode extends INodeLoadData {
   editorType: EditorType;
   childrenIds: string[];
   children?: IApiTreeNode[];
+  iconUrl?: string
 }
 
 export interface IPackagesInfo {

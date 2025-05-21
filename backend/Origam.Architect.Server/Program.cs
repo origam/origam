@@ -1,5 +1,7 @@
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.FileProviders;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
@@ -66,6 +68,12 @@ public class Program
         
         app.UseAuthorization();
         app.UseStaticFiles();
+        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(assemblyPath, "Assets", "Icons")),
+            RequestPath = "/Icons"
+        });
         app.UseSpaStaticFiles();
         app.MapControllers();
         app.UseSpa(spa =>

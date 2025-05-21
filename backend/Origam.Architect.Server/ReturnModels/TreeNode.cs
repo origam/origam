@@ -36,8 +36,19 @@ public class TreeNodeFactory
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
-            EditorType = GetEditorType(node)
+            EditorType = GetEditorType(node),
+            IconUrl = GetIcon(node)
         };
+    }
+
+    private string GetIcon(IBrowserNode2 node)
+    {
+        if (node is SchemaItemGroup)
+        {
+            return "/Icons/directory.svg";
+        }
+
+        return null;
     }
 
     private EditorType? GetEditorType(IBrowserNode2 node)
@@ -66,19 +77,19 @@ public class TreeNodeFactory
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if (node is EntityUIAction)
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         if (itemType == "Origam.Schema.WorkflowModel.Workflow")
         {
-            return null;
+            return EditorType.GridEditor;;
         }
         return EditorType.GridEditor;
     }
