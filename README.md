@@ -44,7 +44,7 @@ Three views of the same project made with ORIGAM:
 
 **Front end custom HTML**
 
-![PIE-HTTML frontend](https://github.com/origam/origam/assets/147499074/4ee3ba61-8a5f-466b-8e25-7c6429b98ba8)
+![PIE-HTML frontend](https://github.com/origam/origam/assets/147499074/4ee3ba61-8a5f-466b-8e25-7c6429b98ba8)
 
 **Front end custom mobile app backed by ORIGAM**
 
