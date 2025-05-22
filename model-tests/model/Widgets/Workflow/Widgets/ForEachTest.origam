@@ -46,6 +46,52 @@
       fwb:sourceContextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/IterationSource/d6e9ea5c-0f61-4446-889f-5612b7ebe046">
       <smct:WorkflowTask
         asi:abstract="false"
+        x:id="6853c28e-3428-42f0-a520-18720551da78"
+        asi:name="0230_SaveData"
+        aws:onFailure="WorkflowFails"
+        wt:outputContextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/AllDataTypes/3c9d3b25-7735-4402-ba25-d43605365b83"
+        wt:outputMethod="AppendMergeExisting"
+        aws:roles="*"
+        smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+        smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="a7872d38-e9f2-49ce-88cf-ad922c8b7763"
+          asi:name="DataStructure"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+          <dsr:DataStructureReference
+            asi:abstract="false"
+            dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+            x:id="69e8164d-f717-4631-a2fb-684e6801fcfc"
+            asi:name="AllDataTypes" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="c85795fc-fe5f-45a2-b03e-d339560dfdd0"
+          asi:name="ForceBulkInsert"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="d05fd03a-732c-4cd9-8f5f-f449e4d6b850"
+          asi:name="Data"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/AllDataTypes/3c9d3b25-7735-4402-ba25-d43605365b83"
+            x:id="06a64184-1168-4143-bbd3-2a146da0f807"
+            asi:name="AllDataTypes"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
+        <wtd:WorkflowTaskDependency
+          asi:abstract="false"
+          x:id="d1fdcdf1-bba0-4f32-8da5-cc37c5097d94"
+          asi:name="After_0220_UpdateText2"
+          wtd:startEvent="Success"
+          wtd:task="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/0200_ForEachIteration/0220_UpdateText2/b3f811f1-0a77-4e15-a443-062ccf9172d1" />
+      </smct:WorkflowTask>
+      <smct:WorkflowTask
+        asi:abstract="false"
         x:id="7b8f69dc-2316-404d-bf8d-25bdc3d61e7f"
         asi:name="0210_LoadData"
         aws:onFailure="WorkflowFails"
@@ -71,6 +117,52 @@
             dsr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
             asi:name="AllDataTypes" />
         </smcp:ServiceMethodCallParameter>
+      </smct:WorkflowTask>
+      <smct:WorkflowTask
+        asi:abstract="false"
+        x:id="b3f811f1-0a77-4e15-a443-062ccf9172d1"
+        asi:name="0220_UpdateText2"
+        aws:onFailure="WorkflowFails"
+        wt:outputContextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/AllDataTypes/3c9d3b25-7735-4402-ba25-d43605365b83"
+        wt:outputMethod="AppendMergeExisting"
+        aws:roles="*"
+        smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+        smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="00351aeb-158e-4e2c-8f32-abc40bb8f6f1"
+          asi:name="XslScript"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+          <tr:TransformationReference
+            asi:abstract="false"
+            x:id="13302297-257c-4496-9d3a-53c3eca5274a"
+            asi:name="AllDataTypes_UpdateText2"
+            tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_UpdateText2.origam#AllDataTypes_UpdateText2/e5ebe0d8-6411-4364-80fa-0195410b40e4" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="815f3df1-70a5-4617-8730-5559f137a584"
+          asi:name="Data"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="Xml"
+            cr:contextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/AllDataTypes/3c9d3b25-7735-4402-ba25-d43605365b83"
+            x:id="b29586f0-c7d3-4acd-a42c-2012322eeb8c"
+            asi:name="AllDataTypes"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="947bc136-5b8f-4fd2-a227-2b4cc9e3dfea"
+          asi:name="Parameters"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+        <wtd:WorkflowTaskDependency
+          asi:abstract="false"
+          x:id="dc996d74-947a-4bd6-abc0-a848de6cff40"
+          asi:name="After_0210_LoadData"
+          wtd:startEvent="Success"
+          wtd:task="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/0200_ForEachIteration/0210_LoadData/7b8f69dc-2316-404d-bf8d-25bdc3d61e7f" />
       </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
