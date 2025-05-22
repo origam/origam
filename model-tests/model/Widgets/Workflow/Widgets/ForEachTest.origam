@@ -11,6 +11,7 @@
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
   xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
@@ -211,5 +212,26 @@
           tr:transformation="Widgets/Transformation/Widgets/UiInLoopTest_InitializeIterationSource.origam#UiInLoopTest_InitializeIterationSource/1277ce60-3694-4284-b555-be6928f301cf" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="636789c0-6e9f-4bb6-ae92-282daf7b6b57"
+      uift:isFinalForm="false"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="0300_UI"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/AllDataTypes/3c9d3b25-7735-4402-ba25-d43605365b83"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="0b0a6a67-eb3f-4de1-946c-18301debe7a0"
+        asi:name="After_0200_ForEachIteration"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/0200_ForEachIteration/61deb931-d543-400c-9f6d-8fd856de45b0" />
+    </uift:WorkflowTask>
   </w:Workflow>
 </x:file>

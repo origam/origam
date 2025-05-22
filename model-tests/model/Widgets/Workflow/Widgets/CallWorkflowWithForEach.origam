@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="ff31cc10-b51c-442c-a937-f4feeffb1cde"
+    asi:name="CallWorkflowWithForEach"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="f4b5c3d1-c985-407f-9c23-961d77aa165f"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <wct:WorkflowTask
+      asi:abstract="false"
+      x:id="e26c2856-3fc5-43c0-974b-60d6704c22b2"
+      asi:name="0100_CallForEachTest"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/CallWorkflowWithForEach.origam#CallWorkflowWithForEach/AllDataTypes/f4b5c3d1-c985-407f-9c23-961d77aa165f"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      wct:workflow="Widgets/Workflow/Widgets/ForEachTest.origam#ForEachTest/f0439218-d309-417e-9856-151a4f5f5a5b" />
+  </w:Workflow>
+</x:file>
