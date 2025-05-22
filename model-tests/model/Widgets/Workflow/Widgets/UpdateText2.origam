@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="7bce4ffa-11e4-4e4e-bf8e-314123051dd6"
+    asi:name="UpdateText2"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="fde634c7-29d0-42a8-9858-83959204fbdb"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="5eab6bb2-110d-4b0d-a57b-8b22acc359a6"
+      asi:name="0100_Load"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/AllDataTypes/fde634c7-29d0-42a8-9858-83959204fbdb"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="14c37bc0-4760-472d-b6f1-205df5eb4790"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="ff6c1985-3110-43fd-97cb-3fadd880a62a"
+          dsr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="6bb36bc5-61db-4eef-84ac-050acfb273ab"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="71b745b9-4821-4d12-8799-efcf42831d63"
+      asi:name="0300_Save"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/AllDataTypes/fde634c7-29d0-42a8-9858-83959204fbdb"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="0f8c0db1-f9b2-4c52-804a-c22412522aed"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/AllDataTypes/fde634c7-29d0-42a8-9858-83959204fbdb"
+          x:id="13b76094-b2ab-478d-a5e1-355ecb7b331a"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="48dc52da-de89-40ba-90a0-7c0fc3f36251"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="8c03c1c4-2078-46cc-bb8c-8462e4031bb8"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7eb893c5-39ff-4ee7-871a-93d4267721dd"
+        asi:name="ForceBulkInsert"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="8fac8a4b-c60f-404b-96c1-655a9cd1904b"
+        asi:name="After_0200_UpdateText2"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/0200_UpdateText2/f5fdce83-9198-48ec-bef6-e6d5579f5478" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="f5fdce83-9198-48ec-bef6-e6d5579f5478"
+      asi:name="0200_UpdateText2"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/AllDataTypes/fde634c7-29d0-42a8-9858-83959204fbdb"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="397c0c90-d927-402c-b1cf-6fc6a0bb641d"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="97526fe7-793d-44f6-9075-9a3b05232d58"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/AllDataTypes/fde634c7-29d0-42a8-9858-83959204fbdb"
+          x:id="21a56267-f886-4103-8ccd-2913cab061c9"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="9a784ae8-bdad-4931-ada9-04be515d214e"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="f1cd6bb4-4d9d-4696-9772-562d0b26513f"
+          asi:name="AllDataTypes_UpdateText2"
+          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_UpdateText2.origam#AllDataTypes_UpdateText2/e5ebe0d8-6411-4364-80fa-0195410b40e4" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="86567a7e-5430-4afc-a859-44acfb10a605"
+        asi:name="After_0100_Load"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/UpdateText2.origam#UpdateText2/0100_Load/5eab6bb2-110d-4b0d-a57b-8b22acc359a6" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>
