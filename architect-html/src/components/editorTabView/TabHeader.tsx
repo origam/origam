@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext } from "react";
 import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
 import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
@@ -104,13 +104,13 @@ export const TabHeader: React.FC<{
           id="closeAll"
           onClick={() => closeAllTabsExcept(null)}
         >
-          Close All
+          {T('Close All', 'tab_header_close_all')}
         </Item>
         <Item
           id="closeAllButThis"
           onClick={() => closeAllTabsExcept(props.editor.schemaItemId)}
         >
-          Close All But This
+          {T('Close All But This', 'tab_header_close_all_but_this')}
         </Item>
       </Menu>
     </div>
