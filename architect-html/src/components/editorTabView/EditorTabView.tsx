@@ -16,69 +16,62 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import { useContext, useEffect, useMemo } from "react";
-import S from "./EditorTabView.module.scss";
-import { observer } from "mobx-react-lite";
-import { action } from "mobx";
-import { RootStoreContext } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
+import React, { useContext, useEffect, useMemo } from 'react';
+import S from './EditorTabView.module.scss';
+import { observer } from 'mobx-react-lite';
+import { action } from 'mobx';
+import { RootStoreContext } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const editors = state.editors.map(x => x.state);
-  const initializeOpenEditors = useMemo(
-    () => state.initializeOpenEditors.bind(state),
-    [state]
-  );
+  const initializeOpenEditors = useMemo(() => state.initializeOpenEditors.bind(state), [state]);
 
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
-    run({generator: initializeOpenEditors});
-  }, [initializeOpenEditors]);
+    run({ generator: initializeOpenEditors });
+  }, [initializeOpenEditors, run]);
 
   function onClose(editor: IEditorState) {
-    run({generator: state.closeEditor(editor.schemaItemId)});
+    run({ generator: state.closeEditor(editor.schemaItemId) });
   }
 
-  function getLabel(editor: IEditorState){
-    if(!editor.isDirty){
+  function getLabel(editor: IEditorState) {
+    if (!editor.isDirty) {
       return editor.label;
     }
-    if(!editor.label){
-      return "*";
+    if (!editor.label) {
+      return '*';
     }
-    return editor.label + " *";
+    return editor.label + ' *';
   }
 
   return (
     <div className={S.root}>
       <div className={S.labels}>
-        {editors.map((editor) => (
+        {editors.map(editor => (
           <div
-            key={editor.label} className={S.labelContainer}
+            key={editor.label}
+            className={S.labelContainer}
             onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
           >
-            <div className={editor.isActive ? S.activeTab : ""}
-            >
-              {getLabel(editor)}
-            </div>
-            <div
-              className={S.closeSymbol}
-              onClick={() => onClose(editor)}
-            >X
+            <div className={editor.isActive ? S.activeTab : ''}>{getLabel(editor)}</div>
+            <div className={S.closeSymbol} onClick={() => onClose(editor)}>
+              X
             </div>
           </div>
         ))}
       </div>
       <div className={S.content}>
-        {state.editors.map((editorContainer) => (
-          <div key={editorContainer.state.schemaItemId}
-               className={editorContainer.state.isActive ? S.visible : S.hidden}>
+        {state.editors.map(editorContainer => (
+          <div
+            key={editorContainer.state.schemaItemId}
+            className={editorContainer.state.isActive ? S.visible : S.hidden}
+          >
             {editorContainer.element}
           </div>
         ))}

@@ -44,16 +44,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: $indefiniteMarkerWidth;
     height: 100%;
     background: linear-gradient(
-                    to right,
-                    var(--background1) 0%,
-                    var(--foreground2) 34%,
-                    var(--foreground3) 50%,
-                    var(--foreground2) 66%,
-                    var(--background1) 100%
+      to right,
+      var(--background1) 0%,
+      var(--foreground2) 34%,
+      var(--foreground3) 50%,
+      var(--foreground2) 66%,
+      var(--background1) 100%
     );
   }
 }
-
 
 .overlay {
   position: fixed;

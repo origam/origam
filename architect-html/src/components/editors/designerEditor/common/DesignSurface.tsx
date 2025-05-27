@@ -17,31 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect, useRef } from "react";
-import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import {
-  Component,
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import S
-  from "src/components/editors/designerEditor/common/DesignerSurface.module.scss";
-import {
-  IDesignerEditorState
-} from "src/components/editors/designerEditor/common/IDesignerEditorState.tsx";
-import {
-  ResizeHandle
-} from "src/components/editors/designerEditor/common/DesignSurfaceState.tsx";
-import {
-  ComponentType
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import { Item, Menu } from "react-contexify";
+import React, { useContext, useEffect, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import S from 'src/components/editors/designerEditor/common/DesignerSurface.module.scss';
+import { IDesignerEditorState } from 'src/components/editors/designerEditor/common/IDesignerEditorState.tsx';
+import { ResizeHandle } from 'src/components/editors/designerEditor/common/DesignSurfaceState.tsx';
+import { ComponentType } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { Item, Menu } from 'react-contexify';
 
 export const DesignSurface: React.FC<{
-  designerState: IDesignerEditorState
-}> = observer(({designerState}) => {
+  designerState: IDesignerEditorState;
+}> = observer(({ designerState }) => {
   const surfaceState = designerState.surface;
   const surfaceRef = useRef<HTMLDivElement>(null);
   const rootStore = useContext(RootStoreContext);
@@ -50,7 +39,7 @@ export const DesignSurface: React.FC<{
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Delete' && surfaceState.selectedComponent) {
-        run({generator: designerState.delete([surfaceState.selectedComponent])});
+        run({ generator: designerState.delete([surfaceState.selectedComponent]) });
       }
     };
 
@@ -58,8 +47,8 @@ export const DesignSurface: React.FC<{
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       surfaceState.onClose();
-    }
-  }, [surfaceState]);
+    };
+  }, [designerState, run, surfaceState]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -74,7 +63,7 @@ export const DesignSurface: React.FC<{
     const dropX = e.clientX - surfaceRect.left;
     const dropY = e.clientY - surfaceRect.top;
 
-    run({generator: designerState.create(dropX, dropY)});
+    run({ generator: designerState.create(dropX, dropY) });
   };
 
   const handleComponentMouseDown = (e: React.MouseEvent, component: Component) => {
@@ -112,14 +101,14 @@ export const DesignSurface: React.FC<{
     const mouseX = e.clientX - rect.left + surfaceRef.current.scrollLeft;
     const mouseY = e.clientY - rect.top + surfaceRef.current.scrollTop;
 
-    run({generator: surfaceState.onDesignerMouseUp(mouseX, mouseY)});
+    run({ generator: surfaceState.onDesignerMouseUp(mouseX, mouseY) });
   };
 
   const handleComponentClick = (event: React.MouseEvent, component: Component) => {
     event.stopPropagation();
     const componentToSelect = (event as any).clickedComponent
       ? (event as any).clickedComponent
-      : component
+      : component;
     surfaceState.selectComponent(componentToSelect);
   };
 
@@ -151,15 +140,14 @@ export const DesignSurface: React.FC<{
     >
       {surfaceState.components
         .filter(component => component.designerRepresentation)
-        .map((component) => (
+        .map(component => (
           <React.Fragment key={component.id}>
             <div
               className={S.componentLabel}
               style={{
                 ...component.getLabelStyle(),
-                zIndex: component.zIndex
-              }
-              }
+                zIndex: component.zIndex,
+              }}
             >
               {component.data.identifier}
             </div>
@@ -173,58 +161,57 @@ export const DesignSurface: React.FC<{
                 width: `${component.width}px`,
                 height: `${component.height}px`,
                 cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-                zIndex: component.zIndex
+                zIndex: component.zIndex,
               }}
-              onMouseDown={(e) => handleComponentMouseDown(e, component)}
-              onClick={(e) => handleComponentClick(e, component)}
+              onMouseDown={e => handleComponentMouseDown(e, component)}
+              onClick={e => handleComponentClick(e, component)}
             >
               {/* Wrapping renderDesignerRepresentation looks like something that could be in the SectionItem component.
             I tried moving it there, but I ran into performance problems and the
              result did not look very pretty.*/}
-              {component.data.type === ComponentType.FormPanel
-                ? <div
+              {component.data.type === ComponentType.FormPanel ? (
+                <div
                   className={S.innerContainer}
                   style={{
                     width: `${component.width}px`,
                     height: `${component.height}px`,
                     cursor: surfaceState.draggingComponentId === component.id ? 'move' : 'default',
-                    zIndex: component.zIndex
-                  }}>
+                    zIndex: component.zIndex,
+                  }}
+                >
                   {component.designerRepresentation}
                 </div>
-                : component.designerRepresentation
-              }
-              {surfaceState.selectedComponent?.id === component.id && [
-                'top',
-                'right',
-                'bottom',
-                'left',
-                'topLeft',
-                'topRight',
-                'bottomRight',
-                'bottomLeft'
-              ].map((handle) => (
-                <div
-                  key={component.id + handle}
-                  className={`${S.resizeHandle} ${S[handle]}`}
-                  onMouseDown={(e) =>
-                    handleResizeStart(e, component, handle as ResizeHandle)
-                  }
-                />
-              ))}
+              ) : (
+                component.designerRepresentation
+              )}
+              {surfaceState.selectedComponent?.id === component.id &&
+                [
+                  'top',
+                  'right',
+                  'bottom',
+                  'left',
+                  'topLeft',
+                  'topRight',
+                  'bottomRight',
+                  'bottomLeft',
+                ].map(handle => (
+                  <div
+                    key={component.id + handle}
+                    className={`${S.resizeHandle} ${S[handle]}`}
+                    onMouseDown={e => handleResizeStart(e, component, handle as ResizeHandle)}
+                  />
+                ))}
             </div>
           </React.Fragment>
         ))}
-      <Menu id={"TAB_LABEL_MENU"} animation="fade">
+      <Menu id={'TAB_LABEL_MENU'} animation="fade">
         <Item
           disabled={({ props }) => props.deleteDisabled}
           onClick={({ props }) => props.onDelete()}
         >
           Delete
         </Item>
-        <Item onClick={({ props }) => props.onAdd()}>
-          Add New
-        </Item>
+        <Item onClick={({ props }) => props.onAdd()}>Add New</Item>
       </Menu>
     </div>
   );

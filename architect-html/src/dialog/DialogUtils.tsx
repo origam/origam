@@ -17,44 +17,45 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
-import { YesNoQuestion } from "src/dialog/components/YesNoQuestion.tsx";
-import { IDialogStackState } from "src/dialog/types.ts";
+import { action } from 'mobx';
+import { YesNoQuestion } from 'src/dialog/components/YesNoQuestion.tsx';
+import { IDialogStackState } from 'src/dialog/types.ts';
 
 export function askYesNoQuestion(
-  dialogStack: IDialogStackState, title: string, question: string): Promise<YesNoResult>
-{
+  dialogStack: IDialogStackState,
+  title: string,
+  question: string,
+): Promise<YesNoResult> {
   return new Promise(
     action((resolve: (value: YesNoResult) => void) => {
-        const closeDialog = dialogStack.pushDialog(
-          "",
-          <YesNoQuestion
-            screenTitle={title}
-            yesLabel={"Yes"}
-            noLabel={"No"}
-            cancelLabel={"Cancel"}
-            message={question}
-            onYesClick={() => {
-              closeDialog();
-              resolve(YesNoResult.Yes);
-            }}
-            onNoClick={() => {
-              closeDialog();
-              resolve(YesNoResult.No);
-            }}
-            onCancelClick={() => {
-              closeDialog();
-              resolve(YesNoResult.Cancel);
-            }}
-          />
-        );
-      }
-    )
+      const closeDialog = dialogStack.pushDialog(
+        '',
+        <YesNoQuestion
+          screenTitle={title}
+          yesLabel={'Yes'}
+          noLabel={'No'}
+          cancelLabel={'Cancel'}
+          message={question}
+          onYesClick={() => {
+            closeDialog();
+            resolve(YesNoResult.Yes);
+          }}
+          onNoClick={() => {
+            closeDialog();
+            resolve(YesNoResult.No);
+          }}
+          onCancelClick={() => {
+            closeDialog();
+            resolve(YesNoResult.Cancel);
+          }}
+        />,
+      );
+    }),
   );
 }
 
 export enum YesNoResult {
   Yes,
   No,
-  Cancel
+  Cancel,
 }

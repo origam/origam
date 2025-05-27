@@ -17,26 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
-import {
-  ScreenSectionEditorState
-} from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx";
-import { observer } from "mobx-react-lite";
-import { IEditorField } from "src/API/IArchitectApi.ts";
-import { action } from "mobx";
+import React from 'react';
+import { ScreenSectionEditorState } from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
+import { observer } from 'mobx-react-lite';
+import { IEditorField } from 'src/API/IArchitectApi.ts';
+import { action } from 'mobx';
 import {
   ComponentType,
   getComponentTypeKey,
-  toComponentType
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import S from "src/components/editors/designerEditor/common/Toolbox.module.scss";
-import {
-  Toolbox
-} from "src/components/editors/designerEditor/common/Toolbox.tsx";
+  toComponentType,
+} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import S from 'src/components/editors/designerEditor/common/Toolbox.module.scss';
+import { Toolbox } from 'src/components/editors/designerEditor/common/Toolbox.tsx';
 
 export const SectionToolbox: React.FC<{
-  designerState: ScreenSectionEditorState
-}> = observer((props) => {
+  designerState: ScreenSectionEditorState;
+}> = observer(props => {
   const surfaceState = props.designerState.surface;
   const sectionToolbox = props.designerState.sectionToolbox;
 
@@ -44,7 +40,7 @@ export const SectionToolbox: React.FC<{
     action(() => {
       surfaceState.draggedComponentData = {
         identifier: field.name,
-        type: toComponentType(field.type)
+        type: toComponentType(field.type),
       };
     })();
   };
@@ -54,7 +50,7 @@ export const SectionToolbox: React.FC<{
       if (sectionToolbox.selectedFieldName || type === ComponentType.GroupBox) {
         surfaceState.draggedComponentData = {
           identifier: sectionToolbox.selectedFieldName,
-          type: type
+          type: type,
         };
       }
     })();
@@ -66,15 +62,12 @@ export const SectionToolbox: React.FC<{
       <div
         key={field.name}
         draggable
-        onClick={() => sectionToolbox.selectedFieldName = field.name}
+        onClick={() => (sectionToolbox.selectedFieldName = field.name)}
         onDragStart={() => onFieldDragStart(field)}
-        className={S.toolboxField + " " + (isSelected ? S.selectedField : "")}
+        className={S.toolboxField + ' ' + (isSelected ? S.selectedField : '')}
       >
-        <div className={S.toolboxFieldIcon}>
-        </div>
-        <div>
-          {field.name}
-        </div>
+        <div className={S.toolboxFieldIcon}></div>
+        <div>{field.name}</div>
       </div>
     );
   }
@@ -87,35 +80,37 @@ export const SectionToolbox: React.FC<{
         onDragStart={() => onControlDragStart(type)}
         className={S.toolboxField}
       >
-        <div className={S.toolboxFieldIcon}>
-        </div>
-        <div>
-          {getComponentTypeKey(type)}
-        </div>
+        <div className={S.toolboxFieldIcon}></div>
+        <div>{getComponentTypeKey(type)}</div>
       </div>
     );
   }
 
-  return <Toolbox
-    toolboxState={props.designerState.toolbox}
-    tabViewItems={[
-      {
-        label: "Fields",
-        node: <div className={S.draggAbles}>
-          {sectionToolbox.fields.map(field => getToolboxComponent(field))}
-        </div>
-      },
-      {
-        label: "Widgets",
-        node: <div className={S.draggAbles}>
-          {getControlComponent(ComponentType.AsCheckBox)}
-          {getControlComponent(ComponentType.AsCombo)}
-          {getControlComponent(ComponentType.AsDateBox)}
-          {getControlComponent(ComponentType.AsTextBox)}
-          {getControlComponent(ComponentType.GroupBox)}
-        </div>
-      }
-    ]}
-  />;
+  return (
+    <Toolbox
+      toolboxState={props.designerState.toolbox}
+      tabViewItems={[
+        {
+          label: 'Fields',
+          node: (
+            <div className={S.draggAbles}>
+              {sectionToolbox.fields.map(field => getToolboxComponent(field))}
+            </div>
+          ),
+        },
+        {
+          label: 'Widgets',
+          node: (
+            <div className={S.draggAbles}>
+              {getControlComponent(ComponentType.AsCheckBox)}
+              {getControlComponent(ComponentType.AsCombo)}
+              {getControlComponent(ComponentType.AsDateBox)}
+              {getControlComponent(ComponentType.AsTextBox)}
+              {getControlComponent(ComponentType.GroupBox)}
+            </div>
+          ),
+        },
+      ]}
+    />
+  );
 });
-

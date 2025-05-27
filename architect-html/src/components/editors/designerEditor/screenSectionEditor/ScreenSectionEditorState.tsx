@@ -17,34 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
-import {
-  IArchitectApi,
-  ISectionEditorData,
-} from "src/API/IArchitectApi.ts";
-import {
-  toChanges
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { PropertiesState } from "src/components/properties/PropertiesState.ts";
-import {
-  Component
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import {
-  SectionToolboxState
-} from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
-import {
-  DesignerEditorState
-} from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
-import {
-  controlToComponent
-} from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
-import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
-import { CancellablePromise } from "mobx/dist/api/flow";
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+import { IArchitectApi, ISectionEditorData } from 'src/API/IArchitectApi.ts';
+import { toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { SectionToolboxState } from 'src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
+import { DesignerEditorState } from 'src/components/editors/designerEditor/common/DesignerEditorState.tsx';
+import { controlToComponent } from 'src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
+import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { CancellablePromise } from 'mobx/dist/api/flow';
 
 export class ScreenSectionEditorState extends DesignerEditorState {
-
   public sectionToolbox: SectionToolboxState;
 
   constructor(
@@ -56,8 +40,15 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     architectApi: IArchitectApi,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
-    super(editorNode, isDirty, sectionEditorData, propertiesState,
-      sectionToolboxState.toolboxState, architectApi, runGeneratorHandled);
+    super(
+      editorNode,
+      isDirty,
+      sectionEditorData,
+      propertiesState,
+      sectionToolboxState.toolboxState,
+      architectApi,
+      runGeneratorHandled,
+    );
     this.sectionToolbox = sectionToolboxState;
   }
 
@@ -65,7 +56,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     return function* (this: ScreenSectionEditorState): Generator<Promise<any>, void, any> {
       const newData = yield this.architectApi.deleteSectionEditorItem({
         editorSchemaItemId: this.toolbox.id,
-        schemaItemIds: components.map(x =>x.id)
+        schemaItemIds: components.map(x => x.id),
       });
       yield* this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
@@ -82,7 +73,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       while (currentParent !== null) {
         relativeX -= currentParent.relativeLeft;
         relativeY -= currentParent.relativeTop;
-        currentParent = currentParent.parent
+        currentParent = currentParent.parent;
       }
 
       const apiControl = yield this.architectApi.createSectionEditorItem({
@@ -91,7 +82,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
         componentType: this.surface.draggedComponentData!.type,
         fieldName: this.surface.draggedComponentData!.identifier,
         top: relativeY,
-        left: relativeX
+        left: relativeX,
       });
 
       const newComponent = yield controlToComponent(apiControl, null);
@@ -106,33 +97,31 @@ export class ScreenSectionEditorState extends DesignerEditorState {
       if (panelSizeChanged) {
         yield* this.update() as any;
       }
-
     }.bind(this);
   }
 
-  * save(): Generator<Promise<any>, void, any> {
+  *save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistSectionEditorChanges(this.editorNode.origamId);
-    yield * super.save();
+    yield* super.save();
   }
 
   protected update(): Generator<Promise<any>, void, any> {
     return this.updateGenerator();
   }
 
-  protected* updateGenerator(): Generator<Promise<any>, void, any> {
+  protected *updateGenerator(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
-        return {
-          schemaItemId: x.id,
-          parentSchemaItemId: x.parent?.id,
-          changes: toChanges(x.properties)
-        }
-      }
-    )
+      return {
+        schemaItemId: x.id,
+        parentSchemaItemId: x.parent?.id,
+        changes: toChanges(x.properties),
+      };
+    });
     const updateResult = yield this.architectApi.updateSectionEditor({
       schemaItemId: this.toolbox.id,
       name: this.toolbox.name,
       selectedDataSourceId: this.toolbox.selectedDataSourceId,
-      modelChanges: modelChanges
+      modelChanges: modelChanges,
     });
     this.isDirty = updateResult.isDirty;
     const newData = updateResult.data;
@@ -142,4 +131,3 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     yield* this.surface.loadComponents(newData.rootControl);
   }
 }
-

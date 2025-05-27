@@ -17,16 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable } from 'mobx';
 import {
   IArchitectApi,
   IEditorField,
   ISectionEditorData,
-  ISectionEditorModel
-} from "src/API/IArchitectApi.ts";
-import {
-  ToolboxState
-} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
+  ISectionEditorModel,
+} from 'src/API/IArchitectApi.ts';
+import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
 
 export class SectionToolboxState {
   toolboxState: ToolboxState;
@@ -36,7 +34,7 @@ export class SectionToolboxState {
   constructor(
     sectionEditorData: ISectionEditorData,
     id: string,
-    private architectApi: IArchitectApi
+    private architectApi: IArchitectApi,
   ) {
     this.toolboxState = new ToolboxState(
       sectionEditorData.dataSources,
@@ -44,17 +42,20 @@ export class SectionToolboxState {
       sectionEditorData.schemaExtensionId,
       sectionEditorData.selectedDataSourceId,
       id,
-      this.updateTopProperties.bind(this))
+      this.updateTopProperties.bind(this),
+    );
     this.fields = sectionEditorData.fields;
   }
 
   private updateTopProperties() {
-    return function* (this: SectionToolboxState): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
+    return function* (
+      this: SectionToolboxState,
+    ): Generator<Promise<ISectionEditorModel>, void, ISectionEditorModel> {
       const updateResult = yield this.architectApi.updateSectionEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
         selectedDataSourceId: this.toolboxState.selectedDataSourceId,
-        modelChanges: []
+        modelChanges: [],
       });
       const newData = updateResult.data;
       this.toolboxState.name = newData.name;
@@ -62,5 +63,4 @@ export class SectionToolboxState {
       this.fields = newData.fields;
     }.bind(this);
   }
-
 }

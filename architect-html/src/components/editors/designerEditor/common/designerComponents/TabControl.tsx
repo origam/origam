@@ -17,35 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  screenLayer
-} from "src/components/editors/designerEditor/common/Layers.ts";
+import { screenLayer } from 'src/components/editors/designerEditor/common/Layers.ts';
 import {
   ComponentType,
-  IComponentData
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { action, observable } from "mobx";
-import { ReactElement, useContext } from "react";
-import S
-  from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
-import { Observer, observer } from "mobx-react-lite";
-import {
-  Component,
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import { TriggerEvent, useContextMenu } from "react-contexify";
-import { RootStoreContext } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import {
-  DesignerStateContext
-} from "src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx";
+  IComponentData,
+} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { action, observable } from 'mobx';
+import { ReactElement, useContext } from 'react';
+import S from 'src/components/editors/designerEditor/common/designerComponents/Components.module.scss';
+import { Observer, observer } from 'mobx-react-lite';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { TriggerEvent, useContextMenu } from 'react-contexify';
+import { RootStoreContext } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { DesignerStateContext } from 'src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx';
 
 export class TabControl extends Component {
-
   @observable private accessor tabs: TabPage[] = [];
 
   get zIndex(): number {
@@ -57,10 +45,10 @@ export class TabControl extends Component {
   }
 
   constructor(args: {
-    id: string,
-    parent: Component | null,
-    data: IComponentData,
-    properties: EditorProperty[],
+    id: string;
+    parent: Component | null;
+    data: IComponentData;
+    properties: EditorProperty[];
   }) {
     super(args);
   }
@@ -88,7 +76,7 @@ export class TabControl extends Component {
     }
   }
 
-  get absoluteLeft(){
+  get absoluteLeft() {
     return super.absoluteLeft;
   }
 
@@ -98,7 +86,7 @@ export class TabControl extends Component {
       tab.absoluteTop = value;
     }
   }
-  get absoluteTop(){
+  get absoluteTop() {
     return super.absoluteTop;
   }
 
@@ -122,15 +110,10 @@ export class TabControl extends Component {
             <div className={S.tabs}>
               {this.tabs
                 .slice()
-                .sort((a, b) => a.get("Text").localeCompare(b.get("Text")))
-                .map(tab =>
-                  <TabLabel
-                    key={tab.id}
-                    onClick={() => this.setVisible(tab.id)}
-                    tabPage={tab}
-                  />
-                )
-              }
+                .sort((a, b) => a.get('Text').localeCompare(b.get('Text')))
+                .map(tab => (
+                  <TabLabel key={tab.id} onClick={() => this.setVisible(tab.id)} tabPage={tab} />
+                ))}
             </div>
           </div>
         )}
@@ -139,21 +122,13 @@ export class TabControl extends Component {
   }
 }
 
-const TabLabel = observer((
-  {
-    tabPage,
-    onClick,
-  }: {
-    tabPage: TabPage;
-    onClick: () => void;
-  }) => {
-
+const TabLabel = observer(({ tabPage, onClick }: { tabPage: TabPage; onClick: () => void }) => {
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);
   const designerState = useContext(DesignerStateContext);
 
-  const {show} = useContextMenu({
-    id: "TAB_LABEL_MENU"
+  const { show } = useContextMenu({
+    id: 'TAB_LABEL_MENU',
   });
 
   function handleContextMenu(event: TriggerEvent) {
@@ -166,52 +141,51 @@ const TabLabel = observer((
         deleteDisabled: (tabPage.parent as TabControl).numberOfTabs === 1,
         onDelete: () => {
           if (designerState) {
-            run({generator: designerState.delete(tabPage.getAllChildren())})
+            run({ generator: designerState.delete(tabPage.getAllChildren()) });
           }
         },
         onAdd: () => {
           if (designerState) {
-            run({generator: designerState.createTabPage(tabPage.parent! as TabControl)})
+            run({ generator: designerState.createTabPage(tabPage.parent! as TabControl) });
           }
-        }
-      }
+        },
+      },
     });
   }
 
   return (
     <>
       <div
-        className={tabPage.isActive ? S.activeTab : ""}
+        className={tabPage.isActive ? S.activeTab : ''}
         onClick={event => {
           (event as any).clickedComponent = tabPage;
           onClick();
         }}
         onContextMenu={handleContextMenu}
       >
-        {tabPage.get("Text")}
+        {tabPage.get('Text')}
       </div>
     </>
   );
 });
 
 export class TabPage extends Component {
-
   @observable accessor hideChildren: boolean = false;
   @observable private accessor _isActive: boolean = false;
   private getChildren: (component: Component) => Component[];
 
   constructor(args: {
-    id: string,
-    parent: TabControl,
-    data: IComponentData,
-    properties: EditorProperty[],
-    getChildren: (component: Component) => Component[]
+    id: string;
+    parent: TabControl;
+    data: IComponentData;
+    properties: EditorProperty[];
+    getChildren: (component: Component) => Component[];
   }) {
     super(args);
     this.getChildren = args.getChildren;
 
     if (!args.parent || args.parent.data.type !== ComponentType.TabControl) {
-      throw new Error("Parent of TabPage must be a TabControl");
+      throw new Error('Parent of TabPage must be a TabControl');
     }
     (args.parent as TabControl).registerTab(this);
 
