@@ -8,5 +8,5 @@ export default {
   bracketSpacing: true,
   jsxSingleQuote: false,
   arrowParens: 'avoid',
-  endOfLine: 'lf',
+  endOfLine: 'auto',
 };
