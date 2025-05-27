@@ -17,23 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult } from "src/API/IArchitectApi";
-import {
-  IPropertyManager
-} from "src/components/editors/propertyEditor/IPropertyManager.tsx";
-import { EditorProperty } from "../editors/gridEditor/EditorProperty";
-import { observable } from "mobx";
+import { IUpdatePropertiesResult } from 'src/API/IArchitectApi';
+import { IPropertyManager } from 'src/components/editors/propertyEditor/IPropertyManager.tsx';
+import { EditorProperty } from '../editors/gridEditor/EditorProperty';
+import { observable } from 'mobx';
 
 export class PropertiesState implements IPropertyManager {
   @observable accessor properties: EditorProperty[] = [];
-  @observable accessor editedItemName = "";
+  @observable accessor editedItemName = '';
 
   setEdited(itemName: string, properties: EditorProperty[]): void {
     this.properties = properties;
     this.editedItemName = itemName;
   }
 
-  onPropertyUpdated(_property: EditorProperty, _value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
-      throw new Error("Method not implemented.");
+  onPropertyUpdated(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _property: EditorProperty,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _value: any,
+  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+    throw new Error('Method not implemented.');
   }
 }

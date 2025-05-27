@@ -17,27 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { ReactNode } from "react";
-import S from "./TopLayout.module.scss";
+import React, { ReactNode } from 'react';
+import S from './TopLayout.module.scss';
 
 export const TopLayout: React.FC<{
   topToolBar: ReactNode;
   editorArea: ReactNode;
   sideBar: ReactNode;
-}> = (props) => {
+}> = props => {
   return (
     <div className={S.root}>
-      <div className={S.topToolbar}>
-        {props.topToolBar}
-      </div>
+      <div className={S.topToolbar}>{props.topToolBar}</div>
       <div className={S.mainArea}>
-        <div className={S.editorArea}>
-          {props.editorArea}
-        </div>
-        <div className={S.sideBar}>
-          {props.sideBar}
-        </div>
+        <div className={S.editorArea}>{props.editorArea}</div>
+        <div className={S.sideBar}>{props.sideBar}</div>
       </div>
     </div>
   );
-}
+};

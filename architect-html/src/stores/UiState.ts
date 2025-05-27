@@ -17,10 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable } from 'mobx';
 
 export class UiState {
-
   storageKey = 'treeExpandedNodes';
 
   @observable accessor expandedNodes: string[] = [];
@@ -46,7 +45,7 @@ export class UiState {
 
   loadStateFromLocalStorage() {
     try {
-      const serializedState = localStorage.getItem(this.storageKey) ?? "";
+      const serializedState = localStorage.getItem(this.storageKey) ?? '';
       return JSON.parse(serializedState) ?? [];
     } catch (err) {
       console.error('Error loading state from local storage:', err);

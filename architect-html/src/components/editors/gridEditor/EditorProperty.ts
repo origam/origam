@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   IApiEditorProperty,
-  IDropDownValue, IPropertyChange,
+  IDropDownValue,
+  IPropertyChange,
   IPropertyUpdate,
-  PropertyType
-} from "src/API/IArchitectApi.ts";
-import { computed, observable } from "mobx";
+  PropertyType,
+} from 'src/API/IArchitectApi.ts';
+import { computed, observable } from 'mobx';
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;
@@ -41,7 +42,7 @@ export class EditorProperty implements IApiEditorProperty {
   }
 
   set value(value: any) {
-    if (this.type === "looukup" && value === "") {
+    if (this.type === 'looukup' && value === '') {
       this._value = null;
     } else {
       this._value = value;
@@ -50,14 +51,12 @@ export class EditorProperty implements IApiEditorProperty {
 
   @computed
   get error(): string | undefined {
-    return this.errors.length === 0
-      ? undefined
-      : this.errors.join("\n");
+    return this.errors.length === 0 ? undefined : this.errors.join('\n');
   }
 
   constructor(apiProperty: IApiEditorProperty) {
     this.name = apiProperty.name;
-    this.controlPropertyId = apiProperty.controlPropertyId
+    this.controlPropertyId = apiProperty.controlPropertyId;
     this.type = apiProperty.type;
     this._value = apiProperty.value;
     this.dropDownValues = apiProperty.dropDownValues;
@@ -74,7 +73,8 @@ export class EditorProperty implements IApiEditorProperty {
     }
     this.errors = propertyUpdate.errors ?? [];
     this.dropDownValues = propertyUpdate.dropDownValues;
-    if (this.type === "looukup" &&
+    if (
+      this.type === 'looukup' &&
       this._value != null &&
       this.dropDownValues.map(x => x.value).includes(!this._value)
     ) {
@@ -91,6 +91,6 @@ export function toChanges(properties: IApiEditorProperty[]): IPropertyChange[] {
         name: x.name,
         controlPropertyId: x.controlPropertyId,
         value: x.value === undefined || x.value === null ? null : x.value.toString(),
-      }
+      };
     });
 }

@@ -17,37 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+import { IArchitectApi, IScreenEditorData } from 'src/API/IArchitectApi.ts';
+import { toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { ScreenToolboxState } from 'src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
+import { DesignerEditorState } from 'src/components/editors/designerEditor/common/DesignerEditorState.tsx';
 import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
-import {
-  IArchitectApi,
-  IScreenEditorData,
-} from "src/API/IArchitectApi.ts";
-import { toChanges } from "src/components/editors/gridEditor/EditorProperty.ts";
-import { PropertiesState } from "src/components/properties/PropertiesState.ts";
-import {
-  Component,
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import {
-  ScreenToolboxState
-} from "src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx";
-import {
-  DesignerEditorState
-} from "src/components/editors/designerEditor/common/DesignerEditorState.tsx";
-import {
-  controlToComponent, toComponentRecursive,
-} from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
-import {
-  SectionItem
-} from "src/components/editors/designerEditor/common/SectionItem.tsx";
-import { ReactElement } from "react";
-import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
-import { CancellablePromise } from "mobx/dist/api/flow";
-import {
-  TabControl
-} from "src/components/editors/designerEditor/common/designerComponents/TabControl.tsx";
-
+  controlToComponent,
+  toComponentRecursive,
+} from 'src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
+import { SectionItem } from 'src/components/editors/designerEditor/common/SectionItem.tsx';
+import { ReactElement } from 'react';
+import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { CancellablePromise } from 'mobx/dist/api/flow';
+import { TabControl } from 'src/components/editors/designerEditor/common/designerComponents/TabControl.tsx';
 
 export class ScreenEditorState extends DesignerEditorState {
   public screenToolbox: ScreenToolboxState;
@@ -59,7 +44,7 @@ export class ScreenEditorState extends DesignerEditorState {
     propertiesState: PropertiesState,
     screenToolboxState: ScreenToolboxState,
     architectApi: IArchitectApi,
-    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>
+    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
     super(
       editorNode,
@@ -69,7 +54,8 @@ export class ScreenEditorState extends DesignerEditorState {
       screenToolboxState.toolboxState,
       architectApi,
       runGeneratorHandled,
-      getSectionLoader(architectApi, editorNode.origamId));
+      getSectionLoader(architectApi, editorNode.origamId),
+    );
     this.screenToolbox = screenToolboxState;
   }
 
@@ -77,7 +63,7 @@ export class ScreenEditorState extends DesignerEditorState {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
       const newData = yield this.architectApi.deleteScreenEditorItem({
         editorSchemaItemId: this.toolbox.id,
-        schemaItemIds: components.map(x => x.id)
+        schemaItemIds: components.map(x => x.id),
       });
       yield* this.surface.loadComponents(newData.data.rootControl);
       this.isDirty = true;
@@ -86,13 +72,13 @@ export class ScreenEditorState extends DesignerEditorState {
 
   createTabPage(tabControl: TabControl) {
     return function* (this: ScreenEditorState): Generator<Promise<any>, void, any> {
-      const tabPageControlItemId = "6d13ec20-3b17-456e-ae43-3021cb067a70";
+      const tabPageControlItemId = '6d13ec20-3b17-456e-ae43-3021cb067a70';
       const screenEditorItem = yield this.architectApi.createScreenEditorItem({
         editorSchemaItemId: this.editorNode.origamId,
         parentControlSetItemId: tabControl.id,
         controlItemId: tabPageControlItemId,
         top: 10,
-        left: 10
+        left: 10,
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
@@ -100,7 +86,8 @@ export class ScreenEditorState extends DesignerEditorState {
         screenEditorItem.screenItem,
         tabControl,
         this.surface.getChildren.bind(this.surface),
-        sectionLoader);
+        sectionLoader,
+      );
       newComponent.width = newComponent.width ?? 400;
       newComponent.height = newComponent.height ?? 20;
       this.surface.components.push(newComponent);
@@ -124,7 +111,7 @@ export class ScreenEditorState extends DesignerEditorState {
       while (currentParent !== null) {
         relativeX -= currentParent.relativeLeft;
         relativeY -= currentParent.relativeTop;
-        currentParent = currentParent.parent
+        currentParent = currentParent.parent;
       }
 
       const screenEditorItem = yield this.architectApi.createScreenEditorItem({
@@ -132,7 +119,7 @@ export class ScreenEditorState extends DesignerEditorState {
         parentControlSetItemId: parent.id,
         controlItemId: this.surface.draggedComponentData!.identifier!,
         top: relativeY,
-        left: relativeX
+        left: relativeX,
       });
 
       const sectionLoader = getSectionLoader(this.architectApi, this.editorNode.origamId);
@@ -142,7 +129,8 @@ export class ScreenEditorState extends DesignerEditorState {
         parent,
         [],
         this.surface.getChildren.bind(this.surface),
-        sectionLoader);
+        sectionLoader,
+      );
       for (const newComponent of components) {
         newComponent.width = newComponent.width ?? 400;
         newComponent.height = newComponent.height ?? 20;
@@ -159,7 +147,7 @@ export class ScreenEditorState extends DesignerEditorState {
     }.bind(this);
   }
 
-  * save(): Generator<Promise<any>, void, any> {
+  *save(): Generator<Promise<any>, void, any> {
     yield this.architectApi.persistChanges(this.editorNode.origamId);
     yield* super.save();
   }
@@ -168,20 +156,19 @@ export class ScreenEditorState extends DesignerEditorState {
     return this.updateGenerator();
   }
 
-  protected* updateGenerator(): Generator<Promise<any>, void, any> {
+  protected *updateGenerator(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
-        return {
-          schemaItemId: x.id,
-          parentSchemaItemId: x.parent?.id,
-          changes: toChanges(x.properties)
-        }
-      }
-    )
+      return {
+        schemaItemId: x.id,
+        parentSchemaItemId: x.parent?.id,
+        changes: toChanges(x.properties),
+      };
+    });
     const updateResult = yield this.architectApi.updateScreenEditor({
       schemaItemId: this.toolbox.id,
       name: this.toolbox.name,
       selectedDataSourceId: this.toolbox.selectedDataSourceId,
-      modelChanges: modelChanges
+      modelChanges: modelChanges,
     });
     this.isDirty = updateResult.isDirty;
     const newData = updateResult.data;
@@ -194,7 +181,7 @@ export class ScreenEditorState extends DesignerEditorState {
 function getSectionLoader(architectApi: IArchitectApi, editorNodeId: string): any {
   return async function loadSection(sectionId: string): Promise<ReactElement> {
     const sectionControls = await architectApi.loadSections(editorNodeId, [sectionId]);
-    const sectionComponents = await toComponentRecursive(sectionControls[sectionId], null, [])
-    return <SectionItem components={sectionComponents}/>
-  }
+    const sectionComponents = await toComponentRecursive(sectionControls[sectionId], null, []);
+    return <SectionItem components={sectionComponents} />;
+  };
 }

@@ -26,7 +26,7 @@ export function getLocaleFromCookie(): string {
   if (results) {
     return results[1];
   } else {
-    throw new Error("Locale cookie was not found. Was the function \"initLocaleCookie\" called?");
+    throw new Error('Locale cookie was not found. Was the function "initLocaleCookie" called?');
   }
 }
 
@@ -35,14 +35,14 @@ export function setLocaleToCookie(locale: string): void {
 }
 
 function getCookie(name: string): string {
-  const value = "; " + document.cookie;
-  const parts = value.split("; " + name + "=");
+  const value = '; ' + document.cookie;
+  const parts = value.split('; ' + name + '=');
 
   if (parts.length === 2) {
-    const cookieValue = parts.pop()!.split(";").shift();
-    return cookieValue ? cookieValue : "";
+    const cookieValue = parts.pop()!.split(';').shift();
+    return cookieValue ? cookieValue : '';
   }
-  return "";
+  return '';
 }
 
 export function initLocaleCookie() {
@@ -50,7 +50,7 @@ export function initLocaleCookie() {
   if (isValidLocalizationCookie(cookieValue)) {
     return;
   }
-  setLocaleToCookie("en-US");
+  setLocaleToCookie('en-US');
 }
 
 function isValidLocalizationCookie(cookie: string) {
@@ -60,5 +60,3 @@ function isValidLocalizationCookie(cookie: string) {
   const localeRegex = new RegExp(`^${localizationCookieName}=c=([a-zA-Z-]+)|`);
   return localeRegex.test(cookie);
 }
-
-

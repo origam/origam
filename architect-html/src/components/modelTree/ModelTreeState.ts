@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
-import { TreeNode } from "src/components/modelTree/TreeNode.ts";
-import { IApiTreeNode, IArchitectApi } from "src/API/IArchitectApi.ts";
-import { RootStore } from "src/stores/RootStore.ts";
+import { observable } from 'mobx';
+import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
+import { IApiTreeNode, IArchitectApi } from 'src/API/IArchitectApi.ts';
+import { RootStore } from 'src/stores/RootStore.ts';
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
@@ -30,10 +30,9 @@ export class ModelTreeState {
     this.architectApi = this.rootStore.architectApi;
   }
 
-  * loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
+  *loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     const apiNodes = yield this.architectApi.getTopModelNodes();
-    this.modelNodes = apiNodes.map(node =>
-      new TreeNode(node, this.rootStore))
+    this.modelNodes = apiNodes.map(node => new TreeNode(node, this.rootStore));
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {

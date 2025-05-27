@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
+import { action, observable } from 'mobx';
 
 export class ProgressBarState {
   @observable private accessor _isWorking = false;
@@ -29,12 +29,15 @@ export class ProgressBarState {
   }
 
   set isWorking(isWorkingNow: boolean) {
-    if(this.timeout) {
+    if (this.timeout) {
       clearTimeout(this.timeout);
     }
 
-    this.timeout = setTimeout(() => {
-      action(()=> this._isWorking = isWorkingNow)();
-    }, !this._isWorking && isWorkingNow ? this.delayOverlayByMilliseconds : 0);
+    this.timeout = setTimeout(
+      () => {
+        action(() => (this._isWorking = isWorkingNow))();
+      },
+      !this._isWorking && isWorkingNow ? this.delayOverlayByMilliseconds : 0,
+    );
   }
 }

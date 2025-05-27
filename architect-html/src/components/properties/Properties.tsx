@@ -17,21 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observer } from "mobx-react-lite";
-import { useContext } from "react";
-import { RootStoreContext } from "src/main";
-import { PropertyEditor } from "src/components/editors/propertyEditor/PropertyEditor";
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { RootStoreContext } from 'src/main';
+import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor';
 import S from 'src/components/properties/Properties.module.scss';
 
 export const Properties: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const propertiesState = rootStore.propertiesState;
-  return <div>
-    <div className={S.editedItemLabel}>
-      {propertiesState.editedItemName}
+  return (
+    <div>
+      <div className={S.editedItemLabel}>{propertiesState.editedItemName}</div>
+      <PropertyEditor propertyManager={propertiesState} properties={propertiesState.properties} />
     </div>
-    <PropertyEditor
-      propertyManager={propertiesState}
-      properties={propertiesState.properties}/>
-  </div>
+  );
 });

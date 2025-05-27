@@ -17,22 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
-import {
-  Component,
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
+import { action, observable } from 'mobx';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
 import {
   ComponentType,
-  IComponentData
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import { IApiControl, IDesignerEditorData, } from "src/API/IArchitectApi.ts";
-import { PropertiesState } from "src/components/properties/PropertiesState.ts";
-import {
-  toComponentRecursive
-} from "src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx";
-import { ReactElement } from "react";
-import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
-import { CancellablePromise } from "mobx/dist/api/flow";
+  IComponentData,
+} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { IApiControl, IDesignerEditorData } from 'src/API/IArchitectApi.ts';
+import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
+import { toComponentRecursive } from 'src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
+import { ReactElement } from 'react';
+import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { CancellablePromise } from 'mobx/dist/api/flow';
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];
@@ -45,7 +41,7 @@ export class DesignSurfaceState {
     originalLeft: 0,
     originalTop: 0,
     didDrag: false,
-    startedAt: undefined
+    startedAt: undefined,
   };
   @observable accessor resizeState: ResizeState = {
     component: null,
@@ -55,7 +51,7 @@ export class DesignSurfaceState {
     originalWidth: 0,
     originalHeight: 0,
     originalLeft: 0,
-    originalTop: 0
+    originalTop: 0,
   };
   panel: Component = null as any; // will be assigned in loadComponents
   panelId: string | undefined;
@@ -77,34 +73,33 @@ export class DesignSurfaceState {
     private propertiesState: PropertiesState,
     private updateEditor: () => Generator<Promise<any>, void, any>,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
-    private loadComponent?: (componentId: string) => Promise<ReactElement>
+    private loadComponent?: (componentId: string) => Promise<ReactElement>,
   ) {
     if (editorData.rootControl) {
       this.panelId = editorData.rootControl.id;
-      runGeneratorHandled({generator: this.loadComponents(editorData.rootControl)});
+      runGeneratorHandled({ generator: this.loadComponents(editorData.rootControl) });
       this.panel = this.components.find(x => x.id === editorData.rootControl.id)!;
     }
   }
 
-  * loadComponents(rootControl: IApiControl) {
+  *loadComponents(rootControl: IApiControl) {
     let components: Component[] = [];
     components = yield toComponentRecursive(
       rootControl,
       null,
       components,
       this.getChildren.bind(this),
-      this.loadComponent)
+      this.loadComponent,
+    );
     this.components = components;
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
   }
 
-  updateComponents(
-    control: IApiControl
-  ) {
-    const currentComponent = this.components.find(x =>x.id === control.id)!;
+  updateComponents(control: IApiControl) {
+    const currentComponent = this.components.find(x => x.id === control.id)!;
     for (const property of currentComponent.properties) {
-      property.value =  control.properties.find(x => x.name === property.name)!.value;
+      property.value = control.properties.find(x => x.name === property.name)!.value;
     }
     for (const childControl of control.children) {
       this.updateComponents(childControl);
@@ -124,11 +119,12 @@ export class DesignSurfaceState {
     if (component) {
       this.selectedComponent = component;
       this.propertiesState.setEdited(
-        component.data.identifier ?? component.getProperty("Text")?.value ?? "",
-        component.properties)
+        component.data.identifier ?? component.getProperty('Text')?.value ?? '',
+        component.properties,
+      );
     } else {
       this.selectedComponent = null;
-      this.propertiesState.setEdited("", [])
+      this.propertiesState.setEdited('', []);
     }
   }
 
@@ -158,7 +154,7 @@ export class DesignSurfaceState {
       originalLeft: component.absoluteLeft,
       originalTop: component.absoluteTop,
       didDrag: false,
-      startedAt: new Date()
+      startedAt: new Date(),
     };
   }
 
@@ -175,8 +171,14 @@ export class DesignSurfaceState {
     ) {
       const targetParent = this.findComponentAt(mouseX, mouseY, draggingComponent);
       if (targetParent && draggingComponent.parent != targetParent) {
-        draggingComponent.relativeLeft = (draggingComponent.parent?.absoluteLeft ?? 0) - targetParent.absoluteLeft + draggingComponent.relativeLeft;
-        draggingComponent.relativeTop = (draggingComponent.parent?.absoluteTop ?? 0) - targetParent.absoluteTop + draggingComponent.relativeTop;
+        draggingComponent.relativeLeft =
+          (draggingComponent.parent?.absoluteLeft ?? 0) -
+          targetParent.absoluteLeft +
+          draggingComponent.relativeLeft;
+        draggingComponent.relativeTop =
+          (draggingComponent.parent?.absoluteTop ?? 0) -
+          targetParent.absoluteTop +
+          draggingComponent.relativeTop;
         draggingComponent.parent = targetParent;
       }
       targetParent.update();
@@ -190,7 +192,7 @@ export class DesignSurfaceState {
       originalLeft: 0,
       originalTop: 0,
       didDrag: false,
-      startedAt: undefined
+      startedAt: undefined,
     };
   }
 
@@ -198,17 +200,19 @@ export class DesignSurfaceState {
     const excludeIds = excludeComponent
       ? [...this.getChildren(excludeComponent).map(x => x.id), excludeComponent.id]
       : [];
-    const componentsUnderPoint = this.components.filter(
-      comp =>
-        (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
-        comp.canHaveChildren &&
-        comp.isActive &&
-        comp.isPointInside(mouseX, mouseY)
-    ) ?? this.panel;
-    const components1 = componentsUnderPoint
-      .sort((comp1, comp2) => comp2.countParents() - comp1.countParents());
-    console.log(components1[0])
-    return components1[0]
+    const componentsUnderPoint =
+      this.components.filter(
+        comp =>
+          (excludeIds.length == 0 || !excludeIds.includes(comp.id)) &&
+          comp.canHaveChildren &&
+          comp.isActive &&
+          comp.isPointInside(mouseX, mouseY),
+      ) ?? this.panel;
+    const components1 = componentsUnderPoint.sort(
+      (comp1, comp2) => comp2.countParents() - comp1.countParents(),
+    );
+    console.log(components1[0]);
+    return components1[0];
   }
 
   onDesignerMouseUp(x: number, y: number) {
@@ -225,7 +229,7 @@ export class DesignSurfaceState {
             originalLeft: 0,
             originalTop: 0,
             didDrag: false,
-            startedAt: undefined
+            startedAt: undefined,
           };
           return;
         }
@@ -242,7 +246,7 @@ export class DesignSurfaceState {
     }.bind(this);
   }
 
-  getChildren(component: Component){
+  getChildren(component: Component) {
     return this.components.filter(x => x.parent?.id === component.id)!;
   }
 
@@ -270,7 +274,7 @@ export class DesignSurfaceState {
       originalWidth: component.width,
       originalHeight: component.height,
       originalLeft: component.absoluteLeft,
-      originalTop: component.absoluteTop
+      originalTop: component.absoluteTop,
     };
   }
 
@@ -281,12 +285,7 @@ export class DesignSurfaceState {
     const component = this.resizeState.component;
     const deltaX = mouseX - this.resizeState.startX;
     const deltaY = mouseY - this.resizeState.startY;
-    const {
-      originalWidth,
-      originalHeight,
-      originalLeft,
-      originalTop
-    } = this.resizeState;
+    const { originalWidth, originalHeight, originalLeft, originalTop } = this.resizeState;
 
     switch (this.resizeState.handle) {
       case 'right':
@@ -360,7 +359,7 @@ export class DesignSurfaceState {
       originalWidth: 0,
       originalHeight: 0,
       originalLeft: 0,
-      originalTop: 0
+      originalTop: 0,
     };
   }
 
@@ -371,7 +370,11 @@ export class DesignSurfaceState {
 
     if (component.canHaveChildren) {
       for (const comp of this.components) {
-        if (comp.parent?.id === component.id && comp.relativeLeft !== undefined && comp.relativeTop !== undefined) {
+        if (
+          comp.parent?.id === component.id &&
+          comp.relativeLeft !== undefined &&
+          comp.relativeTop !== undefined
+        ) {
           comp.absoluteLeft = comp.relativeLeft + component.absoluteLeft;
           comp.absoluteTop = comp.relativeTop + component.absoluteTop;
         }
@@ -379,10 +382,9 @@ export class DesignSurfaceState {
     }
   }
 
-
   @action
   onClose() {
-    this.propertiesState.setEdited("", []);
+    this.propertiesState.setEdited('', []);
   }
 }
 
@@ -411,7 +413,7 @@ const minComponentHeight = 20;
 const minComponentWidth = 20;
 
 export type ResizeHandle =
-  'top'
+  | 'top'
   | 'right'
   | 'bottom'
   | 'left'

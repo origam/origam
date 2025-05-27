@@ -18,11 +18,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  IArchitectApi, IScreenEditorData, IScreenEditorModel, IToolBoxItem
-} from "src/API/IArchitectApi.ts";
-import {
-  ToolboxState
-} from "src/components/editors/designerEditor/common/ToolboxState.tsx";
+  IArchitectApi,
+  IScreenEditorData,
+  IScreenEditorModel,
+  IToolBoxItem,
+} from 'src/API/IArchitectApi.ts';
+import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
 
 export class ScreenToolboxState {
   toolboxState: ToolboxState;
@@ -32,7 +33,7 @@ export class ScreenToolboxState {
   constructor(
     screenEditorData: IScreenEditorData,
     id: string,
-    private architectApi: IArchitectApi
+    private architectApi: IArchitectApi,
   ) {
     this.sections = screenEditorData.sections;
     this.widgets = screenEditorData.widgets;
@@ -42,16 +43,19 @@ export class ScreenToolboxState {
       screenEditorData.schemaExtensionId,
       screenEditorData.selectedDataSourceId,
       id,
-      this.updateTopProperties.bind(this))
+      this.updateTopProperties.bind(this),
+    );
   }
 
   private updateTopProperties() {
-    return function* (this: ScreenToolboxState): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
+    return function* (
+      this: ScreenToolboxState,
+    ): Generator<Promise<IScreenEditorModel>, void, IScreenEditorModel> {
       const updateResult = yield this.architectApi.updateScreenEditor({
         schemaItemId: this.toolboxState.id,
         name: this.toolboxState.name,
         selectedDataSourceId: this.toolboxState.selectedDataSourceId,
-        modelChanges: []
+        modelChanges: [],
       });
       const newData = updateResult.data;
       this.toolboxState.name = newData.name;

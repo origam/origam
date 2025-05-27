@@ -17,25 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  IComponentData
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import { action, observable } from "mobx";
+import { IComponentData } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { action, observable } from 'mobx';
 
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import {
-  controlLayer,
-  sectionLayer
-} from "src/components/editors/designerEditor/common/Layers.ts";
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { controlLayer, sectionLayer } from 'src/components/editors/designerEditor/common/Layers.ts';
 import {
   LabelPosition,
-  parseLabelPosition
-} from "src/components/editors/designerEditor/common/LabelPosition.tsx";
-import S
-  from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
-import { ReactElement } from "react";
+  parseLabelPosition,
+} from 'src/components/editors/designerEditor/common/LabelPosition.tsx';
+import S from 'src/components/editors/designerEditor/common/designerComponents/Components.module.scss';
+import { ReactElement } from 'react';
 
 export abstract class Component {
   id: string;
@@ -51,7 +43,7 @@ export abstract class Component {
     }
     if (!this._designerRepresentation) {
       action(() => {
-        this._designerRepresentation = this.getDesignerRepresentation()
+        this._designerRepresentation = this.getDesignerRepresentation();
       })();
     }
     return this._designerRepresentation;
@@ -62,31 +54,30 @@ export abstract class Component {
   }
 
   get relativeLeft(): number {
-    return this.getProperty("Left")!.value;
+    return this.getProperty('Left')!.value;
   }
 
   set relativeLeft(value: number) {
-    this.getProperty("Left")!.value = value;
+    this.getProperty('Left')!.value = value;
   }
 
   get relativeTop(): number {
-    return this.getProperty("Top")!.value;
+    return this.getProperty('Top')!.value;
   }
 
   set relativeTop(value: number) {
-    this.getProperty("Top")!.value = value;
+    this.getProperty('Top')!.value = value;
   }
 
   get absoluteLeft(): number {
-    return this.relativeLeft
-      + (this.parent?.absoluteLeft ?? 0)
-      + (this.parent?.childOffsetLeft ?? 0);
+    return (
+      this.relativeLeft + (this.parent?.absoluteLeft ?? 0) + (this.parent?.childOffsetLeft ?? 0)
+    );
   }
 
   set absoluteLeft(value: number) {
-    this.relativeLeft = value
-      - (this.parent?.absoluteLeft ?? 0)
-      - (this.parent?.childOffsetLeft ?? 0);
+    this.relativeLeft =
+      value - (this.parent?.absoluteLeft ?? 0) - (this.parent?.childOffsetLeft ?? 0);
   }
 
   get absoluteRight(): number {
@@ -94,15 +85,11 @@ export abstract class Component {
   }
 
   get absoluteTop(): number {
-    return this.relativeTop
-      + (this.parent?.absoluteTop ?? 0)
-      + (this.parent?.childOffsetTop ?? 0);
+    return this.relativeTop + (this.parent?.absoluteTop ?? 0) + (this.parent?.childOffsetTop ?? 0);
   }
 
   set absoluteTop(value: number) {
-    this.relativeTop = value
-      - (this.parent?.absoluteTop ?? 0)
-      - (this.parent?.childOffsetTop ?? 0);
+    this.relativeTop = value - (this.parent?.absoluteTop ?? 0) - (this.parent?.childOffsetTop ?? 0);
   }
 
   get childOffsetLeft() {
@@ -118,27 +105,27 @@ export abstract class Component {
   }
 
   get width(): number {
-    return this.getProperty("Width")!.value;
+    return this.getProperty('Width')!.value;
   }
 
   set width(value: number) {
-    this.getProperty("Width")!.value = value;
+    this.getProperty('Width')!.value = value;
   }
 
   get height(): number {
-    return this.getProperty("Height")!.value;
+    return this.getProperty('Height')!.value;
   }
 
   set height(value: number) {
-    this.getProperty("Height")!.value = value;
+    this.getProperty('Height')!.value = value;
   }
 
   get labelWidth(): number {
-    return this.getProperty("CaptionLength")!.value;
+    return this.getProperty('CaptionLength')!.value;
   }
 
   set labelWidth(value: number) {
-    this.getProperty("CaptionLength")!.value = value;
+    this.getProperty('CaptionLength')!.value = value;
   }
 
   private _labelPosition: LabelPosition;
@@ -159,17 +146,17 @@ export abstract class Component {
   }
 
   constructor(args: {
-    id: string,
-    parent: Component | null,
-    data: IComponentData,
-    properties: EditorProperty[],
+    id: string;
+    parent: Component | null;
+    data: IComponentData;
+    properties: EditorProperty[];
   }) {
     this.id = args.id;
     this.data = args.data;
     this.properties = args.properties;
-    this._labelPosition = parseLabelPosition(this.get("CaptionPosition"));
+    this._labelPosition = parseLabelPosition(this.get('CaptionPosition'));
     this.parent = args.parent;
-    if(this.parent){
+    if (this.parent) {
       this.hideChildren = this.parent.hideChildren;
     }
   }
@@ -198,32 +185,32 @@ export abstract class Component {
           top: `${this.absoluteTop}px`,
           width: `${this.labelWidth}px`,
           height: `${this.height}px`,
-        }
+        };
       case LabelPosition.Right:
         return {
           left: `${this.absoluteLeft + this.width}px`,
           top: `${this.absoluteTop}px`,
           width: `${this.labelWidth}px`,
           height: `${this.height}px`,
-        }
+        };
       case LabelPosition.Bottom:
         return {
           left: `${this.absoluteLeft}px`,
           top: `${this.absoluteTop + this.height}px`,
           width: `${this.width}px`,
           height: `${this.labelWidth}px`,
-        }
+        };
       case LabelPosition.Top:
         return {
           left: `${this.absoluteLeft}px`,
           top: `${this.absoluteTop + -20}px`,
           width: `${this.width}px`,
           height: `${this.labelWidth}px`,
-        }
+        };
       case null:
       case undefined:
       case LabelPosition.None:
-        return {display: 'none'}
+        return { display: 'none' };
     }
   }
 
@@ -247,10 +234,8 @@ export abstract class Component {
     return false;
   }
 
-  update() {
-  }
+  update() {}
 }
-
 
 export class GroupBox extends Component {
   get canHaveChildren(): boolean {
@@ -264,29 +249,22 @@ export class GroupBox extends Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.groupBoxContent}>
-        <div
-          className={S.groupBoxHeader}>{this.properties.find(x => x.name === "Text")?.value}
+        <div className={S.groupBoxHeader}>
+          {this.properties.find(x => x.name === 'Text')?.value}
         </div>
       </div>
     );
   }
 }
 
-export class AsCombo extends Component {
-}
+export class AsCombo extends Component {}
 
-export class AsTextBox extends Component {
-}
+export class AsTextBox extends Component {}
 
-export class TagInput extends Component {
-}
+export class TagInput extends Component {}
 
-export class AsDateBox extends Component {
-}
+export class AsDateBox extends Component {}
 
-export class TextArea extends Component {
-}
+export class TextArea extends Component {}
 
-export class AsTree extends Component {
-}
-
+export class AsTree extends Component {}

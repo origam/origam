@@ -20,14 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import {
   EditorType,
   IApiEditorNode,
-  IApiEditorData, IApiEditorProperty, ISectionEditorData, IScreenEditorData
-} from "src/API/IArchitectApi.ts";
-import {
-  TreeNode
-} from "src/components/modelTree/TreeNode.ts";
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
+  IApiEditorData,
+  IApiEditorProperty,
+  ISectionEditorData,
+  IScreenEditorData,
+} from 'src/API/IArchitectApi.ts';
+import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
 
 export class EditorNode implements IEditorNode {
   id: string;
@@ -57,4 +56,3 @@ export class EditorData implements IApiEditorData {
     this.data = data.data;
   }
 }
-

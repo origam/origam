@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IDataSource } from "src/API/IArchitectApi.ts";
-import { observable } from "mobx";
-import { TabViewState } from "src/components/tabView/TabViewState.ts";
+import { IDataSource } from 'src/API/IArchitectApi.ts';
+import { observable } from 'mobx';
+import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 
 export class ToolboxState {
   @observable accessor name: string;
@@ -34,27 +34,27 @@ export class ToolboxState {
     public schemaExtensionId: string,
     selectedDataSourceId: string,
     public id: string,
-    private updateTopProperties: ()=>()=>Generator<Promise<any>, void, any>,
+    private updateTopProperties: () => () => Generator<Promise<any>, void, any>,
   ) {
     this.name = name;
     this.selectedDataSourceId = selectedDataSourceId;
   }
 
   selectedDataSourceIdChanged(value: string) {
-    return function*  (this: ToolboxState){
+    return function* (this: ToolboxState) {
       this.selectedDataSourceId = value;
-      yield * this.updateTopProperties()();
-      if(this.onNameTopPropertiesChanged){
+      yield* this.updateTopProperties()();
+      if (this.onNameTopPropertiesChanged) {
         this.onNameTopPropertiesChanged();
       }
     }.bind(this);
   }
 
   nameChanged(value: string) {
-    return function*  (this: ToolboxState){
+    return function* (this: ToolboxState) {
       this.name = value;
-      yield * this.updateTopProperties()();
-      if(this.onNameTopPropertiesChanged){
+      yield* this.updateTopProperties()();
+      if (this.onNameTopPropertiesChanged) {
         this.onNameTopPropertiesChanged();
       }
     }.bind(this);

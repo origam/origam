@@ -17,27 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  screenLayer
-} from "src/components/editors/designerEditor/common/Layers.ts";
-import { ReactElement } from "react";
-import S
-  from "src/components/editors/designerEditor/common/designerComponents/Components.module.scss";
-import {
-  Component
-} from "src/components/editors/designerEditor/common/designerComponents/Component.tsx";
-import {
-  IComponentData
-} from "src/components/editors/designerEditor/common/ComponentType.tsx";
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { IApiEditorProperty } from "src/API/IArchitectApi.ts";
+import { screenLayer } from 'src/components/editors/designerEditor/common/Layers.ts';
+import { ReactElement } from 'react';
+import S from 'src/components/editors/designerEditor/common/designerComponents/Components.module.scss';
+import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { IComponentData } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { IApiEditorProperty } from 'src/API/IArchitectApi.ts';
 
 const childGap = 10;
 
 export class SplitPanel extends Component {
-
   get canHaveChildren(): boolean {
     return true;
   }
@@ -49,20 +39,20 @@ export class SplitPanel extends Component {
   private readonly getChildren: (component: Component) => Component[];
 
   constructor(args: {
-    id: string,
-    parent: Component | null,
-    data: IComponentData,
-    properties: EditorProperty[],
-    getChildren: (component: Component) => Component[]
+    id: string;
+    parent: Component | null;
+    data: IComponentData;
+    properties: EditorProperty[];
+    getChildren: (component: Component) => Component[];
   }) {
     super(args);
     this.getChildren = args.getChildren;
 
-    const originalOrientationProperty = this.getProperty("Orientation")!;
+    const originalOrientationProperty = this.getProperty('Orientation')!;
     const index = this.properties.indexOf(originalOrientationProperty);
     this.properties.splice(index, 1);
     const newOrientationProperty = new OrientationProperty(originalOrientationProperty, this);
-    this.properties.push(newOrientationProperty)
+    this.properties.push(newOrientationProperty);
   }
 
   update() {
@@ -71,12 +61,12 @@ export class SplitPanel extends Component {
       return;
     }
     if (children.length > 2) {
-      throw new Error("Split panel cannot have more than 2 children");
+      throw new Error('Split panel cannot have more than 2 children');
     }
     const orientation = this.getOrientation();
     switch (orientation) {
       case Orientation.Horizontal: {
-        const {upperChild, lowerChild} = this.getUpperAndLowerChild(children);
+        const { upperChild, lowerChild } = this.getUpperAndLowerChild(children);
         upperChild.relativeTop = childGap;
         upperChild.relativeLeft = childGap;
         upperChild.width = Math.round(this.width - childGap * 2);
@@ -90,7 +80,7 @@ export class SplitPanel extends Component {
         break;
       }
       case Orientation.Vertical: {
-        const {leftChild, rightChild} = this.getLeftAndRightChild(children)
+        const { leftChild, rightChild } = this.getLeftAndRightChild(children);
         leftChild.relativeLeft = childGap;
         leftChild.relativeTop = childGap;
         leftChild.width = Math.round(this.width / 2 - childGap * 1.5);
@@ -108,14 +98,17 @@ export class SplitPanel extends Component {
     }
   }
 
-  private getOrientation(){
-    const propertyValue = this.get("Orientation");
+  private getOrientation() {
+    const propertyValue = this.get('Orientation');
     switch (propertyValue) {
-      case "0":
-      case "Horizontal": return Orientation.Horizontal;
-      case "1":
-      case "Vertical": return Orientation.Vertical;
-      default: return propertyValue;
+      case '0':
+      case 'Horizontal':
+        return Orientation.Horizontal;
+      case '1':
+      case 'Vertical':
+        return Orientation.Vertical;
+      default:
+        return propertyValue;
     }
   }
 
@@ -123,58 +116,54 @@ export class SplitPanel extends Component {
     if (children.length == 1) {
       return {
         upperChild: children[0],
-        lowerChild: undefined
-      }
+        lowerChild: undefined,
+      };
     }
     if (children[0].relativeTop < children[1].relativeTop) {
       return {
         upperChild: children[0],
-        lowerChild: children[1]
-      }
+        lowerChild: children[1],
+      };
     }
     return {
       upperChild: children[1],
-      lowerChild: children[0]
-    }
+      lowerChild: children[0],
+    };
   }
 
   getLeftAndRightChild(children: Component[]) {
     if (children.length == 1) {
       return {
         leftChild: children[0],
-        rightChild: undefined
-      }
+        rightChild: undefined,
+      };
     }
     if (children[0].relativeLeft > children[1].relativeLeft) {
       return {
         leftChild: children[0],
-        rightChild: children[1]
-      }
+        rightChild: children[1],
+      };
     }
     return {
       leftChild: children[1],
-      rightChild: children[0]
-    }
+      rightChild: children[0],
+    };
   }
 
   getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.groupBoxContent}>
-      </div>
-    );
+    return <div className={S.groupBoxContent}></div>;
   }
 }
 
 class OrientationProperty extends EditorProperty {
-
   constructor(
     apiProperty: IApiEditorProperty,
-    private splitPanel: SplitPanel
+    private splitPanel: SplitPanel,
   ) {
     super(apiProperty);
   }
 
-  get value(){
+  get value() {
     return super.value;
   }
 
@@ -184,4 +173,7 @@ class OrientationProperty extends EditorProperty {
   }
 }
 
-enum Orientation {Horizontal, Vertical}
+enum Orientation {
+  Horizontal,
+  Vertical,
+}

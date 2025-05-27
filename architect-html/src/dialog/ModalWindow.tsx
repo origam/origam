@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "./ModalWindow.module.scss";
-import React, { useCallback, useEffect, useRef } from "react";
-import { observer } from "mobx-react-lite";
-import { requestFocus } from "src/utils/focus.ts";
+import S from './ModalWindow.module.scss';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
+import { requestFocus } from 'src/utils/focus.ts';
 
 interface ModalWindowProps {
   title: React.ReactNode;
@@ -41,9 +41,9 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
     const footerElement = footerRef.current;
     if (footerElement && !focusHookRef.current) {
       footerElement.addEventListener(
-        "keydown",
+        'keydown',
         (evt: KeyboardEvent) => {
-          if (evt.key === "Tab") {
+          if (evt.key === 'Tab') {
             evt.preventDefault();
             const target = evt.target as HTMLElement;
 
@@ -62,7 +62,7 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
             }
           }
         },
-        true
+        true,
       );
       focusHookRef.current = true;
     }
@@ -77,7 +77,7 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
       return (
         <div ref={footerRef} className={S.footer}>
           {props.buttonsLeft}
-          {props.buttonsCenter ? props.buttonsCenter : <div className={S.pusher}/>}
+          {props.buttonsCenter ? props.buttonsCenter : <div className={S.pusher} />}
           {props.buttonsRight}
         </div>
       );
@@ -107,4 +107,3 @@ export const ModalWindow = observer((props: ModalWindowProps) => {
     </div>
   );
 });
-

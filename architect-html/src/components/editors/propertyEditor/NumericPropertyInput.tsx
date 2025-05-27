@@ -17,42 +17,34 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { useEffect, useRef, useState } from "react";
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import React, { useEffect, useRef, useState } from 'react';
 
 const debounceMs = 300;
 
 export const NumericPropertyInput: React.FC<{
   property: EditorProperty;
   onChange: (value: number | null) => void;
-  type: "integer" | "float";
-}> = ({
-        property,
-        onChange,
-        type,
-      }) => {
+  type: 'integer' | 'float';
+}> = ({ property, onChange, type }) => {
   const [inputValue, setInputValue] = useState<string>(
-    property.value != null ? String(property.value) : ""
+    property.value != null ? String(property.value) : '',
   );
   const parseValue = (val: string): number | null => {
-    if (val.trim() === "") {
+    if (val.trim() === '') {
       return null;
     }
-    return type === "integer"
-      ? parseInt(val, 10)
-      : parseFloat(val);
+    return type === 'integer' ? parseInt(val, 10) : parseFloat(val);
   };
 
   useEffect(() => {
-    setInputValue(property.value != null ? String(property.value) : "");
+    setInputValue(property.value != null ? String(property.value) : '');
   }, [property.value]);
 
   const debounceRef = useRef<number>(undefined);
 
   function onValueChange(value: string) {
-    setInputValue(value)
+    setInputValue(value);
     window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
       onChange(parseValue(value));
@@ -62,13 +54,13 @@ export const NumericPropertyInput: React.FC<{
   return (
     <input
       type="number"
-      step={type === "float" ? "any" : "1"}
+      step={type === 'float' ? 'any' : '1'}
       disabled={property.readOnly}
       value={inputValue}
-      onChange={(e) => onValueChange(e.target.value)}
+      onChange={e => onValueChange(e.target.value)}
       onBlur={() => {
-        if (inputValue.trim() === "") {
-          setInputValue(property.value != null ? String(property.value) : "");
+        if (inputValue.trim() === '') {
+          setInputValue(property.value != null ? String(property.value) : '');
         } else {
           onChange(parseValue(inputValue));
         }

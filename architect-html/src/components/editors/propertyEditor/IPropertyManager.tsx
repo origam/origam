@@ -17,11 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { IUpdatePropertiesResult } from "src/API/IArchitectApi.ts";
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { IUpdatePropertiesResult } from 'src/API/IArchitectApi.ts';
 
 export interface IPropertyManager {
-  onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult>
+  onPropertyUpdated(
+    property: EditorProperty,
+    value: any,
+  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult>;
 }

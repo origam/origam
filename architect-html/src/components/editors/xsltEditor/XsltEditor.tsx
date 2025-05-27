@@ -17,32 +17,25 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If notL, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "src/components/editors/xsltEditor/XsltEditor.module.scss";
-import { useContext, useEffect, useRef } from "react";
-import { TabView } from "src/components/tabView/TabView.tsx";
-import {
-  PropertyEditor
-} from "src/components/editors/propertyEditor/PropertyEditor.tsx";
+import S from 'src/components/editors/xsltEditor/XsltEditor.module.scss';
+import { useContext, useRef } from 'react';
+import { TabView } from 'src/components/tabView/TabView.tsx';
+import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor.tsx';
 import React from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
-// @ts-expect-error types for monaco-vim are missing
-import * as monacoVim from 'monaco-vim';
-import { TabViewState } from "src/components/tabView/TabViewState.ts";
+// // @ts-expect-error types for monaco-vim are missing
+// import * as monacoVim from 'monaco-vim';
+import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 
+import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { RootStoreContext, T } from 'src/main.tsx';
 
-import {
-  GridEditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { RootStoreContext, T } from "src/main.tsx";
-
-export const XsltEditor = (props: { editorState: GridEditorState; }) => {
+export const XsltEditor = (props: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const handleInputChange = (value: any) => {
-    const textProperty = props.editorState.properties.find(x => x.name === "TextStore")!;
+    const textProperty = props.editorState.properties.find(x => x.name === 'TextStore')!;
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         yield* props.editorState.onPropertyUpdated(textProperty, value);
@@ -57,41 +50,46 @@ export const XsltEditor = (props: { editorState: GridEditorState; }) => {
         state={new TabViewState()}
         items={[
           {
-            label: T("XSL", "xsl_editor_tab1"),
-            node: <CodeEditor
-              value={props.editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
-              onChange={(text) => handleInputChange(text)}/>
+            label: T('XSL', 'xsl_editor_tab1'),
+            node: (
+              <CodeEditor
+                value={props.editorState.properties.find(x => x.name === 'TextStore')?.value ?? ''}
+                onChange={text => handleInputChange(text)}
+              />
+            ),
           },
           {
-            label: T("Settings", "xsl_editor_tab2"),
-            node:
+            label: T('Settings', 'xsl_editor_tab2'),
+            node: (
               <PropertyEditor
                 propertyManager={props.editorState}
-                properties={props.editorState.properties
-                  .filter(x => x.name !== "TextStore")}/>
-          }
-        ]}/>
+                properties={props.editorState.properties.filter(x => x.name !== 'TextStore')}
+              />
+            ),
+          },
+        ]}
+      />
     </div>
   );
-}
+};
 
 interface ICodeEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
 }
 
-const CodeEditor: React.FC<ICodeEditorProps> = ({value, onChange}) => {
+const CodeEditor: React.FC<ICodeEditorProps> = ({ value, onChange }) => {
   const editorRef = useRef<any>(null);
   const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
-  const vimModeRef = useRef<any>(null);
+  // const vimModeRef = useRef<any>(null);
 
-  useEffect(() => {
-    return () => {
-      if (vimModeRef.current) {
-        vimModeRef.current.dispose();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (vimModeRef.current) {
+  //       vimModeRef.current.dispose();
+  //     }
+  //   };
+  // }, []);
 
   // const initVim = () => {
   //   if (editorRef.current && vimStatusBarRef.current && !vimModeRef.current) {
@@ -99,7 +97,7 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({value, onChange}) => {
   //   }
   // };
 
-  const handleEditorDidMount: EditorProps['onMount'] = (editor) => {
+  const handleEditorDidMount: EditorProps['onMount'] = editor => {
     editorRef.current = editor;
     // initVim();
   };
@@ -117,13 +115,13 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({value, onChange}) => {
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
         options={{
-          minimap: {enabled: false},
+          minimap: { enabled: false },
           lineNumbers: 'on',
           scrollBeyondLastLine: false,
           automaticLayout: true,
         }}
       />
-      <div ref={vimStatusBarRef} className={S.vimStatus}/>
+      <div ref={vimStatusBarRef} className={S.vimStatus} />
     </div>
   );
 };
