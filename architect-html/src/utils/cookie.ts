@@ -38,7 +38,7 @@ function isValidLocalizationCookie(cookie: string) {
   if (!cookie) {
     return false;
   }
-  const localeRegex = new RegExp(`^${localizationCookieName}=c=([a-zA-Z-]+)\|`);
+  const localeRegex = new RegExp(`^${localizationCookieName}=c=([a-zA-Z-]+)|`);
   return localeRegex.test(cookie);
 }
 

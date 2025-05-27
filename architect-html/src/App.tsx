@@ -51,11 +51,11 @@ const App: React.FC = observer(() => {
                 node: <Packages/>
               },
               {
-                label: "Model",
+                label: T("Model", "app_model"),
                 node: <ModelTree/>
               },
               {
-                label: "Properties",
+                label: T("Properties", "app_properties"),
                 node: <Properties/>
               }
             ]}

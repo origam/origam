@@ -1,3 +1,5 @@
 {
-  "app_packages": "Packages"
+  "app_packages": "Packages",
+  "app_model": "Model",
+  "app_properties": "Properties"
 }
