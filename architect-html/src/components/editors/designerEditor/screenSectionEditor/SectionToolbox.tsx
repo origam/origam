@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import React from "react";
 import {
   ScreenSectionEditorState
@@ -14,6 +33,7 @@ import S from "src/components/editors/designerEditor/common/Toolbox.module.scss"
 import {
   Toolbox
 } from "src/components/editors/designerEditor/common/Toolbox.tsx";
+import { T } from "src/main.tsx";
 
 export const SectionToolbox: React.FC<{
   designerState: ScreenSectionEditorState
@@ -81,13 +101,13 @@ export const SectionToolbox: React.FC<{
     toolboxState={props.designerState.toolbox}
     tabViewItems={[
       {
-        label: "Fields",
+        label: T("Fields", "section_tool_box_tab1"),
         node: <div className={S.draggAbles}>
           {sectionToolbox.fields.map(field => getToolboxComponent(field))}
         </div>
       },
       {
-        label: "Widgets",
+        label: T("Widgets", "section_tool_box_tab2"),
         node: <div className={S.draggAbles}>
           {getControlComponent(ComponentType.AsCheckBox)}
           {getControlComponent(ComponentType.AsCombo)}

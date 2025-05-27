@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -31,6 +31,7 @@ import { IDialogStackState } from "src/dialog/types.ts";
 import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
 import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
 import { PropertiesState } from "src/components/properties/PropertiesState";
+import { TranslationsStore } from "src/stores/TranslationsStore.tsx";
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -43,6 +44,7 @@ export class RootStore {
   public errorDialogController: ErrorDialogController;
   public progressBarState= new ProgressBarState();
   public propertiesState = new PropertiesState();
+  public translations = new TranslationsStore()
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);

@@ -1,10 +1,29 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { useContext, useEffect } from 'react';
 import { Packages } from "src/components/packages/Packages.tsx";
 import "./App.css"
 import "src/colors.scss"
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 import ModelTree from "src/components/modelTree/ModelTree.tsx";
@@ -47,15 +66,15 @@ const App: React.FC = observer(() => {
             state={rootStore.sideBarTabViewState}
             items={[
               {
-                label: "Packages",
+                label: T("Packages", "app_packages"),
                 node: <Packages/>
               },
               {
-                label: "Model",
+                label: T("Model", "app_model"),
                 node: <ModelTree/>
               },
               {
-                label: "Properties",
+                label: T("Properties", "app_properties"),
                 node: <Properties/>
               }
             ]}

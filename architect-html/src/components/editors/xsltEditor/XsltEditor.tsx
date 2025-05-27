@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2024 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -36,7 +36,7 @@ import {
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 
 export const XsltEditor = (props: { editorState: GridEditorState; }) => {
   const rootStore = useContext(RootStoreContext);
@@ -57,13 +57,13 @@ export const XsltEditor = (props: { editorState: GridEditorState; }) => {
         state={new TabViewState()}
         items={[
           {
-            label: "XSL",
+            label: T("XSL", "xsl_editor_tab1"),
             node: <CodeEditor
               value={props.editorState.properties.find(x => x.name === "TextStore")?.value ?? ""}
               onChange={(text) => handleInputChange(text)}/>
           },
           {
-            label: "Settings",
+            label: T("Settings", "xsl_editor_tab2"),
             node:
               <PropertyEditor
                 propertyManager={props.editorState}
