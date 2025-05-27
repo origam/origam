@@ -1,4 +1,4 @@
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import {
@@ -33,7 +33,7 @@ export const SaveButton = observer(() => {
       disabled={!activeEditor.isDirty }
       style={{backgroundColor: activeEditor.isDirty ? 'red' : 'initial'}}
     >
-      {'Save'}
+      {T('Save', 'save_button_label')}
     </button>
   );
 });

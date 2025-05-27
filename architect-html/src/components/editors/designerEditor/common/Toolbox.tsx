@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import {
   runInFlowWithHandler
 } from "src/errorHandling/runInFlowWithHandler.ts";
@@ -22,7 +22,7 @@ export const Toolbox: React.FC<{
       <div className={S.inputs}>
         <div className={S.inputContainer}>
           <div>
-            Data Source
+            {T("Data Source", "tool_box_data_source")}
           </div>
           <select
             value={toolboxState.selectedDataSourceId ?? ""}
@@ -38,7 +38,7 @@ export const Toolbox: React.FC<{
         </div>
         <div className={S.inputContainer}>
           <div>
-            Name
+            {T("Name", "tool_box_name")}
           </div>
           <input
             type="text"
@@ -58,7 +58,7 @@ export const Toolbox: React.FC<{
         </div>
         <div className={S.inputContainer}>
           <div>
-            Package
+            {T("Package", "tool_box_package")}
           </div>
           <input
             disabled={true}

@@ -12,6 +12,7 @@ import {
   ComponentType
 } from "src/components/editors/designerEditor/common/ComponentType.tsx";
 import { action } from "mobx";
+import { T } from "src/main.tsx";
 
 export const ScreenToolbox: React.FC<{
   designerState: ScreenEditorState
@@ -49,13 +50,13 @@ export const ScreenToolbox: React.FC<{
     toolboxState={props.designerState.toolbox}
     tabViewItems={[
       {
-        label: "Screen Sections",
+        label: T("Screen Sections", "screen_tool_box_tab1"),
         node: <div className={S.draggAbles}>
           {toolboxState.sections.map(section => getToolboxComponent(section))}
         </div>
       },
       {
-        label: "Widgets",
+        label: T("Widgets", "screen_tool_box_tab2"),
         node: <div className={S.draggAbles}>
           {toolboxState.widgets.map(widget => getToolboxComponent(widget))}
         </div>

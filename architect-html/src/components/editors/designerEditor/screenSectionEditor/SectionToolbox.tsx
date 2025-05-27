@@ -14,6 +14,7 @@ import S from "src/components/editors/designerEditor/common/Toolbox.module.scss"
 import {
   Toolbox
 } from "src/components/editors/designerEditor/common/Toolbox.tsx";
+import { T } from "src/main.tsx";
 
 export const SectionToolbox: React.FC<{
   designerState: ScreenSectionEditorState
@@ -81,13 +82,13 @@ export const SectionToolbox: React.FC<{
     toolboxState={props.designerState.toolbox}
     tabViewItems={[
       {
-        label: "Fields",
+        label: T("Fields", "section_tool_box_tab1"),
         node: <div className={S.draggAbles}>
           {sectionToolbox.fields.map(field => getToolboxComponent(field))}
         </div>
       },
       {
-        label: "Widgets",
+        label: T("Widgets", "section_tool_box_tab2"),
         node: <div className={S.draggAbles}>
           {getControlComponent(ComponentType.AsCheckBox)}
           {getControlComponent(ComponentType.AsCombo)}

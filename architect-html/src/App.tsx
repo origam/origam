@@ -47,7 +47,7 @@ const App: React.FC = observer(() => {
             state={rootStore.sideBarTabViewState}
             items={[
               {
-                label: T("app_packages", "appPackages"),
+                label: T("Packages", "app_packages"),
                 node: <Packages/>
               },
               {
