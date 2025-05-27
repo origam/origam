@@ -26,7 +26,7 @@ import {
 } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import { TreeNode } from "src/components/modelTree/TreeNode.ts";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import {
   runInFlowWithHandler
@@ -80,6 +80,10 @@ const ModelTreeNode: React.FC<{
     run({generator: node.delete.bind(node)});
   }
 
+  function openDocumentationEditor() {
+    run({generator: node.delete.bind(node)});
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶'
@@ -124,13 +128,19 @@ const ModelTreeNode: React.FC<{
                 id="edit"
                 onClick={() => onNodeDoubleClick(node)}
               >
-                Edit
+                {T("Edit", "tree_node_edit")}
               </Item>
               <Item
                 id="delete"
                 onClick={onDelete}
               >
-                Delete
+                {T("Delete", "tree_node_delete")}
+              </Item>
+              <Item
+                id="documentation"
+                onClick={openDocumentationEditor}
+              >
+                {T("Documentation", "tree_node_documentation")}
               </Item>
             </>
           }

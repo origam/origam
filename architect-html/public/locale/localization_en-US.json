@@ -15,4 +15,7 @@
   "dialog_yes" : "Yes",
   "dialog_no" : "No",
   "dialog_cancel" : "Cancel",
+  "tree_node_documentation": "Documentation",
+  "tree_node_delete": "Delete",
+  "tree_node_edit": "Edit"
 }
