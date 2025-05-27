@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import {
@@ -52,7 +52,7 @@ export const SaveButton = observer(() => {
       disabled={!activeEditor.isDirty }
       style={{backgroundColor: activeEditor.isDirty ? 'red' : 'initial'}}
     >
-      {'Save'}
+      {T('Save', 'save_button_label')}
     </button>
   );
 });

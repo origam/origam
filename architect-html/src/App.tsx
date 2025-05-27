@@ -23,7 +23,7 @@ import "./App.css"
 import "src/colors.scss"
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView } from "src/components/tabView/TabView.tsx";
-import { RootStoreContext } from "src/main.tsx";
+import { RootStoreContext, T } from "src/main.tsx";
 import { observer } from "mobx-react-lite";
 import { EditorTabView } from "src/components/editorTabView/EditorTabView.tsx";
 import ModelTree from "src/components/modelTree/ModelTree.tsx";
@@ -66,15 +66,15 @@ const App: React.FC = observer(() => {
             state={rootStore.sideBarTabViewState}
             items={[
               {
-                label: "Packages",
+                label: T("Packages", "app_packages"),
                 node: <Packages/>
               },
               {
-                label: "Model",
+                label: T("Model", "app_model"),
                 node: <ModelTree/>
               },
               {
-                label: "Properties",
+                label: T("Properties", "app_properties"),
                 node: <Properties/>
               }
             ]}
