@@ -31,8 +31,7 @@ export function askYesNoQuestion(
     action((resolve: (value: YesNoResult) => void) => {
       const closeDialog = dialogStack.pushDialog(
         '',
-        <YesNoQuestion
-          screenTitle={title}
+        <YesNoQuestion screenTitle={title}
           yesLabel={T('Yes', 'dialog_yes')}
           noLabel={T('No', 'dialog_no')}
           cancelLabel={T('Cancel', 'dialog_cancel')}
