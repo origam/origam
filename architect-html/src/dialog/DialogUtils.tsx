@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { action } from 'mobx';
 import { YesNoQuestion } from 'src/dialog/components/YesNoQuestion.tsx';
 import { IDialogStackState } from 'src/dialog/types.ts';
-import { T } from "src/main.tsx";
+import { T } from 'src/main.tsx';
 
 export function askYesNoQuestion(
   dialogStack: IDialogStackState,
@@ -29,30 +29,29 @@ export function askYesNoQuestion(
 ): Promise<YesNoResult> {
   return new Promise(
     action((resolve: (value: YesNoResult) => void) => {
-        const closeDialog = dialogStack.pushDialog(
-          "",
-          <YesNoQuestion
-            screenTitle={title}
-            yesLabel={T("Yes", "dialog_yes")}
-            noLabel={T("No", "dialog_no")}
-            cancelLabel={T("Cancel", "dialog_cancel")}
-            message={question}
-            onYesClick={() => {
-              closeDialog();
-              resolve(YesNoResult.Yes);
-            }}
-            onNoClick={() => {
-              closeDialog();
-              resolve(YesNoResult.No);
-            }}
-            onCancelClick={() => {
-              closeDialog();
-              resolve(YesNoResult.Cancel);
-            }}
-          />
-        );
-      }
-    )
+      const closeDialog = dialogStack.pushDialog(
+        '',
+        <YesNoQuestion
+          screenTitle={title}
+          yesLabel={T('Yes', 'dialog_yes')}
+          noLabel={T('No', 'dialog_no')}
+          cancelLabel={T('Cancel', 'dialog_cancel')}
+          message={question}
+          onYesClick={() => {
+            closeDialog();
+            resolve(YesNoResult.Yes);
+          }}
+          onNoClick={() => {
+            closeDialog();
+            resolve(YesNoResult.No);
+          }}
+          onCancelClick={() => {
+            closeDialog();
+            resolve(YesNoResult.Cancel);
+          }}
+        />,
+      );
+    }),
   );
 }
 

@@ -2,8 +2,8 @@
   "app_packages": "Packages",
   "app_model": "Model",
   "app_properties": "Properties",
-  "tool_box_data_source" : "Data Source",
-  "tool_box_name" : "Name",
+  "tool_box_data_source": "Data Source",
+  "tool_box_name": "Name",
   "tool_box_package": "Package",
   "screen_tool_box_tab1": "Screen Sections",
   "screen_tool_box_tab2": "Widgets",
@@ -11,8 +11,8 @@
   "section_tool_box_tab2": "Widgets",
   "xsl_editor_tab1": "XSL",
   "xsl_editor_tab2": "Settings",
-  "save_button_label" : "Save",
-  "dialog_yes" : "Yes",
-  "dialog_no" : "No",
-  "dialog_cancel" : "Cancel",
+  "save_button_label": "Save",
+  "dialog_yes": "Yes",
+  "dialog_no": "No",
+  "dialog_cancel": "Cancel"
 }

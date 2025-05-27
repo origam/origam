@@ -17,21 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi } from "src/API/IArchitectApi.ts";
-import {
-  EditorTabViewState
-} from "src/components/editorTabView/EditorTabViewState.ts";
-import { TabViewState } from "src/components/tabView/TabViewState.ts";
-import { UiState } from "src/stores/UiState.ts";
-import { PackagesState } from "src/components/packages/PackagesState.ts";
-import { ModelTreeState } from "src/components/modelTree/ModelTreeState.ts";
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
-import { DialogStackState } from "src/dialog/DialogStackState.tsx";
-import { IDialogStackState } from "src/dialog/types.ts";
-import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
-import { ProgressBarState } from "src/components/topBar/ProgressBarState.ts";
-import { PropertiesState } from "src/components/properties/PropertiesState";
-import { TranslationsStore } from "src/stores/TranslationsStore.tsx";
+import { IArchitectApi } from 'src/API/IArchitectApi.ts';
+import { EditorTabViewState } from 'src/components/editorTabView/EditorTabViewState.ts';
+import { TabViewState } from 'src/components/tabView/TabViewState.ts';
+import { UiState } from 'src/stores/UiState.ts';
+import { PackagesState } from 'src/components/packages/PackagesState.ts';
+import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
+import { ArchitectApi } from 'src/API/ArchitectApi.ts';
+import { DialogStackState } from 'src/dialog/DialogStackState.tsx';
+import { IDialogStackState } from 'src/dialog/types.ts';
+import { ErrorDialogController } from 'src/errorHandling/ErrorDialog.tsx';
+import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
+import { PropertiesState } from 'src/components/properties/PropertiesState';
+import { TranslationsStore } from 'src/stores/TranslationsStore.tsx';
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -42,9 +40,9 @@ export class RootStore {
   public architectApi: IArchitectApi = new ArchitectApi();
   public dialogStack: IDialogStackState = new DialogStackState();
   public errorDialogController: ErrorDialogController;
-  public progressBarState= new ProgressBarState();
+  public progressBarState = new ProgressBarState();
   public propertiesState = new PropertiesState();
-  public translations = new TranslationsStore()
+  public translations = new TranslationsStore();
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);
@@ -55,9 +53,7 @@ export class RootStore {
       this.sideBarTabViewState,
       this.modelTreeState,
       this.uiState,
-      this.architectApi);
+      this.architectApi,
+    );
   }
 }
-
-
-
