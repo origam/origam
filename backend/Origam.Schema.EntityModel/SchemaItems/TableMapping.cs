@@ -40,7 +40,7 @@ public enum DatabaseMappingObjectType
 /// </summary>
 [SchemaItemDescription("Database Entity", "icon_database-entity.png")]
 [HelpTopic("Entities")]
-[ClassMetaVersion("6.0.0")]
+[ClassMetaVersion("6.1.0")]
 public class TableMapping : AbstractDataEntity
 {
 	public TableMapping() {}

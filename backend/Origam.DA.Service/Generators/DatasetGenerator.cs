@@ -677,7 +677,7 @@ public class DatasetGenerator
 			column.DefaultValue = RenderDefaultValue(finalColumn.Field.DefaultValue);
 		}
 	}
-	public DataSet CreateUpdateFieldDataSet(TableMappingItem table, FieldMappingItem field)
+	public DataSet CreateUpdateFieldDataSet(TableMapping table, FieldMappingItem field)
 	{
 		DataSet ds = new DataSet(dataSetName);
 		ds.Locale = System.Globalization.CultureInfo.CurrentUICulture;

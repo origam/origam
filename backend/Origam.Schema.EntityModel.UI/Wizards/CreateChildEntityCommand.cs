@@ -53,7 +53,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
 	{
 		IDataEntity entity = Owner as IDataEntity;
         var list = new List<ListViewItem>();
-        TableMappingItem table = new TableMappingItem();
+        TableMapping table = new TableMapping();
         DataEntityIndex entityIndex = new DataEntityIndex();
         EntityRelationItem entityRelation = new EntityRelationItem();
         list.Add(new ListViewItem(table.GetType().SchemaItemDescription().Name, table.Icon));
@@ -88,7 +88,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
     {
         IDataEntity entity1 = childEntityForm.Entity1;
         // 1. Create N:N Entity with reference to both entities
-        TableMappingItem newEntity = EntityHelper.CreateTable(childEntityForm.EntityName, childEntityForm.Entity1.Group, false);
+        TableMapping newEntity = EntityHelper.CreateTable(childEntityForm.EntityName, childEntityForm.Entity1.Group, false);
         newEntity.Persist();
         GeneratedModelElements.Add(newEntity);
         // Create index by parent entity

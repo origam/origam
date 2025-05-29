@@ -285,10 +285,10 @@ public abstract class AbstractDataService : IDataService
 		}
 		return result;
 	}
-	internal TableMappingItem GetTable(Guid id)
+	internal TableMapping GetTable(Guid id)
 	{
-		TableMappingItem result = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), 
-            new ModelElementKey(id)) as TableMappingItem;
+		TableMapping result = this.PersistenceProvider.RetrieveInstance(typeof(TableMapping), 
+            new ModelElementKey(id)) as TableMapping;
 		if(result == null)
 		{
 			throw new ArgumentException(ResourceUtils.GetString("TableMappingNotInModel", id.ToString()));

@@ -47,7 +47,7 @@ public class LocalizeDatastructureCommand : AbstractMenuCommand
 		// (all fields = true)
 		foreach (DataStructureEntity dsEntity in ds.LocalizableEntities)
 		{
-			TableMappingItem table = dsEntity.Entity as TableMappingItem;
+			TableMapping table = dsEntity.Entity as TableMapping;
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 			// create new datastructure entity using localization relation
 			DataStructureEntity localizationDSEntity 

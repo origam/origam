@@ -36,16 +36,16 @@ public class DetachedEntity : AbstractDataEntity
 	public DetachedEntity(Key primaryKey) : base(primaryKey)	{}
 //		public override bool CanConvertTo(Type type)
 //		{
-//			return (type == typeof(TableMappingItem));
+//			return (type == typeof(TableMapping));
 //		}
 //
 //		public override ISchemaItem ConvertTo(Type type)
 //		{
-//			if(type == typeof(TableMappingItem))
+//			if(type == typeof(TableMapping))
 //			{
 //				ArrayList ancestors = new ArrayList(this.Ancestors);
 //
-//				TableMappingItem converted = this.RootProvider.NewItem(type, this.SchemaExtensionId, this.Group) as TableMappingItem;
+//				TableMapping converted = this.RootProvider.NewItem(type, this.SchemaExtensionId, this.Group) as TableMapping;
 //
 //				converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
 //

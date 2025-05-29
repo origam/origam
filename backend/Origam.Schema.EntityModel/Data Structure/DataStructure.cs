@@ -61,7 +61,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
             List<DataStructureEntity> result = new List<DataStructureEntity>();
             foreach (DataStructureEntity dsEntity in Entities)
             {
-                TableMappingItem table = dsEntity.Entity as TableMappingItem;
+                TableMapping table = dsEntity.Entity as TableMapping;
                 if (table != null && table.LocalizationRelation != null)
                 {
                     result.Add(dsEntity);

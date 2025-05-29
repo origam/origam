@@ -249,7 +249,7 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
     internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
     {
         return string.Format("ALTER TABLE {0} ALTER COLUMN {1} DROP DEFAULT;",
-                RenderExpression(field.ParentItem as TableMappingItem),
+                RenderExpression(field.ParentItem as TableMapping),
                 sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket);
     }
     

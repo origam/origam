@@ -61,7 +61,7 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
         //    Entity = baseEntity
         //};
         var list = new List<ListViewItem>();
-        TableMappingItem table1 = new TableMappingItem();
+        TableMapping table1 = new TableMapping();
         EntityRelationItem entityRelation = new EntityRelationItem();
         list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
         list.Add(new ListViewItem(entityRelation.GetType().SchemaItemDescription().Name, entityRelation.Icon));
@@ -94,7 +94,7 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
     {
         IDataEntity baseEntity = GetIDataEntity();
         // 1. entity
-        TableMappingItem table = (TableMappingItem)baseEntity;
+        TableMapping table = (TableMapping)baseEntity;
         GeneratedModelElements.Add(table);
         EntityRelationItem relation = EntityHelper.CreateRelation(table, (IDataEntity)wizardForm.RelatedEntity, wizardForm.ParentChildCheckbox, true);
         EntityHelper.CreateRelationKey(relation,

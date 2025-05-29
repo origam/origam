@@ -386,7 +386,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 	}
     internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
     {
-        string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
+        string tableName = (dataEntityIndex.ParentItem as TableMapping)
             .MappedObjectName;
         string indexName = dataEntityIndex.Name;
         // from CompareSchema
@@ -410,10 +410,10 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
         }
         return dbIndexList;
     }
-    internal override Hashtable GetSchemaIndexListGenerate(List<TableMappingItem> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+    internal override Hashtable GetSchemaIndexListGenerate(List<TableMapping> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
     {
         Hashtable schemaIndexListGenerate = new Hashtable();
-        foreach (TableMappingItem t in schemaTables)
+        foreach (TableMapping t in schemaTables)
         {
             if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
             {

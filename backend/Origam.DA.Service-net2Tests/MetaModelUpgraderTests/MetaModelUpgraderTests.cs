@@ -263,4 +263,17 @@ public class MetaModelUpgraderTests: ClassUpgradeTestBase
             sut.TryUpgrade(xFileData);
         });
     }
+
+    [Test]
+    public void ShouldUpgradeTableMappingItem()
+    {
+        XFileData xFileData = LoadFile("TableMappingItemV6.0.0.origam");
+        var sut = new MetaModelAnalyzer(new NullFileWriter(), new MetaModelUpgrader(GetType().Assembly));
+        sut.TryUpgrade(xFileData);
+
+        XNamespace newNs = "http://schemas.origam.com/Origam.Schema.EntityModel.TableMapping/6.1.0";
+        XElement classNode = xFileData.Document.ClassNodes.First();
+        Assert.That(classNode.Name.Namespace, Is.EqualTo(newNs));
+        Assert.That(classNode.Name.LocalName, Is.EqualTo("DataEntity"));
+    }
 }

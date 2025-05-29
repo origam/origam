@@ -140,13 +140,13 @@ public class FieldMappingItem : AbstractDataEntityColumn,
 	}
 	#endregion
 	public static IDataEntity GetLocalizationTable(
-		TableMappingItem tableMappingItem)
+		TableMapping tableMappingItem)
 	{
 		return tableMappingItem?.LocalizationRelation?.AssociatedEntity;
 	}
 	[Browsable(false)]
 	public FieldMappingItem GetLocalizationField(
-		TableMappingItem tableMappingItem)
+		TableMapping tableMappingItem)
 	{
 		if((DataType != OrigamDataType.String) 
 		&& (DataType != OrigamDataType.Memo))
