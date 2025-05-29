@@ -40,12 +40,12 @@ public enum DatabaseMappingObjectType
 /// </summary>
 [SchemaItemDescription("Database Entity", "icon_database-entity.png")]
 [HelpTopic("Entities")]
-[ClassMetaVersion("6.0.0")]
-public class TableMappingItem : AbstractDataEntity
+[ClassMetaVersion("6.1.0")]
+public class TableMapping : AbstractDataEntity
 {
-	public TableMappingItem() {}
-	public TableMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public TableMappingItem(Key primaryKey) : base(primaryKey)	{}
+	public TableMapping() {}
+	public TableMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TableMapping(Key primaryKey) : base(primaryKey)	{}
 	#region Properties
 	private string _sourceTableName;
 	[Category("Mapping")]

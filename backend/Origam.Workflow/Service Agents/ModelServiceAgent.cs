@@ -187,7 +187,7 @@ public class ModelServiceAgent : AbstractServiceAgent
                         resultTable, field, documentationService);
                     continue;
                 }
-                case TableMappingItem
+                case TableMapping
                 {
                     DatabaseObjectType: DatabaseMappingObjectType.View
                 }:
@@ -197,7 +197,7 @@ public class ModelServiceAgent : AbstractServiceAgent
                 default:
                 {
                     AddDatabaseFieldToResultTable(
-                        resultTable, field, field.ParentItem as TableMappingItem, 
+                        resultTable, field, field.ParentItem as TableMapping, 
                         documentationService);
                     break;
                 }
@@ -210,9 +210,9 @@ public class ModelServiceAgent : AbstractServiceAgent
         FieldMappingItem fieldMappingItem,
         IDocumentationService documentationService)
     {
-        List<TableMappingItem> tableMappingItems 
-            = persistenceService.SchemaProvider.RetrieveList<TableMappingItem>();
-        foreach (TableMappingItem tableMappingItem in tableMappingItems)
+        List<TableMapping> tableMappingItems 
+            = persistenceService.SchemaProvider.RetrieveList<TableMapping>();
+        foreach (TableMapping tableMappingItem in tableMappingItems)
         {
             if (tableMappingItem.DatabaseObjectType
                 == DatabaseMappingObjectType.View)
@@ -233,7 +233,7 @@ public class ModelServiceAgent : AbstractServiceAgent
     private void AddDatabaseFieldToResultTable(
         DataTable resultTable,
         FieldMappingItem fieldMappingItem,
-        TableMappingItem parentTableMappingItem,
+        TableMapping parentTableMapping,
         IDocumentationService documentationService)
     {
         DataRow row = resultTable.NewRow();
@@ -244,14 +244,14 @@ public class ModelServiceAgent : AbstractServiceAgent
         row["DefaultValue"] = fieldMappingItem.DefaultValue;
         row["PackageName"] = fieldMappingItem.PackageName;
         row["ForeignKeyEntity"] = 
-            (fieldMappingItem.ForeignKeyEntity as TableMappingItem)
+            (fieldMappingItem.ForeignKeyEntity as TableMapping)
             ?.MappedObjectName ?? "";
         row["ForeignKeyField"] = 
             (fieldMappingItem.ForeignKeyField as FieldMappingItem)
             ?.MappedColumnName ?? "";
         row["IsPrimaryKey"] = fieldMappingItem.IsPrimaryKey;
         row["Name"] = fieldMappingItem.MappedColumnName;
-        row["ParentEntityName"] = parentTableMappingItem.MappedObjectName;
+        row["ParentEntityName"] = parentTableMapping.MappedObjectName;
         row["UserShortHelp"] = documentationService.GetDocumentation(
             fieldMappingItem.Id, DocumentationType.USER_SHORT_HELP);
         row["UserLongHelp"] = documentationService.GetDocumentation(

@@ -170,7 +170,7 @@ internal class DataLoader
 		}
 		var standardMessage = ResourceUtils.GetString(
 			"ErrorLoadingData",
-			(Entity.EntityDefinition as TableMappingItem)?.MappedObjectName,
+			(Entity.EntityDefinition as TableMapping)?.MappedObjectName,
 			Entity.Name,
 			Environment.NewLine, exception.Message);
 		DataService.HandleException(exception, standardMessage, null);
@@ -441,7 +441,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		{
 			return false;
 		}
-		if(!(rootEntity.Entity is TableMappingItem mappingItem))
+		if(!(rootEntity.Entity is TableMapping mappingItem))
 		{
 			return false;
 		} 
@@ -535,7 +535,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 					// in the dataset but that does not matter
 					// because we save such an entity once anyway.
 					if(!(entity.EntityDefinition 
-						   is TableMappingItem tableMapping) 
+						   is TableMapping tableMapping) 
 					   || !changedDataset.Tables.Contains(currentEntityName))
 					{
 						continue;
@@ -1291,7 +1291,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		IDbConnection connection = transaction.Connection;
 		try
 		{
-			TableMappingItem table = GetTable(entityId);
+			TableMapping table = GetTable(entityId);
 			if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 			{
 				throw new ArgumentOutOfRangeException(
@@ -1379,7 +1379,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		IDbConnection connection = transaction.Connection;
 		try
 		{
-			TableMappingItem table = GetTable(entityId);
+			TableMapping table = GetTable(entityId);
 			if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 			{
 				throw new ArgumentOutOfRangeException(
@@ -1621,8 +1621,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	
     public override string EntityDdl(Guid entityId)
     {
-        if(!(PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), 
-	            new ModelElementKey(entityId)) is TableMappingItem table))
+        if(!(PersistenceProvider.RetrieveInstance(typeof(TableMapping), 
+	            new ModelElementKey(entityId)) is TableMapping table))
         {
             throw new ArgumentOutOfRangeException("entityId", entityId, 
                 "Element is not a table mapping.");
@@ -1640,7 +1640,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         result[0] = DbDataAdapterFactory.AddColumnDdl(column);
         result[1] = DbDataAdapterFactory.AddForeignKeyConstraintDdl(
-            column.ParentItem as TableMappingItem, 
+            column.ParentItem as TableMapping, 
             column.ForeignKeyConstraint);
         return result;
     }
@@ -1937,7 +1937,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	public override List<SchemaDbCompareResult> CompareSchema(IPersistenceProvider provider)
 	{
 		var results = new List<SchemaDbCompareResult>();
-		List<TableMappingItem> schemaTables = GetSchemaTables(provider);
+		List<TableMapping> schemaTables = GetSchemaTables(provider);
         // tables
         Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 		var schemaColumnList = new Hashtable();
@@ -1947,10 +1947,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		columns.CaseSensitive = true;
 		DoCompare(results, dbTableList, schemaTableList, columns, 
 			DbCompareResultType.MissingInDatabase, 
-			typeof(TableMappingItem), provider);
+			typeof(TableMapping), provider);
 		DoCompare(results, dbTableList, schemaTableList, columns, 
 			DbCompareResultType.MissingInSchema, 
-			typeof(TableMappingItem), provider);
+			typeof(TableMapping), provider);
         // fields
         // model exists in database
         DoCompareModelInDatabase(results, schemaTables, 
@@ -1986,10 +1986,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return results;
 	}
     private void DoCompareIndexExistingTables(
-        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet foreignKeys, 
+        List<SchemaDbCompareResult> results, List<TableMapping> schemaTables, DataSet foreignKeys, 
         DataSet columns)
     {
-        foreach(TableMappingItem table in schemaTables)
+        foreach(TableMapping table in schemaTables)
         {
             // not for views and not for tables where generating script
             // is turned off
@@ -2010,10 +2010,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	                bool found = table.Constraints
 		                .Where(constraint => 
 			                (constraint.Type == ConstraintType.ForeignKey) 
-			                && (constraint.ForeignEntity is TableMappingItem))
+			                && (constraint.ForeignEntity is TableMapping))
 		                .Any(constraint => 
 			                ((string)row["PK_Table"] 
-			                == ((TableMappingItem)constraint.ForeignEntity)
+			                == ((TableMapping)constraint.ForeignEntity)
 								.MappedObjectName) 
 			                && ((string)row["FK_Table"] 
 			                    == table.MappedObjectName));
@@ -2042,18 +2042,18 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
     }
     private void CompareConstraintMissingInDatabase(
-        DataEntityConstraint constraint, TableMappingItem table,
+        DataEntityConstraint constraint, TableMapping table,
         DataSet foreignKeys, DataSet columns, List<SchemaDbCompareResult> results)
     {
 		if((constraint.Type != ConstraintType.ForeignKey) 
-		   || !(constraint.ForeignEntity is TableMappingItem) 
+		   || !(constraint.ForeignEntity is TableMapping) 
 		   || !(constraint.Fields[0] is FieldMappingItem))
 		{
 			return;
 		}
 		DataRow[] rows = foreignKeys.Tables[0].Select(
 			"PK_Table = '" 
-			+ (constraint.ForeignEntity as TableMappingItem)
+			+ (constraint.ForeignEntity as TableMapping)
 			.MappedObjectName 
 			+ "' AND FK_Table = '" 
 			+ table.MappedObjectName 
@@ -2140,7 +2140,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 								   .MappedColumnName 
 							   + "_" 
 							   + (constraint.ForeignEntity 
-								   as TableMappingItem).MappedObjectName,
+								   as TableMapping).MappedObjectName,
 					SchemaItem = table,
 					SchemaItemType = typeof(
 						DataEntityConstraint)
@@ -2151,9 +2151,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     internal abstract string GetSqlFk();
     private void DoCompareIndex(
-        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet indexFields)
+        List<SchemaDbCompareResult> results, List<TableMapping> schemaTables, DataSet indexFields)
     {
-        foreach(TableMappingItem table in schemaTables)
+        foreach(TableMapping table in schemaTables)
         {
             if(!table.GenerateDeploymentScript 
                || (table.DatabaseObjectType 
@@ -2239,7 +2239,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     internal abstract Hashtable GetDbIndexList(
         DataSet indexes, Hashtable schemaTableList);
     internal abstract Hashtable GetSchemaIndexListGenerate(
-	    List<TableMappingItem> schemaTables, Hashtable dbTableList, 
+	    List<TableMapping> schemaTables, Hashtable dbTableList, 
         Hashtable schemaIndexListAll);
     
     internal abstract string GetSqlIndexFields();
@@ -2369,10 +2369,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return stringBuilder.ToString().ToUpper();
 	}
     private void DoCompareModelInDatabase(
-        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, Hashtable dbTableList, 
+        List<SchemaDbCompareResult> results, List<TableMapping> schemaTables, Hashtable dbTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
-        foreach(TableMappingItem table in schemaTables)
+        foreach(TableMapping table in schemaTables)
         {
             // only if the table exists in the database,
             // otherwise we will be creating the whole table later on
@@ -2459,10 +2459,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
         return dbTableList;
     }
     
-    private Hashtable GetSchemaTableList(List<TableMappingItem> schemaTables)
+    private Hashtable GetSchemaTableList(List<TableMapping> schemaTables)
     {
         var schemaTableList = new Hashtable();
-        foreach(TableMappingItem table in schemaTables)
+        foreach(TableMapping table in schemaTables)
         {
             if(!schemaTableList.Contains(table.MappedObjectName))
             {
@@ -2471,20 +2471,20 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return schemaTableList;
     }
-    private List<TableMappingItem> GetSchemaTables(IPersistenceProvider provider)
+    private List<TableMapping> GetSchemaTables(IPersistenceProvider provider)
     {
         List<ISchemaItem> entityList = provider
             .RetrieveListByCategory<ISchemaItem>(
 	            AbstractDataEntity.CategoryConst);
-        var schemaTables = new List<TableMappingItem>();
+        var schemaTables = new List<TableMapping>();
         foreach(var tableMappingItem 
-                in entityList.OfType<TableMappingItem>())
+                in entityList.OfType<TableMapping>())
         {
             schemaTables.Add(tableMappingItem);
         }
         return schemaTables;
     }
-    private static string ConstraintName(TableMappingItem table, 
+    private static string ConstraintName(TableMapping table, 
         DataEntityConstraint constraint)
     {
         return 
@@ -2493,7 +2493,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             + "_" 
             + ((FieldMappingItem)constraint.Fields[0]).MappedColumnName 
             + "_" 
-            + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
+            + ((TableMapping)constraint.ForeignEntity).MappedObjectName;
     }
 	private void DoCompare(List<SchemaDbCompareResult> results, Hashtable dbList, 
         Hashtable schemaList, DataSet columns, 
@@ -2536,11 +2536,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            SchemaItemType = schemaItemType
             };
             // generate a model element
-            if(schemaItemType == typeof(TableMappingItem))
+            if(schemaItemType == typeof(TableMapping))
             {
 	            var schemaService = ServiceManager.Services
 		            .GetService<ISchemaService>();
-	            var entity = new TableMappingItem();
+	            var entity = new TableMapping();
 	            entity.PersistenceProvider = provider;
 	            entity.SchemaExtensionId 
 		            = schemaService.ActiveSchemaExtensionId;
@@ -2599,10 +2599,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
         foreach(DictionaryEntry entry in schemaList)
         {
             var process 
-	            = !((entry.Value is TableMappingItem tableMappingItem) 
+	            = !((entry.Value is TableMapping tableMappingItem) 
 	                && !tableMappingItem.GenerateDeploymentScript);
             if((entry.Value is DataEntityIndex dataEntityIndex) 
-               && (!((TableMappingItem)dataEntityIndex.ParentItem)
+               && (!((TableMapping)dataEntityIndex.ParentItem)
 	                   .GenerateDeploymentScript 
                    || !dataEntityIndex.GenerateDeploymentScript))
             {
@@ -2620,15 +2620,15 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            ParentSchemaItem = ((ISchemaItem)entry.Value).ParentItem,
 	            SchemaItemType = schemaItemType
             };
-            if(schemaItemType == typeof(TableMappingItem))
+            if(schemaItemType == typeof(TableMapping))
             {
-	            if(((TableMappingItem)result.SchemaItem).DatabaseObjectType 
+	            if(((TableMapping)result.SchemaItem).DatabaseObjectType 
 	               == DatabaseMappingObjectType.Table)
 	            {
 		            result.Script = sqlGenerator.TableDefinitionDdl(
-			            result.SchemaItem as TableMappingItem);
+			            result.SchemaItem as TableMapping);
 		            result.Script2 = sqlGenerator.ForeignKeyConstraintsDdl(
-			            result.SchemaItem as TableMappingItem);
+			            result.SchemaItem as TableMapping);
 	            }
 	            else
 	            {
@@ -2696,7 +2696,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 						var entityId = (Guid)table.ExtendedProperties["Id"];
 						var entity = GetEntity(entityId);
 						if(entity.EntityDefinition.GetType() 
-						   == typeof(TableMappingItem))
+						   == typeof(TableMapping))
 						{
 							newData.Clear();
 							LoadActualRow(newData, entityId, query.MethodId,

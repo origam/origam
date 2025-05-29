@@ -195,7 +195,7 @@ public class MsSqlDataService : AbstractSqlDataService
                 }
             }
             bulk.DestinationTableName 
-                = (entity.EntityDefinition as TableMappingItem)
+                = (entity.EntityDefinition as TableMapping)
                 .MappedObjectName;
             bulk.BulkCopyTimeout = 1000;
             bulk.WriteToServer(table);
@@ -206,9 +206,9 @@ public class MsSqlDataService : AbstractSqlDataService
         IPersistenceService persistence = ServiceManager.Services.GetService(
             typeof(IPersistenceService)) as IPersistenceService;
         Guid entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
-        TableMappingItem entity =
-            (TableMappingItem)persistence.SchemaProvider.RetrieveInstance(
-            typeof(TableMappingItem), new ModelElementKey(entityId));
+        TableMapping entity =
+            (TableMapping)persistence.SchemaProvider.RetrieveInstance(
+            typeof(TableMapping), new ModelElementKey(entityId));
         StringBuilder fieldNames = new StringBuilder();
         foreach (DataEntityIndex index in entity.EntityIndexes)
         {
@@ -441,7 +441,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
 	}
     internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
     {
-        string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
+        string tableName = (dataEntityIndex.ParentItem as TableMapping)
             .MappedObjectName;
         string indexName = dataEntityIndex.Name;
         // from CompareSchema
@@ -470,10 +470,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
         }
         return dbIndexList;
     }
-    internal override Hashtable GetSchemaIndexListGenerate(List<TableMappingItem> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+    internal override Hashtable GetSchemaIndexListGenerate(List<TableMapping> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
     {
         Hashtable schemaIndexListGenerate = new Hashtable();
-        foreach (TableMappingItem t in schemaTables)
+        foreach (TableMapping t in schemaTables)
         {
             if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
             {

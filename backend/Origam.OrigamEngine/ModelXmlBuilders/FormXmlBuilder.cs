@@ -221,7 +221,7 @@ public class FormXmlBuilder
 	public static string DatabaseTableName(DataTable table)
 	{
 		IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		TableMappingItem tableMapping = ps.SchemaProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey((Guid)table.ExtendedProperties["EntityId"])) as TableMappingItem;
+		TableMapping tableMapping = ps.SchemaProvider.RetrieveInstance(typeof(TableMapping), new ModelElementKey((Guid)table.ExtendedProperties["EntityId"])) as TableMapping;
 		if(tableMapping != null)
 		{
 			return tableMapping.MappedObjectName;
