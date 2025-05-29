@@ -21,11 +21,9 @@ public class EditorService(
     private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems =
         new();
 
-    public EditorData OpenEditorWithNewItem(Guid parentId, string fullTypeName)
+    public EditorData OpenEditorWithNewItem(string parentId, string fullTypeName)
     {
-        IBrowserNode2 parentItem = persistenceProvider
-            .RetrieveInstance<IBrowserNode2>(parentId);
-        var factory = (ISchemaItemFactory)parentItem;
+        ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
         Type newItemType = Reflector.GetTypeByName(fullTypeName);
         object result = factory
@@ -62,7 +60,25 @@ public class EditorService(
         return editorSchemaItems
             .GetOrAdd(item.Id, id => new EditorData(item));
     }
-    
+
+    private ISchemaItemFactory GetParentItemFactory(string parentId)
+    {
+        if (Guid.TryParse(parentId, out Guid parentGuid))
+        {
+            IBrowserNode2 parentItem = persistenceProvider
+                .RetrieveInstance<IBrowserNode2>(parentGuid);
+            return (ISchemaItemFactory)parentItem;
+        }
+
+        ISchemaItemProvider provider = schemaService.Providers
+            .FirstOrDefault(provider => provider.GetType().FullName == parentId);
+        if (provider == null)
+        {
+            throw new Exception("Unable to find schema item provider " + parentId);
+        }
+        return provider;
+    }
+
     private void SetControlItem (ControlSetItem controlSetItem, ControlItem controlItem)
     {
         controlSetItem.ControlItem = controlItem;

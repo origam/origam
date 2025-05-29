@@ -17,5 +17,7 @@
   "dialog_cancel" : "Cancel",
   "tree_node_documentation": "Documentation",
   "tree_node_delete": "Delete",
-  "tree_node_edit": "Edit"
+  "tree_node_edit": "Edit",
+  "tab_header_close_all" : "Close All",
+  "tab_header_close_all_but_this": "Close All But This"
 }
