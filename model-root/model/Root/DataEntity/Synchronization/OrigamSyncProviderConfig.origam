@@ -12,7 +12,7 @@
   xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
-  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMapping/6.1.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
