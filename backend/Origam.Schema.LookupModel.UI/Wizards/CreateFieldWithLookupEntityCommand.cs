@@ -56,7 +56,7 @@ public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
 	{
         FieldMappingItem baseField = Owner as FieldMappingItem;
         var list = new List<ListViewItem>();
-        TableMappingItem table1 = new TableMappingItem();
+        TableMapping table1 = new TableMapping();
         FieldMappingItem fieldMapping = new FieldMappingItem();
         DataServiceDataLookup data = new DataServiceDataLookup();
         list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
@@ -105,7 +105,7 @@ public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
             baseEntity = baseField.ParentItem as IDataEntity;
         }
         // 1. entity
-        TableMappingItem table = CreateLookupEntity(createFieldWith.LookupName, baseEntity,
+        TableMapping table = CreateLookupEntity(createFieldWith.LookupName, baseEntity,
             baseField);
         // 2. field "Name"
         FieldMappingItem nameField = EntityHelper.CreateColumn(table,
@@ -255,12 +255,12 @@ public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
     {
         return _schemaBrowser.ImageIndex(icon);
     }
-    private TableMappingItem CreateLookupEntity(
+    private TableMapping CreateLookupEntity(
        string LookupName, IDataEntity baseEntity,
         IDataEntityColumn baseField)
     {
         bool createAncestor = baseField == null;
-        TableMappingItem table = EntityHelper.CreateTable(
+        TableMapping table = EntityHelper.CreateTable(
             LookupName, baseEntity.Group, false, createAncestor);
         table.Persist();
         GeneratedModelElements.Add(table);
