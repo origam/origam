@@ -19,7 +19,6 @@ public class EditorController(
     EditorService editorService,
     DocumentationHelperService documentationHelper,
     IWebHostEnvironment environment,
-    IDocumentationService documentationService,
     ILogger<OrigamController> log)
     : OrigamController(log, environment)
 {
