@@ -81,7 +81,7 @@ const ModelTreeNode: React.FC<{
   }
 
   function openDocumentationEditor() {
-    run({generator: node.delete.bind(node)});
+    run({generator: editorTabViewState.openDocumentationEditor(node)});
   }
 
   function getSymbol() {

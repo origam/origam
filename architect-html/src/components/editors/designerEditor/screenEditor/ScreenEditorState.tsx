@@ -53,6 +53,7 @@ export class ScreenEditorState extends DesignerEditorState {
   public screenToolbox: ScreenToolboxState;
 
   constructor(
+    editorId: string,
     editorNode: IEditorNode,
     isDirty: boolean,
     screenEditorData: IScreenEditorData,
@@ -62,6 +63,7 @@ export class ScreenEditorState extends DesignerEditorState {
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>
   ) {
     super(
+      editorId,
       editorNode,
       isDirty,
       screenEditorData,

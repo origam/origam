@@ -42,10 +42,11 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   @observable accessor _isDirty: boolean;
 
   constructor(
-    private editorNode: IEditorNode,
+    public editorId: string,
+    protected editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
-    private architectApi: IArchitectApi
+    protected architectApi: IArchitectApi
   ) {
     this._isDirty = isDirty;
     this.properties = properties ?? [];
@@ -62,10 +63,6 @@ export class GridEditorState implements IEditorState, IPropertyManager {
 
   get label() {
     return this.properties.find(x => x.name === "Name")?.value || "";
-  }
-
-  get schemaItemId() {
-    return this.editorNode.origamId;
   }
 
   * save(): Generator<Promise<any>, void, any> {

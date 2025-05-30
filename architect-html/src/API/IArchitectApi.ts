@@ -31,7 +31,7 @@ export interface IArchitectApi {
 
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
-  closeEditor(schemaItemId: string): Promise<void>
+  closeEditor(editorId: string): Promise<void>
 
   persistChanges(schemaItemId: string): Promise<void>;
 
@@ -90,6 +90,15 @@ export interface IArchitectApi {
   }) : Promise<IScreenEditorModel>
 
   loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>>;
+
+  openDocumentationEditor(origamId: string): Promise<IApiEditorData>;
+
+  updateDocumentationProperties(
+    schemaItemId: string,
+    changes: IPropertyChange[]
+  ): Promise<IUpdatePropertiesResult>;
+
+  persistDocumentationChanges(schemaItemId: string): Promise<void>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;
@@ -193,11 +202,14 @@ export interface IMenuItemInfo {
   iconIndex: number | null;
 }
 
-export type EditorType =
+export type EditorSubType =
   "GridEditor"
   | "XslTEditor"
   | "ScreenSectionEditor"
+  | "ScreenEditor"
   | null;
+
+export type EditorType = EditorSubType | "DocumentationEditor"
 
 export interface INodeLoadData {
   id: string;
@@ -208,7 +220,7 @@ export interface INodeLoadData {
 export interface IApiTreeNode extends INodeLoadData {
   origamId: string;
   hasChildNodes: boolean;
-  editorType: EditorType;
+  defaultEditor: EditorSubType;
   childrenIds: string[];
   children?: IApiTreeNode[];
   iconUrl?: string
@@ -250,6 +262,8 @@ export interface IDropDownValue {
 }
 
 export interface IApiEditorData {
+  editorId: string;
+  editorType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
   data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
@@ -260,5 +274,5 @@ export interface IApiEditorNode {
   id: string;
   origamId: string;
   nodeText: string;
-  editorType: EditorType;
+  editorType: EditorSubType;
 }

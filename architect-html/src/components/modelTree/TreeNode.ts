@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   IApiTreeNode,
-  EditorType, IArchitectApi,
+  EditorSubType, IArchitectApi,
   IMenuItemInfo, IApiEditorData
 } from "src/API/IArchitectApi.ts";
 import { observable } from "mobx";
@@ -43,7 +43,7 @@ export class TreeNode implements IEditorNode {
     this.origamId = apiNode.origamId;
     this.nodeText = apiNode.nodeText;
     this.isNonPersistentItem = apiNode.isNonPersistentItem;
-    this.editorType = apiNode.editorType;
+    this.editorType = apiNode.defaultEditor;
     this.childrenIds = apiNode.childrenIds;
     this.iconUrl = apiNode.iconUrl;
     this.children = apiNode.children
@@ -59,7 +59,7 @@ export class TreeNode implements IEditorNode {
   nodeText: string;
   childrenInitialized: boolean;
   isNonPersistentItem: boolean;
-  editorType: EditorType;
+  editorType: EditorSubType;
   children: TreeNode[];
   childrenIds: string[];
   iconUrl?: string;
