@@ -21,13 +21,11 @@ import React, { useContext, useEffect } from 'react';
 import S from 'src/components/modelTree/ModelTree.module.scss';
 import { Menu, Item, useContextMenu, TriggerEvent, Separator, Submenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-import { TreeNode } from "src/components/modelTree/TreeNode.ts";
-import { RootStoreContext, T } from "src/main.tsx";
-import { observer } from "mobx-react-lite";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { Icon } from "src/components/icon/Icon.tsx";
+import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
+import { RootStoreContext, T } from 'src/main.tsx';
+import { observer } from 'mobx-react-lite';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { Icon } from 'src/components/icon/Icon.tsx';
 
 const ModelTreeNode: React.FC<{
   node: TreeNode;
@@ -77,7 +75,7 @@ const ModelTreeNode: React.FC<{
   }
 
   function openDocumentationEditor() {
-    run({generator: editorTabViewState.openDocumentationEditor(node)});
+    run({ generator: editorTabViewState.openDocumentationEditor(node) });
   }
 
   function getSymbol() {
@@ -117,23 +115,14 @@ const ModelTreeNode: React.FC<{
           <Separator />
           {!node.isNonPersistentItem && (
             <>
-              <Item
-                id="edit"
-                onClick={() => onNodeDoubleClick(node)}
-              >
-                {T("Edit", "tree_node_edit")}
+              <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
+                {T('Edit', 'tree_node_edit')}
               </Item>
-              <Item
-                id="delete"
-                onClick={onDelete}
-              >
-                {T("Delete", "tree_node_delete")}
+              <Item id="delete" onClick={onDelete}>
+                {T('Delete', 'tree_node_delete')}
               </Item>
-              <Item
-                id="documentation"
-                onClick={openDocumentationEditor}
-              >
-                {T("Documentation", "tree_node_documentation")}
+              <Item id="documentation" onClick={openDocumentationEditor}>
+                {T('Documentation', 'tree_node_documentation')}
               </Item>
             </>
           )}

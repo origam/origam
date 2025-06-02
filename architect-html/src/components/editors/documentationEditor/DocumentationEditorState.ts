@@ -1,27 +1,19 @@
-import {
-  EditorProperty,
-  toChanges
-} from "src/components/editors/gridEditor/EditorProperty.ts";
+import { EditorProperty, toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
 import {
   DocumentationEditorData,
   IArchitectApi,
-  IUpdatePropertiesResult
-} from "src/API/IArchitectApi.ts";
-import {
-  GridEditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
+  IUpdatePropertiesResult,
+} from 'src/API/IArchitectApi.ts';
+import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
 
 export class DocumentationEditorState extends GridEditorState {
-
   constructor(
     editorId: string,
     editorNode: IEditorNode,
     private documentationData: DocumentationEditorData,
     isDirty: boolean,
-    architectApi: IArchitectApi
+    architectApi: IArchitectApi,
   ) {
     const properties = documentationData.properties.map(property => new EditorProperty(property));
     super(editorId, editorNode, properties, isDirty, architectApi);
@@ -31,7 +23,7 @@ export class DocumentationEditorState extends GridEditorState {
     return `[${this.documentationData.label}]`;
   }
 
-  * save(): Generator<Promise<any>, void, any> {
+  *save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;
       yield this.architectApi.persistDocumentationChanges(this.editorNode.origamId);
@@ -44,10 +36,16 @@ export class DocumentationEditorState extends GridEditorState {
     }
   }
 
-  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+  *onPropertyUpdated(
+    property: EditorProperty,
+    value: any,
+  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     property.value = value;
     const changes = toChanges(this.properties);
-    const updateResult = (yield this.architectApi.updateDocumentationProperties(this.editorNode.origamId, changes)) as IUpdatePropertiesResult;
+    const updateResult = (yield this.architectApi.updateDocumentationProperties(
+      this.editorNode.origamId,
+      changes,
+    )) as IUpdatePropertiesResult;
     this._isDirty = updateResult.isDirty;
   }
 }

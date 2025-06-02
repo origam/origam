@@ -39,13 +39,15 @@ export const EditorTabView: React.FC = observer(() => {
     <div className={S.root}>
       <div className={S.labels}>
         {editors.map(editor => (
-          <TabHeader key={editor.schemaItemId + editor.label} editor={editor} />
+          <TabHeader key={editor.editorId} editor={editor} />
         ))}
       </div>
       <div className={S.content}>
-        {state.editors.map((editorContainer) => (
-          <div key={editorContainer.state.editorId}
-               className={editorContainer.state.isActive ? S.visible : S.hidden}>
+        {state.editors.map(editorContainer => (
+          <div
+            key={editorContainer.state.editorId}
+            className={editorContainer.state.isActive ? S.visible : S.hidden}
+          >
             {editorContainer.element}
           </div>
         ))}

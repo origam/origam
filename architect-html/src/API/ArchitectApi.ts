@@ -92,25 +92,30 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async closeEditor(editorId: string) {
-    await (this.axiosInstance.post("/Editor/CloseEditor",
-      {editorId: editorId}));
+    await this.axiosInstance.post('/Editor/CloseEditor', { editorId: editorId });
   }
 
   async openDocumentationEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (await (this.axiosInstance.post("/Documentation/OpenEditor",
-      {schemaItemId: schemaItemId}))).data;
+    return (
+      await this.axiosInstance.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })
+    ).data;
   }
 
-  async updateDocumentationProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IUpdatePropertiesResult> {
-    return (await this.axiosInstance.post(`/Documentation/Update`, {
-      schemaItemId,
-      changes
-    })).data;
+  async updateDocumentationProperties(
+    schemaItemId: string,
+    changes: IPropertyChange[],
+  ): Promise<IUpdatePropertiesResult> {
+    return (
+      await this.axiosInstance.post(`/Documentation/Update`, {
+        schemaItemId,
+        changes,
+      })
+    ).data;
   }
 
   async persistDocumentationChanges(schemaItemId: string): Promise<void> {
     await this.axiosInstance.post(`/Documentation/PersistChanges`, {
-      schemaItemId
+      schemaItemId,
     });
   }
 

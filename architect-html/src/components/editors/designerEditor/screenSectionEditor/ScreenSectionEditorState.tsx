@@ -41,8 +41,16 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     architectApi: IArchitectApi,
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
-    super(editorId, editorNode, isDirty, sectionEditorData, propertiesState,
-      sectionToolboxState.toolboxState, architectApi, runGeneratorHandled);
+    super(
+      editorId,
+      editorNode,
+      isDirty,
+      sectionEditorData,
+      propertiesState,
+      sectionToolboxState.toolboxState,
+      architectApi,
+      runGeneratorHandled,
+    );
     this.sectionToolbox = sectionToolboxState;
   }
 

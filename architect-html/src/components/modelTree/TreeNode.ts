@@ -19,16 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   IApiTreeNode,
-  EditorSubType, IArchitectApi,
-  IMenuItemInfo, IApiEditorData
-} from "src/API/IArchitectApi.ts";
-import { observable } from "mobx";
-import {
-  EditorData,
-} from "src/components/modelTree/EditorData.ts";
-import { IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
-import { RootStore } from "src/stores/RootStore.ts";
+  EditorSubType,
+  IArchitectApi,
+  IMenuItemInfo,
+  IApiEditorData,
+} from 'src/API/IArchitectApi.ts';
+import { observable } from 'mobx';
+import { EditorData } from 'src/components/modelTree/EditorData.ts';
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+import { RootStore } from 'src/stores/RootStore.ts';
 
 export class TreeNode implements IEditorNode {
   private architectApi: IArchitectApi;

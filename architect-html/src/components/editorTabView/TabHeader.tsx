@@ -32,14 +32,14 @@ export const TabHeader: React.FC<{
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
-  const menuId = "TabMenu_" + props.editor.editorId
+  const menuId = 'TabMenu_' + props.editor.editorId;
 
   const { show, hideAll } = useContextMenu({
     id: menuId,
   });
 
   function onClose(editor: IEditorState) {
-    run({generator: state.closeEditor(editor.editorId)});
+    run({ generator: state.closeEditor(editor.editorId) });
   }
 
   async function handleContextMenu(event: TriggerEvent) {
@@ -64,7 +64,7 @@ export const TabHeader: React.FC<{
           if (ignoreId && editor.editorId === ignoreId) {
             continue;
           }
-          yield* state.closeEditor(editor.editorId)()
+          yield* state.closeEditor(editor.editorId)();
         }
       },
     });
@@ -80,7 +80,8 @@ export const TabHeader: React.FC<{
 
   return (
     <div
-      key={props.editor.label} className={S.labelContainer}
+      key={props.editor.label}
+      className={S.labelContainer}
       onClick={() => action(() => state.setActiveEditor(props.editor.editorId))()}
     >
       <div className={props.editor.isActive ? S.activeTab : ''} onContextMenu={handleContextMenu}>
@@ -93,10 +94,7 @@ export const TabHeader: React.FC<{
         <Item id="closeAll" onClick={() => closeAllTabsExcept(null)}>
           {T('Close All', 'tab_header_close_all')}
         </Item>
-        <Item
-          id="closeAllButThis"
-          onClick={() => closeAllTabsExcept(props.editor.editorId)}
-        >
+        <Item id="closeAllButThis" onClick={() => closeAllTabsExcept(props.editor.editorId)}>
           {T('Close All But This', 'tab_header_close_all_but_this')}
         </Item>
       </Menu>

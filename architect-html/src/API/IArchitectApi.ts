@@ -30,7 +30,7 @@ export interface IArchitectApi {
 
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
-  closeEditor(editorId: string): Promise<void>
+  closeEditor(editorId: string): Promise<void>;
 
   persistChanges(schemaItemId: string): Promise<void>;
 
@@ -90,15 +90,14 @@ export interface IArchitectApi {
 
   loadSections(
     editorSchemaItemId: string,
-  }) : Promise<IScreenEditorModel>;
-
-  loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>>;
+    sectionIds: string[],
+  ): Promise<Record<string, IApiControl>>;
 
   openDocumentationEditor(origamId: string): Promise<IApiEditorData>;
 
   updateDocumentationProperties(
     schemaItemId: string,
-    changes: IPropertyChange[]
+    changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult>;
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
@@ -206,13 +205,13 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
-  "GridEditor"
-  | "XslTEditor"
-  | "ScreenSectionEditor"
-  | "ScreenEditor"
+  | 'GridEditor'
+  | 'XslTEditor'
+  | 'ScreenSectionEditor'
+  | 'ScreenEditor'
   | null;
 
-export type EditorType = EditorSubType | "DocumentationEditor"
+export type EditorType = EditorSubType | 'DocumentationEditor';
 
 export interface INodeLoadData {
   id: string;

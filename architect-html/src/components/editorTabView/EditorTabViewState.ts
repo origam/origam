@@ -17,19 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
-import {
-  Editor,
-  getEditor
-} from "src/components/editors/GetEditor.tsx";
+import { observable } from 'mobx';
+import { Editor, getEditor } from 'src/components/editors/GetEditor.tsx';
 import {
   IApiEditorNode,
   IArchitectApi,
-  IApiEditorData, EditorType
-} from "src/API/IArchitectApi.ts";
-import {
-  EditorData
-} from "src/components/modelTree/EditorData.ts";
+  IApiEditorData,
+  EditorType,
+} from 'src/API/IArchitectApi.ts';
+import { EditorData } from 'src/components/modelTree/EditorData.ts';
 
 import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
 import { RootStore } from 'src/stores/RootStore.ts';
@@ -79,26 +75,26 @@ export class EditorTabViewState {
   }
 
   openDocumentationEditor(node: TreeNode) {
-    return function * (this: EditorTabViewState): Generator<Promise<IApiEditorData>, void, IApiEditorData>
-    {
+    return function* (
+      this: EditorTabViewState,
+    ): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
       const apiEditorData = yield this.architectApi.openDocumentationEditor(node.origamId);
       const editorData = new EditorData(apiEditorData, node);
-      this.openEditor(editorData, "DocumentationEditor");
+      this.openEditor(editorData, 'DocumentationEditor');
     }.bind(this);
   }
 
   openEditor(editorData: EditorData, editorType?: EditorType) {
-    const alreadyOpenEditor = this.editors
-      .find(editor => editor.state.editorId === editorData.editorId);
+    const alreadyOpenEditor = this.editors.find(
+      editor => editor.state.editorId === editorData.editorId,
+    );
     if (alreadyOpenEditor) {
       this.setActiveEditor(alreadyOpenEditor.state.editorId);
       return;
     }
 
     const editor = getEditor({
-      editorType: editorType === undefined
-        ? editorData.editorType
-        : editorType,
+      editorType: editorType === undefined ? editorData.editorType : editorType,
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
@@ -108,7 +104,7 @@ export class EditorTabViewState {
       return;
     }
 
-    this.editors.push(editor)
+    this.editors.push(editor);
     this.setActiveEditor(editor.state.editorId);
   }
 

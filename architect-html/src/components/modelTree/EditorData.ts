@@ -24,14 +24,11 @@ import {
   IApiEditorProperty,
   ISectionEditorData,
   IScreenEditorData,
-  EditorType, DocumentationEditorData
-} from "src/API/IArchitectApi.ts";
-import {
-  TreeNode
-} from "src/components/modelTree/TreeNode.ts";
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
+  EditorType,
+  DocumentationEditorData,
+} from 'src/API/IArchitectApi.ts';
+import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
 
 export class EditorNode implements IEditorNode {
   id: string;

@@ -25,99 +25,113 @@ import {
   DocumentationEditorData,
   EditorType,
   IApiEditorProperty,
-  IArchitectApi, IScreenEditorData,
-  ISectionEditorData
-} from "src/API/IArchitectApi.ts";
-import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
-import { EditorData } from "src/components/modelTree/EditorData.ts";
-import ScreenSectionEditor
-  from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx";
-import {
-  ScreenSectionEditorState
-} from "src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx";
-import {
-  EditorProperty
-} from "src/components/editors/gridEditor/EditorProperty.ts";
-import { PropertiesState } from "src/components/properties/PropertiesState.ts";
-import {
-  ScreenEditorState
-} from "src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx";
-import ScreenEditor
-  from "src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx";
-import {
-  ScreenToolboxState
-} from "src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx";
-import {
-  SectionToolboxState
-} from "src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx";
-import { FlowHandlerInput } from "src/errorHandling/runInFlowWithHandler.ts";
-import { CancellablePromise } from "mobx/dist/api/flow";
-import {
-  DocumentationEditorState
-} from "src/components/editors/documentationEditor/DocumentationEditorState.ts";
-import { T } from "src/main.tsx";
+  IArchitectApi,
+  IScreenEditorData,
+  ISectionEditorData,
+} from 'src/API/IArchitectApi.ts';
+import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
+import { EditorData } from 'src/components/modelTree/EditorData.ts';
+import ScreenSectionEditor from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx';
+import { ScreenSectionEditorState } from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
+import { ScreenEditorState } from 'src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx';
+import ScreenEditor from 'src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx';
+import { ScreenToolboxState } from 'src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
+import { SectionToolboxState } from 'src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
+import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { CancellablePromise } from 'mobx/dist/api/flow';
+import { DocumentationEditorState } from 'src/components/editors/documentationEditor/DocumentationEditorState.ts';
+import { T } from 'src/main.tsx';
 
-export function getEditor(
-  args: {
-    editorType: EditorType,
-    editorData: EditorData,
-    propertiesState: PropertiesState
-    architectApi: IArchitectApi,
-    runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
-  }
-) {
-  const {editorType, editorData, propertiesState, architectApi} = args;
-  const {node, data, isDirty} = editorData;
-  if (editorType === "GridEditor") {
+export function getEditor(args: {
+  editorType: EditorType;
+  editorData: EditorData;
+  propertiesState: PropertiesState;
+  architectApi: IArchitectApi;
+  runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
+}) {
+  const { editorType, editorData, propertiesState, architectApi } = args;
+  const { node, data, isDirty } = editorData;
+  if (editorType === 'GridEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new GridEditorState(editorData.editorId, node, properties, isDirty, architectApi);
+    const editorState = new GridEditorState(
+      editorData.editorId,
+      node,
+      properties,
+      isDirty,
+      architectApi,
+    );
     return new Editor(
       editorState,
-      <GridEditor
-        editorState={editorState}
-        title={T("Editing: {0}", "grid_editor_title", editorState.label)}/>
+      (
+        <GridEditor
+          editorState={editorState}
+          title={T('Editing: {0}', 'grid_editor_title', editorState.label)}
+        />
+      ),
     );
   }
-  if (editorType === "XslTEditor") {
+  if (editorType === 'XslTEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new GridEditorState(editorData.editorId, node, properties, isDirty, architectApi);
-    return new Editor(
-      editorState,
-      <XsltEditor editorState={editorState}/>
+    const editorState = new GridEditorState(
+      editorData.editorId,
+      node,
+      properties,
+      isDirty,
+      architectApi,
     );
+    return new Editor(editorState, <XsltEditor editorState={editorState} />);
   }
-  if (editorType === "ScreenSectionEditor") {
+  if (editorType === 'ScreenSectionEditor') {
     const sectionData = data as ISectionEditorData;
     const sectionToolboxState = new SectionToolboxState(sectionData, node.origamId, architectApi);
-    const state = new ScreenSectionEditorState(editorData.editorId, node, isDirty, sectionData,
-      propertiesState, sectionToolboxState, architectApi, args.runGeneratorHandled);
-    return new Editor(
-      state,
-      <ScreenSectionEditor designerState={state}/>
+    const state = new ScreenSectionEditorState(
+      editorData.editorId,
+      node,
+      isDirty,
+      sectionData,
+      propertiesState,
+      sectionToolboxState,
+      architectApi,
+      args.runGeneratorHandled,
     );
     return new Editor(state, <ScreenSectionEditor designerState={state} />);
+    return new Editor(state, <ScreenSectionEditor designerState={state} />);
   }
-  if (editorType === "ScreenEditor") {
+  if (editorType === 'ScreenEditor') {
     const screenData = data as IScreenEditorData;
     const screenToolboxState = new ScreenToolboxState(screenData, node.origamId, architectApi);
     const state = new ScreenEditorState(
-      editorData.editorId, node, isDirty, screenData, propertiesState,
-      screenToolboxState, architectApi, args.runGeneratorHandled);
-    return new Editor(
-      state,
-      <ScreenEditor designerState={state}/>
+      editorData.editorId,
+      node,
+      isDirty,
+      screenData,
+      propertiesState,
+      screenToolboxState,
+      architectApi,
+      args.runGeneratorHandled,
     );
     return new Editor(state, <ScreenEditor designerState={state} />);
+    return new Editor(state, <ScreenEditor designerState={state} />);
   }
-  if (editorType === "DocumentationEditor") {
+  if (editorType === 'DocumentationEditor') {
     const documentationData = data as DocumentationEditorData;
-    const editorState = new DocumentationEditorState(editorData.editorId, node, documentationData, isDirty, architectApi);
+    const editorState = new DocumentationEditorState(
+      editorData.editorId,
+      node,
+      documentationData,
+      isDirty,
+      architectApi,
+    );
     return new Editor(
       editorState,
-      <GridEditor
-        editorState={editorState}
-        title={T("Documentation: {0}", "documentation_editor_title", documentationData.label)}
-      />
+      (
+        <GridEditor
+          editorState={editorState}
+          title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
+        />
+      ),
     );
   }
   return null;

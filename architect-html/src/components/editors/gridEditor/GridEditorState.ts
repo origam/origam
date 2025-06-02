@@ -36,7 +36,7 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     protected editorNode: IEditorNode,
     properties: EditorProperty[] | undefined,
     isDirty: boolean,
-    protected architectApi: IArchitectApi
+    protected architectApi: IArchitectApi,
   ) {
     this._isDirty = isDirty;
     this.properties = properties ?? [];
@@ -55,7 +55,7 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     return this.properties.find(x => x.name === 'Name')?.value || '';
   }
 
-  * save(): Generator<Promise<any>, void, any> {
+  *save(): Generator<Promise<any>, void, any> {
     try {
       this.isSaving = true;
       yield this.architectApi.persistChanges(this.editorNode.origamId);

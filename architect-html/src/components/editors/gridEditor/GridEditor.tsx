@@ -24,9 +24,9 @@ import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorSta
 import { observer } from 'mobx-react-lite';
 
 export const GridEditor: React.FC<{
-  editorState: GridEditorState
-  title: string
-}> = observer( (props) => {
+  editorState: GridEditorState;
+  title: string;
+}> = observer(props => {
   return (
     <div className={S.gridEditor}>
       <h3 className={S.title}>{props.title}</h3>
