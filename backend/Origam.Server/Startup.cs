@@ -99,7 +99,8 @@ public class Startup
             options.MultipartHeadersLengthLimit =
                 startUpConfiguration.MultipartHeadersLengthLimit;
         });
-        services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
+        services.AddSingleton<PersistedGrantStore>();
+        services.AddSingleton<IOpenIddictTokenStore<OrigamToken>>(sp => sp.GetRequiredService<PersistedGrantStore>());
         var builder = services.AddMvc().AddNewtonsoftJson();
         services.Configure<IdentityOptions>(options =>
         {
