@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using IdentityServer4;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -49,7 +48,7 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[Authorize]
 [ApiController]
 [Route("internalApi/[controller]")]
 public abstract class AbstractController: ControllerBase
