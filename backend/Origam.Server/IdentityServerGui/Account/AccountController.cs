@@ -44,7 +44,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     private readonly IMailService _mailService;
     private readonly UserConfig _userConfig;
     private readonly IStringLocalizer<SharedResources> _localizer;
-    private readonly IPersistedGrantStore _persistedGrantStore;
+    private readonly PersistedGrantStore _persistedGrantStore;
     private readonly SessionObjects _sessionObjects;
     private readonly ILogger<UserManager<IOrigamUser>> _logger;
     private readonly IdentityGuiConfig _configOptions;
@@ -59,7 +59,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         IEventService events,
         IMailService mailService,
         IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
-        IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
+        PersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
         IOptions<RequestLocalizationOptions> requestLocalizationOptions,
         IOptions<IdentityGuiConfig> configOptions,
         ILogger<UserManager<IOrigamUser>> logger)
