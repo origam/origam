@@ -58,8 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-    <PackageReference Include="IdentityServer4" Version="4.1.2" NoWarn="NU1902"/>
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
+    <PackageReference Include="OpenIddict" Version="3.3.1" />
+    <PackageReference Include="OpenIddict.Server" Version="3.3.1" />
+    <PackageReference Include="OpenIddict.Validation" Version="3.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
