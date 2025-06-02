@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.Events;
+using OpenIddict.Server;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
 

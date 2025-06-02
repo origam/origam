@@ -24,6 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text.Json;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -345,6 +346,21 @@ public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
         return new ValueTask<string?>(token.Key);
     }
 
+    public ValueTask<string?> GetAuthorizationIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>((string?)null);
+    }
+
+    public ValueTask<DateTimeOffset?> GetRedemptionDateAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<DateTimeOffset?>((DateTimeOffset?)null);
+    }
+
+    public ValueTask<ImmutableDictionary<string, JsonElement>> GetPropertiesAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<ImmutableDictionary<string, JsonElement>>(ImmutableDictionary<string, JsonElement>.Empty);
+    }
+
     public ValueTask<string?> GetStatusAsync(OrigamToken token, CancellationToken cancellationToken)
     {
         return new ValueTask<string?>(null);
@@ -374,6 +390,18 @@ public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
         }
     }
 
+    public async IAsyncEnumerable<TResult> ListAsync<TState, TResult>(
+        Func<IQueryable<OrigamToken>, TState, IQueryable<TResult>> query,
+        TState state,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter());
+        foreach (var item in query(list.AsQueryable(), state))
+        {
+            yield return item;
+        }
+    }
+
     public async ValueTask<long> CountAsync<TResult>(Func<IQueryable<OrigamToken>, IQueryable<TResult>> query, CancellationToken cancellationToken)
     {
         var list = await GetAllAsync(new PersistedGrantFilter());
@@ -384,6 +412,15 @@ public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
     {
         var list = await GetAllAsync(new PersistedGrantFilter());
         return query(list.AsQueryable()).FirstOrDefault();
+    }
+
+    public async ValueTask<TResult?> GetAsync<TState, TResult>(
+        Func<IQueryable<OrigamToken>, TState, IQueryable<TResult>> query,
+        TState state,
+        CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter());
+        return query(list.AsQueryable(), state).FirstOrDefault();
     }
 
     public ValueTask<OrigamToken?> FindByReferenceIdAsync(string identifier, CancellationToken cancellationToken)
@@ -464,6 +501,16 @@ public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
     public ValueTask SetReferenceIdAsync(OrigamToken token, string? identifier, CancellationToken cancellationToken)
     {
         token.Key = identifier ?? string.Empty;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetRedemptionDateAsync(OrigamToken token, DateTimeOffset? date, CancellationToken cancellationToken)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetPropertiesAsync(OrigamToken token, ImmutableDictionary<string, JsonElement> properties, CancellationToken cancellationToken)
+    {
         return ValueTask.CompletedTask;
     }
 
