@@ -26,10 +26,11 @@ import { observer } from "mobx-react-lite";
 
 export const GridEditor: React.FC<{
   editorState: GridEditorState
+  title: string
 }> = observer( (props) => {
   return (
     <div className={S.gridEditor}>
-      <h3 className={S.title}>{`Editing: ${props.editorState.label}`}</h3>
+      <h3 className={S.title}>{props.title}</h3>
       <PropertyEditor
         propertyManager={props.editorState}
         properties={props.editorState.properties}/>

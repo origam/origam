@@ -19,5 +19,7 @@
   "tree_node_delete": "Delete",
   "tree_node_edit": "Edit",
   "tab_header_close_all" : "Close All",
-  "tab_header_close_all_but_this": "Close All But This"
+  "tab_header_close_all_but_this": "Close All But This",
+  "grid_editor_title": "Editing: {0}",
+  "documentation_editor_title": "Documentation: {0}"
 }

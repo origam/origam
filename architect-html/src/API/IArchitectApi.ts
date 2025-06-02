@@ -244,6 +244,11 @@ export type PropertyType =
   | "float"
   | "looukup";
 
+export interface DocumentationEditorData {
+  label: string;
+  properties: IApiEditorProperty[];
+}
+
 export interface IApiEditorProperty {
   name: string;
   controlPropertyId: string | null;
@@ -266,7 +271,7 @@ export interface IApiEditorData {
   editorType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
+  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData | DocumentationEditorData;
   isDirty: boolean;
 }
 

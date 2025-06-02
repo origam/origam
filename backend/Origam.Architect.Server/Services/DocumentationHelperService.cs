@@ -6,7 +6,7 @@ namespace Origam.Architect.Server.Services;
 
 public class DocumentationHelperService(IDocumentationService documentationService)
 {
-    public List<EditorProperty> GetData(DocumentationComplete documentationComplete)
+    public DocumentationEditorData GetData(DocumentationComplete documentationComplete, string label)
     {
         var entries = Enum.GetValues(typeof(DocumentationType))
             .Cast<DocumentationType>()
@@ -35,7 +35,11 @@ public class DocumentationHelperService(IDocumentationService documentationServi
                 value: row.Data);
         }
 
-        return entries.Values.ToList();
+        return new DocumentationEditorData
+        {
+            Label = label,
+            Properties = entries.Values.ToList()
+        };
     }
 
     public void Update(ChangesModel changes, EditorData editor)

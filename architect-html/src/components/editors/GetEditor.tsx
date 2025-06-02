@@ -23,6 +23,7 @@ import {
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
 import {
+  DocumentationEditorData,
   EditorType,
   IApiEditorProperty,
   IArchitectApi, IScreenEditorData,
@@ -55,6 +56,7 @@ import { CancellablePromise } from "mobx/dist/api/flow";
 import {
   DocumentationEditorState
 } from "src/components/editors/documentationEditor/DocumentationEditorState.ts";
+import { T } from "src/main.tsx";
 
 export function getEditor(
   args: {
@@ -72,7 +74,9 @@ export function getEditor(
     const editorState = new GridEditorState(editorData.editorId, node, properties, isDirty, architectApi);
     return new Editor(
       editorState,
-      <GridEditor editorState={editorState}/>
+      <GridEditor
+        editorState={editorState}
+        title={T("Editing: {0}", "grid_editor_title", editorState.label)}/>
     );
   }
   if (editorType === "XslTEditor") {
@@ -105,11 +109,14 @@ export function getEditor(
     );
   }
   if (editorType === "DocumentationEditor") {
-    const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new DocumentationEditorState(editorData.editorId, node, properties, isDirty, architectApi);
+    const documentationData = data as DocumentationEditorData;
+    const editorState = new DocumentationEditorState(editorData.editorId, node, documentationData, isDirty, architectApi);
     return new Editor(
       editorState,
-      <GridEditor editorState={editorState}/>
+      <GridEditor
+        editorState={editorState}
+        title={T("Documentation: {0}", "documentation_editor_title", documentationData.label)}
+      />
     );
   }
   return null;

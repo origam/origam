@@ -35,7 +35,7 @@ public class DocumentationController(
                 editorId: editor.Id,
                 isPersisted: true,
                 node: treeNode,
-                data: documentationHelper.GetData(editor.DocumentationData)
+                data: documentationHelper.GetData(editor.DocumentationData, item.Name)
             );
             return Ok(openEditorData);
         });

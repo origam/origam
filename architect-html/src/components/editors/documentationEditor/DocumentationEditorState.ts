@@ -2,15 +2,33 @@ import {
   EditorProperty,
   toChanges
 } from "src/components/editors/gridEditor/EditorProperty.ts";
-import { IUpdatePropertiesResult } from "src/API/IArchitectApi.ts";
+import {
+  DocumentationEditorData,
+  IArchitectApi,
+  IUpdatePropertiesResult
+} from "src/API/IArchitectApi.ts";
 import {
   GridEditorState
 } from "src/components/editors/gridEditor/GridEditorState.ts";
+import {
+  IEditorNode
+} from "src/components/editorTabView/EditorTabViewState.ts";
 
 export class DocumentationEditorState extends GridEditorState {
 
+  constructor(
+    editorId: string,
+    editorNode: IEditorNode,
+    private documentationData: DocumentationEditorData,
+    isDirty: boolean,
+    architectApi: IArchitectApi
+  ) {
+    const properties = documentationData.properties.map(property => new EditorProperty(property));
+    super(editorId, editorNode, properties, isDirty, architectApi);
+  }
+
   get label() {
-    return "";
+    return `[${this.documentationData.label}]`;
   }
 
   * save(): Generator<Promise<any>, void, any> {
