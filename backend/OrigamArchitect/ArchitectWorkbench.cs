@@ -1787,12 +1787,12 @@ public void OpenForm(object owner,Hashtable parameters)
 			ShowDocumentation cmd = new ShowDocumentation();
 			cmd.Run();
 		}
-		if(_schema.ActiveNode is TableMappingItem)
+		if(_schema.ActiveNode is TableMapping)
 		{
 			try
 			{
-				_outputPad.SetOutputText(abstractSqlCommandGenerator.TableDefinitionDdl(_schema.ActiveNode as TableMappingItem));
-				_outputPad.AppendText(abstractSqlCommandGenerator.ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMappingItem));
+				_outputPad.SetOutputText(abstractSqlCommandGenerator.TableDefinitionDdl(_schema.ActiveNode as TableMapping));
+				_outputPad.AppendText(abstractSqlCommandGenerator.ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMapping));
 			}
 			catch(Exception ex)
 			{

@@ -155,7 +155,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     public DbDataAdapter CreateDataAdapter(SelectParameters adParameters, bool forceDatabaseCalculation)
     {
-        if (!(adParameters.Entity.EntityDefinition is TableMappingItem))
+        if (!(adParameters.Entity.EntityDefinition is TableMapping))
         {
             throw new Exception(ResourceUtils.GetString("OnlyMappedEntitiesToBeProcessed"));
         }
@@ -194,7 +194,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         DataStructureEntity entity, DataStructureFilterSet filterSet,
         ColumnsInfo columnsInfo, bool forceDatabaseCalculation)
     {
-        if (!(entity.EntityDefinition is TableMappingItem))
+        if (!(entity.EntityDefinition is TableMapping))
         {
             throw new Exception(ResourceUtils.GetString("OnlyMappedEntitiesToBeProcessed"));
         }
@@ -208,7 +208,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return adapter;
     }
 
-    public DbDataAdapter CreateUpdateFieldDataAdapter(TableMappingItem table, FieldMappingItem field)
+    public DbDataAdapter CreateUpdateFieldDataAdapter(TableMapping table, FieldMappingItem field)
     {
         DbDataAdapter adapter = GetAdapter();
         BuildSelectUpdateFieldCommand(adapter, table, field);
@@ -218,7 +218,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return adapter;
     }
 
-    public IDbCommand UpdateFieldCommand(TableMappingItem entity, FieldMappingItem field)
+    public IDbCommand UpdateFieldCommand(TableMapping entity, FieldMappingItem field)
     {
         IDbCommand cmd = GetCommand(
             "UPDATE "
@@ -269,7 +269,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return dtm;
     }
 
-    private DataTableMapping CreateUpdateFieldMapping(TableMappingItem table, FieldMappingItem field)
+    private DataTableMapping CreateUpdateFieldMapping(TableMapping table, FieldMappingItem field)
     {
         DataTableMapping dtm = new DataTableMapping();
 
@@ -300,14 +300,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
     }
 
-    public void BuildSelectUpdateFieldCommand(DbDataAdapter adapter, TableMappingItem table, FieldMappingItem field)
+    public void BuildSelectUpdateFieldCommand(DbDataAdapter adapter, TableMapping table, FieldMappingItem field)
     {
         ((IDbDataAdapter)adapter).SelectCommand = GetCommand(SelectUpdateFieldSql(table, field));
 
         BuildUpdateFieldParameters(((IDbDataAdapter)adapter).SelectCommand, field);
     }
 
-    public IDbCommand SelectReferenceCountCommand(TableMappingItem table, FieldMappingItem field)
+    public IDbCommand SelectReferenceCountCommand(TableMapping table, FieldMappingItem field)
     {
         IDbCommand cmd = GetCommand(SelectReferenceCountSql(table, field));
         cmd.CommandType = CommandType.Text;
@@ -575,7 +575,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     {
         StringBuilder ddl = new StringBuilder();
 
-        foreach (TableMappingItem table in tables)
+        foreach (TableMapping table in tables)
         {
             if (table.DatabaseObjectType == DatabaseMappingObjectType.Table)
             {
@@ -587,7 +587,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         return ddl.ToString();
     }
-    public string ForeignKeyConstraintsDdl(TableMappingItem table)
+    public string ForeignKeyConstraintsDdl(TableMapping table)
     {
         string result = "";
 
@@ -601,7 +601,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return result;
     }
 
-	public string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
+	public string AddForeignKeyConstraintDdl(TableMapping table, DataEntityConstraint constraint)
     {
         StringBuilder ddl = new StringBuilder();
 
@@ -614,13 +614,13 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     public string ParameterDeclarationChar =>
         sqlRenderer.ParameterDeclarationChar;
 
-    public string ForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
+    public string ForeignKeyConstraintDdl(TableMapping table, DataEntityConstraint constraint)
     {
         StringBuilder ddl = new StringBuilder();
 
-        if (constraint.ForeignEntity is TableMappingItem && constraint.Fields[0] is FieldMappingItem)
+        if (constraint.ForeignEntity is TableMapping && constraint.Fields[0] is FieldMappingItem)
         {
-            string pkTableName = (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
+            string pkTableName = (constraint.ForeignEntity as TableMapping).MappedObjectName;
 
             ddl.AppendFormat("CONSTRAINT {1}",
                 sqlRenderer.NameLeftBracket + table.MappedObjectName + sqlRenderer.NameRightBracket,
@@ -662,12 +662,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         StringBuilder ddl = new StringBuilder();
 
         ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
-            RenderExpression(field.ParentItem as TableMappingItem),
+            RenderExpression(field.ParentItem as TableMapping),
             ColumnDefinitionDdl(field));
 
         if (!field.AllowNulls && field.DefaultValue != null)
         {
-            string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
+            string constraintName = "DF_" + (field.ParentItem as TableMapping).MappedObjectName + "_" + field.MappedColumnName;
             ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1};",
                 sqlRenderer.NameLeftBracket + constraintName + sqlRenderer.NameRightBracket,
                 this.RenderConstant(field.DefaultValue, false));
@@ -686,7 +686,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         StringBuilder ddl = new StringBuilder();
 
         ddl.AppendFormat("ALTER TABLE {0} ALTER COLUMN {1}",
-            RenderExpression(field.ParentItem as TableMappingItem),
+            RenderExpression(field.ParentItem as TableMapping),
             ChangeColumnDefinitionDdl(field));
         return ddl.ToString();
     }
@@ -727,7 +727,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         ddl.AppendFormat("CREATE {0} INDEX  {1} ON {2} (",
             (index.IsUnique ? "UNIQUE " : ""),
             sqlRenderer.NameLeftBracket + GetIndexName(entity, index) + sqlRenderer.NameRightBracket,
-            sqlRenderer.NameLeftBracket + (index.ParentItem as TableMappingItem).MappedObjectName + sqlRenderer.NameRightBracket
+            sqlRenderer.NameLeftBracket + (index.ParentItem as TableMapping).MappedObjectName + sqlRenderer.NameRightBracket
             );
 
         int i = 0;
@@ -768,7 +768,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
     }
 
-    public string TableDefinitionDdl(TableMappingItem table)
+    public string TableDefinitionDdl(TableMapping table)
     {
         if (table.DatabaseObjectType != DatabaseMappingObjectType.Table)
         {
@@ -1002,7 +1002,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         var rowOffset = selectParameters.RowOffset;
         bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
 
-        if (!(entity.EntityDefinition is TableMappingItem))
+        if (!(entity.EntityDefinition is TableMapping))
         {
             throw new Exception("Only database mapped entities can be processed by the Data Service!");
         }
@@ -1595,7 +1595,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return sqlExpression.ToString();
     }
 
-    public string SelectUpdateFieldSql(TableMappingItem table, FieldMappingItem updatedField)
+    public string SelectUpdateFieldSql(TableMapping table, FieldMappingItem updatedField)
     {
         DataStructureEntity entity = new DataStructureEntity();
         entity.PersistenceProvider = table.PersistenceProvider;
@@ -1648,7 +1648,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return sqlExpression.ToString();
     }
 
-    public string SelectReferenceCountSql(TableMappingItem table, FieldMappingItem updatedField)
+    public string SelectReferenceCountSql(TableMapping table, FieldMappingItem updatedField)
     {
         DataStructureEntity entity = new DataStructureEntity();
         entity.PersistenceProvider = table.PersistenceProvider;
@@ -3115,8 +3115,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     private string RenderExpression(ISchemaItem item, DataStructureEntity entity,
         Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences, bool renderSqlForDetachedFields)
     {
-        if (item is TableMappingItem)
-            return RenderExpression(item as TableMappingItem);
+        if (item is TableMapping)
+            return RenderExpression(item as TableMapping);
         if (item is EntityRelationItem)
             return RenderExpression(item as EntityRelationItem);
         else if (item is FieldMappingItem)
@@ -3364,7 +3364,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return AggregationHelper(item, entity, item, replaceParameterTexts, 1, joins, dynamicParameters, parameterReferences);
     }
 
-    internal string RenderExpression(TableMappingItem item)
+    internal string RenderExpression(TableMapping item)
     {
         return sqlRenderer.NameLeftBracket + item.MappedObjectName + sqlRenderer.NameRightBracket;
     }
@@ -3381,18 +3381,18 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         bool localize 
             = dataStructureEntity?.RootItem is DataStructure dataStructure 
               && dataStructure.IsLocalized;
-        TableMappingItem tableMappingItem = null;
+        TableMapping tableMappingItem = null;
         FieldMappingItem localizedItem = null;
         if (localize)
         {
             tableMappingItem 
-                = dataStructureEntity.Entity as TableMappingItem;
+                = dataStructureEntity.Entity as TableMapping;
             if (tableMappingItem == null)
             {
                 // it could be a relation
                 if (dataStructureEntity.Entity is EntityRelationItem entityRelationItem)
                 {
-                    tableMappingItem = entityRelationItem.RelatedEntity as TableMappingItem;
+                    tableMappingItem = entityRelationItem.RelatedEntity as TableMapping;
                 }
             }
             localizedItem = fieldMappingItem.GetLocalizationField(tableMappingItem);

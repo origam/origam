@@ -188,14 +188,14 @@ public static class EntityHelper
 		}
 		return sortSetItem;
 	}
-    public static TableMappingItem CreateTable(
+    public static TableMapping CreateTable(
         string name, 
         SchemaItemGroup group,
         bool persist)
     {
         return CreateTable(name, group, persist, true);
     }
-    public static TableMappingItem CreateTable(
+    public static TableMapping CreateTable(
         string name, 
         SchemaItemGroup group, 
         bool persist, 
@@ -206,7 +206,7 @@ public static class EntityHelper
 		var entityModelSchemaItemProvider = schemaService
 			.GetProvider<EntityModelSchemaItemProvider>();
         var newEntity = entityModelSchemaItemProvider
-            .NewItem<TableMappingItem>(
+            .NewItem<TableMapping>(
 	            schemaService.StorageSchemaExtensionId, null);
 		newEntity.Name = name;
 		newEntity.MappedObjectName = name;
@@ -581,14 +581,14 @@ public static class EntityHelper
 		generatedElements?.Add(parameterReference);
 		return filter;
     }
-    public static TableMappingItem CreateLanguageTranslationChildEntity(
-        TableMappingItem parentEntity, ICollection selectedFields)
+    public static TableMapping CreateLanguageTranslationChildEntity(
+        TableMapping parentEntity, ICollection selectedFields)
     {
         return CreateLanguageTranslationChildEntity(
             parentEntity, selectedFields, null);
     }
-    public static TableMappingItem CreateLanguageTranslationChildEntity(
-        TableMappingItem parentEntity, ICollection selectedFields,
+    public static TableMapping CreateLanguageTranslationChildEntity(
+        TableMapping parentEntity, ICollection selectedFields,
         IList<ISchemaItem> generatedElements)
 	{			
 		var schemaService 

@@ -269,7 +269,7 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         string constraintName)
     {
         return string.Format("ALTER TABLE {0} DROP CONSTRAINT {1};",
-            RenderExpression(field.ParentItem as TableMappingItem),
+            RenderExpression(field.ParentItem as TableMapping),
             sqlRenderer.NameLeftBracket + constraintName +
             sqlRenderer.NameRightBracket);
     }

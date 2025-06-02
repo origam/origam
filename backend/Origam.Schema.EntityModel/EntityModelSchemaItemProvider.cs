@@ -46,13 +46,13 @@ public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
 	#region ISchemaItemFactory Members
 	public override Type[] NewItemTypes => new[]
 	{
-		typeof(TableMappingItem), typeof(DetachedEntity)
+		typeof(TableMapping), typeof(DetachedEntity)
 	};
 	public override T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group)
 	{
 		T item;
-		if(typeof(T) == typeof(TableMappingItem))
+		if(typeof(T) == typeof(TableMapping))
 		{
 			item = base.NewItem<T>(schemaExtensionId, group, 
 				"NewTable");
@@ -69,7 +69,7 @@ public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
 				"This type is not supported by EntityModel");
 		}
 		// add default ancestor to all database entities
-		if(typeof(T) == typeof(TableMappingItem))
+		if(typeof(T) == typeof(TableMapping))
 		{
 			EntityHelper.AddAncestor(
 				item as IDataEntity, EntityHelper.DefaultAncestor, false);

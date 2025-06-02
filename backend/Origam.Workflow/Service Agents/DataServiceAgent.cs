@@ -256,7 +256,7 @@ public class DataServiceAgent : AbstractServiceAgent
 	
 	private int UpdateReferences(Guid entityId, object oldValue, object newValue)
 	{
-		TableMappingItem originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey(entityId)) as TableMappingItem;
+		TableMapping originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMapping), new ModelElementKey(entityId)) as TableMapping;
 		if(originalEntity == null)
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
@@ -280,7 +280,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			foreach(IDataEntity entity in entities.ChildItems)
 			{
-				TableMappingItem table = entity as TableMappingItem;
+				TableMapping table = entity as TableMapping;
 				if(table != null && table.DatabaseObjectType == DatabaseMappingObjectType.Table && table.GenerateDeploymentScript)
 				{
 					foreach(IDataEntityColumn column in table.EntityColumns)
@@ -333,7 +333,7 @@ public class DataServiceAgent : AbstractServiceAgent
 	}
 	private int ReferenceCount(Guid entityId, object value)
 	{
-		TableMappingItem originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey(entityId)) as TableMappingItem;
+		TableMapping originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMapping), new ModelElementKey(entityId)) as TableMapping;
 		if(originalEntity == null)
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
@@ -357,7 +357,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			if(!skipRelationships.Contains(entity))
 			{
-				TableMappingItem table = entity as TableMappingItem;
+				TableMapping table = entity as TableMapping;
 				if(table != null && table.DatabaseObjectType == DatabaseMappingObjectType.Table && table.GenerateDeploymentScript)
 				{
 					foreach(IDataEntityColumn column in table.EntityColumns)
