@@ -26,8 +26,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
+using OpenIddict.Abstractions;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
@@ -100,7 +99,8 @@ public class Startup
             options.MultipartHeadersLengthLimit =
                 startUpConfiguration.MultipartHeadersLengthLimit;
         });
-        services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
+        services.AddSingleton<PersistedGrantStore>();
+        services.AddSingleton<IOpenIddictTokenStore<OrigamToken>>(sp => sp.GetRequiredService<PersistedGrantStore>());
         var builder = services.AddMvc().AddNewtonsoftJson();
         services.Configure<IdentityOptions>(options =>
         {
@@ -160,16 +160,24 @@ public class Startup
         services.Configure<HtmlClientConfig>(options 
             => Configuration.GetSection("HtmlClientConfig")
                 .Bind(options));
-        services.AddIdentityServer()
-            .AddInMemoryApiResources(Settings.GetIdentityApiResources())
-            .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
-            .AddInMemoryIdentityResources(Settings.GetIdentityResources())
-            .AddAspNetIdentity<IOrigamUser>()
-            .AddSigningCredential(new X509Certificate2(
-                identityServerConfig.PathToJwtCertificate,
-                identityServerConfig.PasswordForJwtCertificate))
-            .AddInMemoryApiScopes(Settings.GetApiScopes())
-            .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
+        services.AddOpenIddict()
+            .AddServer(options =>
+            {
+                options.SetTokenEndpointUris("/connect/token");
+                options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
+                options.AcceptAnonymousClients();
+                options.AddSigningCertificate(new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate));
+                options.UseAspNetCore()
+                    .EnableTokenEndpointPassthrough();
+            })
+            .AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
         
         if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
         {
@@ -184,7 +192,7 @@ public class Startup
         services.AddSoapCore();
         services.AddSingleton<DataServiceSoap>();
         services.AddSingleton<WorkflowServiceSoap>();
-        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<IOpenIddictServerHandler<ProcessSignInContext>, ProfileService>();
         services.AddMvc(options => options.EnableEndpointRouting = false)
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization(options => {
@@ -250,9 +258,7 @@ public class Startup
                         identityServerConfig.GoogleLogin.ClientId;
                     options.ClientSecret = identityServerConfig.GoogleLogin
                         .ClientSecret;
-                    options.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    // OpenIddict uses ASP.NET Core Identity for external login cookies
                 });
         }
         if(identityServerConfig.MicrosoftLogin != null)
@@ -266,9 +272,7 @@ public class Startup
                         .MicrosoftLogin.ClientId;
                     microsoftOptions.ClientSecret = identityServerConfig
                         .MicrosoftLogin.ClientSecret;
-                    microsoftOptions.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    // OpenIddict uses ASP.NET Core Identity for external login cookies
                 });
         }
         if(identityServerConfig.AzureAdLogin != null)
@@ -284,9 +288,7 @@ public class Startup
                         = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
-                    options.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    // OpenIddict uses ASP.NET Core Identity for external login cookies
                     options.TokenValidationParameters
                         = new TokenValidationParameters
                         {
@@ -344,11 +346,11 @@ public class Startup
         var localizationOptions = app.ApplicationServices
             .GetService<IOptions<RequestLocalizationOptions>>().Value;
         app.UseRequestLocalization(localizationOptions);
-        app.UseIdentityServer();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseMiddleware<FatalErrorMiddleware>();
         app.UseUserApi(startUpConfiguration, identityServerConfig);
         app.UseWorkQueueApi();
-        app.UseAuthentication();
         app.UseHttpsRedirection();
         if (startUpConfiguration.EnableSoapInterface)
         {

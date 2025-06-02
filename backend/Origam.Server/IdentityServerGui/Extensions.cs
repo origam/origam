@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
-using IdentityServer4.Stores;
+using OpenIddict.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Server.IdentityServerGui.Account;
 
@@ -12,7 +11,7 @@ public static class Extensions
     /// Checks if the redirect URI is for a native client.
     /// </summary>
     /// <returns></returns>
-    public static bool IsNativeClient(this AuthorizationRequest context)
+    public static bool IsNativeClient(this OpenIddictRequest context)
     {
         return !context.RedirectUri.StartsWith("https", StringComparison.Ordinal)
                && !context.RedirectUri.StartsWith("http", StringComparison.Ordinal);
