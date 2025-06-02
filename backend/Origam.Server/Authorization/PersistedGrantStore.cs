@@ -41,8 +41,6 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Authorization;
 
-#nullable enable
-
 /// <summary>
 /// Data model used by <see cref="PersistedGrantStore"/> to store OpenIddict tokens.
 /// </summary>
