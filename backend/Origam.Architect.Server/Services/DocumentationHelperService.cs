@@ -6,20 +6,19 @@ namespace Origam.Architect.Server.Services;
 
 public class DocumentationHelperService(IDocumentationService documentationService)
 {
-    
     public List<EditorProperty> GetData(DocumentationComplete documentationComplete)
     {
         var entries = Enum.GetValues(typeof(DocumentationType))
             .Cast<DocumentationType>()
             .Select(docType => new EditorProperty(
                 name: docType.ToString(),
-                type:"string",
-                category:null, 
-                controlPropertyId: null, 
+                type: "string",
+                category: Strings.CategoryDocumentation,
+                controlPropertyId: null,
                 description: "",
                 dropDownValues: [],
-                readOnly: false, 
-                value: null )
+                readOnly: false,
+                value: null)
             )
             .ToDictionary(prop => prop.Name, prop => prop);
 
@@ -27,12 +26,12 @@ public class DocumentationHelperService(IDocumentationService documentationServi
         {
             entries[row.Category] = new EditorProperty(
                 name: row.Category,
-                type:"string",
-                category:null, 
-                controlPropertyId: null, 
+                type: "string",
+                category: Strings.CategoryDocumentation,
+                controlPropertyId: null,
                 description: "",
                 dropDownValues: [],
-                readOnly: false, 
+                readOnly: false,
                 value: row.Data);
         }
 
