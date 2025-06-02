@@ -23,11 +23,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
-using IdentityServer4.Stores;
+using OpenIddict.Abstractions;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
@@ -37,7 +38,35 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Authorization;
-public class PersistedGrantStore: IPersistedGrantStore
+
+/// <summary>
+/// Data model used by <see cref="PersistedGrantStore"/> to store OpenIddict tokens.
+/// </summary>
+public class OrigamToken
+{
+    public string Key { get; set; } = string.Empty;
+    public string SubjectId { get; set; } = string.Empty;
+    public string ClientId { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
+    public DateTime CreationTime { get; set; }
+    public DateTime? Expiration { get; set; }
+    public string Data { get; set; } = string.Empty;
+    public string SessionId { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Filter used when deleting tokens.
+/// </summary>
+public class PersistedGrantFilter
+{
+    public string? ClientId { get; set; }
+    public string? SubjectId { get; set; }
+    public string? Type { get; set; }
+    public string? SessionId { get; set; }
+}
+
+// TODO: migrate to OpenIddict token store implementation
+public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
 {
     private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid("ee21a554-9cd7-49bd-b989-4596d918af63");
     private static readonly Guid GetGrandByKeyFilterId = new Guid("12cffef2-6d1b-40d0-9e45-0e8b095c7248");
@@ -57,7 +86,7 @@ public class PersistedGrantStore: IPersistedGrantStore
         FireStateMachineEvents = false,
         LoadActualValuesAfterUpdate = false,
     };
-    public Task StoreAsync(PersistedGrant grant)
+    public Task StoreAsync(OrigamToken grant)
     {
         IPersistenceProvider schemaProvider = ServiceManager.Services
             .GetService<IPersistenceService>()
@@ -82,7 +111,7 @@ public class PersistedGrantStore: IPersistedGrantStore
         
         return Task.CompletedTask;
     }
-    public Task<PersistedGrant> GetAsync(string key)
+    public Task<OrigamToken> GetAsync(string key)
     {
         DataSet dataSet = DataService.Instance.LoadData(
             OrigamIdentityGrantDataStructureId, 
@@ -94,7 +123,7 @@ public class PersistedGrantStore: IPersistedGrantStore
             key);
         return Task.FromResult(GrantsFromDataSet(dataSet).FirstOrDefault());
     }
-    public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
+    public Task<IEnumerable<OrigamToken>> GetAllAsync(PersistedGrantFilter filter)
     {
         QueryParameterCollection parameters = FilterToParameterCollection(filter);
         DataSet dataSet = DataService.Instance.LoadData(
@@ -128,7 +157,7 @@ public class PersistedGrantStore: IPersistedGrantStore
         }
         return parameters;
     }
-    public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
+    public Task<IEnumerable<OrigamToken>> GetAllAsync(string subjectId)
     {
         DataSet dataSet = DataService.Instance.LoadData(
             OrigamIdentityGrantDataStructureId, 
@@ -219,23 +248,99 @@ public class PersistedGrantStore: IPersistedGrantStore
         
         return Task.CompletedTask;
     }
-    private static IEnumerable<PersistedGrant> GrantsFromDataSet(DataSet dataSet)
+    private static IEnumerable<OrigamToken> GrantsFromDataSet(DataSet dataSet)
     {
         return dataSet.Tables[GrantTableName].Rows
             .Cast<DataRow>()
             .Select(
                 row =>
-                    new PersistedGrant
+                    new OrigamToken
                     {
                         Key = row["Key"] as string,
                         Type = row["Type"] as string,
                         SubjectId = row["SubjectId"] as string,
                         ClientId = row["ClientId"] as string,
                         CreationTime = (DateTime) row["CreationTime"],
-                        Expiration = (DateTime) row["Expiration"],
+                        Expiration = row["Expiration"] as DateTime?,
                         Data = row["Data"] as string,
                         SessionId = row["SessionId"] as string,
-                    } 
+                    }
             );
     }
+
+    #region IOpenIddictTokenStore implementation
+
+    public async ValueTask<long> CountAsync(CancellationToken cancellationToken)
+    {
+        var all = await GetAllAsync(new PersistedGrantFilter());
+        return all.LongCount();
+    }
+
+    public ValueTask CreateAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask(StoreAsync(token));
+    }
+
+    public ValueTask DeleteAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask(RemoveAsync(token.Key));
+    }
+
+    public ValueTask DeleteAsync(string identifier, CancellationToken cancellationToken)
+    {
+        return new ValueTask(RemoveAsync(identifier));
+    }
+
+    public ValueTask<OrigamToken?> FindByIdAsync(string identifier, CancellationToken cancellationToken)
+    {
+        return new ValueTask<OrigamToken?>(GetAsync(identifier));
+    }
+
+    public async IAsyncEnumerable<OrigamToken> FindBySubjectAsync(string subject, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(subject);
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+
+    public ValueTask<string?> GetIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.Key);
+    }
+
+    public ValueTask<string?> GetApplicationIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.ClientId);
+    }
+
+    public ValueTask<string?> GetSubjectAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.SubjectId);
+    }
+
+    public ValueTask<string?> GetTypeAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.Type);
+    }
+
+    public ValueTask<DateTimeOffset?> GetExpirationDateAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<DateTimeOffset?>(token.Expiration);
+    }
+
+    public async ValueTask UpdateAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        await RemoveAsync(token.Key);
+        await StoreAsync(token);
+    }
+
+    public ValueTask PruneAsync(DateTimeOffset threshold, CancellationToken cancellationToken)
+    {
+        // Tokens are removed when expired
+        return new ValueTask();
+    }
+
+    #endregion
 }
