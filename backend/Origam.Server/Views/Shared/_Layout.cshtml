@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<SharedResources> SharedLocalizer
-@using IdentityServer4.Extensions
 @using Microsoft.Extensions.Options
 @using Origam
 @using Origam.Server
@@ -10,7 +9,7 @@
     string name = null;
     if (!true.Equals(ViewData["signed-out"]))
     {
-        name = Context.User?.GetDisplayName();
+        name = Context.User?.Identity?.Name;
     }
     CustomAssetsConfig config = ConfigOptions.Value;
     var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl)
