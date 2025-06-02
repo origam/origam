@@ -18,54 +18,48 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext, useEffect } from 'react';
-import S from "src/components/modelTree/ModelTree.module.scss"
-import {
-  Menu,
-  Item,
-  useContextMenu, TriggerEvent, Separator, Submenu
-} from 'react-contexify';
+import S from 'src/components/modelTree/ModelTree.module.scss';
+import { Menu, Item, useContextMenu, TriggerEvent, Separator, Submenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-import { TreeNode } from "src/components/modelTree/TreeNode.ts";
-import { RootStoreContext } from "src/main.tsx";
-import { observer } from "mobx-react-lite";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { Icon } from "src/components/icon/Icon.tsx";
+import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
+import { RootStoreContext } from 'src/main.tsx';
+import { observer } from 'mobx-react-lite';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { Icon } from 'src/components/icon/Icon.tsx';
 
 const ModelTreeNode: React.FC<{
   node: TreeNode;
-}> = observer(({node}) => {
+}> = observer(({ node }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
   const menuId = 'SideMenu' + node.id;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
-    if (node.isExpanded && !node.childrenInitialized && (node.children.length === 0)) {
-      run({generator: node.loadChildren.bind(node)});
+    if (node.isExpanded && !node.childrenInitialized && node.children.length === 0) {
+      run({ generator: node.loadChildren.bind(node) });
     }
-  }, [node.isExpanded, node.children]);
+  }, [node.isExpanded, node.children, node, run]);
 
-  const {show, hideAll} = useContextMenu({
+  const { show, hideAll } = useContextMenu({
     id: menuId,
   });
 
   async function handleContextMenu(event: TriggerEvent) {
-    run({generator: node.getMenuItems.bind(node)});
-    show({event, props: {}});
+    run({ generator: node.getMenuItems.bind(node) });
+    show({ event, props: {} });
   }
 
   const onNodeDoubleClick = async (node: TreeNode) => {
     if (!node.editorType) {
       await onToggle();
     } else {
-      run({generator: editorTabViewState.openEditorById(node)});
+      run({ generator: editorTabViewState.openEditorById(node) });
     }
-  }
+  };
 
   const onToggle = async () => {
-    run({generator: node.toggle.bind(node)});
+    run({ generator: node.toggle.bind(node) });
   };
 
   function onMenuVisibilityChange(isVisible: boolean) {
@@ -77,12 +71,12 @@ const ModelTreeNode: React.FC<{
   }
 
   function onDelete() {
-    run({generator: node.delete.bind(node)});
+    run({ generator: node.delete.bind(node) });
   }
 
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
-      return node.isExpanded ? '▼' : '▶'
+      return node.isExpanded ? '▼' : '▶';
     }
   }
 
@@ -98,52 +92,40 @@ const ModelTreeNode: React.FC<{
           className={S.iconAndText}
         >
           <div className={S.icon}>
-            <Icon src={node.iconUrl ?? '/Icons/generic.svg'}/>
+            <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
           </div>
           {node.nodeText}
         </div>
-        <Menu
-          id={menuId}
-          onVisibilityChange={onMenuVisibilityChange}
-        >
+        <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
           <Submenu label="New">
-            {node.contextMenuItems.map((item) => (
+            {node.contextMenuItems.map(item => (
               <Item
                 key={item.typeName + item.caption}
                 id={item.typeName}
-                onClick={() => run({generator: node.createNode(item.typeName)})}
+                onClick={() => run({ generator: node.createNode(item.typeName) })}
               >
                 {item.caption}
               </Item>
             ))}
           </Submenu>
-          <Separator/>
-          {!node.isNonPersistentItem &&
+          <Separator />
+          {!node.isNonPersistentItem && (
             <>
-              <Item
-                id="edit"
-                onClick={() => onNodeDoubleClick(node)}
-              >
+              <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
                 Edit
               </Item>
-              <Item
-                id="delete"
-                onClick={onDelete}
-              >
+              <Item id="delete" onClick={onDelete}>
                 Delete
               </Item>
             </>
-          }
+          )}
         </Menu>
         {node.isLoading && ' Loading...'}
       </div>
       {node.isExpanded && node.children.length > 0 && (
         <div className={S.children}>
-          {node.children.map((childNode) => (
-            <ModelTreeNode
-              key={childNode.id + childNode.nodeText}
-              node={childNode}
-            />
+          {node.children.map(childNode => (
+            <ModelTreeNode key={childNode.id + childNode.nodeText} node={childNode} />
           ))}
         </div>
       )}
@@ -156,11 +138,8 @@ const ModelTree: React.FC = observer(() => {
 
   return (
     <div>
-      {modelTreeState.modelNodes.map((node) => (
-        <ModelTreeNode
-          key={node.id + node.nodeText}
-          node={node}
-        />
+      {modelTreeState.modelNodes.map(node => (
+        <ModelTreeNode key={node.id + node.nodeText} node={node} />
       ))}
     </div>
   );

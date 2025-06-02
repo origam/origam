@@ -17,17 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { flow } from "mobx";
-import { handleError } from "src/errorHandling/handleError.tsx";
-import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
+import { flow } from 'mobx';
+import { handleError } from 'src/errorHandling/handleError.tsx';
+import { ErrorDialogController } from 'src/errorHandling/ErrorDialog.tsx';
 
 type GeneratorFunction = (...args: any[]) => Generator;
 type GeneratorInput = Generator | GeneratorFunction;
 type ActionInput = (() => Promise<any>) | (() => void);
 
-export type FlowHandlerInput =
-  | { action: ActionInput }
-  | { generator: GeneratorInput };
+export type FlowHandlerInput = { action: ActionInput } | { generator: GeneratorInput };
 
 export function wrapInFlowWithHandler(args: {
   controller: ErrorDialogController;
@@ -43,22 +41,22 @@ export function wrapInFlowWithHandler(args: {
   });
 }
 
-export function runInFlowWithHandler(controller: ErrorDialogController){
-  return function inner(args: FlowHandlerInput){
-     if ('action' in args) {
-    return wrapInFlowWithHandler({
-      controller: controller,
-      action: args.action
-    })();
-  } else if ('generator' in args) {
-    return runGeneratorInFlowWithHandler({
-      controller: controller,
-      generator: args.generator
-    });
-  } else {
-    throw new Error('Invalid input, need an action or a generator to run.');
-  }
-  }
+export function runInFlowWithHandler(controller: ErrorDialogController) {
+  return function inner(args: FlowHandlerInput) {
+    if ('action' in args) {
+      return wrapInFlowWithHandler({
+        controller: controller,
+        action: args.action,
+      })();
+    } else if ('generator' in args) {
+      return runGeneratorInFlowWithHandler({
+        controller: controller,
+        generator: args.generator,
+      });
+    } else {
+      throw new Error('Invalid input, need an action or a generator to run.');
+    }
+  };
 }
 
 function runGeneratorInFlowWithHandler(args: {
@@ -67,9 +65,7 @@ function runGeneratorInFlowWithHandler(args: {
 }) {
   return flow(function* runWithHandler() {
     try {
-      const generator = typeof args.generator === 'function'
-        ? args.generator()
-        : args.generator;
+      const generator = typeof args.generator === 'function' ? args.generator() : args.generator;
       return yield* generator;
     } catch (e) {
       yield* handleError(args.controller)(e);

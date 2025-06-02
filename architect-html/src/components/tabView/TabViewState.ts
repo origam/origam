@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from "mobx";
+import { observable } from 'mobx';
 
 export class TabViewState {
   @observable accessor activeTabIndex = 0;

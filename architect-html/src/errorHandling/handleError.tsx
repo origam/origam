@@ -17,26 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { flow } from "mobx";
-import { ErrorDialogController } from "src/errorHandling/ErrorDialog.tsx";
+import { flow } from 'mobx';
+import { ErrorDialogController } from 'src/errorHandling/ErrorDialog.tsx';
 
-const HANDLED = Symbol("_$ErrorHandled");
+const HANDLED = Symbol('_$ErrorHandled');
 
 export function handleError(controller: ErrorDialogController) {
-  return function*handleError(error: any) {
-    if (error.code === "ERR_NETWORK" && error.name === "AxiosError"){
-      yield* controller.pushError(
-          "Network Unavailable",
-      );
+  return function* handleError(error: any) {
+    if (error.code === 'ERR_NETWORK' && error.name === 'AxiosError') {
+      yield* controller.pushError('Network Unavailable');
       return;
     }
     if (error[HANDLED]) {
       yield error[HANDLED];
       return;
     }
-    const promise = flow(() => controller.pushError(error))()
+    const promise = flow(() => controller.pushError(error))();
     error[HANDLED] = promise;
     yield promise;
-
   };
 }

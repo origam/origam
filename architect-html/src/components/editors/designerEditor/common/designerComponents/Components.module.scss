@@ -31,7 +31,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin: 3px;
 }
 
-
 .designSurfaceInput {
   border: 1px solid var(--background4);
   background-color: var(--background1);
@@ -68,7 +67,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   gap: 10px;
 
-  .activeTab{
+  .activeTab {
     font-weight: bold;
   }
 }

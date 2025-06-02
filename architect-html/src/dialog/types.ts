@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React from 'react';
 
 export interface IDialogDimensions {
   width: number;
@@ -38,7 +38,7 @@ export interface IDialogStackState {
     key: string,
     component: React.ReactElement,
     dialogDimensions?: IDialogDimensions,
-    closeOnClickOutside?: boolean
+    closeOnClickOutside?: boolean,
   ): () => void;
 
   closeDialog(key: string): void;

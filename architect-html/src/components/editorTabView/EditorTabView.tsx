@@ -16,41 +16,38 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import React, { useContext, useEffect, useMemo } from "react";
-import S from "./EditorTabView.module.scss";
-import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { TabHeader } from "src/components/editorTabView/TabHeader.tsx";
+import React, { useContext, useEffect, useMemo } from 'react';
+import S from './EditorTabView.module.scss';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { TabHeader } from 'src/components/editorTabView/TabHeader.tsx';
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const editors = state.editors.map(x => x.state);
-  const initializeOpenEditors = useMemo(
-    () => state.initializeOpenEditors.bind(state),
-    [state]
-  );
+  const initializeOpenEditors = useMemo(() => state.initializeOpenEditors.bind(state), [state]);
 
   const run = runInFlowWithHandler(rootStore.errorDialogController);
 
   useEffect(() => {
-    run({generator: initializeOpenEditors});
-  }, [initializeOpenEditors]);
+    run({ generator: initializeOpenEditors });
+  }, [initializeOpenEditors, run]);
 
   return (
     <div className={S.root}>
       <div className={S.labels}>
-        {editors.map((editor) =>
-          <TabHeader editor={editor}/>)
-        }
+        {editors.map(editor => (
+          <TabHeader key={editor.schemaItemId + editor.label} editor={editor} />
+        ))}
       </div>
       <div className={S.content}>
-        {state.editors.map((editorContainer) => (
-          <div key={editorContainer.state.schemaItemId}
-               className={editorContainer.state.isActive ? S.visible : S.hidden}>
+        {state.editors.map(editorContainer => (
+          <div
+            key={editorContainer.state.schemaItemId}
+            className={editorContainer.state.isActive ? S.visible : S.hidden}
+          >
             {editorContainer.element}
           </div>
         ))}
@@ -58,5 +55,3 @@ export const EditorTabView: React.FC = observer(() => {
     </div>
   );
 });
-
-

@@ -17,28 +17,25 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IPackage } from "src/API/IArchitectApi.ts";
-import { useContext } from "react";
-import { RootStoreContext } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import S from "src/components/packages/PackageItem.module.scss"
+import { IPackage } from 'src/API/IArchitectApi.ts';
+import { useContext } from 'react';
+import { RootStoreContext } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import S from 'src/components/packages/PackageItem.module.scss';
 
-export function PackageItem(props: {
-  package: IPackage,
-  isSelected?: boolean
-}) {
+export function PackageItem(props: { package: IPackage; isSelected?: boolean }) {
   const rootStore = useContext(RootStoreContext);
   const packagesState = rootStore.packagesState;
 
   async function onPackageClick() {
     runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: packagesState.setActivePackageClick(props.package.id)
+      generator: packagesState.setActivePackageClick(props.package.id),
     });
   }
 
   return (
-    <div className={S.root + " " + (props.isSelected ? S.selected : "")} onClick={onPackageClick}>{props.package.name}</div>
+    <div className={S.root + ' ' + (props.isSelected ? S.selected : '')} onClick={onPackageClick}>
+      {props.package.name}
+    </div>
   );
 }

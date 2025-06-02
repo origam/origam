@@ -17,16 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import S from "./DialogStack.module.scss";
-import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "src/main.tsx";
-import { IDialogInfo } from "src/dialog/types.ts";
+import S from './DialogStack.module.scss';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from 'src/main.tsx';
+import { IDialogInfo } from 'src/dialog/types.ts';
 
 export const ApplicationDialogStack: React.FC = observer(() => {
   const dialogStack = useContext(RootStoreContext).dialogStack;
-  return <DialogStack stackedDialogs={dialogStack.stackedDialogs} close={dialogStack.closeDialog}/>;
+  return (
+    <DialogStack stackedDialogs={dialogStack.stackedDialogs} close={dialogStack.closeDialog} />
+  );
 });
 
 interface DialogStackProps {
@@ -35,11 +37,14 @@ interface DialogStackProps {
 }
 
 export const DialogStack: React.FC<DialogStackProps> = observer(({ stackedDialogs, close }) => {
-  const onOverlayClick = useCallback((dialogInfo: IDialogInfo) => {
-    if (dialogInfo.closeOnClickOutside) {
-      close(dialogInfo.key);
-    }
-  }, [close]);
+  const onOverlayClick = useCallback(
+    (dialogInfo: IDialogInfo) => {
+      if (dialogInfo.closeOnClickOutside) {
+        close(dialogInfo.key);
+      }
+    },
+    [close],
+  );
 
   const getStackedDialogs = useCallback(() => {
     const result = [];
@@ -49,8 +54,8 @@ export const DialogStack: React.FC<DialogStackProps> = observer(({ stackedDialog
         // For all dialogs except the last one
         result.push(
           React.cloneElement(stackedDialogs[i].component, {
-            key: stackedDialogs[i].key
-          })
+            key: stackedDialogs[i].key,
+          }),
         );
       } else {
         // For the last dialog, add overlay and the dialog
@@ -61,8 +66,8 @@ export const DialogStack: React.FC<DialogStackProps> = observer(({ stackedDialog
             onClick={() => onOverlayClick(stackedDialogs[i])}
           />,
           React.cloneElement(stackedDialogs[i].component, {
-            key: stackedDialogs[i].key
-          })
+            key: stackedDialogs[i].key,
+          }),
         );
       }
     }
@@ -70,8 +75,5 @@ export const DialogStack: React.FC<DialogStackProps> = observer(({ stackedDialog
     return result;
   }, [stackedDialogs, onOverlayClick]);
 
-  return createPortal(
-    <>{getStackedDialogs()}</>,
-    document.getElementById("modal-window-portal")!
-  );
+  return createPortal(<>{getStackedDialogs()}</>, document.getElementById('modal-window-portal')!);
 });

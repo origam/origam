@@ -17,15 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import axios from "axios";
-import { observable } from "mobx";
-import { getLocaleFromCookie, setLocaleToCookie } from "src/utils/cookie.ts";
+import axios from 'axios';
+import { observable } from 'mobx';
+import { getLocaleFromCookie, setLocaleToCookie } from 'src/utils/cookie.ts';
 
-const debugShowTranslations = window.localStorage.getItem("debugShowTranslations") === "true";
+const debugShowTranslations = window.localStorage.getItem('debugShowTranslations') === 'true';
 
 export class TranslationsStore {
-
-  @observable accessor locale: string = "en-US";
+  @observable accessor locale: string = 'en-US';
   @observable.ref private accessor translations = {} as { [k: string]: string };
 
   setLocale(locale: string) {
@@ -39,9 +38,9 @@ export class TranslationsStore {
   async translationsInit(locale: string) {
     try {
       const result = await axios.get(`locale/localization_${locale}.json`, {});
-      this.translations = result.data
+      this.translations = result.data;
     } catch (error: any) {
-      console.error(error) /* eslint-disable-line no-console */
+      console.error(error);
     }
   }
 
@@ -58,29 +57,35 @@ export class TranslationsStore {
       result = result.replace(`{${i}}`, p[i]);
     }
     if (debugShowTranslations) {
-      if (this.locale === "en-US" && result !== defaultContent) {
-        console.error("default translation for translKey " + translKey + " does not match translation for en-US!");
+      if (this.locale === 'en-US' && result !== defaultContent) {
+        console.error(
+          'default translation for translKey ' +
+            translKey +
+            ' does not match translation for en-US!',
+        );
       }
       if (showingDefault) {
-        console.error(`Could not find translation for: "${translKey}", showing default: "${result}"`); // eslint-disable-line no-console
+        console.error(
+          `Could not find translation for: "${translKey}", showing default: "${result}"`,
+        );
         return (
-          <span title={translKey} style={{backgroundColor: "red"}}>
-        {result}
-        </span>
-      );
+          <span title={translKey} style={{ backgroundColor: 'red' }}>
+            {result}
+          </span>
+        );
       } else {
         return (
-          <span title={translKey} style={{backgroundColor: "green"}}>
-        {result}
-        </span>
-      );
+          <span title={translKey} style={{ backgroundColor: 'green' }}>
+            {result}
+          </span>
+        );
       }
     } else {
       return result;
     }
   }
 
-  * updateLocale(): Generator<Promise<any>, void, any> {
+  *updateLocale(): Generator<Promise<any>, void, any> {
     const cookieLocale = getLocaleFromCookie();
     if (cookieLocale !== this.locale) {
       yield* this.setLocale(cookieLocale)();

@@ -17,35 +17,33 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext } from "react";
-import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
-import { observer } from "mobx-react-lite";
-import { RootStoreContext, T } from "src/main.tsx";
-import {
-  runInFlowWithHandler
-} from "src/errorHandling/runInFlowWithHandler.ts";
-import { Item, Menu, TriggerEvent, useContextMenu } from "react-contexify";
-import S from "src/components/editorTabView/EditorTabView.module.scss";
-import { action } from "mobx";
+import React, { useContext } from 'react';
+import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
+import { observer } from 'mobx-react-lite';
+import { RootStoreContext, T } from 'src/main.tsx';
+import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { Item, Menu, TriggerEvent, useContextMenu } from 'react-contexify';
+import S from 'src/components/editorTabView/EditorTabView.module.scss';
+import { action } from 'mobx';
 
 export const TabHeader: React.FC<{
-  editor: IEditorState
-}> = observer((props) => {
+  editor: IEditorState;
+}> = observer(props => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
-  const menuId = "TabMenu_" + props.editor.schemaItemId
+  const menuId = 'TabMenu_' + props.editor.schemaItemId;
 
-  const {show, hideAll} = useContextMenu({
+  const { show, hideAll } = useContextMenu({
     id: menuId,
   });
 
   function onClose(editor: IEditorState) {
-    run({generator: state.closeEditor(editor.schemaItemId)});
+    run({ generator: state.closeEditor(editor.schemaItemId) });
   }
 
   async function handleContextMenu(event: TriggerEvent) {
-    show({event, props: {}});
+    show({ event, props: {} });
   }
 
   function getLabel(editor: IEditorState) {
@@ -53,9 +51,9 @@ export const TabHeader: React.FC<{
       return editor.label;
     }
     if (!editor.label) {
-      return "*";
+      return '*';
     }
-    return editor.label + " *";
+    return editor.label + ' *';
   }
 
   function closeAllTabsExcept(ignoreId: string | null) {
@@ -66,9 +64,9 @@ export const TabHeader: React.FC<{
           if (ignoreId && editor.schemaItemId === ignoreId) {
             continue;
           }
-          yield* state.closeEditor(editor.schemaItemId)()
+          yield* state.closeEditor(editor.schemaItemId)();
         }
-      }
+      },
     });
   }
 
@@ -82,37 +80,24 @@ export const TabHeader: React.FC<{
 
   return (
     <div
-      key={props.editor.label} className={S.labelContainer}
+      key={props.editor.label}
+      className={S.labelContainer}
       onClick={() => action(() => state.setActiveEditor(props.editor.schemaItemId))()}
     >
-      <div
-        className={props.editor.isActive ? S.activeTab : ""}
-        onContextMenu={handleContextMenu}
-      >
+      <div className={props.editor.isActive ? S.activeTab : ''} onContextMenu={handleContextMenu}>
         {getLabel(props.editor)}
       </div>
-      <div
-        className={S.closeSymbol}
-        onClick={() => onClose(props.editor)}
-      >X
+      <div className={S.closeSymbol} onClick={() => onClose(props.editor)}>
+        X
       </div>
-      <Menu
-        id={menuId}
-        onVisibilityChange={onMenuVisibilityChange}
-      >
-        <Item
-          id="closeAll"
-          onClick={() => closeAllTabsExcept(null)}
-        >
+      <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
+        <Item id="closeAll" onClick={() => closeAllTabsExcept(null)}>
           {T('Close All', 'tab_header_close_all')}
         </Item>
-        <Item
-          id="closeAllButThis"
-          onClick={() => closeAllTabsExcept(props.editor.schemaItemId)}
-        >
+        <Item id="closeAllButThis" onClick={() => closeAllTabsExcept(props.editor.schemaItemId)}>
           {T('Close All But This', 'tab_header_close_all_but_this')}
         </Item>
       </Menu>
     </div>
-  )
-})
+  );
+});
