@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
@@ -327,6 +328,160 @@ public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
     public ValueTask<DateTimeOffset?> GetExpirationDateAsync(OrigamToken token, CancellationToken cancellationToken)
     {
         return new ValueTask<DateTimeOffset?>(token.Expiration);
+    }
+
+    public ValueTask<DateTimeOffset?> GetCreationDateAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<DateTimeOffset?>(token.CreationTime);
+    }
+
+    public ValueTask<string?> GetPayloadAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.Data);
+    }
+
+    public ValueTask<string?> GetReferenceIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.Key);
+    }
+
+    public ValueTask<string?> GetStatusAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(null);
+    }
+
+    public ValueTask<string?> GetSessionIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<string?>(token.SessionId);
+    }
+
+    public ValueTask<bool> HasReferenceIdAsync(OrigamToken token, CancellationToken cancellationToken)
+    {
+        return new ValueTask<bool>(!string.IsNullOrEmpty(token.Key));
+    }
+
+    public ValueTask<OrigamToken> InstantiateAsync(CancellationToken cancellationToken)
+    {
+        return new ValueTask<OrigamToken>(new OrigamToken());
+    }
+
+    public async IAsyncEnumerable<OrigamToken> ListAsync(int? count, int? offset, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter());
+        foreach (var item in list.Skip(offset ?? 0).Take(count ?? int.MaxValue))
+        {
+            yield return item;
+        }
+    }
+
+    public async ValueTask<long> CountAsync<TResult>(Func<IQueryable<OrigamToken>, IQueryable<TResult>> query, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter());
+        return query(list.AsQueryable()).LongCount();
+    }
+
+    public async ValueTask<TResult?> GetAsync<TResult>(Func<IQueryable<OrigamToken>, IQueryable<TResult>> query, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter());
+        return query(list.AsQueryable()).FirstOrDefault();
+    }
+
+    public ValueTask<OrigamToken?> FindByReferenceIdAsync(string identifier, CancellationToken cancellationToken)
+    {
+        return new ValueTask<OrigamToken?>(GetAsync(identifier));
+    }
+
+    public async IAsyncEnumerable<OrigamToken> FindByApplicationIdAsync(string applicationId, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter { ClientId = applicationId });
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+
+    public IAsyncEnumerable<OrigamToken> FindByAuthorizationIdAsync(string authorizationId, CancellationToken cancellationToken)
+    {
+        return AsyncEnumerable.Empty<OrigamToken>();
+    }
+
+    public async IAsyncEnumerable<OrigamToken> FindAsync(string subject, string client, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter { SubjectId = subject, ClientId = client });
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+
+    public async IAsyncEnumerable<OrigamToken> FindAsync(string subject, string client, string status, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter { SubjectId = subject, ClientId = client });
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+
+    public async IAsyncEnumerable<OrigamToken> FindAsync(string subject, string client, string status, string type, CancellationToken cancellationToken)
+    {
+        var list = await GetAllAsync(new PersistedGrantFilter { SubjectId = subject, ClientId = client, Type = type });
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+
+    public ValueTask SetApplicationIdAsync(OrigamToken token, string? applicationId, CancellationToken cancellationToken)
+    {
+        token.ClientId = applicationId ?? string.Empty;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetAuthorizationIdAsync(OrigamToken token, string? authorizationId, CancellationToken cancellationToken)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetCreationDateAsync(OrigamToken token, DateTimeOffset? creationDate, CancellationToken cancellationToken)
+    {
+        token.CreationTime = creationDate?.UtcDateTime ?? DateTime.UtcNow;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetExpirationDateAsync(OrigamToken token, DateTimeOffset? expirationDate, CancellationToken cancellationToken)
+    {
+        token.Expiration = expirationDate?.UtcDateTime;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetPayloadAsync(OrigamToken token, string? payload, CancellationToken cancellationToken)
+    {
+        token.Data = payload ?? string.Empty;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetReferenceIdAsync(OrigamToken token, string? identifier, CancellationToken cancellationToken)
+    {
+        token.Key = identifier ?? string.Empty;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetStatusAsync(OrigamToken token, string? status, CancellationToken cancellationToken)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetSubjectAsync(OrigamToken token, string? subject, CancellationToken cancellationToken)
+    {
+        token.SubjectId = subject ?? string.Empty;
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask SetTypeAsync(OrigamToken token, string? type, CancellationToken cancellationToken)
+    {
+        token.Type = type ?? string.Empty;
+        return ValueTask.CompletedTask;
     }
 
     public async ValueTask UpdateAsync(OrigamToken token, CancellationToken cancellationToken)
