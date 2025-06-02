@@ -21,7 +21,7 @@ import S from './EditorTabView.module.scss';
 import { observer } from 'mobx-react-lite';
 import { RootStoreContext } from 'src/main.tsx';
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { TabHeader } from "src/components/editorTabView/TabHeader.tsx";
+import { TabHeader } from 'src/components/editorTabView/TabHeader.tsx';
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -38,9 +38,9 @@ export const EditorTabView: React.FC = observer(() => {
   return (
     <div className={S.root}>
       <div className={S.labels}>
-        {editors.map((editor) =>
-          <TabHeader editor={editor}/>)
-        }
+        {editors.map(editor => (
+          <TabHeader key={editor.schemaItemId + editor.label} editor={editor} />
+        ))}
       </div>
       <div className={S.content}>
         {state.editors.map(editorContainer => (

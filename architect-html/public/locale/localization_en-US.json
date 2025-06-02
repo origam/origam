@@ -15,6 +15,6 @@
   "dialog_yes": "Yes",
   "dialog_no": "No",
   "dialog_cancel": "Cancel",
-  "tab_header_close_all" : "Close All",
+  "tab_header_close_all": "Close All",
   "tab_header_close_all_but_this": "Close All But This"
 }
