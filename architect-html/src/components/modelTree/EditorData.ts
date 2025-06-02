@@ -18,12 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  EditorType,
+  EditorSubType,
   IApiEditorNode,
   IApiEditorData,
   IApiEditorProperty,
   ISectionEditorData,
   IScreenEditorData,
+  EditorType,
+  DocumentationEditorData,
 } from 'src/API/IArchitectApi.ts';
 import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
 import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
@@ -32,7 +34,7 @@ export class EditorNode implements IEditorNode {
   id: string;
   origamId: string;
   nodeText: string;
-  editorType: EditorType;
+  editorType: EditorSubType;
   parent: TreeNode | null = null;
 
   constructor(node: IApiEditorNode, parent: TreeNode | null) {
@@ -45,11 +47,15 @@ export class EditorNode implements IEditorNode {
 }
 
 export class EditorData implements IApiEditorData {
+  editorId: string;
+  editorType: EditorType;
   parentNodeId: string | undefined;
   isDirty: boolean;
   node: EditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
+  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData | DocumentationEditorData;
   constructor(data: IApiEditorData, parent: TreeNode | null) {
+    this.editorId = data.editorId;
+    this.editorType = data.editorType;
     this.parentNodeId = data.parentNodeId;
     this.isDirty = data.isDirty;
     this.node = new EditorNode(data.node, parent);

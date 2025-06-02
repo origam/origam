@@ -46,6 +46,7 @@ public class Program
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
         builder.Services.AddSingleton(documentation);
+        builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddLogging(logging =>
         {
             logging.AddLog4Net();

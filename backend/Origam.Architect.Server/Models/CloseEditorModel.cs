@@ -1,9 +1,13 @@
-﻿using Origam.Server.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using Origam.Architect.Server.Services;
+using Origam.Server.Attributes;
 
 namespace Origam.Architect.Server.Models;
 
 public class CloseEditorModel
 {
-    [RequiredNonDefault]
-    public Guid SchemaItemId { get; set; }
+    [Required]
+    public string EditorId { get; set; }
+    
+    public EditorId GetTypedEditorId() => new EditorId(EditorId); 
 }

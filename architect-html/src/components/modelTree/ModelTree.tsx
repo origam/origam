@@ -22,7 +22,7 @@ import S from 'src/components/modelTree/ModelTree.module.scss';
 import { Menu, Item, useContextMenu, TriggerEvent, Separator, Submenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
-import { RootStoreContext } from 'src/main.tsx';
+import { RootStoreContext, T } from 'src/main.tsx';
 import { observer } from 'mobx-react-lite';
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { Icon } from 'src/components/icon/Icon.tsx';
@@ -74,6 +74,10 @@ const ModelTreeNode: React.FC<{
     run({ generator: node.delete.bind(node) });
   }
 
+  function openDocumentationEditor() {
+    run({ generator: editorTabViewState.openDocumentationEditor(node) });
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -112,10 +116,13 @@ const ModelTreeNode: React.FC<{
           {!node.isNonPersistentItem && (
             <>
               <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
-                Edit
+                {T('Edit', 'tree_node_edit')}
               </Item>
               <Item id="delete" onClick={onDelete}>
-                Delete
+                {T('Delete', 'tree_node_delete')}
+              </Item>
+              <Item id="documentation" onClick={openDocumentationEditor}>
+                {T('Documentation', 'tree_node_documentation')}
               </Item>
             </>
           )}
