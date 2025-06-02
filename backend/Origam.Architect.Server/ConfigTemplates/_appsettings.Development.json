@@ -6,6 +6,6 @@
     }
   },
   "SpaConfig": {
-    "SourcePath": "C:\\Repos\\origam\\architect-html"
+    "PathToClientApplication": "C:\\Repos\\origam\\architect-html"
   }
 }
