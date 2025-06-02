@@ -17,34 +17,33 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@use "sass:color";
+@use 'sass:color';
 
 @function hexToRGB($hex) {
-  @return color.channel($hex, "red", $space: rgb),
-  color.channel($hex, "green", $space: rgb),
-  color.channel($hex, "blue", $space: rgb);
+  @return color.channel($hex, 'red', $space: rgb), color.channel($hex, 'green', $space: rgb),
+    color.channel($hex, 'blue', $space: rgb);
 }
 
-$background1: #FFFFFF;
-$background2: #F7F6FA;
-$background3: #E9E8F0;
-$background4: #D3D3D3;
-$background5: #B0AFB7;
-$background6: #77767E;
-$background7: #3E3D45;
-$background8: #0D0D0D;
-$foreground1: #4C84FF;
+$background1: #ffffff;
+$background2: #f7f6fa;
+$background3: #e9e8f0;
+$background4: #d3d3d3;
+$background5: #b0afb7;
+$background6: #77767e;
+$background7: #3e3d45;
+$background8: #0d0d0d;
+$foreground1: #4c84ff;
 $foreground2: #73b1e7;
 $foreground3: #0a77d5;
-$foreground4: #ACC6FF;
-$foreground5: #EDF2FF;
-$foreground6: #8998C5;
-$foreground7: #435BA3;
-$ok1: #69D07F;
-$warning1: #FFBF05;
-$warning2: #FE8933;
-$warning3: #FFFF00;
-$error1: #FE5461;
+$foreground4: #acc6ff;
+$foreground5: #edf2ff;
+$foreground6: #8998c5;
+$foreground7: #435ba3;
+$ok1: #69d07f;
+$warning1: #ffbf05;
+$warning2: #fe8933;
+$warning3: #ffff00;
+$error1: #fe5461;
 
 :root {
   --background1: #{$background1};

@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface IArchitectApi {
-
   getOpenEditors(): Promise<IApiEditorData[]>;
 
   getPackages(): Promise<IPackagesInfo>;
@@ -39,7 +38,7 @@ export interface IArchitectApi {
 
   updateProperties(
     schemaItemId: string | undefined,
-    changes: IPropertyChange[]
+    changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult>;
 
   deleteSchemaItem(schemaItemId: string): Promise<void>;
@@ -49,45 +48,49 @@ export interface IArchitectApi {
   createNode(node: INodeLoadData, typeName: string): Promise<IApiEditorData>;
 
   updateSectionEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string
-    modelChanges: IModelChange[]
+    schemaItemId: string | undefined;
+    name: string;
+    selectedDataSourceId: string;
+    modelChanges: IModelChange[];
   }): Promise<ISectionEditorModel>;
 
-  createSectionEditorItem(args:{
-    editorSchemaItemId: string,
-    parentControlSetItemId: string,
-    componentType: string,
-    fieldName?: string,
-    top: number,
-    left: number
-  }) : Promise<IApiControl>
+  createSectionEditorItem(args: {
+    editorSchemaItemId: string;
+    parentControlSetItemId: string;
+    componentType: string;
+    fieldName?: string;
+    top: number;
+    left: number;
+  }): Promise<IApiControl>;
 
-  deleteSectionEditorItem(args:{
-    schemaItemIds: string[],
-    editorSchemaItemId: string,
-  }) : Promise<ISectionEditorModel>
+  deleteSectionEditorItem(args: {
+    schemaItemIds: string[];
+    editorSchemaItemId: string;
+  }): Promise<ISectionEditorModel>;
 
   updateScreenEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string
-    modelChanges: IModelChange[]
+    schemaItemId: string | undefined;
+    name: string;
+    selectedDataSourceId: string;
+    modelChanges: IModelChange[];
   }): Promise<IScreenEditorModel>;
 
-  createScreenEditorItem(args:{
+  createScreenEditorItem(args: {
     editorSchemaItemId: string;
     parentControlSetItemId: string;
     controlItemId: string;
-    top: number,
-    left: number
-  }) : Promise<IScreenEditorItem>
+    top: number;
+    left: number;
+  }): Promise<IScreenEditorItem>;
 
-  deleteScreenEditorItem(args:{
-    schemaItemIds: string[],
+  deleteScreenEditorItem(args: {
+    schemaItemIds: string[];
+    editorSchemaItemId: string;
+  }): Promise<IScreenEditorModel>;
+
+  loadSections(
     editorSchemaItemId: string,
-  }) : Promise<IScreenEditorModel>
+  }) : Promise<IScreenEditorModel>;
 
   loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>>;
 
@@ -113,7 +116,7 @@ export interface IScreenEditorItem {
 export interface IModelChange {
   schemaItemId: string;
   parentSchemaItemId: string | undefined;
-  changes: IPropertyChange[]
+  changes: IPropertyChange[];
 }
 
 export interface IPropertyChange {
@@ -123,7 +126,7 @@ export interface IPropertyChange {
 }
 
 export interface ISectionEditorModel {
-  data: ISectionEditorData,
+  data: ISectionEditorData;
   isDirty: boolean;
 }
 
@@ -140,13 +143,13 @@ export interface ISectionEditorData extends IDesignerEditorData {
 }
 
 export interface IScreenEditorData extends IDesignerEditorData {
-    sections: IToolBoxItem[];
-    widgets: IToolBoxItem[];
+  sections: IToolBoxItem[];
+  widgets: IToolBoxItem[];
 }
 
 export interface IToolBoxItem {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }
 
 export interface IApiControl {
@@ -186,7 +189,7 @@ export enum OrigamDataType {
   Xml = 'Xml',
   Array = 'Array',
   Geography = 'Geography',
-  Object = 'Object'
+  Object = 'Object',
 }
 
 export interface IPropertyUpdate {
@@ -223,7 +226,7 @@ export interface IApiTreeNode extends INodeLoadData {
   defaultEditor: EditorSubType;
   childrenIds: string[];
   children?: IApiTreeNode[];
-  iconUrl?: string
+  iconUrl?: string;
 }
 
 export interface IPackagesInfo {
@@ -232,17 +235,11 @@ export interface IPackagesInfo {
 }
 
 export interface IPackage {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
-export type PropertyType =
-  "boolean"
-  | "enum"
-  | "string"
-  | "integer"
-  | "float"
-  | "looukup";
+export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
 
 export interface DocumentationEditorData {
   label: string;

@@ -42,7 +42,7 @@ public class TreeNodeFactory
 
     private string GetIcon(IBrowserNode2 node)
     {
-        if (node is SchemaItemGroup)
+        if (node is SchemaItemGroup or AbstractSchemaItemProvider)
         {
             return "/Icons/directory.svg";
         }

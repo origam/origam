@@ -17,23 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed, observable } from "mobx";
-import {
-  IArchitectApi,
-  IUpdatePropertiesResult,
-} from "src/API/IArchitectApi.ts";
-import {
-  IEditorNode
-} from "src/components/editorTabView/EditorTabViewState.ts";
-import { IEditorState } from "src/components/editorTabView/IEditorState.ts";
-import {
-  EditorProperty,
-  toChanges
-} from "src/components/editors/gridEditor/EditorProperty.ts";
+import { computed, observable } from 'mobx';
+import { IArchitectApi, IUpdatePropertiesResult } from 'src/API/IArchitectApi.ts';
+import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
+import { EditorProperty, toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
 
-import {
-  IPropertyManager
-} from "src/components/editors/propertyEditor/IPropertyManager.tsx";
+import { IPropertyManager } from 'src/components/editors/propertyEditor/IPropertyManager.tsx';
 
 export class GridEditorState implements IEditorState, IPropertyManager {
   @observable accessor properties: EditorProperty[];
@@ -62,7 +52,7 @@ export class GridEditorState implements IEditorState, IPropertyManager {
   }
 
   get label() {
-    return this.properties.find(x => x.name === "Name")?.value || "";
+    return this.properties.find(x => x.name === 'Name')?.value || '';
   }
 
   * save(): Generator<Promise<any>, void, any> {
@@ -78,16 +68,22 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     }
   }
 
-  * onPropertyUpdated(property: EditorProperty, value: any): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
+  *onPropertyUpdated(
+    property: EditorProperty,
+    value: any,
+  ): Generator<Promise<IUpdatePropertiesResult>, void, IUpdatePropertiesResult> {
     property.value = value;
     const changes = toChanges(this.properties);
-    const updateResult = (yield this.architectApi.updateProperties(this.editorNode.origamId, changes)) as IUpdatePropertiesResult;
+    const updateResult = (yield this.architectApi.updateProperties(
+      this.editorNode.origamId,
+      changes,
+    )) as IUpdatePropertiesResult;
     for (const property of this.properties) {
-      const propertyUpdate = updateResult.propertyUpdates
-        .find(update => property.name === update.propertyName)
+      const propertyUpdate = updateResult.propertyUpdates.find(
+        update => property.name === update.propertyName,
+      );
       property.update(propertyUpdate);
     }
     this._isDirty = updateResult.isDirty;
   }
 }
-

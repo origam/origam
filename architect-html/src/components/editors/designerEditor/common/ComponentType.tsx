@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { OrigamDataType } from "src/API/IArchitectApi.ts";
+import { OrigamDataType } from 'src/API/IArchitectApi.ts';
 
 export enum ComponentType {
   AsCombo = 'Origam.Gui.Win.AsDropDown',
@@ -33,7 +33,7 @@ export enum ComponentType {
   SplitPanel = 'Origam.Gui.Win.SplitPanel',
   TabControl = 'Origam.Gui.Win.AsTabControl',
   TabPage = 'System.Windows.Forms.TabPage',
-  AsTree= 'Origam.Gui.Win.AsTreeView'
+  AsTree = 'Origam.Gui.Win.AsTreeView',
 }
 
 export function parseComponentType(value: string): ComponentType {
@@ -71,6 +71,5 @@ export function toComponentType(origamType: OrigamDataType): ComponentType {
 }
 
 export function getComponentTypeKey(componentTypeValue: ComponentType): string | undefined {
-  return Object.entries(ComponentType)
-    .find(entry => entry[1] === componentTypeValue)?.[0];
+  return Object.entries(ComponentType).find(entry => entry[1] === componentTypeValue)?.[0];
 }

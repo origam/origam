@@ -17,65 +17,54 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observer } from "mobx-react-lite";
-import React from "react";
-import S from "src/dialog/ModalWindow.module.scss";
-import { ModalWindow } from "src/dialog/ModalWindow.tsx";
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import S from 'src/dialog/ModalWindow.module.scss';
+import { ModalWindow } from 'src/dialog/ModalWindow.tsx';
 
 interface YesNoQuestionProps {
   screenTitle: string;
   yesLabel: string;
   noLabel: string;
   message: string;
-  cancelLabel?: string
+  cancelLabel?: string;
   onYesClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onNoClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(({
-  screenTitle,
-  yesLabel,
-  noLabel,
-  message,
-  cancelLabel,
-  onYesClick,
-  onNoClick,
-  onCancelClick
-}) => {
-  return (
-    <ModalWindow
-      title={screenTitle}
-      buttonsCenter={
-        <>
-          <button
-            id="yesButton"
-            tabIndex={0}
-            autoFocus
-            onClick={onYesClick}
-          >
-            {yesLabel}
-          </button>
-          <button
-            id="noButton"
-            tabIndex={0}
-            onClick={onNoClick}
-          >
-            {noLabel}
-          </button>
-          {onCancelClick && cancelLabel && (
-            <button
-              id="cancelButton"
-              tabIndex={0}
-              onClick={onCancelClick}
-            >
-              {cancelLabel}
+export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(
+  ({
+    screenTitle,
+    yesLabel,
+    noLabel,
+    message,
+    cancelLabel,
+    onYesClick,
+    onNoClick,
+    onCancelClick,
+  }) => {
+    return (
+      <ModalWindow
+        title={screenTitle}
+        buttonsCenter={
+          <>
+            <button id="yesButton" tabIndex={0} autoFocus onClick={onYesClick}>
+              {yesLabel}
             </button>
-          )}
-        </>
-      }
-    >
-      <div className={S.dialogContent}>{message}</div>
-    </ModalWindow>
-  );
-});
+            <button id="noButton" tabIndex={0} onClick={onNoClick}>
+              {noLabel}
+            </button>
+            {onCancelClick && cancelLabel && (
+              <button id="cancelButton" tabIndex={0} onClick={onCancelClick}>
+                {cancelLabel}
+              </button>
+            )}
+          </>
+        }
+      >
+        <div className={S.dialogContent}>{message}</div>
+      </ModalWindow>
+    );
+  },
+);

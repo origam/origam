@@ -65,4 +65,3 @@ export class EditorData implements IApiEditorData {
     this.data = data.data;
   }
 }
-

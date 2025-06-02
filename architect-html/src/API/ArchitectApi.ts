@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from 'axios';
 import {
   IApiTreeNode,
   IArchitectApi,
@@ -29,11 +29,11 @@ import {
   ISectionEditorModel,
   IUpdatePropertiesResult,
   IPackagesInfo,
-  IScreenEditorModel, IScreenEditorItem
-} from "src/API/IArchitectApi.ts";
+  IScreenEditorModel,
+  IScreenEditorItem,
+} from 'src/API/IArchitectApi.ts';
 
 export class ArchitectApi implements IArchitectApi {
-
   errorHandler: (error: any) => void;
   axiosInstance: AxiosInstance;
 
@@ -46,10 +46,10 @@ export class ArchitectApi implements IArchitectApi {
     const axiosInstance = axios.create({});
 
     axiosInstance.interceptors.response.use(
-      (response) => {
+      response => {
         return response;
       },
-      async (error) => {
+      async error => {
         if (error.response?.data?.constructor?.name === 'Blob') {
           error.response.data = await error.response.data.text();
         }
@@ -57,18 +57,17 @@ export class ArchitectApi implements IArchitectApi {
           this.errorHandler(error);
         }
         throw error;
-      }
+      },
     );
     return axiosInstance;
   }
 
-
   async setActivePackage(packageId: string): Promise<void> {
-    await this.axiosInstance.post("/Package/SetActive", {id: packageId})
+    await this.axiosInstance.post('/Package/SetActive', { id: packageId });
   }
 
   async getPackages(): Promise<IPackagesInfo> {
-    return (await this.axiosInstance.get("/Package/GetAll")).data
+    return (await this.axiosInstance.get('/Package/GetAll')).data;
   }
 
   async getTopModelNodes(): Promise<IApiTreeNode[]> {
@@ -76,20 +75,20 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async getNodeChildren(node: IApiTreeNode): Promise<IApiTreeNode[]> {
-    return (await this.axiosInstance.get(
-      `/Model/GetChildren`,
-      {
+    return (
+      await this.axiosInstance.get(`/Model/GetChildren`, {
         params: {
           id: node.origamId,
           nodeText: node.nodeText,
-          isNonPersistentItem: node.isNonPersistentItem
-        }
-      })).data;
+          isNonPersistentItem: node.isNonPersistentItem,
+        },
+      })
+    ).data;
   }
 
   async openEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (await (this.axiosInstance.post("/Editor/OpenEditor",
-      {schemaItemId: schemaItemId}))).data;
+    return (await this.axiosInstance.post('/Editor/OpenEditor', { schemaItemId: schemaItemId }))
+      .data;
   }
 
   async closeEditor(editorId: string) {
@@ -117,138 +116,125 @@ export class ArchitectApi implements IArchitectApi {
 
   async persistChanges(schemaItemId: string): Promise<void> {
     await this.axiosInstance.post(`/Editor/PersistChanges`, {
-      schemaItemId
+      schemaItemId,
     });
   }
 
   async persistSectionEditorChanges(schemaItemId: string): Promise<void> {
     await this.axiosInstance.post(`/SectionEditor/Save`, {
-      schemaItemId
+      schemaItemId,
     });
   }
 
-  async updateProperties(schemaItemId: string, changes: IPropertyChange[]): Promise<IUpdatePropertiesResult> {
-    return (await this.axiosInstance.post(`/PropertyEditor/Update`, {
-      schemaItemId,
-      changes
-    })).data;
+  async updateProperties(
+    schemaItemId: string,
+    changes: IPropertyChange[],
+  ): Promise<IUpdatePropertiesResult> {
+    return (
+      await this.axiosInstance.post(`/PropertyEditor/Update`, {
+        schemaItemId,
+        changes,
+      })
+    ).data;
   }
 
   async deleteSchemaItem(schemaItemId: string) {
-    await this.axiosInstance.post("/Model/DeleteSchemaItem",
-      {schemaItemId: schemaItemId}
-    )
+    await this.axiosInstance.post('/Model/DeleteSchemaItem', { schemaItemId: schemaItemId });
   }
 
   async getMenuItems(node: IApiTreeNode): Promise<IMenuItemInfo[]> {
-    return (await this.axiosInstance.get(
-      `/Model/GetMenuItems`,
-      {
+    return (
+      await this.axiosInstance.get(`/Model/GetMenuItems`, {
         params: {
           id: node.origamId,
           nodeText: node.nodeText,
-          isNonPersistentItem: node.isNonPersistentItem
-        }
-      })).data;
+          isNonPersistentItem: node.isNonPersistentItem,
+        },
+      })
+    ).data;
   }
 
   async getOpenEditors(): Promise<IApiEditorData[]> {
-    return (await this.axiosInstance.get(
-      `/Editor/GetOpenEditors`)).data;
+    return (await this.axiosInstance.get(`/Editor/GetOpenEditors`)).data;
   }
 
   async createNode(node: IApiTreeNode, typeName: string): Promise<IApiEditorData> {
-    return (await this.axiosInstance.post("/Editor/CreateNode",
-      {
+    return (
+      await this.axiosInstance.post('/Editor/CreateNode', {
         nodeId: node.origamId,
-        newTypeName: typeName
-      }
-    )).data;
+        newTypeName: typeName,
+      })
+    ).data;
   }
 
   async updateSectionEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string,
-    modelChanges: IModelChange[]
+    schemaItemId: string | undefined;
+    name: string;
+    selectedDataSourceId: string;
+    modelChanges: IModelChange[];
   }): Promise<ISectionEditorModel> {
     return (await this.axiosInstance.post(`/SectionEditor/Update`, args)).data;
   }
 
-  async createSectionEditorItem(
-    args: {
-      editorSchemaItemId: string,
-      parentControlSetItemId: string,
-      componentType: string,
-      fieldName?: string,
-      top: number,
-      left: number
-    }
-  ): Promise<IApiControl> {
-    return (await this.axiosInstance.post("/SectionEditor/CreateItem",
-      args
-    )).data;
+  async createSectionEditorItem(args: {
+    editorSchemaItemId: string;
+    parentControlSetItemId: string;
+    componentType: string;
+    fieldName?: string;
+    top: number;
+    left: number;
+  }): Promise<IApiControl> {
+    return (await this.axiosInstance.post('/SectionEditor/CreateItem', args)).data;
   }
 
-  async deleteSectionEditorItem(
-    args: {
-      schemaItemIds: string[],
-      editorSchemaItemId: string,
-    }
-  ): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post("/SectionEditor/Delete",
-      args
-    )).data;
+  async deleteSectionEditorItem(args: {
+    schemaItemIds: string[];
+    editorSchemaItemId: string;
+  }): Promise<ISectionEditorModel> {
+    return (await this.axiosInstance.post('/SectionEditor/Delete', args)).data;
   }
 
   async updateScreenEditor(args: {
-    schemaItemId: string | undefined,
-    name: string,
-    selectedDataSourceId: string,
-    modelChanges: IModelChange[]
+    schemaItemId: string | undefined;
+    name: string;
+    selectedDataSourceId: string;
+    modelChanges: IModelChange[];
   }): Promise<IScreenEditorModel> {
     return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
   }
 
-  async createScreenEditorItem(
-    args: {
-      editorSchemaItemId: string;
-      parentControlSetItemId: string;
-      controlItemId: string;
-      top: number,
-      left: number
-    }
-  ): Promise<IScreenEditorItem> {
-    return (await this.axiosInstance.post("/ScreenEditor/CreateItem",
-      args
-    )).data;
+  async createScreenEditorItem(args: {
+    editorSchemaItemId: string;
+    parentControlSetItemId: string;
+    controlItemId: string;
+    top: number;
+    left: number;
+  }): Promise<IScreenEditorItem> {
+    return (await this.axiosInstance.post('/ScreenEditor/CreateItem', args)).data;
   }
 
-  async deleteScreenEditorItem(
-    args: {
-      schemaItemIds: string[],
-      editorSchemaItemId: string,
-    }
-  ): Promise<IScreenEditorModel> {
-    return (await this.axiosInstance.post("/ScreenEditor/Delete",
-      args
-    )).data;
+  async deleteScreenEditorItem(args: {
+    schemaItemIds: string[];
+    editorSchemaItemId: string;
+  }): Promise<IScreenEditorModel> {
+    return (await this.axiosInstance.post('/ScreenEditor/Delete', args)).data;
   }
 
-  async loadSections(editorSchemaItemId: string, sectionIds: string[]): Promise<Record<string, IApiControl>> {
-    return (await this.axiosInstance.get(
-      `/ScreenEditor/GetSections`,
-      {
+  async loadSections(
+    editorSchemaItemId: string,
+    sectionIds: string[],
+  ): Promise<Record<string, IApiControl>> {
+    return (
+      await this.axiosInstance.get(`/ScreenEditor/GetSections`, {
         params: {
           sectionIds: sectionIds,
-          editorSchemaItemId: editorSchemaItemId
-        }
-      })).data;
+          editorSchemaItemId: editorSchemaItemId,
+        },
+      })
+    ).data;
   }
 }
 
 export function simpleErrorHandler(error: any) {
   console.error(error);
 }
-
-

@@ -31,12 +31,12 @@ import { IEditorNode
 import { RootStore } from "src/stores/RootStore.ts";
 
 export class TreeNode implements IEditorNode {
-    private architectApi: IArchitectApi;
+  private architectApi: IArchitectApi;
 
   constructor(
     apiNode: IApiTreeNode,
     private rootStore: RootStore,
-    public parent: TreeNode | null = null
+    public parent: TreeNode | null = null,
   ) {
     this.architectApi = rootStore.architectApi;
     this.id = apiNode.id;
@@ -47,11 +47,10 @@ export class TreeNode implements IEditorNode {
     this.childrenIds = apiNode.childrenIds;
     this.iconUrl = apiNode.iconUrl;
     this.children = apiNode.children
-      ? apiNode.children.map(child =>
-        new TreeNode(child, this.rootStore, this))
+      ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
-    this.childrenInitialized = apiNode.hasChildNodes && this.children.length > 0
-      || !apiNode.hasChildNodes;
+    this.childrenInitialized =
+      (apiNode.hasChildNodes && this.children.length > 0) || !apiNode.hasChildNodes;
   }
 
   id: string;
@@ -71,45 +70,41 @@ export class TreeNode implements IEditorNode {
     return this.rootStore.uiState.isExpanded(this.id);
   }
 
-  * loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
+  *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;
     }
     this.isLoading = true;
     try {
       const nodes = yield this.architectApi.getNodeChildren(this);
-      this.children = nodes.map(node =>
-        new TreeNode(node, this.rootStore, this));
+      this.children = nodes.map(node => new TreeNode(node, this.rootStore, this));
       this.childrenInitialized = true;
     } finally {
       this.isLoading = false;
     }
   }
 
-  * toggle() {
+  *toggle() {
     this.rootStore.uiState.setExpanded(this.id, !this.isExpanded);
     yield;
   }
 
-  * delete() {
+  *delete() {
     yield this.architectApi.deleteSchemaItem(this.origamId);
     if (this.parent) {
       yield* this.parent.loadChildren.bind(this.parent)();
     }
   }
 
-  * getMenuItems() {
+  *getMenuItems() {
     this.contextMenuItems = yield this.architectApi.getMenuItems(this);
   }
 
   createNode(typeName: string) {
-    return function * (this: TreeNode): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
+    return function* (this: TreeNode): Generator<Promise<IApiEditorData>, void, IApiEditorData> {
       const apiEditorData = yield this.architectApi.createNode(this, typeName);
       const editorData = new EditorData(apiEditorData, this);
       this.rootStore.editorTabViewState.openEditor(editorData);
     }.bind(this);
   }
 }
-
-
-

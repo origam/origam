@@ -17,11 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
-import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
-import {
-  GridEditorState
-} from "src/components/editors/gridEditor/GridEditorState.ts";
+import React from 'react';
+import { GridEditor } from 'src/components/editors/gridEditor/GridEditor.tsx';
+import { XsltEditor } from 'src/components/editors/xsltEditor/XsltEditor.tsx';
+import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
 import {
   DocumentationEditorData,
   EditorType,
@@ -96,6 +95,7 @@ export function getEditor(
       state,
       <ScreenSectionEditor designerState={state}/>
     );
+    return new Editor(state, <ScreenSectionEditor designerState={state} />);
   }
   if (editorType === "ScreenEditor") {
     const screenData = data as IScreenEditorData;
@@ -107,6 +107,7 @@ export function getEditor(
       state,
       <ScreenEditor designerState={state}/>
     );
+    return new Editor(state, <ScreenEditor designerState={state} />);
   }
   if (editorType === "DocumentationEditor") {
     const documentationData = data as DocumentationEditorData;
@@ -122,8 +123,9 @@ export function getEditor(
   return null;
 }
 
-
 export class Editor {
-  constructor(public state: IEditorState, public element: React.ReactElement) {
-  }
+  constructor(
+    public state: IEditorState,
+    public element: React.ReactElement,
+  ) {}
 }
