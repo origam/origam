@@ -187,6 +187,7 @@ Below are examples of typical tasks Codex might be asked to perform, along with 
 - **Versioning**: Whenever creating or updating Docker tags in `docker/`, follow the `YYYY.MAJOR.MINOR` scheme that Origam uses.  
 - **Documentation**: If generating XML comments for methods (using `/// <summary> ... </summary>`), keep them concise and relevant to business logic.  
 - **Error Messages**: Origam often surfaces localized error strings; when adding new exceptions, follow the existing pattern (e.g., `throw new InvalidOperationException("Feature X is not available.")`).
+- **License Headers**: New source files must include the standard ORIGAM license header with the year range updated to the current year (e.g., `2005 - 2025`).
 
 ---
 
