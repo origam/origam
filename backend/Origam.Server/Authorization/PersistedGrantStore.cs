@@ -26,8 +26,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
-using IdentityServer4.Stores;
+using OpenIddict.Abstractions;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
@@ -37,7 +36,8 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Authorization;
-public class PersistedGrantStore: IPersistedGrantStore
+// TODO: migrate to OpenIddict token store implementation
+public class PersistedGrantStore
 {
     private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid("ee21a554-9cd7-49bd-b989-4596d918af63");
     private static readonly Guid GetGrandByKeyFilterId = new Guid("12cffef2-6d1b-40d0-9e45-0e8b095c7248");
