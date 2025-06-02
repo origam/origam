@@ -65,7 +65,6 @@ public class PersistedGrantFilter
     public string? SessionId { get; set; }
 }
 
-// TODO: migrate to OpenIddict token store implementation
 public class PersistedGrantStore : IOpenIddictTokenStore<OrigamToken>
 {
     private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid("ee21a554-9cd7-49bd-b989-4596d918af63");
