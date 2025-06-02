@@ -19,10 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext, useEffect, useMemo } from 'react';
 import S from './EditorTabView.module.scss';
 import { observer } from 'mobx-react-lite';
-import { action } from 'mobx';
 import { RootStoreContext } from 'src/main.tsx';
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
+import { TabHeader } from "src/components/editorTabView/TabHeader.tsx";
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -36,35 +35,12 @@ export const EditorTabView: React.FC = observer(() => {
     run({ generator: initializeOpenEditors });
   }, [initializeOpenEditors, run]);
 
-  function onClose(editor: IEditorState) {
-    run({ generator: state.closeEditor(editor.schemaItemId) });
-  }
-
-  function getLabel(editor: IEditorState) {
-    if (!editor.isDirty) {
-      return editor.label;
-    }
-    if (!editor.label) {
-      return '*';
-    }
-    return editor.label + ' *';
-  }
-
   return (
     <div className={S.root}>
       <div className={S.labels}>
-        {editors.map(editor => (
-          <div
-            key={editor.label}
-            className={S.labelContainer}
-            onClick={() => action(() => state.setActiveEditor(editor.schemaItemId))()}
-          >
-            <div className={editor.isActive ? S.activeTab : ''}>{getLabel(editor)}</div>
-            <div className={S.closeSymbol} onClick={() => onClose(editor)}>
-              X
-            </div>
-          </div>
-        ))}
+        {editors.map((editor) =>
+          <TabHeader editor={editor}/>)
+        }
       </div>
       <div className={S.content}>
         {state.editors.map(editorContainer => (
