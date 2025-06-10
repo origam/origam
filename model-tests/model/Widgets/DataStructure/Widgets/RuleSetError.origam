@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsr1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRule/6.0.0"
+  xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
+  xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="5719e748-2f24-487e-8416-b956ae2434c4"
+    ds1:localized="false"
+    asi:name="RuleSetError">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/RuleSetError.origam#RuleSetError/0fdf519d-3276-4562-b791-4e2a588bc9f3"
+      x:id="39abf076-fa4e-4b28-a456-a1f6a3e71b3b"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="RuleSetError"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false" />
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="61de6c32-db3b-4819-903a-1e5b2b72ca74"
+      asi:name="DefaultRule">
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/RuleSetError.origam#RuleSetError/RuleSetError/39abf076-fa4e-4b28-a456-a1f6a3e71b3b"
+        x:id="2f169d38-e9b1-4847-bf45-c99d4d0fce46"
+        asi:name="RuleSetError_EmptyField"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/RuleSetError.origam#RuleSetError/Quantity/01cd4fa5-ed5a-4907-8854-1862f4f681cf"
+        dsr1:valueRule="Widgets/Rule/Widgets/DividedByZero.origam#DividedByZero/f2760600-ec37-4dde-a98f-a442919c948f">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/RuleSetError.origam#RuleSetError/RuleSetError/39abf076-fa4e-4b28-a456-a1f6a3e71b3b"
+          dsrd:field="Widgets/DataEntity/Widgets/RuleSetError.origam#RuleSetError/Name/0b3eb656-e8ee-4763-9d0d-b09683c72ae6"
+          x:id="ac432531-d85b-46c2-a841-ddcdc7064eba"
+          asi:name="RuleSetError_Name" />
+      </dsr1:DataStructureRule>
+    </dsrs:DataStructureRuleSet>
+  </ds1:DataStructure>
+</x:file>

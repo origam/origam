@@ -21,6 +21,24 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     dcrmi:refreshPortalAfterSave="false"
     ami:roles="*" />
+  <frmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    frmi:autoSaveOnListRecordChange="false"
+    ami:displayName="Rule Set Error"
+    x:id="7bd9f68f-e15d-43de-bbfc-938c21e372b7"
+    asi:name="RuleSetError"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    frmi:readOnlyAccess="false"
+    frmi:refreshAfterSaveType="RefreshChangedRecords"
+    frmi:refreshOnFocus="false"
+    frmi:refreshPortalAfterSave="false"
+    frmi:requestSaveAfterUpdate="false"
+    ami:roles="*"
+    frmi:ruleSet="Widgets/DataStructure/Widgets/RuleSetError.origam#RuleSetError/DefaultRule/61de6c32-db3b-4819-903a-1e5b2b72ca74"
+    frmi:screen="Widgets/FormControlSet/Widgets/RuleSetError.origam#RuleSetError/cbc7ebda-49b3-4210-8549-fc92c04c0bf2" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
