@@ -398,14 +398,6 @@ jobs:
          tag: '$(TAG)'
        displayName: Delete previous GitHub origam-html-chat/$(TAG) release
        continueOnError: true
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'delete'
-         tag: '$(TAG_LATEST)'
-       displayName: Delete previous GitHub origam-html-chat/$(TAG_LATEST) release
-       continueOnError: true
      - script: |
         git tag -f $(TAG)
         git tag -f $(TAG_LATEST)
@@ -524,28 +516,6 @@ jobs:
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub origam-html-chat/$(TAG) release
-     # ------------------------------------
-     # RELEASE ORIGAM_HTML_CHAT - TAG_LATEST
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'create'
-         target: $(ORIGAM_HTML_CHAT_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG_LATEST)'
-         title: '$(TAG_LATEST)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG_LATEST)">origam-source/$(TAG_LATEST)</a>
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub origam-html-chat/$(TAG_LATEST) release
   # ------------------------------------
   # DOCKER Linux
   # ------------------------------------
