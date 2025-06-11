@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.Service;
 using log4net;
+using Origam.Service.Core;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workbench.Services;
@@ -193,7 +194,7 @@ public class DataLookupService : IDataLookupService
 		bool error = false;
 		try
 		{
-			if(lookup.ValueDisplayMember.IndexOf(";") > 0)
+			if (lookup.ValueDisplayMember.IndexOf(";") > 0)
 			{
 				IServiceAgent dataServiceAgent = GetAgent();
 				dataServiceAgent.MethodName = "LoadDataByQuery";
@@ -202,8 +203,9 @@ public class DataLookupService : IDataLookupService
 				dataServiceAgent.TransactionId = internalTransactionId;
 				dataServiceAgent.Run();
 				DataSet data = dataServiceAgent.Result as DataSet;
-				string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-				if(data.Tables[0].Rows.Count == 0)
+				string[] columns
+					= lookup.ValueDisplayMember.Split(";".ToCharArray());
+				if (data.Tables[0].Rows.Count == 0)
 				{
 					val = null;
 				}
@@ -218,11 +220,12 @@ public class DataLookupService : IDataLookupService
 				dataServiceAgent.MethodName = "GetScalarValueByQuery";
 				dataServiceAgent.Parameters.Clear();
 				dataServiceAgent.Parameters.Add("Query", query);
-				dataServiceAgent.Parameters.Add("ColumnName", lookup.ValueDisplayMember);
+				dataServiceAgent.Parameters.Add("ColumnName",
+					lookup.ValueDisplayMember);
 				dataServiceAgent.TransactionId = internalTransactionId;
 				dataServiceAgent.Run();
 				object result = dataServiceAgent.Result;
-				if(result == null)
+				if (result == null)
 				{
 					val = null;
 				}
@@ -234,6 +237,10 @@ public class DataLookupService : IDataLookupService
 		}
 		catch(System.Threading.ThreadAbortException)
 		{
+		}
+		catch(RuleException)
+		{
+			throw;
 		}
 		catch(Exception ex)
 		{
