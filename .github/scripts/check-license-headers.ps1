@@ -25,6 +25,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 $LicenseTextOther = $LicenseTextCS -replace "#region license`r?`n", "" -replace "`r?`n#endregion", ""
 $ErrorFiles = @()
 
+Write-Host "Current directory: $(Get-Location)"
+
 function Check-LicenseHeader($file, $expectedHeader) {
     $fileContent = [string](Get-Content $file -Raw)
     $normalizedHeader = $expectedHeader -replace "`r`n", "`n"
@@ -38,6 +40,9 @@ function Check-LicenseHeader($file, $expectedHeader) {
 $FilesToCheck = Get-ChildItem -Recurse -File |
     Where-Object { $_.Extension -in ".cs", ".ts", ".tsx", ".css", ".scss" } |
     Where-Object { $_.FullName -notmatch '\\(bin|obj|node_modules|dist)\\' }
+
+Write-Host "`nScanning files:"
+$FilesToCheck | ForEach-Object { Write-Host " - $_.FullName" }
 
 foreach ($file in $FilesToCheck) {
     if ($file.Extension -eq ".cs") {
