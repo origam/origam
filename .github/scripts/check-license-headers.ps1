@@ -1,4 +1,9 @@
-﻿$CurrentYear = (Get-Date).Year
+﻿# Ensure we scan from repo root
+$RepoRoot = Resolve-Path "$PSScriptRoot/../.."
+Set-Location $RepoRoot
+Write-Host "📁 Scanning from: $RepoRoot"
+
+$CurrentYear = (Get-Date).Year
 $LicenseTextCS = @"
 #region license
 /*
@@ -24,8 +29,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 $LicenseTextOther = $LicenseTextCS -replace "#region license`r?`n", "" -replace "`r?`n#endregion", ""
 $ErrorFiles = @()
-
-Write-Host "Current directory: $(Get-Location)"
 
 function Check-LicenseHeader($file, $expectedHeader) {
     $fileContent = [string](Get-Content $file -Raw)
