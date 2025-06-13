@@ -28,9 +28,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 "@
 
 $LicenseTextOther = $LicenseTextCS -replace "#region license`r?`n", "" -replace "`r?`n#endregion", ""
-$ErrorFiles = @()
+$global:ErrorFiles = @()
 
 function Check-LicenseHeader($file, $expectedHeader) {
+    Write-Host "Checking: $($file)"
     $fileContent = [string](Get-Content $file -Raw)
     $normalizedHeader = $expectedHeader -replace "`r`n", "`n"
     $normalizedFile = $fileContent -replace "`r`n", "`n"
@@ -44,8 +45,6 @@ $FilesToCheck = Get-ChildItem -Recurse -File |
     Where-Object { $_.Extension -in ".cs", ".ts", ".tsx", ".css", ".scss" } |
     Where-Object { $_.FullName -notmatch '\\(bin|obj|node_modules|dist)\\' }
 
-Write-Host "`nScanning files:"
-$FilesToCheck | ForEach-Object { Write-Host " - $_.FullName" }
 
 foreach ($file in $FilesToCheck) {
     if ($file.Extension -eq ".cs") {
@@ -55,9 +54,9 @@ foreach ($file in $FilesToCheck) {
     }
 }
 
-if ($ErrorFiles.Count -gt 0) {
+if ($global:ErrorFiles.Count -gt 0) {
     Write-Host "`n❌ The following files are missing the correct license header:`n"
-    $ErrorFiles | ForEach-Object { Write-Host " - $_" }
+    $global:ErrorFiles | ForEach-Object { Write-Host " - $_" }
     exit 1
 } else {
     Write-Host "✅ All source files have the correct license header."
