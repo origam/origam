@@ -1,3 +1,4 @@
+#region license
 /*
 Copyright 2005 - 2023 Advantage Solutions, s. r. o.
 
@@ -16,6 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
 namespace Origam.Server.Configuration;
 public class ChatConfig

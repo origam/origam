@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, 20* ]
+    branches: [ master, 20*, license-headers ]
 
 jobs:
   analyze:
@@ -23,6 +23,10 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+
+    - name: Run license header check
+      shell: pwsh
+      run: .github/scripts/check-license-headers.ps1
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
