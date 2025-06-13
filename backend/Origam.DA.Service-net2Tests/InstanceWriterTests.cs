@@ -33,7 +33,7 @@ public class InstanceWriterTests
     [Test]
     public void ShouldWriteFile()
     {
-        var itemToWrite = new TableMappingItem();
+        var itemToWrite = new TableMapping();
         itemToWrite.Name = "TestName";
         itemToWrite.PersistenceProvider = new NullPersistenceProvider();
         OrigamXmlDocument document = new OrigamXmlDocument();

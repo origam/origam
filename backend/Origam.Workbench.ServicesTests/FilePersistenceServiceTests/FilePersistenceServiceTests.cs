@@ -34,7 +34,7 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
         var sut = InitializeFilePersistenceService(pathToTestDirectory);
         bool reloadNeededEventCalled = false;
         var itemBeforeChange = sut.SchemaProvider
-            .RetrieveInstance<TableMappingItem>(testEntityId);
+            .RetrieveInstance<TableMapping>(testEntityId);
         
         Assert.That(itemBeforeChange.Name, Is.EqualTo("TestEntity"));
         
@@ -45,7 +45,7 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
             Assert.IsTrue(maybeError.HasNoValue);
             
             var itemAfterChange = sut.SchemaProvider
-                .RetrieveInstance<TableMappingItem>(testEntityId);
+                .RetrieveInstance<TableMapping>(testEntityId);
             Assert.That(itemAfterChange.Name, Is.EqualTo("TestEntityChanged"));
         };
         string testFileContents = File.ReadAllText(pathToTestFile);

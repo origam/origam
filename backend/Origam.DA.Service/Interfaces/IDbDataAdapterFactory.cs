@@ -44,14 +44,14 @@ public interface IDbDataAdapterFactory : ICloneable, IDisposable
         bool forceDatabaseCalculation);
 	IDbCommand ScalarValueCommand(DataStructure ds,  DataStructureFilterSet filter, 
         DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable parameters);
-	IDbCommand UpdateFieldCommand(TableMappingItem entity,  FieldMappingItem field);
+	IDbCommand UpdateFieldCommand(TableMapping entity,  FieldMappingItem field);
 	IDbCommand GetCommand(string cmdText, IDbConnection connection);
 	IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction);
 	IDbCommand GetCommand(string cmdText);
 	IDbDataParameter GetParameter();
 	IDbDataParameter GetParameter(string name, Type type);
-	DbDataAdapter CreateUpdateFieldDataAdapter(TableMappingItem table, FieldMappingItem field);
-	IDbCommand SelectReferenceCountCommand(TableMappingItem table, FieldMappingItem field);
+	DbDataAdapter CreateUpdateFieldDataAdapter(TableMapping table, FieldMappingItem field);
+	IDbCommand SelectReferenceCountCommand(TableMapping table, FieldMappingItem field);
 	DbDataAdapter GetAdapter();
 	DbDataAdapter GetAdapter(IDbCommand command);
 	DbDataAdapter CloneAdapter(DbDataAdapter adapter);
@@ -59,9 +59,9 @@ public interface IDbDataAdapterFactory : ICloneable, IDisposable
 	List<string> Parameters(DataStructure ds, DataStructureEntity entity, 
         DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
         string columnName);
-    string TableDefinitionDdl(TableMappingItem table);
+    string TableDefinitionDdl(TableMapping table);
     string AddColumnDdl(FieldMappingItem field);
     string AlterColumnDdl(FieldMappingItem field);
-    string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint);
+    string AddForeignKeyConstraintDdl(TableMapping table, DataEntityConstraint constraint);
 	string ParameterDeclarationChar { get; }
 }

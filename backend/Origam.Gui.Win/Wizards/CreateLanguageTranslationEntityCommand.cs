@@ -40,7 +40,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	{
 		get
 		{				
-			return Owner is TableMappingItem;
+			return Owner is TableMapping;
 		}
 		set
 		{
@@ -50,7 +50,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         var list = new List<ListViewItem>();
-        TableMappingItem mappingItem = new TableMappingItem();
+        TableMapping mappingItem = new TableMapping();
         list.Add(new ListViewItem(mappingItem.GetType().SchemaItemDescription().Name, mappingItem.Icon));
         Stack stackPage = new Stack();
         stackPage.Push(PagesList.Finish);
@@ -64,7 +64,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
             PageTitle = "",
             Description = ResourceUtils.GetString("CreateLanguageTranslationEntityWizardDescription"),
             Pages = stackPage,
-            Entity = Owner as TableMappingItem,
+            Entity = Owner as TableMapping,
             IsRoleVisible = false,
             textColumnsOnly = true,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
@@ -80,7 +80,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
     {
         List<ISchemaItem> generatedElements = new List<ISchemaItem>();
         var table = EntityHelper.CreateLanguageTranslationChildEntity(
-            wizardForm.Entity as TableMappingItem, wizardForm.SelectedFields, generatedElements);
+            wizardForm.Entity as TableMapping, wizardForm.SelectedFields, generatedElements);
         foreach (var item in generatedElements)
         {
             GeneratedModelElements.Add(item);
@@ -100,6 +100,6 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Language Entity: \t");
-        richTextBoxSummary.AppendText(string.Format("{0}_l10n", (wizardForm.Entity as TableMappingItem).Name));
+        richTextBoxSummary.AppendText(string.Format("{0}_l10n", (wizardForm.Entity as TableMapping).Name));
     }
 }

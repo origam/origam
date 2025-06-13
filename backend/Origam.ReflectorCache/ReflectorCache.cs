@@ -137,8 +137,8 @@ public class ReflectorCache : IReflectorCache
 				return new Origam.Schema.WorkflowModel.WorkflowCallTask(key);
 			case "Origam.Schema.DeploymentModel.DeploymentVersion":
 				return new Origam.Schema.DeploymentModel.DeploymentVersion(key);
-			case "Origam.Schema.EntityModel.TableMappingItem":
-				return new Origam.Schema.EntityModel.TableMappingItem(key);
+			case "Origam.Schema.EntityModel.TableMapping":
+				return new Origam.Schema.EntityModel.TableMapping(key);
 			case "Origam.Schema.MenuModel.FormReferenceMenuItem":
 				return new Origam.Schema.MenuModel.FormReferenceMenuItem(key);
 			case "Origam.Schema.EntityModel.DataStructureEntity":
