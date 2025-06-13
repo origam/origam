@@ -33,7 +33,8 @@ export const EditorTabView: React.FC = observer(() => {
 
   useEffect(() => {
     run({ generator: initializeOpenEditors });
-  }, [initializeOpenEditors, run]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={S.root}>

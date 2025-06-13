@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.Service;
 using log4net;
+using Origam.Service.Core;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workbench.Services;
@@ -234,6 +235,10 @@ public class DataLookupService : IDataLookupService
 		}
 		catch(System.Threading.ThreadAbortException)
 		{
+		}
+		catch(RuleException)
+		{
+			throw;
 		}
 		catch(Exception ex)
 		{
