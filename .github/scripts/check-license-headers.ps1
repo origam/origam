@@ -26,7 +26,7 @@ $LicenseTextOther = $LicenseTextCS -replace "#region license`r?`n", "" -replace 
 $ErrorFiles = @()
 
 function Check-LicenseHeader($file, $expectedHeader) {
-    $fileContent = Get-Content $file -Raw
+    $fileContent = [string](Get-Content $file -Raw)
     $normalizedHeader = $expectedHeader -replace "`r`n", "`n"
     $normalizedFile = $fileContent -replace "`r`n", "`n"
 
