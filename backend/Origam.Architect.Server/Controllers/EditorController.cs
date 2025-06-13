@@ -116,59 +116,6 @@ public class EditorController(
         });
     } 
     
-    // [HttpPost("OpenDocumentationEditor")]
-    // public IActionResult OpenDocumentationEditor([Required] [FromBody] OpenEditorModel input)
-    // {
-    //     return RunWithErrorHandler(() =>
-    //     {
-    //         EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
-    //         ISchemaItem item = editor.Item;
-    //         TreeNode treeNode = treeNodeFactory.Create(item);
-    //
-    //         var openEditorData = new OpenEditorData(
-    //             editorId: editor.Id,
-    //             node: treeNode,
-    //             data: GetDocumentationData(item),
-    //             isPersisted: true
-    //         );
-    //         return Ok(openEditorData);
-    //     });
-    // }
-    //
-    // private HashSet<EditorProperty> GetDocumentationData(ISchemaItem item)
-    // {
-    //     var documentationComplete = documentationService.LoadDocumentation(item.Id);
-    //
-    //     HashSet<EditorProperty> entries = Enum.GetValues(typeof(DocumentationType))
-    //         .Cast<DocumentationType>()
-    //         .Select(docType => new EditorProperty(
-    //             name: docType.ToString(),
-    //             type:"string",
-    //             category:null, 
-    //             controlPropertyId: null, 
-    //             description: "",
-    //             dropDownValues: [],
-    //             readOnly: false, 
-    //             value: null )
-    //         )
-    //         .ToHashSet();
-    //
-    //     foreach (DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows)
-    //     {
-    //         entries.Add(new EditorProperty(
-    //             name: row.Category,
-    //             type:"string",
-    //             category:null, 
-    //             controlPropertyId: null, 
-    //             description: "",
-    //             dropDownValues: [],
-    //             readOnly: false, 
-    //             value: row.Data));
-    //     }
-    //
-    //     return entries;
-    // }
-
     private object GetData(TreeNode treeNode, ISchemaItem item)
     {
         object data = treeNode.DefaultEditor switch
