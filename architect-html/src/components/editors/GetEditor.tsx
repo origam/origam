@@ -72,7 +72,7 @@ export function getEditor(args: {
       ),
     );
   }
-  if (editorType === 'XslTEditor') {
+  if (editorType === 'XsltEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
     const editorState = new GridEditorState(
       editorData.editorId,

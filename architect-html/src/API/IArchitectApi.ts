@@ -206,7 +206,7 @@ export interface IMenuItemInfo {
 
 export type EditorSubType =
   | 'GridEditor'
-  | 'XslTEditor'
+  | 'XsltEditor'
   | 'ScreenSectionEditor'
   | 'ScreenEditor'
   | null;

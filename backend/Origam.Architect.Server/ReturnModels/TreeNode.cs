@@ -72,7 +72,7 @@ public class TreeNodeFactory
            || itemType == "Origam.Schema.RuleModel.EndRule"
            || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
         {
-            return EditorSubType.XslTEditor;
+            return EditorSubType.XsltEditor;
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
@@ -96,5 +96,5 @@ public class TreeNodeFactory
 
 public enum EditorSubType
 {
-    GridEditor, XslTEditor, ScreenSectionEditor, ScreenEditor
+    GridEditor, XsltEditor, ScreenSectionEditor, ScreenEditor
 }
