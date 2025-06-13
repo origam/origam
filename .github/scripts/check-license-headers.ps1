@@ -35,9 +35,9 @@ function Check-LicenseHeader($file, $expectedHeader) {
     }
 }
 
-$FilesToCheck = Get-ChildItem -Recurse -Include *.cs, *.ts, *.tsx, *.css, *.scss | Where-Object {
-    $_.FullName -notmatch '\\(bin|obj|node_modules|dist)\\'
-}
+$FilesToCheck = Get-ChildItem -Recurse -File |
+    Where-Object { $_.Extension -in ".cs", ".ts", ".tsx", ".css", ".scss" } |
+    Where-Object { $_.FullName -notmatch '\\(bin|obj|node_modules|dist)\\' }
 
 foreach ($file in $FilesToCheck) {
     if ($file.Extension -eq ".cs") {
