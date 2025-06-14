@@ -30,7 +30,7 @@ export interface IArchitectApi {
 
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
-  closeEditor(schemaItemId: string): Promise<void>;
+  closeEditor(editorId: string): Promise<void>;
 
   persistChanges(schemaItemId: string): Promise<void>;
 
@@ -92,6 +92,15 @@ export interface IArchitectApi {
     editorSchemaItemId: string,
     sectionIds: string[],
   ): Promise<Record<string, IApiControl>>;
+
+  openDocumentationEditor(origamId: string): Promise<IApiEditorData>;
+
+  updateDocumentationProperties(
+    schemaItemId: string,
+    changes: IPropertyChange[],
+  ): Promise<IUpdatePropertiesResult>;
+
+  persistDocumentationChanges(schemaItemId: string): Promise<void>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;
@@ -195,7 +204,14 @@ export interface IMenuItemInfo {
   iconIndex: number | null;
 }
 
-export type EditorType = 'GridEditor' | 'XslTEditor' | 'ScreenSectionEditor' | null;
+export type EditorSubType =
+  | 'GridEditor'
+  | 'XsltEditor'
+  | 'ScreenSectionEditor'
+  | 'ScreenEditor'
+  | null;
+
+export type EditorType = EditorSubType | 'DocumentationEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -206,7 +222,7 @@ export interface INodeLoadData {
 export interface IApiTreeNode extends INodeLoadData {
   origamId: string;
   hasChildNodes: boolean;
-  editorType: EditorType;
+  defaultEditor: EditorSubType;
   childrenIds: string[];
   children?: IApiTreeNode[];
   iconUrl?: string;
@@ -223,6 +239,11 @@ export interface IPackage {
 }
 
 export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
+
+export interface DocumentationEditorData {
+  label: string;
+  properties: IApiEditorProperty[];
+}
 
 export interface IApiEditorProperty {
   name: string;
@@ -242,9 +263,11 @@ export interface IDropDownValue {
 }
 
 export interface IApiEditorData {
+  editorId: string;
+  editorType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData;
+  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData | DocumentationEditorData;
   isDirty: boolean;
 }
 
@@ -252,5 +275,5 @@ export interface IApiEditorNode {
   id: string;
   origamId: string;
   nodeText: string;
-  editorType: EditorType;
+  editorType: EditorSubType;
 }

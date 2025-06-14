@@ -1,3 +1,4 @@
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -16,11 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-export interface IEditorState {
-  editorId: string;
-  label: string;
-  isActive: boolean;
-  isDirty: boolean;
-  save(): Generator<Promise<any>, void, any>;
+namespace Origam.Architect.Server.ReturnModels;
+
+public class DocumentationEditorData
+{
+    public List<EditorProperty> Properties { get; set; }
+    public string Label { get; set; }
 }

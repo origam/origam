@@ -19,7 +19,7 @@ public class SectionEditorController(
     public ActionResult<SectionEditorModel> Update(
         [FromBody] SectionEditorChangesModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
         if (editor.Item is not PanelControlSet screenSection)
         {
             return BadRequest(
@@ -40,7 +40,7 @@ public class SectionEditorController(
     public ActionResult<SectionEditorModel> Delete(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
         if (editor.Item is PanelControlSet screenSection)
         {
             designerEditorService.DeleteItem(input.SchemaItemIds, screenSection);
@@ -61,7 +61,7 @@ public class SectionEditorController(
     public ActionResult<ApiControl> CreateItem(
         [FromBody] SectionEditorItemModel itemModelData)
     {
-        EditorData editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is PanelControlSet screenSection)
         {
@@ -76,7 +76,7 @@ public class SectionEditorController(
     [HttpPost("Save")]
     public ActionResult<Dictionary<Guid, ApiControl>> Save([FromBody] PersistModel input)
     {
-        EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
         ISchemaItem item = editorData.Item;
         if (item is PanelControlSet screenSection)
         {

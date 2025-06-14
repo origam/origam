@@ -14,9 +14,8 @@ public class TreeNode
     public bool IsNonPersistentItem { get; set; }
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
-    public EditorType? EditorType { get; set; }
-
-
+    public EditorSubType? DefaultEditor { get; set; }
+    
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
         return node == null 
@@ -36,7 +35,7 @@ public class TreeNodeFactory
             NodeText = node.NodeText,
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
-            EditorType = GetEditorType(node),
+            DefaultEditor = GetEditorType(node),
             IconUrl = GetIcon(node)
         };
     }
@@ -51,7 +50,7 @@ public class TreeNodeFactory
         return null;
     }
 
-    private EditorType? GetEditorType(IBrowserNode2 node)
+    private EditorSubType? GetEditorType(IBrowserNode2 node)
     {
         if (node is not ISchemaItem || node is Package)
         {
@@ -61,41 +60,41 @@ public class TreeNodeFactory
         string itemType = node.GetType().ToString();
         if(itemType == "Origam.Schema.GuiModel.FormControlSet")
         {
-            return EditorType.ScreenEditor;
+            return EditorSubType.ScreenEditor;
         }
         if(itemType == "Origam.Schema.GuiModel.PanelControlSet"
            || itemType == "Origam.Schema.GuiModel.ControlSetItem")
         {
-            return EditorType.ScreenSectionEditor;
+            return EditorSubType.ScreenSectionEditor;
         }
         if(itemType == "Origam.Schema.EntityModel.XslTransformation"
            || itemType == "Origam.Schema.RuleModel.XslRule"
            || itemType == "Origam.Schema.RuleModel.EndRule"
            || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
         {
-            return EditorType.XslTEditor;
+            return EditorSubType.XsltEditor;
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
-            return EditorType.GridEditor;;
+            return EditorSubType.GridEditor;
         }
         if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
-            return EditorType.GridEditor;;
+            return EditorSubType.GridEditor;
         }
         if (node is EntityUIAction)
         {
-            return EditorType.GridEditor;;
+            return EditorSubType.GridEditor;
         }
         if (itemType == "Origam.Schema.WorkflowModel.Workflow")
         {
-            return EditorType.GridEditor;;
+            return EditorSubType.GridEditor;
         }
-        return EditorType.GridEditor;
+        return EditorSubType.GridEditor;
     }
 }
 
-public enum EditorType
+public enum EditorSubType
 {
-    GridEditor, XslTEditor, ScreenSectionEditor, ScreenEditor
+    GridEditor, XsltEditor, ScreenSectionEditor, ScreenEditor
 }

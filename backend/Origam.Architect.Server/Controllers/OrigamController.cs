@@ -24,7 +24,7 @@ public abstract class OrigamController(
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {
             return environment.IsDevelopment()
-                ? ex
+                ? ex.ToString()
                 : new
                 {
                     message = defaultMessage ??

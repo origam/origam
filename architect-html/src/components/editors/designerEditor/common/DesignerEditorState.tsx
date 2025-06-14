@@ -45,11 +45,8 @@ export abstract class DesignerEditorState implements IDesignerEditorState {
     return this.toolbox.name;
   }
 
-  get schemaItemId() {
-    return this.editorNode.origamId;
-  }
-
   protected constructor(
+    public editorId: string,
     protected editorNode: IEditorNode,
     isDirty: boolean,
     editorData: IDesignerEditorData,
