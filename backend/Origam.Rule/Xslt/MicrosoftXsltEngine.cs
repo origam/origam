@@ -190,6 +190,10 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             }
             catch (XsltException ex)
             {
+                if (ex.InnerException is RuleException)
+                {
+                    throw ex.InnerException;
+                }
                 string terminateStringEnglish = "Transform terminated:";
                 string terminateString = ResourceUtils.GetString("XsltTransformTerminated");
                 if (ex.Message.Length >= terminateString.Length &&
@@ -197,15 +201,12 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                 {
                     throw new OrigamRuleException(ex.Message.Substring(terminateString.Length + 1, ex.Message.Length - 2 - terminateString.Length), ex, null);
                 }
-                else if (ex.Message.Length >= terminateStringEnglish.Length &&
+                if (ex.Message.Length >= terminateStringEnglish.Length &&
                     ex.Message.Substring(0, terminateStringEnglish.Length) == terminateStringEnglish)
                 {
                     throw new OrigamRuleException(ex.Message.Substring(terminateStringEnglish.Length + 1, ex.Message.Length - 2 - terminateStringEnglish.Length), ex, null);
                 }
-                else
-                {
-                    throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
-                }
+                throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
             }
             catch (OrigamRuleException)
             {
