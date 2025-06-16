@@ -124,7 +124,7 @@ export function DropdownEditorInput(props: {
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           autoCorrect={"off"}
           autoCapitalize={"off"}
           spellCheck={"false"}

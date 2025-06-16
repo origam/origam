@@ -86,7 +86,7 @@ export class SaveFilterDialog extends React.Component<{
               <input
                 ref={this.refInput}
                 className={S.textInput}
-                autoComplete={"off"}
+                autoComplete={"new-password"}
                 value={this.filterName}
                 onChange={(event) => this.onNameChanged(event)}
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}

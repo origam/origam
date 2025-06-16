@@ -133,7 +133,7 @@ export const FullScreenDateTimeEditor: React.FC<{
             id={props.id}
             className={cx("input", S.input, S.fullScreenEditorInput)}
             type="text"
-            autoComplete={"off"}
+            autoComplete={"new-password"}
             onBlur={props.editorModel.handleInputBlur}
             value={props.editorModel.textFieldValue}
             onChange={props.editorModel.handleTextFieldChange}

@@ -231,7 +231,7 @@ export class TextEditor extends React.Component<{
           style={this.getStyle()}
           className={S.input}
           type={this.props.isPassword ? "password" : "text"}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
@@ -289,7 +289,7 @@ export class TextEditor extends React.Component<{
           id={this.props.id}
           style={this.getStyle()}
           className={S.input}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}

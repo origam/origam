@@ -97,7 +97,7 @@ export const MobileTagInputEditor = (
               id={props.id}
               disabled={props.isReadOnly}
               className={S.filterInput + " " + props.customInputClass}
-              autoComplete={"off"}
+              autoComplete={"new-password"}
               style={getStyle()}
               size={1}
             />
