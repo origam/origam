@@ -63,7 +63,7 @@ export function MobileDropdownEditorInput(props: {
           onChange={props.behavior.handleInputChange}
           value={props.behavior.inputValue || ""}
           style={getStyle()}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           autoCorrect={"off"}
           autoCapitalize={"off"}
           spellCheck={"false"}

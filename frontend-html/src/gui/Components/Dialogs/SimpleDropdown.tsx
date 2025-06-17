@@ -137,7 +137,7 @@ function DropDownControl(props: {
         className={cx(S.input)}
         value={props.value}
         disabled={true}
-        autoComplete={"off"}
+        autoComplete={"new-password"}
       />
       <div
         className="inputBtn lastOne">
