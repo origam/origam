@@ -52,6 +52,10 @@ export default defineConfig({
         target: 'https://localhost:7099',
         secure: false,
       },
+      '/Documentation': {
+        target: 'https://localhost:7099',
+        secure: false,
+      },
       '/Icons': {
         target: 'http://localhost:5003',
         secure: false,

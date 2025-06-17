@@ -32,6 +32,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
   public sectionToolbox: SectionToolboxState;
 
   constructor(
+    editorId: string,
     editorNode: IEditorNode,
     isDirty: boolean,
     sectionEditorData: ISectionEditorData,
@@ -41,6 +42,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>,
   ) {
     super(
+      editorId,
       editorNode,
       isDirty,
       sectionEditorData,
