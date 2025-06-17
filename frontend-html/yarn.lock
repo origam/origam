@@ -3080,14 +3080,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "axios@npm:1.9.0"
+"axios@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "axios@npm:1.10.0"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/9371a56886c2e43e4ff5647b5c2c3c046ed0a3d13482ef1d0135b994a628c41fbad459796f101c655e62f0c161d03883454474d2e435b2e021b1924d9f24994c
+  checksum: 10c0/2239cb269cc789eac22f5d1aabd58e1a83f8f364c92c2caa97b6f5cbb4ab2903d2e557d9dc670b5813e9bcdebfb149e783fb8ab3e45098635cd2f559b06bd5d8
   languageName: node
   linkType: hard
 
@@ -6086,12 +6086,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client-ts@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "oidc-client-ts@npm:3.2.1"
+"oidc-client-ts@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "oidc-client-ts@npm:3.3.0"
   dependencies:
     jwt-decode: "npm:^4.0.0"
-  checksum: 10c0/ecad464d4c3c1e02000f106f576e9b1bfc73e203e2bacea3163ba6d4c3701d393c665fab8abf898967ec8e15d861246e1d42b0ec7a65e3757460db51250aaacc
+  checksum: 10c0/f749a0718df00009a4c75a656b7a32e45064b9e30db2cb9df77bdd01a136ed84e1aa29075c18941b644c1fbf6b0bf61d78d2cd0af381336d2c0a6d3420aead82
   languageName: node
   linkType: hard
 
@@ -6762,7 +6762,7 @@ __metadata:
     "@vitejs/plugin-basic-ssl": "npm:^2.0.0"
     "@vitejs/plugin-react": "npm:^4.5.2"
     "@xstate/inspect": "npm:^0.8.0"
-    axios: "npm:^1.9.0"
+    axios: "npm:^1.10.0"
     bind-decorator: "npm:^1.0.11"
     browserslist: "npm:^4.25.0"
     browserslist-useragent-regexp: "npm:^4.1.3"
@@ -6785,7 +6785,7 @@ __metadata:
     mobx-react: "npm:6.3.1"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
-    oidc-client-ts: "npm:^3.2.1"
+    oidc-client-ts: "npm:^3.3.0"
     patch-package: "npm:^8.0.0"
     postinstall-postinstall: "npm:^2.1.0"
     react: "npm:^17.0.2"
