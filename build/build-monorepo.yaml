@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2025.6.0.$(Build.BuildId)
+  value: 2025.7.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 25.6.0.$(Build.BuildId)
+  value: 25.7.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2025.6.alpha
+  value: 2025.7.alpha
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2025.5.0
+  value: 2025.6.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2025.6
+  value: 2025.7
 
 
 resources:
@@ -76,7 +76,7 @@ jobs:
          (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
-        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commits/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
        displayName: 'Build Number'
@@ -200,7 +200,7 @@ jobs:
          (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
-        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commits/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
        displayName: 'Build Number'
