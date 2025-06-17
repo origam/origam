@@ -19,7 +19,7 @@ variables:
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2025.6.0
 - name: IS_PRERELASE
-  value: false
+  value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
   value: 2025.6
 
