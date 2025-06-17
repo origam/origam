@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Extensions;
@@ -44,7 +45,7 @@ public abstract class OrigamController(
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {
             return environment.IsDevelopment()
-                ? ex
+                ? ex.ToString()
                 : new
                 {
                     message = defaultMessage ??

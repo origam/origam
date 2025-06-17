@@ -178,7 +178,7 @@ export class NumberEditor extends React.Component<NumberEditorProps, any> {
           className={cx(S.input)}
           type={this.model.getInputType()}
           inputMode={this.model.getInputMode()}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           value={this.model.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}

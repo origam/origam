@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface IEditorState {
-  schemaItemId: string;
+  editorId: string;
   label: string;
   isActive: boolean;
   isDirty: boolean;

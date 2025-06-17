@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
@@ -39,7 +40,7 @@ public class SectionEditorController(
     public ActionResult<SectionEditorModel> Update(
         [FromBody] SectionEditorChangesModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
         if (editor.Item is not PanelControlSet screenSection)
         {
             return BadRequest(
@@ -60,7 +61,7 @@ public class SectionEditorController(
     public ActionResult<SectionEditorModel> Delete(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
         if (editor.Item is PanelControlSet screenSection)
         {
             designerEditorService.DeleteItem(input.SchemaItemIds, screenSection);
@@ -81,7 +82,7 @@ public class SectionEditorController(
     public ActionResult<ApiControl> CreateItem(
         [FromBody] SectionEditorItemModel itemModelData)
     {
-        EditorData editor = editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is PanelControlSet screenSection)
         {
@@ -96,7 +97,7 @@ public class SectionEditorController(
     [HttpPost("Save")]
     public ActionResult<Dictionary<Guid, ApiControl>> Save([FromBody] PersistModel input)
     {
-        EditorData editorData = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
         ISchemaItem item = editorData.Item;
         if (item is PanelControlSet screenSection)
         {

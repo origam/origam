@@ -300,7 +300,7 @@ export class BlobEditor extends React.Component<{
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
               ref={this.refInput}
-              autoComplete={"off"}
+              autoComplete={"new-password"}
               onFocus={() => this.onFocus()}
               onBlur={() => this.onBlur()}
               onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
@@ -326,7 +326,7 @@ export class BlobEditor extends React.Component<{
           className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
           disabled={this.props.isReadOnly}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           onChange={(event: any) =>
             !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
           }

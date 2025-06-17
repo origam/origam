@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
@@ -38,7 +39,7 @@ public class ScreenEditorController(
     public ActionResult<ScreenEditorData> Update(
         [FromBody] SectionEditorChangesModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.SchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
         if (editor.Item is not FormControlSet screenSection)
         {
             return BadRequest(
@@ -60,7 +61,7 @@ public class ScreenEditorController(
     public ActionResult<ScreenEditorModel> Delete(
         [FromBody] ScreenEditorDeleteItemModel input)
     {
-        EditorData editor = editorService.OpenEditor(input.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
         if (editor.Item is FormControlSet screenSection)
         {
             designerService.DeleteItem(input.SchemaItemIds, screenSection);
@@ -82,7 +83,7 @@ public class ScreenEditorController(
         [FromBody] ScreenEditorItemModel itemModelData)
     {
         EditorData editor =
-            editorService.OpenEditor(itemModelData.EditorSchemaItemId);
+            editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
@@ -101,7 +102,7 @@ public class ScreenEditorController(
         [FromQuery(Name = "sectionIds[]")] Guid[] sectionIds, [FromQuery] Guid editorSchemaItemId)
     {
         EditorData editor =
-            editorService.OpenEditor(editorSchemaItemId);
+            editorService.OpenDefaultEditor(editorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {

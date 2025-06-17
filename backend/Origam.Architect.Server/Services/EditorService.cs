@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Collections.Concurrent;
 using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
@@ -38,7 +39,7 @@ public class EditorService(
     private readonly IPersistenceProvider persistenceProvider =
         persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<Guid, EditorData> editorSchemaItems =
+    private readonly ConcurrentDictionary<EditorId, EditorData> editorSchemaItems =
         new();
 
     public EditorData OpenEditorWithNewItem(string parentId, string fullTypeName)
@@ -78,7 +79,7 @@ public class EditorService(
 
         ISchemaItem item = (ISchemaItem)result;
         return editorSchemaItems
-            .GetOrAdd(item.Id, id => new EditorData(item));
+            .GetOrAdd(EditorId.Default(item.Id), id => new EditorData(item, id));
     }
 
     private ISchemaItemFactory GetParentItemFactory(string parentId)
@@ -135,22 +136,34 @@ public class EditorService(
         return null;
     }
 
-    public EditorData OpenEditor(Guid schemaItemId)
+    public EditorData OpenDefaultEditor(Guid schemaItemId)
     {
         return editorSchemaItems.GetOrAdd(
-            schemaItemId,
-            id =>
+            EditorId.Default(schemaItemId),
+            editorId =>
             {
                 ISchemaItem item = persistenceService.SchemaProvider
-                    .RetrieveInstance<ISchemaItem>(id, false);
-                return new EditorData(item);
+                    .RetrieveInstance<ISchemaItem>(editorId.SchemaItemId, false);
+                return new EditorData(item, editorId);
+            });
+    }
+    
+    public EditorData OpenDocumentationEditor(Guid schemaItemId)
+    {
+        return editorSchemaItems.GetOrAdd(
+            EditorId.Documentation(schemaItemId),
+            editorId =>
+            {
+                ISchemaItem item = persistenceService.SchemaProvider
+                    .RetrieveInstance<ISchemaItem>(editorId.SchemaItemId, false);
+                return new EditorData(item, editorId);
             });
     }
 
-    public void CloseEditor(Guid schemaItemId)
+    public void CloseEditor(EditorId editorId)
     {
         bool success =
-            editorSchemaItems.TryRemove(schemaItemId,
+            editorSchemaItems.TryRemove(editorId,
                 out EditorData removedData);
         if (!success)
         {
@@ -180,7 +193,7 @@ public class EditorService(
 
     public EditorData ChangesToEditorData(ChangesModel input)
     {
-        EditorData editor = OpenEditor(input.SchemaItemId);
+        EditorData editor = OpenDefaultEditor(input.SchemaItemId);
         PropertyInfo[] properties = editor.Item.GetType().GetProperties();
         foreach (var change in input.Changes)
         {
@@ -214,9 +227,11 @@ public class EditorService(
     }
 }
 
-public class EditorData(ISchemaItem item)
+public class EditorData(ISchemaItem item, EditorId id)
 {
+    public EditorId Id { get; } = id;
     public ISchemaItem Item { get; } = item;
+    public DocumentationComplete DocumentationData { get; set; }
     public DateTime OpenedAt { get; } = DateTime.Now;
 
     public bool IsDirty { get; set; }

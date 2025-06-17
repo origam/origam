@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -66,6 +67,7 @@ public class Program
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
         builder.Services.AddSingleton(documentation);
+        builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddLogging(logging =>
         {
             logging.AddLog4Net();

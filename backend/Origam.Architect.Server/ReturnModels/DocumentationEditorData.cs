@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -19,16 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-using Origam.Architect.Server.Services;
-using Origam.Server.Attributes;
+namespace Origam.Architect.Server.ReturnModels;
 
-namespace Origam.Architect.Server.Models;
-
-public class CloseEditorModel
+public class DocumentationEditorData
 {
-    [Required]
-    public string EditorId { get; set; }
-    
-    public EditorId GetTypedEditorId() => new EditorId(EditorId); 
+    public List<EditorProperty> Properties { get; set; }
+    public string Label { get; set; }
 }
