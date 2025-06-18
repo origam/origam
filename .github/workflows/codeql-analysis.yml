@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, 20*, license-headers ]
+    branches: [ master, 20* ]
 
 jobs:
   analyze:
