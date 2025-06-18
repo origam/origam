@@ -83,6 +83,15 @@ public class Startup
         {
             options.AllowSynchronousIO = true;
         });
+        services.Configure<CookiePolicyOptions>(options =>
+        {
+            options.MinimumSameSitePolicy = SameSiteMode.None;
+        });
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
         // If using IIS:
         services.Configure<IISServerOptions>(options =>
         {
@@ -349,6 +358,17 @@ public class Startup
         app.UseUserApi(startUpConfiguration, identityServerConfig);
         app.UseWorkQueueApi();
         app.UseAuthentication();
+        
+        // tell ASP.NET Core to process X-Forwarded-For / -Proto headers
+        var forwardOptions = new ForwardedHeadersOptions {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+        // these two settings allow processing from the Azure front-end
+        forwardOptions.KnownNetworks.Clear();
+        forwardOptions.KnownProxies.Clear();
+
+        app.UseForwardedHeaders(forwardOptions);
+        
         app.UseHttpsRedirection();
         if (startUpConfiguration.EnableSoapInterface)
         {
