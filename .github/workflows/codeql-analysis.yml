@@ -24,6 +24,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+    - name: Run license header check
+      shell: pwsh
+      run: .github/scripts/check-license-headers.ps1
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
