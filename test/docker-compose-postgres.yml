@@ -2,7 +2,7 @@ services:
   database-server:
     build:
       context: .
-      dockerfile: Dockerfile.mssql
+      dockerfile: Dockerfile.postgresql
     environment:
       - POSTGRES_PASSWORD=${SA_PASSWORD}
       - USER_PASSWORD=${OrigamSettings_DbPassword}

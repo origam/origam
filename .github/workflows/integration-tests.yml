@@ -158,7 +158,7 @@ jobs:
           path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
           retention-days: 1
 
-  integration-tests:
+  integration-tests-mssql:
     needs: [ build-frontend,build-server ]
     name: integration-tests
     runs-on: ubuntu-latest
@@ -205,13 +205,13 @@ jobs:
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit
 
       - name: Clean up
         if: always()
         run: |
           cd test
-          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down
 
       - name: Produce frontend integration test report
         uses: dorny/test-reporter@v1
@@ -239,3 +239,86 @@ jobs:
             htmlfrontendbuild
             workflowbuild
           failOnError: false
+
+  integration-tests-postgres:
+    needs: [ build-frontend,build-server ]
+    name: integration-tests
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      actions: read
+      contents: read
+      checks: write
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: test/HTML5
+
+      - name: Download Frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: test/HTML5/clients/origam
+
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/HTML5_TESTS
+
+      - name: Copy model to test directory
+        run: |
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Run Tests
+        run: |
+          cd test
+          mkdir output
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgres.yml" --profile test up --abort-on-container-exit
+
+      - name: Clean up
+        if: always()
+        run: |
+          cd test
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgres.yml" --profile test down
+
+      - name: Produce frontend integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Integration Test Results
+          path: test/output/frontend-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Produce workflow integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Workflow Integration Test Results
+          path: test/output/workflow-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            htmlserverbuild
+            htmlfrontendbuild
+            workflowbuild
+          failOnError: false
+
