@@ -334,12 +334,16 @@ public class Startup
         }
         if (Configuration.GetValue<bool>("BehindProxy"))
         {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            var forwardedHeadersOptions = new ForwardedHeadersOptions()
             {
-                ForwardedHeaders 
-                    = ForwardedHeaders.XForwardedProto 
-                    | ForwardedHeaders.XForwardedHost
-            });
+                ForwardedHeaders
+                    = ForwardedHeaders.XForwardedProto
+                      | ForwardedHeaders.XForwardedHost
+                      | ForwardedHeaders.XForwardedFor,
+            };
+            forwardedHeadersOptions.KnownNetworks.Clear();
+            forwardedHeadersOptions.KnownProxies.Clear();
+            app.UseForwardedHeaders(forwardedHeadersOptions);
         }
         var localizationOptions = app.ApplicationServices
             .GetService<IOptions<RequestLocalizationOptions>>().Value;
