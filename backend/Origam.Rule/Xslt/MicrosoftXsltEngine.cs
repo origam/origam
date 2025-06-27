@@ -225,6 +225,23 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             }
             throw;
         }
+        catch(RuleException ex)
+        {
+            if(Trace)
+            {
+                TracingService.TraceStep(
+                    workflowInstanceId: TraceWorkflowId,
+                    stepPath: TraceStepName, 
+                    stepId: TraceStepId,
+                    category: "Transformation Service", 
+                    subCategory: "Error", 
+                    remark: null, 
+                    data1: null, 
+                    data2: null,
+                    message: ex.Message);
+            }
+            throw;
+        }
         catch (Exception ex)
         {
             if (this.Trace)
