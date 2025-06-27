@@ -1244,12 +1244,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.0.4":
-  version: 24.0.4
-  resolution: "@types/node@npm:24.0.4"
+"@types/node@npm:^24.0.5":
+  version: 24.0.5
+  resolution: "@types/node@npm:24.0.5"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10c0/590e8cb0ec59fb9cd566402120e690d87ecbdf57f1ee2b8493266121ed33aa4b25949a0c6156b84a6ffb9250baaf1f80e9af142da542ed603e6ee73fc4d1115f
+  checksum: 10c0/5e0f6aedce6984087d0e62cd5e4147276b8fc14f5ec2987ef1cd89ff20ea79566db5c61ffa7bdfd9dfe67f22794422e3b2b922ad4b22e769d1ef67095e66b331
   languageName: node
   linkType: hard
 
@@ -1584,7 +1584,7 @@ __metadata:
     "@monaco-editor/react": "npm:^4.7.0"
     "@types/babel__core": "npm:^7.20.5"
     "@types/lodash": "npm:^4.17.18"
-    "@types/node": "npm:^24.0.4"
+    "@types/node": "npm:^24.0.5"
     "@types/react": "npm:^19.1.8"
     "@types/react-dom": "npm:^19.1.6"
     "@typescript-eslint/eslint-plugin": "npm:^8.35.0"
