@@ -252,7 +252,7 @@ jobs:
            !*.config
          TargetFolder: '$(build.artifactstagingdirectory)\origam-architect-server'
        condition: succeededOrFailed()
-     - task: PublishBuildArtifacts@1
+    - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-architect-server'
        inputs:
          PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect-server'
