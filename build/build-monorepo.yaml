@@ -313,7 +313,7 @@ jobs:
          Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
        displayName: Store origam-origam commit id
      - powershell: |
-         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-chat rev-parse HEAD)
+         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
          Write-Host $htmlChatCommitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_CHAT_COMMIT_ID;]$htmlChatCommitId"
        displayName: Store origam-chat commit id
