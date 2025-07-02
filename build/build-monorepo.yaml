@@ -494,7 +494,7 @@ jobs:
            ```
            Architect Server Docker Images
            ```
-           docker pull origam/architect:$(TAG_LATEST).linux
+           docker pull origam/architect:$(TAG).$(Build.BuildId).linux
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
