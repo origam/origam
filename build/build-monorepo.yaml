@@ -259,7 +259,7 @@ jobs:
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
-         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-chat/client/yarn.lock'
+         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: corepack enable
