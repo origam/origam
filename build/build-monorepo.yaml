@@ -243,6 +243,21 @@ jobs:
          PathtoPublish: '$(build.artifactstagingdirectory)\scheduler'
          ArtifactName: origam-scheduler
        condition: succeededOrFailed()
+    - task: CopyFiles@2
+       displayName: 'Copy Architect Server to: $(build.artifactstagingdirectory)\origam-architect-server'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Architect.Server\bin\Release\net8.0\publish\'
+         Contents: |
+           **\*.*
+           !*.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect-server'
+       condition: succeededOrFailed()
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-architect-server'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect-server'
+         ArtifactName: origam-architect-server
+       condition: succeededOrFailed()
   - job: build_html_applications
     displayName: Build Frontend Applications
     pool:
@@ -259,7 +274,7 @@ jobs:
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
-         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
+         key: 'yarn-2025-08-02-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam/architect-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: corepack enable
@@ -291,6 +306,20 @@ jobs:
        inputs:
          PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
          ArtifactName: origam-chat
+       condition: succeededOrFailed()
+     - script: |
+        yarn install --immutable
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\architect-html\
+       displayName: 'origam-architect-client yarn'
+     - script: |
+        yarn build
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\architect-html\
+       displayName: 'origam-architect-client yarn build'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-architect-client'
+       inputs:
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\architect-html\dist'
+         ArtifactName: origam-architect-client
        condition: succeededOrFailed()
   - job: build_release
     displayName: Compose Artifacts and Create Github Release
