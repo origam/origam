@@ -492,6 +492,10 @@ jobs:
            docker pull origam/server:$(TAG).$(Build.BuildId).win-nano
            docker pull origam/server:$(TAG).$(Build.BuildId).win-core
            ```
+           Architect Server Docker Images
+           ```
+           docker pull origam/architect:$(TAG_LATEST).linux
+           ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
@@ -528,6 +532,10 @@ jobs:
            docker pull origam/server:$(TAG_LATEST).linux
            docker pull origam/server:$(TAG_LATEST).win-nano
            docker pull origam/server:$(TAG_LATEST).win-core
+           ```
+           Architect Server Docker Images
+           ```
+           docker pull origam/architect:$(TAG_LATEST).linux
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
@@ -573,8 +581,8 @@ jobs:
   # ------------------------------------
   # DOCKER Linux
   # ------------------------------------
-  - job: build_docker
-    displayName: Build Linux Docker
+  - job: build_origam_docker
+    displayName: Build Origam Linux Docker
     dependsOn: build_release
     pool:
       vmImage: ubuntu-24.04
@@ -599,6 +607,35 @@ jobs:
          containerRegistry: dockerhub
          repository: origam/server
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/DockerfileServer.linux'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).linux
+           $(TAG_LATEST).linux
+  - job: build_origam_architect_docker
+    displayName: Build Origam Architect Linux Docker
+    dependsOn: build_release
+    pool:
+      vmImage: ubuntu-24.04
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-architect artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-architect'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - bash: |
+        mv origam-architect architect/bin
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Place resources in correct positions
+     - task: Docker@2
+       displayName: 'Build and publish docker image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/architect
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/DockerfileArchitect.linux'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).linux
