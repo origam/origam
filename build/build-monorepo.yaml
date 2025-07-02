@@ -243,7 +243,7 @@ jobs:
          PathtoPublish: '$(build.artifactstagingdirectory)\scheduler'
          ArtifactName: origam-scheduler
        condition: succeededOrFailed()
-    - task: CopyFiles@2
+     - task: CopyFiles@2
        displayName: 'Copy Architect Server to: $(build.artifactstagingdirectory)\origam-architect-server'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Architect.Server\bin\Release\net8.0\publish\'
@@ -252,7 +252,7 @@ jobs:
            !*.config
          TargetFolder: '$(build.artifactstagingdirectory)\origam-architect-server'
        condition: succeededOrFailed()
-    - task: PublishBuildArtifacts@1
+     - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-architect-server'
        inputs:
          PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect-server'
