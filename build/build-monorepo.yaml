@@ -116,12 +116,6 @@ jobs:
          TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
          flattenFolders: true
        condition: succeededOrFailed()
-     - task: PublishBuildArtifacts@1
-       displayName: 'Publish artifact: origam-architect'
-       inputs:
-         PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect'
-         ArtifactName: origam-architect
-       condition: succeededOrFailed()
      - powershell: |
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@product_version@", "$(PRODUCT_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
@@ -381,6 +375,20 @@ jobs:
          downloadType: 'single'
          artifactName: 'origam-chat'
          downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-architect-client artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-architect-client'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
+       displayName: Download origam-architect-server artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-architect-server'
+         downloadPath: '$(build.artifactstagingdirectory)'
      - task: CopyFiles@2
        displayName: Copy origam-model to staging directory
        inputs:
@@ -406,6 +414,17 @@ jobs:
          PathtoPublish: '$(Build.ArtifactStagingDirectory)\origam-server'
          ArtifactName: 'origam'
        displayName: 'Publish artifact: origam'
+     - task: CopyFiles@2
+       displayName: Copy origam-architect-client to origam-architect-server
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-architect-client'
+         Contents: '**'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-architect-server\ClientApplication'
+     - task: PublishBuildArtifacts@1
+       inputs:
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)\origam-architect-server'
+         ArtifactName: 'origam-architect'
+       displayName: 'Publish artifact: origam-architect'
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
@@ -444,6 +463,7 @@ jobs:
        displayName: 'Tag origam-chat'
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-architect-server", "$(build.artifactstagingdirectory)\origam-architect-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-scheduler", "$(build.artifactstagingdirectory)\origam-scheduler.zip"); }
        displayName: Zip files for release
@@ -478,6 +498,7 @@ jobs:
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
+           $(Build.ArtifactStagingDirectory)/origam-architect-server.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
@@ -514,6 +535,7 @@ jobs:
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
+           $(Build.ArtifactStagingDirectory)/origam-architect-server.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
