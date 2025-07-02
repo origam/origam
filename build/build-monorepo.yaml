@@ -26,7 +26,7 @@ variables:
 
 resources:
   repositories:
-   - repository: origam-html-chat
+   - repository: origam-chat
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
@@ -214,19 +214,19 @@ jobs:
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
        displayName: 'Build Architect Server'
      - task: CopyFiles@2
-       displayName: 'Copy Server to: $(build.artifactstagingdirectory)\origam-html'
+       displayName: 'Copy Server to: $(build.artifactstagingdirectory)\origam-server'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
          Contents: |
            **\*.*
            !*.config
-         TargetFolder: '$(build.artifactstagingdirectory)\origam-html'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-server'
        condition: succeededOrFailed()
      - task: PublishBuildArtifacts@1
-       displayName: 'Publish artifact: origam-html-server'
+       displayName: 'Publish artifact: origam-server'
        inputs:
-         PathtoPublish: '$(build.artifactstagingdirectory)\origam-html'
-         ArtifactName: origam-html-server
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-server'
+         ArtifactName: origam-server
        condition: succeededOrFailed()
      - task: CopyFiles@2
        displayName: 'Copy Scheduler to: $(build.artifactstagingdirectory)\scheduler'
@@ -250,7 +250,7 @@ jobs:
     steps:
      - checkout: origam
        fetchDepth: 1
-     - checkout: origam-html-chat
+     - checkout: origam-chat
        fetchDepth: 1
      - task: NodeTool@0
        displayName: 'Use Node 18.x'
@@ -259,7 +259,7 @@ jobs:
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
-         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
+         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: corepack enable
@@ -267,33 +267,33 @@ jobs:
      - script: |
         yarn install --immutable
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
-       displayName: 'origam-html yarn'
+       displayName: 'origam-client yarn'
      - script: |
         yarn build
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
-       displayName: 'origam-html yarn build'
+       displayName: 'origam-client yarn build'
      - task: PublishBuildArtifacts@1
-       displayName: 'Publish artifact: origam-html-client'
+       displayName: 'Publish artifact: origam-client'
        inputs:
          PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\dist'
-         ArtifactName: origam-html-client
+         ArtifactName: origam-client
        condition: succeededOrFailed()
      - script: |
         yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
-       displayName: 'origam-html-chat yarn'
+       displayName: 'origam-chat yarn'
      - script: |
         yarn build
        workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
-       displayName: 'origam-html-chat yarn build'
+       displayName: 'origam-chat yarn build'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-chat'
        inputs:
          PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
-         ArtifactName: origam-html-chat
+         ArtifactName: origam-chat
        condition: succeededOrFailed()
   - job: build_release
-    displayName: Create Github Release
+    displayName: Compose Artifacts and Create Github Release
     dependsOn: 
     - build_html_applications
     - build_desktop_applications
@@ -304,7 +304,7 @@ jobs:
      - checkout: origam
        fetchDepth: 1
        persistCredentials: true
-     - checkout: origam-html-chat
+     - checkout: origam-chat
        fetchDepth: 1
        persistCredentials: true
      - powershell: |
@@ -313,10 +313,10 @@ jobs:
          Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
        displayName: Store origam-origam commit id
      - powershell: |
-         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
+         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-chat rev-parse HEAD)
          Write-Host $htmlChatCommitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_CHAT_COMMIT_ID;]$htmlChatCommitId"
-       displayName: Store origam-html-chat commit id
+       displayName: Store origam-chat commit id
      - task: DownloadBuildArtifacts@0
        displayName: Download origam-setup artifact
        inputs:
@@ -325,11 +325,11 @@ jobs:
          artifactName: 'origam-setup'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
-       displayName: Download origam-html-server artifact
+       displayName: Download origam-server artifact
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html-server'
+         artifactName: 'origam-server'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
        displayName: Download origam-scheduler artifact
@@ -339,18 +339,18 @@ jobs:
          artifactName: 'origam-scheduler'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
-       displayName: Download origam-html-client artifact
+       displayName: Download origam-client artifact
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html-client'
+         artifactName: 'origam-client'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
-       displayName: Download origam-html-chat artifact
+       displayName: Download origam-chat artifact
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html-chat'
+         artifactName: 'origam-chat'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: CopyFiles@2
        displayName: Copy origam-model to staging directory
@@ -361,22 +361,22 @@ jobs:
            l10n/**
          TargetFolder: '$(build.artifactstagingdirectory)\origam-model'
      - task: CopyFiles@2
-       displayName: Copy origam-html-client to origam-html-server
+       displayName: Copy origam-client to origam-server
        inputs:
-         SourceFolder: '$(build.artifactstagingdirectory)\origam-html-client'
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-client'
          Contents: '**'
-         TargetFolder: '$(build.artifactstagingdirectory)\origam-html-server\clients\origam'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-server\clients\origam'
      - task: CopyFiles@2
-       displayName: Copy origam-html-chat to origam-html-server
+       displayName: Copy origam-chat to origam-server
        inputs:
-         SourceFolder: '$(build.artifactstagingdirectory)\origam-html-chat'
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-chat'
          Contents: '**'
-         TargetFolder: '$(build.artifactstagingdirectory)\origam-html-server\clients\chat'
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-server\clients\chat'
      - task: PublishBuildArtifacts@1
        inputs:
-         PathtoPublish: '$(Build.ArtifactStagingDirectory)\origam-html-server'
-         ArtifactName: 'origam-html'
-       displayName: 'Publish artifact: origam-html'
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)\origam-server'
+         ArtifactName: 'origam'
+       displayName: 'Publish artifact: origam'
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
@@ -411,10 +411,10 @@ jobs:
         git tag -f $(TAG)
         git tag -f $(TAG_LATEST)
         git push -f origin --tags
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat
-       displayName: 'Tag origam-html-chat'
+       workingDirectory: $(Agent.BuildDirectory)\s\origam-chat
+       displayName: 'Tag origam-chat'
      - powershell: |
-        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-scheduler", "$(build.artifactstagingdirectory)\origam-scheduler.zip"); }
        displayName: Zip files for release
@@ -531,15 +531,15 @@ jobs:
      - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
-       displayName: 'Download origam-html artifact'
+       displayName: 'Download origam artifact'
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html'
+         artifactName: 'origam'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - bash: |
         cp -R ../frontend-html server/HTML5-SOURCE
-        mv origam-html server/HTML5
+        mv origam server/HTML5
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2
@@ -564,11 +564,11 @@ jobs:
      - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
-       displayName: 'Download origam-html artifact'
+       displayName: 'Download origam artifact'
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html'
+         artifactName: 'origam'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-scheduler artifact'
@@ -579,7 +579,7 @@ jobs:
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination server\HTML5-SOURCE -Recurse
-        Move-Item -Path origam-html -Destination server\HTML5 -force
+        Move-Item -Path origam -Destination server\HTML5 -force
         Move-Item -Path origam-scheduler -Destination server\Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
@@ -605,11 +605,11 @@ jobs:
      - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
-       displayName: 'Download origam-html artifact'
+       displayName: 'Download origam artifact'
        inputs:
          buildType: 'current'
          downloadType: 'single'
-         artifactName: 'origam-html'
+         artifactName: 'origam'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-scheduler artifact'
@@ -620,7 +620,7 @@ jobs:
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination server\HTML5-SOURCE -Recurse
-        Move-Item -Path origam-html -Destination server\HTML5 -force
+        Move-Item -Path origam -Destination server\HTML5 -force
         Move-Item -Path origam-scheduler -Destination server\Scheduler -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
