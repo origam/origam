@@ -411,7 +411,7 @@ jobs:
         git tag -f $(TAG)
         git tag -f $(TAG_LATEST)
         git push -f origin --tags
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-chat
+       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat
        displayName: 'Tag origam-chat'
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
