@@ -162,8 +162,8 @@ jobs:
            server_source\**\*.*
          RemoveSourceFolder: true
        displayName: 'origam-setup clean up'
-  - job: build_server
-    displayName: Build Server and Scheduler
+  - job: build_server_applications
+    displayName: Build Server Applications
     pool:
       vmImage: windows-2022
     steps:
@@ -210,6 +210,9 @@ jobs:
      - script: |
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:OrigamScheduler -v:m
        displayName: 'Build Scheduler'
+     - script: |
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
+       displayName: 'Build Architect Server'
      - task: CopyFiles@2
        displayName: 'Copy Server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
@@ -240,8 +243,8 @@ jobs:
          PathtoPublish: '$(build.artifactstagingdirectory)\scheduler'
          ArtifactName: origam-scheduler
        condition: succeededOrFailed()
-  - job: build_html
-    displayName: Build HTML Frontend
+  - job: build_html_applications
+    displayName: Build Frontend Applications
     pool:
       vmImage: windows-2022
     steps:
@@ -292,9 +295,9 @@ jobs:
   - job: build_release
     displayName: Create Github Release
     dependsOn: 
-    - build_html
+    - build_html_applications
     - build_desktop_applications
-    - build_server
+    - build_server_applications
     pool:
       vmImage: windows-2022
     steps:
