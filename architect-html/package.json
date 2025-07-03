@@ -13,7 +13,7 @@
     "fix": "yarn format && yarn lint:fix"
   },
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
     "@monaco-editor/react": "^4.7.0",
     "axios": "^1.10.0",
     "lodash": "^4.17.21",
