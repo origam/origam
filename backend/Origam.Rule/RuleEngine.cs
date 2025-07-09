@@ -342,6 +342,12 @@ public class RuleEngine
 			
 			return exceptions;
 		}
+		// due to a complex situation, a rule exception can be raised inside
+	    // a workflow used to retrieve a look-up value by rule
+	    catch(RuleException)
+	    {
+		    throw;
+	    }
 		catch(Exception ex)
 		{
 			throw new Exception(ResourceUtils.GetString("ErrorRuleFailed1", rule.Name), ex);
