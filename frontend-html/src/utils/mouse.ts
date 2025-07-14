@@ -17,13 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createMachine, interpret } from "xstate";
+import { createMachine, createActor } from "xstate";
+
+interface MouseContext {}
+
+interface MouseDownEvent {
+  type: "MOUSE_DOWN";
+  payload: { domEvent: globalThis.MouseEvent };
+}
 
 export function preventDoubleclickSelect() {
-  const interpreter = interpret(
-    createMachine(
+  const interpreter = createActor(
+    createMachine<MouseContext, MouseDownEvent>(
       {
-        predictableActionArguments: true,
         id: "selectionPreventer",
         initial: "IDLE",
         states: {
@@ -31,7 +37,7 @@ export function preventDoubleclickSelect() {
             on: {
               MOUSE_DOWN: {
                 target: "DEAD_PERIOD",
-                cond: "isNotEditable",
+                guard: "isNotEditable",
               },
             },
           },
