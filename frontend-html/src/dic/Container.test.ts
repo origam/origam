@@ -234,8 +234,8 @@ describe("Container", () => {
 
     const d = container4.resolve(IDog);
 
-    expect(() => container1.resolve(IDog)).toThrowError();
-    expect(() => container2.resolve(IDog)).toThrowError();
+    expect(() => container1.resolve(IDog)).toThrow();
+    expect(() => container2.resolve(IDog)).toThrow();
 
     const dogs = [
       container3.resolve(IDog),
