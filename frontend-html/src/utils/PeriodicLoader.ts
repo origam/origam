@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { flow } from "mobx";
-import { createMachine, createActor } from "xstate";
+import { createMachine, createActor, setup, fromPromise, fromCallback } from "xstate";
 import { EventHandler } from "./events";
 
 export class PeriodicLoader {
@@ -29,7 +29,14 @@ export class PeriodicLoader {
   }
 
   interpreter = createActor(
-    createMachine(
+    setup({
+      types: {
+        context: {} as {},
+        events: {} as
+          | { type: "START" }
+          | { type: "SOME_API_SUCCESS" },
+      },
+    }).createMachine(
       {
         id: "periodicLoader",
         initial: "INITIALIZED",
@@ -69,19 +76,20 @@ export class PeriodicLoader {
       {
         actions: {},
         actors: {
-          svcLoadFunction: (ctx: any, event: any) => async () => {
-            this.t0 = new Date().valueOf();
+          svcLoadFunction: fromPromise(async () => {
+            this.t0 = Date.now();
             await flow(this.loadFunction)();
-            this.t1 = new Date().valueOf();
-          },
-          svcSuccessfulApiSubs: (ctx: any, event: any) => (callback: any, onReceive: any) => {
-            return this.getChSuccessfulApi().subscribe(() => {
-              this.interpreter.send({ type: "SOME_API_SUCCESS" });
+            this.t1 = Date.now();
+          }),
+          svcSuccessfulApiSubs: fromCallback(({ sendBack }) => {
+            const sub = this.getChSuccessfulApi().subscribe(() => {
+              sendBack({ type: "SOME_API_SUCCESS" });
             });
-          },
+            return () => sub.unsubscribe();
+          }),
         },
         delays: {
-          REST_DELAY: (ctx: any, event: any) => {
+          REST_DELAY: () => {
             return Math.max(0, this.refreshIntervalMs - (this.t1 - this.t0));
           },
         },

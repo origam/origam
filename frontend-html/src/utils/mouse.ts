@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createMachine, createActor } from "xstate";
+import { createMachine, createActor, setup } from "xstate";
 
 interface MouseContext {}
 
@@ -28,7 +28,12 @@ interface MouseDownEvent {
 
 export function preventDoubleclickSelect() {
   const interpreter = createActor(
-    createMachine<MouseContext, MouseDownEvent>(
+    setup({
+      types: {
+        context: {} as MouseContext,
+        events: {} as MouseDownEvent,
+      },
+    }).createMachine(
       {
         id: "selectionPreventer",
         initial: "IDLE",
