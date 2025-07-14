@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { flow } from "mobx";
-import { createMachine, interpret } from "xstate";
+import { createMachine, createActor } from "xstate";
 import { EventHandler } from "./events";
 
 export class PeriodicLoader {
@@ -28,10 +28,9 @@ export class PeriodicLoader {
     this.interpreter.start();
   }
 
-  interpreter = interpret(
+  interpreter = createActor(
     createMachine(
       {
-        predictableActionArguments: true,
         id: "periodicLoader",
         initial: "INITIALIZED",
         states: {
@@ -69,26 +68,25 @@ export class PeriodicLoader {
       },
       {
         actions: {},
-        services: {
-          svcLoadFunction: (ctx, event) => async () => {
+        actors: {
+          svcLoadFunction: (ctx: any, event: any) => async () => {
             this.t0 = new Date().valueOf();
             await flow(this.loadFunction)();
             this.t1 = new Date().valueOf();
           },
-          svcSuccessfulApiSubs: (ctx, event) => (callback, onReceive) => {
+          svcSuccessfulApiSubs: (ctx: any, event: any) => (callback: any, onReceive: any) => {
             return this.getChSuccessfulApi().subscribe(() => {
-              this.interpreter.send("SOME_API_SUCCESS");
+              this.interpreter.send({ type: "SOME_API_SUCCESS" });
             });
           },
         },
         delays: {
-          REST_DELAY: (ctx, event) => {
+          REST_DELAY: (ctx: any, event: any) => {
             return Math.max(0, this.refreshIntervalMs - (this.t1 - this.t0));
           },
         },
       }
-    ),
-    {devTools: true}
+    )
   );
 
   t0 = 0;
@@ -100,11 +98,11 @@ export class PeriodicLoader {
     this.refreshIntervalMs = refreshIntervalMs;
     this.t0 = 0;
     this.t1 = 0;
-    if (!this.interpreter.state?.matches?.("INITIALIZED")) {
+    if (!this.interpreter.getSnapshot().matches("INITIALIZED")) {
       this.interpreter.stop();
       this.interpreter.start();
     }
-    this.interpreter.send("START");
+    this.interpreter.send({ type: "START" });
   }
 
   *stop() {
