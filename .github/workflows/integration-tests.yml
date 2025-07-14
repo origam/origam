@@ -138,7 +138,7 @@ jobs:
       - name: Build Server Architect
         run: |
           cd backend
-          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect Server" /t:Server\Origam_Server:Publish -v:m
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect Server" /t:Server\Origam_Architect_Server:Publish -v:m
 
   build-server:
     name: build-server
