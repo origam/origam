@@ -111,6 +111,35 @@ jobs:
           yarn build
         shell: bash
 
+  build-architect-server:
+    name: build-server
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore Packages
+        run: |
+          cd backend
+          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+      - name: Build Server Architect
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect Server" /t:Server\Origam_Server:Publish -v:m
+
   build-server:
     name: build-server
     runs-on: windows-2025
