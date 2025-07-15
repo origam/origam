@@ -16,6 +16,11 @@ services:
       - test
     tty: false
     stdin_open: false
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   test-server:
     build:
@@ -42,7 +47,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - database-server
+      database-server:
+        condition: service_healthy
     profiles:
       - test
     tty: true
