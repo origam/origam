@@ -118,8 +118,18 @@ class Program
     {
     }
     
-    [Verb("test-db", HelpText = "Try to connect to database and run a sql command.")]
-    class DbTestOptions
+    [Verb("get-root-version", HelpText = "Try get Root package version to test if the model has been initialized in the database. Return 0 if successful.")]
+    class GetRootVersionOptions
+    {
+        [Option('a', "attempts", Required = true,
+            HelpText = "Number of test attempts.")]
+        public int Attempts { get; set; }
+        [Option('d', "delay", Required = true,
+            HelpText = "Delay between attempts in milliseconds.")]
+        public int Delay { get; set; }
+    } 
+    [Verb("run-sql", HelpText = "Try to connect to database and run a sql command. Return 0 if successful.")]
+    class RunSqlCommandOptions
     {
         [Option('a', "attempts", Required = true,
             HelpText = "Number of test attempts.")]
@@ -130,6 +140,19 @@ class Program
         [Option('c', "sql-command", Required = true,
             HelpText = "SQL command to run.")]
         public string SqlCommand { get; set; }
+    } 
+    [Verb("run-sql-procedure", HelpText = "Try to connect to database and run a sql procedure. Return 0 if successful.")]
+    class RunSqlProcedureCommandOptions
+    {
+        [Option('a', "attempts", Required = true,
+            HelpText = "Number of test attempts.")]
+        public int Attempts { get; set; }
+        [Option('d', "delay", Required = true,
+            HelpText = "Delay between attempts in milliseconds.")]
+        public int Delay { get; set; }
+        [Option('c', "sql-command", Required = true,
+            HelpText = "SQL procedure to run.")]
+        public string ProcedureName { get; set; }
     }
     [Verb("process-doc-generator",
         HelpText = "Generate Menu into output with xslt template.")]
@@ -221,9 +244,17 @@ class Program
                 EntryAssembly();
                 return CompareSchema(options);
             }
-            case DbTestOptions options:
+            case GetRootVersionOptions options:
             {
-                return TestDatabase(options);
+                return GetRootVersion(options);
+            }
+            case RunSqlCommandOptions options:
+            {
+                return RunSqlCommand(options);
+            }
+            case RunSqlProcedureCommandOptions options:
+            {
+                return RunSqlProcedure(options);
             }
             case NormalizeFileFormatOptions _:
             {
@@ -244,10 +275,12 @@ class Program
         {
             typeof(ProcessCheckRulesOptions),
             typeof(ProcessDocGeneratorOptions),
-            typeof(GeneratePassHashOptions),
-            typeof(DbTestOptions)
+            typeof(GeneratePassHashOptions)
         #if !NETCORE2_1
             ,
+            typeof(GetRootVersionOptions),
+            typeof(RunSqlCommandOptions),
+            typeof(RunSqlProcedureCommandOptions),
             typeof(ProcessQueueOptions),
             typeof(RunUpdateScriptsOptions),
             typeof(RestartServerOptions),
@@ -534,51 +567,141 @@ class Program
             }
         }
     }
-    private static int TestDatabase(DbTestOptions arguments)
+
+    private static int GetRootVersion(GetRootVersionOptions arguments)
     {
-        OrigamSettingsCollection configurations;
+        OrigamSettings origamSettings;
         try
         {
-            configurations = ConfigurationManager.GetAllConfigurations();
-            if (configurations.Count != 1)
-            {
-                return SetTestDatabaseReturn(false);
-            }
-        } catch
+            origamSettings = GetOrigamSettings();
+        } 
+        catch(Exception ex )
         {
-            return SetTestDatabaseReturn(false);
+            log.Error(ex);
+            return 1;
         }
-        var origamSettings = configurations[0];
+
+        string sqlCommand = "";
+        if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
+        {
+            sqlCommand =
+                "SELECT 'Root package version: ' || \"Version\" FROM \"OrigamModelVersion\" where \"refSchemaExtensionId\"='147fa70d-6519-4393-b5d0-87931f9fd609'";
+        }
+        else if(origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
+        {
+            sqlCommand =
+                "SELECT  'Root package version: ' + \"Version\" FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='147fa70d-6519-4393-b5d0-87931f9fd609'";
+        }
+        else
+        {
+            throw new ArgumentException($"Unknown DataDataService: \"{origamSettings.DataDataService}\"");
+        }
+
+        return RunSqlCommand(new RunSqlCommandOptions
+        {
+            Delay = arguments.Delay,
+            Attempts = arguments.Attempts,
+            SqlCommand = sqlCommand
+        });
+    }
+
+    private static int RunSqlProcedure(RunSqlProcedureCommandOptions arguments)
+    {
+        OrigamSettings origamSettings;
+        try
+        {
+            origamSettings = GetOrigamSettings();
+        } 
+        catch(Exception ex )
+        {
+            log.Error(ex);
+            return 1;
+        }
+        
+        string sqlCommand = "";
+        if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
+        {
+             string name = !arguments.ProcedureName.StartsWith("\"") && !arguments.ProcedureName.EndsWith("\"")
+                 ? "\"" + arguments.ProcedureName + "\"" 
+                 : arguments.ProcedureName;
+            sqlCommand = $"CALL {name}";
+        }
+        else if(origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
+        {
+            sqlCommand = $"EXEC {arguments.ProcedureName}";
+        }
+        else
+        {
+            throw new ArgumentException($"Unknown DataDataService: \"{origamSettings.DataDataService}\"");
+        }
+
+        return RunSqlCommand(new RunSqlCommandOptions
+        {
+            Delay = arguments.Delay,
+            Attempts = arguments.Attempts,
+            SqlCommand = sqlCommand
+        });
+    }
+
+    private static int RunSqlCommand(RunSqlCommandOptions arguments)
+    {
+        OrigamSettings origamSettings;
+        try
+        {
+            origamSettings = GetOrigamSettings();
+        } 
+        catch(Exception ex )
+        {
+            log.Error(ex);
+            return 1;
+        }
+
         var connString = origamSettings.DataConnectionString;
-        var result = false;
         for (var i = 0; i < arguments.Attempts; i++)
         {
             try
             {
-                using (var connection = new SqlConnection(connString))
+                if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
                 {
+                    using var connection = new Npgsql.NpgsqlConnection(connString);
+                    var query = arguments.SqlCommand;
+                    using var command = new Npgsql.NpgsqlCommand(query, connection);
+                    connection.Open();
+                    var resultObj = command.ExecuteScalar();
+                    Console.Write(resultObj?.ToString());
+                    return 0;
+                }
+                if(origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
+                {
+                    using var connection = new SqlConnection(connString);
                     var query = arguments.SqlCommand;
                     var command = new SqlCommand(query, connection);
                     connection.Open();
-                    var info = command.ExecuteScalar().ToString();
-                    if (info != null)
-                    {
-                        result = true;
-                        break;
-                    }
+                    var resultObj = command.ExecuteScalar();
+                    Console.Write(resultObj?.ToString());
+                    return 0;
+                }
+                else
+                {
+                    throw new ArgumentException($"Unknown DataDataService: \"{origamSettings.DataDataService}\"");
                 }
             }
             catch (Exception ex)
             {
-                log.Info("Failure:", ex);
+                log.Error("Failure:", ex);
             }
             Thread.Sleep(arguments.Delay);
         }
-        return SetTestDatabaseReturn(result);
+        return 1;
     }
-    private static int SetTestDatabaseReturn(bool returnValue)
+    
+    private static OrigamSettings GetOrigamSettings()
     {
-        Console.Write(returnValue);
-        return Convert.ToInt32(returnValue);
+        OrigamSettingsCollection configurations = ConfigurationManager.GetAllConfigurations();
+        if (configurations.Count != 1)
+        {
+            throw new Exception("Exactly one configuration in OrigamSettings is required.");
+        }
+        return configurations[0];
     }
 }
