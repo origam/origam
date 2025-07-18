@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { flow } from "mobx";
-import { createMachine, interpret } from "xstate";
+import { createMachine, createActor, setup, fromPromise, fromCallback } from "xstate";
 import { EventHandler } from "./events";
 
 export class PeriodicLoader {
@@ -28,10 +28,16 @@ export class PeriodicLoader {
     this.interpreter.start();
   }
 
-  interpreter = interpret(
-    createMachine(
+  interpreter = createActor(
+    setup({
+      types: {
+        context: {} as {},
+        events: {} as
+          | { type: "START" }
+          | { type: "SOME_API_SUCCESS" },
+      },
+    }).createMachine(
       {
-        predictableActionArguments: true,
         id: "periodicLoader",
         initial: "INITIALIZED",
         states: {
@@ -69,26 +75,26 @@ export class PeriodicLoader {
       },
       {
         actions: {},
-        services: {
-          svcLoadFunction: (ctx, event) => async () => {
-            this.t0 = new Date().valueOf();
+        actors: {
+          svcLoadFunction: fromPromise(async () => {
+            this.t0 = Date.now();
             await flow(this.loadFunction)();
-            this.t1 = new Date().valueOf();
-          },
-          svcSuccessfulApiSubs: (ctx, event) => (callback, onReceive) => {
-            return this.getChSuccessfulApi().subscribe(() => {
-              this.interpreter.send("SOME_API_SUCCESS");
+            this.t1 = Date.now();
+          }),
+          svcSuccessfulApiSubs: fromCallback(({ sendBack }) => {
+            const sub = this.getChSuccessfulApi().subscribe(() => {
+              sendBack({ type: "SOME_API_SUCCESS" });
             });
-          },
+            return () => sub.unsubscribe();
+          }),
         },
         delays: {
-          REST_DELAY: (ctx, event) => {
+          REST_DELAY: () => {
             return Math.max(0, this.refreshIntervalMs - (this.t1 - this.t0));
           },
         },
       }
-    ),
-    {devTools: true}
+    )
   );
 
   t0 = 0;
@@ -100,11 +106,11 @@ export class PeriodicLoader {
     this.refreshIntervalMs = refreshIntervalMs;
     this.t0 = 0;
     this.t1 = 0;
-    if (!this.interpreter.state?.matches?.("INITIALIZED")) {
+    if (!this.interpreter.getSnapshot().matches("INITIALIZED")) {
       this.interpreter.stop();
       this.interpreter.start();
     }
-    this.interpreter.send("START");
+    this.interpreter.send({ type: "START" });
   }
 
   *stop() {
