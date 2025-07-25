@@ -45,7 +45,7 @@ function Fill-ConfigFromTemplate
     $templateContent | Set-Content $OutputFile
 }
 
-function Initialize-OrigamSettings {
+function Initialize-OrigamSettingsConfig {
     try
     {
         Write-Host "Starting OrigamSettings generation..."

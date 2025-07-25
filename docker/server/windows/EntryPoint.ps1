@@ -102,13 +102,14 @@ switch ($env:CONTAINER_MODE) {
             Write-Host "Error during configuration generation: $_" -ForegroundColor Red
             throw $_
         }
-        Initialize-OrigamSettings
+        Initialize-OrigamSettingsConfig
         $env:ASPNETCORE_URLS = 'http://+:8080;https://+:443'
-        & dotnet Origam.Server.dll
+        #& dotnet Origam.Server.dll
+        powershell
     }
     "scheduler" {
         Set-Location /home/origam/Scheduler
-        Initialize-OrigamSettings
+        Initialize-OrigamSettingsConfig
         & dotnet Origam.Scheduler.dll
         exit 1
     }
