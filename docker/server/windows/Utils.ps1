@@ -153,7 +153,7 @@ function Fill-OrigamSettingsConfig {
     }
 
     # Save the updated XML back to file.
-    $xml.Save($ConfigFile)
+    $xml.Save((Join-Path (Get-Location) $ConfigFile))
     Write-Host "$ConfigFile file updated successfully."
 }
 
