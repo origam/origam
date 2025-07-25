@@ -104,8 +104,7 @@ switch ($env:CONTAINER_MODE) {
         }
         Initialize-OrigamSettingsConfig
         $env:ASPNETCORE_URLS = 'http://+:8080;https://+:443'
-        #& dotnet Origam.Server.dll
-        powershell
+        & dotnet Origam.Server.dll
     }
     "scheduler" {
         Set-Location /home/origam/Scheduler
