@@ -55,6 +55,7 @@ function Initialize-OrigamSettings {
         }
         Copy-Item -Path "..\_OrigamSettings.mssql.template" -Destination "OrigamSettings.config"
         Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config"
+        Get-Content "OrigamSettings.config"
     }
     catch
     {
