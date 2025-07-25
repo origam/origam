@@ -45,6 +45,24 @@ function Fill-ConfigFromTemplate
     $templateContent | Set-Content $OutputFile
 }
 
+function Initialize-OrigamSettings {
+    try
+    {
+        Write-Host "Starting OrigamSettings generation..."
+        if (-not $env:OrigamSettings__ModelSourceControlLocation)
+        {
+            $env:OrigamSettings__ModelSourceControlLocation = "C:\home\origam\projectData\model"
+        }
+        Copy-Item -Path "..\_OrigamSettings.mssql.template" -Destination "OrigamSettings.config"
+        Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config"
+    }
+    catch
+    {
+        Write-Host "Error during database configuration: $_" -ForegroundColor Red
+        throw $_
+    }
+}
+
 function Fill-OrigamSettingsConfig {
     param(
         [Parameter(Mandatory = $true)]

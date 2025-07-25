@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-windowsservercore-ltsc2022
 
 USER ContainerAdministrator
 
+ENV CONTAINER_MODE=server
+
 WORKDIR /home/origam
 
 # Create required directories
@@ -15,24 +17,21 @@ COPY server/HTML5 HTML5/
 COPY server/HTML5-SOURCE HTML5-SOURCE/
 COPY server/Scheduler Scheduler/
 
-WORKDIR /home/origam/HTML5
 
 # Copy configuration templates and scripts
+WORKDIR /home/origam/HTML5
 COPY server/_appsettings.template .
-COPY server/_OrigamSettings.mssql.template .
-COPY server/_OrigamSettings.postgres.template .
 COPY server/log4net.config .
-COPY server/windows/StartServer.ps1 .
+WORKDIR /home/origam
+COPY server/_OrigamSettings.mssql.template .
 COPY server/windows/Install.ps1 .
 COPY server/windows/Utils.ps1 .
 COPY server/windows/CreateSslCertificate.ps1 .
+COPY server/windows/EntryPoint.ps1 .
 
 # Install dependencies
 RUN powershell.exe -ExecutionPolicy Bypass -File install.ps1
 
-WORKDIR /home/origam/HTML5-SOURCE
-WORKDIR /home/origam/HTML5
-
 EXPOSE 8080 443
 
-ENTRYPOINT ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "startServer.ps1"]
+ENTRYPOINT ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "EntryPoint.ps1"]
