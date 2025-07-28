@@ -29,8 +29,6 @@ COPY server/HTML5 HTML5/
 COPY server/HTML5-SOURCE HTML5-SOURCE/
 COPY server/Scheduler Scheduler/
 
-WORKDIR /home/origam/HTML5
-
 # Copy configuration templates and scripts
 WORKDIR /home/origam/HTML5
 COPY server/_appsettings.template .
