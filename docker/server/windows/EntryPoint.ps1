@@ -109,7 +109,7 @@ switch ($env:CONTAINER_MODE) {
     "scheduler" {
         Set-Location /home/origam/Scheduler
         Initialize-OrigamSettingsConfig
-        & dotnet Origam.Scheduler.dll
+        & ".\Origam.Scheduler.exe"
         exit 1
     }
     default {
