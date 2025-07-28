@@ -1,0 +1,7 @@
+﻿CREATE PROCEDURE "restoreWidgetSectionTestMaster"
+AS
+BEGIN
+  DELETE FROM "WidgetSectionTestDetailDetail";
+  DELETE FROM "WidgetSectionTestDetail";
+  DELETE FROM "WidgetSectionTestMaster";
+END;

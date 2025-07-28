@@ -1,0 +1,22 @@
+﻿CREATE PROCEDURE "replicateWideDropdownHorizontalScrollError"
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM "TagInputBinding";
+    DELETE FROM "WidgetDropdownTest";
+    DELETE FROM "AllDataTypes";
+    DELETE FROM "TagInputSource";
+
+    INSERT INTO "TagInputSource" ("Label", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Number") 
+    VALUES ('Label 1', '639fd781-4111-4c8f-97ec-85b3385895ff', NULL, '72970893-5788-4c78-b0f8-afb8b2e76a82', '2023-06-13T16:13:21.647'::timestamp, NULL, 1);
+
+    INSERT INTO "TagInputSource" ("Label", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Number") 
+    VALUES ('Label 2 a very long label with a very descriptive text that could impress a lot of people', '639fd781-4111-4c8f-97ec-85b3385895ff', NULL, 'e1bb068a-79c5-43c9-8cc2-ae239345ff5c', '2023-06-13T16:13:42.590'::timestamp, NULL, 2);
+
+    INSERT INTO "TagInputSource" ("Label", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Number") 
+    VALUES ('yet another label', '639fd781-4111-4c8f-97ec-85b3385895ff', NULL, '8b07c731-78dd-4076-b768-89f29b08dbad', '2023-06-13T16:14:13.823'::timestamp, NULL, 3);
+
+    INSERT INTO "AllDataTypes" ("Text1", "Date1", "Integer1", "Currency1", "Boolean1", "Long1", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Text2", "refTagInputSourceId") 
+    VALUES ('very long text 1 - a very long name of a machine', '2023-06-13T00:00:00.000'::timestamp, 100, 12.2500, true, 12343, '639fd781-4111-4c8f-97ec-85b3385895ff', '639fd781-4111-4c8f-97ec-85b3385895ff', '7725d1e5-5823-439b-9456-9d711f9f79ed', '2023-06-13T16:04:28.063'::timestamp, '2023-06-13T16:15:11.843'::timestamp, 'A very long description of a machine abc cba bca', 'e1bb068a-79c5-43c9-8cc2-ae239345ff5c');
+END;
+$$;

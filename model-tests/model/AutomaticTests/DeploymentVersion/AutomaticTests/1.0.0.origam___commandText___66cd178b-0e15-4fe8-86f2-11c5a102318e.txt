@@ -1,0 +1,29 @@
+﻿CREATE OR REPLACE PROCEDURE "putNumericTestDataToAllDataTypes"()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+DELETE FROM "TagInputBinding";
+DELETE FROM "WidgetDropdownTest";
+DELETE FROM "AllDataTypes";
+DELETE FROM "TagInputSource";
+
+INSERT INTO "TagInputSource" ("Label", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Number")
+VALUES 
+('Label1', 'abce2f49-6693-4525-87a4-65d8687413fb', NULL, 'eef55cab-d66f-4828-b3bf-f27c7930858f', '2021-06-24T09:28:14.220', NULL, 1),
+('Label2', 'abce2f49-6693-4525-87a4-65d8687413fb', NULL, '74ba6e7d-6d77-4268-9e73-601a71d8b385', '2021-06-24T09:28:14.220', NULL, 2),
+('Label3', 'abce2f49-6693-4525-87a4-65d8687413fb', NULL, 'b34bc298-cac4-46d6-b77c-31c838c4feb7', '2021-06-24T09:28:14.220', NULL, 3);
+
+INSERT INTO "AllDataTypes" (
+  "Text1", "Date1", "Integer1", "Currency1", "Boolean1", "Long1",
+  "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated",
+  "Text2", "refTagInputSourceId"
+)
+VALUES (
+  'txt1628', '2025-11-26T00:00:00.000', 1618, 123456.789, true, 1618,
+  'abce2f49-6693-4525-87a4-65d8687413fb', NULL, '65c11391-ab95-4f3a-83e2-00373215efcc',
+  '2025-11-26T00:00:00.000', NULL, 'txt1638', NULL
+);
+
+END;
+$$;
