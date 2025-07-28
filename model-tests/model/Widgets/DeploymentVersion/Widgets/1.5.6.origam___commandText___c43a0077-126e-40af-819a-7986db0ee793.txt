@@ -1,0 +1,38 @@
+﻿INSERT INTO "WorkQueue" (
+  "refRemovalOrigamStateMachineEventTypeId", "RemovalNewValue", "ExternalSourceUserName", 
+  "ExternalSourceLastTime", "ExternalSourceLastMessage", "RemovalOldValue", "ExternalSourcePassword", 
+  "ExternalSourceConnection", "ReferenceCode", "ReverseLookupFieldValues", "CreationNewValue", 
+  "CreationFieldName", "CreationOldValue", "WorkQueueClass", "refWorkQueueExternalSourceTypeId", 
+  "Roles", "ExternalSourceState", "refCreationOrigamStateMachineEventTypeId", "IsErrorQueue", 
+  "RemovalFieldName", "Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", 
+  "RecordUpdated", "IsActive", "CreationCondition", "RemovalCondition", "IsMessageCountDisplayed", 
+  "ApiAccessRoles", "QueueProcessor", "refWorkQueueRetryTypeId", "RetryIntervalSeconds", 
+  "MaxRetries", "ExponentialRetryBase", "ThrottlingIntervalSeconds", "ThrottlingItemsPerInterval", 
+  "EnableThrottling"
+) VALUES (
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'TEST_BUTTON', 0, NULL, NULL, NULL, 
+  'TestQueue1', NULL, '*', NULL, NULL, false, NULL, 'Buttons testing', 
+  'e1cb020f-2b12-47b7-a510-ef8c9cf6ccc1', NULL, '6c83fb61-f89d-4266-947b-cba270aa5396', 
+  '2025-01-16T17:12:12.543', NULL, true, NULL, NULL, true, NULL, NULL, 
+  '69460bcf-81d4-4a97-94f7-5a391d16f771', 30, 3, 2.0000000000, 60, 10, false
+);
+
+INSERT INTO "WorkQueueCommand" (
+  "Command", "Param1", "refWorkQueueId", "AutoProcessingConditionXPath", "refWorkQueueCommandTypeId", 
+  "Text", "refErrorWorkQueueId", "Param2", "SortOrder", "IsAutoProcessed", "RecordCreatedBy", 
+  "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "IsDefault", "IsAutoProcessedWithErrors", "Roles"
+) VALUES (
+  NULL, NULL, '6c83fb61-f89d-4266-947b-cba270aa5396', NULL, '8d4117e0-590b-4495-9fd3-de46d9e768af', 
+  'Button 2', NULL, NULL, 2, false, 'e1cb020f-2b12-47b7-a510-ef8c9cf6ccc1', NULL, 
+  '03b4c6e1-d19f-46c5-9153-46ca1c3f3515', '2025-01-16T17:34:07.393', NULL, false, false, '*'
+);
+
+INSERT INTO "WorkQueueCommand" (
+  "Command", "Param1", "refWorkQueueId", "AutoProcessingConditionXPath", "refWorkQueueCommandTypeId", 
+  "Text", "refErrorWorkQueueId", "Param2", "SortOrder", "IsAutoProcessed", "RecordCreatedBy", 
+  "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "IsDefault", "IsAutoProcessedWithErrors", "Roles"
+) VALUES (
+  NULL, NULL, '6c83fb61-f89d-4266-947b-cba270aa5396', NULL, 'ac21499d-1033-4761-b2b4-5a369c776594', 
+  'Button 1', NULL, NULL, 1, false, 'e1cb020f-2b12-47b7-a510-ef8c9cf6ccc1', 'e1cb020f-2b12-47b7-a510-ef8c9cf6ccc1', 
+  'e73ca1db-6b16-4ad9-b6ea-217e6cae80ef', '2025-01-16T17:34:50.300', '2025-01-16T17:37:15.727', false, false, '*'
+);

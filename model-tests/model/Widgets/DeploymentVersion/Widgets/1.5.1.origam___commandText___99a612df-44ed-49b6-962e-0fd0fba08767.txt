@@ -1,0 +1,9 @@
+﻿CREATE TABLE "TagInputBinding" (
+    "refAllDataTypesId" UUID NULL,
+    "refTagInputSourceId" UUID NULL,
+    "RecordCreatedBy" UUID NULL,
+    "RecordUpdatedBy" UUID NULL,
+    "Id" UUID NOT NULL PRIMARY KEY,
+    "RecordCreated" TIMESTAMP NULL,
+    "RecordUpdated" TIMESTAMP NULL
+);
