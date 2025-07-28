@@ -69,7 +69,7 @@ if [[ "$return_code" != 0 ]]; then
   print_file_contents origam-output.txt
   exit 1
 else
-  echo "DB initialized"
+  echo " DB initialized"
 fi
 
 print_title "Run frontend integration tests"
