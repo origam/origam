@@ -104,11 +104,13 @@ switch ($env:CONTAINER_MODE) {
         }
         Initialize-OrigamSettingsConfig
         $env:ASPNETCORE_URLS = 'http://+:8080;https://+:443'
+        Write-Host "Starting Origam.Server"
         & dotnet Origam.Server.dll
     }
     "scheduler" {
         Set-Location /home/origam/Scheduler
         Initialize-OrigamSettingsConfig
+        Write-Host "Starting Origam.Scheduler"
         & dotnet OrigamScheduler.dll
         exit 1
     }
