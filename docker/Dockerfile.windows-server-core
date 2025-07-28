@@ -22,6 +22,8 @@ COPY server/Scheduler Scheduler/
 WORKDIR /home/origam/HTML5
 COPY server/_appsettings.template .
 COPY server/log4net.config .
+WORKDIR /home/origam/Scheduler
+COPY server/log4net.config .
 WORKDIR /home/origam
 COPY server/_OrigamSettings.mssql.template .
 COPY server/windows/Install.ps1 .
