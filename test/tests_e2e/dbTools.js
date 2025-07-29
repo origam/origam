@@ -2,7 +2,7 @@ const util = require('util');
 const execAsync = util.promisify(require('child_process').exec);
 
 // we need to use origam-utils to execute the procedures, access via node mssql client doesn't yield any results
-async function executeProcedure(procedureName: string) {
+async function executeProcedure(procedureName) {
   const script = `dotnet ../origam-utils.dll run-sql-procedure --attempts 5 --delay 5000 --sql-command "${procedureName}"`;
 
   try {
