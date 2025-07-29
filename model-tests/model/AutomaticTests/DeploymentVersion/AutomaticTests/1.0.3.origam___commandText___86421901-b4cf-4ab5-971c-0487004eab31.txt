@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE "restoreWidgetSectionTestMasterForRefreshTest"
+﻿CREATE PROCEDURE "restoreWidgetSectionTestMasterForRefreshTest"()
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -23,5 +23,4 @@ BEGIN
 
     INSERT INTO "WidgetSectionTestDetailDetail" ("refWidgetSectionTestDetailId", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Text1") 
     VALUES ('924f48a9-bc75-4334-80ed-b08b82507952', '69aacf26-300e-477b-b9a6-408324ca1cad', NULL, '9335fa1d-5fc6-4737-8c49-e406c9e6cddd', '2024-01-30T16:22:42.803', NULL, 'subDetail1');
-END;
-$$;
+END $$;

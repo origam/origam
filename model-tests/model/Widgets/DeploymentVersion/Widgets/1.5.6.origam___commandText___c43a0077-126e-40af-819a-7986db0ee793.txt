@@ -10,7 +10,7 @@
   "MaxRetries", "ExponentialRetryBase", "ThrottlingIntervalSeconds", "ThrottlingItemsPerInterval", 
   "EnableThrottling"
 ) VALUES (
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'TEST_BUTTON', 0, NULL, NULL, NULL, 
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'TEST_BUTTON', false, NULL, NULL, NULL, 
   'TestQueue1', NULL, '*', NULL, NULL, false, NULL, 'Buttons testing', 
   'e1cb020f-2b12-47b7-a510-ef8c9cf6ccc1', NULL, '6c83fb61-f89d-4266-947b-cba270aa5396', 
   '2025-01-16T17:12:12.543', NULL, true, NULL, NULL, true, NULL, NULL, 

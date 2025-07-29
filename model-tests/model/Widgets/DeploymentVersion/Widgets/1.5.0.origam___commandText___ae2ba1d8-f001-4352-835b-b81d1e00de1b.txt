@@ -1,4 +1,3 @@
-﻿ALTER TABLE "WidgetSectionTestDetailDetail"
-ADD CONSTRAINT "FK_WidgetSectionTestDetailDetail_refWidgetSectionTestDetailId_WidgetSectionTestDetail"
-FOREIGN KEY ("refWidgetSectionTestDetailId")
-REFERENCES "WidgetSectionTestDetail" ("Id");
+﻿ALTER TABLE "AggregationChildChildData" ADD CONSTRAINT "FK_AggregationChildChildData_refAggregationChildDataId_AggregationChildData"
+	FOREIGN KEY ("refAggregationChildDataId")
+	REFERENCES "AggregationChildData" ("Id");

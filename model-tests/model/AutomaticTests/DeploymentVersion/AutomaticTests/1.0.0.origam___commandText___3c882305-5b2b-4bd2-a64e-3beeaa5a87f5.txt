@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE "restoreWidgetSectionTestMaster"
-AS
+﻿CREATE PROCEDURE "restoreWidgetSectionTestMaster"()
+LANGUAGE plpgsql
+AS $$
 BEGIN
   DELETE FROM "WidgetSectionTestDetailDetail";
   DELETE FROM "WidgetSectionTestDetail";
   DELETE FROM "WidgetSectionTestMaster";
-END;
+END $$;
