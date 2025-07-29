@@ -7,14 +7,14 @@ async function executeProcedure(procedureName) {
 
   try {
     const { stdout, stderr } = await execAsync(script);
-    console.log(stdout);
-    if (stderr) console.error(stderr);
-  } catch (error: any) {
+    if (stdout && stdout.trim()) console.log(stdout);
+    if (stderr && stderr.trim()) console.error(stderr);
+  } catch (error) {
     // Print output if exit code is 1 (error)
     if (error.code === 1) {
       console.error('Script failed with exit code 1');
-      if (error.stdout) console.log(error.stdout);
-      if (error.stderr) console.error(error.stderr);
+      if (error.stdout?.trim()) console.log(error.stdout);
+      if (error.stderr?.trim()) console.error(error.stderr);
     } else {
       // For any other error, rethrow or handle as needed
       throw error;
