@@ -577,6 +577,7 @@ class Program
         } 
         catch(Exception ex )
         {
+            Console.Error.WriteLine(ex);
             log.Error(ex);
             return 1;
         }
@@ -614,6 +615,7 @@ class Program
         } 
         catch(Exception ex )
         {
+            Console.Error.WriteLine(ex);
             log.Error(ex);
             return 1;
         }
@@ -624,7 +626,7 @@ class Program
              string name = !arguments.ProcedureName.StartsWith("\"") && !arguments.ProcedureName.EndsWith("\"")
                  ? "\"" + arguments.ProcedureName + "\"" 
                  : arguments.ProcedureName;
-            sqlCommand = $"CALL {name}";
+            sqlCommand = $"CALL {name}();";
         }
         else if(origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
         {
@@ -652,6 +654,7 @@ class Program
         } 
         catch(Exception ex )
         {
+            Console.Error.WriteLine(ex);
             log.Error(ex);
             return 1;
         }
@@ -688,6 +691,7 @@ class Program
             }
             catch (Exception ex)
             {
+                Console.Error.WriteLine(ex);
                 log.Error("Failure:", ex);
             }
             Thread.Sleep(arguments.Delay);
