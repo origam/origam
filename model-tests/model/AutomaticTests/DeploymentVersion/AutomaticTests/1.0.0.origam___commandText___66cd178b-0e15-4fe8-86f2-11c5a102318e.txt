@@ -20,7 +20,7 @@ INSERT INTO "AllDataTypes" (
   "Text2", "refTagInputSourceId"
 )
 VALUES (
-  'txt1628', '2025-11-26T00:00:00.000', 1618, 123456.789, true, 1618,
+  'txt1628', '2025-11-26T00:00:00.000', 1618, 123456.78, true, 1618,
   'abce2f49-6693-4525-87a4-65d8687413fb', NULL, '65c11391-ab95-4f3a-83e2-00373215efcc',
   '2025-11-26T00:00:00.000', NULL, 'txt1638', NULL
 );
