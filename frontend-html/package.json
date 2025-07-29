@@ -16,7 +16,7 @@
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
     "@messageformat/core": "^3.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/classnames": "^2.3.4",
