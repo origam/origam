@@ -42,13 +42,13 @@ COPY server/linux/updateTimezone.sh \
 WORKDIR /home/origam
 RUN mkdir Architect
 COPY --chown=origam:origam architect/bin /home/origam/Architect/
-COPY --chown=origam:origam architect/bin architect/appsettings.json \
+COPY --chown=origam:origam architect/bin architect/linux/appsettings.json \
 server/_OrigamSettings.mssql.template \
 server/_OrigamSettings.postgres.template \
 architect/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 architect/linux/entrypoint.sh \
-server/log4net.config \
+server/log4net.server.config \
 /home/origam/Architect/
 WORKDIR /home/origam/Architect
 RUN mkdir logs \

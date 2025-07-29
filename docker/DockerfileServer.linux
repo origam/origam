@@ -60,7 +60,7 @@ server/_OrigamSettings.postgres.template \
 server/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 server/linux/entrypoint.sh \
-server/log4net.config \
+server/log4net.server.config \
 server/linux/updateEnvironment.sh \
 server/linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
