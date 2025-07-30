@@ -89,7 +89,16 @@ print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
 echo
 cd /home/origam/HTML5_TESTS
-cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+if [[ ${DatabaseType} == mssql ]]; then
+  cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+fi
+if [[ ${DatabaseType} == postgresql ]]; then
+  cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
+fi
+if [[ ! -f "OrigamSettings.config" ]]; then
+  echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
+  exit 1
+fi
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
 sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config

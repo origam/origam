@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<OrigamSettings>
+  <xmlSerializerSection type="Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <ArrayOfOrigamSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <OrigamSettings>
+        <SchemaConnectionString />
+        <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
+        <DataConnectionString>Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
+        <SchemaDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</SchemaDataService>
+        <DataDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</DataDataService>
+        <SecurityDomain />
+        <ReportConnectionString />
+        <PrintItServiceUrl />
+        <SQLReportServiceUrl />
+        <SQLReportServiceAccount />
+        <SQLReportServicePassword />
+        <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
+        <GUIExcelExportFormat>XLS</GUIExcelExportFormat>
+        <DefaultSchemaExtensionId>f17329d6-3143-420a-a2e6-30e431eea51d</DefaultSchemaExtensionId>
+        <ExtraSchemaExtensionId>00000000-0000-0000-0000-000000000000</ExtraSchemaExtensionId>
+        <TitleText>LinearWorkQueueProcessor</TitleText>
+        <Slogan />
+        <Name>LinearWorkQueueProcessor</Name>
+        <LocalizationFolder />
+        <TranslationBuilderLanguages />
+        <HelpUrl>https://www.merriam-webster.com/dictionary/help</HelpUrl>
+        <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
+        <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
+        <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
+        <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
+        <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
+        <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
+		<AutoProcessWorkQueues>true</AutoProcessWorkQueues>
+      </OrigamSettings>
+	  <OrigamSettings>
+        <SchemaConnectionString />
+        <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
+        <DataConnectionString>Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
+        <SchemaDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</SchemaDataService>
+        <DataDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</DataDataService>
+        <SecurityDomain />
+        <ReportConnectionString />
+        <PrintItServiceUrl />
+        <SQLReportServiceUrl />
+        <SQLReportServiceAccount />
+        <SQLReportServicePassword />
+        <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
+        <GUIExcelExportFormat>XLS</GUIExcelExportFormat>
+        <DefaultSchemaExtensionId>f17329d6-3143-420a-a2e6-30e431eea51d</DefaultSchemaExtensionId>
+        <ExtraSchemaExtensionId>00000000-0000-0000-0000-000000000000</ExtraSchemaExtensionId>
+        <TitleText>RoundRobinWorkQueueProcessor</TitleText>
+        <Slogan />
+        <Name>RoundRobinWorkQueueProcessor</Name>
+        <LocalizationFolder />
+        <TranslationBuilderLanguages />
+        <HelpUrl>https://www.merriam-webster.com/dictionary/help</HelpUrl>
+        <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
+        <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
+        <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
+        <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
+        <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
+        <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
+        <WorkQueueProcessingMode>RoundRobin</WorkQueueProcessingMode>
+        <AutoProcessWorkQueues>true</AutoProcessWorkQueues>
+      </OrigamSettings>
+    </ArrayOfOrigamSettings>
+  </xmlSerializerSection>
+</OrigamSettings>
