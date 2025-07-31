@@ -37,9 +37,11 @@ using System.Threading;
 using BrockAllen.IdentityReboot;
 using MoreLinq.Extensions;
 using Origam.Extensions;
+using Origam.Utils.Sql;
 
 namespace Origam.Utils;
-class Program
+
+public class Program
 {
     private static QueueProcessor queueProcessor;
     private delegate bool EventHandler(CtrlType sig);
@@ -246,15 +248,15 @@ class Program
             }
             case GetRootVersionOptions options:
             {
-                return new SqlRunner(log).GetRootVersion(options);
+                return SqlRunner.Create(log).GetRootVersion(options);
             }
             case RunSqlCommandOptions options:
             {
-                return new SqlRunner(log).RunSqlCommand(options);
+                return SqlRunner.Create(log).RunSqlCommand(options);
             }
             case RunSqlProcedureCommandOptions options:
             {
-                return new SqlRunner(log).RunSqlProcedure(options);
+                return SqlRunner.Create(log).RunSqlProcedure(options);
             }
             case NormalizeFileFormatOptions _:
             {
