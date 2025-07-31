@@ -11,13 +11,6 @@ run_silently() {
     fi
 }
 
-# ENV variable default values specific to linux
-# OrigamSettings.config
-if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
-  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
-fi
-
-
 cd /home/origam
 PROJECT_DATA_DIRECTORY="/home/origam/projectData"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then

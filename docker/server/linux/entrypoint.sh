@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# ENV variable default values specific to linux
+# OrigamSettings.config
+if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
+  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
+fi
+
 sudo /root/updateTimezone.sh
 cd /home/origam/Setup
 ./updateEnvironment.sh
