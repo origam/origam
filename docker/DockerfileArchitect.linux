@@ -50,6 +50,7 @@ server/linux/fill_origam_settings_config.sh \
 architect/linux/entrypoint.sh \
 server/log4net.server.config \
 /home/origam/Architect/
+RUN mv /home/origam/Architect/log4net.server.config /home/origam/Architect/log4net.config
 WORKDIR /home/origam/Architect
 RUN mkdir logs \
 && chmod +x configureServer.sh \

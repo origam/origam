@@ -198,5 +198,3 @@ export gitConfSshKey
 export gitConfSshDomain
 export OrigamSettings_DbUsername
 export OrigamSettings_DbPassword
-./updateEnvironment.sh
-sudo ./updateEnvironmentRoot.sh
