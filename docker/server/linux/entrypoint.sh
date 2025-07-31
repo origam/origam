@@ -5,7 +5,7 @@ cd /home/origam/Setup
 ./updateEnvironment.sh
 sudo ./updateEnvironmentRoot.sh
 
-if [ "$CONTAINER_MODE" = 'server' ]; then
+if [ -z "$CONTAINER_MODE" ] || [ "$CONTAINER_MODE" = 'server' ]; then
   cd /etc/nginx/ssl
   sudo /etc/nginx/ssl/createSslCertificate.sh
   sudo /etc/init.d/nginx start
