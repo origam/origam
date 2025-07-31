@@ -287,13 +287,13 @@ jobs:
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFilePostgres.env -f "docker-compose-postgres.yml" --profile test up --abort-on-container-exit
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit
 
       - name: Clean up
         if: always()
         run: |
           cd test
-          docker compose --env-file envFilePostgres.env -f "docker-compose-postgres.yml" --profile test down
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test down
 
       - name: Produce frontend integration test report
         uses: dorny/test-reporter@v1
