@@ -160,7 +160,7 @@ jobs:
 
   integration-tests-mssql:
     needs: [ build-frontend,build-server ]
-    name: integration-tests
+    name: integration-tests-mssql
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -242,7 +242,7 @@ jobs:
 
   integration-tests-postgres:
     needs: [ build-frontend,build-server ]
-    name: integration-tests
+    name: integration-tests-pgsql
     runs-on: ubuntu-latest
     permissions:
       id-token: write
