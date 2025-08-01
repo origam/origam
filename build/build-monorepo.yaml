@@ -596,9 +596,17 @@ jobs:
          downloadType: 'single'
          artifactName: 'origam'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-scheduler artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-scheduler'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - bash: |
         cp -R ../frontend-html server/HTML5-SOURCE
         mv origam server/HTML5
+        mv origam-scheduler server/Scheduler
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2
