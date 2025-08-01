@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-windowsservercore-ltsc2022
 
 USER ContainerAdministrator
 
-ENV CONTAINER_MODE=server
+ENV ContainerMode=server
 
 WORKDIR /home/origam
 

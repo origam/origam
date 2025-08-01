@@ -54,8 +54,6 @@ fill_origam_settings_config() {
         else
             xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "${node_name}" -v "${value}" "$config_file"
         fi
-
-        echo "---------------------------------------"
     done
 
     echo "${config_file} file updated successfully."
