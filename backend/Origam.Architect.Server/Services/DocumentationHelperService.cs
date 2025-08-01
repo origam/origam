@@ -25,7 +25,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class DocumentationHelperService(IDocumentationService documentationService)
+public class DocumentationHelperService()
 {
     public DocumentationEditorData GetData(DocumentationComplete documentationComplete, string label)
     {
