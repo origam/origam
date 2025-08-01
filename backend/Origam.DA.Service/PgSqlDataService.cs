@@ -65,6 +65,46 @@ public class PgSqlDataService : AbstractSqlDataService
 	{
 		return new NpgsqlConnection(connectionString);
 	}
+    
+    protected override IDbCommand ExecuteNonQuery(string name, QueryParameterCollection parameters, IDbConnection connection,
+        IDbTransaction transaction, int timeOut)
+    {
+        string procedureName = !name.StartsWith("\"") && !name.EndsWith("\"") 
+            ?  "\"" + name + "\""
+            : name;
+        
+        var parameterPlaceholders = new List<string>();
+        foreach (var parameter in parameters)
+        {
+            parameterPlaceholders.Add("@" + parameter.Name);
+        }
+
+        string callText = $"CALL {procedureName}({string.Join(", ", parameterPlaceholders)});";
+
+        IDbCommand command = DbDataAdapterFactory.GetCommand(callText, connection);
+        command.Transaction = transaction;
+        command.CommandTimeout = timeOut;
+        
+        foreach (QueryParameter parameter in parameters)
+        {
+            if (parameter.Value != null)
+            {
+                IDbDataParameter dataParameter = DbDataAdapterFactory
+                    .GetParameter(parameter.Name, parameter.Value.GetType());
+                dataParameter.ParameterName = "@" + parameter.Name;
+                dataParameter.Value = parameter.Value;
+                command.Parameters.Add(dataParameter);
+            }
+        }
+        
+        command.CommandType = CommandType.Text;
+
+        command.Prepare();
+        command.ExecuteNonQuery();
+
+        return command;
+    }
+
     public override string BuildConnectionString(string hostName,int port, string databaseName, 
 		string userName, string password, bool integratedAuthentication, bool pooling)
     {

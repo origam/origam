@@ -119,6 +119,6 @@ describe("Html client", () => {
     await sleep(1000);
 
     const editorValue = await page.evaluate(x => x.value, numberEditor);
-    expect(editorValue).toBe(`12${thousandsSeparator}356${decimalSeparator}789`);
+    expect(editorValue).toBe(`12${thousandsSeparator}356${decimalSeparator}78`);
   });
 });

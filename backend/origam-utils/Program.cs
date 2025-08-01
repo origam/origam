@@ -37,9 +37,11 @@ using System.Threading;
 using BrockAllen.IdentityReboot;
 using MoreLinq.Extensions;
 using Origam.Extensions;
+using Origam.Utils.Sql;
 
 namespace Origam.Utils;
-class Program
+
+public class Program
 {
     private static QueueProcessor queueProcessor;
     private delegate bool EventHandler(CtrlType sig);
@@ -118,8 +120,18 @@ class Program
     {
     }
     
-    [Verb("test-db", HelpText = "Try to connect to database and run a sql command.")]
-    class DbTestOptions
+    [Verb("get-root-version", HelpText = "Try get Root package version to test if the model has been initialized in the database. Return 0 if successful.")]
+    public class GetRootVersionOptions
+    {
+        [Option('a', "attempts", Required = true,
+            HelpText = "Number of test attempts.")]
+        public int Attempts { get; set; }
+        [Option('d', "delay", Required = true,
+            HelpText = "Delay between attempts in milliseconds.")]
+        public int Delay { get; set; }
+    } 
+    [Verb("run-sql", HelpText = "Try to connect to database and run a sql command. Return 0 if successful.")]
+    public class RunSqlCommandOptions
     {
         [Option('a', "attempts", Required = true,
             HelpText = "Number of test attempts.")]
@@ -130,6 +142,19 @@ class Program
         [Option('c', "sql-command", Required = true,
             HelpText = "SQL command to run.")]
         public string SqlCommand { get; set; }
+    } 
+    [Verb("run-sql-procedure", HelpText = "Try to connect to database and run a sql procedure. Return 0 if successful.")]
+    public class RunSqlProcedureCommandOptions
+    {
+        [Option('a', "attempts", Required = true,
+            HelpText = "Number of test attempts.")]
+        public int Attempts { get; set; }
+        [Option('d', "delay", Required = true,
+            HelpText = "Delay between attempts in milliseconds.")]
+        public int Delay { get; set; }
+        [Option('c', "sql-command", Required = true,
+            HelpText = "SQL procedure to run.")]
+        public string ProcedureName { get; set; }
     }
     [Verb("process-doc-generator",
         HelpText = "Generate Menu into output with xslt template.")]
@@ -221,9 +246,17 @@ class Program
                 EntryAssembly();
                 return CompareSchema(options);
             }
-            case DbTestOptions options:
+            case GetRootVersionOptions options:
             {
-                return TestDatabase(options);
+                return SqlRunner.Create(log).GetRootVersion(options);
+            }
+            case RunSqlCommandOptions options:
+            {
+                return SqlRunner.Create(log).RunSqlCommand(options);
+            }
+            case RunSqlProcedureCommandOptions options:
+            {
+                return SqlRunner.Create(log).RunSqlProcedure(options);
             }
             case NormalizeFileFormatOptions _:
             {
@@ -244,10 +277,12 @@ class Program
         {
             typeof(ProcessCheckRulesOptions),
             typeof(ProcessDocGeneratorOptions),
-            typeof(GeneratePassHashOptions),
-            typeof(DbTestOptions)
+            typeof(GeneratePassHashOptions)
         #if !NETCORE2_1
             ,
+            typeof(GetRootVersionOptions),
+            typeof(RunSqlCommandOptions),
+            typeof(RunSqlProcedureCommandOptions),
             typeof(ProcessQueueOptions),
             typeof(RunUpdateScriptsOptions),
             typeof(RestartServerOptions),
@@ -533,52 +568,5 @@ class Program
                         result?.ItemName} {result?.Remark}");
             }
         }
-    }
-    private static int TestDatabase(DbTestOptions arguments)
-    {
-        OrigamSettingsCollection configurations;
-        try
-        {
-            configurations = ConfigurationManager.GetAllConfigurations();
-            if (configurations.Count != 1)
-            {
-                return SetTestDatabaseReturn(false);
-            }
-        } catch
-        {
-            return SetTestDatabaseReturn(false);
-        }
-        var origamSettings = configurations[0];
-        var connString = origamSettings.DataConnectionString;
-        var result = false;
-        for (var i = 0; i < arguments.Attempts; i++)
-        {
-            try
-            {
-                using (var connection = new SqlConnection(connString))
-                {
-                    var query = arguments.SqlCommand;
-                    var command = new SqlCommand(query, connection);
-                    connection.Open();
-                    var info = command.ExecuteScalar().ToString();
-                    if (info != null)
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Info("Failure:", ex);
-            }
-            Thread.Sleep(arguments.Delay);
-        }
-        return SetTestDatabaseReturn(result);
-    }
-    private static int SetTestDatabaseReturn(bool returnValue)
-    {
-        Console.Write(returnValue);
-        return Convert.ToInt32(returnValue);
     }
 }

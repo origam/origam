@@ -9,3 +9,7 @@ RuntimeModelConfiguration.json
 /docker/runWin.cmd
 /docker/HTML5/
 /docker/architect/bin/
+/test/HTML5
+/test/output
+/test/model
+/test/tests_e2e/node_modules

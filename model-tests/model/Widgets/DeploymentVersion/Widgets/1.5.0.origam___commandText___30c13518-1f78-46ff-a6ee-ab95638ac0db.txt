@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WidgetSectionTestDetailDetail" (
+"refWidgetSectionTestDetailId" UUID NOT NULL,
+"RecordCreatedBy" UUID NULL,
+"RecordUpdatedBy" UUID NULL,
+"Id" UUID NOT NULL PRIMARY KEY,
+"RecordCreated" TIMESTAMP NULL,
+"RecordUpdated" TIMESTAMP NULL
+);
+
+CREATE INDEX "ix_WidgetSectionTestDetail" ON "WidgetSectionTestDetailDetail" ("refWidgetSectionTestDetailId" ASC);

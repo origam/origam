@@ -1,0 +1,10 @@
+﻿CREATE TABLE "UserAccount" (
+	"ValidTo" timestamp NULL,
+	"refUserNameId" uuid NULL,
+	"ValidFrom" timestamp NOT NULL,
+	"RecordCreated" timestamp NULL,
+	"RecordUpdatedBy" uuid NULL,
+	"Id" uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" uuid NULL,
+	"RecordUpdated" timestamp NULL
+);

@@ -1,0 +1,26 @@
+﻿CREATE PROCEDURE "restoreWidgetSectionTestMasterForRefreshTest"()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM "WidgetSectionTestDetailDetail";
+    DELETE FROM "WidgetSectionTestDetail";
+    DELETE FROM "WidgetSectionTestMaster";
+
+    INSERT INTO "WidgetSectionTestMaster" ("Text1", "Text2", "Memo1", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+    VALUES ('text21', 'text22', NULL, '69aacf26-300e-477b-b9a6-408324ca1cad', '69aacf26-300e-477b-b9a6-408324ca1cad', 'c947a2f0-d287-4361-baeb-235150993b05', '2024-01-30T16:21:25.590', '2024-01-30T16:22:59.033');
+
+    INSERT INTO "WidgetSectionTestMaster" ("Text1", "Text2", "Memo1", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+    VALUES ('text11', 'text12', NULL, '69aacf26-300e-477b-b9a6-408324ca1cad', NULL, '7f223028-0214-4b6a-90e8-498d6ad2ad9e', '2024-01-30T16:22:10.327', NULL);
+
+    INSERT INTO "WidgetSectionTestDetail" ("refWidgetSectionTestMasterId", "Text1", "Text2", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+    VALUES ('7f223028-0214-4b6a-90e8-498d6ad2ad9e', 'detail1', NULL, '69aacf26-300e-477b-b9a6-408324ca1cad', NULL, '924f48a9-bc75-4334-80ed-b08b82507952', '2024-01-30T16:22:36.987', NULL);
+
+    INSERT INTO "WidgetSectionTestDetail" ("refWidgetSectionTestMasterId", "Text1", "Text2", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+    VALUES ('c947a2f0-d287-4361-baeb-235150993b05', 'detail2', NULL, '69aacf26-300e-477b-b9a6-408324ca1cad', '69aacf26-300e-477b-b9a6-408324ca1cad', '516cfe82-cf2b-43b5-9519-f9fc1a0e7044', '2024-01-30T16:21:41.770', '2024-01-30T16:23:10.083');
+
+    INSERT INTO "WidgetSectionTestDetailDetail" ("refWidgetSectionTestDetailId", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Text1") 
+    VALUES ('516cfe82-cf2b-43b5-9519-f9fc1a0e7044', '69aacf26-300e-477b-b9a6-408324ca1cad', '69aacf26-300e-477b-b9a6-408324ca1cad', '37479aed-fab6-4b0e-98db-5b714d31b5ec', '2024-01-30T16:21:55.960', '2024-01-30T16:23:18.283', 'subDetail2');
+
+    INSERT INTO "WidgetSectionTestDetailDetail" ("refWidgetSectionTestDetailId", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Text1") 
+    VALUES ('924f48a9-bc75-4334-80ed-b08b82507952', '69aacf26-300e-477b-b9a6-408324ca1cad', NULL, '9335fa1d-5fc6-4737-8c49-e406c9e6cddd', '2024-01-30T16:22:42.803', NULL, 'subDetail1');
+END $$;

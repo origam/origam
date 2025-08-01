@@ -19,5 +19,13 @@
       asi:name="00010_Insert_WQ_WQCommands"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:1.5.6.origam___commandText___c43a0077-126e-40af-819a-7986db0ee793.txt"
+      x:id="c43a0077-126e-40af-819a-7986db0ee793"
+      asi:name="00020_PG_Insert_WQ_WQCommands"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>

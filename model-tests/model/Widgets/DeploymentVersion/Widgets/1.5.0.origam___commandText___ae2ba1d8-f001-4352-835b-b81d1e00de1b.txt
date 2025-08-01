@@ -1,0 +1,3 @@
+﻿ALTER TABLE "AggregationChildChildData" ADD CONSTRAINT "FK_AggregationChildChildData_refAggregationChildDataId_AggregationChildData"
+	FOREIGN KEY ("refAggregationChildDataId")
+	REFERENCES "AggregationChildData" ("Id");

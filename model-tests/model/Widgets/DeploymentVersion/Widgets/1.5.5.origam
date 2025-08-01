@@ -21,11 +21,27 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___4ff29031-3272-497a-b901-e834e307ee46.txt"
+      x:id="4ff29031-3272-497a-b901-e834e307ee46"
+      asi:name="00060_PG_Database_Entity_UserName"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="40"
       scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___5b525755-ab93-4840-bde6-d3170b55ac03.txt"
       x:id="5b525755-ab93-4840-bde6-d3170b55ac03"
       asi:name="00040_InsertInto_UserName"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___85bf75c4-3be7-46d7-8370-a28a0caa3978.txt"
+      x:id="85bf75c4-3be7-46d7-8370-a28a0caa3978"
+      asi:name="00050_PG_Database_Entity_UserAccount"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
@@ -42,6 +58,22 @@
       x:id="be62d6c4-6961-4476-b8e7-e22873996e2a"
       asi:name="00020_Database_Entity_UserName"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___d86a53f8-198b-427a-8898-0519091c59d4.txt"
+      x:id="d86a53f8-198b-427a-8898-0519091c59d4"
+      asi:name="00080_PG_InsertInto_UserName"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.5.5.origam___commandText___ddb54858-ea53-42f8-829b-c54c5f1cf533.txt"
+      x:id="ddb54858-ea53-42f8-829b-c54c5f1cf533"
+      asi:name="00070_PG_Database_Entity_UserAccount"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>

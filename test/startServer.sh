@@ -4,8 +4,8 @@ DIR="data"
 
 # generate certificate every start.
 	openssl rand -base64 10 >certpass
-	openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
-	openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx
+	openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer  > /dev/null 2>&1
+	openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx  > /dev/null 2>&1
 	cp _appsettings.template appsettings.prepare
     sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
 
@@ -29,7 +29,7 @@ if [[ -n ${OrigamSettings_SetOnStart} && ${OrigamSettings_SetOnStart} == true ]]
 fi
 if [[ ! -f "OrigamSettings.config" ]]; then
 	if [[ -z ${OrigamSettings_SchemaExtensionGuid} || -z ${OrigamSettings_DbHost}  || -z ${OrigamSettings_DbPort}  || -z ${OrigamSettings_DbUsername}  || -z ${OrigamSettings_DbPassword}  || -z ${DatabaseName}  ]];then
-		echo "OrigamSettings.config not exists!!"
+		echo "OrigamSettings.config does not exist!!"
 		echo "one or more variables are undefined"
 		echo "Please check if environment variables are set properly."
 		echo "OrigamSettings_SchemaExtensionGuid, OrigamSettings_DbHost, OrigamSettings_DbPort, OrigamSettings_DbUsername, OrigamSettings_DbPassword, DatabaseName"
