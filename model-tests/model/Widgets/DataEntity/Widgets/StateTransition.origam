@@ -13,6 +13,7 @@
     tmi:databaseObjectType="Table"
     tmi:generateDeploymentScript="true"
     x:id="0ebe03b0-e53c-4415-b7b4-c4f587b30838"
+    ade:label="State Transition"
     tmi:mappedObjectName="StateTransition"
     asi:name="StateTransition"
     ade:readOnly="false">

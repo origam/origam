@@ -11,8 +11,8 @@
 
 	<xsl:template match="StateTransition">
 		<xsl:copy>
-			<xsl:copy-of select="@*[name() != 'refWorkflowStateId']"/>
-			<xsl:attribute name="refWorkflowStateId"><xsl:value-of select="'82792f50-5232-4096-a953-4ccd66711352'"/></xsl:attribute>
+			<xsl:copy-of select="@*[name() != 'refWorkflowStatesId']"/>
+			<xsl:attribute name="refWorkflowStatesId"><xsl:value-of select="'82792f50-5232-4096-a953-4ccd66711352'"/></xsl:attribute>
 			<xsl:copy-of select="*"/>
 		</xsl:copy>
 	</xsl:template>

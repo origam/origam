@@ -17,9 +17,9 @@
       sme:action="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/170011ca-7bd6-435d-b538-0f93e1f0d906"
       x:id="53b75c5d-ba15-4086-92a2-a564a0412dc3"
       asi:name="OnEnd"
-      sme:newState="Widgets/WorkflowStateMachine/Widgets/StateTransition_refWorkflowStatesId.origam#StateTransition_refWorkflowStatesId/Error/b137d4bb-e88e-4d8a-a75f-99fad333e5d0"
+      sme:newState="Widgets/WorkflowStateMachine/Widgets/StateTransition_refWorkflowStatesId.origam#StateTransition_refWorkflowStatesId/End/4a45f632-a23b-4c9a-a447-6ed2b1a122f9"
       sme:roles="*"
-      sme:type="StateTransition" />
+      sme:type="StateEntry" />
     <sms:StateMachineState
       asi:abstract="false"
       x:id="4a45f632-a23b-4c9a-a447-6ed2b1a122f9"
