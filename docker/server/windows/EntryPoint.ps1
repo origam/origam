@@ -1,5 +1,5 @@
 . "./Utils.ps1"
-Write-Host "Container started with CONTAINER_MODE=$env:CONTAINER_MODE"
+Write-Host "Container started with ContainerMode=$env:ContainerMode"
 $ErrorActionPreference = 'Stop'
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 $projectDataPath = "C:\home\origam\projectData"
@@ -36,7 +36,7 @@ else
 {
     Write-Host "Git pull on start is disabled. Skipping repository clone."
 }
-switch ($env:CONTAINER_MODE) {
+switch ($env:ContainerMode) {
     "server" {
         Set-Location /home/origam/HTML5
         # Generate the HTTPS SSL certificate
@@ -115,7 +115,7 @@ switch ($env:CONTAINER_MODE) {
         exit 1
     }
     default {
-        Write-Host "Unknown CONTAINER_MODE: $env:CONTAINER_MODE"
+        Write-Host "Unknown ContainerMode: $env:ContainerMode"
         exit 1
     }
 }

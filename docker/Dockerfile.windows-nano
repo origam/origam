@@ -11,7 +11,7 @@ COPY --from=powershell ${src} ${target}
 
 USER ContainerAdministrator
 
-ENV CONTAINER_MODE=server
+ENV ContainerMode=server
 
 # Set PowerShell path
 RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
