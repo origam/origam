@@ -1265,7 +1265,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	protected virtual IDbCommand ExecuteNonQuery(string name, QueryParameterCollection parameters, IDbConnection connection,
 		IDbTransaction transaction, int timeOut)
 	{
-		 IDbCommand command = DbDataAdapterFactory.GetCommand(
+		IDbCommand command = DbDataAdapterFactory.GetCommand(
 			name, connection);
 		command.Transaction = transaction;
 		command.CommandTimeout = timeOut;
