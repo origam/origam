@@ -1171,26 +1171,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				// no output data structure - no results - execute non-query
 				if(result == null)
 				{
-					command = DbDataAdapterFactory.GetCommand(
-						name, connection);
-					command.Transaction = transaction;
-					command.CommandTimeout 
-						= settings.DataServiceExecuteProcedureTimeout;
-					foreach(QueryParameter parameter in query.Parameters)
-					{
-						if(parameter.Value != null)
-						{
-							IDbDataParameter dataParameter 
-								= DbDataAdapterFactory
-									.GetParameter(parameter.Name, 
-										parameter.Value.GetType());
-							dataParameter.Value = parameter.Value;
-							command.Parameters.Add(dataParameter);
-						}
-					}
-					command.CommandType = CommandType.StoredProcedure;
-					command.Prepare();
-					command.ExecuteNonQuery();
+					command = ExecuteNonQuery(
+						name: name, 
+						parameters: query.Parameters, 
+						connection: connection, 
+						transaction: transaction, 
+						timeOut: settings.DataServiceExecuteProcedureTimeout);
 				}
 				// results present - we take the first entity of the output
 				// data structure and fill the results into it
@@ -1275,6 +1261,32 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		}
 		return result;
 	}
+
+	protected virtual IDbCommand ExecuteNonQuery(string name, QueryParameterCollection parameters, IDbConnection connection,
+		IDbTransaction transaction, int timeOut)
+	{
+		IDbCommand command = DbDataAdapterFactory.GetCommand(
+			name, connection);
+		command.Transaction = transaction;
+		command.CommandTimeout = timeOut;
+		foreach(QueryParameter parameter in parameters)
+		{
+			if(parameter.Value != null)
+			{
+				IDbDataParameter dataParameter 
+					= DbDataAdapterFactory
+						.GetParameter(parameter.Name, 
+							parameter.Value.GetType());
+				dataParameter.Value = parameter.Value;
+				command.Parameters.Add(dataParameter);
+			}
+		}
+		command.CommandType = CommandType.StoredProcedure;
+		command.Prepare();
+		command.ExecuteNonQuery();
+		return command;
+	}
+
 	public override int UpdateField(
 		Guid entityId, 
 		Guid fieldId, 

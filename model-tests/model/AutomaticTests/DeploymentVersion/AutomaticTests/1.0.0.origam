@@ -13,6 +13,22 @@
     dv:version="1.0.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___0244b979-7a6e-4b49-a6f6-342cdd2f2723.txt"
+      x:id="0244b979-7a6e-4b49-a6f6-342cdd2f2723"
+      asi:name="00060_PG_restoreAllDataTypes.sql"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___10863ba9-7703-4e0e-b70c-a31f455d7b18.txt"
+      x:id="10863ba9-7703-4e0e-b70c-a31f455d7b18"
+      asi:name="00080_PG_clearScreenConfiguration"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___124def9b-9200-419c-b96f-356fedaa05c3.txt"
       x:id="124def9b-9200-419c-b96f-356fedaa05c3"
@@ -26,6 +42,30 @@
       x:id="34639502-577a-4251-9c3c-6a59d3bbeec9"
       asi:name="00040_Create_Test_User"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___3c882305-5b2b-4bd2-a64e-3beeaa5a87f5.txt"
+      x:id="3c882305-5b2b-4bd2-a64e-3beeaa5a87f5"
+      asi:name="00070_PG_restoreWidgetSectionTestMaster.sql"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___66cd178b-0e15-4fe8-86f2-11c5a102318e.txt"
+      x:id="66cd178b-0e15-4fe8-86f2-11c5a102318e"
+      asi:name="00100_PG_putNumericTestDataToAllDataTypes"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___7a90ca35-43c5-4161-b08a-7e85b888e396.txt"
+      x:id="7a90ca35-43c5-4161-b08a-7e85b888e396"
+      asi:name="00090_PG_Create_Test_User"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"

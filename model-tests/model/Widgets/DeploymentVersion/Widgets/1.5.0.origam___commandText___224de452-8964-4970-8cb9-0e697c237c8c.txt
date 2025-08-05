@@ -1,0 +1,10 @@
+﻿CREATE TABLE "AggregationChildChildData" (
+"refAggregationChildDataId" UUID NOT NULL,
+"Price" MONEY NOT NULL,
+"RecordCreatedBy" UUID NULL,
+"RecordUpdatedBy" UUID NULL,
+"Id" UUID NOT NULL PRIMARY KEY,
+"RecordCreated" TIMESTAMP NULL,
+"RecordUpdated" TIMESTAMP NULL
+);
+CREATE INDEX "ix_AggregationChildData" ON "AggregationChildChildData" ("refAggregationChildDataId" ASC);

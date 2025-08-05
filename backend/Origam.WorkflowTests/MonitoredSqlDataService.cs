@@ -26,7 +26,42 @@ using Origam.DA.Service;
 
 namespace Origam.WorkflowTests;
 
-public class MonitoredMsSqlDataService : MsSqlDataService
+public class MonitoredMsSqlDataService : MsSqlDataService, ITraceService
+{
+    private readonly SqlDataServiceMonitor monitor = new ();
+    public List<Operation> Operations => monitor.Operations;
+
+    public override int UpdateData(
+        DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
+        string transactionId, bool forceBulkInsert)
+    {
+        monitor.TraceUpdateData(dataset);
+        return base.UpdateData(query, userProfile, dataset,
+            transactionId, forceBulkInsert);
+    }
+}
+
+public class MonitoredPgSqlDataService : PgSqlDataService, ITraceService
+{
+    private readonly SqlDataServiceMonitor monitor = new ();
+    public List<Operation> Operations => monitor.Operations;
+
+    public override int UpdateData(
+        DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
+        string transactionId, bool forceBulkInsert)
+    {
+        monitor.TraceUpdateData(dataset);
+        return base.UpdateData(query, userProfile, dataset,
+            transactionId, forceBulkInsert);
+    }
+}
+
+interface ITraceService
+{
+    public List<Operation> Operations { get; }
+}
+
+public class SqlDataServiceMonitor
 {
     public List<Operation> Operations { get; } = new();
 
@@ -35,9 +70,7 @@ public class MonitoredMsSqlDataService : MsSqlDataService
         Operations.Add(operation);
     }
 
-    public override int UpdateData(
-        DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
-        string transactionId, bool forceBulkInsert)
+    public void TraceUpdateData(DataSet dataset)
     {
         var deletesWorkQueueEntry = dataset 
             is { Tables: [{ TableName: "WorkQueueEntry", 
@@ -57,8 +90,6 @@ public class MonitoredMsSqlDataService : MsSqlDataService
                         { "executedAt", DateTime.Now }
                     }));
         }
-        return base.UpdateData(query, userProfile, dataset,
-            transactionId, forceBulkInsert);
     }
 }
 

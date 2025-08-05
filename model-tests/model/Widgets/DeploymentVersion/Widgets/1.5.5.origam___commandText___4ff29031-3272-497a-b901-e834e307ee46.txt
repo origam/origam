@@ -1,0 +1,9 @@
+﻿CREATE TABLE "UserName" (
+	"FirstName" VARCHAR(50),
+	"Surname" VARCHAR(50),
+	"RecordCreated" TIMESTAMP,
+	"RecordUpdatedBy" UUID,
+	"Id" UUID NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" UUID,
+	"RecordUpdated" TIMESTAMP
+);

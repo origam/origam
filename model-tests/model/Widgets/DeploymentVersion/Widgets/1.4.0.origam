@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.2&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.2.1&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;bb8c67fb-44c1-4b41-8fce-4d50cd5a759d, 1.0.0"
     x:id="9b0df70f-15ba-4d3e-9a8d-15eb3835a213"
     asi:name="1.4.0"
     dv:version="1.4.0">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___13a49ba2-2c30-41fe-a01a-826e60bc0e9d.txt"
+      x:id="13a49ba2-2c30-41fe-a01a-826e60bc0e9d"
+      asi:name="00040_AddRole_FRM_AggregationParentFunction"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___27c09543-616e-40f1-b031-6e3628a7b043.txt"
+      x:id="27c09543-616e-40f1-b031-6e3628a7b043"
+      asi:name="00080_PG_AddRole_FRM_AggregationParentFunction"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___4eb12eb7-2220-4966-82bc-57892a3373d8.txt"
+      x:id="4eb12eb7-2220-4966-82bc-57892a3373d8"
+      asi:name="00070_PG_Database_Entity_AggregationChildData"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="10"
@@ -16,11 +45,11 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___fbb05adc-e932-4da8-829d-1e667991d69e.txt"
-      x:id="fbb05adc-e932-4da8-829d-1e667991d69e"
-      asi:name="00020_Database_Entity_AggregationChildData"
-      scusa:platform="MsSql"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___99adb3b8-75cf-4756-93f9-4ccb15188f96.txt"
+      x:id="99adb3b8-75cf-4756-93f9-4ccb15188f96"
+      asi:name="00060_PG_Database_Entity_AggregationChildData"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
@@ -32,10 +61,18 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___13a49ba2-2c30-41fe-a01a-826e60bc0e9d.txt"
-      x:id="13a49ba2-2c30-41fe-a01a-826e60bc0e9d"
-      asi:name="00040_AddRole_FRM_AggregationParentFunction"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___dc3531b0-4ada-4a87-8596-37e82d9dc1da.txt"
+      x:id="dc3531b0-4ada-4a87-8596-37e82d9dc1da"
+      asi:name="00050_PG_Database_Entity_AggregationParentFunction"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:1.4.0.origam___commandText___fbb05adc-e932-4da8-829d-1e667991d69e.txt"
+      x:id="fbb05adc-e932-4da8-829d-1e667991d69e"
+      asi:name="00020_Database_Entity_AggregationChildData"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

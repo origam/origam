@@ -1,0 +1,6 @@
+﻿CREATE PROCEDURE "clearScreenConfiguration"()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM "OrigamFormPanelConfig";
+END $$; 
