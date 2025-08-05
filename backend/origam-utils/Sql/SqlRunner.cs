@@ -33,7 +33,7 @@ public interface ISqlRunner
     int RunSqlCommand(Program.RunSqlCommandOptions arguments);
 }
 
-abstract class SqlRunner :ISqlRunner
+abstract class SqlRunner : ISqlRunner
 {
     protected readonly ILog log;
 
@@ -91,7 +91,6 @@ abstract class SqlRunner :ISqlRunner
             log.Error(ex);
             return 1;
         }
-
         for (int i = 0; i < arguments.Attempts; i++)
         {
             try
@@ -106,7 +105,6 @@ abstract class SqlRunner :ISqlRunner
                 Thread.Sleep(arguments.Delay);
             }
         }
-
         return 1;
     }
 
