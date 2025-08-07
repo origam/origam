@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.ReturnModels;
@@ -31,36 +32,37 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class PropertyEditorController(
     PropertyEditorService propertyService,
-    EditorService editorService)
-    : ControllerBase
+    EditorService editorService
+) : ControllerBase
 {
     [HttpPost("Update")]
-    public UpdatePropertiesResult Update(
-        [FromBody] ChangesModel changes)
+    public UpdatePropertiesResult Update([FromBody] ChangesModel changes)
     {
         EditorData editor = editorService.ChangesToEditorData(changes);
-        PropertyInfo[] properties = editor.Item
-            .GetType()
-            .GetProperties();
+        PropertyInfo[] properties = editor.Item.GetType().GetProperties();
         IEnumerable<PropertyUpdate> propertyUpdates = propertyService
             .GetEditorProperties(editor.Item)
             .Select(editorProperty =>
             {
-                PropertyInfo property = properties
-                    .FirstOrDefault(x => x.Name == editorProperty.Name);
+                PropertyInfo property = properties.FirstOrDefault(x =>
+                    x.Name == editorProperty.Name
+                );
                 return new PropertyUpdate
                 {
                     PropertyName = editorProperty.Name,
-                    Errors =
-                        propertyService.GetRuleErrors(property, editor.Item),
-                    DropDownValues = editorProperty
-                        .DropDownValues ?? Array.Empty<DropDownValue>()
+                    Errors = propertyService.GetRuleErrors(
+                        property,
+                        editor.Item
+                    ),
+                    DropDownValues =
+                        editorProperty.DropDownValues
+                        ?? Array.Empty<DropDownValue>(),
                 };
             });
         return new UpdatePropertiesResult
         {
             PropertyUpdates = propertyUpdates,
-            IsDirty = editor.IsDirty
+            IsDirty = editor.IsDirty,
         };
     }
 }

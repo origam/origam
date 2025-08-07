@@ -28,8 +28,8 @@ namespace Origam.Architect.Server.Controllers;
 
 public abstract class OrigamController(
     ILogger<OrigamController> log,
-    IWebHostEnvironment environment)
-    : ControllerBase
+    IWebHostEnvironment environment
+) : ControllerBase
 {
     protected readonly ILogger<OrigamController> log = log;
 
@@ -40,7 +40,8 @@ public abstract class OrigamController(
     }
 
     protected async Task<IActionResult> RunWithErrorHandlerAsync(
-        Func<Task<IActionResult>> func)
+        Func<Task<IActionResult>> func
+    )
     {
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {
@@ -48,8 +49,8 @@ public abstract class OrigamController(
                 ? ex.ToString()
                 : new
                 {
-                    message = defaultMessage ??
-                              "An error has occured. There may be some details in the log file."
+                    message = defaultMessage
+                        ?? "An error has occured. There may be some details in the log file.",
                 };
         }
 
@@ -57,7 +58,6 @@ public abstract class OrigamController(
         {
             return await func();
         }
-        
         catch (DBConcurrencyException ex)
         {
             log.LogError(ex, ex.Message);

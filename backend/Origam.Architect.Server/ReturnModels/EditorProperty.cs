@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 
 namespace Origam.Architect.Server.ReturnModels;
@@ -32,25 +33,26 @@ public class EditorProperty
         DropDownValue[] dropDownValues,
         string category,
         string description,
-        bool readOnly)
+        bool readOnly
+    )
     {
-    Name  = name;
-    Type = type;
-    Value = value;
-    DropDownValues  = dropDownValues;
-    Category= category;
-    Description = description;
-    ReadOnly = readOnly;
-    ControlPropertyId = controlPropertyId;
+        Name = name;
+        Type = type;
+        Value = value;
+        DropDownValues = dropDownValues;
+        Category = category;
+        Description = description;
+        ReadOnly = readOnly;
+        ControlPropertyId = controlPropertyId;
     }
 
-    public string Name { get; } 
+    public string Name { get; }
     public string Type { get; }
     public object Value { get; set; }
     public DropDownValue[] DropDownValues { get; }
-    public string Category { get; } 
+    public string Category { get; }
     public string Description { get; }
-    public bool ReadOnly { get; } 
+    public bool ReadOnly { get; }
     public Guid? ControlPropertyId { get; }
     public List<string> Errors { get; set; }
 }

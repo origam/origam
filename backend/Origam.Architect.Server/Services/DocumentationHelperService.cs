@@ -27,7 +27,10 @@ namespace Origam.Architect.Server.Services;
 
 public class DocumentationHelperService()
 {
-    public DocumentationEditorData GetData(DocumentationComplete documentationComplete, string label)
+    public DocumentationEditorData GetData(
+        DocumentationComplete documentationComplete,
+        string label
+    )
     {
         var entries = Enum.GetValues(typeof(DocumentationType))
             .Cast<DocumentationType>()
@@ -39,11 +42,15 @@ public class DocumentationHelperService()
                 description: "",
                 dropDownValues: [],
                 readOnly: false,
-                value: null)
-            )
+                value: null
+            ))
             .ToDictionary(prop => prop.Name, prop => prop);
 
-        foreach (DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows)
+        foreach (
+            DocumentationComplete.DocumentationRow row in documentationComplete
+                .Documentation
+                .Rows
+        )
         {
             entries[row.Category] = new EditorProperty(
                 name: row.Category,
@@ -53,13 +60,14 @@ public class DocumentationHelperService()
                 description: "",
                 dropDownValues: [],
                 readOnly: false,
-                value: row.Data);
+                value: row.Data
+            );
         }
 
         return new DocumentationEditorData
         {
             Label = label,
-            Properties = entries.Values.ToList()
+            Properties = entries.Values.ToList(),
         };
     }
 
@@ -67,9 +75,11 @@ public class DocumentationHelperService()
     {
         foreach (PropertyChange propertyChange in changes.Changes)
         {
-            DocumentationComplete.DocumentationDataTable table = editor.DocumentationData.Documentation;
-            DocumentationComplete.DocumentationRow row = table.Rows
-                .Cast<DocumentationComplete.DocumentationRow>()
+            DocumentationComplete.DocumentationDataTable table = editor
+                .DocumentationData
+                .Documentation;
+            DocumentationComplete.DocumentationRow row = table
+                .Rows.Cast<DocumentationComplete.DocumentationRow>()
                 .FirstOrDefault(row => row.Category == propertyChange.Name);
             if (string.IsNullOrEmpty(propertyChange.Value))
             {

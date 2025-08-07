@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
@@ -38,14 +39,14 @@ public class DataSource
 {
     public static DataSource Empty = new DataSource
     {
-        Name = "", 
-        SchemaItemId = Guid.Empty
+        Name = "",
+        SchemaItemId = Guid.Empty,
     };
     public Guid SchemaItemId { get; set; }
     public string Name { get; set; }
 }
 
-public  class EditorField
+public class EditorField
 {
     public OrigamDataType Type { get; set; }
     public String Name { get; set; }
