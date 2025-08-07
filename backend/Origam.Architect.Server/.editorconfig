@@ -1,4 +1,6 @@
-﻿# Inspired by https://github.com/dotnet/aspnetcore/blob/main/.editorconfig
+﻿# Inspired by https://learn.microsoft.com/cs-cz/dotnet/csharp/fundamentals/coding-style/coding-conventions
+# Inspired by https://github.com/dotnet/aspnetcore/blob/main/.editorconfig
+# Inspired by https://github.com/dotnet/docs/blob/main/.editorconfig
 # Inspired by https://github.com/dotnet/runtime/blob/1d32e0a510d3dd48b3c8ddcdf0a86e5d4292b896/.editorconfig
 
 root = true
