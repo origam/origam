@@ -1,4 +1,4 @@
-﻿# Inspired by https://learn.microsoft.com/cs-cz/dotnet/csharp/fundamentals/coding-style/coding-conventions
+# Inspired by https://learn.microsoft.com/cs-cz/dotnet/csharp/fundamentals/coding-style/coding-conventions
 # Inspired by https://github.com/dotnet/aspnetcore/blob/main/.editorconfig
 # Inspired by https://github.com/dotnet/docs/blob/main/.editorconfig
 # Inspired by https://github.com/dotnet/runtime/blob/1d32e0a510d3dd48b3c8ddcdf0a86e5d4292b896/.editorconfig
@@ -41,10 +41,10 @@ dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = false:suggestion
 
-# Require var all the time
+# Require var
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
 
 # Use int x = .. over Int32
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
