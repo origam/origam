@@ -17,13 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsForm: IControl
+public class AsForm : IControl
 {
     [Browsable(false)]
     public string ExtraControlBindings { get; set; }
@@ -44,8 +45,5 @@ public class AsForm: IControl
     [Browsable(false)]
     public int Width { get; set; } = 200;
 
-    public void Initialize(ControlSetItem controlSetItem)
-    {
-
-    }
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

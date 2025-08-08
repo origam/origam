@@ -17,13 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown: LabeledEditor, IAsControl
+public class AsDropDown : LabeledEditor, IAsControl
 {
     public bool HideOnForm { get; set; }
 
@@ -39,13 +40,13 @@ public class AsDropDown: LabeledEditor, IAsControl
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }
-    
+
     [Localizable(true)]
     [MergableProperty(false)]
     public int TabIndex { get; set; }
 
     public Object LookupValue { get; set; }
-    
+
     [NotAModelProperty]
     public string DefaultBindableProperty => "LookupValue";
 }

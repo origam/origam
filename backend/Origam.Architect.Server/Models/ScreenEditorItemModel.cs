@@ -17,10 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 namespace Origam.Architect.Server.Models;
 
-public class ScreenEditorItemModel {
+public class ScreenEditorItemModel
+{
     public Guid EditorSchemaItemId { get; set; }
     public Guid ParentControlSetItemId { get; set; }
     public Guid ControlItemId { get; set; }

@@ -32,18 +32,20 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class ScreenEditorController(
     DesignerEditorService designerService,
-    EditorService editorService)
-    : ControllerBase
+    EditorService editorService
+) : ControllerBase
 {
     [HttpPost("Update")]
     public ActionResult<ScreenEditorData> Update(
-        [FromBody] SectionEditorChangesModel input)
+        [FromBody] SectionEditorChangesModel input
+    )
     {
         EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
         if (editor.Item is not FormControlSet screenSection)
         {
             return BadRequest(
-                $"item id: {input.SchemaItemId} is not a PanelControlSet");
+                $"item id: {input.SchemaItemId} is not a PanelControlSet"
+            );
         }
 
         editor.IsDirty = designerService.Update(screenSection, input);
@@ -52,57 +54,63 @@ public class ScreenEditorController(
             new ScreenEditorModel
             {
                 Data = editorData,
-                IsDirty = editor.IsDirty
+                IsDirty = editor.IsDirty,
             }
         );
     }
 
     [HttpPost("Delete")]
     public ActionResult<ScreenEditorModel> Delete(
-        [FromBody] ScreenEditorDeleteItemModel input)
+        [FromBody] ScreenEditorDeleteItemModel input
+    )
     {
-        EditorData editor = editorService.OpenDefaultEditor(input.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(
+            input.EditorSchemaItemId
+        );
         if (editor.Item is FormControlSet screenSection)
         {
             designerService.DeleteItem(input.SchemaItemIds, screenSection);
             editor.IsDirty = true;
             var editorData = designerService.GetScreenEditorData(screenSection);
-            return new ScreenEditorModel
-            {
-                Data = editorData,
-                IsDirty = true
-            };
+            return new ScreenEditorModel { Data = editorData, IsDirty = true };
         }
 
         return BadRequest(
-            $"item id: {input.EditorSchemaItemId} is not a PanelControlSet");
+            $"item id: {input.EditorSchemaItemId} is not a PanelControlSet"
+        );
     }
 
     [HttpPost("CreateItem")]
     public ActionResult<ScreenEditorItem> CreateItem(
-        [FromBody] ScreenEditorItemModel itemModelData)
+        [FromBody] ScreenEditorItemModel itemModelData
+    )
     {
-        EditorData editor =
-            editorService.OpenDefaultEditor(itemModelData.EditorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(
+            itemModelData.EditorSchemaItemId
+        );
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
-            ScreenEditorItem newItem =
-                designerService.CreateNewItem(itemModelData, screenSection);
+            ScreenEditorItem newItem = designerService.CreateNewItem(
+                itemModelData,
+                screenSection
+            );
             editor.IsDirty = true;
             return Ok(newItem);
         }
 
         return BadRequest(
-            $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet");
+            $"item id: {itemModelData.EditorSchemaItemId} is not a PanelControlSet"
+        );
     }
 
     [HttpGet("GetSections")]
     public ActionResult<Dictionary<Guid, ApiControl>> GetSections(
-        [FromQuery(Name = "sectionIds[]")] Guid[] sectionIds, [FromQuery] Guid editorSchemaItemId)
+        [FromQuery(Name = "sectionIds[]")] Guid[] sectionIds,
+        [FromQuery] Guid editorSchemaItemId
+    )
     {
-        EditorData editor =
-            editorService.OpenDefaultEditor(editorSchemaItemId);
+        EditorData editor = editorService.OpenDefaultEditor(editorSchemaItemId);
         ISchemaItem item = editor.Item;
         if (item is FormControlSet screenSection)
         {
@@ -110,7 +118,7 @@ public class ScreenEditorController(
         }
 
         return BadRequest(
-            $"item id: {editorSchemaItemId} is not a PanelControlSet");
-
+            $"item id: {editorSchemaItemId} is not a PanelControlSet"
+        );
     }
 }

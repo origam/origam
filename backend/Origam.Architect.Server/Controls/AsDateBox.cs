@@ -17,16 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDateBox: LabeledEditor, IAsControl
+public class AsDateBox : LabeledEditor, IAsControl
 {
     public bool HideOnForm { get; set; }
-    
+
     public bool ReadOnly { get; set; }
 
     public string CustomFormat { get; set; } = "dd.MMMM yyyy";
@@ -42,7 +43,7 @@ public class AsDateBox: LabeledEditor, IAsControl
     public int TabIndex { get; set; }
 
     public Object DateValue { get; set; }
-    
+
     [NotAModelProperty]
     public string DefaultBindableProperty => "DateValue";
 }

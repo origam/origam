@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Origam.Architect.Server.Controls;
@@ -25,7 +26,7 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class TabPage: IControl
+public class TabPage : IControl
 {
     [Localizable(true)]
     [Browsable(true)]
@@ -50,24 +51,26 @@ public class TabPage: IControl
     public void Initialize(ControlSetItem controlSetItem)
     {
         Regex tabPageNumberRegex = new Regex(@"TabPage(\d*)");
-        var tabs = controlSetItem.ParentItem.ChildItems
-            .OfType<ControlSetItem>()
+        var tabs = controlSetItem
+            .ParentItem.ChildItems.OfType<ControlSetItem>()
             .ToList();
-        var labelTexts = tabs
-            .Select(tab => tab.GetPropertyOrNull("Text")?.Value)
+        var labelTexts = tabs.Select(tab =>
+                tab.GetPropertyOrNull("Text")?.Value
+            )
             .Where(labelText => labelText != null);
 
-        int maxTabPageNumber =  labelTexts.Where(labelText => labelText.StartsWith("TabPage"))
+        int maxTabPageNumber = labelTexts
+            .Where(labelText => labelText.StartsWith("TabPage"))
             .Select(labelText =>
             {
                 var match = tabPageNumberRegex.Match(labelText);
                 return match.Groups[1].Value == ""
-                    ? 0 
+                    ? 0
                     : int.Parse(match.Groups[1].Value);
             })
             .DefaultIfEmpty(0)
             .Max();
-        
+
         Text = $"TabPage{maxTabPageNumber + 1}";
         string height = tabs.First().GetPropertyOrNull("Height")?.Value;
         if (!string.IsNullOrEmpty(height))

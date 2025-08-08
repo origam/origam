@@ -34,15 +34,21 @@ namespace Origam.Architect.Server.Services;
 public class EditorService(
     SchemaService schemaService,
     IPersistenceService persistenceService,
-    PropertyParser propertyParser)
+    PropertyParser propertyParser
+)
 {
     private readonly IPersistenceProvider persistenceProvider =
         persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<EditorId, EditorData> editorSchemaItems =
-        new();
+    private readonly ConcurrentDictionary<
+        EditorId,
+        EditorData
+    > editorSchemaItems = new();
 
-    public EditorData OpenEditorWithNewItem(string parentId, string fullTypeName)
+    public EditorData OpenEditorWithNewItem(
+        string parentId,
+        string fullTypeName
+    )
     {
         ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
@@ -51,25 +57,33 @@ public class EditorService(
             .GetType()
             .GetMethod("NewItem")
             .MakeGenericMethod(newItemType)
-            .Invoke(factory,
-                new object[] { schemaService.ActiveSchemaExtensionId, null });
+            .Invoke(
+                factory,
+                new object[] { schemaService.ActiveSchemaExtensionId, null }
+            );
 
         if (result is FormControlSet formControlSet)
         {
             var rootControl = formControlSet.NewItem<ControlSetItem>(
-                schemaService.ActiveSchemaExtensionId, null);
+                schemaService.ActiveSchemaExtensionId,
+                null
+            );
             ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsForm");
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
             rootControl.GetProperty("Top").Value = "15";
             rootControl.GetProperty("Left").Value = "15";
-        } 
+        }
         else if (result is PanelControlSet panelControlSet)
         {
             var rootControl = panelControlSet.NewItem<ControlSetItem>(
-                schemaService.ActiveSchemaExtensionId, null);
-            ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsPanel");
+                schemaService.ActiveSchemaExtensionId,
+                null
+            );
+            ControlItem controlItem = GetControlByType(
+                "Origam.Gui.Win.AsPanel"
+            );
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
@@ -78,38 +92,51 @@ public class EditorService(
         }
 
         ISchemaItem item = (ISchemaItem)result;
-        return editorSchemaItems
-            .GetOrAdd(EditorId.Default(item.Id), id => new EditorData(item, id));
+        return editorSchemaItems.GetOrAdd(
+            EditorId.Default(item.Id),
+            id => new EditorData(item, id)
+        );
     }
 
     private ISchemaItemFactory GetParentItemFactory(string parentId)
     {
         if (Guid.TryParse(parentId, out Guid parentGuid))
         {
-            IBrowserNode2 parentItem = persistenceProvider
-                .RetrieveInstance<IBrowserNode2>(parentGuid);
+            IBrowserNode2 parentItem =
+                persistenceProvider.RetrieveInstance<IBrowserNode2>(parentGuid);
             return (ISchemaItemFactory)parentItem;
         }
 
-        ISchemaItemProvider provider = schemaService.Providers
-            .FirstOrDefault(provider => provider.GetType().FullName == parentId);
+        ISchemaItemProvider provider = schemaService.Providers.FirstOrDefault(
+            provider => provider.GetType().FullName == parentId
+        );
         if (provider == null)
         {
-            throw new Exception("Unable to find schema item provider " + parentId);
+            throw new Exception(
+                "Unable to find schema item provider " + parentId
+            );
         }
         return provider;
     }
 
-    private void SetControlItem (ControlSetItem controlSetItem, ControlItem controlItem)
+    private void SetControlItem(
+        ControlSetItem controlSetItem,
+        ControlItem controlItem
+    )
     {
         controlSetItem.ControlItem = controlItem;
-        List<ControlPropertyItem> controlProperties = controlItem
-            .ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst);
-        
+        List<ControlPropertyItem> controlProperties =
+            controlItem.ChildItemsByType<ControlPropertyItem>(
+                ControlPropertyItem.CategoryConst
+            );
+
         foreach (ControlPropertyItem controlProperty in controlProperties)
         {
-            PropertyValueItem valueItem = controlSetItem.NewItem<PropertyValueItem>(
-                schemaService.ActiveSchemaExtensionId, null);
+            PropertyValueItem valueItem =
+                controlSetItem.NewItem<PropertyValueItem>(
+                    schemaService.ActiveSchemaExtensionId,
+                    null
+                );
             valueItem.ControlPropertyItem = controlProperty;
             valueItem.Name = controlProperty.Name;
         }
@@ -119,13 +146,12 @@ public class EditorService(
     {
         var items = schemaService
             .GetProvider<UserControlSchemaItemProvider>()
-            .ChildItems
-            .OfType<ControlItem>();
+            .ChildItems.OfType<ControlItem>();
         foreach (ControlItem item in items)
         {
-           // When we decide to implement the plugin support we have to extend this method.
-           // The original is here should look here for more 
-           // https://github.com/origam/origam/blob/b5f3cc1dfe853de4082e41c594eb8f6c59451a9c/backend/Origam.Gui.Designer/ControlSetEditor.cs#L940
+            // When we decide to implement the plugin support we have to extend this method.
+            // The original is here should look here for more
+            // https://github.com/origam/origam/blob/b5f3cc1dfe853de4082e41c594eb8f6c59451a9c/backend/Origam.Gui.Designer/ControlSetEditor.cs#L940
 
             if (item.ControlType == fullTypeName)
             {
@@ -142,29 +168,38 @@ public class EditorService(
             EditorId.Default(schemaItemId),
             editorId =>
             {
-                ISchemaItem item = persistenceService.SchemaProvider
-                    .RetrieveInstance<ISchemaItem>(editorId.SchemaItemId, false);
+                ISchemaItem item =
+                    persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+                        editorId.SchemaItemId,
+                        false
+                    );
                 return new EditorData(item, editorId);
-            });
+            }
+        );
     }
-    
+
     public EditorData OpenDocumentationEditor(Guid schemaItemId)
     {
         return editorSchemaItems.GetOrAdd(
             EditorId.Documentation(schemaItemId),
             editorId =>
             {
-                ISchemaItem item = persistenceService.SchemaProvider
-                    .RetrieveInstance<ISchemaItem>(editorId.SchemaItemId, false);
+                ISchemaItem item =
+                    persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+                        editorId.SchemaItemId,
+                        false
+                    );
                 return new EditorData(item, editorId);
-            });
+            }
+        );
     }
 
     public void CloseEditor(EditorId editorId)
     {
-        bool success =
-            editorSchemaItems.TryRemove(editorId,
-                out EditorData removedData);
+        bool success = editorSchemaItems.TryRemove(
+            editorId,
+            out EditorData removedData
+        );
         if (!success)
         {
             return;
@@ -197,17 +232,21 @@ public class EditorService(
         PropertyInfo[] properties = editor.Item.GetType().GetProperties();
         foreach (var change in input.Changes)
         {
-            PropertyInfo propertyToChange = properties
-                .FirstOrDefault(prop => prop.Name == change.Name);
+            PropertyInfo propertyToChange = properties.FirstOrDefault(prop =>
+                prop.Name == change.Name
+            );
 
             if (propertyToChange == null)
             {
                 throw new Exception(
-                    $"Property {change.Name} not found on type {editor.GetType().Name}");
+                    $"Property {change.Name} not found on type {editor.GetType().Name}"
+                );
             }
 
-            object newValue =
-                propertyParser.Parse(propertyToChange, change.Value);
+            object newValue = propertyParser.Parse(
+                propertyToChange,
+                change.Value
+            );
             object oldValue = propertyToChange.GetValue(editor.Item);
             if (oldValue != newValue)
             {
@@ -222,8 +261,7 @@ public class EditorService(
 
     public IEnumerable<EditorData> GetOpenEditors()
     {
-        return editorSchemaItems.Values
-            .OrderBy(x => x.OpenedAt);
+        return editorSchemaItems.Values.OrderBy(x => x.OpenedAt);
     }
 }
 

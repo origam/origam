@@ -17,23 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public abstract class ControlBase: IControl
+public abstract class ControlBase : IControl
 {
     [ReferenceProperty("StyleId")]
     [TypeConverter(typeof(StylesConverter))]
     public Guid StyleId { get; set; }
-    
+
     [Category("Layout")]
     [Browsable(false)]
     public int Top { get; set; }
-    
+
     [Category("Layout")]
     [Browsable(false)]
     public int Left { get; set; }
@@ -46,7 +47,5 @@ public abstract class ControlBase: IControl
     [Browsable(false)]
     public int Width { get; set; } = 200;
 
-    public virtual void Initialize(ControlSetItem controlSetItem)
-    {
-    }
+    public virtual void Initialize(ControlSetItem controlSetItem) { }
 }

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 using Origam.Architect.Server.ReturnModels;
 using Origam.DA;
@@ -31,7 +32,9 @@ namespace Origam.Architect.Server.Services;
 public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 {
     private IEnumerable<EditorProperty> GetEditorPropertiesByName(
-        ISchemaItem item, string[] names)
+        ISchemaItem item,
+        string[] names
+    )
     {
         var properties = item.GetType()
             .GetProperties()
@@ -42,14 +45,13 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 
     public List<string> GetRuleErrors(PropertyInfo property, ISchemaItem item)
     {
-        List<string> ruleErrors = property.GetCustomAttributes()
+        List<string> ruleErrors = property
+            .GetCustomAttributes()
             .OfType<IModelElementRule>()
             .Select(rule => rule.CheckRule(item, property.Name)?.Message)
             .Where(message => message != null)
             .ToList();
-        return ruleErrors.Count == 0
-            ? null
-            : ruleErrors;
+        return ruleErrors.Count == 0 ? null : ruleErrors;
     }
 
     public IEnumerable<EditorProperty> GetEditorProperties(ISchemaItem item)
@@ -73,14 +75,16 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
 
         IEnumerable<EditorProperty> properties = item.GetType()
             .GetProperties()
-            .Select(
-                prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
+            .Select(prop =>
+                propertyFactory.CreateIfMarkedAsEditable(prop, item)
+            )
             .Where(x => x != null);
         return properties;
     }
 
     public IEnumerable<EditorProperty> GetEditorPropertiesWithErrors(
-        ISchemaItem item)
+        ISchemaItem item
+    )
     {
         var editorProperties = GetEditorProperties(item)
             .Peek(property =>
@@ -90,13 +94,16 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
         return editorProperties;
     }
 
-    public List<string> GetRuleErrorsIfExist(EditorProperty editorProperty,
-        ISchemaItem item)
+    public List<string> GetRuleErrorsIfExist(
+        EditorProperty editorProperty,
+        ISchemaItem item
+    )
     {
         Type type = item.GetType();
         PropertyInfo[] properties = type.GetProperties();
-        PropertyInfo propertyInfo =
-            properties.First(property => property.Name == editorProperty.Name);
+        PropertyInfo propertyInfo = properties.First(property =>
+            property.Name == editorProperty.Name
+        );
         return GetRuleErrors(propertyInfo, item);
     }
 }

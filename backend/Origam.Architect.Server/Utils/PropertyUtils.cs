@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel;
 using System.Reflection;
 using Origam.Extensions;
@@ -28,7 +29,7 @@ namespace Origam.Architect.Server.Utils;
 public static class PropertyUtils
 {
     public static bool CanBeEdited(PropertyInfo property)
-    {        
+    {
         var browsableAttribute = property.GetAttribute<BrowsableAttribute>();
         if (browsableAttribute == null)
         {

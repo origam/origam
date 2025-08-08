@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Wrappers;
 
@@ -40,8 +41,8 @@ public class ProjectController : ControllerBase
     public IActionResult GetAvailable()
     {
         return Ok(configManager.Available);
-    }    
-    
+    }
+
     [HttpPost("[action]")]
     public IActionResult SetActive()
     {

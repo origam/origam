@@ -29,6 +29,6 @@ public class CloseEditorModel
 {
     [Required]
     public string EditorId { get; set; }
-    
-    public EditorId GetTypedEditorId() => new EditorId(EditorId); 
+
+    public EditorId GetTypedEditorId() => new EditorId(EditorId);
 }

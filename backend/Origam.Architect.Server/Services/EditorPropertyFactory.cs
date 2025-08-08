@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
@@ -35,8 +36,10 @@ namespace Origam.Architect.Server.Services;
 
 public class EditorPropertyFactory
 {
-    public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property,
-        ISchemaItem item)
+    public EditorProperty CreateIfMarkedAsEditable(
+        PropertyInfo property,
+        ISchemaItem item
+    )
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         if (category == null || !PropertyUtils.CanBeEdited(property))
@@ -50,8 +53,9 @@ public class EditorPropertyFactory
     public EditorProperty Create(PropertyInfo property, object instance)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description =
-            property.GetAttribute<DescriptionAttribute>()?.Description;
+        string description = property
+            .GetAttribute<DescriptionAttribute>()
+            ?.Description;
 
         object value = property.GetValue(instance);
 
@@ -63,11 +67,15 @@ public class EditorPropertyFactory
             dropDownValues: GetAvailableValues(property, instance),
             category: category,
             description: description,
-            readOnly: property.GetSetMethod() == null);
+            readOnly: property.GetSetMethod() == null
+        );
     }
 
-    public EditorProperty Create(PropertyInfo property,
-        PropertyBindingInfo bindingInfo, DropDownValue[] dropDownValues)
+    public EditorProperty Create(
+        PropertyInfo property,
+        PropertyBindingInfo bindingInfo,
+        DropDownValue[] dropDownValues
+    )
     {
         return new EditorProperty(
             name: property.Name,
@@ -77,18 +85,24 @@ public class EditorPropertyFactory
             dropDownValues: dropDownValues,
             category: "Data",
             description: "The data bindings for the control.",
-            readOnly: property.GetSetMethod() == null);
+            readOnly: property.GetSetMethod() == null
+        );
     }
-    public EditorProperty Create(PropertyInfo property,
-        PropertyValueItem valueItem)
+
+    public EditorProperty Create(
+        PropertyInfo property,
+        PropertyValueItem valueItem
+    )
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description =
-            property.GetAttribute<DescriptionAttribute>()?.Description;
-        
-        string name = property   
-            .GetCustomAttribute<ReferencePropertyAttribute>()?.Name ?? property.Name;
-        
+        string description = property
+            .GetAttribute<DescriptionAttribute>()
+            ?.Description;
+
+        string name =
+            property.GetCustomAttribute<ReferencePropertyAttribute>()?.Name
+            ?? property.Name;
+
         return new EditorProperty(
             name: name,
             controlPropertyId: valueItem.ControlPropertyId,
@@ -97,7 +111,8 @@ public class EditorPropertyFactory
             dropDownValues: GetAvailableValues(property, null),
             category: category,
             description: description,
-            readOnly: property.GetSetMethod() == null);
+            readOnly: property.GetSetMethod() == null
+        );
     }
 
     private object ToSerializableValue(object value)
@@ -111,9 +126,11 @@ public class EditorPropertyFactory
             var editorValue = new List<object>();
             foreach (var item in collection)
             {
-                editorValue.Add(item is IPersistent persistentValue
-                    ? persistentValue.Id
-                    : value);
+                editorValue.Add(
+                    item is IPersistent persistentValue
+                        ? persistentValue.Id
+                        : value
+                );
             }
 
             return editorValue;
@@ -122,35 +139,41 @@ public class EditorPropertyFactory
         return value;
     }
 
-    private DropDownValue[] GetAvailableValues(PropertyInfo property,
-        object instance)
+    private DropDownValue[] GetAvailableValues(
+        PropertyInfo property,
+        object instance
+    )
     {
-        bool isReferenceProperty = property   
-            .GetCustomAttribute<ReferencePropertyAttribute>() != null;
-        if (!isReferenceProperty && 
-            (property.PropertyType == typeof(string) ||
-            property.PropertyType == typeof(Guid) ||
-            property.PropertyType == typeof(int) ||
-            property.PropertyType == typeof(long) ||
-            property.PropertyType == typeof(decimal) ||
-            property.PropertyType == typeof(double) ||
-            property.PropertyType == typeof(float) ||
-            property.PropertyType == typeof(bool)))
+        bool isReferenceProperty =
+            property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
+        if (
+            !isReferenceProperty
+            && (
+                property.PropertyType == typeof(string)
+                || property.PropertyType == typeof(Guid)
+                || property.PropertyType == typeof(int)
+                || property.PropertyType == typeof(long)
+                || property.PropertyType == typeof(decimal)
+                || property.PropertyType == typeof(double)
+                || property.PropertyType == typeof(float)
+                || property.PropertyType == typeof(bool)
+            )
+        )
         {
             return [];
         }
 
         if (property.PropertyType.IsEnum)
         {
-            return Enum
-                .GetValues(property.PropertyType)
+            return Enum.GetValues(property.PropertyType)
                 .Cast<object>()
                 .Select(x => new DropDownValue(x.ToString(), (int)x))
                 .ToArray();
         }
 
         var converterType = property
-            .GetAttribute<TypeConverterAttribute>()?.ConverterTypeName;
+            .GetAttribute<TypeConverterAttribute>()
+            ?.ConverterTypeName;
         if (converterType == null)
         {
             return [];
@@ -163,18 +186,21 @@ public class EditorPropertyFactory
         }
 
         object converterInstance = Activator.CreateInstance(type);
-        MethodInfo getValuesMethod = type.GetMethod("GetStandardValues",
-            new Type[] { typeof(ITypeDescriptorContext) })!;
+        MethodInfo getValuesMethod = type.GetMethod(
+            "GetStandardValues",
+            new Type[] { typeof(ITypeDescriptorContext) }
+        )!;
         var context = new Context(instance);
         var values =
             getValuesMethod.Invoke(converterInstance, new object[] { context })
-                as TypeConverter.StandardValuesCollection;
+            as TypeConverter.StandardValuesCollection;
         if (values == null || values.Count == 0)
         {
             return [];
         }
 
-        return values.Cast<ISchemaItem>()
+        return values
+            .Cast<ISchemaItem>()
             .Select(x => new DropDownValue(x?.Name ?? "", x?.Id))
             .ToArray();
     }
@@ -197,14 +223,17 @@ public class EditorPropertyFactory
             return "integer";
         }
 
-        if (type == typeof(decimal) || type == typeof(double) ||
-            type == typeof(float))
+        if (
+            type == typeof(decimal)
+            || type == typeof(double)
+            || type == typeof(float)
+        )
         {
             return "float";
         }
 
-        bool isReferenceProperty = property   
-            .GetCustomAttribute<ReferencePropertyAttribute>() != null;
+        bool isReferenceProperty =
+            property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
         if (isReferenceProperty || type.IsAssignableTo(typeof(ISchemaItem)))
         {
             return "looukup";
