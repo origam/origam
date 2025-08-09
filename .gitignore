@@ -1,4 +1,5 @@
-﻿/backend/Origam.Server/serverCore.pfx
+﻿/backend/Origam.Architect.Server/appsettings.Development.json
+/backend/Origam.Server/serverCore.pfx
 .idea
 .DS_Store
 /plugins/__pycache__
