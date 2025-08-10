@@ -5,6 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>12</LangVersion>
     </PropertyGroup>
+    <PropertyGroup>
+        <AnalysisLevel>8.0</AnalysisLevel>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors>$(WarningsAsErrors)</WarningsAsErrors>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference
             Include="Microsoft.AspNetCore.SpaServices.Extensions"
