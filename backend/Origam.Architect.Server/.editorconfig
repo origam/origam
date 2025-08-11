@@ -1,5 +1,12 @@
 root = true
 [*.cs]
+# CSharpier Setup
+csharpier_formatter = csharp
+indent_style = space
+indent_size = 4
+max_line_length = 80
+
+# Analyzers Setup
 # Basic roslynator setup
 roslynator_blank_line_between_using_directives = never
 # Disable roslynator rules by default
