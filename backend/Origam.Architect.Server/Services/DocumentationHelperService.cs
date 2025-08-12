@@ -36,13 +36,13 @@ public class DocumentationHelperService()
             .Cast<DocumentationType>()
             .Select(docType => new EditorProperty(
                 name: docType.ToString(),
-                type: "string",
-                category: Strings.CategoryDocumentation,
                 controlPropertyId: null,
-                description: "",
+                type: "string",
+                value: null,
                 dropDownValues: [],
-                readOnly: false,
-                value: null
+                category: Strings.CategoryDocumentation,
+                description: "",
+                readOnly: false
             ))
             .ToDictionary(prop => prop.Name, prop => prop);
 
@@ -52,13 +52,13 @@ public class DocumentationHelperService()
         {
             entries[row.Category] = new EditorProperty(
                 name: row.Category,
-                type: "string",
-                category: Strings.CategoryDocumentation,
                 controlPropertyId: null,
-                description: "",
+                type: "string",
+                value: row.Data,
                 dropDownValues: [],
-                readOnly: false,
-                value: row.Data
+                category: Strings.CategoryDocumentation,
+                description: "",
+                readOnly: false
             );
         }
 

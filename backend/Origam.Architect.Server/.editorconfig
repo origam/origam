@@ -21,6 +21,8 @@ dotnet_diagnostic.CS1591.severity = none
 dotnet_diagnostic.IDE0005.severity = warning
 # Add parameter name to improve readability
 dotnet_diagnostic.MA0003.severity = error
+# Order named arguments according to the order of parameters
+dotnet_diagnostic.RCS1205.severity = error
 # Enforce parentheses
 dotnet_diagnostic.RCS1123.severity = error
 # Enforce no blank lines between using directives

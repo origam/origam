@@ -432,8 +432,8 @@ public class DesignerEditorService(
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left,
-            width: (int?)width,
-            height: (int?)height
+            height: (int?)height,
+            width: (int?)width
         );
         return new Tuple<ControlSetItem, ApiControl>(newItem, sectionControl);
     }

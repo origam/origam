@@ -52,9 +52,9 @@ public class DocumentationController(
             editor.DocumentationData = documentationService.LoadDocumentation(item.Id);
             var openEditorData = new OpenEditorData(
                 editorId: editor.Id,
-                isPersisted: true,
                 node: treeNode,
-                data: documentationHelper.GetData(editor.DocumentationData, item.Name)
+                data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                isPersisted: true
             );
             return Ok(openEditorData);
         });

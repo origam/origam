@@ -83,10 +83,10 @@ public class EditorController(
                         ),
                         EditorType.DocumentationEditor => new OpenEditorData(
                             editorId: editor.Id,
-                            isPersisted: item.IsPersisted,
                             node: treeNode,
-                            isDirty: editor.IsDirty,
-                            data: documentationHelper.GetData(editor.DocumentationData, item.Name)
+                            data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                            isPersisted: item.IsPersisted,
+                            isDirty: editor.IsDirty
                         ),
                         _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
                     };
