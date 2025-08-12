@@ -68,8 +68,10 @@ public abstract class OrigamController(
                 case IUserException:
                     return StatusCode(420, GetReturnObject(ex, ex.Message));
                 default:
+                {
                     log.LogOrigamError(ex, ex.Message);
                     return StatusCode(500, GetReturnObject(ex));
+                }
             }
         }
     }

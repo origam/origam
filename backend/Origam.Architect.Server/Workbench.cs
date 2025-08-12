@@ -71,8 +71,10 @@ public class Workbench
             case true when !PopulateEmptyDatabaseOnLoad:
                 return;
             case true:
+            {
                 deployment.Deploy();
                 break;
+            }
         }
 
         RunDeploymentScripts(deployment, isInteractive);
@@ -146,7 +148,9 @@ public class Workbench
     {
         var currentPersistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         if (!(currentPersistenceService is FilePersistenceService))
+        {
             return;
+        }
         var cancellationToken = modelCheckCancellationTokenSource.Token;
         Task.Factory.StartNew(
                 () =>

@@ -106,7 +106,9 @@ public class ControlAdapter(
             {
                 var attr = propertyInfo.GetCustomAttribute<SchemaItemPropertyAttribute>();
                 if (attr == null)
+                {
                     return false;
+                }
                 if (propertyInfo.Name == nameof(RequestSaveAfterChange))
                 {
                     return controlSetItem.ControlItem.RequestSaveAfterChangeAllowed;
