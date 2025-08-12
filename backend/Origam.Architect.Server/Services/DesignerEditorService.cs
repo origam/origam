@@ -273,7 +273,7 @@ public class DesignerEditorService(
             .First(item => item.ControlType == itemModelData.ComponentType);
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId,
-            null
+            group: null
         );
         newItem.ControlItem = controlItem;
         newItem.Name = itemModelData.FieldName ?? controlItem.Name;
@@ -283,7 +283,9 @@ public class DesignerEditorService(
         IDataEntity dataEntity = persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
             screenSection.DataSourceId
         );
-        DataSet dataSet = new DatasetGenerator(false).CreateDataSet(dataEntity);
+        DataSet dataSet = new DatasetGenerator(userDefinedParameters: false).CreateDataSet(
+            dataEntity
+        );
         string caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
         if (controlAdapter.Control is IAsControl asControl)
         {
@@ -330,7 +332,7 @@ public class DesignerEditorService(
         {
             result = controlSetItem.NewItem<PropertyBindingInfo>(
                 schemaService.ActiveSchemaExtensionId,
-                null
+                group: null
             );
             result.ControlPropertyItem = propertyToFind;
             result.Name = propertyToFind.Name;
@@ -413,7 +415,7 @@ public class DesignerEditorService(
 
         ControlSetItem newItem = parent.NewItem<ControlSetItem>(
             schemaService.ActiveSchemaExtensionId,
-            null
+            group: null
         );
         newItem.ControlItem = controlItem;
         newItem.Name = controlItem.Name;
@@ -492,7 +494,7 @@ public class DesignerEditorService(
             {
                 ControlItem newControl = controlSchemaItemProvider.NewItem<ControlItem>(
                     schemaService.ActiveSchemaExtensionId,
-                    null
+                    group: null
                 );
                 newControl.Name = screenSection.Name;
                 newControl.IsComplexType = true;

@@ -219,7 +219,7 @@ public class ControlAdapter(
             }
             var propertyValueItem = controlSetItem.NewItem<PropertyValueItem>(
                 schemaService.ActiveSchemaExtensionId,
-                null
+                group: null
             );
             object value = property.GetValue(Control);
             ControlPropertyItem propertyItem = FindPropertyItem(property.Name);

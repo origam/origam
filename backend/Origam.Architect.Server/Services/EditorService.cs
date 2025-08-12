@@ -56,7 +56,7 @@ public class EditorService(
         {
             var rootControl = formControlSet.NewItem<ControlSetItem>(
                 schemaService.ActiveSchemaExtensionId,
-                null
+                group: null
             );
             ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsForm");
             SetControlItem(rootControl, controlItem);
@@ -69,7 +69,7 @@ public class EditorService(
         {
             var rootControl = panelControlSet.NewItem<ControlSetItem>(
                 schemaService.ActiveSchemaExtensionId,
-                null
+                group: null
             );
             ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsPanel");
             SetControlItem(rootControl, controlItem);
@@ -116,7 +116,7 @@ public class EditorService(
         {
             PropertyValueItem valueItem = controlSetItem.NewItem<PropertyValueItem>(
                 schemaService.ActiveSchemaExtensionId,
-                null
+                group: null
             );
             valueItem.ControlPropertyItem = controlProperty;
             valueItem.Name = controlProperty.Name;
@@ -151,7 +151,7 @@ public class EditorService(
             {
                 ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
                     editorId.SchemaItemId,
-                    false
+                    useCache: false
                 );
                 return new EditorData(item, editorId);
             }
@@ -166,7 +166,7 @@ public class EditorService(
             {
                 ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
                     editorId.SchemaItemId,
-                    false
+                    useCache: false
                 );
                 return new EditorData(item, editorId);
             }

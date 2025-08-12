@@ -95,7 +95,7 @@ public class EditorPropertyFactory
             controlPropertyId: valueItem.ControlPropertyId,
             type: ToPropertyTypeName(property),
             value: valueItem.TypedValue,
-            dropDownValues: GetAvailableValues(property, null),
+            dropDownValues: GetAvailableValues(property, instance: null),
             category: category,
             description: description,
             readOnly: property.GetSetMethod() == null

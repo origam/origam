@@ -191,7 +191,7 @@ public class Workbench
         CancellationToken cancellationToken
     )
     {
-        ReferenceIndexManager.Clear(false);
+        ReferenceIndexManager.Clear(fullClear: false);
         independentPersistenceService
             .SchemaProvider.RetrieveList<IFilePersistent>()
             .OfType<ISchemaItem>()
