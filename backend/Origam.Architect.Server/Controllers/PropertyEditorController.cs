@@ -23,8 +23,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
-using Origam.Schema;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 

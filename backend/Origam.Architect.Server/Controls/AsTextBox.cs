@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
-using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 

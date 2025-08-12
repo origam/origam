@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using Origam.Architect.Server.Controls;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;

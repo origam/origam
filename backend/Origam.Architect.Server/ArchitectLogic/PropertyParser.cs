@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;

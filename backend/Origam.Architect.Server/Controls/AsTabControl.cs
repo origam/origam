@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 namespace Origam.Architect.Server.Controls;
 
 public class AsTabControl : ControlBase

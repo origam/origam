@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 
