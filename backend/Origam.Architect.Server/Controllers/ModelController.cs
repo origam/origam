@@ -38,8 +38,7 @@ public class ModelController(
     TreeNodeFactory treeNodeFactory
 ) : ControllerBase
 {
-    private readonly IPersistenceProvider persistenceProvider =
-        persistenceService.SchemaProvider;
+    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
     [HttpGet("GetTopNodes")]
     public ActionResult<List<TreeNode>> GetTopNodes()
@@ -60,10 +59,7 @@ public class ModelController(
                 HasChildNodes = x.HasChildNodes,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()
-                    .OrderBy(
-                        child => child.NodeText,
-                        StringComparer.OrdinalIgnoreCase
-                    )
+                    .OrderBy(child => child.NodeText, StringComparer.OrdinalIgnoreCase)
                     .Select(treeNodeFactory.Create)
                     .ToList(),
             })
@@ -103,14 +99,9 @@ public class ModelController(
         return Ok(nodes);
     }
 
-    private List<TreeNode> GetChildren(
-        Guid id,
-        bool isNonPersistentItem,
-        string nodeText
-    )
+    private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem, string nodeText)
     {
-        IBrowserNode2 provider =
-            persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
+        IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode
@@ -156,16 +147,12 @@ public class ModelController(
     }
 
     [HttpPost("DeleteSchemaItem")]
-    public IActionResult DeleteSchemaItem(
-        [Required] [FromBody] DeleteModel input
-    )
+    public IActionResult DeleteSchemaItem([Required] [FromBody] DeleteModel input)
     {
         ISchemaItem instance = null;
         foreach (ISchemaItemProvider provider in schemaService.Providers)
         {
-            instance = provider.ChildItemsRecursive.FirstOrDefault(x =>
-                x.Id == input.SchemaItemId
-            );
+            instance = provider.ChildItemsRecursive.FirstOrDefault(x => x.Id == input.SchemaItemId);
             if (instance != null)
             {
                 break;
@@ -212,15 +199,10 @@ public class ModelController(
             return provider.NewItemTypes.Select(GetMenuInfo);
         }
 
-        IBrowserNode2 instance =
-            persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
+        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
 
         ISchemaItemFactory factory = isNonPersistentItem
-            ? new NonpersistentSchemaItemNode
-            {
-                NodeText = nodeText,
-                ParentNode = instance,
-            }
+            ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
             : (ISchemaItemFactory)instance;
 
         return factory.NewItemTypes.Select(GetMenuInfo);

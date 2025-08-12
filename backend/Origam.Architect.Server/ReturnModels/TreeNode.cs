@@ -101,10 +101,7 @@ public class TreeNodeFactory
         {
             return EditorSubType.GridEditor;
         }
-        if (
-            itemType
-            == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity"
-        )
+        if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
             return EditorSubType.GridEditor;
         }

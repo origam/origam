@@ -41,17 +41,13 @@ public class EditorId
     {
         if (string.IsNullOrEmpty(editorId))
         {
-            throw new ArgumentException(
-                $"Could not parse {editorId} to editor Id"
-            );
+            throw new ArgumentException($"Could not parse {editorId} to editor Id");
         }
 
         string[] strings = editorId.Split("_");
         if (strings.Length != 2)
         {
-            throw new ArgumentException(
-                $"Could not parse {editorId} to editor Id"
-            );
+            throw new ArgumentException($"Could not parse {editorId} to editor Id");
         }
 
         if (Enum.TryParse(strings[0], out EditorType editorType))
@@ -60,9 +56,7 @@ public class EditorId
         }
         else
         {
-            throw new ArgumentException(
-                $"Could not parse {editorId} to editor Id"
-            );
+            throw new ArgumentException($"Could not parse {editorId} to editor Id");
         }
 
         if (Guid.TryParse(strings[1], out Guid parsedId))
@@ -71,9 +65,7 @@ public class EditorId
         }
         else
         {
-            throw new ArgumentException(
-                $"Could not parse {editorId} to editor Id"
-            );
+            throw new ArgumentException($"Could not parse {editorId} to editor Id");
         }
 
         id = editorId;

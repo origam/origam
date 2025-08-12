@@ -96,9 +96,7 @@ public class ControlAdapter(
             persistenceService.SchemaProvider.RetrieveInstance<DataConstant>(
                 controlSetItem.MultiColumnAdapterFieldCondition
             );
-        set =>
-            controlSetItem.MultiColumnAdapterFieldCondition =
-                value?.Id ?? Guid.Empty;
+        set => controlSetItem.MultiColumnAdapterFieldCondition = value?.Id ?? Guid.Empty;
     }
 
     private IEnumerable<PropertyInfo> GetSchemaItemProperties()
@@ -107,15 +105,12 @@ public class ControlAdapter(
             .GetProperties()
             .Where(propertyInfo =>
             {
-                var attr =
-                    propertyInfo.GetCustomAttribute<SchemaItemPropertyAttribute>();
+                var attr = propertyInfo.GetCustomAttribute<SchemaItemPropertyAttribute>();
                 if (attr == null)
                     return false;
                 if (propertyInfo.Name == nameof(RequestSaveAfterChange))
                 {
-                    return controlSetItem
-                        .ControlItem
-                        .RequestSaveAfterChangeAllowed;
+                    return controlSetItem.ControlItem.RequestSaveAfterChangeAllowed;
                 }
                 if (propertyInfo.Name == nameof(MappingCondition))
                 {
@@ -134,9 +129,7 @@ public class ControlAdapter(
         {
             PropertyBindingInfo bindingInfo = controlSetItem
                 .ChildItems.OfType<PropertyBindingInfo>()
-                .FirstOrDefault(item =>
-                    item.ControlPropertyId == propertyChange.ControlPropertyId
-                );
+                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
             if (bindingInfo != null)
             {
                 if (bindingInfo.Value != propertyChange.Value)
@@ -149,9 +142,7 @@ public class ControlAdapter(
             }
             PropertyValueItem valueItem = controlSetItem
                 .ChildItems.OfType<PropertyValueItem>()
-                .FirstOrDefault(item =>
-                    item.ControlPropertyId == propertyChange.ControlPropertyId
-                );
+                .FirstOrDefault(item => item.ControlPropertyId == propertyChange.ControlPropertyId);
             if (valueItem != null)
             {
                 if (valueItem.Value != propertyChange.Value)
@@ -167,10 +158,7 @@ public class ControlAdapter(
                 .FirstOrDefault(x => x.Name == propertyChange.Name);
             if (schemaItemProperty != null)
             {
-                object parsedValue = propertyParser.Parse(
-                    schemaItemProperty,
-                    propertyChange.Value
-                );
+                object parsedValue = propertyParser.Parse(schemaItemProperty, propertyChange.Value);
                 schemaItemProperty.SetValue(this, parsedValue);
                 changesMade = true;
             }
@@ -179,37 +167,25 @@ public class ControlAdapter(
         return changesMade;
     }
 
-    public List<EditorProperty> GetEditorProperties(
-        DropDownValue[] dataSourceDropDownValues
-    )
+    public List<EditorProperty> GetEditorProperties(DropDownValue[] dataSourceDropDownValues)
     {
         IEnumerable<EditorProperty> properties = Control
             .GetType()
             .GetProperties()
-            .Where(property =>
-                property.GetAttribute<NotAModelPropertyAttribute>() == null
-            )
+            .Where(property => property.GetAttribute<NotAModelPropertyAttribute>() == null)
             .Select(property =>
             {
                 PropertyBindingInfo bindingInfo = controlSetItem
                     .ChildItems.OfType<PropertyBindingInfo>()
-                    .FirstOrDefault(item =>
-                        item.ControlPropertyItem.Name == property.Name
-                    );
+                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
                 if (bindingInfo != null)
                 {
-                    return propertyFactory.Create(
-                        property,
-                        bindingInfo,
-                        dataSourceDropDownValues
-                    );
+                    return propertyFactory.Create(property, bindingInfo, dataSourceDropDownValues);
                 }
 
                 PropertyValueItem valueItem = controlSetItem
                     .ChildItems.OfType<PropertyValueItem>()
-                    .FirstOrDefault(item =>
-                        item.ControlPropertyItem.Name == property.Name
-                    );
+                    .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
                 return propertyFactory.Create(property, valueItem);
             });
         var schemaItemProperties = GetSchemaItemProperties()
@@ -220,26 +196,17 @@ public class ControlAdapter(
     private ControlPropertyItem FindPropertyItem(string propertyName)
     {
         var propertyItem = controlSetItem
-            .ControlItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
-            )
+            .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
             .FirstOrDefault(x => x.Name == propertyName);
         if (propertyItem == null)
         {
-            throw new Exception(
-                "ControlPropertyItem " + propertyName + " not found"
-            );
+            throw new Exception("ControlPropertyItem " + propertyName + " not found");
         }
 
         return propertyItem;
     }
 
-    public void InitializeProperties(
-        int top,
-        int left,
-        int? height = null,
-        int? width = null
-    )
+    public void InitializeProperties(int top, int left, int? height = null, int? width = null)
     {
         Control.Initialize(controlSetItem);
         Type type = Control.GetType();
@@ -286,15 +253,12 @@ public class ControlAdapter(
             else if (property.PropertyType == typeof(bool))
             {
                 propertyItem.PropertyType = ControlPropertyValueType.Boolean;
-                propertyValueItem.Value =
-                    value == null ? null : XmlConvert.ToString((bool)value);
+                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((bool)value);
             }
             else if (property.PropertyType == typeof(Guid))
             {
-                propertyItem.PropertyType =
-                    ControlPropertyValueType.UniqueIdentifier;
-                propertyValueItem.Value =
-                    value == null ? null : XmlConvert.ToString((Guid)value);
+                propertyItem.PropertyType = ControlPropertyValueType.UniqueIdentifier;
+                propertyValueItem.Value = value == null ? null : XmlConvert.ToString((Guid)value);
             }
             else if (property.PropertyType.IsEnum)
             {

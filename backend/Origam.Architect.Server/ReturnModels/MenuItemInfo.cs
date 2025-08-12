@@ -28,12 +28,7 @@ public class MenuItemInfo
     public string IconName { get; init; }
     public int? IconIndex { get; init; }
 
-    public MenuItemInfo(
-        string caption,
-        string typeName,
-        string iconName,
-        int? iconIndex
-    )
+    public MenuItemInfo(string caption, string typeName, string iconName, int? iconIndex)
     {
         Caption = caption;
         TypeName = typeName;

@@ -36,10 +36,7 @@ namespace Origam.Architect.Server.Services;
 
 public class EditorPropertyFactory
 {
-    public EditorProperty CreateIfMarkedAsEditable(
-        PropertyInfo property,
-        ISchemaItem item
-    )
+    public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         if (category == null || !PropertyUtils.CanBeEdited(property))
@@ -53,9 +50,7 @@ public class EditorPropertyFactory
     public EditorProperty Create(PropertyInfo property, object instance)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description = property
-            .GetAttribute<DescriptionAttribute>()
-            ?.Description;
+        string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
         object value = property.GetValue(instance);
 
@@ -89,19 +84,13 @@ public class EditorPropertyFactory
         );
     }
 
-    public EditorProperty Create(
-        PropertyInfo property,
-        PropertyValueItem valueItem
-    )
+    public EditorProperty Create(PropertyInfo property, PropertyValueItem valueItem)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        string description = property
-            .GetAttribute<DescriptionAttribute>()
-            ?.Description;
+        string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
         string name =
-            property.GetCustomAttribute<ReferencePropertyAttribute>()?.Name
-            ?? property.Name;
+            property.GetCustomAttribute<ReferencePropertyAttribute>()?.Name ?? property.Name;
 
         return new EditorProperty(
             name: name,
@@ -126,11 +115,7 @@ public class EditorPropertyFactory
             var editorValue = new List<object>();
             foreach (var item in collection)
             {
-                editorValue.Add(
-                    item is IPersistent persistentValue
-                        ? persistentValue.Id
-                        : value
-                );
+                editorValue.Add(item is IPersistent persistentValue ? persistentValue.Id : value);
             }
 
             return editorValue;
@@ -139,10 +124,7 @@ public class EditorPropertyFactory
         return value;
     }
 
-    private DropDownValue[] GetAvailableValues(
-        PropertyInfo property,
-        object instance
-    )
+    private DropDownValue[] GetAvailableValues(PropertyInfo property, object instance)
     {
         bool isReferenceProperty =
             property.GetCustomAttribute<ReferencePropertyAttribute>() != null;
@@ -171,9 +153,7 @@ public class EditorPropertyFactory
                 .ToArray();
         }
 
-        var converterType = property
-            .GetAttribute<TypeConverterAttribute>()
-            ?.ConverterTypeName;
+        var converterType = property.GetAttribute<TypeConverterAttribute>()?.ConverterTypeName;
         if (converterType == null)
         {
             return [];
@@ -223,11 +203,7 @@ public class EditorPropertyFactory
             return "integer";
         }
 
-        if (
-            type == typeof(decimal)
-            || type == typeof(double)
-            || type == typeof(float)
-        )
+        if (type == typeof(decimal) || type == typeof(double) || type == typeof(float))
         {
             return "float";
         }

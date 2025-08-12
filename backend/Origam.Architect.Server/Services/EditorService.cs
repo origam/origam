@@ -37,18 +37,11 @@ public class EditorService(
     PropertyParser propertyParser
 )
 {
-    private readonly IPersistenceProvider persistenceProvider =
-        persistenceService.SchemaProvider;
+    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
-    private readonly ConcurrentDictionary<
-        EditorId,
-        EditorData
-    > editorSchemaItems = new();
+    private readonly ConcurrentDictionary<EditorId, EditorData> editorSchemaItems = new();
 
-    public EditorData OpenEditorWithNewItem(
-        string parentId,
-        string fullTypeName
-    )
+    public EditorData OpenEditorWithNewItem(string parentId, string fullTypeName)
     {
         ISchemaItemFactory factory = GetParentItemFactory(parentId);
 
@@ -57,10 +50,7 @@ public class EditorService(
             .GetType()
             .GetMethod("NewItem")
             .MakeGenericMethod(newItemType)
-            .Invoke(
-                factory,
-                new object[] { schemaService.ActiveSchemaExtensionId, null }
-            );
+            .Invoke(factory, new object[] { schemaService.ActiveSchemaExtensionId, null });
 
         if (result is FormControlSet formControlSet)
         {
@@ -81,9 +71,7 @@ public class EditorService(
                 schemaService.ActiveSchemaExtensionId,
                 null
             );
-            ControlItem controlItem = GetControlByType(
-                "Origam.Gui.Win.AsPanel"
-            );
+            ControlItem controlItem = GetControlByType("Origam.Gui.Win.AsPanel");
             SetControlItem(rootControl, controlItem);
             rootControl.GetProperty("Height").Value = "500";
             rootControl.GetProperty("Width").Value = "500";
@@ -102,41 +90,34 @@ public class EditorService(
     {
         if (Guid.TryParse(parentId, out Guid parentGuid))
         {
-            IBrowserNode2 parentItem =
-                persistenceProvider.RetrieveInstance<IBrowserNode2>(parentGuid);
+            IBrowserNode2 parentItem = persistenceProvider.RetrieveInstance<IBrowserNode2>(
+                parentGuid
+            );
             return (ISchemaItemFactory)parentItem;
         }
 
-        ISchemaItemProvider provider = schemaService.Providers.FirstOrDefault(
-            provider => provider.GetType().FullName == parentId
+        ISchemaItemProvider provider = schemaService.Providers.FirstOrDefault(provider =>
+            provider.GetType().FullName == parentId
         );
         if (provider == null)
         {
-            throw new Exception(
-                "Unable to find schema item provider " + parentId
-            );
+            throw new Exception("Unable to find schema item provider " + parentId);
         }
         return provider;
     }
 
-    private void SetControlItem(
-        ControlSetItem controlSetItem,
-        ControlItem controlItem
-    )
+    private void SetControlItem(ControlSetItem controlSetItem, ControlItem controlItem)
     {
         controlSetItem.ControlItem = controlItem;
         List<ControlPropertyItem> controlProperties =
-            controlItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
-            );
+            controlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst);
 
         foreach (ControlPropertyItem controlProperty in controlProperties)
         {
-            PropertyValueItem valueItem =
-                controlSetItem.NewItem<PropertyValueItem>(
-                    schemaService.ActiveSchemaExtensionId,
-                    null
-                );
+            PropertyValueItem valueItem = controlSetItem.NewItem<PropertyValueItem>(
+                schemaService.ActiveSchemaExtensionId,
+                null
+            );
             valueItem.ControlPropertyItem = controlProperty;
             valueItem.Name = controlProperty.Name;
         }
@@ -168,11 +149,10 @@ public class EditorService(
             EditorId.Default(schemaItemId),
             editorId =>
             {
-                ISchemaItem item =
-                    persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                        editorId.SchemaItemId,
-                        false
-                    );
+                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+                    editorId.SchemaItemId,
+                    false
+                );
                 return new EditorData(item, editorId);
             }
         );
@@ -184,11 +164,10 @@ public class EditorService(
             EditorId.Documentation(schemaItemId),
             editorId =>
             {
-                ISchemaItem item =
-                    persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                        editorId.SchemaItemId,
-                        false
-                    );
+                ISchemaItem item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+                    editorId.SchemaItemId,
+                    false
+                );
                 return new EditorData(item, editorId);
             }
         );
@@ -196,10 +175,7 @@ public class EditorService(
 
     public void CloseEditor(EditorId editorId)
     {
-        bool success = editorSchemaItems.TryRemove(
-            editorId,
-            out EditorData removedData
-        );
+        bool success = editorSchemaItems.TryRemove(editorId, out EditorData removedData);
         if (!success)
         {
             return;
@@ -214,8 +190,7 @@ public class EditorService(
         }
         else
         {
-            ISchemaItemProvider provider =
-                removedItem.ParentItem ?? removedItem.RootProvider;
+            ISchemaItemProvider provider = removedItem.ParentItem ?? removedItem.RootProvider;
             if (provider != null)
             {
                 if (provider.ChildItems.Contains(removedItem))
@@ -243,10 +218,7 @@ public class EditorService(
                 );
             }
 
-            object newValue = propertyParser.Parse(
-                propertyToChange,
-                change.Value
-            );
+            object newValue = propertyParser.Parse(propertyToChange, change.Value);
             object oldValue = propertyToChange.GetValue(editor.Item);
             if (oldValue != newValue)
             {

@@ -115,9 +115,7 @@ public class PropertyParser
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
             Guid id = ParseGuid(value, property);
-            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(
-                id
-            );
+            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
         }
 
         throw new Exception(

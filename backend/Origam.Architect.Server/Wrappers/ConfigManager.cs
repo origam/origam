@@ -30,8 +30,5 @@ public class ConfigManager
     }
 
     public IEnumerable<string> Available =>
-        ConfigurationManager
-            .GetAllConfigurations()
-            .Cast<OrigamSettings>()
-            .Select(x => x.Name);
+        ConfigurationManager.GetAllConfigurations().Cast<OrigamSettings>().Select(x => x.Name);
 }

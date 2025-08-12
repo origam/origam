@@ -32,9 +32,7 @@ public class AsTreeView : ControlBase
     public string ParentIDColumn { get; set; }
 
     [Category("Data")]
-    [Description(
-        "Identifier member, in most cases this is primary column of the table."
-    )]
+    [Description("Identifier member, in most cases this is primary column of the table.")]
     public string IDColumn { get; set; }
 
     [Localizable(true)]

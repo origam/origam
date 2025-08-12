@@ -37,11 +37,7 @@ public class SectionEditorData
 
 public class DataSource
 {
-    public static DataSource Empty = new DataSource
-    {
-        Name = "",
-        SchemaItemId = Guid.Empty,
-    };
+    public static DataSource Empty = new DataSource { Name = "", SchemaItemId = Guid.Empty };
     public Guid SchemaItemId { get; set; }
     public string Name { get; set; }
 }

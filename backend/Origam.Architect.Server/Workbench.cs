@@ -39,8 +39,7 @@ public class Workbench
         MethodBase.GetCurrentMethod().DeclaringType
     );
 
-    private readonly CancellationTokenSource modelCheckCancellationTokenSource =
-        new();
+    private readonly CancellationTokenSource modelCheckCancellationTokenSource = new();
     private SchemaService schema;
 
     public Workbench(SchemaService schema)
@@ -60,8 +59,7 @@ public class Workbench
     private void _schema_SchemaLoaded(object sender, bool isInteractive)
     {
         OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schema);
-        IDeploymentService deployment =
-            ServiceManager.Services.GetService<IDeploymentService>();
+        IDeploymentService deployment = ServiceManager.Services.GetService<IDeploymentService>();
         IParameterService parameterService =
             ServiceManager.Services.GetService<IParameterService>();
 
@@ -84,16 +82,12 @@ public class Workbench
         if (isEmpty)
         {
             string userName = SecurityManager.CurrentPrincipal.Identity.Name;
-            IOrigamProfileProvider profileProvider =
-                SecurityManager.GetProfileProvider();
+            IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
             profileProvider.AddUser("Architect (" + userName + ")", userName);
         }
     }
 
-    private void RunDeploymentScripts(
-        IDeploymentService deployment,
-        bool isInteractive
-    ) { }
+    private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive) { }
 
     public void Connect()
     {
@@ -109,8 +103,7 @@ public class Workbench
 
     private void InitPersistenceService()
     {
-        IPersistenceService persistence =
-            OrigamEngine.OrigamEngine.CreatePersistenceService();
+        IPersistenceService persistence = OrigamEngine.OrigamEngine.CreatePersistenceService();
         ServiceManager.Services.AddService(persistence);
     }
 
@@ -120,13 +113,10 @@ public class Workbench
             AppDomain.CurrentDomain.BaseDirectory,
             "OrigamSettings.config"
         );
-        OrigamSettingsCollection configurations =
-            ConfigurationManager.GetAllUserHomeConfigurations(
-                origamSettingsPath
-            );
-        var configuration = configurations
-            .Cast<OrigamSettings>()
-            .FirstOrDefault();
+        OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
+            origamSettingsPath
+        );
+        var configuration = configurations.Cast<OrigamSettings>().FirstOrDefault();
         if (configuration != null)
         {
             ConfigurationManager.SetActiveConfiguration(configuration);
@@ -139,29 +129,22 @@ public class Workbench
     private void InitializeConnectedServices()
     {
         ServiceManager.Services.AddService(
-            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(
-                externalAgent
-            ))
+            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent))
         );
         ServiceManager.Services.AddService(new StateMachineService());
-        ServiceManager.Services.AddService(
-            OrigamEngine.OrigamEngine.CreateDocumentationService()
-        );
+        ServiceManager.Services.AddService(OrigamEngine.OrigamEngine.CreateDocumentationService());
         ServiceManager.Services.AddService(new TracingService());
         ServiceManager.Services.AddService(new DataLookupService());
         ServiceManager.Services.AddService(new DeploymentService());
         ServiceManager.Services.AddService(new ParameterService());
-        ServiceManager.Services.AddService(
-            new Origam.Workflow.WorkQueue.WorkQueueService()
-        );
+        ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
     }
 
     public void RunBackgroundInitializationTasks()
     {
-        var currentPersistenceService =
-            ServiceManager.Services.GetService<IPersistenceService>();
+        var currentPersistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         if (!(currentPersistenceService is FilePersistenceService))
             return;
         var cancellationToken = modelCheckCancellationTokenSource.Token;
@@ -173,14 +156,8 @@ public class Workbench
                             new FilePersistenceBuilder().CreateNoBinFilePersistenceService()
                     )
                     {
-                        IndexReferences(
-                            independentPersistenceService,
-                            cancellationToken
-                        );
-                        DoModelChecks(
-                            independentPersistenceService,
-                            cancellationToken
-                        );
+                        IndexReferences(independentPersistenceService, cancellationToken);
+                        DoModelChecks(independentPersistenceService, cancellationToken);
                     }
                 },
                 cancellationToken
@@ -228,16 +205,13 @@ public class Workbench
         CancellationToken cancellationToken
     )
     {
-        List<Dictionary<ISchemaItem, string>> errorFragments =
-            ModelRules.GetErrors(
-                schemaProviders: new OrigamProviderBuilder()
-                    .SetSchemaProvider(
-                        independentPersistenceService.SchemaProvider
-                    )
-                    .GetAll(),
-                independentPersistenceService: independentPersistenceService,
-                cancellationToken: cancellationToken
-            );
+        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
+            schemaProviders: new OrigamProviderBuilder()
+                .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                .GetAll(),
+            independentPersistenceService: independentPersistenceService,
+            cancellationToken: cancellationToken
+        );
         var persistenceProvider = (FilePersistenceProvider)
             independentPersistenceService.SchemaProvider;
     }

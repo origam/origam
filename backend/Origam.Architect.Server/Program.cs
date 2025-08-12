@@ -43,18 +43,14 @@ public class Program
         workbench.InitializeDefaultServices();
         workbench.Connect();
 
-        var persistence =
-            ServiceManager.Services.GetService<IPersistenceService>();
-        var documentation =
-            ServiceManager.Services.GetService<IDocumentationService>();
+        var persistence = ServiceManager.Services.GetService<IPersistenceService>();
+        var documentation = ServiceManager.Services.GetService<IDocumentationService>();
         var builder = WebApplication.CreateBuilder(args);
         builder
             .Services.AddControllers()
             .AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.Converters.Add(
-                    new JsonStringEnumConverter()
-                );
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -76,9 +72,7 @@ public class Program
             logging.AddLog4Net();
         });
 
-        var spaConfig = builder
-            .Configuration.GetSectionOrThrow("SpaConfig")
-            .Get<SpaConfig>();
+        var spaConfig = builder.Configuration.GetSectionOrThrow("SpaConfig").Get<SpaConfig>();
         builder.Services.AddSpaStaticFiles(configuration =>
         {
             configuration.RootPath = spaConfig.PathToClientApplication;
@@ -93,9 +87,7 @@ public class Program
 
         app.UseAuthorization();
         app.UseStaticFiles();
-        string assemblyPath = Path.GetDirectoryName(
-            Assembly.GetExecutingAssembly().Location
-        );
+        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
             new StaticFileOptions
             {

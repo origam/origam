@@ -46,10 +46,7 @@ public class EditorController(
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var editor = editorService.OpenEditorWithNewItem(
-            input.NodeId,
-            input.NewTypeName
-        );
+        var editor = editorService.OpenEditorWithNewItem(input.NodeId, input.NewTypeName);
 
         TreeNode treeNode = treeNodeFactory.Create(editor.Item);
         return new OpenEditorData(
@@ -81,9 +78,7 @@ public class EditorController(
                             node: treeNode,
                             data: GetData(treeNode, item),
                             isPersisted: item.IsPersisted,
-                            parentNodeId: TreeNode.ToTreeNodeId(
-                                item.ParentItem
-                            ),
+                            parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
                             isDirty: editor.IsDirty
                         ),
                         EditorType.DocumentationEditor => new OpenEditorData(
@@ -91,14 +86,9 @@ public class EditorController(
                             isPersisted: item.IsPersisted,
                             node: treeNode,
                             isDirty: editor.IsDirty,
-                            data: documentationHelper.GetData(
-                                editor.DocumentationData,
-                                item.Name
-                            )
+                            data: documentationHelper.GetData(editor.DocumentationData, item.Name)
                         ),
-                        _ => throw new Exception(
-                            "Unknown editor type: " + editor.Id.Type
-                        ),
+                        _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
                     };
                 })
                 .ToList();
@@ -111,9 +101,7 @@ public class EditorController(
     {
         return RunWithErrorHandler(() =>
         {
-            EditorData editor = editorService.OpenDefaultEditor(
-                input.SchemaItemId
-            );
+            EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
             ISchemaItem item = editor.Item;
             TreeNode treeNode = treeNodeFactory.Create(item);
 
@@ -131,17 +119,10 @@ public class EditorController(
     {
         object data = treeNode.DefaultEditor switch
         {
-            EditorSubType.GridEditor => propertyService.GetEditorProperties(
-                item
-            ),
-            EditorSubType.XsltEditor => propertyService.GetEditorProperties(
-                item
-            ),
-            EditorSubType.ScreenSectionEditor =>
-                sectionService.GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(
-                item
-            ),
+            EditorSubType.GridEditor => propertyService.GetEditorProperties(item),
+            EditorSubType.XsltEditor => propertyService.GetEditorProperties(item),
+            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
+            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
             _ => null,
         };
         return data;
@@ -162,14 +143,9 @@ public class EditorController(
     {
         return RunWithErrorHandler(() =>
         {
-            EditorData editorData = editorService.OpenDefaultEditor(
-                input.SchemaItemId
-            );
+            EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
             ISchemaItem item = editorData.Item;
-            if (
-                item is AbstractControlSet controlSet
-                && controlSet.DataSourceId == Guid.Empty
-            )
+            if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
             {
                 return BadRequest("No Datasource selected can't save");
             }

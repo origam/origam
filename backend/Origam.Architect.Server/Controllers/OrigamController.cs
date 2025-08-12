@@ -39,9 +39,7 @@ public abstract class OrigamController(
         return RunWithErrorHandlerAsync(AsynFunc).Result;
     }
 
-    protected async Task<IActionResult> RunWithErrorHandlerAsync(
-        Func<Task<IActionResult>> func
-    )
+    protected async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
     {
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {

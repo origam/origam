@@ -51,12 +51,8 @@ public class TabPage : IControl
     public void Initialize(ControlSetItem controlSetItem)
     {
         Regex tabPageNumberRegex = new Regex(@"TabPage(\d*)");
-        var tabs = controlSetItem
-            .ParentItem.ChildItems.OfType<ControlSetItem>()
-            .ToList();
-        var labelTexts = tabs.Select(tab =>
-                tab.GetPropertyOrNull("Text")?.Value
-            )
+        var tabs = controlSetItem.ParentItem.ChildItems.OfType<ControlSetItem>().ToList();
+        var labelTexts = tabs.Select(tab => tab.GetPropertyOrNull("Text")?.Value)
             .Where(labelText => labelText != null);
 
         int maxTabPageNumber = labelTexts
@@ -64,9 +60,7 @@ public class TabPage : IControl
             .Select(labelText =>
             {
                 var match = tabPageNumberRegex.Match(labelText);
-                return match.Groups[1].Value == ""
-                    ? 0
-                    : int.Parse(match.Groups[1].Value);
+                return match.Groups[1].Value == "" ? 0 : int.Parse(match.Groups[1].Value);
             })
             .DefaultIfEmpty(0)
             .Max();

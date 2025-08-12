@@ -140,9 +140,7 @@ public class AsPanel : ControlBase
     [Category("Pipeline View")]
     public bool IsPipelineVisible { get; set; }
 
-    [Description(
-        "This setting is only applied on the action buttons placed on the toolbar."
-    )]
+    [Description("This setting is only applied on the action buttons placed on the toolbar.")]
     public bool DisableActionButtons { get; set; }
 
     [Category("Behavior")]

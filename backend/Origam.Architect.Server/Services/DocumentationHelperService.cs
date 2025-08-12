@@ -47,9 +47,7 @@ public class DocumentationHelperService()
             .ToDictionary(prop => prop.Name, prop => prop);
 
         foreach (
-            DocumentationComplete.DocumentationRow row in documentationComplete
-                .Documentation
-                .Rows
+            DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows
         )
         {
             entries[row.Category] = new EditorProperty(
@@ -64,11 +62,7 @@ public class DocumentationHelperService()
             );
         }
 
-        return new DocumentationEditorData
-        {
-            Label = label,
-            Properties = entries.Values.ToList(),
-        };
+        return new DocumentationEditorData { Label = label, Properties = entries.Values.ToList() };
     }
 
     public void Update(ChangesModel changes, EditorData editor)

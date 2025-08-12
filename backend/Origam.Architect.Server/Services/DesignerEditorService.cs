@@ -40,23 +40,11 @@ public class DesignerEditorService(
     ControlAdapterFactory adapterFactory
 )
 {
-    private readonly Guid tabControlControlItemId = new(
-        "2e39362b-80a6-4430-a9bd-b3013583a2fe"
-    );
-    private readonly Guid tabPageControlItemId = new(
-        "6d13ec20-3b17-456e-ae43-3021cb067a70"
-    );
-    private readonly List<string> implementedScreenWidgets =
-    [
-        "TabControl",
-        "SplitPanel",
-        "AsTree",
-    ];
+    private readonly Guid tabControlControlItemId = new("2e39362b-80a6-4430-a9bd-b3013583a2fe");
+    private readonly Guid tabPageControlItemId = new("6d13ec20-3b17-456e-ae43-3021cb067a70");
+    private readonly List<string> implementedScreenWidgets = ["TabControl", "SplitPanel", "AsTree"];
 
-    public bool Update(
-        AbstractControlSet screenSection,
-        SectionEditorChangesModel input
-    )
+    public bool Update(AbstractControlSet screenSection, SectionEditorChangesModel input)
     {
         bool editorIsDirty = false;
         if (screenSection.Name != input.Name)
@@ -74,8 +62,7 @@ public class DesignerEditorService(
         foreach (var changes in input.ModelChanges)
         {
             ControlSetItem itemToUpdate =
-                screenSection.GetChildByIdRecursive(changes.SchemaItemId)
-                as ControlSetItem;
+                screenSection.GetChildByIdRecursive(changes.SchemaItemId) as ControlSetItem;
             if (itemToUpdate == null)
             {
                 throw new Exception(
@@ -85,8 +72,7 @@ public class DesignerEditorService(
 
             if (
                 itemToUpdate.Id != screenSection.MainItem.Id
-                && itemToUpdate.ParentItemId
-                    != (changes.ParentSchemaItemId ?? Guid.Empty)
+                && itemToUpdate.ParentItemId != (changes.ParentSchemaItemId ?? Guid.Empty)
             )
             {
                 itemToUpdate.ParentItem.ChildItems.Remove(itemToUpdate);
@@ -99,8 +85,7 @@ public class DesignerEditorService(
                 }
             }
 
-            ControlAdapter.ControlAdapter controlAdapter =
-                adapterFactory.Create(itemToUpdate);
+            ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(itemToUpdate);
             editorIsDirty = controlAdapter.UpdateProperties(changes);
         }
 
@@ -115,11 +100,7 @@ public class DesignerEditorService(
                 schemaService.GetProvider(typeof(EntityModelSchemaItemProvider))
                 as EntityModelSchemaItemProvider;
             var dataSources = entityProvider
-                .ChildItems.Select(x => new DataSource
-                {
-                    Name = x.Name,
-                    SchemaItemId = x.Id,
-                })
+                .ChildItems.Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
             dataSources.Insert(0, DataSource.Empty);
@@ -128,18 +109,14 @@ public class DesignerEditorService(
             DropDownValue[] dataSourceDropDownValues = fields
                 .Select(field => new DropDownValue(field.Name, field.Name))
                 .ToArray();
-            ApiControl apiControl = LoadContent(
-                screenSection.MainItem,
-                dataSourceDropDownValues
-            );
+            ApiControl apiControl = LoadContent(screenSection.MainItem, dataSourceDropDownValues);
             return new SectionEditorData
             {
                 Name = editedItem.Name,
                 SchemaExtensionId = editedItem.SchemaExtensionId,
                 DataSources = dataSources,
                 RootControl = apiControl,
-                SelectedDataSourceId =
-                    screenSection.DataEntity?.Id ?? Guid.Empty,
+                SelectedDataSourceId = screenSection.DataEntity?.Id ?? Guid.Empty,
                 Fields = GetFields(screenSection),
             };
         }
@@ -155,37 +132,25 @@ public class DesignerEditorService(
                 schemaService.GetProvider<DataStructureSchemaItemProvider>();
             if (dataStructureProvider == null)
             {
-                throw new UserOrigamException(
-                    $"No package is active. Select a package first."
-                );
+                throw new UserOrigamException($"No package is active. Select a package first.");
             }
 
             var dataSources = dataStructureProvider
-                .ChildItems.Select(x => new DataSource
-                {
-                    Name = x.Name,
-                    SchemaItemId = x.Id,
-                })
+                .ChildItems.Select(x => new DataSource { Name = x.Name, SchemaItemId = x.Id })
                 .OrderBy(x => x.Name)
                 .ToList();
             dataSources.Insert(0, DataSource.Empty);
 
-            var userControlProvider =
-                schemaService.GetProvider<UserControlSchemaItemProvider>();
+            var userControlProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
 
             var sections = userControlProvider
                 .ChildItems.OfType<ControlItem>()
                 .Where(item =>
                     item.ControlType != "Origam.Gui.Win.AsForm"
                     && item.IsComplexType
-                    && item.ControlToolBoxVisibility
-                        != ControlToolBoxVisibility.Nowhere
+                    && item.ControlToolBoxVisibility != ControlToolBoxVisibility.Nowhere
                 )
-                .Select(item => new ToolBoxItem
-                {
-                    Name = item.Name,
-                    Id = item.Id,
-                })
+                .Select(item => new ToolBoxItem { Name = item.Name, Id = item.Id })
                 .OrderBy(x => x.Name);
 
             var widgets = userControlProvider
@@ -198,11 +163,7 @@ public class DesignerEditorService(
                             or ControlToolBoxVisibility.PanelAndFormDesigner
                 )
                 .Where(item => implementedScreenWidgets.Contains(item.Name))
-                .Select(item => new ToolBoxItem
-                {
-                    Name = item.Name,
-                    Id = item.Id,
-                })
+                .Select(item => new ToolBoxItem { Name = item.Name, Id = item.Id })
                 .OrderBy(x => x.Name);
 
             ApiControl apiControl = LoadContent(screen.MainItem, []);
@@ -230,15 +191,9 @@ public class DesignerEditorService(
         }
 
         return dataEntity
-            .ChildItemsByType<IDataEntityColumn>(
-                AbstractDataEntityColumn.CategoryConst
-            )
+            .ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst)
             .OrderBy(field => field.Name)
-            .Select(field => new EditorField
-            {
-                Name = field.Name,
-                Type = field.DataType,
-            })
+            .Select(field => new EditorField { Name = field.Name, Type = field.DataType })
             .ToList();
     }
 
@@ -247,14 +202,9 @@ public class DesignerEditorService(
         DropDownValue[] dataSourceDropDownValues
     )
     {
-        ApiControl apiControl = LoadItem(
-            controlSetItem,
-            dataSourceDropDownValues
-        );
+        ApiControl apiControl = LoadItem(controlSetItem, dataSourceDropDownValues);
 
-        var childControls = controlSetItem.ChildItemsByType<ControlSetItem>(
-            "ControlSetItem"
-        );
+        var childControls = controlSetItem.ChildItemsByType<ControlSetItem>("ControlSetItem");
         foreach (var childControl in childControls)
         {
             if (childControl.IsDeleted)
@@ -274,16 +224,12 @@ public class DesignerEditorService(
         DropDownValue[] dataSourceDropDownValues
     )
     {
-        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(
-            controlSetItem
-        );
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(controlSetItem);
         ApiControl apiControl = new ApiControl
         {
             Type = controlSetItem.ControlItem.ControlType,
             Id = controlSetItem.Id,
-            Properties = controlAdapter.GetEditorProperties(
-                dataSourceDropDownValues
-            ),
+            Properties = controlAdapter.GetEditorProperties(dataSourceDropDownValues),
         };
 
         if (controlSetItem.RootItem is PanelControlSet controlSet)
@@ -318,9 +264,7 @@ public class DesignerEditorService(
         );
         if (parent == null)
         {
-            throw new Exception(
-                $"Parent object {itemModelData.ParentControlSetItemId} not found"
-            );
+            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
         }
 
         ControlItem controlItem = schemaService
@@ -334,30 +278,18 @@ public class DesignerEditorService(
         newItem.ControlItem = controlItem;
         newItem.Name = itemModelData.FieldName ?? controlItem.Name;
 
-        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(
-            newItem
-        );
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
 
-        IDataEntity dataEntity =
-            persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
-                screenSection.DataSourceId
-            );
+        IDataEntity dataEntity = persistenceService.SchemaProvider.RetrieveInstance<IDataEntity>(
+            screenSection.DataSourceId
+        );
         DataSet dataSet = new DatasetGenerator(false).CreateDataSet(dataEntity);
-        string caption = dataSet
-            .Tables[0]
-            .Columns[itemModelData.FieldName]
-            ?.Caption;
+        string caption = dataSet.Tables[0].Columns[itemModelData.FieldName]?.Caption;
         if (controlAdapter.Control is IAsControl asControl)
         {
             string boundPropertyName = asControl.DefaultBindableProperty;
-            ControlPropertyItem propertyItem = FindPropertyItem(
-                newItem,
-                boundPropertyName
-            );
-            PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(
-                newItem,
-                propertyItem
-            );
+            ControlPropertyItem propertyItem = FindPropertyItem(newItem, boundPropertyName);
+            PropertyBindingInfo propertyBinding = FindOrMakeBindingInfo(newItem, propertyItem);
             propertyBinding.ControlPropertyItem = propertyItem;
             propertyBinding.Name = boundPropertyName;
             propertyBinding.Value = itemModelData.FieldName;
@@ -368,14 +300,9 @@ public class DesignerEditorService(
             // Looks strange, we will have to see how well it works.
         }
 
-        controlAdapter.InitializeProperties(
-            top: itemModelData.Top,
-            left: itemModelData.Left
-        );
+        controlAdapter.InitializeProperties(top: itemModelData.Top, left: itemModelData.Left);
         PropertyValueItem textValueItem = newItem
-            .ChildItemsByType<PropertyValueItem>(
-                PropertyValueItem.CategoryConst
-            )
+            .ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
             .FirstOrDefault(x => x.Name == "Text");
         if (textValueItem != null && caption != null)
         {
@@ -394,14 +321,9 @@ public class DesignerEditorService(
     )
     {
         PropertyBindingInfo result = controlSetItem
-            .ChildItemsByType<PropertyBindingInfo>(
-                PropertyBindingInfo.CategoryConst
-            )
+            .ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst)
             .FirstOrDefault(item =>
-                Equals(
-                    item.ControlPropertyItem?.PrimaryKey,
-                    propertyToFind.PrimaryKey
-                )
+                Equals(item.ControlPropertyItem?.PrimaryKey, propertyToFind.PrimaryKey)
             );
 
         if (result == null)
@@ -417,15 +339,10 @@ public class DesignerEditorService(
         return result;
     }
 
-    private ControlPropertyItem FindPropertyItem(
-        ControlSetItem controlSetItem,
-        string propertyName
-    )
+    private ControlPropertyItem FindPropertyItem(ControlSetItem controlSetItem, string propertyName)
     {
         ControlPropertyItem propertyItem = controlSetItem
-            .ControlItem.ChildItemsByType<ControlPropertyItem>(
-                ControlPropertyItem.CategoryConst
-            )
+            .ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
             .FirstOrDefault(propItem =>
                 string.Equals(
                     propItem.Name,
@@ -483,14 +400,10 @@ public class DesignerEditorService(
         FormControlSet screen
     )
     {
-        ISchemaItem parent = screen.GetChildByIdRecursive(
-            itemModelData.ParentControlSetItemId
-        );
+        ISchemaItem parent = screen.GetChildByIdRecursive(itemModelData.ParentControlSetItemId);
         if (parent == null)
         {
-            throw new Exception(
-                $"Parent object {itemModelData.ParentControlSetItemId} not found"
-            );
+            throw new Exception($"Parent object {itemModelData.ParentControlSetItemId} not found");
         }
 
         ControlItem controlItem = schemaService
@@ -510,21 +423,12 @@ public class DesignerEditorService(
         object width = null;
         if (controlItem.PanelControlSet != null)
         {
-            sectionControl = LoadContent(
-                controlItem.PanelControlSet.MainItem,
-                []
-            );
-            height = sectionControl
-                .Properties.Find(prop => prop.Name == "Height")
-                .Value;
-            width = sectionControl
-                .Properties.Find(prop => prop.Name == "Width")
-                .Value;
+            sectionControl = LoadContent(controlItem.PanelControlSet.MainItem, []);
+            height = sectionControl.Properties.Find(prop => prop.Name == "Height").Value;
+            width = sectionControl.Properties.Find(prop => prop.Name == "Width").Value;
         }
 
-        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(
-            newItem
-        );
+        ControlAdapter.ControlAdapter controlAdapter = adapterFactory.Create(newItem);
         controlAdapter.InitializeProperties(
             top: itemModelData.Top,
             left: itemModelData.Left,
@@ -538,9 +442,7 @@ public class DesignerEditorService(
     {
         foreach (var schemaItemId in schemaItemIds)
         {
-            ISchemaItem schemaItem = rootItem.GetChildByIdRecursive(
-                schemaItemId
-            );
+            ISchemaItem schemaItem = rootItem.GetChildByIdRecursive(schemaItemId);
             if (schemaItem is ControlSetItem itemToUpdate)
             {
                 itemToUpdate.IsDeleted = true;
@@ -559,10 +461,7 @@ public class DesignerEditorService(
             {
                 var screenControlSet = (ControlSetItem)
                     formControlSet.GetChildByIdRecursive(sectionId);
-                var screenSection = screenControlSet
-                    .ControlItem
-                    .PanelControlSet
-                    .MainItem;
+                var screenSection = screenControlSet.ControlItem.PanelControlSet.MainItem;
                 ApiControl sectionControl = LoadContent(screenSection, []);
                 sectionControl.Properties.Find(x => x.Name == "Top").Value = 0;
                 sectionControl.Properties.Find(x => x.Name == "Left").Value = 0;
@@ -573,8 +472,7 @@ public class DesignerEditorService(
 
     public bool SaveScreenSection(PanelControlSet screenSection)
     {
-        var controlSchemaItemProvider =
-            schemaService.GetProvider<UserControlSchemaItemProvider>();
+        var controlSchemaItemProvider = schemaService.GetProvider<UserControlSchemaItemProvider>();
         try
         {
             bool createWidget = !screenSection.IsPersisted;
@@ -592,24 +490,20 @@ public class DesignerEditorService(
             screenSection.OldPrimaryKey = null;
             if (createWidget)
             {
-                ControlItem newControl =
-                    controlSchemaItemProvider.NewItem<ControlItem>(
-                        schemaService.ActiveSchemaExtensionId,
-                        null
-                    );
+                ControlItem newControl = controlSchemaItemProvider.NewItem<ControlItem>(
+                    schemaService.ActiveSchemaExtensionId,
+                    null
+                );
                 newControl.Name = screenSection.Name;
                 newControl.IsComplexType = true;
                 Type t = typeof(PanelControlSet);
                 newControl.ControlType = t.ToString();
                 newControl.ControlNamespace = t.Namespace;
                 newControl.PanelControlSet = screenSection;
-                newControl.ControlToolBoxVisibility =
-                    ControlToolBoxVisibility.FormDesigner;
+                newControl.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
                 SchemaItemAncestor ancestor = new SchemaItemAncestor();
                 ancestor.SchemaItem = newControl;
-                ancestor.Ancestor = editorService.GetControlByType(
-                    "Origam.Gui.Win.AsPanel"
-                );
+                ancestor.Ancestor = editorService.GetControlByType("Origam.Gui.Win.AsPanel");
                 ancestor.PersistenceProvider = newControl.PersistenceProvider;
                 newControl.ThrowEventOnPersist = false;
                 newControl.Persist();

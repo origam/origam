@@ -45,23 +45,16 @@ public class DocumentationController(
     {
         return RunWithErrorHandler(() =>
         {
-            EditorData editor = editorService.OpenDocumentationEditor(
-                input.SchemaItemId
-            );
+            EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
             ISchemaItem item = editor.Item;
             TreeNode treeNode = treeNodeFactory.Create(item);
 
-            editor.DocumentationData = documentationService.LoadDocumentation(
-                item.Id
-            );
+            editor.DocumentationData = documentationService.LoadDocumentation(item.Id);
             var openEditorData = new OpenEditorData(
                 editorId: editor.Id,
                 isPersisted: true,
                 node: treeNode,
-                data: documentationHelper.GetData(
-                    editor.DocumentationData,
-                    item.Name
-                )
+                data: documentationHelper.GetData(editor.DocumentationData, item.Name)
             );
             return Ok(openEditorData);
         });
@@ -72,9 +65,7 @@ public class DocumentationController(
     {
         return RunWithErrorHandler(() =>
         {
-            EditorData editor = editorService.OpenDocumentationEditor(
-                changes.SchemaItemId
-            );
+            EditorData editor = editorService.OpenDocumentationEditor(changes.SchemaItemId);
             documentationHelper.Update(changes, editor);
 
             return Ok(new UpdatePropertiesResult { IsDirty = editor.IsDirty });
@@ -86,13 +77,8 @@ public class DocumentationController(
     {
         return RunWithErrorHandler(() =>
         {
-            EditorData editor = editorService.OpenDocumentationEditor(
-                input.SchemaItemId
-            );
-            documentationService.SaveDocumentation(
-                editor.DocumentationData,
-                input.SchemaItemId
-            );
+            EditorData editor = editorService.OpenDocumentationEditor(input.SchemaItemId);
+            documentationService.SaveDocumentation(editor.DocumentationData, input.SchemaItemId);
             editor.IsDirty = false;
             return Ok();
         });

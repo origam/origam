@@ -44,16 +44,14 @@ public class ControlAdapterFactory(
             {
                 className = "AsPanel";
             }
-            string newFullClassName =
-                "Origam.Architect.Server.Controls." + className;
+            string newFullClassName = "Origam.Architect.Server.Controls." + className;
             Type controlType = Type.GetType(newFullClassName);
             if (controlType == null)
             {
                 throw new Exception("Cannot find type: " + newFullClassName);
             }
 
-            IControl control =
-                Activator.CreateInstance(controlType) as IControl;
+            IControl control = Activator.CreateInstance(controlType) as IControl;
             return new ControlAdapter(
                 controlSetItem,
                 control,
@@ -65,10 +63,7 @@ public class ControlAdapterFactory(
         }
         catch (Exception ex)
         {
-            throw new Exception(
-                "Cannot find a form class for " + oldFullClassName,
-                ex
-            );
+            throw new Exception("Cannot find a form class for " + oldFullClassName, ex);
         }
     }
 }
