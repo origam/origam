@@ -683,10 +683,13 @@ public class ControlSetEditor : AbstractEditor
 				}
 			}
 #if DEBUG
-			string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
-			string path = Path.Combine("C:\\Repos\\origam\\backend\\Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
+			string architectExePath = Assembly.GetExecutingAssembly().Location;
+			string architectBinDir = Path.GetDirectoryName(architectExePath)!;
+			string backendDir = Path.GetFullPath(Path.Combine(architectBinDir, "..", "..", ".."));
+			string path = Path.Combine(backendDir, "Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
 			if (!File.Exists(path))
 			{
+				string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
 				File.WriteAllText(path, newClass);
 			}
 #endif
