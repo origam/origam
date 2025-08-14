@@ -5,16 +5,15 @@
       <OrigamSettings>
         <SchemaDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</DataDataService>
+        <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
+		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
         <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
+        <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
+        <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
         <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
 		<WorkQueueProcessingMode>Linear</WorkQueueProcessingMode>
 		<AutoProcessWorkQueues>true</AutoProcessWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
-        <WorkQueueListRefreshPeriod>60</WorkQueueListRefreshPeriod>
-        <HelpUrl>doc.aspx</HelpUrl>
-		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
-		<AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
-        <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
       </OrigamSettings>
     </ArrayOfOrigamSettings>

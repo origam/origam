@@ -6,9 +6,6 @@
         <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>
         <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
-        <GUIExcelExportFormat>XLS</GUIExcelExportFormat>
-        <ExtraSchemaExtensionId>00000000-0000-0000-0000-000000000000</ExtraSchemaExtensionId>
-        <HelpUrl>doc.aspx</HelpUrl>
 		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
         <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
         <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
