@@ -17,10 +17,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;
@@ -114,12 +114,12 @@ public class PropertyParser
         if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
             Guid id = ParseGuid(value, property);
-            return persistenceService.SchemaProvider
-                .RetrieveInstance<IPersistent>(id);
+            return persistenceService.SchemaProvider.RetrieveInstance<IPersistent>(id);
         }
 
         throw new Exception(
-            $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed.");
+            $"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed."
+        );
     }
 
     private Guid ParseGuid(string value, PropertyInfo property)
@@ -135,6 +135,7 @@ public class PropertyParser
     private Exception MakeCouldNotParseException(PropertyInfo property)
     {
         return new Exception(
-            $"Could not parse value of property {property.Name} to {property.PropertyType.Name}");
+            $"Could not parse value of property {property.Name} to {property.PropertyType.Name}"
+        );
     }
 }

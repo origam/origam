@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Models;
@@ -25,8 +26,8 @@ namespace Origam.Architect.Server.Models;
 public class NewItemModel
 {
     [Required]
-    public string NodeId { get; set; }   
-    
+    public string NodeId { get; set; }
+
     [Required]
     public string NewTypeName { get; set; }
 }

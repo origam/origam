@@ -40,17 +40,14 @@ public class EditorController(
     EditorService editorService,
     DocumentationHelperService documentationHelper,
     IWebHostEnvironment environment,
-    ILogger<OrigamController> log)
-    : OrigamController(log, environment)
+    ILogger<OrigamController> log
+) : OrigamController(log, environment)
 {
     [HttpPost("CreateNode")]
-    public OpenEditorData CreateNode(
-        [Required] [FromBody] NewItemModel input)
+    public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
     {
-        var editor =
-            editorService.OpenEditorWithNewItem(
-                input.NodeId, input.NewTypeName);
-        
+        var editor = editorService.OpenEditorWithNewItem(input.NodeId, input.NewTypeName);
+
         TreeNode treeNode = treeNodeFactory.Create(editor.Item);
         return new OpenEditorData(
             editorId: editor.Id,
@@ -77,19 +74,21 @@ public class EditorController(
                     return editor.Id.Type switch
                     {
                         EditorType.Default => new OpenEditorData(
-                            editorId: editor.Id, 
+                            editorId: editor.Id,
                             node: treeNode,
                             data: GetData(treeNode, item),
                             isPersisted: item.IsPersisted,
-                            parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem), 
-                            isDirty: editor.IsDirty),
+                            parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
+                            isDirty: editor.IsDirty
+                        ),
                         EditorType.DocumentationEditor => new OpenEditorData(
                             editorId: editor.Id,
+                            node: treeNode,
+                            data: documentationHelper.GetData(editor.DocumentationData, item.Name),
                             isPersisted: item.IsPersisted,
-                            node: treeNode, 
-                            isDirty: editor.IsDirty,
-                            data: documentationHelper.GetData(editor.DocumentationData, item.Name)),
-                        _ => throw new Exception("Unknown editor type: " + editor.Id.Type)
+                            isDirty: editor.IsDirty
+                        ),
+                        _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
                     };
                 })
                 .ToList();
@@ -114,19 +113,17 @@ public class EditorController(
             );
             return Ok(openEditorData);
         });
-    } 
-    
+    }
+
     private object GetData(TreeNode treeNode, ISchemaItem item)
     {
         object data = treeNode.DefaultEditor switch
         {
             EditorSubType.GridEditor => propertyService.GetEditorProperties(item),
             EditorSubType.XsltEditor => propertyService.GetEditorProperties(item),
-            EditorSubType.ScreenSectionEditor => sectionService
-                .GetSectionEditorData(item),
-            EditorSubType.ScreenEditor => sectionService
-                .GetScreenEditorData(item),
-            _ => null
+            EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
+            EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),
+            _ => null,
         };
         return data;
     }

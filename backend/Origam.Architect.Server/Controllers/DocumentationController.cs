@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -37,10 +37,9 @@ public class DocumentationController(
     IWebHostEnvironment environment,
     IDocumentationService documentationService,
     DocumentationHelperService documentationHelper,
-    ILogger<OrigamController> log)
-    : OrigamController(log, environment)
+    ILogger<OrigamController> log
+) : OrigamController(log, environment)
 {
-  
     [HttpPost("OpenEditor")]
     public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
@@ -51,35 +50,28 @@ public class DocumentationController(
             TreeNode treeNode = treeNodeFactory.Create(item);
 
             editor.DocumentationData = documentationService.LoadDocumentation(item.Id);
-            var openEditorData = new OpenEditorData
-            (
+            var openEditorData = new OpenEditorData(
                 editorId: editor.Id,
-                isPersisted: true,
                 node: treeNode,
-                data: documentationHelper.GetData(editor.DocumentationData, item.Name)
+                data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                isPersisted: true
             );
             return Ok(openEditorData);
         });
     }
 
     [HttpPost("Update")]
-    public IActionResult Update(
-        [FromBody] ChangesModel changes)
+    public IActionResult Update([FromBody] ChangesModel changes)
     {
         return RunWithErrorHandler(() =>
         {
             EditorData editor = editorService.OpenDocumentationEditor(changes.SchemaItemId);
             documentationHelper.Update(changes, editor);
 
-            return Ok( 
-                new UpdatePropertiesResult
-                {
-                    IsDirty = editor.IsDirty
-                }
-            );
+            return Ok(new UpdatePropertiesResult { IsDirty = editor.IsDirty });
         });
     }
-    
+
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {

@@ -1,0 +1,23 @@
+name: CSharpier
+on:
+  push:
+    branches: [ master, 20* ]
+  pull_request:
+    branches: [ master, 20* ]
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    name: Check Formatting
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: CSharpier check for selected projects
+        run: |
+          cd backend
+          dotnet tool restore
+          dotnet csharpier check Origam.Architect.Server
+
