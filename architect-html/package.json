@@ -30,7 +30,7 @@
     "react-inlinesvg": "^4.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
+    "@babel/core": "^7.28.3",
     "@types/babel__core": "^7.20.5",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.2.1",
