@@ -27,7 +27,10 @@ namespace Origam.Architect.Server.Utils;
 
 public static class PropertyUtils
 {
-    public static bool CanBeEdited(PropertyInfo property)
+    public static bool CanBeEdited(
+	
+	
+	PropertyInfo property)
     {
         var browsableAttribute = property.GetAttribute<BrowsableAttribute>();
         if (browsableAttribute == null)
