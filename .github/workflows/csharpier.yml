@@ -22,5 +22,5 @@ jobs:
       - name: CSharpier check for selected projects
         run: |
           cd backend
-          dotnet tool run csharpier --check Origam.Architect.Server
+          dotnet tool run csharpier check Origam.Architect.Server
 
