@@ -29,6 +29,7 @@ public static class PropertyUtils
 {
     public static bool CanBeEdited(PropertyInfo property)
     {
+        int unusedVariable;
         var browsableAttribute = property.GetAttribute<BrowsableAttribute>();
         if (browsableAttribute == null)
         {
