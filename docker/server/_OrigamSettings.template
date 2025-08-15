@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <OrigamSettings>
-  <xmlSerializerSection type="Origam.OrigamSettingsCollection, Origam, Version=1.14.2825.20394, Culture=neutral, PublicKeyToken=null">
+  <xmlSerializerSection type="Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
     <ArrayOfOrigamSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <OrigamSettings>
-        <SchemaDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</SchemaDataService>
-        <DataDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</DataDataService>
         <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
 		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
         <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
