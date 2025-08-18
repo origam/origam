@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dlmb="http://schemas.origam.com/Origam.Schema.LookupModel.DataLookupMenuBinding/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="9b8686bf-d795-4ba1-806b-a537e8940231"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupUserName_Surname.origam#LookupUserName_Surname/ed737dad-a4a1-44f5-81e1-96f4501b6fb3"
+    adl:listDisplayMember="Surname"
+    adl:listValueMember="Id"
+    asi:name="UserName_Surname"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupUserName_Surname.origam#LookupUserName_Surname/ed737dad-a4a1-44f5-81e1-96f4501b6fb3"
+    adl:valueDisplayMember="Surname"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupUserName_Surname.origam#LookupUserName_Surname/GetId/ebcb2a3e-ab7d-4edf-b657-929a395ce062"
+    adl:valueValueMember="Id">
+    <dlmb:DataLookupMenuBinding
+      asi:abstract="false"
+      x:id="c5dcf69d-eb3f-4115-af7a-95c6cc3ca656"
+      dlmb:level="100"
+      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/TestMenuBinding/UserAccount/9f4755ad-3af4-46a6-ab29-7279ba6f7120"
+      asi:name="MenuBinding"
+      dlmb:roles="*" />
+  </dsdl:DataLookup>
+</x:file>

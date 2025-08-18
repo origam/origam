@@ -184,6 +184,8 @@ export interface IFormScreen extends IFormScreenData {
   printMasterDetailTree(): void;
 
   parent?: any;
+
+  dispose(): void;
 }
 
 export interface IScreenNotification {

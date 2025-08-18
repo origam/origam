@@ -41,30 +41,30 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
+using Origam.Schema;
 using Origam.Schema.MenuModel;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+public class EntityWorkflowActionScriptCallComparer : IComparer<ISchemaItem>
 {
-    public class EntityWorkflowActionScriptCallComparer : IComparer
+    public int Compare(ISchemaItem x, ISchemaItem y)
     {
-        public int Compare(object x, object y)
+        EntityWorkflowActionScriptCall scriptX
+            = (EntityWorkflowActionScriptCall)x;
+        EntityWorkflowActionScriptCall scriptY
+            = (EntityWorkflowActionScriptCall)y;
+        if(scriptX.Order == scriptY.Order)
         {
-            EntityWorkflowActionScriptCall scriptX
-                = (EntityWorkflowActionScriptCall)x;
-            EntityWorkflowActionScriptCall scriptY
-                = (EntityWorkflowActionScriptCall)y;
-            if(scriptX.Order == scriptY.Order)
-            {
-                return 0;
-            }
-            else if(scriptX.Order > scriptY.Order)
-            {
-                return 1;
-            }
-            else
-            {
-                return -1;
-            }
+            return 0;
+        }
+        else if(scriptX.Order > scriptY.Order)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
         }
     }
 }

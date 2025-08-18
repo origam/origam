@@ -41,7 +41,10 @@ export class ResultGroup extends React.Component<{
   render() {
     return (
       <div>
-        <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
+        <div 
+          key={this.props.name}
+          className={S.resultGroupRow} 
+          onClick={() => this.onGroupClick()}>
           {this.props.group.isExpanded ? (
             <i className={"fas fa-angle-up " + S.arrow}/>
           ) : (

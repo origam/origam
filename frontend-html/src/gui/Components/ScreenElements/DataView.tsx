@@ -118,7 +118,7 @@ export class DataViewInner extends React.Component<IDataViewProps> {
         <div className={S.overlayContainer}>
           {isMobileLayoutActive(this.props.dataView)
             ? <MobileDataViewHeader isVisible={!this.props.isHeadless}/>
-            : <CDataViewHeader isVisible={!this.props.isHeadless}/>
+            : <CDataViewHeader isVisible={!this.props.dataView?.isHeadless}/>
           }
 
           {isWorking && <DataViewLoading/>}

@@ -20,75 +20,60 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+public enum EntityAuditingType
 {
-    public enum EntityAuditingType
-    {
-        None = 0,
-        All = 1,
-        UpdatesAndDeletes = 2
-    }
-
+    None = 0,
+    All = 1,
+    UpdatesAndDeletes = 2
+}
+/// <summary>
+/// Interface for data entities, which contain columns
+/// </summary>
+public interface IDataEntity : ISchemaItem
+{
 	/// <summary>
-	/// Interface for data entities, which contain columns
+	/// Parameters of this data entity (in case the entity is query
 	/// </summary>
-	public interface IDataEntity : ISchemaItem
-	{
-		/// <summary>
-		/// Parameters of this data entity (in case the entity is query
-		/// </summary>
-		ArrayList EntityParameters {get;}
-
-		/// <summary>
-		/// Collection of expressions which make up a primary key of this data entity
-		/// </summary>
-		ArrayList EntityPrimaryKey {get;}
-		
-		/// <summary>
-		/// Returns true if complete data entity is read only
-		/// </summary>
-		bool EntityIsReadOnly {get; set;}
-
-		/// <summary>
-		/// Returns all columns of this data entity
-		/// </summary>
-		ArrayList EntityColumns {get;}
-
-		/// <summary>
-		/// Returns all relations of this data entity
-		/// </summary>
-		ArrayList EntityRelations {get;}
-
-		/// <summary>
-		/// Returns all filters of this data entity
-		/// </summary>
-		ArrayList EntityFilters {get;}
-
-		/// <summary>
-		/// Returns all indexes of this data entity
-		/// </summary>
-		ArrayList EntityIndexes {get;}
-
-		/// <summary>
-		/// Returns all security rules of this data entity
-		/// </summary>
-		ArrayList RowLevelSecurityRules {get;}
-
-		ArrayList ConditionalFormattingRules {get;}
-
-		ArrayList Constraints {get;}
-
-		string Caption {get; set;}
-
-		EntityAuditingType AuditingType {get; set;}
-
-		IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }
-
-		ArrayList ChildEntitiesRecursive {get;}
-		ArrayList ChildEntities {get;}
-
-		IDataEntityColumn DescribingField {get; set;}
-		bool HasEntityAFieldDenyReadRule();
-	}
+	List<SchemaItemParameter> EntityParameters {get;}
+	/// <summary>
+	/// Collection of expressions which make up a primary key of this data entity
+	/// </summary>
+	List<IDataEntityColumn> EntityPrimaryKey {get;}
+	
+	/// <summary>
+	/// Returns true if complete data entity is read only
+	/// </summary>
+	bool EntityIsReadOnly {get; set;}
+	/// <summary>
+	/// Returns all columns of this data entity
+	/// </summary>
+	List<IDataEntityColumn> EntityColumns {get;}
+	/// <summary>
+	/// Returns all relations of this data entity
+	/// </summary>
+	List<EntityRelationItem> EntityRelations {get;}
+	/// <summary>
+	/// Returns all filters of this data entity
+	/// </summary>
+	List<EntityFilter> EntityFilters {get;}
+	/// <summary>
+	/// Returns all indexes of this data entity
+	/// </summary>
+	List<DataEntityIndex> EntityIndexes {get;}
+	/// <summary>
+	/// Returns all security rules of this data entity
+	/// </summary>
+	List<AbstractEntitySecurityRule> RowLevelSecurityRules {get;}
+	List<EntityConditionalFormatting> ConditionalFormattingRules {get;}
+	List<DataEntityConstraint> Constraints {get;}
+	string Caption {get; set;}
+	EntityAuditingType AuditingType {get; set;}
+	IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }
+	List<IDataEntity> ChildEntitiesRecursive {get;}
+	List<IDataEntity> ChildEntities {get;}
+	IDataEntityColumn DescribingField {get; set;}
+	bool HasEntityAFieldDenyReadRule();
 }

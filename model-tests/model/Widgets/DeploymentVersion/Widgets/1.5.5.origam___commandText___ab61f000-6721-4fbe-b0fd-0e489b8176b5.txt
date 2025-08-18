@@ -1,0 +1,9 @@
+﻿CREATE TABLE [UserAccount] (
+	[ValidTo] DateTime NULL,
+	[refUserNameId] UniqueIdentifier NULL,
+	[ValidFrom] DateTime NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);

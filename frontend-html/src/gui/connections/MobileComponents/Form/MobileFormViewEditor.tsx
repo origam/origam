@@ -41,7 +41,7 @@ export const MobileFormViewEditor: React.FC<{
   isRichText: boolean;
   property: IProperty;
   xmlNode: any;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   backgroundColor?: string;
 }> = (props) => {
 

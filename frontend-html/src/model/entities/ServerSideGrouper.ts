@@ -77,7 +77,7 @@ export class ServerSideGrouper implements IGrouper {
     }
     const expandedGroupDisplayValues = this.allGroups
       .filter(group => group.isExpanded)
-      .map(group => group.columnDisplayValue)
+      .map(group => group.getColumnDisplayValue())
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn.columnId);
     const lookupId = property && property.lookup && property.lookup.lookupId;
@@ -89,7 +89,7 @@ export class ServerSideGrouper implements IGrouper {
 
   private*loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]): Generator {
     for (const group of childGroups) {
-      if (expandedGroupDisplayValues.includes(group.columnDisplayValue)) {
+      if (expandedGroupDisplayValues.includes(group.getColumnDisplayValue())) {
         group.isExpanded = true;
         yield*this.loadChildren(group);
         yield*this.loadAndExpandChildren(group.childGroups, expandedGroupDisplayValues)
@@ -97,8 +97,8 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  substituteRecord(row: any[]): void {
-    this.allGroups.map(group => group.substituteRecord(row))
+  substituteRecords(rows: any[][]): void {
+    this.allGroups.map(group => group.substituteRecords(rows))
   }
 
   refresh() {
@@ -214,7 +214,7 @@ export class ServerSideGrouper implements IGrouper {
         rowCount: groupDataItem["groupCount"] as number,
         parent: parent,
         columnValue: groupData.value,
-        columnDisplayValue: groupData.label,
+        getColumnDisplayValue: () => groupData.label,
         aggregations: parseAggregations(groupDataItem["aggregations"]),
         groupingUnit: groupingSettings.groupingUnit,
         grouper: this,

@@ -1,0 +1,168 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions;
+
+
+.modalWindow {
+  z-index: 1000;
+  position: fixed;
+  min-width: 100px;
+  background-color: var(--background1);
+  display: flex;
+  flex-direction: column;
+
+  @include styles.popoverShadow;
+
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
+  border: 1px solid var(--background5);
+  @include definitions.border-radius(4px);
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  font-weight: 700;
+  color:var(--background8);
+  align-items: center;
+  cursor: default;
+  background: var(--background3);
+  height: 40px;
+  font-size: definitions.$h1-fontsize;
+  line-height: definitions.$h1-lineheight;
+  padding: 0 0.65em 0 0.65em;
+  @include definitions.border-radius(4px 4px 0 0);
+}
+
+.progressIndicator {
+  @include styles.progressIndicator;
+  & {
+    background-color:var(--background1);
+    width: 100%;
+  }
+}
+
+.label {
+  height: 100%;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.labelText {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+}
+
+.buttons button {
+  background: transparent;
+  color: var(--background8);
+  border: none;
+  padding: 0px;
+  border-radius: 2px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  font-size: 10px;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.btnClose {
+  padding: 5px;
+  overflow: hidden;
+  @include styles.hoverItemAnimation;
+
+  .btnIconContainer {
+    background: none;
+    height: 40px;
+    padding: 0;
+    width: 40px;
+    svg {
+      @include styles.hoverItemAnimation;
+      background: none;
+      height: 2em;
+      stroke: var(--error1);
+      stroke-width: 1.5px;
+      top: calc(20px - 1em);
+      width: 2em;
+    }
+  }
+
+  &:hover {
+    color:var(--background1);
+    background: none;
+    svg {
+      stroke: var(--background8);
+      stroke-width: 2px;
+    }
+  }
+}
+
+.btnClose :global(.icon) {
+  position: relative;
+  top: -1px;
+}
+
+.body {
+  flex-grow: 1;
+  overflow: auto;
+  /*padding: 10px;*/
+}
+
+.footer {
+  min-height: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border-top: 1px solid var(--background3);
+  padding: 1em;
+}
+
+.footer button {
+  @include styles.dialogButton;
+  background: var(--background2);
+  box-sizing: border-box;
+  font-weight: 700;
+  margin: 0 0.5em;
+  min-width: 75px;
+  padding: 0 1.5em;
+  @include definitions.border-radius(3em);
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.pusher {
+  flex-grow: 1;
+}

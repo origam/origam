@@ -21,6 +21,7 @@ import { DialogScreen } from "gui/Workbench/ScreenArea/ScreenArea";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getOpenedDialogScreenItems } from "model/selectors/getOpenedDialogScreenItems";
 import React from "react";
+import { getNewRecordScreenButtons } from "gui/connections/NewRecordScreen";
 
 @observer
 export class CDialogContent extends React.Component {
@@ -34,9 +35,14 @@ export class CDialogContent extends React.Component {
     const openedDialogItems = getOpenedDialogScreenItems(this.workbench);
     return (
       <>
-        {openedDialogItems.map(item => (
-          <DialogScreen openedScreen={item} key={`${item.menuItemId}@${item.order}`}/>
-        ))}
+        {openedDialogItems.map(item =>
+          <DialogScreen
+            openedScreen={item}
+            bottomButtons={item.isNewRecordScreen ? getNewRecordScreenButtons(item) : null}
+            showCloseButton={!item.isNewRecordScreen}
+            key={`${item.menuItemId}@${item.order}`}
+          />
+        )}
       </>
     );
   }

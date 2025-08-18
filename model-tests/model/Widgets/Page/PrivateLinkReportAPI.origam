@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="0092188b-d2be-4a03-bd12-550a6bfe4256"
+    ap:mimeType="text/html"
+    asi:name="PrivateLinkReportAPI"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    xdp:transformation="Widgets/Transformation/Widgets/LinkReportHtml.origam#LinkReportHtml/c286449e-09ed-42d1-9a25-45937026bc05"
+    ap:url="api/private/link-report" />
+</x:file>

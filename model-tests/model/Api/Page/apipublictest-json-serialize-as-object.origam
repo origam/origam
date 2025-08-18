@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="Api/DataStructure/Api/ApiMasterDetailTest.origam#ApiMasterDetailTest/721bd324-c8ae-458b-8e0a-21a0a9b90450"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="28a7e4f3-63b4-4344-9cb1-4edec72c2f4b"
+    xdp:method="Api/DataStructure/Api/ApiMasterDetailTest.origam#ApiMasterDetailTest/TestJsonSerializeAsObject/3ba7cfcc-ef5b-4045-9397-ae64bee03d57"
+    ap:mimeType="application/json"
+    asi:name="api/public/test-json-serialize-as-object"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    ap:url="api/public/test-json-serialize-as-object" />
+</x:file>

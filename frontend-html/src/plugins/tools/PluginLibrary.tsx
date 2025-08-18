@@ -22,9 +22,12 @@ import { createScreenPluginData, createSectionPluginData } from "./PluginData";
 import React, { Fragment } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
 import { Localizer } from "plugins/tools/Localizer";
-import { ILocalization, IPlugin, isIScreenPlugin, isISectionPlugin } from "@origam/plugins";
 import { Observer } from "mobx-react";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { IPlugin } from "plugins/interfaces/IPlugin";
+import { ILocalization } from "plugins/interfaces/ILocalization";
+import { isIScreenPlugin } from "plugins/interfaces/IScreenPlugin";
+import { isISectionPlugin } from "plugins/interfaces/ISectionPlugin";
 
 const pluginFactoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
 

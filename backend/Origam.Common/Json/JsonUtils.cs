@@ -25,61 +25,59 @@ using Newtonsoft.Json.Converters;
 using System.Data;
 using System.IO;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+public class JsonUtils
 {
-    public class JsonUtils
+	public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
 	{
-		public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootObject)
+        SerializeToJson(textWriter, value, omitRootElement, false);
+    }
+    public static void SerializeToJson(TextWriter textWriter, object value,
+       bool omitRootElement, bool omitMainElement)
+    {
+        JsonSerializer serializer = new JsonSerializer();
+        // remove standard DataSet and XML converters
+        RemoveJsonConverter(serializer, typeof(DataSetConverter));
+        RemoveJsonConverter(serializer, typeof(XmlNodeConverter));
+        // add our custom converters
+        if (value is DataSet)
+        {
+            DataSetConverter datasetConverter = new DataSetConverter(
+                omitRootElement: omitRootElement, 
+                omitMainElement: omitMainElement);
+            serializer.Converters.Add(datasetConverter);
+            serializer.Converters.Add(new DataRowConverter());
+        }
+        else
+        {
+            XmlNodeConverter xmlConverter = new XmlNodeConverter();
+            xmlConverter.OmitRootObject = omitRootElement;
+            serializer.Converters.Add(xmlConverter);
+        }
+        JsonWriter writer = new JsonTextWriter(textWriter);
+        //JsonWriter writer = new JsonTextWriter(textWriter);
+        serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+        serializer.Serialize(writer, value);
+    }
+    public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
+	{
+		JsonConverter converter = GetJsonConverter(serializer, type);
+		if (converter != null)
 		{
-			JsonSerializer serializer = new JsonSerializer();
-			// remove standard DataSet and XML converters
-			RemoveJsonConverter(serializer, typeof(DataSetConverter));
-			RemoveJsonConverter(serializer, typeof(XmlNodeConverter));
-			// add our custom converters
-
-
-			if (value is DataSet)
-			{
-				DataSetConverter datasetConverter = new DataSetConverter();
-				datasetConverter.OmitRootObject = omitRootObject;
-				serializer.Converters.Add(datasetConverter);
-				serializer.Converters.Add(new DataRowConverter());
-			}
-			else
-			{
-				XmlNodeConverter xmlConverter = new XmlNodeConverter();
-				xmlConverter.OmitRootObject = omitRootObject;
-				serializer.Converters.Add(xmlConverter);
-			}
-			JsonWriter writer = new JsonTextWriter(textWriter);
-			//JsonWriter writer = new JsonTextWriter(textWriter);
-			serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-			serializer.Serialize(writer, value);
+			serializer.Converters.Remove(converter);
 		}
-
-		public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
+	}
+	public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
+	{
+		JsonConverter result = null;
+		foreach (JsonConverter converter in serializer.Converters)
 		{
-			JsonConverter converter = GetJsonConverter(serializer, type);
-			if (converter != null)
+			if (type.Equals(converter.GetType()))
 			{
-				serializer.Converters.Remove(converter);
+				result = converter;
+				break;
 			}
 		}
-
-		public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
-		{
-			JsonConverter result = null;
-			foreach (JsonConverter converter in serializer.Converters)
-			{
-				if (type.Equals(converter.GetType()))
-				{
-					result = converter;
-					break;
-				}
-			}
-
-			return result;
-		}
-
+		return result;
 	}
 }

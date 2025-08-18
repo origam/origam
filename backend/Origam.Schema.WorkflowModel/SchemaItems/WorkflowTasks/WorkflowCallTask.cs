@@ -21,94 +21,84 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
+[HelpTopic("Workflow+Call+Task")]
+[ClassMetaVersion("6.0.0")]
+public class WorkflowCallTask : WorkflowTask
 {
-	[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
-    [HelpTopic("Workflow+Call+Task")]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkflowCallTask : WorkflowTask
+	public WorkflowCallTask() {}
+	public WorkflowCallTask(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+	public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
+	#region Override ISchemaItem Members
+	public override void GetExtraDependencies(
+		List<ISchemaItem> dependencies)
 	{
-		public WorkflowCallTask() {}
-
-		public WorkflowCallTask(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
-
-		#region Override AbstractSchemaItem Members
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(Workflow);
-			base.GetExtraDependencies(dependencies);
-		}
-		#endregion
-
-		#region Properties
-		public Guid WorkflowId;
-
-		[TypeConverter(typeof(WorkflowConverter))]
-        [NotNullModelElementRule()]
-		[XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
-		{
-			get
-			{
-				var key = new ModelElementKey
-				{
-					Id = WorkflowId
-				};
-				return (IWorkflow)PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				// We delete any current parameters
-				foreach(ISchemaItem child in ChildItems)
-				{
-					if(child is ContextStoreLink)
-					{
-						child.IsDeleted = true;
-					}
-				}
-				
-				if(value == null)
-				{
-					WorkflowId = Guid.Empty;
-				}
-				else
-				{
-					WorkflowId = (Guid)value.PrimaryKey["Id"];
-				}
-			}
-		}
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(WorkflowTaskDependency), typeof(ContextStoreLink)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			string itemName = null;
-			if(typeof(T) == typeof(WorkflowTaskDependency))
-			{
-				itemName = "NewWorkflowTaskDependency";
-			}
-			else if(typeof(T) == typeof(ContextStoreLink))
-			{
-				itemName = "NewContextStoreLink";
-			}
-			return base.NewItem<T>(schemaExtensionId, group, itemName);
-		}
-		#endregion
-
+		dependencies.Add(Workflow);
+		base.GetExtraDependencies(dependencies);
 	}
+	#endregion
+	#region Properties
+	public Guid WorkflowId;
+	[TypeConverter(typeof(WorkflowConverter))]
+    [NotNullModelElementRule()]
+	[XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
+	{
+		get
+		{
+			var key = new ModelElementKey
+			{
+				Id = WorkflowId
+			};
+			return (IWorkflow)PersistenceProvider.RetrieveInstance(
+				typeof(ISchemaItem), key);
+		}
+		set
+		{
+			// We delete any current parameters
+			foreach(ISchemaItem child in ChildItems)
+			{
+				if(child is ContextStoreLink)
+				{
+					child.IsDeleted = true;
+				}
+			}
+			
+			if(value == null)
+			{
+				WorkflowId = Guid.Empty;
+			}
+			else
+			{
+				WorkflowId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+	}
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(WorkflowTaskDependency), typeof(ContextStoreLink)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		string itemName = null;
+		if(typeof(T) == typeof(WorkflowTaskDependency))
+		{
+			itemName = "NewWorkflowTaskDependency";
+		}
+		else if(typeof(T) == typeof(ContextStoreLink))
+		{
+			itemName = "NewContextStoreLink";
+		}
+		return base.NewItem<T>(schemaExtensionId, group, itemName);
+	}
+	#endregion
 }

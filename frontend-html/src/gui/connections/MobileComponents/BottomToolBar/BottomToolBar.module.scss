@@ -28,3 +28,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .isRed {
   fill: var(--error1);
 }
+
+// https://medium.com/swlh/styling-elements-based-on-number-of-siblings-1ca506351e68
+/* one item */
+.root ~ div:global(.bottomBarItem):first-child:nth-last-child(1) {
+  /* -or- li:only-child { */
+  width: 100%;
+}/* two items */
+.root div:global(.bottomBarItem):first-child:nth-last-child(2),
+.root div:global(.bottomBarItem):first-child:nth-last-child(2) ~ div:global(.bottomBarItem) {
+  width: 50%;
+}/* three items */
+.root div:global(.bottomBarItem):first-child:nth-last-child(3),
+.root div:global(.bottomBarItem):first-child:nth-last-child(3) ~ div:global(.bottomBarItem) {
+  width: 33.3333%;
+}/* four items */
+.root div:global(.bottomBarItem):first-child:nth-last-child(4),
+.root div:global(.bottomBarItem):first-child:nth-last-child(4) ~ div:global(.bottomBarItem) {
+  width: 25%;
+}

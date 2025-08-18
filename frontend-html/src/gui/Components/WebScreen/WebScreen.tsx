@@ -22,7 +22,7 @@ import S from "gui/Components/WebScreen/WebScreen.module.scss";
 import cx from "classnames";
 
 export const WebScreen: React.FC<{
-  url: string;
+  source: string;
   isLoading?: boolean;
   refIFrame?: any;
   onLoad?: any;
@@ -59,6 +59,7 @@ export const WebScreen: React.FC<{
         onLoadStart={props.onLoadStart}
         ref={refIFrame}
         className={S.webContent}
+        src={props.source}
       />
       <div className={cx(S.transparentOverlay, {isVisible: mouseDowned})}/>
     </div>

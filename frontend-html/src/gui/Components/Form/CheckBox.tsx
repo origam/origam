@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { IProperty } from "model/entities/types/IProperty";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "gui/Components/Form/CheckBox.module.scss";
@@ -27,6 +27,7 @@ import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { IFocusable } from "model/entities/FormFocusManager";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
+import * as uuid from 'uuid';
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -52,11 +53,10 @@ export const CheckBox: React.FC<{
     }),
   };
 })((props) => {
+  const labelId = useMemo(() => uuid.v4(), []);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const label = props.property!.name;
-  const left = props.fieldDimensions?.left;
-  const top = props.fieldDimensions?.top;
 
   function captionStyle() {
     if (props.isHidden) {
@@ -64,16 +64,7 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    if(props.fieldDimensions.isUnset){
-      const style = props.fieldDimensions.asStyle();
-      style["color"] = props.labelColor;
-      return style;
-    }
-    // 20 is expected checkbox width, might be needed to be set dynamically
-    // if there is some difference in chekbox sizes between various platforms.
     return {
-      top: top,
-      left: left! + 20,
       color: props.labelColor
     };
   }
@@ -100,22 +91,20 @@ export const CheckBox: React.FC<{
   }
 
   return (
-    <div>
-      <div className={S.editor} style={formFieldStyle()}>
-        <BoolEditor
-          id={props.property!.modelInstanceId}
-          value={props.checked}
-          isReadOnly={props.readOnly}
-          onBlur={onInputBlur}
-          onFocus={onInputFocus}
-          onChange={onChange}
-          onKeyDown={event => props.onKeyDown(event)}
-          subscribeToFocusManager={props.subscribeToFocusManager}
-          onClick={props.onClick}
-        />
-      </div>
+    <div className={S.root} style={formFieldStyle()}>
+      <BoolEditor
+        id={labelId}
+        value={props.checked}
+        isReadOnly={props.readOnly}
+        onBlur={onInputBlur}
+        onFocus={onInputFocus}
+        onChange={onChange}
+        onKeyDown={event => props.onKeyDown(event)}
+        subscribeToFocusManager={props.subscribeToFocusManager}
+        onClick={props.onClick}
+      />
       <label
-        htmlFor={props.property!.modelInstanceId}
+        htmlFor={labelId}
         className={S.caption + " " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}
         style={captionStyle()}
       >

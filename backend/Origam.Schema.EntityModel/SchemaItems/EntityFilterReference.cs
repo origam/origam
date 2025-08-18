@@ -21,126 +21,110 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for EntityFilterReference.
+/// </summary>
+[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
+[HelpTopic("Filter+Reference")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Filter")]
+[ClassMetaVersion("6.0.0")]
+public class EntityFilterReference : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntityFilterReference.
-	/// </summary>
-	[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
-    [HelpTopic("Filter+Reference")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Filter")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityFilterReference : AbstractSchemaItem
+	public const string CategoryConst = "EntityFilterReference";
+	public EntityFilterReference() : base() {}
+	public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractDataEntityColumn Members
+	public override string ItemType
 	{
-		public const string CategoryConst = "EntityFilterReference";
-
-		public EntityFilterReference() : base() {}
-
-		public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
-	
-		#region Overriden AbstractDataEntityColumn Members
-
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
-			if(this.Filter != null)
-				base.GetParameterReferences(this.Filter as AbstractSchemaItem, list);
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Filter);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-			{
-				if(item.OldPrimaryKey != null)
-				{
-					if(item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
-					{
-						this.Filter = item as EntityFilter;
-						break;
-					}
-				}
-			}
-
-			base.UpdateReferences ();
-		}
-
-		public override SchemaItemCollection ChildItems
-		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
-		}
-		#endregion
-
-		#region Properties
-		public Guid FilterId;
-
-		[TypeConverter(typeof(EntityFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRuleAttribute()]
-        [XmlReference("filter", "FilterId")]
-        public EntityFilter Filter
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.FilterId;
-
-				return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(value == null)
-				{
-					this.FilterId = Guid.Empty;
-
-					this.Name = "";
-				}
-				else
-				{
-					this.FilterId = (Guid)value.PrimaryKey["Id"];
-
-					this.Name = this.Filter.Name;
-				}
-			}
-		}
-
-		private string _roles;
-		[Category("Security")]
-		[XmlAttribute("roles")]
-        public string Roles
-		{
-			get
-			{
-				return _roles;
-			}
-			set
-			{
-				_roles = value;
-			}
-		}
-		#endregion
 	}
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	{
+		if(this.Filter != null)
+			base.GetParameterReferences(Filter, list);
+	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.Filter);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override void UpdateReferences()
+	{
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+		{
+			if(item.OldPrimaryKey != null)
+			{
+				if(item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
+				{
+					this.Filter = item as EntityFilter;
+					break;
+				}
+			}
+		}
+		base.UpdateReferences ();
+	}
+	public override ISchemaItemCollection ChildItems
+	{
+		get
+		{
+			return SchemaItemCollection.Create();
+		}
+	}
+	#endregion
+	#region Properties
+	public Guid FilterId;
+	[TypeConverter(typeof(EntityFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRuleAttribute()]
+    [XmlReference("filter", "FilterId")]
+    public EntityFilter Filter
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.FilterId;
+			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				this.FilterId = Guid.Empty;
+				this.Name = "";
+			}
+			else
+			{
+				this.FilterId = (Guid)value.PrimaryKey["Id"];
+				this.Name = this.Filter.Name;
+			}
+		}
+	}
+	private string _roles;
+	[Category("Security")]
+	[XmlAttribute("roles")]
+    public string Roles
+	{
+		get
+		{
+			return _roles;
+		}
+		set
+		{
+			_roles = value;
+		}
+	}
+	#endregion
 }

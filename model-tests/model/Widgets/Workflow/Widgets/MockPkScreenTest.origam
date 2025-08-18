@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="e4f78df6-e578-42dd-be34-7d74e962c716"
+    asi:name="MockPkScreenTest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="e8c9871f-7583-4040-af61-327d5e7e6a66"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypesInnerJoinTaginputSource_mockPk"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/05b95e7a-de87-446d-aff5-8a7003f72fca" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="e4145ece-acbd-4393-abc0-24f28263cfe6"
+      asi:name="LoadData_AllDataTypesInnerJoinTaginputSource_mockPk"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/MockPkScreenTest.origam#MockPkScreenTest/AllDataTypesInnerJoinTaginputSource_mockPk/e8c9871f-7583-4040-af61-327d5e7e6a66"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="25e9180e-0ef7-4289-9999-716ecaff5b00"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="6b4b75ef-a6a1-4976-8334-cce23f8eff73"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/05b95e7a-de87-446d-aff5-8a7003f72fca"
+          x:id="3a4964e3-d3fc-49d7-9f17-1c64433ea144"
+          asi:name="AllDataTypesInnerJoinTaginputSource_mockPk" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="691ec613-4900-435f-ac1b-4c2ecf4e877a"
+      uift:isFinalForm="false"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="30_Show"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/MockPkScreenTest.origam#MockPkScreenTest/AllDataTypesInnerJoinTaginputSource_mockPk/e8c9871f-7583-4040-af61-327d5e7e6a66"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Widgets/FormControlSet/Widgets/AllDataTypesInnerJoinTaginputSource_mockPk.origam#AllDataTypesInnerJoinTaginputSource_mockPk/eb1aa80e-3c57-4bfa-815a-a2aeea460774">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="1b80d0d0-32e8-4075-afd1-ba71f6f31d98"
+        asi:name="After_LoadData_AllDataTypesInnerJoinTaginputSource_mockPk"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/MockPkScreenTest.origam#MockPkScreenTest/LoadData_AllDataTypesInnerJoinTaginputSource_mockPk/e4145ece-acbd-4393-abc0-24f28263cfe6" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
+  xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -49,6 +61,36 @@
         asi:name="AttachmentKey2"
         ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d" />
     </eri:EntityRelation>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="CloseAndCancel"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="c2971499-ea6e-4844-9d16-5c9994666b11"
+      euia:label="Save"
+      ewa:mergeType="Ignore"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="Save"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/25c09180-0a59-4d00-bd96-d2211456b03b">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="/"
+        x:id="e947617c-c552-43b8-93d1-99988dcc45cc"
+        asi:name="AttachmentEdit"
+        euiapm:type="Current" />
+    </ewa:EntityUIAction>
     <sia:ancestor
       sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="86e5d620-7037-468b-b17d-8f9496a77b81" />

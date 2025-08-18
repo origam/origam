@@ -23,215 +23,197 @@ using System;
 using System.Xml.Serialization;
 using System.Globalization;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+/// <summary>
+/// Summary description for TextReaderAgentSeparator.
+/// </summary>
+[Serializable()]
+public class TextReaderOptionsField
 {
-	/// <summary>
-	/// Summary description for TextReaderAgentSeparator.
-	/// </summary>
-	[Serializable()]
-	public class TextReaderOptionsField
+	private string _name;
+	private string _culture;
+	private string _format;
+	private bool _isQuoted = false;
+	private bool _isOptional = false;
+	private string _quoteChar;
+	private string _decimalSeparator;
+	private int _length = 0;
+	private string _nullValue = null;
+	private bool _isIgnored = false;
+	private string[] _alternativeFormats;
+	public TextReaderOptionsField()
 	{
-		private string _name;
-		private string _culture;
-		private string _format;
-		private bool _isQuoted = false;
-		private bool _isOptional = false;
-		private string _quoteChar;
-		private string _decimalSeparator;
-		private int _length = 0;
-		private string _nullValue = null;
-		private bool _isIgnored = false;
-		private string[] _alternativeFormats;
-
-		public TextReaderOptionsField()
+	}
+	[XmlAttribute()]
+	public string Name
+	{
+		get
 		{
+			return _name;
 		}
-
-		[XmlAttribute()]
-		public string Name
+		set
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			_name = value;
 		}
-
-		[XmlAttribute()]
-		public string Format
+	}
+	[XmlAttribute()]
+	public string Format
+	{
+		get
 		{
-			get
-			{
-				return _format;
-			}
-			set
-			{
-				_format = value;
-			}
+			return _format;
 		}
-
-		[XmlArrayItem("Format", typeof(string))]
-		public string[] AlternativeFormats
+		set
 		{
-			get
-			{
-				return _alternativeFormats;
-			}
-			set
-			{
-				_alternativeFormats = value;
-			}
+			_format = value;
 		}
-
-		[XmlAttribute()]
-		public string DecimalSeparator
+	}
+	[XmlArrayItem("Format", typeof(string))]
+	public string[] AlternativeFormats
+	{
+		get
 		{
-			get
-			{
-				return _decimalSeparator;
-			}
-			set
-			{
-				_decimalSeparator = value;
-			}
+			return _alternativeFormats;
 		}
-
-		[XmlAttribute()]
-		public string Culture
+		set
 		{
-			get
-			{
-				return _culture;
-			}
-			set
-			{
-				_culture = value;
-			}
+			_alternativeFormats = value;
 		}
-
-		[XmlAttribute()]
-		public bool IsQuoted
+	}
+	[XmlAttribute()]
+	public string DecimalSeparator
+	{
+		get
 		{
-			get
-			{
-				return _isQuoted;
-			}
-			set
-			{
-				_isQuoted = value;
-			}
+			return _decimalSeparator;
 		}
-
-		[XmlAttribute()]
-		public bool IsOptional
+		set
 		{
-			get
-			{
-				return _isOptional;
-			}
-			set
-			{
-				_isOptional = value;
-			}
+			_decimalSeparator = value;
 		}
-
-		[XmlAttribute()]
-		public bool IsIgnored
+	}
+	[XmlAttribute()]
+	public string Culture
+	{
+		get
 		{
-			get
-			{
-				return _isIgnored;
-			}
-			set
-			{
-				_isIgnored = value;
-			}
+			return _culture;
 		}
-
-		[XmlAttribute()]
-		public string QuoteChar
+		set
 		{
-			get
-			{
-				return _quoteChar;
-			}
-			set
-			{
-				_quoteChar = value;
-			}
+			_culture = value;
 		}
-
-		[XmlAttribute()]
-		public int Length
+	}
+	[XmlAttribute()]
+	public bool IsQuoted
+	{
+		get
 		{
-			get
-			{
-				return _length;
-			}
-			set
-			{
-				_length = value;
-			}
+			return _isQuoted;
 		}
-
-		[XmlAttribute()]
-		public string NullValue
+		set
 		{
-			get
-			{
-				return _nullValue;
-			}
-			set
-			{
-				_nullValue = value;
-			}
+			_isQuoted = value;
 		}
-
-		public CultureInfo GetCulture()
+	}
+	[XmlAttribute()]
+	public bool IsOptional
+	{
+		get
 		{
-			if(_culture == null)
-			{
-				return CultureInfo.InvariantCulture;
-			}
-			else
-			{
-				return new CultureInfo(_culture);
-			}
+			return _isOptional;
 		}
-
-		public string[] Formats
+		set
 		{
-			get
+			_isOptional = value;
+		}
+	}
+	[XmlAttribute()]
+	public bool IsIgnored
+	{
+		get
+		{
+			return _isIgnored;
+		}
+		set
+		{
+			_isIgnored = value;
+		}
+	}
+	[XmlAttribute()]
+	public string QuoteChar
+	{
+		get
+		{
+			return _quoteChar;
+		}
+		set
+		{
+			_quoteChar = value;
+		}
+	}
+	[XmlAttribute()]
+	public int Length
+	{
+		get
+		{
+			return _length;
+		}
+		set
+		{
+			_length = value;
+		}
+	}
+	[XmlAttribute()]
+	public string NullValue
+	{
+		get
+		{
+			return _nullValue;
+		}
+		set
+		{
+			_nullValue = value;
+		}
+	}
+	public CultureInfo GetCulture()
+	{
+		if(_culture == null)
+		{
+			return CultureInfo.InvariantCulture;
+		}
+		else
+		{
+			return new CultureInfo(_culture);
+		}
+	}
+	public string[] Formats
+	{
+		get
+		{
+			if(this.AlternativeFormats == null || this.AlternativeFormats.Length == 0)
 			{
-				if(this.AlternativeFormats == null || this.AlternativeFormats.Length == 0)
+				if(this.Format == null)
 				{
-					if(this.Format == null)
-					{
-						return new string[0];
-					}
-					else
-					{
-						return new string[] {this.Format};
-					}
+					return new string[0];
 				}
 				else
 				{
-					if(this.Format == null)
-					{
-						return this.AlternativeFormats;
-					}
-					else
-					{
-						string[] result = new string[this.AlternativeFormats.LongLength + 1];
-
-						result[0] = this.Format;
-						this.AlternativeFormats.CopyTo(result, 1);
-
-						return result;
-					}
+					return new string[] {this.Format};
+				}
+			}
+			else
+			{
+				if(this.Format == null)
+				{
+					return this.AlternativeFormats;
+				}
+				else
+				{
+					string[] result = new string[this.AlternativeFormats.LongLength + 1];
+					result[0] = this.Format;
+					this.AlternativeFormats.CopyTo(result, 1);
+					return result;
 				}
 			}
 		}

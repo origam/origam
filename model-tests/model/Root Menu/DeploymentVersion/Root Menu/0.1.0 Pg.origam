@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="6269978d-429e-45a5-b88a-94fbce253846"
@@ -7,10 +12,10 @@
     dv:version="0.1.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___48990cca-57b6-4d65-8186-34b5916f634d.txt"
-      x:id="48990cca-57b6-4d65-8186-34b5916f634d"
-      asi:name="00010_AddRole_FRM_OrigamRole"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___07128fbf-6cdd-485b-abcf-20fc5cf634cc.txt"
+      x:id="07128fbf-6cdd-485b-abcf-20fc5cf634cc"
+      asi:name="00080_AddRole_FRM_Colors"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -31,10 +36,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___762f3915-6ce1-4873-bed5-90c455554498.txt"
-      x:id="762f3915-6ce1-4873-bed5-90c455554498"
-      asi:name="00040_AddRole_WF_NewUser"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___48990cca-57b6-4d65-8186-34b5916f634d.txt"
+      x:id="48990cca-57b6-4d65-8186-34b5916f634d"
+      asi:name="00010_AddRole_FRM_OrigamRole"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -43,6 +48,30 @@
       scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___67fe8ca8-62fb-4dbf-a73b-7e1df23cece6.txt"
       x:id="67fe8ca8-62fb-4dbf-a73b-7e1df23cece6"
       asi:name="00050_AddRole_FRM_Map"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___6b675bb0-5f17-439e-9324-ac6ea0148153.txt"
+      x:id="6b675bb0-5f17-439e-9324-ac6ea0148153"
+      asi:name="00090_AddRole_FRM_SerialNumberRanges"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___762f3915-6ce1-4873-bed5-90c455554498.txt"
+      x:id="762f3915-6ce1-4873-bed5-90c455554498"
+      asi:name="00040_AddRole_WF_NewUser"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="110"
+      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___79eb194f-1b50-4ccc-9681-9ee220d035a3.txt"
+      x:id="79eb194f-1b50-4ccc-9681-9ee220d035a3"
+      asi:name="00110_AddRole_FRM_WorkQueue"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -63,34 +92,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="80"
-      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___07128fbf-6cdd-485b-abcf-20fc5cf634cc.txt"
-      x:id="07128fbf-6cdd-485b-abcf-20fc5cf634cc"
-      asi:name="00080_AddRole_FRM_Colors"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="90"
-      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___6b675bb0-5f17-439e-9324-ac6ea0148153.txt"
-      x:id="6b675bb0-5f17-439e-9324-ac6ea0148153"
-      asi:name="00090_AddRole_FRM_SerialNumberRanges"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="100"
       scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___dae1f6b4-d8d2-43bf-9cfe-05b7fe133be3.txt"
       x:id="dae1f6b4-d8d2-43bf-9cfe-05b7fe133be3"
       asi:name="00100_AddRole_FRM_Language"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="110"
-      scusa:commandText="-***-ExternalFile:0.1.0 Pg.origam___commandText___79eb194f-1b50-4ccc-9681-9ee220d035a3.txt"
-      x:id="79eb194f-1b50-4ccc-9681-9ee220d035a3"
-      asi:name="00110_AddRole_FRM_WorkQueue"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

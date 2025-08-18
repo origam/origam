@@ -25,7 +25,7 @@ Install [Visual Studio](https://visualstudio.microsoft.com/downloads/).
 Select **ASP.NET and web development** and **.NET desktop development** during the installation process.
 
 #### Node.js
-Make sure you download at least version 14 of [Node.js](https://nodejs.org/en/).
+Make sure you download at least version 18 of [Node.js](https://nodejs.org/en/).
 
 #### Javascript IDE
 Either [Visual Studio Code](https://code.visualstudio.com/), [JetBrains Webstorm](https://www.jetbrains.com/webstorm/) or something else.
@@ -95,7 +95,10 @@ Open the file in a text editor and replace its contents with this
 Make sure you set the correct **ModelSourceControlLocation** in the file. Open the 
 Architect again. You should see the demo projects' packages. Double click the **Widgets**
 package and a **Deployment Scripts Pending** pop up should show up. Click Yes. The database 
-should now contain the generated tables and data.
+should now contain the generated tables and minimal data so the application can start.
+Then double click the **Automatic Tests** package
+and run the deployment scripts there too. These will add some test data to the generated tables 
+so that you have same thing to play with.
 
 Now we add a test user into the database. Open **SQL Server Management Studio** go to
 the database **origam-demo** and run the following script

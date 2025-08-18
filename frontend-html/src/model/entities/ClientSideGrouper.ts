@@ -52,6 +52,8 @@ export class ClientSideGrouper implements IGrouper {
   get allGroups() {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
+  substituteRecords(rows: any[][]) {
+  }
 
   substituteRecord(row: any[]): void {
   }
@@ -82,7 +84,7 @@ export class ClientSideGrouper implements IGrouper {
 
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
-      if (this.expandedGroupDisplayValues.has(group.columnDisplayValue)) {
+      if (this.expandedGroupDisplayValues.has(group.getColumnDisplayValue())) {
         group.isExpanded = true;
         this.loadChildrenInternal(group);
         this.loadRecursively(group.childGroups);
@@ -92,9 +94,9 @@ export class ClientSideGrouper implements IGrouper {
 
   expansionListener(item: ClientSideGroupItem) {
     if (item.isExpanded) {
-      this.expandedGroupDisplayValues.add(item.columnDisplayValue);
+      this.expandedGroupDisplayValues.add(item.getColumnDisplayValue());
     } else {
-      this.expandedGroupDisplayValues.delete(item.columnDisplayValue);
+      this.expandedGroupDisplayValues.delete(item.getColumnDisplayValue());
     }
   }
 
@@ -121,7 +123,7 @@ export class ClientSideGrouper implements IGrouper {
           rowCount: groupData.rows.length,
           parent: parent,
           columnValue: groupData.label,
-          columnDisplayValue: property ? dataTable.resolveCellText(property, groupData.label) : groupData.label,
+          getColumnDisplayValue: () => property ? dataTable.resolveCellText(property, groupData.label) : groupData.label,
           aggregations: this.calcAggregations(groupData.rows),
           grouper: this,
           expansionListener: this.expansionListener.bind(this)

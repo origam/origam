@@ -32,6 +32,7 @@ import { Notifications } from "./Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "./SidebarState";
 import { About } from "model/entities/AboutInfo";
+import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -65,6 +66,7 @@ export class Workbench implements IWorkbench {
   favorites: Favorites = null as any;
   sidebarState: SidebarState = null as any;
   about: About = null as any;
+  newRecordScreenData?: NewRecordScreenData;
 
   @observable isFullScreen: boolean = false;
 

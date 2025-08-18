@@ -18,30 +18,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import moment from "moment";
-import { DateSequence } from "../../../../utils/cookies";
+import { DateSequence } from "utils/cookies";
 
 export default class DateCompleter {
   dateSequence: DateSequence;
-  expectedFormat: string;
   dateSeparator: string;
   timeSeparator: string;
   dateTimeSeparator: string;
-  expectedDateFormat: string;
   timeNowFunc: () => moment.Moment;
 
   constructor(
     dateSequence: DateSequence,
-    expectedFormat: string,
     dateSeparator: string,
     timeSeparator: string,
     dateTimeSeparator: string,
     timeNowFunc: () => moment.Moment
   ) {
-    this.expectedFormat = expectedFormat;
     this.dateSeparator = dateSeparator;
     this.timeSeparator = timeSeparator;
     this.dateTimeSeparator = dateTimeSeparator;
-    this.expectedDateFormat = this.expectedFormat.split(this.dateTimeSeparator)[0];
     this.timeNowFunc = timeNowFunc;
     this.dateSequence = dateSequence;
   }
@@ -55,11 +50,8 @@ export default class DateCompleter {
       t.match(/^\d\d\d\s+\d\d\d\d$/) ||
       t.match(/^\d\d\d\d?\s+\d\d$/) ||
       t.match(/^\d\d\d\d\d\d\d\d\s+\d\d\d\d\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d?$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d:\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?\/\d\d?$/)
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d?\\d?\\" + this.dateSeparator + "?\\d?\\d?\\d?\\d?$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d?\\d?\\" + this.dateSeparator + "?\\d?\\d?\\d?\\d? +\\d?\\d?:?\\d?\\d?:?\\d?\\d?$"))
     );
   }
 
@@ -72,7 +64,9 @@ export default class DateCompleter {
       t.match(/^\d\d\d\d\s+\d\d\d\d$/) ||
       t.match(/^\d\d\d\d\s+\d\d$/) ||
       t.match(/^\d\d\d\d\d\d\d\d \d\d\d\d\d\d$/) ||
-      t.match(/^\d\d?$/)
+      t.match(/^\d\d?$/) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d?\\d?\\" + this.dateSeparator + "?\\d?\\d?\\d?\\d?$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d?\\d?\\" + this.dateSeparator + "?\\d?\\d?\\d?\\d? +\\d?\\d?:?\\d?\\d?:?\\d?\\d?$"))
     );
   }
 
@@ -89,21 +83,14 @@ export default class DateCompleter {
     const dateAndTime = trimmedText.split(this.dateTimeSeparator);
     const dateText = dateAndTime[0];
     let completeDate = this.autoCompleteDate(dateText);
-
+    let parsingFormat = this.parsingDateFormat();
     if (dateAndTime.length === 2) {
       const timeText = dateAndTime[1];
       const completeTime = this.autoCompleteTime(timeText);
       completeDate += this.dateTimeSeparator + completeTime;
+      parsingFormat = this.parsingDateTimeFormat();
     }
-    return moment(completeDate, this.expectedFormat);
-  }
-
-  reformat(completeDateTime: string) {
-    const dateTime = moment(completeDateTime, this.expectedFormat);
-    if (dateTime.hour() === 0 && dateTime.minute() === 0 && dateTime.second() === 0) {
-      return dateTime.format(this.expectedDateFormat);
-    }
-    return dateTime.format(this.expectedFormat);
+    return moment(completeDate, parsingFormat);
   }
 
   autoCompleteTime(incompleteTime: string): string {
@@ -141,10 +128,10 @@ export default class DateCompleter {
   completeTimeWithSeparators(incompleteTime: string): string {
     const splitTime = incompleteTime.split(this.timeSeparator);
     if (splitTime.length === 2) {
-      return moment([2010, 1, 1, splitTime[0], splitTime[1], 0, 0]).format("hh:mm:ss A");
+      return moment([2010, 1, 1, splitTime[0], splitTime[1], 0, 0]).format(this.parsingTimeFormat());
     }
     if (splitTime.length === 3) {
-      return moment([2010, 1, 1, splitTime[0], splitTime[1], splitTime[2], 0]).format("hh:mm:ss A");
+      return moment([2010, 1, 1, splitTime[0], splitTime[1], splitTime[2], 0]).format(this.parsingTimeFormat());
     }
     return incompleteTime;
   }
@@ -156,7 +143,9 @@ export default class DateCompleter {
   }
 
   completeDateWithSeparators(incompleteDate: string): string {
-    const splitDate = incompleteDate.split(this.dateSeparator);
+    const splitDate = incompleteDate
+      .split(this.dateSeparator)
+      .filter(x => x !== "");
     if (splitDate.length === 2) {
       return incompleteDate + this.dateSeparator + this.timeNowFunc().year();
     } else {
@@ -180,8 +169,7 @@ export default class DateCompleter {
       case 6: {
         // assuming input is day and month in order specified by
         // current culture followed by incomplete year (yy)
-        const incompleteWithSeparators = this.addSeparators(incompleteDate);
-        return incompleteWithSeparators;
+        return this.addSeparators(incompleteDate);
       }
       default:
         return this.addSeparators(incompleteDate);
@@ -194,7 +182,7 @@ export default class DateCompleter {
 
     const date = moment(usDateString, "M/D/YYYY");
 
-    return date ? date.format(this.expectedDateFormat) : day;
+    return date ? date.format(this.parsingDateFormat()) : day;
   }
 
   addYear(dayAndMonth: string): string {
@@ -208,7 +196,7 @@ export default class DateCompleter {
   }
 
   addSeparators(incompleteDate: string): string {
-    const format = this.getDoubleDayAndMonthFormat();
+    const format = this.parsingDateTimeFormat();
 
     const firstIndex = format.indexOf(this.dateSeparator);
     const secondIndex = format.lastIndexOf(this.dateSeparator);
@@ -233,16 +221,22 @@ export default class DateCompleter {
     return incompleteDate;
   }
 
-  getDoubleDayAndMonthFormat(): string {
-    // dateFormat might be d/m/yyyy, this,
-    // method makes sure we get dd/mm/yyyy
-    const formatHasSingleDigitDayAndMonth = this.expectedDateFormat.length === 8;
-    let format;
-    if (formatHasSingleDigitDayAndMonth) {
-      format = this.expectedFormat.toLowerCase().replace("d", "dd").replace("m", "mm");
-    } else {
-      format = this.expectedFormat;
+  parsingDateTimeFormat(): string {
+    return `${this.parsingDateFormat()} ${this.parsingTimeFormat()}`;
+  }
+
+  parsingTimeFormat(){
+    return `HH${this.timeSeparator}mm${this.timeSeparator}ss`;
+  }
+
+  private parsingDateFormat() {
+    switch (this.dateSequence) {
+      case DateSequence.DayMonthYear:
+        return `DD${this.dateSeparator}MM${this.dateSeparator}YYYY`;
+      case DateSequence.MonthDayYear:
+        return `MM${this.dateSeparator}DD${this.dateSeparator}YYYY`;
+      default:
+        throw new Error(`${this.dateSequence} not implemented`);
     }
-    return format;
   }
 }

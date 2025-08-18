@@ -34,101 +34,92 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Commands;
 
-namespace Origam.Gui.Win.Wizards
+namespace Origam.Gui.Win.Wizards;
+/// <summary>
+/// Summary description for CreatePanelFromEntityCommand.
+/// </summary>
+public class CreatePanelFromEntityCommand : AbstractMenuCommand
 {
-	/// <summary>
-	/// Summary description for CreatePanelFromEntityCommand.
-	/// </summary>
-	public class CreatePanelFromEntityCommand : AbstractMenuCommand
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    ScreenWizardForm screenwizardForm;
+    PanelControlSet panel;
+    public override bool IsEnabled
 	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm screenwizardForm;
-        PanelControlSet panel;
-
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
-				return Owner is IDataEntity;
-			}
-			set
-			{
-				throw new ArgumentException("Cannot set this property", "IsEnabled");
-			}
+			return Owner is IDataEntity;
 		}
-
-		public override void Run()
+		set
 		{
-            List<string> listdsName = GetListDatastructure(PanelControlSet.CategoryConst);
-
-            ArrayList list = new ArrayList();
-            PanelControlSet pp = new PanelControlSet();
-            list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
-            
-            Stack stackPage = new Stack();
-            stackPage.Push(PagesList.Finish);
-            stackPage.Push(PagesList.SummaryPage);
-            stackPage.Push(PagesList.ScreenForm);
-            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+			throw new ArgumentException("Cannot set this property", "IsEnabled");
+		}
+	}
+	public override void Run()
+	{
+        List<string> listdsName = GetListDatastructure(PanelControlSet.CategoryConst);
+        var list = new List<ListViewItem>();
+        PanelControlSet pp = new PanelControlSet();
+        list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
+        
+        Stack stackPage = new Stack();
+        stackPage.Push(PagesList.Finish);
+        stackPage.Push(PagesList.SummaryPage);
+        stackPage.Push(PagesList.ScreenForm);
+        if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+        {
+            stackPage.Push(PagesList.StructureNamePage);
+        }
+        stackPage.Push(PagesList.StartPage);
+        screenwizardForm = new ScreenWizardForm
+        {
+            ItemTypeList = list,
+            Title = ResourceUtils.GetString("CreatePanelFromEntityWizardTitle"),
+            PageTitle = "",
+            Description = ResourceUtils.GetString("CreatePanelFromEntityWizardDescription"),
+            Pages = stackPage,
+            StructureList = listdsName,
+            Entity = Owner as IDataEntity,
+            NameOfEntity = (Owner as IDataEntity).Name,
+            IsRoleVisible = false,
+            textColumnsOnly = false,
+            ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+            Command = this
+        };
+        Wizard wiz = new Wizard(screenwizardForm);
+        if (wiz.ShowDialog() == DialogResult.OK)
+        {
+            EditSchemaItem edit = new EditSchemaItem
             {
-                stackPage.Push(PagesList.StructureNamePage);
-            }
-            stackPage.Push(PagesList.StartPage);
-
-            screenwizardForm = new ScreenWizardForm
-            {
-                ItemTypeList = list,
-                Title = ResourceUtils.GetString("CreatePanelFromEntityWizardTitle"),
-                PageTitle = "",
-                Description = ResourceUtils.GetString("CreatePanelFromEntityWizardDescription"),
-                Pages = stackPage,
-                StructureList = listdsName,
-                Entity = Owner as IDataEntity,
-                NameOfEntity = (Owner as IDataEntity).Name,
-                IsRoleVisible = false,
-                textColumnsOnly = false,
-                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-                Command = this
+                Owner = panel
             };
-
-            Wizard wiz = new Wizard(screenwizardForm);
-            if (wiz.ShowDialog() == DialogResult.OK)
-            {
-                EditSchemaItem edit = new EditSchemaItem
-                {
-                    Owner = panel
-                };
-                edit.Run();
-                _schemaBrowser.EbrSchemaBrowser.SelectItem(panel);
-            }
-            else
-            {
-                GeneratedModelElements.Clear();
-            }
+            edit.Run();
+            _schemaBrowser.EbrSchemaBrowser.SelectItem(panel);
         }
-
-        public override void Execute()
+        else
         {
-            string groupName = null;
-            if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
-
-            panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames,screenwizardForm.NameOfEntity);
-            GeneratedModelElements.Add(panel);
+            GeneratedModelElements.Clear();
         }
-        public override int GetImageIndex(string icon)
-        {
-            return _schemaBrowser.ImageIndex(icon);
-        }
-        public override void SetSummaryText(object summary)
-        {
-            RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("Datastructure: \t\t");
-            richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            ShowListItems(richTextBoxSummary, screenwizardForm.SelectedFieldNames);
-        }
+    }
+    public override void Execute()
+    {
+        string groupName = null;
+        if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
+        panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames,screenwizardForm.NameOfEntity);
+        GeneratedModelElements.Add(panel);
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
+    }
+    public override void SetSummaryText(object summary)
+    {
+        RichTextBox richTextBoxSummary = (RichTextBox)summary;
+        richTextBoxSummary.Text = "This Wizard will create a Screen from an Entity with these parameters:";
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText("Datastructure: \t\t");
+        richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        ShowListItems(richTextBoxSummary, screenwizardForm.SelectedFieldNames);
     }
 }

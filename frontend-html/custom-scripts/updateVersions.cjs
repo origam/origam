@@ -1,12 +1,13 @@
 const fs = require("fs");
+const path = require('path');
 
 const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
 const envFilePath = ".env.production.local";
 
 const pluginVersionsVariableName = "VITE_REACT_APP_ORIGAM_UI_PLUGINS";
 
-function getPackageName(pluginName, registrationFile) {
-  const pluginPackageRegEx = new RegExp('import\\s*{\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
+function getPackagePath(pluginName, registrationFile) {
+  const pluginPackageRegEx = new RegExp('import\\s*{?\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}?\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
   let packageMatch = pluginPackageRegEx.exec(registrationFile);
   if(!packageMatch){
     throw new Error(`Could not find import of plugin ${pluginName}`)
@@ -14,9 +15,27 @@ function getPackageName(pluginName, registrationFile) {
   return packageMatch[1];
 }
 
+function getPackageNameAndVersionFromPackageJson(pathToPackageJson){
+  const packageJson = JSON.parse(fs.readFileSync(pathToPackageJson).toString());
+  return [packageJson["name"], packageJson["version"]];
+}
+
 function findUsedPackageNames(registrationFile) {
   const pluginRegEx = /registerPlugin\s*\(\s*"(\w+)",/g;
   return [...registrationFile.matchAll(pluginRegEx)].map(x => x[1]);
+}
+
+function findPackageJsonPath(importPath){
+
+  let packageJsonPath = `src/${path.dirname(importPath)}/package.json`
+  if(fs.existsSync(packageJsonPath)){
+    return packageJsonPath;
+  }
+  packageJsonPath = `src/${path.dirname(path.dirname(importPath))}/package.json`
+  if(fs.existsSync(packageJsonPath)){
+    return packageJsonPath;
+  }
+  throw new Error(`Could not find package.json on path \"${importPath}\"`);
 }
 
 function setVariableValue(variableName, value, envFile) {
@@ -38,9 +57,17 @@ const registrationFile = fs.readFileSync(pluginRegistrationFilePath).toString();
 const usedPluginNames = findUsedPackageNames(registrationFile)
 const packageNamesAndVersions = usedPluginNames
   .map(pluginName => {
-    const packageName = getPackageName(pluginName, registrationFile);
-    const packageReference = require(`../node_modules/${packageName}/package.json`);
-    return `${pluginName} - ${packageName}: ${packageReference.version}`;
+    const importPath = getPackagePath(pluginName, registrationFile);
+    let packageVersion;
+    let packageName;
+    if(importPath.startsWith("plugins/implementations/")){
+      const packageJsonPath = findPackageJsonPath(importPath);
+      [packageName, packageVersion] = getPackageNameAndVersionFromPackageJson(packageJsonPath)
+    }else{
+      packageName = importPath;
+      packageVersion = require(`../node_modules/${importPath}/package.json`).version;
+    }
+    return `${pluginName} - ${packageName}: ${packageVersion}`;
   })
   .join(";")
 

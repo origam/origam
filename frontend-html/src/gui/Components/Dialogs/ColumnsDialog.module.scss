@@ -17,7 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/definitions";
+.tableAndControlRow {
+  width: 640px;
+  height: 400px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.columnOrderScreen {
+  .explanation {
+    text-align: center;
+  }
+}
 
 .columnTable {
   width: 640px;
@@ -25,11 +37,67 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-bottom: 20px;
 }
 
-.lockedColumns {
+.orderTable {
+  flex: 1 0 auto;
+}
+
+.orderControls {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 10px;
+  padding: 5px;
+}
+
+.lockedColumns,
+.reordering {
   display: flex;
   justify-content: center;
-  align-items: baseline;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
+}
+
+
+
+.button {
+  height: 30px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: var(--background7);
+  border: 1px solid var(--background5);
+  background-color: var(--background3);
+  padding: 5px 8px 5px 8px;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-left: 5px;
+  transition: all 300ms linear;
+  background: var(--background2);
+  border: 1px solid var(--background5);
+  box-sizing: border-box;
+  font-weight: 700;
+  margin: 0 0.5em;
+  min-width: 75px;
+  padding: 0 1.5em;
+  -webkit-border-radius: 3em;
+  -moz-border-radius: 3em;
+  -ms-border-radius: 3em;
+  -o-border-radius: 3em;
+  border-radius: 3em;
+  background: var(--background3);
+  border-color: var(--background5);
+  color: var(--background7);
+  svg {
+    display: block;
+  }
+  &:hover {
+    background: var(--background5);
+    color: var(--background8);
+  }
+  &:focus {
+    background: var(--background1);
+    color: var(--foreground1);
+  }
 }
 
 .lockedColumnsInput {
@@ -37,7 +105,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-left: 10px;
 }
 
-.checkBoxCell{
+.checkBoxCell {
   justify-content: center;
 }
 
@@ -52,6 +120,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   white-space: nowrap;
   overflow: hidden;
   border-bottom: 1px solid var(--background3);
+  cursor: pointer;
+  &:not(:global(.header)):hover {
+    background-color: var(--background3) !important;
+  }
 }
 
 .columnTableCell:global(.header) {
@@ -64,6 +136,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .columnTableCell:global(.even) {
   background-color: var(--background1);
+}
+
+.columnTableCell:global(.selected) {
+  background-color: #edf2ff;
+  border: 1px solid #4c84ff;
+  border-left: 4px solid #4c84ff;
 }
 
 .columnWidthHandle {
@@ -86,7 +164,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   min-width: 8px;
 }
 
-.columnTableCell .dropdown{
+.columnTableCell .dropdown {
   height: 19px;
   width: 72.5px;
+}
+
+.tabHandleRow {
+  background-color: var(--background3);
 }

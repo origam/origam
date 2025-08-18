@@ -1,18 +1,38 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
 import { T } from "utils/translation";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import React from "react";
+import { getMobileState } from "model/selectors/getMobileState";
 
 export interface IMobileLayoutState {
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
-  showOpenTabCombo: boolean;
   showSearchButton: boolean;
-  showHamburgerMenuButton: boolean;
-  heading: string;
+  topLeftComponent: TopLeftComponent;
   showOkButton: boolean;
+  showBackButton: boolean;
+
+  getTopComponentState(ctx: any): ITopComponentState;
 
   showCloseButton(someScreensAreOpen: boolean): boolean;
 
@@ -21,15 +41,31 @@ export interface IMobileLayoutState {
   close(ctx: any): Promise<IMobileLayoutState>;
 }
 
+export interface ITopComponentState {
+  heading: string;
+  topMiddleComponent: TopCenterComponent
+}
+
+export enum TopLeftComponent {
+  Menu,
+  Close,
+  None
+}
+
+export enum TopCenterComponent {
+  OpenTabCombo,
+  MenuEditButton,
+  Heading
+}
+
 export class MenuLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
   showSearchButton = true;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.Close;
   showOkButton = false;
-  heading = T("Menu", "menu");
+  showBackButton = false;
 
   showCloseButton(someScreensAreOpen: boolean) {
     return someScreensAreOpen;
@@ -42,17 +78,50 @@ export class MenuLayoutState implements IMobileLayoutState {
   hamburgerClick(): IMobileLayoutState {
     return new ScreenLayoutState();
   }
+
+  getTopComponentState(ctx: any): ITopComponentState {
+    const mobileState = getMobileState(ctx);
+    const activeSection = mobileState.sidebarState.activeSection;
+    switch (activeSection) {
+      case "Menu":
+        return {
+          heading: T("Menu", "menu"),
+          topMiddleComponent: TopCenterComponent.MenuEditButton
+        };
+      case "Favorites":
+        return {
+          heading: "Favorites",
+          topMiddleComponent: TopCenterComponent.MenuEditButton
+        };
+      case "WorkQueues":
+        return {
+          heading: "WorkQueues",
+          topMiddleComponent: TopCenterComponent.Heading
+        };
+      case "Search":
+        return {
+          heading: "Search",
+          topMiddleComponent: TopCenterComponent.Heading
+        };
+      case "Chat":
+        return {
+          heading: "Chat",
+          topMiddleComponent: TopCenterComponent.Heading
+        };
+      default:
+        throw Error(activeSection + " not implemented ");
+    }
+  }
 }
 
 export class AboutLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
-  heading = T("About", "about_application");
+  showBackButton = false;
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
@@ -64,6 +133,13 @@ export class AboutLayoutState implements IMobileLayoutState {
 
   hamburgerClick(): IMobileLayoutState {
     return new MenuLayoutState();
+  }
+
+  getTopComponentState(ctx: any): ITopComponentState {
+    return {
+      heading: T("About", "about_application"),
+      topMiddleComponent: TopCenterComponent.Heading
+    };
   }
 }
 
@@ -71,11 +147,10 @@ export class SearchLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
   showSearchButton = false;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
-  heading = T("Search", "mobile_search_title");
+  showBackButton = false;
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
@@ -88,21 +163,28 @@ export class SearchLayoutState implements IMobileLayoutState {
   hamburgerClick(): IMobileLayoutState {
     return new MenuLayoutState();
   }
+
+  getTopComponentState(ctx: any): ITopComponentState {
+    return {
+      heading: T("Search", "mobile_search_title"),
+      topMiddleComponent: TopCenterComponent.Heading
+    };
+  }
 }
 
 export class EditLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
   showSearchButton = false;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.None;
   showOkButton = true;
+  showBackButton = false;
   private readonly showCloseButton_: boolean;
 
   constructor(
     public component: React.ReactNode,
-    public heading: string,
+    private heading: string,
     public layoutAfterClose?: IMobileLayoutState,
     showOkButton?: boolean,
     showCloseButton = false)
@@ -122,17 +204,23 @@ export class EditLayoutState implements IMobileLayoutState {
   hamburgerClick(): IMobileLayoutState {
     return new MenuLayoutState();
   }
+
+  getTopComponentState(ctx: any): ITopComponentState {
+    return {
+      heading: this.heading,
+      topMiddleComponent: TopCenterComponent.Heading
+    };
+  }
 }
 
 export class ScreenLayoutState implements IMobileLayoutState {
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
-  showOpenTabCombo = true;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
-  heading = "";
+  showBackButton = true;
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
@@ -141,9 +229,9 @@ export class ScreenLayoutState implements IMobileLayoutState {
   async close(ctx: any): Promise<IMobileLayoutState> {
     const activeScreen = getActiveScreen(ctx);
     if (activeScreen) {
-      await onScreenTabCloseClick(activeScreen)(null);
+      const isClosing = await onScreenTabCloseClick(activeScreen)(null);
       const stillOpenScreens = getOpenedNonDialogScreenItems(ctx);
-      if (stillOpenScreens.length === 0) {
+      if (stillOpenScreens.length === 0 && isClosing) {
         return new MenuLayoutState();
       }
     }
@@ -152,5 +240,12 @@ export class ScreenLayoutState implements IMobileLayoutState {
 
   hamburgerClick(): IMobileLayoutState {
     return new MenuLayoutState();
+  }
+
+  getTopComponentState(ctx: any): ITopComponentState {
+    return {
+      heading: "",
+      topMiddleComponent: TopCenterComponent.OpenTabCombo
+    };
   }
 }

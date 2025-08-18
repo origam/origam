@@ -25,57 +25,44 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+[SchemaItemDescription("Method", "Methods", "method-1.png")]
+[HelpTopic("Service+Method")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
 {
-	[SchemaItemDescription("Method", "Methods", "method-1.png")]
-    [HelpTopic("Service+Method")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
+	public const string CategoryConst = "ServiceMethod";
+	public ServiceMethod() {}
+	public ServiceMethod(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+	public ServiceMethod(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	private OrigamDataType _returnValueDataType;
+	[XmlAttribute("returnValueDataType")]
+	public OrigamDataType ReturnValueDataType
 	{
-		public const string CategoryConst = "ServiceMethod";
-
-		public ServiceMethod() {}
-
-		public ServiceMethod(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public ServiceMethod(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		private OrigamDataType _returnValueDataType;
-		[XmlAttribute("returnValueDataType")]
-		public OrigamDataType ReturnValueDataType
-		{
-			get => _returnValueDataType;
-			set => _returnValueDataType = value;
-		}
-		#endregion
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType => CategoryConst;
-
-		public override bool UseFolders => false;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(ServiceMethodParameter)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(ServiceMethodParameter) ?
-					"NewParameter" : null);
-		}
-
-		#endregion
+		get => _returnValueDataType;
+		set => _returnValueDataType = value;
 	}
+	#endregion
+	#region Overriden ISchemaItem Members
+	
+	public override string ItemType => CategoryConst;
+	public override bool UseFolders => false;
+	#endregion
+	#region ISchemaItemFactory Members
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(ServiceMethodParameter)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(ServiceMethodParameter) ?
+				"NewParameter" : null);
+	}
+	#endregion
 }

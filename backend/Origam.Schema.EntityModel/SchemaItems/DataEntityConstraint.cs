@@ -20,59 +20,48 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+public enum ConstraintType
 {
-	public enum ConstraintType
+	PrimaryKey,
+	ForeignKey,
+	Unique
+}
+/// <summary>
+/// Summary description for DataEntityConstraint.
+/// </summary>
+public class DataEntityConstraint
+{
+	public DataEntityConstraint(ConstraintType type)
 	{
-		PrimaryKey,
-		ForeignKey,
-		Unique
+		this.Type = type;
 	}
-
-	/// <summary>
-	/// Summary description for DataEntityConstraint.
-	/// </summary>
-	public class DataEntityConstraint
+	private ConstraintType _type;
+	public ConstraintType Type
 	{
-		public DataEntityConstraint(ConstraintType type)
+		get
 		{
-			this.Type = type;
+			return _type;
 		}
-
-		private ConstraintType _type;
-		public ConstraintType Type
+		set
 		{
-			get
-			{
-				return _type;
-			}
-			set
-			{
-				_type = value;
-			}
-		}
-
-		private IDataEntity _foreignEntity;
-		public IDataEntity ForeignEntity
-		{
-			get
-			{
-				return _foreignEntity;
-			}
-			set
-			{
-				_foreignEntity = value;
-			}
-		}
-
-		private ArrayList _fields = new ArrayList();
-		public ArrayList Fields
-		{
-			get
-			{
-				return _fields;
-			}
+			_type = value;
 		}
 	}
+	private IDataEntity _foreignEntity;
+	public IDataEntity ForeignEntity
+	{
+		get
+		{
+			return _foreignEntity;
+		}
+		set
+		{
+			_foreignEntity = value;
+		}
+	}
+
+	public List<IDataEntityColumn> Fields { get; } = new ();
 }

@@ -23,44 +23,40 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Mail
+namespace Origam.Mail;
+public class MailServiceFactory
 {
-    public class MailServiceFactory
+#if NETSTANDARD
+    private static readonly IConfiguration configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddEnvironmentVariables()
+        .Build();
+#endif
+    private MailServiceFactory()
+    {
+    }
+    
+    public static IMailService GetMailService()
     {
 #if NETSTANDARD
-        private static readonly IConfiguration configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddEnvironmentVariables()
-            .Build();
-#endif
-        private MailServiceFactory()
-        {
-
-        }
-        
-        public static IMailService GetMailService()
-        {
-#if NETSTANDARD
-            var mailConfig = configuration.GetSection("MailConfig");
-            string username = mailConfig["UserName"];
-            bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
-            string password = mailConfig["Password"];
-            string server = mailConfig["Server"];
-            int port = mailConfig.GetIntOrThrow("Port");
-            string pickupDirectoryLocation = mailConfig["PickupDirectoryLocation"];
-
-            return new NetStandardMailService(
-                server: server, 
-                port: port, 
-                username: username, 
-                pickupDirectoryLocation: pickupDirectoryLocation,
-                password: password, 
-                useSsl: useSsl
-            );            
+        var mailConfig = configuration.GetSection("MailConfig");
+        string username = mailConfig["UserName"];
+        bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
+        string password = mailConfig["Password"];
+        string server = mailConfig["Server"];
+        int port = mailConfig.GetIntOrThrow("Port");
+        string pickupDirectoryLocation = mailConfig["PickupDirectoryLocation"];
+        return new NetStandardMailService(
+            server: server, 
+            port: port, 
+            username: username, 
+            pickupDirectoryLocation: pickupDirectoryLocation,
+            password: password, 
+            useSsl: useSsl
+        );            
 #else
-            return new NetFxMailService();            
+        return new NetFxMailService();            
 #endif
-        }
     }
 }

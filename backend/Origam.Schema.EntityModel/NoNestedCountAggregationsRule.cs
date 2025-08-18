@@ -23,42 +23,38 @@ using System;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.EntityModel
+namespace Origam.DA.EntityModel;
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute 
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-    public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute 
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
+        if (!(instance is AggregatedColumn aggregatedColumn))
         {
-            if (!(instance is AggregatedColumn aggregatedColumn))
-            {
-                throw new Exception(
-                    $"{nameof(NoNestedCountAggregationsRule)} can be only applied to type {nameof(AggregatedColumn)}");  
-            }
-            if (!(aggregatedColumn.Field is AggregatedColumn referencedColumn))
-            {
-                return null;
-            }
-
-            if (aggregatedColumn.AggregationType != referencedColumn.AggregationType &&
-                aggregatedColumn.AggregationType != AggregationType.Sum && 
-                referencedColumn.AggregationType != AggregationType.Count ||
-                aggregatedColumn.AggregationType == AggregationType.Count && 
-                referencedColumn.AggregationType == AggregationType.Count)
-            {
-                return new Exception(
-                    $"Nested aggregation error. Column must have the property {nameof(AggregationType)} set to the same\n" +
-                           $"value as {nameof(AggregationType)} of the field it references \"{referencedColumn.Name}\"\n" +
-                           "The only exception is a combination of Count(Count()) which is not allowed and should be\n" +
-                           "replaced by Sum(Count()) to calculate the total count.");
-            }
-            
+            throw new Exception(
+                $"{nameof(NoNestedCountAggregationsRule)} can be only applied to type {nameof(AggregatedColumn)}");  
+        }
+        if (!(aggregatedColumn.Field is AggregatedColumn referencedColumn))
+        {
             return null;
         }
-
-        public override Exception CheckRule(object instance, string memberName)
+        if (aggregatedColumn.AggregationType != referencedColumn.AggregationType &&
+            aggregatedColumn.AggregationType != AggregationType.Sum && 
+            referencedColumn.AggregationType != AggregationType.Count ||
+            aggregatedColumn.AggregationType == AggregationType.Count && 
+            referencedColumn.AggregationType == AggregationType.Count)
         {
-            return CheckRule(instance);
+            return new Exception(
+                $"Nested aggregation error. Column must have the property {nameof(AggregationType)} set to the same\n" +
+                       $"value as {nameof(AggregationType)} of the field it references \"{referencedColumn.Name}\"\n" +
+                       "The only exception is a combination of Count(Count()) which is not allowed and should be\n" +
+                       "replaced by Sum(Count()) to calculate the total count.");
         }
+        
+        return null;
+    }
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        return CheckRule(instance);
     }
 }

@@ -251,8 +251,13 @@ export class FormScreen implements IFormScreen {
     console.log("End of View bindings");
     console.log("");
   }
-
   /* eslint-enable no-console */
+
+  dispose(){
+    for (let dataSource of this.dataSources) {
+      dataSource.dispose();
+    }
+  }
 }
 
 export class FormScreenEnvelope implements IFormScreenEnvelope {
@@ -278,8 +283,13 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(args: {initUIResult: any, preloadIsDirty?: boolean}): Generator {
-    yield*this.formScreenLifecycle.start(args.initUIResult, args.preloadIsDirty);
+  *start(args: {initUIResult: any, preloadIsDirty?: boolean, createNewRecord?: boolean}): Generator {
+    yield*this.formScreenLifecycle.start(
+      {
+        initUIResult: args.initUIResult,
+        preloadIsDirty: args.preloadIsDirty,
+        createNewRecord: args.createNewRecord
+      });
   }
 
   parent?: any;

@@ -26,101 +26,90 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Version history:
+/// 1.0.0 Initial version of HashtagCategory
+/// 1.0.1 Renamed to DeepLinkCategory
+/// </summary>
+[SchemaItemDescription("Deep Link Category", "hashtag_category.png")]
+[HelpTopic("Deep+Link+Categories")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("1.0.1")]
+public class DeepLinkCategory : AbstractSchemaItem , ILookupReference
 {
-    /// <summary>
-    /// Version history:
-    /// 1.0.0 Initial version of HashtagCategory
-    /// 1.0.1 Renamed to DeepLinkCategory
-    /// </summary>
-    [SchemaItemDescription("Deep Link Category", "hashtag_category.png")]
-    [HelpTopic("Deep+Link+Categories")]
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.1")]
-    public class DeepLinkCategory : AbstractSchemaItem , ILookupReference
+    public const string CategoryConst = "DeepLinkCategory";
+    public DeepLinkCategory() : base() { Init(); }
+    public DeepLinkCategory(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+    public DeepLinkCategory(Key primaryKey) : base(primaryKey) { Init(); }
+    private void Init()
     {
-        public const string CategoryConst = "DeepLinkCategory";
-
-        public DeepLinkCategory() : base() { Init(); }
-
-        public DeepLinkCategory(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-        public DeepLinkCategory(Key primaryKey) : base(primaryKey) { Init(); }
-
-        private void Init()
+    }
+    private string _Label;
+    [Category("Reference")]
+    [DisplayName("Label")]
+    [Description("A name of the deep link category that will appear to the user when creating a deep link.")]
+    [NotNullModelElementRule()]
+    [Localizable(true)]
+    [XmlAttribute("label")]
+    public string Label
+    {
+        get
         {
+            return _Label;
         }
-
-        private string _Label;
-        [Category("Reference")]
-        [DisplayName("Label")]
-        [Description("A name of the deep link category that will appear to the user when creating a deep link.")]
-        [NotNullModelElementRule()]
-        [Localizable(true)]
-        [XmlAttribute("label")]
-        public string Label
+        set
         {
-            get
-            {
-                return _Label;
-            }
-            set
-            {
-                _Label = value;
-            }
+            _Label = value;
         }
-        public Guid LookupId;
-
-        [Category("Reference")]
-        [TypeConverter(typeof(DataLookupConverter))]
-        [LookupServerSideElementRule]
-        [NotNullModelElementRule]
-        [Description("A lookup which will resolve the list of available values for the link. The lookup must be server-side filtered and must be connected to a menu item so the user can open the link.")]
-        [XmlReference("lookup", "LookupId")]
-        public IDataLookup Lookup
+    }
+    public Guid LookupId;
+    [Category("Reference")]
+    [TypeConverter(typeof(DataLookupConverter))]
+    [LookupServerSideElementRule]
+    [NotNullModelElementRule]
+    [Description("A lookup which will resolve the list of available values for the link. The lookup must be server-side filtered and must be connected to a menu item so the user can open the link.")]
+    [XmlReference("lookup", "LookupId")]
+    public IDataLookup Lookup
+    {
+        get
         {
-            get
-            {
-                return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                    typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId));
-            }
-            set
-            {
-                this.LookupId = (value == null ? Guid.Empty
-                    : (Guid)value.PrimaryKey["Id"]);
-            }
+            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
+                typeof(ISchemaItem), new ModelElementKey(this.LookupId));
         }
-
-        private string _roles = "*";
-        [Category("Security")]
-        [NotNullModelElementRule()]
-        [XmlAttribute("roles")]
-        public string Roles
+        set
         {
-            get
-            {
-                return _roles;
-            }
-            set
-            {
-                _roles = value;
-            }
+            this.LookupId = (value == null ? Guid.Empty
+                : (Guid)value.PrimaryKey["Id"]);
         }
-
-
-        public override bool UseFolders
+    }
+    private string _roles = "*";
+    [Category("Security")]
+    [NotNullModelElementRule()]
+    [XmlAttribute("roles")]
+    public string Roles
+    {
+        get
         {
-            get
-            {
-                return false;
-            }
+            return _roles;
         }
-        public override string ItemType
+        set
         {
-            get
-            {
-                return CategoryConst;
-            }
+            _roles = value;
+        }
+    }
+    public override bool UseFolders
+    {
+        get
+        {
+            return false;
+        }
+    }
+    public override string ItemType
+    {
+        get
+        {
+            return CategoryConst;
         }
     }
 }

@@ -26,20 +26,16 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+[SchemaItemDescription("Entity Rule", "entity-rule.png")]
+[HelpTopic("Entity+Rule")]
+[ClassMetaVersion("6.0.0")]
+public class EntityRule : XPathRule, IEntityRule
 {
-    [SchemaItemDescription("Entity Rule", "entity-rule.png")]
-    [HelpTopic("Entity+Rule")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityRule : XPathRule, IEntityRule
-    {
-
-		public EntityRule() : base() {}
-		public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-        public EntityRule(Key primaryKey) : base(primaryKey) { }
-
-        [XmlAttribute("isPathRelative")]
-        [Browsable(false)]
-		public override bool IsPathRelative { get; set; } = false;
-    }
+	public EntityRule() : base() {}
+	public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+    public EntityRule(Key primaryKey) : base(primaryKey) { }
+    [XmlAttribute("isPathRelative")]
+    [Browsable(false)]
+	public override bool IsPathRelative { get; set; } = false;
 }

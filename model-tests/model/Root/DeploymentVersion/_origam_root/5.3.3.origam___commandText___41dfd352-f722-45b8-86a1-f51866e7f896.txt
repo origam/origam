@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamParameters] ALTER COLUMN [StringValue] nvarchar(max) NULL

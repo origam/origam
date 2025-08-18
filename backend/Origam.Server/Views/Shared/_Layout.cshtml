@@ -14,7 +14,7 @@
     }
     CustomAssetsConfig config = ConfigOptions.Value;
     var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl)
-        ? "/assets/identity/icons/origam.png"
+        ? "/assets/identity/icons/origam-logo.svg"
         : config.IdentityGuiLogoUrl;
 
     OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
@@ -52,7 +52,7 @@
     @RenderBody()
 </div>
 
-<script src="~/assets/identity/js/form-sumbit.js?version=0.0.0.0"></script>
+<script src="~/assets/identity/js/form-submit.js?version=0.0.0.0"></script>
 <script src="~/assets/identity/js/custom.js?version=0.0.0.0"></script>
 <script src="~/assets/supportedBrowserRegEx.js?version=0.0.0.0"></script>
 <script src="~/assets/identity/js/browser-check.js?version=0.0.0.0"></script>

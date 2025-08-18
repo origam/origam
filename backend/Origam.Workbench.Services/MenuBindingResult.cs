@@ -19,44 +19,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// Summary description for MenuBindingResult.
+/// </summary>
+public class MenuBindingResult : IMenuBindingResult
 {
-	/// <summary>
-	/// Summary description for MenuBindingResult.
-	/// </summary>
-	public class MenuBindingResult : IMenuBindingResult
+	private string _panelId;
+	private string _menuId;
+	public MenuBindingResult()
 	{
-		private string _panelId;
-		private string _menuId;
-
-		public MenuBindingResult()
-		{
-		}
-
-		public MenuBindingResult(string menuId, string panelId)
-		{
-			_menuId = menuId;
-			_panelId = panelId;
-		}
-
-		#region IMenuBindingResult Members
-
-		public string PanelId
-		{
-			get
-			{
-				return _panelId;
-			}
-		}
-
-		public string MenuId
-		{
-			get
-			{
-				return _menuId;
-			}
-		}
-
-		#endregion
 	}
+	public MenuBindingResult(string menuId, string panelId)
+	{
+		_menuId = menuId;
+		_panelId = panelId;
+	}
+	#region IMenuBindingResult Members
+	public string PanelId
+	{
+		get
+		{
+			return _panelId;
+		}
+	}
+	public string MenuId
+	{
+		get
+		{
+			return _menuId;
+		}
+	}
+	#endregion
 }

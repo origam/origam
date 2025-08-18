@@ -18,9 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext } from "react";
-import { ModalWindow } from "@origam/components";
 import { MobXProviderContext } from "mobx-react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ModalWindow } from "gui/Components/Dialogs/ModalWindow";
+import { isPhoneLayoutActive } from "model/selectors/isPhoneLayoutActive";
 
 export const ModalDialog: React.FC<{
   title: React.ReactNode;
@@ -34,6 +35,7 @@ export const ModalDialog: React.FC<{
   topPosiotionProc?: number;
   onKeyDown?: (event: any) => void;
   onWindowMove?: (top: number, left: number)=>void;
+  mustRunFullScreenInMobile?: boolean;
 }> = (props) => {
   const application = useContext(MobXProviderContext).application
 
@@ -47,7 +49,7 @@ export const ModalDialog: React.FC<{
       buttonsCenter={props.buttonsCenter}
       width={props.width}
       height={props.height}
-      fullScreen={isMobileLayoutActive(application)}
+      fullScreen={isPhoneLayoutActive(application) || isMobileLayoutActive (application) && props.mustRunFullScreenInMobile}
       topPosiotionProc={props.topPosiotionProc}
       onKeyDown={props.onKeyDown}
       onWindowMove={props.onWindowMove}

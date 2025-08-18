@@ -4,18 +4,28 @@
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
-  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="25c09180-0a59-4d00-bd96-d2211456b03b"
     asi:name="AttachmentSave"
     w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
+    <crs:WorkflowTask
+      asi:abstract="false"
+      x:id="692c68ea-b021-44b3-8583-812581c9d731"
+      asi:name="CheckFileName"
+      aws:onFailure="WorkflowFails"
+      aws:roles="*"
+      aws:validationRule="Attachments/Rule/Attachments/ValidateFileName.origam#ValidateFileName/d592c674-81b7-4094-a093-18e4222f8b72"
+      aws:validationRuleContextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -46,9 +56,9 @@
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
         <dsr:DataStructureReference
           asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
+          dsr:dataStructure="Attachments/DataStructure/Attachments/AttachmentSave.origam#AttachmentSave/4659ef8b-f62c-46dc-904a-2d3c6f3cc9fa"
           x:id="37ea9a21-fc6e-4477-95a6-5b420e0dab15"
-          asi:name="Attachment" />
+          asi:name="AttachmentSave" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -63,6 +73,12 @@
           asi:name="AttachmentEdit"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="eb7b49f1-c9a5-4574-aa77-aedec552e69a"
+        asi:name="After_CheckFileName"
+        wtd:startEvent="Success"
+        wtd:task="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/CheckFileName/692c68ea-b021-44b3-8583-812581c9d731" />
     </smct:WorkflowTask>
   </w:Workflow>
 </x:file>

@@ -23,7 +23,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
 import { computed } from "mobx";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 

@@ -22,10 +22,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
 import cx from "classnames";
+import { IDataView } from "model/entities/types/IDataView";
 
 @observer
 export class FormRoot extends React.Component<{
   className?: string;
+  dataView: IDataView;
   style?: any
 }> {
 
@@ -55,7 +57,8 @@ export class FormRoot extends React.Component<{
   }
 
   @action.bound handleWindowClick(event: any) {
-    if (this.elmFormRoot && !this.elmFormRoot.contains(event.target)) {
+    if (this.elmFormRoot && this.elmFormRoot.contains(event.target) && event.target.tagName !== "DIV") {
+      this.props.dataView!.formFocusManager.setLastFocused(event.target);
     }
   }
 

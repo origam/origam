@@ -31,119 +31,106 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+internal class PersitHelper
 {
-    internal class PersitHelper
-    {
-        private readonly IPersistenceService persistenceService;
-
-        public IList<string> DefaultFolders { get; }
-        
-        public PersitHelper(string testFolderPath)
-        {
-            DefaultFolders = new List<string>
-            {
-                CategoryFactory.Create(typeof(Package)),
-                CategoryFactory.Create(typeof(SchemaItemGroup))
-            };
-
-            persistenceService = new FilePersistenceService(
-                metaModelUpgradeService: new NullMetaModelUpgradeService(), 
-                defaultFolders: DefaultFolders, 
-                pathToRuntimeModelConfig: "runtimeConfig.json" ,
-                basePath: testFolderPath);
-        }
-        public IPersistenceProvider GetPersistenceProvider()
-        {
-            return persistenceService.SchemaProvider;
-        }
-        public void PersistAll()
-        {
-            PersistFolders<Package>();
-            PersistFolders<SchemaItemGroup>();
-
-            using (new DebugTimer())
-            {
-                TypeTools.AllProviderTypes
-                    .ForEach(PersistAllProviderItems);
-            }
-
-            var filePresProvider =
-                (FilePersistenceProvider)persistenceService.SchemaProvider;
-            filePresProvider.PersistIndex();
-        }
-
-        public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
-        {
-            return (IFilePersistent)persistenceService.SchemaProvider
-                .RetrieveInstance(type, primaryKey);
-        }
-
-        public List<AbstractSchemaItem> RetrieveAll()
-        {
-            List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
-                .Select(TypeTools.GetAllItems)
-                .SelectMany(itemCollection => itemCollection.ToGeneric())
-                .ToList();
-
-            return abstractSchemaItems;
-        }
+    private readonly IPersistenceService persistenceService;
+    public IList<string> DefaultFolders { get; }
     
-        private void PersistFolders<T>()
+    public PersitHelper(string testFolderPath)
+    {
+        DefaultFolders = new List<string>
         {
-            IPersistenceService dbSvc = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(null);
-       
-            foreach (IPersistent item in listOfItems)
-            {
-                persistenceService.SchemaProvider.Persist(item);
-            }
-        }
-
-        private void PersistAllProviderItems(Type providerType)
+            CategoryFactory.Create(typeof(Package)),
+            CategoryFactory.Create(typeof(SchemaItemGroup))
+        };
+        persistenceService = new FilePersistenceService(
+            metaModelUpgradeService: new NullMetaModelUpgradeService(), 
+            defaultFolders: DefaultFolders, 
+            pathToRuntimeModelConfig: "runtimeConfig.json" ,
+            basePath: testFolderPath);
+    }
+    public IPersistenceProvider GetPersistenceProvider()
+    {
+        return persistenceService.SchemaProvider;
+    }
+    public void PersistAll()
+    {
+        PersistFolders<Package>();
+        PersistFolders<SchemaItemGroup>();
+        using (new DebugTimer())
         {
-            var allItems = TypeTools.GetAllItems(providerType); 
-            foreach (AbstractSchemaItem item in allItems)
-            {
-                persistenceService.SchemaProvider.BeginTransaction();
-                Persist(item);
-                persistenceService.SchemaProvider.EndTransaction();
-            }
-
-            Console.WriteLine("ProviderType:" + providerType +", items: "+allItems.Count);
+            TypeTools.AllProviderTypes
+                .ForEach(PersistAllProviderItems);
         }
+        var filePresProvider =
+            (FilePersistenceProvider)persistenceService.SchemaProvider;
+        filePresProvider.PersistIndex();
+    }
+    public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
+    {
+        return (IFilePersistent)persistenceService.SchemaProvider
+            .RetrieveInstance(type, primaryKey);
+    }
+    public List<ISchemaItem> RetrieveAll()
+    {
+        List<ISchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
+            .Select(TypeTools.GetAllItems)
+            .SelectMany(itemCollection => itemCollection)
+            .ToList();
+        return abstractSchemaItems;
+    }
 
-        public void Persist(List<IFilePersistent> items)
-        {
-            persistenceService.SchemaProvider.BeginTransaction();
-            foreach (var item in items)
-            {
-                persistenceService.SchemaProvider.Persist(item); 
-            }
-            persistenceService.SchemaProvider.EndTransaction();
-        }
-        
-        public void PersistSingle(IFilePersistent item)
-        {
-            persistenceService.SchemaProvider.BeginTransaction();
-            persistenceService.SchemaProvider.Persist(item); 
-            persistenceService.SchemaProvider.EndTransaction();
-        }
-
-        private void Persist( AbstractSchemaItem item)
+    private void PersistFolders<T>()
+    {
+        IPersistenceService dbSvc = ServiceManager.Services.GetService(
+            typeof(IPersistenceService)) as IPersistenceService;
+        var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(null);
+   
+        foreach (IPersistent item in listOfItems)
         {
             persistenceService.SchemaProvider.Persist(item);
-            foreach (var ancestor in item.Ancestors)
+        }
+    }
+    private void PersistAllProviderItems(Type providerType)
+    {
+        var allItems = TypeTools.GetAllItems(providerType); 
+        foreach (ISchemaItem item in allItems)
+        {
+            persistenceService.SchemaProvider.BeginTransaction();
+            Persist(item);
+            persistenceService.SchemaProvider.EndTransaction();
+        }
+        Console.WriteLine("ProviderType:" + providerType +", items: "+allItems.Count);
+    }
+    public void Persist(List<IFilePersistent> items)
+    {
+        persistenceService.SchemaProvider.BeginTransaction();
+        foreach (var item in items)
+        {
+            persistenceService.SchemaProvider.Persist(item); 
+        }
+        persistenceService.SchemaProvider.EndTransaction();
+    }
+    
+    public void PersistSingle(IFilePersistent item)
+    {
+        persistenceService.SchemaProvider.BeginTransaction();
+        persistenceService.SchemaProvider.Persist(item); 
+        persistenceService.SchemaProvider.EndTransaction();
+    }
+    private void Persist( ISchemaItem item)
+    {
+        persistenceService.SchemaProvider.Persist(item);
+        foreach (var ancestor in item.Ancestors)
+        {
+            persistenceService.SchemaProvider.Persist(ancestor);
+        }
+        foreach (var child in item.ChildItems)
+        {
+            if (child.DerivedFrom == null && child.IsPersistable)
             {
-                persistenceService.SchemaProvider.Persist(ancestor);
-            }
-            foreach (var child in item.ChildItems)
-            {
-                if (child.DerivedFrom == null && child.IsPersistable)
-                {
-                    Persist(child);
-                }
+                Persist(child);
             }
         }
     }

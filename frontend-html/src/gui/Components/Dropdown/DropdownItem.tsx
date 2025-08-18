@@ -35,9 +35,15 @@ export const DropdownItem: React.FC<{
     return props.isSelected ? S.isSelected : ""
   }
 
+  function onClick(event: any){
+    if(!props.isDisabled){
+      props.onClick?.(event);
+    }
+  }
+
   return <div
     id={props.id}
-    onClick={props.onClick}
+    onClick={onClick}
     className={cx(S.root, getStyle(), props.className, "dropdownItem")}
   >
     {props.children}

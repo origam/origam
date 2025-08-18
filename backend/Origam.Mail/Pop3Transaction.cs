@@ -23,47 +23,39 @@ using System;
 using MailKit.Net.Pop3;
 
 
-namespace Origam.Mail
+namespace Origam.Mail;
+/// <summary>
+/// Summary description for Pop3Transaction.
+/// </summary>
+public class Pop3Transaction : OrigamTransaction
 {
-	/// <summary>
-	/// Summary description for Pop3Transaction.
-	/// </summary>
-	public class Pop3Transaction : OrigamTransaction
-	{
-        public Pop3Transaction(Pop3Client client)
+    public Pop3Transaction(Pop3Client client)
+    {
+        PopClient = client;
+    }
+    public override void Commit()
+    {
+        CheckStatus();
+        PopClient.Disconnect(true);
+        PopClient.Dispose();
+    }
+    public override void Rollback()
+    {
+        CheckStatus();
+        PopClient.Reset();
+        PopClient.Disconnect(true);
+        PopClient.Dispose();
+    }
+    public Pop3Client PopClient { get; } = null;
+    private void CheckStatus()
+    {
+        if (PopClient == null)
         {
-            PopClient = client;
+            throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
         }
-
-        public override void Commit()
+        if (!PopClient.IsConnected)
         {
-            CheckStatus();
-            PopClient.Disconnect(true);
-            PopClient.Dispose();
-        }
-
-        public override void Rollback()
-        {
-            CheckStatus();
-
-            PopClient.Reset();
-            PopClient.Disconnect(true);
-            PopClient.Dispose();
-        }
-
-        public Pop3Client PopClient { get; } = null;
-
-        private void CheckStatus()
-        {
-            if (PopClient == null)
-            {
-                throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
-            }
-
-            if (!PopClient.IsConnected)
-            {
-                throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
-            }
+            throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
         }
     }
 }

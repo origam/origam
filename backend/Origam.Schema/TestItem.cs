@@ -23,39 +23,31 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+/// <summary>
+/// Summary description for TestItem.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public class TestItem : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for TestItem.
-	/// </summary>
-    [ClassMetaVersion("6.0.0")]
-	public class TestItem : AbstractSchemaItem
+	public TestItem() : base() {}
+	public TestItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TestItem(ModelElementKey primaryKey) : base(primaryKey)	{}
+	public string TestField = "";
+	#region Overriden ISchemaItem Methods
+	public override string ItemType
 	{
-		public TestItem() : base() {}
-
-		public TestItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public TestItem(ModelElementKey primaryKey) : base(primaryKey)	{}
-
-		public string TestField = "";
-
-		#region Overriden AbstractSchemaItem Methods
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return "TEST";
-			}
+			return "TEST";
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "0";
-			}
-		}
-
-		#endregion
 	}
+	public override string Icon
+	{
+		get
+		{
+			return "0";
+		}
+	}
+	#endregion
 }

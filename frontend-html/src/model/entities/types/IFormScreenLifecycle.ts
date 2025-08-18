@@ -57,11 +57,15 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 }
 
 export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
+  onClose: (() => void) | undefined;
   focusedDataViewId: string | undefined;
   $type_IFormScreenLifecycle: 1;
 
   isWorkingDelayed: boolean;
   isWorking: boolean;
+
+  workflowNextActive: number;
+  workflowAbortActive: number;
 
   updateRequestAggregator: UpdateRequestAggregator;
   rowSelectedReactionsDisabled(dataView: IDataView): boolean;
@@ -72,7 +76,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   onCreateRow(entity: string, gridId: string): Generator;
 
-  onDeleteRow(entity: string, rowId: string, dataView: IDataView): Generator;
+  onDeleteRow(entity: string, rowId: string, dataView: IDataView, doNotAskForConfirmation?: boolean): Generator;
 
   updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): Generator;
 
@@ -93,7 +97,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   updateTotalRowCount(dataView: IDataView): Promise<any>;
 
-  onRequestScreenClose(isDueToError?: boolean): Generator;
+  onRequestScreenClose(closeWithoutSaving?: boolean): Generator;
 
   clearAutoRefreshInterval(): void;
 
@@ -107,7 +111,9 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   killForm(): void;
 
-  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
+  closeForm(): Generator;
+
+  start(args:{initUIResult: any, preloadIsDirty?: boolean, createNewRecord?: boolean}): Generator;
 
   loadGroups(rootDataView: IDataView, columnSettings: IGroupingSettings, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined): Promise<any[]>;
 
@@ -123,6 +129,12 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   registerDisposer(disposer: () => void): void;
 
   onCopyRow(entity: any, gridId: string, rowId: string): any;
+}
+
+export interface IUpdateChanges {
+  dataViewId: string;
+  columnsChangedOnClient: string[];
+  columnsChangedOnServer: string[];
 }
 
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>

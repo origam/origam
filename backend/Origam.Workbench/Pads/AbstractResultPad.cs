@@ -24,50 +24,47 @@ using Origam.Workbench.Services;
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Workbench.Pads
+namespace Origam.Workbench.Pads;
+public class AbstractResultPad : AbstractPadContent
 {
-    public class AbstractResultPad : AbstractPadContent
+    public bool OpenParentPackage(Guid SchemaExtensionId)
     {
-        public bool OpenParentPackage(Guid SchemaExtensionId)
+        Guid SchemaExtensionIdItem = SchemaExtensionId;
+        TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
+        if (treenode != null)
         {
-            Guid SchemaExtensionIdItem = SchemaExtensionId;
-            TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
-            if (treenode != null)
+            if (!((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
             {
-                if (!((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+                DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.No)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.No)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return true;
+                    return false;
                 }
             }
-            LoadSchema(treenode,SchemaExtensionIdItem);
-            return true;
+            else
+            {
+                return true;
+            }
         }
-
-        private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
+        LoadSchema(treenode,SchemaExtensionIdItem);
+        return true;
+    }
+    private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
+    {
+        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        if (treenode != null)
         {
-            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-            if (treenode != null)
+            schema.UnloadSchema();
+        }
+        if (treenode == null || !((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+        {
+            foreach (Package sch in schema.AllPackages)
             {
-                schema.UnloadSchema();
-            }
-            if (treenode == null || !((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
-            {
-                foreach (Package sch in schema.AllPackages)
+                if (sch.Id.Equals(SchemaExtensionIdItem))
                 {
-                    if (sch.Id.Equals(SchemaExtensionIdItem))
-                    {
-                        schema.LoadSchema(sch.Id);
-                        ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
-                        cmd.Run();
-                    }
+                    schema.LoadSchema(sch.Id);
+                    ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
+                    cmd.Run();
                 }
             }
         }

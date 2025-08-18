@@ -19,7 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/connections/MobileComponents/BottomToolBar/BottomIcon.module.scss";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
+import cx from "classnames";
 
 export const BottomIcon: React.FC<{
   iconPath?: string;
@@ -29,7 +30,7 @@ export const BottomIcon: React.FC<{
 }> = (props) => {
   return (
     <div
-      className={S.root}
+      className={cx(S.root, "bottomBarItem")}
       onClick={props.onClick}
     >
       {props.iconPath && <div className={S.icon}>

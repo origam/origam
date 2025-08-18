@@ -1,0 +1,64 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.progressIndicator {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  z-index: 2000;
+  left: 0;
+  overflow: hidden;
+
+  $indefiniteMarkerWidth: 200%;
+
+  @keyframes slideright {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(50%);
+    }
+  }
+
+  .indefinite {
+    animation-name: slideright;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(20);
+    width: $indefiniteMarkerWidth;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      var(--background1) 0%,
+      var(--foreground2) 34%,
+      var(--foreground3) 50%,
+      var(--foreground2) 66%,
+      var(--background1) 100%
+    );
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1001;
+}

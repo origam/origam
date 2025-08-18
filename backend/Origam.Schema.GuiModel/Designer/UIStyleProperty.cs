@@ -24,97 +24,85 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for Graphics.
+/// </summary>
+[SchemaItemDescription("Style Property", "icon_style-property.png")]
+[HelpTopic("Styles")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class UIStyleProperty : AbstractSchemaItem
 {
-    /// <summary>
-    /// Summary description for Graphics.
-    /// </summary>
-    [SchemaItemDescription("Style Property", "icon_style-property.png")]
-    [HelpTopic("Styles")]
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class UIStyleProperty : AbstractSchemaItem
+    public const string CategoryConst = "StyleProperty";
+    public UIStyleProperty() : base() { Init(); }
+    public UIStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+    public UIStyleProperty(Key primaryKey) : base(primaryKey) { Init(); }
+    private void Init()
     {
-        public const string CategoryConst = "StyleProperty";
-
-        public UIStyleProperty() : base() { Init(); }
-
-        public UIStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-        public UIStyleProperty(Key primaryKey) : base(primaryKey) { Init(); }
-
-        private void Init()
+    }
+    #region Properties
+    public Guid ControlStylePropertyId;
+    [TypeConverter(typeof(ControlStylePropertyConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
+    [XmlReference("property", "ControlStylePropertyId")]
+    public ControlStyleProperty Property
+    {
+        get
         {
-
+            return (ControlStyleProperty)this.PersistenceProvider.RetrieveInstance(
+                typeof(ControlStyleProperty), new ModelElementKey(this.ControlStylePropertyId));
         }
-
-        #region Properties
-        public Guid ControlStylePropertyId;
-
-        [TypeConverter(typeof(ControlStylePropertyConverter))]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule()]
-        [XmlReference("property", "ControlStylePropertyId")]
-        public ControlStyleProperty Property
+        set
         {
-            get
-            {
-                return (ControlStyleProperty)this.PersistenceProvider.RetrieveInstance(
-                    typeof(ControlStyleProperty), new ModelElementKey(this.ControlStylePropertyId));
-            }
-            set
-            {
-                this.ControlStylePropertyId = (Guid)value.PrimaryKey["Id"];
-                UpdateName();
-            }
+            this.ControlStylePropertyId = (Guid)value.PrimaryKey["Id"];
+            UpdateName();
         }
-
-        private string _value;
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule()]
-        [XmlAttribute("value")]
-        public string Value
+    }
+    private string _value;
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
+    [XmlAttribute("value")]
+    public string Value
+    {
+        get
         {
-            get
-            {
-                if (_value == null) return null;
-                return _value.Trim();
-            }
-            set
-            {
-                _value = value;
-                UpdateName();
-            }
+            if (_value == null) return null;
+            return _value.Trim();
         }
-        #endregion
-
-        #region Overriden AbstractSchemaItem Members
-        public override void GetExtraDependencies(ArrayList dependencies)
+        set
         {
-            if (this.Property != null)
-            {
-                dependencies.Add(this.Property);
-            }
-            base.GetExtraDependencies(dependencies);
+            _value = value;
+            UpdateName();
         }
-
-        public override string ItemType
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        if (this.Property != null)
         {
-            get
-            {
-                return CategoryConst;
-            }
+            dependencies.Add(this.Property);
         }
-        #endregion
-
-        private void UpdateName()
+        base.GetExtraDependencies(dependencies);
+    }
+    public override string ItemType
+    {
+        get
         {
-            if (this.Property != null && this.Value != null)
-            {
-                this.Name = this.Property.Name + ": " + this.Value;
-            }
+            return CategoryConst;
+        }
+    }
+    #endregion
+    private void UpdateName()
+    {
+        if (this.Property != null && this.Value != null)
+        {
+            this.Name = this.Property.Name + ": " + this.Value;
         }
     }
 }

@@ -23,7 +23,7 @@ import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHead
 import { DataViewHeaderGroup } from "gui/Components/DataViewHeader/DataViewHeaderGroup";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { FilterDropDown } from "gui/connections/FilterDropDown";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import uiActions from "model/actions-ui-tree";
@@ -56,7 +56,7 @@ import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
 import {  renderRowCount} from "gui/connections/CDataViewHeader";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
-import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
+import "gui/connections/MobileComponents/Grid/DataViewHeader.scss"
 import { getMobileState } from "model/selectors/getMobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";

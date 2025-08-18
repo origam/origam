@@ -7,7 +7,7 @@ VALUES ('4574d756-8970-4369-9125-94defcfeeec6', 'English (US)', 'en-US', SYSDATE
 
 IF NOT EXISTS (select * from Language WHERE TagIETF = 'cs-CZ')
 INSERT INTO Language (Id, Name, TagIETF, RecordCreated)
-VALUES ('5477d278-ba2b-46ea-9bd3-509d4c699762', 'Čeština', 'cs-CZ', SYSDATETIME())
+VALUES ('5477d278-ba2b-46ea-9bd3-509d4c699762', N'Čeština', 'cs-CZ', SYSDATETIME())
 
 IF NOT EXISTS (select * from Language WHERE TagIETF = 'de-DE')
 INSERT INTO Language (Id, Name, TagIETF, RecordCreated)

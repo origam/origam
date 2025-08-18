@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -17,86 +18,112 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Collections;
 using System.Xml;
-
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+public class AsPanelActionButtonBuilder
 {
-	/// <summary>
-	/// Summary description for AsPanelActionButtonBuilder.
-	/// </summary>
-	public class AsPanelActionButtonBuilder
-	{
-		public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
-			ActionButtonPlacement placement, string actionId, string groupId, string caption,
-			string iconUrl, bool isDefault, Hashtable parameters, string confirmationMessage)
-		{
-			Build(actionsElement, type, mode, placement, actionId, groupId, caption, iconUrl, isDefault, parameters,
-				false, false, false, 0, "", 0, confirmationMessage);
-		}
+    public static void Build(XmlElement actionsElement, ActionConfiguration config)
+    {
+        XmlElement actionElement =
+            actionsElement.OwnerDocument.CreateElement("Action");
+        actionsElement.AppendChild(actionElement);
 
-		public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
-			ActionButtonPlacement placement, string actionId, string groupId, string caption,
-			string iconUrl, bool isDefault, Hashtable parameters, bool shortcutIsShift, 
-			bool shortcutIsControl,	bool shortcutIsAlt, int shortcutKeyCode, string scannerParameter,
-			int terminatorCharCode, string confirmationMessage)
-		{
-			XmlElement actionElement = actionsElement.OwnerDocument.CreateElement("Action");
-			actionsElement.AppendChild(actionElement);
+        actionElement.SetAttribute("ShowAlways",
+            XmlConvert.ToString(config.ShowAlways));
+        actionElement.SetAttribute("Type", config.Type.ToString());
+        actionElement.SetAttribute("Id", config.ActionId);
+        actionElement.SetAttribute("GroupId", config.GroupId);
+        actionElement.SetAttribute("Caption", config.Caption);
+        actionElement.SetAttribute("IconUrl", config.IconUrl);
+        actionElement.SetAttribute("Mode", config.Mode.ToString());
+        actionElement.SetAttribute("IsDefault",
+            XmlConvert.ToString(config.IsDefault));
+        actionElement.SetAttribute("Placement", config.Placement.ToString());
 
-			actionElement.SetAttribute("Type", type.ToString());
-			actionElement.SetAttribute("Id", actionId);
-			actionElement.SetAttribute("GroupId", groupId);
-			actionElement.SetAttribute("Caption", caption);
-			actionElement.SetAttribute("IconUrl", iconUrl);
-			actionElement.SetAttribute("Mode", mode.ToString());
-			actionElement.SetAttribute("IsDefault", XmlConvert.ToString(isDefault));
-			actionElement.SetAttribute("Placement", placement.ToString());
+        if (!string.IsNullOrEmpty(config.ConfirmationMessage))
+        {
+            actionElement.SetAttribute("ConfirmationMessage",
+                config.ConfirmationMessage);
+        }
 
-			if(confirmationMessage != null)
-			{
-				actionElement.SetAttribute("ConfirmationMessage", confirmationMessage);
-			}
+        if (config.Shortcut != null && config.Shortcut.KeyCode != 0)
+        {
+            XmlElement shortcutElement =
+                actionElement.OwnerDocument.CreateElement("KeyboardShortcut");
+            actionElement.AppendChild(shortcutElement);
+            shortcutElement.SetAttribute("Ctrl",
+                XmlConvert.ToString(config.Shortcut.IsControl));
+            shortcutElement.SetAttribute("Shift",
+                XmlConvert.ToString(config.Shortcut.IsShift));
+            shortcutElement.SetAttribute("Alt",
+                XmlConvert.ToString(config.Shortcut.IsAlt));
+            shortcutElement.SetAttribute("KeyCode",
+                XmlConvert.ToString(config.Shortcut.KeyCode));
+        }
 
-			if(shortcutKeyCode != 0)
-			{
-				XmlElement shortcutElement = actionElement.OwnerDocument.CreateElement("KeyboardShortcut");
-				actionElement.AppendChild(shortcutElement);
+        if (config.Scanner != null && config.Scanner.TerminatorCharCode != 0)
+        {
+            actionElement.SetAttribute("ScannerInputTerminator",
+                XmlConvert.ToString(config.Scanner.TerminatorCharCode));
+        }
 
-				shortcutElement.SetAttribute("Ctrl", XmlConvert.ToString(shortcutIsControl));
-				shortcutElement.SetAttribute("Shift", XmlConvert.ToString(shortcutIsShift));
-				shortcutElement.SetAttribute("Alt", XmlConvert.ToString(shortcutIsAlt));
-				shortcutElement.SetAttribute("KeyCode", XmlConvert.ToString(shortcutKeyCode));
-			}
+        if (!string.IsNullOrEmpty(config.Scanner?.Parameter))
+        {
+            actionElement.SetAttribute("ScannerInputParameterName",
+                config.Scanner.Parameter);
+        }
 
-			if(terminatorCharCode != 0)
-			{
-				actionElement.SetAttribute("ScannerInputTerminator", XmlConvert.ToString(terminatorCharCode));
-			}
+        if (config.Parameters is { Count: > 0 })
+        {
+            XmlElement parametersElement =
+                actionElement.OwnerDocument.CreateElement("Parameters");
+            actionElement.AppendChild(parametersElement);
+            foreach (DictionaryEntry entry in config.Parameters)
+            {
+                XmlElement parameterElement =
+                    parametersElement.OwnerDocument.CreateElement("Parameter");
+                parametersElement.AppendChild(parameterElement);
+                parameterElement.SetAttribute("Name", (string)entry.Key);
+                parameterElement.SetAttribute("FieldName", (string)entry.Value);
+            }
+        }
+    }
+}
 
-			if(scannerParameter != "" && scannerParameter != null)
-			{
-				actionElement.SetAttribute("ScannerInputParameterName", scannerParameter);
-			}
+public class ActionConfiguration
+{
+    public PanelActionType Type { get; set; }
+    public PanelActionMode Mode { get; set; }
+    public ActionButtonPlacement Placement { get; set; }
+    public string ActionId { get; set; }
+    public string GroupId { get; set; }
+    public string Caption { get; set; }
+    public string IconUrl { get; set; }
+    public bool IsDefault { get; set; }
+    public bool ShowAlways { get; set; }
+    public string ConfirmationMessage { get; set; }
+    public Hashtable Parameters { get; set; } = new Hashtable();
+    public KeyShortcut Shortcut { get; set; }
+    public ScannerSettings Scanner { get; set; }
+}
 
-			if(parameters.Count > 0)
-			{
-				XmlElement parametersElement = actionElement.OwnerDocument.CreateElement("Parameters");
-				actionElement.AppendChild(parametersElement);
+public class KeyShortcut
+{
+    public bool IsShift { get; set; }
+    public bool IsControl { get; set; }
+    public bool IsAlt { get; set; }
+    public int KeyCode { get; set; }
+}
 
-				foreach(DictionaryEntry entry in parameters)
-				{
-					XmlElement parameterElement = parametersElement.OwnerDocument.CreateElement("Parameter");
-					parametersElement.AppendChild(parameterElement);
-
-					parameterElement.SetAttribute("Name", (string)entry.Key);
-					parameterElement.SetAttribute("FieldName", (string)entry.Value);
-				}
-			}
-		}
-	}
+public class ScannerSettings
+{
+    public string Parameter { get; set; } = "";
+    public int TerminatorCharCode { get; set; }
 }

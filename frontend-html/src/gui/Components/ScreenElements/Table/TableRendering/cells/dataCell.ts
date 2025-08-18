@@ -27,7 +27,6 @@ import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "model/actions-ui-tree";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getShowToolTipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
   currentColumnLeft,
@@ -46,7 +45,9 @@ import {
   context2d,
   currentDataRow,
   drawingColumnIndex,
+  isLastRow,
   recordId,
+  rowHeight,
   rowIndex,
   tableColumnIds,
   tablePanelView,
@@ -67,6 +68,8 @@ import {
   getPaddingRight,
   xCenter,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { T } from "utils/translation";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -80,23 +83,24 @@ export function dataColumnsDraws() {
     clipCell();
     drawCellValue();
     registerClickHandler(id);
-    registerToolTipGetter(id);
+    registerTooltipGetter(id);
   });
 }
 
-function registerToolTipGetter(columnId: string) {
+function registerTooltipGetter(columnId: string) {
   const ctx2d = context2d();
   const property = currentProperty();
   const cellRenderer = currentDataCellRenderer(ctx2d);
   const cellClickableArea = getCellClickableArea();
   const cellWidth = currentColumnWidth();
+  const isMacOS = () => {return navigator.userAgent.toLowerCase().includes("mac")};
 
   if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
     return;
   }
 
   if (
-    getShowToolTipsForMemoFieldsOnly(property) &&
+    getShowTooltipsForMemoFieldsOnly(property) &&
     (property.column !== "Text" || !property.multiline)
   ) {
     return;
@@ -114,10 +118,18 @@ function registerToolTipGetter(columnId: string) {
     w: cellClickableArea.width,
     h: cellClickableArea.height,
     handler(event: any) {
-      if (hasTooltip) {
-        tablePanelView.currentTooltipText = cellTextRendered;
-      } else {
+      tablePanelView.property = property;
+      const nonPrintableChar = tablePanelView.currentTooltipText?.startsWith('\t') ? '\v' : '\t'; // nonprintable chars so the tooltip always rerenders
+      if (cellTextRendered as string === "") {
         tablePanelView.currentTooltipText = undefined;
+      }
+      else if (!property.isLink) {
+        tablePanelView.currentTooltipText = hasTooltip ? nonPrintableChar + cellTextRendered : undefined;
+      }
+      else {
+        const tooltipTranslation = isMacOS() ? T("Hold Cmd and click to open link", "hold_cmd_tool_tip")
+        : T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+        tablePanelView.currentTooltipText = nonPrintableChar + (hasTooltip ? cellTextRendered : "") + '\n' + tooltipTranslation;
       }
     },
   });
@@ -137,8 +149,8 @@ function registerClickHandler(columnId: string) {
       y: checkboxClickableArea.y,
       w: checkboxClickableArea.width,
       h: checkboxClickableArea.height,
-      handler(event: any) {
-        flow(function*() {
+      async handler(event: any) {
+        await flow(function*() {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
             const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
@@ -146,7 +158,14 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, true);
+            yield*getTablePanelView(ctx).onCellClick(
+              {
+                event: event,
+                row: row,
+                columnId: columnId,
+                isControlInteraction: true,
+                isDoubleClick: false
+              });
           }
         })();
       },
@@ -157,16 +176,33 @@ function registerClickHandler(columnId: string) {
     y: cellClickableArea.y,
     w: cellClickableArea.width,
     h: cellClickableArea.height,
-    handler(event: any) {
-      flow(function*() {
+    async handler(event: any) {
+      await flow(function*() {
         if (event.isDouble) {
           getTablePanelView(ctx).setEditing(false);
           const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
           if (defaultAction && defaultAction.isEnabled) {
             yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
           }
+          else {
+            yield*getTablePanelView(ctx).onCellClick(
+              {
+                event: event,
+                row: row,
+                columnId: columnId,
+                isControlInteraction: false,
+                isDoubleClick: true
+              });
+          }
         } else {
-          yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+          yield*getTablePanelView(ctx).onCellClick(
+            {
+              event: event,
+              row: row,
+              columnId: columnId,
+              isControlInteraction: false,
+              isDoubleClick: false
+            });
         }
       })();
     },
@@ -190,6 +226,22 @@ function getCheckboxClickableArea() {
     width: fontSize,
     height: fontSize,
   };
+}
+
+export function drawBottomLineBorder() {
+  const ctx2d = context2d();
+  ctx2d.save();
+  ctx2d.beginPath();
+  const x1 = CPR() * currentColumnLeft();
+  const y1 = CPR() * (currentRowTop() + rowHeight() - 1);
+  const x2 = x1 + CPR() * currentColumnWidth();
+  const y2 = y1;
+  ctx2d.moveTo(x1, y1);
+  ctx2d.lineTo(x2, y2);
+  ctx2d.lineWidth = 0.6;
+  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--background4');
+  ctx2d.stroke();
+  ctx2d.restore();
 }
 
 export function drawDataCellBackground() {
@@ -217,6 +269,9 @@ export function drawDataCellBackground() {
   );
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth);
+  }
+  if (isLastRow()) {
+    drawBottomLineBorder();
   }
 }
 
@@ -306,4 +361,8 @@ function getBackGroundColor() {
         : getComputedStyle(document.documentElement).getPropertyValue('--background1');
     }
   }
+}
+
+function getShowTooltipsForMemoFieldsOnly(ctx: any) {
+  return getWorkbenchLifecycle(ctx).portalSettings?.showTooltipsForMemoFieldsOnly;
 }

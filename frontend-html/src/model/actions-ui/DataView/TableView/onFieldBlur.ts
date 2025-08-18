@@ -26,9 +26,10 @@ import { getGridFocusManager } from "model/entities/GridFocusManager";
 export function onFieldBlur(ctx: any) {
   return flow(function*onFieldBlur() {
     try {
-      yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
-        yield*flushCurrentRowData(ctx)();
+      return yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
+        const updates = yield*flushCurrentRowData(ctx)();
         getGridFocusManager(ctx).focusEditor();
+        return updates;
       });
     } catch (e) {
       yield*handleError(ctx)(e);

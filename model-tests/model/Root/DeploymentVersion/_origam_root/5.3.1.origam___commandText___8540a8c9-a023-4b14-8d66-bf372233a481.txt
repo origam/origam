@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WorkQueueRetryType_l10n" (
+	"Name" Varchar(200) NOT NULL,
+	"refWorkQueueRetryTypeId" Uuid NOT NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"refLanguageId" Uuid NOT NULL);
+CREATE UNIQUE  INDEX  "WorkQueueRetryType_l10n_ix_unq_WorkQueueRetryType" ON "WorkQueueRetryType_l10n" ("refWorkQueueRetryTypeId" ASC, "refLanguageId" ASC);

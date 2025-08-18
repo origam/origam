@@ -1,0 +1,46 @@
+// This example demonstrates how to connect to Origam's private APIs from another server or service
+
+// Setup
+// This is an input file for Visual Studio Code REST client:
+// https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+//
+// - instal the client
+// - set @port
+// - click "Send Request" over the request you want to send 
+
+@port = 44357
+
+###
+// Authenticate 
+// The "password" grant type used in this example is only suitable for
+// server to server communication! Do not use it for anything else.
+//
+// First make sure the "PrivateApiAuthentication" property under "IdentityServerConfig" 
+// in the appsettings.json is set to "Token". The default is "Cookie" which would not work 
+// because there is no way of getting a cookie in server to server comminication as of now.
+//
+// The "client_secret" parameter must match the property "ClientSecret" in the "ServerClient" 
+// section found in the appsettings.json. The "client_id" parameter is always the same. The "username" is 
+// an Origam user's login and "password" is the user's password. 
+// 
+// Put the token received from the following request to the subsequent request headers.
+// Token endpoint documentation:
+// https://identityserver4.readthedocs.io/en/latest/endpoints/token.html?highlight=Resource%20Owner
+
+
+POST https://localhost:{{port}}/connect/token
+CONTENT-TYPE: application/x-www-form-urlencoded
+
+client_secret=serverSecret
+&client_id=serverClient
+&grant_type=password
+&password=???
+&username=???
+
+###
+// Now you can use the token to call private APIs 
+
+GET https://localhost:{{port}}/api/private/link-report
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRFNDg1MkE1QTYzRDQyODUyQjU5RDNBOUY4OTNBMjc3QzVCQkZCREFSUzI1NiIsInR5cCI6ImF0K2p3dCIsIng1dCI6IjNraFNwYVk5UW9VcldkT3AtSk9pZDhXNy05byJ9.eyJuYmYiOjE2OTYzNTQ0MzMsImV4cCI6MTY5NjM1ODAzMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTciLCJjbGllbnRfaWQiOiJzZXJ2ZXJDbGllbnQiLCJzdWIiOiI2OWFhY2YyNi0zMDBlLTQ3N2ItYjlhNi00MDgzMjRjYTFjYWQiLCJhdXRoX3RpbWUiOjE2OTYzNTQ0MzMsImlkcCI6ImxvY2FsIiwibmFtZSI6Indhc2hpIiwianRpIjoiRUJCNUM4QkZFQThDQjBBMEQ1M0YxQURCMjAxODk0NzkiLCJpYXQiOjE2OTYzNTQ0MzMsInNjb3BlIjpbIklkZW50aXR5U2VydmVyQXBpIl0sImFtciI6WyJwd2QiXX0.az2Z1uTcof33otdUX-vAmsoPOXB-22QutG1OInbTgJl3XiB4U23UJGNML8Eyb4C39m4p4hBhnUd6bWXc6Dr9LSvZoEFyuazqE8c1qIh-oxM_0ZsQfzarWtEFFfJTxC5tN0NmhtZNlBQLx5hR7pqq7UNGeXIKhke_kBkwnXbYiCwhc4EmOajsql3MBhWh0JW3YOoYC69BoyBghglzwq4fQFzX6GiBlGSKpap6Y_lFL1e1PkU6hSMesTAIQBe9bwW4q7Yq_jm1CttZblz-yalDyyI6eE8wP9ot64wzE9ouNlvw54-_4qe7vTTBHZbzyv2wwwKn_xzidAMvHzlJIgE1mQ
+
+// The auth tokens have limited life time it is therefore better to use a specialized OAuth library which will handle this.

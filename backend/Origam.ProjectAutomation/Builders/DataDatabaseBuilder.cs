@@ -22,78 +22,74 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class DataDatabaseBuilder : AbstractDatabaseBuilder
 {
-    public class DataDatabaseBuilder : AbstractDatabaseBuilder
+    string _databaseName;
+    DatabaseType _databaseType;
+    public override string Name
     {
-        string _databaseName;
-        DatabaseType _databaseType;
-
-        public override string Name
+        get
         {
-            get
-            {
-                return "Create Data Database";
-            }
+            return "Create Data Database";
         }
-
-        public override void Execute(Project project)
+    }
+    public override void Execute(Project project)
+    {
+        _databaseType = project.DatabaseType;
+        _databaseName = project.DataDatabaseName;
+        CreateDatabase(project);
+        CreateSchema(project);
+        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
+    }
+           
+    public string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
+    {
+        return DataService(_databaseType).BuildConnectionString(
+            project.DatabaseServerName, project.DatabasePort, creatingDatabase, project.DatabaseUserName,
+            project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
+        
+    }
+    public void ResetDataservice()
+    {
+        DataService();
+    }
+    public string BuildConnectionString(Project project, bool pooling)
+    {
+        _databaseType = project.DatabaseType;
+        return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.DatabasePort,
+            project.DataDatabaseName, project.DatabaseUserName,
+            project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
+    }
+    public string BuildConnectionStringArchitect(Project project, bool pooling)
+    {
+        _databaseType = project.DatabaseType;
+        if(_databaseType==DatabaseType.MsSql)
         {
-            _databaseType = project.DatabaseType;
-            _databaseName = project.DataDatabaseName;
-            CreateDatabase(project);
-            CreateSchema(project);
-            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
+            return BuildConnectionString(project, pooling);
         }
-               
-        public string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
+        if (_databaseType == DatabaseType.PgSql)
         {
-            return DataService(_databaseType).BuildConnectionString(
-                project.DatabaseServerName, project.Port, creatingDatabase, project.DatabaseUserName,
-                project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-            
+            this.DataService(_databaseType).DbUser=project.Name;
+            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.DatabasePort,
+                project.DataDatabaseName, DataService(_databaseType).DbUser,
+                 project.UserPassword, project.DatabaseIntegratedAuthentication, pooling);
         }
-        public void ResetDataservice()
-        {
-            DataService();
-        }
-        public string BuildConnectionString(Project project, bool pooling)
-        {
-            _databaseType = project.DatabaseType;
-            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
-                project.DataDatabaseName, project.DatabaseUserName,
-                project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
-        }
-        public string BuildConnectionStringArchitect(Project project, bool pooling)
-        {
-            _databaseType = project.DatabaseType;
-            if(_databaseType==DatabaseType.MsSql)
-            {
-                return BuildConnectionString(project, pooling);
-            }
-            if (_databaseType == DatabaseType.PgSql)
-            {
-                this.DataService(_databaseType).DbUser=project.Name;
-                return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
-                    project.DataDatabaseName, DataService(_databaseType).DbUser,
-                     project.UserPassword, project.DatabaseIntegratedAuthentication, pooling);
-            }
-            return null;
-        }
-        private void CreateSchema(Project project)
-        {
-            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, project.DataDatabaseName);
-            DataService(_databaseType).CreateSchema(_databaseName);
-        }
-        private void CreateDatabase(Project project)
-        {
-            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
-            DataService(_databaseType).CreateDatabase(_databaseName);
-        }
-        public override void Rollback()
-        {
-            OrigamUserContext.Reset();
-            DataService(_databaseType).DeleteDatabase(_databaseName);
-        }
+        return null;
+    }
+    private void CreateSchema(Project project)
+    {
+        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, project.DataDatabaseName);
+        DataService(_databaseType).CreateSchema(_databaseName);
+    }
+    private void CreateDatabase(Project project)
+    {
+        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
+        DataService(_databaseType).CreateDatabase(_databaseName);
+    }
+    public override void Rollback()
+    {
+        OrigamUserContext.Reset();
+        DataService(_databaseType).DeleteDatabase(_databaseName);
     }
 }

@@ -21,59 +21,51 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence; 
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for DataStructureTransformationTemplate.
+/// </summary>
+[SchemaItemDescription("Transformation Template", 
+    "icon_transformation-template.png")]
+[HelpTopic("Template+Set+Template")]
+[ClassMetaVersion("6.0.0")]
+public class DataStructureTransformationTemplate : DataStructureTemplate
 {
-	/// <summary>
-	/// Summary description for DataStructureTransformationTemplate.
-	/// </summary>
-	[SchemaItemDescription("Transformation Template", 
-        "icon_transformation-template.png")]
-    [HelpTopic("Template+Set+Template")]
-    [ClassMetaVersion("6.0.0")]
-	public class DataStructureTransformationTemplate : DataStructureTemplate
+	public DataStructureTransformationTemplate() : base(){}
+	
+	public DataStructureTransformationTemplate(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataStructureTransformationTemplate(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	public Guid TransformationId;
+	[Category("Reference")]
+	[TypeConverter(typeof(TransformationConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("transformation", "TransformationId")]
+	public ITransformation Transformation
 	{
-		public DataStructureTransformationTemplate() : base(){}
-		
-		public DataStructureTransformationTemplate(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataStructureTransformationTemplate(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		public Guid TransformationId;
-
-		[Category("Reference")]
-		[TypeConverter(typeof(TransformationConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("transformation", "TransformationId")]
-		public ITransformation Transformation
+		get
 		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.TransformationId;
-
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as ITransformation;
-			}
-			set
-			{
-				this.TransformationId = (Guid)value.PrimaryKey["Id"];
-
-				this.Name = this.Transformation.Name;
-			}
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.TransformationId;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as ITransformation;
 		}
-		#endregion
-
-		#region Overriden Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		set
 		{
-			if(this.Transformation != null) dependencies.Add(this.Transformation);
-
-			base.GetExtraDependencies (dependencies);
+			this.TransformationId = (Guid)value.PrimaryKey["Id"];
+			this.Name = this.Transformation.Name;
 		}
-		#endregion
 	}
+	#endregion
+	#region Overriden Members
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		if(this.Transformation != null) dependencies.Add(this.Transformation);
+		base.GetExtraDependencies (dependencies);
+	}
+	#endregion
 }

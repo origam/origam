@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/definitions";
+@use "src/gui/definitions" as definitions;
 
 
 .scrolleeShifted {
@@ -32,7 +32,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .loadingOverlay {
@@ -94,6 +94,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .cellAreaContainer {
   position: relative;
   flex-grow: 1;
+  cursor: default;
+
+  &:global(.isLink) {
+    cursor: pointer !important;
+  }
+
 }
 
 .canvasRow {
@@ -104,18 +110,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
 }
 
-.toolTip {
+.tooltip {
   height: 100%;
   position: absolute;
   top: 0;
   display: flex;
   align-items: center;
   z-index: 100;
-}
-
-.toolTipContainer{
-  border-radius: 0px;
-  border: 1px;
 }
 
 .tooltipContent{
@@ -125,7 +126,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: left;
 }
 
-.toolTipLine {
+.tooltipLine {
  white-space: pre-wrap;
   text-align: left;
 }

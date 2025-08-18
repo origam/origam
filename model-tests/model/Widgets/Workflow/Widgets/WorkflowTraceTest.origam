@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="884f0254-139c-4f66-8693-3b73c56d5990"
+    asi:name="WorkflowTraceTest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="1b182e54-b8f1-484d-8cf6-b77c53bd040c"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="f9ff0b01-d573-489b-aaa3-ff829071303d"
+      asi:name="0100_LoadData_AllDataTypes"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/WorkflowTraceTest.origam#WorkflowTraceTest/AllDataTypes/1b182e54-b8f1-484d-8cf6-b77c53bd040c"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8227ff73-b256-45e7-888b-446cb7eff28f"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="e7a54c8a-a979-459f-b6f2-47ed02b18f36"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="ee6162d7-8c41-477b-8efc-3ed4702cb651"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+    </smct:WorkflowTask>
+    <wct:WorkflowTask
+      asi:abstract="false"
+      x:id="cce71946-60db-49bc-bcb1-b143846c6b96"
+      asi:name="0200_Call_MultistepWorkflow"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/WorkflowTraceTest.origam#WorkflowTraceTest/AllDataTypes/1b182e54-b8f1-484d-8cf6-b77c53bd040c"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      wct:workflow="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="6bc0da8a-99b1-4a79-ad62-ac6e9b5fcad4"
+        asi:name="After_0100_LoadData_AllDataTypes"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/WorkflowTraceTest.origam#WorkflowTraceTest/0100_LoadData_AllDataTypes/f9ff0b01-d573-489b-aaa3-ff829071303d" />
+    </wct:WorkflowTask>
+  </w:Workflow>
+</x:file>

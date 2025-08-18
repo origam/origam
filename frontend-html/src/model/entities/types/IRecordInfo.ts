@@ -41,7 +41,8 @@ export interface IRecordInfo extends IRecordInfoData {
     event: any,
     menuId: string,
     dataStructureEntityId: string,
-    rowId: string
+    rowId: string,
+    sessionId: string,
   ): Generator;
 
   onOpenRecordAuditClick(
@@ -54,7 +55,8 @@ export interface IRecordInfo extends IRecordInfoData {
   onSelectedRowMaybeChanged(
     menuId: string,
     dataStructureEntityId: string,
-    rowId: string | undefined
+    rowId: string | undefined,
+    sessionId: string
   ): Generator;
 
   onSidebarInfoSectionCollapsed(): Generator;

@@ -23,7 +23,7 @@ import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearch
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
 import { T } from "../../../utils/translation";
@@ -83,6 +83,7 @@ export class ResultGroup extends React.Component<{
         <div className={S.dropDownParent}>
           {this.isExpanded && this.props.results.map(result =>
             <Dropdowner
+              key={result.id}
               trigger={({refTrigger, setDropped}) => (
                 <SearchResultItem
                   refDom={refTrigger}

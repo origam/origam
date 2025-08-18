@@ -23,117 +23,103 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+[SchemaItemDescription("Client Script Invocation", "Scripts", 
+    "icon_client-script-invocation.png")]
+[HelpTopic("Client+Script")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 {
-
-	[SchemaItemDescription("Client Script Invocation", "Scripts", 
-        "icon_client-script-invocation.png")]
-    [HelpTopic("Client+Script")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityWorkflowActionScriptCall : AbstractSchemaItem
+	public const string CategoryConst = "EntityWorkflowActionScriptCall";
+	public EntityWorkflowActionScriptCall() : base() {}
+	public EntityWorkflowActionScriptCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityWorkflowActionScriptCall(Key primaryKey) : base(primaryKey)	{}
+	public override string ItemType
 	{
-		public const string CategoryConst = "EntityWorkflowActionScriptCall";
-
-		public EntityWorkflowActionScriptCall() : base() {}
-
-		public EntityWorkflowActionScriptCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityWorkflowActionScriptCall(Key primaryKey) : base(primaryKey)	{}
-
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		private string _roles = "";
-		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("roles")]
-		public string Roles
+	}
+	private string _roles = "";
+	[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+	[StringNotEmptyModelElementRule()]
+    [XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
-				return _roles;
-			}
-			set
-			{
-				_roles = value;
-			}
+			return _roles;
 		}
-
-		private string _features;
-		[Category("Condition")]
-		[XmlAttribute("features")]
-        public string Features
+		set
 		{
-			get
-			{
-				return _features;
-			}
-			set
-			{
-				_features = value;
-			}
-		}		
-
-		public Guid RuleId;
-
-		[Category("Condition")]
-		[TypeConverter(typeof(EntityRuleConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("rule", "RuleId")]
-		public IEntityRule Rule
-		{
-			get
-			{
-                return (IEntityRule)PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), new ModelElementKey(RuleId));
-			}
-			set
-			{
-				RuleId = (value == null) 
-					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			_roles = value;
 		}
-
-		private int _order = 0;
-		[Category("Script")]
-		[XmlAttribute("order")]
-		public int Order
+	}
+	private string _features;
+	[Category("Condition")]
+	[XmlAttribute("features")]
+    public string Features
+	{
+		get
 		{
-			get
-			{
-				return _order;
-			}
-			set
-			{
-				_order = value;
-			}
+			return _features;
 		}
-
-		private string _script;
-
-		[Category("Script")]
-		[XmlAttribute("script")]
-		public string Script
+		set
 		{
-			get { return _script; }
-			set { _script = value; }
+			_features = value;
 		}
-
-		public override void GetExtraDependencies(ArrayList dependencies)
+	}		
+	public Guid RuleId;
+	[Category("Condition")]
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("rule", "RuleId")]
+	public IEntityRule Rule
+	{
+		get
 		{
-			if(Rule != null) dependencies.Add(Rule);
-			base.GetExtraDependencies (dependencies);
+            return (IEntityRule)PersistenceProvider.RetrieveInstance(
+				typeof(ISchemaItem), new ModelElementKey(RuleId));
 		}
+		set
+		{
+			RuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	private int _order = 0;
+	[Category("Script")]
+	[XmlAttribute("order")]
+	public int Order
+	{
+		get
+		{
+			return _order;
+		}
+		set
+		{
+			_order = value;
+		}
+	}
+	private string _script;
+	[Category("Script")]
+	[XmlAttribute("script")]
+	public string Script
+	{
+		get { return _script; }
+		set { _script = value; }
+	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		if(Rule != null) dependencies.Add(Rule);
+		base.GetExtraDependencies (dependencies);
 	}
 }

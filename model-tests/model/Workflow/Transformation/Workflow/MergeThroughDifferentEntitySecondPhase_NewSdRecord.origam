@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
+  <xt:Transformation
+    asi:abstract="false"
+    x:id="7acd0146-e7c6-4d8e-aca0-98c817d07b8e"
+    asi:name="MergeThroughDifferentEntitySecondPhase_NewSdRecord"
+    xt:text="-***-ExternalFile:MergeThroughDifferentEntitySecondPhase_NewSdRecord.origam___text___7acd0146-e7c6-4d8e-aca0-98c817d07b8e.xslt" />
+</x:file>

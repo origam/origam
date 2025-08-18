@@ -29,6 +29,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   isFilterControlsDisplayed: boolean;
   activeFilters: IFilter[];
+  activeCompleteFilters: IFilter[];
 
   filteringFunction(ignorePropertyId?: string): (row: any[], forceRowId?: string) => boolean;
 
@@ -37,6 +38,10 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   getSettingByPropertyId(propertyId: string): IFilter | undefined;
 
   setFilter(term: IFilter): void;
+
+  toggleSelectionCheckboxFilter(): void;
+
+  selectionCheckboxFilter: boolean | null;
 
   setFilters(filters: IFilter[]): void;
 

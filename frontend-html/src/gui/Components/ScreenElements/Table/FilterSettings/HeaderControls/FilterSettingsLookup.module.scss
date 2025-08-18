@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/commonStyles";
-@import "~@origam/styles/dist/styles/definitions";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions;
 
 .droppedPanel {
-  @include popoverShadow;
+  @include styles.popoverShadow;
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
-  @include border-radius(4px);
+  @include definitions.border-radius(4px);
 }
 
 .optionGridCell {
@@ -33,7 +33,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   cursor: pointer;
  white-space: nowrap;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
   background: var(--background1) !important;
   color: var(--foreground1);
   padding: 0 0.25em;

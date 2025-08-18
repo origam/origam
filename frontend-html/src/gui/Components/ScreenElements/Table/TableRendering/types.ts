@@ -32,7 +32,7 @@ export interface IGroupRow {
 export interface IGroupTreeNode {
   dispose(): void;
 
-  substituteRecord(row: any[]): any;
+  substituteRecords(rows: any[][]): any;
 
   level: number;
 
@@ -47,7 +47,7 @@ export interface IGroupTreeNode {
   isExpanded: boolean;
   rowCount: number;
   columnValue: string;
-  columnDisplayValue: string;
+  getColumnDisplayValue: () => string;
   aggregations: IAggregation[] | undefined;
   allParents: IGroupTreeNode[];
 
@@ -63,7 +63,7 @@ export interface IGroupTreeNode {
 export type ITableRow = any[] | IGroupRow;
 
 export interface IMouseOverSubsItem {
-  toolTipGetter(worldX: number, worldY: number, canvasX: number, canvasY: number): IToolTipData;
+  tooltipGetter(worldX: number, worldY: number, canvasX: number, canvasY: number): ITooltipData;
 
   x: number;
   y: number;
@@ -71,7 +71,7 @@ export interface IMouseOverSubsItem {
   h: number;
 }
 
-export interface IToolTipData {
+export interface ITooltipData {
   content: any;
   columnIndex: number;
   rowIndex: number;
@@ -81,6 +81,15 @@ export interface IToolTipData {
 }
 
 export interface IClickSubsItem {
+  handler(event: any, worldX: number, worldY: number, canvasX: number, canvasY: number): Promise<void>;
+
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface IMouseMoveSubsItem {
   handler(event: any, worldX: number, worldY: number, canvasX: number, canvasY: number): void;
 
   x: number;

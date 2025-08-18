@@ -20,8 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -29,166 +32,183 @@ using Microsoft.Net.Http.Headers;
 using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Server.Extensions;
 using Origam.Server.Model.Report;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+[AllowAnonymous]
+[Controller]
+[Route("internalApi/[controller]")]
+public class ReportController : AbstractController
 {
-    [AllowAnonymous]
-    [Controller]
-    [Route("internalApi/[controller]")]
-    public class ReportController : AbstractController
+    private readonly IStringLocalizer<SharedResources> localizer;
+    private readonly CoreHttpTools httpTools = new();
+    public ReportController(
+        SessionObjects sessionObjects, 
+        IStringLocalizer<SharedResources> localizer,
+        ILogger<ReportController> log, IWebHostEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
-        private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly CoreHttpTools httpTools = new CoreHttpTools();
-
-        public ReportController(
-            SessionObjects sessionObjects, 
-            IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log, sessionObjects)
+        this.localizer = localizer;
+    }
+    [HttpGet("{reportRequestId:guid}")]
+    public IActionResult Get(Guid reportRequestId)
+    {
+        try
         {
-            this.localizer = localizer;
-        }
-        [HttpGet("{reportRequestId:guid}")]
-        public IActionResult Get(Guid reportRequestId)
-        {
-            try
+            var (reportRequest, report) = GetReport(reportRequestId);
+            if (report == null)
             {
-                var (reportRequest, report) = GetReport(reportRequestId);
-                if (report == null)
+                return NotFound(localizer["ErrorReportNotAvailable"].ToString());
+            }
+            switch (report)
+            {
+                case WebReport webReport:
                 {
-                    return NotFound(localizer["ErrorReportNotAvailable"].ToString());
+                    return HandleWebReport(reportRequest, webReport);
                 }
-                switch(report)
+                case FileSystemReport fileSystemReport:
                 {
-                    case WebReport webReport:
+                    return HandleFileSystemReport(
+                        reportRequest, fileSystemReport);
+                }
+                default:
+                {
+                    if (reportRequest.DataReportExportFormatType
+                        == DataReportExportFormatType.ExternalViewer)
                     {
-                        return HandleWebReport(reportRequest, webReport);
+                        return HandleReportWithExternalViewer(
+                            new Guid(reportRequest.ReportId),
+                            report, reportRequest.Parameters);
                     }
-                    case FileSystemReport fileSystemReport:
-                    {
-                        return HandleFileSystemReport(
-                            reportRequest, fileSystemReport);
-                    }
-                    default:
-                    {
-                        if(report != null)
-                        {
-                            return HandleReport(reportRequest, report.Name);
-                        }
-                        return NotFound(localizer["ErrorReportNotAvailable"]
-                            .ToString());
-                    }
+                    // handle all other report by running
+                    // report service agent's GetReport method
+                    return HandleReport(reportRequest, report.Name);
                 }
             }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-            finally
-            {
-                RemoveRequest(reportRequestId);
-            }
         }
-        [HttpGet("[action]")]
-        public IActionResult GetReportInfo(Guid reportRequestId)
+        catch (Exception ex)
         {
-            return RunWithErrorHandler(() =>
-            {
-                var (_, report) = GetReport(reportRequestId);
-                return report == null
-                    ? (IActionResult)NotFound(localizer["ErrorReportNotAvailable"].ToString())
-                    : Ok(new ReportInfo { IsWebReport = report is WebReport });
-            });
+            return StatusCode(500, ex);
         }
-        private (ReportRequest, AbstractReport) GetReport(Guid reportRequestId)
+        finally
         {
-            ReportRequest reportRequest = sessionObjects.SessionManager
-                .GetReportRequest(reportRequestId);
-            if(reportRequest == null)
-            {
-                return (null, null);
-            }
-            // log in as the user originally requesting the report
-            // so row level security can be applied 
-            SecurityManager.SetCustomIdentity(
-                reportRequest.UserName, HttpContext);
-            reportRequest.TimesRequested++;
-            // get report model data
-            var persistenceService = ServiceManager
-                .Services.GetService<IPersistenceService>();
-            var report = persistenceService.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractReport), 
-                    new ModelElementKey(new Guid(reportRequest.ReportId))) 
-                as AbstractReport;
-            return (reportRequest, report);
+            RemoveRequest(reportRequestId);
         }
-        private IActionResult HandleReport(
-            ReportRequest reportRequest, string reportName)
+    }
+    private IActionResult HandleReportWithExternalViewer(
+        Guid reportId,
+        AbstractReport report, 
+        Hashtable parameters)
+    {
+        var reportService = ReportServiceAgent.GetService(report);
+        string url = reportService.PrepareExternalReportViewer(
+            reportId,
+            data: null, 
+            DataReportExportFormatType.ExternalViewer.ToString(),
+            parameters, 
+            dbTransaction: null);
+        return Redirect(url);
+    }
+    [HttpGet("[action]")]
+    public IActionResult GetReportInfo(Guid reportRequestId)
+    {
+        return RunWithErrorHandler(() =>
         {
-            var report = ReportService.GetReport(
-                new Guid(reportRequest.ReportId),
-                null,
-                reportRequest.DataReportExportFormatType.GetString(),
-                reportRequest.Parameters,
-                null);
-            Response.Headers.Add(
-                HeaderNames.ContentDisposition,
-                "filename=\"" + reportName + "."
-                + reportRequest.DataReportExportFormatType.GetExtension() 
-                + "\"");
-            return File(report, 
-                reportRequest.DataReportExportFormatType.GetContentType());
+            var (_, report) = GetReport(reportRequestId);
+            return report == null
+                ? NotFound(localizer["ErrorReportNotAvailable"].ToString())
+                : Ok(new ReportInfo { IsWebReport = report is WebReport });
+        });
+    }
+    private (ReportRequest, AbstractReport) GetReport(Guid reportRequestId)
+    {
+        ReportRequest reportRequest = sessionObjects.SessionManager
+            .GetReportRequest(reportRequestId);
+        if (reportRequest == null)
+        {
+            return (null, null);
         }
-        private IActionResult HandleWebReport(
-            ReportRequest reportRequest, 
-            WebReport webReport)
+        // log in as the user originally requesting the report
+        // so row level security can be applied 
+        SecurityManager.SetCustomIdentity(
+            reportRequest.UserName, HttpContext);
+        reportRequest.TimesRequested++;
+        // get report model data
+        var persistenceService = ServiceManager
+            .Services.GetService<IPersistenceService>();
+        var report = persistenceService.SchemaProvider.RetrieveInstance(
+                typeof(AbstractReport), 
+                new ModelElementKey(new Guid(reportRequest.ReportId))) 
+            as AbstractReport;
+        return (reportRequest, report);
+    }
+    private IActionResult HandleReport(
+        ReportRequest reportRequest, string reportName)
+    {
+        byte[] report = ReportService.GetReport(
+            new Guid(reportRequest.ReportId),
+            data: null,
+            reportRequest.DataReportExportFormatType.GetString(),
+            reportRequest.Parameters,
+            transactionId: null);
+        Response.Headers.Append(
+            HeaderNames.ContentDisposition,
+            "filename=\"" + reportName + "."
+            + reportRequest.DataReportExportFormatType.GetExtension() 
+            + "\"");
+        return File(report, 
+            reportRequest.DataReportExportFormatType.GetContentType());
+    }
+    private IActionResult HandleWebReport(
+        ReportRequest reportRequest, 
+        WebReport webReport)
+    {
+        ReportHelper.PopulateDefaultValues(
+            webReport, reportRequest.Parameters);
+        string url = HttpTools.Instance.BuildUrl(
+            webReport.Url, reportRequest.Parameters, 
+            webReport.ForceExternalUrl,
+            webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
+        return Redirect(url);
+    }
+    private IActionResult HandleFileSystemReport(
+        ReportRequest reportRequest, 
+        FileSystemReport report)
+    {
+        ReportHelper.PopulateDefaultValues(
+            report, reportRequest.Parameters);
+        string filePath = ReportHelper.BuildFileSystemReportFilePath(
+            report.ReportPath, reportRequest.Parameters);
+        if (!System.IO.File.Exists(filePath))
         {
-            ReportHelper.PopulateDefaultValues(
-                webReport, reportRequest.Parameters);
-            var url = HttpTools.Instance.BuildUrl(
-                webReport.Url, reportRequest.Parameters, 
-                webReport.ForceExternalUrl,
-                webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
-            return Redirect(url);
+            return NotFound();
         }
-        private IActionResult HandleFileSystemReport(
-            ReportRequest reportRequest, 
-            FileSystemReport report)
-        {
-            ReportHelper.PopulateDefaultValues(
-                report, reportRequest.Parameters);
-            var filePath = ReportHelper.BuildFileSystemReportFilePath(
-                report.ReportPath, reportRequest.Parameters);
-            if(!System.IO.File.Exists(filePath))
-            {
-                return NotFound();
-            }
-            var mimeType = HttpTools.Instance.GetMimeType(filePath);
-            var fileName = Path.GetFileName(filePath);
-            Response.Headers.Add(
-                HeaderNames.ContentDisposition,
-                httpTools.GetFileDisposition(
-                    new CoreRequestWrapper(Request), 
-                    fileName));
-            var stream = new FileStream(filePath, FileMode.Open);
-            // specifying filename forces content-disposition attachment;
-            return File(stream, mimeType, fileName);
-        }
-        private void RemoveRequest(Guid reportRequestId)
-        {
-            var reportRequest = sessionObjects.SessionManager
-                .GetReportRequest(reportRequestId);
-            if((reportRequest == null) 
-            || (reportRequest.TimesRequested >= 2)
+        string mimeType = HttpTools.Instance.GetMimeType(filePath);
+        string fileName = Path.GetFileName(filePath);
+        Response.Headers.Append(
+            HeaderNames.ContentDisposition,
+            httpTools.GetFileDisposition(
+                Request.GetUserAgent(), 
+                fileName));
+        var stream = new FileStream(filePath, FileMode.Open);
+        // specifying filename forces content-disposition attachment;
+        return File(stream, mimeType, fileName);
+    }
+    private void RemoveRequest(Guid reportRequestId)
+    {
+        var reportRequest = sessionObjects.SessionManager
+            .GetReportRequest(reportRequestId);
+        if (reportRequest is not { TimesRequested: < 2 }
             || (Request.Headers.ContainsKey(HeaderNames.UserAgent)
-            && (Request.Headers[HeaderNames.UserAgent].ToString()
+                && (Request.Headers[HeaderNames.UserAgent].ToString()
                     .IndexOf("Edge", StringComparison.Ordinal) == -1)))
-            {
-                sessionObjects.SessionManager.RemoveReportRequest(
-                    reportRequestId);
-            }
+        {
+            sessionObjects.SessionManager.RemoveReportRequest(
+                reportRequestId);
         }
     }
 }

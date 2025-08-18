@@ -1,0 +1,352 @@
+name: "Integration Tests"
+
+on:
+  push:
+    branches: [ master, 20* ]
+  pull_request:
+    branches: [ master, 20* ]
+
+jobs:
+  build-frontend:
+    name: build-frontend
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
+
+      - name: Log versions
+        run: |
+          yarn --version
+          node --version
+        shell: bash
+
+      - name: Build Frontend
+        env:
+          CI: true
+        run: |
+          cd frontend-html
+          yarn install --immutable --check-cache
+          yarn build --check-cache
+        shell: bash
+
+      - name: Run Frontend Tests
+        env:
+          CI: true
+        run: |
+          cd frontend-html
+          yarn test
+        shell: bash
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: "frontend-html/dist"
+          retention-days: 1
+          
+  build-html-architect:
+    name: build-html-architect
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn
+        run: corepack prepare yarn@stable --activate
+        shell: bash
+
+      - name: Log versions
+        run: |
+          yarn --version
+          node --version
+        shell: bash
+
+      - name: Build Html Architect
+        env:
+          CI: true
+        run: |
+          cd architect-html
+          yarn install --immutable --check-cache
+          yarn build
+        shell: bash
+
+  build-architect-server:
+    name: build-server
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore Packages
+        run: |
+          cd backend
+          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+      - name: Build Server Architect
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
+
+  build-server:
+    name: build-server
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore Packages
+        run: |
+          cd backend
+          msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
+      - name: Build Server
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+      - name: Build Origam.WorkflowTests
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
+
+      - name: Upload server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: "backend/Origam.Server/bin/Release/net8.0/publish"
+          retention-days: 1
+
+      - name: Upload workflow integration tests artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflowbuild
+          path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
+          retention-days: 1
+
+  integration-tests-mssql:
+    needs: [ build-frontend,build-server ]
+    name: integration-tests-mssql
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      actions: read
+      contents: read
+      checks: write
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: test/HTML5
+
+      - name: Download Frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: test/HTML5/clients/origam
+
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/HTML5_TESTS
+
+      - name: Copy model to test directory
+        run: |
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Run Tests
+        run: |
+          cd test
+          mkdir output
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit
+
+      - name: Clean up
+        if: always()
+        run: |
+          cd test
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down
+
+      - name: Produce frontend integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Integration Test Results
+          path: test/output/frontend-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Produce workflow integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Workflow Integration Test Results
+          path: test/output/workflow-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+  integration-tests-postgres:
+    needs: [ build-frontend,build-server ]
+    name: integration-tests-pgsql
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      actions: read
+      contents: read
+      checks: write
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: test/HTML5
+
+      - name: Download Frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: test/HTML5/clients/origam
+
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/HTML5_TESTS
+
+      - name: Copy model to test directory
+        run: |
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Run Tests
+        run: |
+          cd test
+          mkdir output
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit
+
+      - name: Clean up
+        if: always()
+        run: |
+          cd test
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test down
+
+      - name: Produce frontend integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Integration Test Results
+          path: test/output/frontend-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Produce workflow integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Workflow Integration Test Results
+          path: test/output/workflow-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+  cleanup-artifacts:
+    name: cleanup-artifacts
+    runs-on: ubuntu-latest
+    needs:
+      - integration-tests-mssql
+      - integration-tests-postgres
+    if: always()
+    steps:
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            htmlserverbuild
+            htmlfrontendbuild
+            workflowbuild
+          failOnError: false
+

@@ -22,7 +22,7 @@ import "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { getStyle } from "gui/Components/Form/FormSection";
 import cx from "classnames";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import S from "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 
 const emptyDimensions = new FieldDimensions();

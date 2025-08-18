@@ -25,6 +25,7 @@ export function onWorkflowNextClick(ctx: any) {
   return flow(function*onWorkflowNextClick(event: any) {
     try {
       const lifecycle = getFormScreenLifecycle(ctx);
+      if(lifecycle.workflowNextActive > 0) return;
       yield*lifecycle.onFlushData();
       yield*lifecycle.onWorkflowNextClick(event);
     } catch (e) {

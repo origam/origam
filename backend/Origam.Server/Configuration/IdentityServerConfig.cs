@@ -29,277 +29,258 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+public enum AuthenticationType
 {
-    public enum AuthenticationType
+    Email,
+    Username
+}   
+
+public enum AuthenticationMethod
+{
+    Cookie,
+    Token
+}
+
+public static class IdentityServerDefaults
+{
+    public const string AzureAdScheme = "AzureAd";
+    public const string WindowsAdScheme = "Windows";
+}
+
+public class IdentityServerConfig
+{
+    public string PathToJwtCertificate { get; }
+    public string PasswordForJwtCertificate { get; }
+    public GoogleLogin GoogleLogin { get; }
+    public MicrosoftLogin MicrosoftLogin { get; }
+    public AzureAdLogin AzureAdLogin {get;}
+    public WebClient WebClient { get; }
+    public MobileClient MobileClient { get; }
+    public ServerClient ServerClient { get; }
+    public bool CookieSlidingExpiration { get; } 
+    public int CookieExpirationMinutes { get; }
+    public string AuthenticationPostProcessor { get; }
+    public AuthenticationMethod PrivateApiAuthentication { get; }
+    public IdentityServerConfig(IConfiguration configuration)
     {
-        Email,
-        Username
-    }   
-    
-    public enum AuthenticationMethod
-    {
-        Cookie,
-        Token
+        var identityServerSection = configuration
+            .GetSectionOrThrow("IdentityServerConfig");
+        PathToJwtCertificate = identityServerSection
+            .GetStringOrThrow("PathToJwtCertificate");
+        PasswordForJwtCertificate = identityServerSection.GetValue<string>(
+                "PasswordForJwtCertificate");
+        CookieSlidingExpiration = identityServerSection
+            .GetValue("CookieSlidingExpiration", true);
+        PrivateApiAuthentication = identityServerSection
+            .GetValue("PrivateApiAuthentication", AuthenticationMethod.Cookie);
+        CookieExpirationMinutes = identityServerSection
+            .GetValue("CookieExpirationMinutes", 60);
+        GoogleLogin = ConfigureGoogleLogin(identityServerSection);
+        MicrosoftLogin = ConfigureMicrosoftLogin(identityServerSection);
+        AzureAdLogin = ConfigureAzureAdLogin(identityServerSection);
+        WebClient = ConfigureWebClient(identityServerSection);
+        MobileClient = ConfigureMobileClient(identityServerSection);
+        ServerClient = ConfigureServerClient(identityServerSection);
+        AuthenticationPostProcessor = identityServerSection.GetValue(
+            "AuthenticationPostProcessor", "");
     }
-    
-    public static class IdentityServerDefaults
+    private ServerClient ConfigureServerClient(
+        IConfigurationSection identityServerSection)
     {
-        public const string AzureAdScheme = "AzureAd";
-        public const string WindowsAdScheme = "Windows";
+        var serverClientSection = identityServerSection
+            .GetSection("ServerClient");
+        if (serverClientSection.Exists())
+        {
+            return new ServerClient
+            {
+                ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
+            };
+        }
+        return null;
     }
-    
-    public class IdentityServerConfig
+    private MobileClient ConfigureMobileClient(
+        IConfigurationSection identityServerSection)
     {
-        public string PathToJwtCertificate { get; }
-        public string PasswordForJwtCertificate { get; }
-        public GoogleLogin GoogleLogin { get; }
-        public MicrosoftLogin MicrosoftLogin { get; }
-        public AzureAdLogin AzureAdLogin {get;}
-        public WebClient WebClient { get; }
-        public MobileClient MobileClient { get; }
-        public ServerClient ServerClient { get; }
-        public bool CookieSlidingExpiration { get; } 
-        public int CookieExpirationMinutes { get; }
-        public string AuthenticationPostProcessor { get; }
-        public AuthenticationMethod PrivateApiAuthentication { get; }
-
-        public IdentityServerConfig(IConfiguration configuration)
+        var mobileClientSection = identityServerSection
+            .GetSection("MobileClient");
+        if (mobileClientSection.GetChildren().Any())
         {
-            var identityServerSection = configuration
-                .GetSectionOrThrow("IdentityServerConfig");
-            PathToJwtCertificate = identityServerSection
-                .GetStringOrThrow("PathToJwtCertificate");
-            PasswordForJwtCertificate = identityServerSection.GetValue<string>(
-                    "PasswordForJwtCertificate");
-            CookieSlidingExpiration = identityServerSection
-                .GetValue("CookieSlidingExpiration", true);
-            PrivateApiAuthentication = identityServerSection
-                .GetValue("PrivateApiAuthentication", AuthenticationMethod.Cookie);
-            CookieExpirationMinutes = identityServerSection
-                .GetValue("CookieExpirationMinutes", 60);
-            GoogleLogin = ConfigureGoogleLogin(identityServerSection);
-            MicrosoftLogin = ConfigureMicrosoftLogin(identityServerSection);
-            AzureAdLogin = ConfigureAzureAdLogin(identityServerSection);
-            WebClient = ConfigureWebClient(identityServerSection);
-            MobileClient = ConfigureMobileClient(identityServerSection);
-            ServerClient = ConfigureServerClient(identityServerSection);
-            AuthenticationPostProcessor = identityServerSection.GetValue(
-                "AuthenticationPostProcessor", "");
-        }
-
-        private ServerClient ConfigureServerClient(
-            IConfigurationSection identityServerSection)
-        {
-            var serverClientSection = identityServerSection
-                .GetSection("ServerClient");
-            if (identityServerSection.GetChildren().Any())
+            return new MobileClient
             {
-                return new ServerClient
-                {
-                    ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
-                };
-            }
-            return null;
+                PostLogoutRedirectUris = mobileClientSection
+                    .GetSectionOrThrow("PostLogoutRedirectUris")
+                    .GetStringArrayOrThrow(),
+                RedirectUris = mobileClientSection
+                    .GetSectionOrThrow("RedirectUris")
+                    .GetStringArrayOrThrow()
+            }; 
         }
-
-        private MobileClient ConfigureMobileClient(
-            IConfigurationSection identityServerSection)
+        return null;
+    }
+    private WebClient ConfigureWebClient(
+        IConfigurationSection identityServerSection)
+    {
+        var webClientSection = identityServerSection
+            .GetSection("WebClient");
+        if (webClientSection.GetChildren().Any())
         {
-            var mobileClientSection = identityServerSection
-                .GetSection("MobileClient");
-            if (mobileClientSection.GetChildren().Any())
+            return new WebClient
             {
-                return new MobileClient
-                {
-                    PostLogoutRedirectUris = mobileClientSection
-                        .GetSectionOrThrow("PostLogoutRedirectUris")
-                        .GetStringArrayOrThrow(),
-                    RedirectUris = mobileClientSection
-                        .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow()
-                }; 
-            }
-            return null;
+                PostLogoutRedirectUris = webClientSection
+                    .GetSectionOrThrow("PostLogoutRedirectUris")
+                    .GetStringArrayOrThrow(),
+                RedirectUris = webClientSection
+                    .GetSectionOrThrow("RedirectUris")
+                    .GetStringArrayOrThrow(),
+                AllowedCorsOrigins = webClientSection
+                    .GetSection("AllowedCorsOrigins")
+                    ?.Get<string[]>()
+            };
         }
-
-        private WebClient ConfigureWebClient(
-            IConfigurationSection identityServerSection)
+        return null;
+    }
+    private GoogleLogin ConfigureGoogleLogin(
+        IConfigurationSection identityServerSection)
+    {
+        var googleLoginSection = identityServerSection
+            .GetSection("GoogleLogin");
+        if (googleLoginSection.GetChildren().Any())
         {
-            var webClientSection = identityServerSection
-                .GetSection("WebClient");
-            if (webClientSection.GetChildren().Any())
+            return new GoogleLogin(googleLoginSection)
             {
-                return new WebClient
-                {
-                    PostLogoutRedirectUris = webClientSection
-                        .GetSectionOrThrow("PostLogoutRedirectUris")
-                        .GetStringArrayOrThrow(),
-                    RedirectUris = webClientSection
-                        .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow(),
-                    AllowedCorsOrigins = webClientSection
-                        .GetSection("AllowedCorsOrigins")
-                        ?.Get<string[]>()
-                };
-            }
-            return null;
-        }
-
-        private GoogleLogin ConfigureGoogleLogin(
-            IConfigurationSection identityServerSection)
-        {
-            var googleLoginSection = identityServerSection
-                .GetSection("GoogleLogin");
-            if (googleLoginSection.GetChildren().Any())
-            {
-                return new GoogleLogin(googleLoginSection)
-                {
-                    ClientId = googleLoginSection.GetStringOrThrow(
-                        "ClientId"),
-                    ClientSecret = googleLoginSection .GetStringOrThrow(
-                        "ClientSecret")
-                };
-            }
-            return null;
-        }
-        
-        private MicrosoftLogin ConfigureMicrosoftLogin(
-            IConfigurationSection identityServerSection)
-        {
-            var microsoftLoginSection = identityServerSection
-                .GetSection("MicrosoftLogin");
-            if (microsoftLoginSection.GetChildren().Any())
-            {
-                return new MicrosoftLogin(microsoftLoginSection)
-                {
-                    ClientId = microsoftLoginSection.GetStringOrThrow(
-                        "ClientId"),
-                    ClientSecret = microsoftLoginSection.GetStringOrThrow(
+                ClientId = googleLoginSection.GetStringOrThrow(
+                    "ClientId"),
+                ClientSecret = googleLoginSection .GetStringOrThrow(
                     "ClientSecret")
-                };
-            }
-            return null;
+            };
         }
-        
-        private AzureAdLogin ConfigureAzureAdLogin(
-            IConfigurationSection identityServerSection)
+        return null;
+    }
+    
+    private MicrosoftLogin ConfigureMicrosoftLogin(
+        IConfigurationSection identityServerSection)
+    {
+        var microsoftLoginSection = identityServerSection
+            .GetSection("MicrosoftLogin");
+        if (microsoftLoginSection.GetChildren().Any())
         {
-            var azureAdLoginSection = identityServerSection
-                .GetSection("AzureAdLogin");
-            if (azureAdLoginSection.GetChildren().Any())
+            return new MicrosoftLogin(microsoftLoginSection)
             {
-                return new AzureAdLogin(azureAdLoginSection)
-                {
-                    ClientId = azureAdLoginSection.GetStringOrThrow("ClientId"),
-                    TenantId = azureAdLoginSection.GetStringOrThrow("TenantId")
-                };
-            }
-            return null;
+                ClientId = microsoftLoginSection.GetStringOrThrow(
+                    "ClientId"),
+                ClientSecret = microsoftLoginSection.GetStringOrThrow(
+                "ClientSecret")
+            };
         }
-
-        public ExternalCallbackProcessingInfo GetExternalCallbackProcessingInfo(
-            string authenticationScheme)
+        return null;
+    }
+    
+    private AzureAdLogin ConfigureAzureAdLogin(
+        IConfigurationSection identityServerSection)
+    {
+        var azureAdLoginSection = identityServerSection
+            .GetSection("AzureAdLogin");
+        if (azureAdLoginSection.GetChildren().Any())
         {
-            switch(authenticationScheme)
+            return new AzureAdLogin(azureAdLoginSection)
             {
-                case GoogleDefaults.AuthenticationScheme:
-                    return GoogleLogin;
-                case MicrosoftAccountDefaults.AuthenticationScheme:
-                    return MicrosoftLogin;
-                case IdentityServerDefaults.AzureAdScheme:
-                    return AzureAdLogin;
-                case  IdentityServerDefaults.WindowsAdScheme:
-                    return new WindowsLogin();
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        nameof(authenticationScheme),
-                        $@"Invalid authentication scheme {authenticationScheme}");
-            }
+                ClientId = azureAdLoginSection.GetStringOrThrow("ClientId"),
+                TenantId = azureAdLoginSection.GetStringOrThrow("TenantId")
+            };
         }
+        return null;
     }
-
-    public class ServerClient
+    public ExternalCallbackProcessingInfo GetExternalCallbackProcessingInfo(
+        string authenticationScheme)
     {
-        public string ClientSecret { get; set; }
-    }
-
-    public class WebClient
-    {
-        public string[] RedirectUris { get; set; }
-        public string[] PostLogoutRedirectUris { get; set; }
-        public string[] AllowedCorsOrigins { get; set; }  
-    }
-    
-    public class MobileClient
-    {
-        public string[] RedirectUris { get; set; }
-        public string[] PostLogoutRedirectUris { get; set; }
-    }
-
-    public abstract class ExternalCallbackProcessingInfo
-    {
-        public AuthenticationType AuthenticationType { get; set; }
-        public string ClaimType { get; set; }
-
-        protected ExternalCallbackProcessingInfo(
-            IConfigurationSection configurationSection)
+        switch(authenticationScheme)
         {
-            AuthenticationType = configurationSection.GetValue(
-                "AuthenticationType", AuthenticationType.Email);
-            ClaimType = configurationSection.GetValue(
-                "ClaimType", ClaimTypes.Email);
-        }
-
-        protected ExternalCallbackProcessingInfo()
-        {
-        }
-    }
-    
-    public class GoogleLogin : ExternalCallbackProcessingInfo
-    {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-
-        public GoogleLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
+            case GoogleDefaults.AuthenticationScheme:
+                return GoogleLogin;
+            case MicrosoftAccountDefaults.AuthenticationScheme:
+                return MicrosoftLogin;
+            case IdentityServerDefaults.AzureAdScheme:
+                return AzureAdLogin;
+            case  IdentityServerDefaults.WindowsAdScheme:
+                return new WindowsLogin();
+            default:
+                throw new ArgumentOutOfRangeException(
+                    nameof(authenticationScheme),
+                    $@"Invalid authentication scheme {authenticationScheme}");
         }
     }
+}
+public class ServerClient
+{
+    public string ClientSecret { get; set; }
+}
+public class WebClient
+{
+    public string[] RedirectUris { get; set; }
+    public string[] PostLogoutRedirectUris { get; set; }
+    public string[] AllowedCorsOrigins { get; set; }  
+}
 
-    public class MicrosoftLogin : ExternalCallbackProcessingInfo
+public class MobileClient
+{
+    public string[] RedirectUris { get; set; }
+    public string[] PostLogoutRedirectUris { get; set; }
+}
+public abstract class ExternalCallbackProcessingInfo
+{
+    public AuthenticationType AuthenticationType { get; set; }
+    public string ClaimType { get; set; }
+    protected ExternalCallbackProcessingInfo(
+        IConfigurationSection configurationSection)
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-
-        public MicrosoftLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
-        }
+        AuthenticationType = configurationSection.GetValue(
+            "AuthenticationType", AuthenticationType.Email);
+        ClaimType = configurationSection.GetValue(
+            "ClaimType", ClaimTypes.Email);
     }
-    
-    public class AzureAdLogin : ExternalCallbackProcessingInfo
+    protected ExternalCallbackProcessingInfo()
     {
-        public string ClientId { get; set; }
-        public string TenantId { get; set; }
-
-        public AzureAdLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
-        }
     }
+}
 
-    public class WindowsLogin : ExternalCallbackProcessingInfo
+public class GoogleLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
+    public GoogleLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
     {
-        public WindowsLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
-        }
+    }
+}
+public class MicrosoftLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
+    public MicrosoftLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
+    {
+    }
+}
 
-        public WindowsLogin()
-        {
-            AuthenticationType = AuthenticationType.Username;
-            ClaimType = "name";
-        }
+public class AzureAdLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string TenantId { get; set; }
+    public AzureAdLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
+    {
+    }
+}
+public class WindowsLogin : ExternalCallbackProcessingInfo
+{
+    public WindowsLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
+    {
+    }
+    public WindowsLogin()
+    {
+        AuthenticationType = AuthenticationType.Username;
+        ClaimType = "name";
     }
 }

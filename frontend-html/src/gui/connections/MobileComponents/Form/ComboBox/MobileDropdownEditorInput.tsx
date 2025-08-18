@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { Observer } from "mobx-react";
 import React, { useEffect, useMemo } from "react";
 import cx from 'classnames';
-import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import S from "gui/Components/Dropdown/Dropdown.module.scss";
 import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 
@@ -63,7 +63,7 @@ export function MobileDropdownEditorInput(props: {
           onChange={props.behavior.handleInputChange}
           value={props.behavior.inputValue || ""}
           style={getStyle()}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           autoCorrect={"off"}
           autoCapitalize={"off"}
           spellCheck={"false"}

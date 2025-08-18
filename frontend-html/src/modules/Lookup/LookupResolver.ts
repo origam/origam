@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, createAtom, IAtom } from "mobx";
+import { action, createAtom, IAtom, observable } from "mobx";
 import _ from "lodash";
 import { LookupCacheIndividual } from "./LookupCacheIndividual";
 import { ILookupIndividualResultListenerArgs, LookupLoaderIndividual, } from "./LookupLoaderIndividual";
@@ -27,6 +27,7 @@ export class LookupResolver {
   constructor(private cache: LookupCacheIndividual, private loader: LookupLoaderIndividual) {
   }
 
+  @observable
   resolved = new Map<any, any>();
   atoms = new Map<any, IAtom>();
 
@@ -41,13 +42,13 @@ export class LookupResolver {
   handleAtomObserved(key: any, atom: IAtom) {
     this.atoms.set(key, atom);
     if (!this.resolved.has(key)) {
-      this.loader.setInterrest(key);
+      this.loader.setInterest(key);
     }
   }
 
   handleAtomUnobserved(key: any, atom: IAtom) {
     this.atoms.delete(key);
-    this.loader.resetInterrest(key);
+    this.loader.resetInterest(key);
   }
 
   @action.bound
@@ -57,7 +58,7 @@ export class LookupResolver {
       if (!this.atoms.has(k)) {
         keysToDelete.push(k);
       } else {
-        this.loader.setInterrest(k);
+        this.loader.setInterest(k);
       }
     }
     for (let k of keysToDelete) {

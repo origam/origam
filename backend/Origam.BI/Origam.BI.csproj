@@ -1,157 +1,113 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>7.10.6030</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{54BFF654-2A00-4A8A-86B0-06F124D769A1}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon />
     <AssemblyKeyContainerName />
-    <AssemblyName>Origam.BI</AssemblyName>
     <AssemblyOriginatorKeyFile />
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Origam.BI</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <OldToolsVersion>0.0</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
     <LangVersion>10</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <Configurations>Debug Architect Server;Debug Architect;Debug Client;Debug Server;Debug;Release Architect;Release Client;Release Server;Release;Release Architect Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Architect Server|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Architect Server|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
-      <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
-      <Name>Origam.Common.NetFX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
-      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
-      <Name>Origam.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
-      <Name>Origam.DA.Common</Name>
-      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
-      <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
-      <Name>Origam.Rule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
-      <Name>Origam.Schema.EntityModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
-      <Name>Origam.Schema.GuiModel</Name>
-      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
-      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
-      <Name>Origam.Schema</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
-      <Name>Origam.Services</Name>
-      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
-      <Name>Origam.UI.Common</Name>
-      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
-      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
-      <Name>Origam.Workbench.Services</Name>
-    </ProjectReference>
-    <Reference Include="System">
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj" />
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj" />
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj" />
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
+    <Reference Update="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Data">
+    <Reference Update="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Xml">
+    <Reference Update="System.Xml">
       <Name>System.XML</Name>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
+    <Compile Update="Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="IReportService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ReportHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Strings.resx">
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net">
-      <Version>2.0.15</Version>
+      <Version>2.0.17</Version>
     </PackageReference>
     <PackageReference Include="Origam.Service.Core">
-      <Version>2.1.1</Version>
+      <Version>2.3.3</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
-  </Import>
+  <ItemGroup>
+    <EmbeddedResource Update="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent />
-    <PostBuildEvent />
+    <AssemblyTitle>ORIGAM Business Inteligence Common</AssemblyTitle>
+    <Description>Common functionality for ORIGAM Business Inteligence</Description>
+    <Company>Advantage Solutions, s. r. o.</Company>
+    <Product>ORIGAM</Product>
+    <Copyright>%28c%29 2005 - 2021 Advantage Solutions, s. r. o.</Copyright>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
   </PropertyGroup>
 </Project>

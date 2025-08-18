@@ -20,45 +20,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+public enum WorkflowStepStartEvent
 {
-	public enum WorkflowStepStartEvent
-	{
-		Success,
-		Failure,
-		Finish
-	}
-
-	public enum WorkflowStepResult
-	{
-		Ready,
-		Success,
-		Failure,
-		NotRun,
-		FailureNotRun,
-		Running
-	}
-
-	/// <summary>
-	/// Summary description for IWorkflowStep.
-	/// </summary>
-	public interface IWorkflowStep : ISchemaItem, ITraceable
-	{
-		StartRule StartConditionRule{get; set;}
-		IContextStore StartConditionRuleContextStore{get; set;}
-		IEndRule ValidationRule{get; set;}
-		IContextStore ValidationRuleContextStore{get; set;}
-		string Roles{get;set;}
-		string Features{get;set;}
-		ArrayList Dependencies{get;}
-		StepFailureMode OnFailure { set; get; }
-	}
-
-	public enum StepFailureMode
-	{
-		WorkflowFails, Suppress
-	}
+	Success,
+	Failure,
+	Finish
+}
+public enum WorkflowStepResult
+{
+	Ready,
+	Success,
+	Failure,
+	NotRun,
+	FailureNotRun,
+	Running
+}
+/// <summary>
+/// Summary description for IWorkflowStep.
+/// </summary>
+public interface IWorkflowStep : ISchemaItem, ITraceable
+{
+	StartRule StartConditionRule{get; set;}
+	IContextStore StartConditionRuleContextStore{get; set;}
+	IEndRule ValidationRule{get; set;}
+	IContextStore ValidationRuleContextStore{get; set;}
+	string Roles{get;set;}
+	string Features{get;set;}
+	List<WorkflowTaskDependency> Dependencies{get;}
+	StepFailureMode OnFailure { set; get; }
+}
+public enum StepFailureMode
+{
+	WorkflowFails, Suppress
 }

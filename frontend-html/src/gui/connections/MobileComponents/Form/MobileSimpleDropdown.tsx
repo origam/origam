@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { CSSProperties, useState } from "react";
 import S from "gui/connections/MobileComponents/Form/MobileSimpleDropdown.module.scss";
-import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
-import { IOption } from "@origam/plugins";
+import CS from "gui/Components/Dropdown/Dropdown.module.scss";
 import { observer } from "mobx-react";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getMobileState } from "model/selectors/getMobileState";
 import cx from "classnames";
-import "@origam/components/src/components/Dropdown/Dropdown.module.scss";
+import "gui/Components/Dropdown/Dropdown.module.scss";
 import { prepareForFilter } from "model/selectors/PortalSettings/getStringFilterConfig";
+import { IOption } from "gui/Components/Dialogs/SimpleDropdown";
 
 @observer
 export class MobileSimpleDropdown<T> extends React.Component<{
@@ -86,6 +86,7 @@ function DropDownControl(props: {
       onMouseDown={() => props.onMouseDown()}
       className={CS.control + " " + props.className}>
       <input
+        autoComplete={"new-password"}
         className={S.input}
         value={props.value}
         disabled={true}
@@ -126,6 +127,7 @@ function FullScreenEditor<T>(props: {
     <div className={cx(CS.table, S.root)}>
       <div className={cx(CS.control, S.inputContainer)}>
         <input
+          autoComplete={"new-password"}
           className={cx("input", CS.input)}
           value={value}
           onChange={event => setValue(event.target.value)}

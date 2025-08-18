@@ -22,36 +22,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 
-namespace Origam.Workbench.Pads
+namespace Origam.Workbench.Pads;
+/// <summary>
+/// Summary description for LogPad.
+/// </summary>
+public class LogPad : OutputPad
 {
-	/// <summary>
-	/// Summary description for LogPad.
-	/// </summary>
-	public class LogPad : OutputPad
+	public LogPad() : base()
 	{
-		public LogPad() : base()
-		{
-			// Instantiate the writer 
-			TextWriter _writer = new LogPadStreamWriter(this); 
-			// Redirect the out Console stream 
-			Console.SetOut(_writer);
-			this.TabText = "Log";
-			this.Text = "Log";
-		}
-
-        private void InitializeComponent()
-        {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
-            this.SuspendLayout();
-            // 
-            // LogPad
-            // 
-            this.ClientSize = new System.Drawing.Size(352, 271);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "LogPad";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
-        }
+		// Instantiate the writer 
+		TextWriter _writer = new LogPadStreamWriter(this); 
+		// Redirect the out Console stream 
+		Console.SetOut(_writer);
+		this.TabText = "Log";
+		this.Text = "Log";
+	}
+    private void InitializeComponent()
+    {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
+        this.SuspendLayout();
+        // 
+        // LogPad
+        // 
+        this.ClientSize = new System.Drawing.Size(352, 271);
+        this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+        this.Name = "LogPad";
+        this.ResumeLayout(false);
+        this.PerformLayout();
     }
 }

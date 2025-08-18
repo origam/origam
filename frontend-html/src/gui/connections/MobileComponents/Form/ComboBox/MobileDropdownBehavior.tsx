@@ -45,7 +45,7 @@ export interface IMobileBehaviorData {
   cache: DropdownEditorLookupListCache,
   onValueSelected?: () => void,
   autoSort?: boolean,
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void,
 }
 
 export class MobileDropdownBehavior implements IDropdownEditorBehavior{
@@ -57,7 +57,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   private cache: DropdownEditorLookupListCache;
   public onValueSelected?: () => void;
   private autoSort?: boolean;
-  private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
 
   constructor(args: IMobileBehaviorData) {
     this.api = args.api;
@@ -74,6 +74,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
+  hasNewScreenButton = false;
 
   @observable cursorRowId = "";
 
@@ -111,8 +112,8 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   handleInputChange(event: any) {
     this.userEnteredValue = event.target.value;
 
+    this.dataTable.setFilterPhrase(this.userEnteredValue || "");
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
-      this.dataTable.setFilterPhrase(this.userEnteredValue || "");
       if (this.setup().cached && this.cache.hasCachedListRows()) {
         this.dataTable.setData(this.cache.getCachedListRows());
       } else {
@@ -137,9 +138,9 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleTableCellClicked(event: any, visibleRowIndex: any) {
+  async handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    this.data.chooseNewValue(id);
+    await this.data.chooseNewValue(id);
 
     this.ensureRequestCancelled();
     this.userEnteredValue = "";

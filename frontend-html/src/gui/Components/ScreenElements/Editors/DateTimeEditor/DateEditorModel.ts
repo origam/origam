@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import { action, computed, flow, observable } from "mobx";
-import { toOrigamServerString } from "@origam/utils";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
+import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { toOrigamServerString } from "utils/moment";
 
 export interface IEditorState{
-  value: string | null;
+  initialValue: string | null;
 }
 
 export class DateEditorModel {
@@ -46,10 +46,12 @@ export class DateEditorModel {
     await flow(function*() {
       const dateCompleter = self.getDateCompleter();
       const completedMoment = dateCompleter.autoComplete(self.dirtyTextualValue);
-      if (completedMoment) {
+      if (completedMoment && completedMoment.isValid())  {
         yield self.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (self.momentValue?.isValid()) {
-        yield self.onChange?.(event, toOrigamServerString(self.momentValue));
+      }
+      else if (self.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(self.momentValue!);
+        yield self.onChange?.(event, currentIsoString);
       }
 
       self.dirtyTextualValue = undefined;
@@ -81,7 +83,6 @@ export class DateEditorModel {
     const formatData = getDefaultCsDateFormatDataFromCookie();
     return new DateCompleter(
       formatData.defaultDateSequence,
-      this.outputFormat,
       formatData.defaultDateSeparator,
       formatData.defaultTimeSeparator,
       formatData.defaultDateTimeSeparator,
@@ -98,13 +99,33 @@ export class DateEditorModel {
     }
   }
 
+  hasValueChanged(){
+    if(!this.momentValue?.isValid()){
+      return false;
+    }
+    const initialMoment = moment(this.editorState.initialValue);
+    if(!initialMoment?.isValid()){
+      return true;
+    }
+    const currentIsoString = toOrigamServerString(this.momentValue);
+    const initValueIsoString = toOrigamServerString(initialMoment);
+    return currentIsoString !== initValueIsoString;
+  }
+
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Enter" || event.key === "Tab") {
+    if (
+      event.key === "Enter" ||
+      event.key === "Tab" ||
+      isSaveShortcut(event) ||
+      isRefreshShortcut(event)
+    ) {
       const completedMoment = this.autoCompletedMoment;
-      if (completedMoment) {
+      if (completedMoment && completedMoment.isValid())  {
         this.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (this.momentValue?.isValid()) {
-        this.onChange?.(event, toOrigamServerString(this.momentValue));
+      }
+      else if (this.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(this.momentValue!);
+        this.onChange?.(event, currentIsoString);
       }
       this.dirtyTextualValue = undefined;
     }
@@ -130,7 +151,7 @@ export class DateEditorModel {
     if (this.dirtyTextualValue) {
       return moment(this.dirtyTextualValue, this.outputFormat);
     }
-    return !!this.editorState.value ? moment(this.editorState.value) : null;
+    return !!this.editorState.initialValue ? moment(this.editorState.initialValue) : null;
   }
 
   formatMomentValue(value: Moment | null | undefined) {

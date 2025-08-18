@@ -41,7 +41,7 @@ svg.icon {
 
 :global(.resultArea){
   border-top: 1px solid var(--background5);
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   max-height: 35vh;
   display: flex;

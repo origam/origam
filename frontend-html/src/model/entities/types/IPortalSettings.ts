@@ -23,7 +23,8 @@ export interface IPortalSettings {
   showChat: boolean;
   showWorkQueues: boolean;
   helpUrl: string;
-  showToolTipsForMemoFieldsOnly: boolean;
+  showTooltipsForMemoFieldsOnly: boolean;
   rowStatesDebouncingDelayMilliseconds: number;
+  dropDownTypingDebouncingDelayMilliseconds: number;
   filterConfig: IFilterConfig;
 }

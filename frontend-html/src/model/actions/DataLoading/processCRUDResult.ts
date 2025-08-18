@@ -29,6 +29,7 @@ import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewCache } from "../../selectors/FormScreen/getDataViewCache";
 import { getFocusManager } from "model/selectors/getFocusManager";
+import {clearRowStateValue} from "../RowStates/clearRowStateValue";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -50,61 +51,68 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function*processCRUDResult(ctx: any, result: ICRUDResult,
+export function*processCRUDResult(ctx: any, results: ICRUDResult[],
                                   resortTables?: boolean | undefined,
-                                  sourceDataView?: IDataView): Generator {
-  if (_.isArray(result)) {
-    for (let resultItem of result) {
-      yield*processCRUDResult(ctx, resultItem, resortTables, sourceDataView);
+                                  sourceDataView?: IDataView): Generator
+{
+  const updates: ICRUDResult[] = [];
+  for (let result of results) {
+    if (result.operation === IResponseOperation.Update){
+      updates.push(result);
     }
-    return;
+    else {
+      yield*processUpdates(ctx, updates, resortTables);
+      yield*processSingleResult(ctx, result, resortTables, sourceDataView);
+    }
   }
-  // console.log(result)
-  const resultItem = result;
+  yield*processUpdates(ctx, updates, resortTables);
+}
+
+function*processUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined) {
+  if (updates.length > 0) {
+    const updatesByEntity = updates.groupBy(x => x.entity);
+    for (let updatesForEntity of updatesByEntity.values()) {
+      yield*batchProcessUpdates(ctx, updatesForEntity, resortTables);
+    }
+    updates.length = 0;
+  }
+}
+function updateRowState(ctx: any, resultItem: ICRUDResult) {
   if (resultItem.state) {
     // TODO: Context for all CRUD ops?
     // TODO: Actions are pre data view vs state is related to entity?
     putRowStateValue(ctx)(resultItem.entity, resultItem.state);
   }
+  else
+  {
+    clearRowStateValue(ctx)(resultItem.entity, resultItem.objectId);
+  }
+}
+
+function*processSingleResult(ctx: any, resultItem: ICRUDResult,
+                           resortTables?: boolean | undefined,
+                           sourceDataView?: IDataView): Generator {
+  updateRowState(ctx, resultItem);
   switch (resultItem.operation) {
-    case IResponseOperation.Update: {
-      const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
-      for (let dataView of dataViews) {
-        dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
-        dataView.substituteRecord(resultItem.wrappedObject);
-        getDataViewCache(dataView).UpdateData(dataView);
-        if (resortTables) {
-          yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
-        }
-        if (!dataView.selectedRow) {
-          dataView.reselectOrSelectFirst();
-        }
-        dataView.formFocusManager.stopAutoFocus();
-        const focusManager = getFocusManager(dataView);
-        focusManager.setFocus();
-      }
-      getFormScreen(ctx).setDirty(true);
-      break;
-    }
     case IResponseOperation.Create: {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
         const tablePanelView = dataView.tablePanelView;
-        const dataSourceRow = result.wrappedObject;
+        const dataSourceRow = resultItem.wrappedObject;
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
 
         if (dataView.isLazyLoading) {
-          yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
+          yield dataView.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
           try {
             dataView.lifecycle.stopSelectedRowReaction();
-            dataView.selectRow(dataSourceRow);
+            yield*dataView.selectRow(dataSourceRow);
             yield*dataView.lifecycle.changeMasterRow();
           } finally {
-            dataView.lifecycle.startSelectedRowReaction();
+            yield*dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
-          yield dataView.dataTable.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
-          dataView.selectRow(dataSourceRow);
+          yield dataView.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
+          yield*dataView.selectRow(dataSourceRow);
         }
         getDataViewCache(dataView).UpdateData(dataView);
       }
@@ -116,7 +124,7 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          dataView.deleteRowAndSelectNext(row);
+          yield*dataView.deleteRowAndSelectNext(row);
           getDataViewCache(dataView).UpdateData(dataView);
         }
       }
@@ -146,7 +154,7 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
           yield*dataView.lifecycle.navigateChildren();
         }
         if (!dataView.selectedRow) {
-          dataView.reselectOrSelectFirst();
+          yield*dataView.reselectOrSelectFirst();
         }
       }
       break;
@@ -167,5 +175,25 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
     default:
       throw new Error("Unknown operation " + resultItem.operation);
   }
-  //}
+}
+
+function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined){
+  for (const resultItem of updates) {
+    updateRowState(ctx, resultItem);
+  }
+  const dataViews = getDataViewsByEntity(ctx, updates[0].entity);
+  for (let dataView of dataViews) {
+    dataView.substituteRecords(updates.map(x=> x.wrappedObject));
+    getDataViewCache(dataView).UpdateData(dataView);
+    if (resortTables) {
+      yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+    }
+    if (!dataView.selectedRow) {
+      yield*dataView.reselectOrSelectFirst();
+    }
+    dataView.formFocusManager.stopAutoFocus();
+  }
+  const screenFocusManager = getFocusManager(ctx);
+  screenFocusManager.setFocus();
+  getFormScreen(ctx).setDirty(true);
 }

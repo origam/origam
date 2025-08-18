@@ -28,13 +28,18 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSessionId } from "model/selectors/getSessionId";
 import { cloneFilterGroup } from "xmlInterpreters/filterXml";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { IFilterSwitchContainer } from "gui/connections/FilterSwitch";
 
-export class FilterGroupManager {
+export class FilterGroupManager implements IFilterSwitchContainer{
   ctx: any;
   filterGroups: IFilterGroup[] = [];
+  @observable
   private _defaultFilter: IFilterGroup | undefined;
   @observable
   selectedFilterGroup: IFilterGroup | undefined;
+  @observable
+  alwaysShowFilters;
 
   get isSelectedFilterGroupDefault() {
     if (!this.selectedFilterGroup) {
@@ -43,13 +48,14 @@ export class FilterGroupManager {
     return this.defaultFilter?.id === this.selectedFilterGroup?.id;
   }
 
-  constructor(private filterConfiguration: IFilterConfiguration) {
+  constructor(private filterConfiguration: IFilterConfiguration, alwaysShowFilters: boolean) {
     this.ctx = filterConfiguration;
     filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
       if (!filteringOn) {
         this.selectedFilterGroup = undefined;
       }
     });
+    this.alwaysShowFilters = alwaysShowFilters;
   }
 
   get filtersHidden() {
@@ -70,8 +76,11 @@ export class FilterGroupManager {
   }
 
   get noFilterActive() {
-    return this.activeFilters.length === 0 ||
-      this.activeFilters.every(filter => !filter.setting.isComplete)
+    return !this.selectedFilterGroup?.selectionCheckboxFilter &&
+      (
+        this.activeFilters.length === 0 ||
+        this.activeFilters.every(filter => !filter.setting.isComplete)
+      )
   }
 
   @action.bound
@@ -81,6 +90,8 @@ export class FilterGroupManager {
     if (this.selectedFilterGroup?.filters) {
       this.filterConfiguration.setFilters(this.selectedFilterGroup.filters);
     }
+    this.filterConfiguration.selectionCheckboxFilter = 
+      this.selectedFilterGroup?.selectionCheckboxFilter ?? null;
   }
 
   filterToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
@@ -93,8 +104,25 @@ export class FilterGroupManager {
   }
 
   getFilterGroupServerVersion(name: string, isGlobal: boolean) {
+    const filters = [...this.activeFilters];
+    const {selectionCheckboxFilter} = this.filterConfiguration;
+    if(selectionCheckboxFilter !== null) {
+      filters.push({
+        propertyId: getSelectionMember(this),
+        dataType: '',
+        setting: {
+          type: 'eq',
+          val1ServerForm: selectionCheckboxFilter,
+          filterValue1: undefined,
+          filterValue2: undefined,
+          val2ServerForm:  undefined,
+          isComplete: true,
+          lookupId: undefined
+        }
+      })
+    }
     return {
-      details: this.activeFilters
+      details: filters
         .filter(filter => filter.setting.isComplete)
         .map((filter) => this.filterToServerVersion(filter)),
       id: undefined,
@@ -121,7 +149,9 @@ export class FilterGroupManager {
       filters: this.activeFilters,
       id: filterGroupId,
       isGlobal: isGlobal,
-      name: name
+      name: name,
+      selectionCheckboxFilter: 
+        this.filterConfiguration.selectionCheckboxFilter
     }
     this.filterGroups.push(filterGroup);
   }
@@ -172,6 +202,7 @@ export class FilterGroupManager {
       Filter: this.getFilterGroupServerVersion("DEFAULT", false),
       IsDefault: true
     });
+    this._defaultFilter = this.selectedFilterGroup;
   }
 
   parent?: any;

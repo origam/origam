@@ -29,20 +29,30 @@ import { getTableViewProperties } from "model/selectors/TablePanelView/getTableV
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Measure, { BoundingRect } from "react-measure";
-import { Canvas } from "./Canvas";
-import { HeaderRow } from "./HeaderRow";
-import { PositionedField } from "./PositionedField";
-import Scrollee from "./Scrollee";
-import Scroller from "./Scroller";
-import S from "./Table.module.scss";
-import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
-import { renderTable } from "./TableRendering/renderTable";
-import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
-import { IGridDimensions, ITableProps } from "./types";
+import { Canvas } from "gui/Components/ScreenElements/Table/Canvas";
+import { HeaderRow } from "gui/Components/ScreenElements/Table/HeaderRow";
+import { PositionedField } from "gui/Components/ScreenElements/Table/PositionedField";
+import Scrollee from "gui/Components/ScreenElements/Table/Scrollee";
+import Scroller from "gui/Components/ScreenElements/Table/Scroller";
+import S from "gui/Components/ScreenElements/Table/Table.module.scss";
+import { getTooltip, handleTableClick, handleTableMouseMove } from "gui/Components/ScreenElements/Table/TableRendering/onClick";
+import { renderTable } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow, ITooltipData } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IGridDimensions, ITableProps } from "gui/Components/ScreenElements/Table/types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IFocusable } from "model/entities/FormFocusManager";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import cx from 'classnames';
+import { getGridFocusManager } from "model/entities/GridFocusManager";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -100,9 +110,9 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function handleClick(event: any) {
+  async function handleClick(event: any) {
     const domRect = event.target.getBoundingClientRect();
-    const handlingResult = handleTableClick(
+    const handlingResult = await handleTableClick(
       event,
       event.clientX - domRect.x,
       event.clientY - domRect.y,
@@ -123,6 +133,9 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       scrollTopObs.get(),
       mouseMoveSubscriptions
     );
+    if (!handlingResult.handled) {
+      getTablePanelView(ctx).onMouseMoveOutsideCells();
+    }
     return handlingResult;
   }
 
@@ -133,7 +146,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function getToolTipContent(event: any, boundingRectangle: DOMRect) {
+  function getTooltipContent(event: any, boundingRectangle: DOMRect) {
     return getTooltip(
       event.clientX - boundingRectangle.x + scrollLeftObs.get(),
       event.clientY - boundingRectangle.y + scrollTopObs.get(),
@@ -141,7 +154,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     );
   }
 
-  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent};
+  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getTooltipContent: getTooltipContent};
 }
 
 export const Table: React.FC<ITableProps & {
@@ -243,18 +256,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         }
       )
     );
-    this.props.listenForScrollToCell &&
-    this.disposers.push(
-      this.props.listenForScrollToCell((rowIdx, colIdx) => {
-        this.scrollToCellShortest(rowIdx, colIdx);
-      })
-    );
   }
 
   componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {
-    if (this.props.isVisible !== prevProps.isVisible) {
-      this.remeasureCellArea();
-    }
+    this.remeasureCellArea();
   }
 
   componentWillUnmount() {
@@ -275,7 +280,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     // TODO: Refactor to take real scrollbar sizes
     //const freeColIndex = columnIdx + this.fixedColumnCount;
     const {gridDimensions} = this.props;
-    const SCROLLBAR_SIZE = 20;
+    const SCROLLBAR_SIZE = 24;
+    const ROW_HEIGHT = 25;
     if (this.elmScroller) {
       const top = gridDimensions.getRowTop(rowIdx);
       const bottom = gridDimensions.getRowBottom(rowIdx);
@@ -295,9 +301,12 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       if (top - this.elmScroller.scrollTop < 0) {
         this.elmScroller.scrollTo({scrollTop: top});
       }
-      if (bottom - this.elmScroller.scrollTop > this.contentBounds.height - SCROLLBAR_SIZE) {
+      if (
+        bottom - this.elmScroller.scrollTop > this.contentBounds.height - 
+        SCROLLBAR_SIZE
+      ) {
         this.elmScroller.scrollTo({
-          scrollTop: bottom - this.contentBounds.height + SCROLLBAR_SIZE,
+          scrollTop: bottom - this.contentBounds.height + SCROLLBAR_SIZE + ROW_HEIGHT ,
         });
       }
     }
@@ -338,15 +347,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @observable
-  toolTipData: IToolTipData | undefined = undefined;
+  tooltipData: ITooltipData | undefined = undefined;
 
   @action.bound onMouseOver(event: any, boundingRectangle: DOMRect) {
-    this.toolTipData = undefined;
+    this.tooltipData = undefined;
     setTimeout(() => {
       runInAction(() => {
-        //console.log("mouseOver", boundingRectangle);
-        this.mouseInToolTipEnabledArea = true;
-        //this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+        this.mouseInTooltipEnabledArea = true;
       });
     });
   }
@@ -357,16 +364,36 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @observable
-  mouseInToolTipEnabledArea = true;
+  mouseInTooltipEnabledArea = true;
 
-  @action.bound onMouseLeaveToolTipEnabledArea(event: any) {
+  @action.bound onMouseLeaveTooltipEnabledArea(event: any) {
     this.tablePanelView.currentTooltipText = undefined;
-    this.mouseInToolTipEnabledArea = false;
+    this.mouseInTooltipEnabledArea = false;
   }
 
   @action.bound handleScrollerClick(event: any) {
-    const {handled} = this.tableRenderer.handleClick(event);
-    if (!handled) this.props.onOutsideTableClick?.(event);
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this.context.tablePanelView,
+      generator: function* (){
+        const handled = yield self.tableRenderer.handleClick(event);
+        if (!self.tablePanelView.isEditing || !handled) {
+          self.focusTable();
+          let dataView = getDataView(self.context.tablePanelView);
+          if (getFormScreenLifecycle(dataView).focusedDataViewId === dataView.id && dataView.selectedRowId) {
+            yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+              getMenuItemId(dataView),
+              getDataStructureEntityId(dataView),
+              dataView.selectedRowId,
+              getSessionId(dataView)
+            );
+          }
+        }
+        if (!handled) {
+          self.props.onOutsideTableClick?.(event);
+        }
+      }()
+    });
   }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
@@ -396,8 +423,21 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   onFocus(event: any){
     if(event.target){
       let dataView = getDataView(this.context.tablePanelView);
-      dataView.formFocusManager.setLastFocused(event.target! as IFocusable);
+      dataView.gridFocusManager.setLastFocusedFilter(event.target! as IFocusable);
     }
+  }
+
+  isCursorIconPointer(): boolean {
+    return !!this.tablePanelView.property?.isLink
+    && this.tablePanelView.ctrlOrCmdPressed
+    && this.tablePanelView.currentTooltipText !== undefined;
+  }
+
+  canFocus(){
+    const formScreen = getFormScreen(this.tablePanelView);
+    const childBindings = formScreen.rootDataViews[0].childBindings;
+    const noEditorInChildViewsOpen = childBindings.every(x => x.childDataView.gridFocusManager.canFocusTable)
+    return getGridFocusManager(this.context.tablePanelView).canFocusTable && noEditorInChildViewsOpen;
   }
 
   render() {
@@ -410,7 +450,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         : undefined;
 
     return (
-      <div className={S.table}>
+      <div className={`${S.table} tableContainer`}>
         {this.props.isLoading && (
           <div className={S.loadingOverlay}>
             <div className={S.loadingIcon}>
@@ -444,6 +484,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         fixedVert={true}
                         zIndex={100}
                         width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                        controlScrollStateByFocus={true}
+                        controlScrollStateSelector=".tableContainer"
+                        controlScrollStatePadding={{ left: 40, right: 40 }}
                       >
                         <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>
                           <Droppable droppableId="headers" direction="horizontal" >
@@ -463,7 +506,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
                   <div
                     ref={measureRef}
-                    className={S.cellAreaContainer}
+                    className={cx("cellAreaContainer", S.cellAreaContainer, (this.isCursorIconPointer()) ? ["isLink", S.isLink] : "")}
                     title={this.tablePanelView.currentTooltipText}
                   >
                     <>
@@ -484,7 +527,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           scrollOffsetSource={this.props.scrollState}
                           worldBounds={contentRect.bounds!}
                           cellRectangle={editorCellRectangle!}
-                          onMouseEnter={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
+                          onMouseEnter={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         >
                           {this.props.renderEditor && this.props.renderEditor()}
                         </PositionedField>
@@ -502,9 +545,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         onClick={this.handleScrollerClick}
                         onMouseMove={this.handleScrollerMouseMove}
                         onMouseOver={this.onMouseOver}
-                        onMouseLeave={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
+                        onMouseLeave={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         onKeyDown={this.props.onKeyDown}
                         onFocus={this.props.onFocus}
+                        canFocus={()=>this.canFocus()}
                       />
                     </>
                   </div>

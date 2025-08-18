@@ -28,7 +28,7 @@ import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import S from "gui/connections/MobileComponents/TopToolBar/TabSelector.module.scss"
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { getLabel } from "gui/connections/CScreenTabbedViewHandleRow";
 
 @observer
@@ -42,14 +42,6 @@ export class TabSelector extends React.Component<{
   }
 
   render() {
-    if (!this.props.mobileState.layoutState.showOpenTabCombo) {
-      return (
-        <div className={S.heading}>
-          {this.props.mobileState.layoutState.heading}
-        </div>
-      );
-    }
-
     const openedScreens = getOpenedNonDialogScreenItems(this.workbench);
     const someScreenIsDirty = openedScreens.some(screen => screen.content?.formScreen?.isDirty)
     const activeItem = openedScreens.find(item => item.isActive);

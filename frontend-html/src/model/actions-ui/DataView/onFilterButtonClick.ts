@@ -26,10 +26,14 @@ export function onFilterButtonClick(ctx: any) {
   return flow(function*onFilterButtonClick(event: any) {
     try {
       const dataView = getDataView(ctx);
+      const filterConfiguration = getFilterConfiguration(ctx);
       if (dataView.isFormViewActive()) {
         dataView.activateTableView?.();
+        if(filterConfiguration.isFilterControlsDisplayed){
+          return;
+        }
       }
-      getFilterConfiguration(ctx).onFilterDisplayClick(event);
+      filterConfiguration.onFilterDisplayClick(event);
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;

@@ -27,6 +27,10 @@ import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 import uiActions from "../../../actions-ui-tree";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function onTableKeyDown(ctx: any) {
   return flow(function*onTableKeyDown(event: any) {
@@ -39,6 +43,14 @@ export function onTableKeyDown(ctx: any) {
             break;
           }
           yield*selectPrevRow(ctx)();
+
+          yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+            getMenuItemId(dataView),
+            getDataStructureEntityId(dataView),
+            dataView.selectedRowId,
+            getSessionId(dataView)
+          );
+
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowDown":
@@ -47,16 +59,14 @@ export function onTableKeyDown(ctx: any) {
             break;
           }
           yield*selectNextRow(ctx)();
-          getTablePanelView(ctx).scrollToCurrentCell();
-          break;
-        case "ArrowLeft":
-          selectPrevColumn(ctx)();
-          event.preventDefault();
-          getTablePanelView(ctx).scrollToCurrentCell();
-          break;
-        case "ArrowRight":
-          selectNextColumn(ctx)();
-          event.preventDefault();
+
+          yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+            getMenuItemId(dataView),
+            getDataStructureEntityId(dataView),
+            dataView.selectedRowId,
+            getSessionId(dataView)
+          );
+
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "F2":
@@ -66,9 +76,9 @@ export function onTableKeyDown(ctx: any) {
           break;
         case "Tab":
           if (event.shiftKey) {
-            selectPrevColumn(ctx)(true);
+            yield*selectPrevColumn(ctx)(true);
           } else {
-            selectNextColumn(ctx)(true);
+            yield*selectNextColumn(ctx)(true);
           }
           event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();

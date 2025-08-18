@@ -36,6 +36,7 @@ export function MapPerspectiveSearch() {
             <div className={S.mapSearch} ref={mapSearchStore.refSearchField}>
               <input
                 className={"input"}
+                autoComplete={"new-password"}
                 value={mapSearchStore.searchInputValue}
                 onChange={mapSearchStore.handleSearchInputChange}
                 onKeyDown={mapSearchStore.handleSearchInputKeyDown}

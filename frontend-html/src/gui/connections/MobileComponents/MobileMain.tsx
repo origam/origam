@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./MobileMain.module.scss";
 import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar/TopToolBar";
-import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState, } from "model/entities/MobileState/MobileState";
 import { About } from "model/entities/AboutInfo";
@@ -41,7 +40,10 @@ import {
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { CDialogContent } from "gui/connections/CDialogContent";
-import "gui/connections/MobileComponents/mobile.module.scss"
+import "gui/connections/MobileComponents/mobile.scss"
+import { observable } from "mobx";
+import { viewportHeight } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
+import { MobileSideBar } from "./MobileSideBar";
 
 @observer
 export class MobileMain extends React.Component<{}> {
@@ -60,11 +62,28 @@ export class MobileMain extends React.Component<{}> {
     return getAbout(this.context.application);
   }
 
+  @observable.ref
+  rootStyle: {[key: string] : string} | undefined;
+
   componentDidMount() {
     if (!getActiveScreen(this.workbench)) {
       this.mobileState.layoutState = new MenuLayoutState();
     }
     this.about.update();
+    window.visualViewport?.addEventListener("resize", (event) => this.onResize());
+  }
+  componentWillUnmount() {
+    window.visualViewport?.removeEventListener("resize", (event) => this.onResize());
+  }
+
+  private onResize() {
+    if (!viewportHeight.isSet()){
+      return;
+    }
+    const keyboardHeight = viewportHeight.get() - (VisualViewport as any).height;
+    if (keyboardHeight > 0) {
+      this.rootStyle = {"padding-bottom": keyboardHeight + "px"};
+    }
   }
 
   renderMainPageContents() {
@@ -80,7 +99,7 @@ export class MobileMain extends React.Component<{}> {
 
   private renderStateComponent() {
     if (this.mobileState.layoutState instanceof MenuLayoutState) {
-      return <CSidebar/>;
+      return <MobileSideBar/>;
     }
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>
@@ -101,7 +120,8 @@ export class MobileMain extends React.Component<{}> {
 
   render() {
     return (
-      <div className={S.root}>
+      <div className={S.root} style={this.rootStyle}>
+        {this.rootStyle ? this.rootStyle["padding-bottom"] : null}
         <TopToolBar mobileState={this.mobileState}/>
         {this.renderMainPageContents()}
         <CDialogContent/>

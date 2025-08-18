@@ -21,17 +21,19 @@ import { ICaptionPosition } from "./ICaptionPosition";
 import { IPropertyColumn } from "./IPropertyColumn";
 import { ILookup } from "./ILookup";
 import { ILookupIndividualEngine } from "../Property";
+import {ITabIndexOwner, TabIndex} from "model/entities/TabIndexOwner";
 
 export enum IDockType {
   Dock = "Dock",
   Fill = "Fill",
 }
 
-export interface IPropertyData {
+export interface IPropertyData extends ITabIndexOwner{
   id: string;
-  tabIndex: string | undefined;
+  tabIndex: TabIndex;
   modelInstanceId: string;
   name: string;
+  gridCaption: string;
   readOnly: boolean;
   x: number;
   y: number;
@@ -56,10 +58,10 @@ export interface IPropertyData {
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;
   autoSort: boolean;
-  toolTip: string;
+  tooltip: string;
   suppressEmptyColumns: boolean;
   supportsServerSideSorting: boolean;
-
+  isInteger: boolean;
   controlPropertyValue?: string;
   controlPropertyId?: string;
   parameters?: any;

@@ -28,7 +28,6 @@ import {
   ColumnConfigurationModel,
   timeunitOptions
 } from "model/entities/TablePanelView/ColumnConfigurationModel";
-import { Button, SimpleDropdown } from "@origam/components";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
@@ -36,6 +35,8 @@ import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/Mobile
 import { ColumnOrderEditor } from "gui/connections/MobileComponents/Grid/ColumnOrderEditor";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
+import { Button } from "gui/Components/Button/Button";
+import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
 
 export const ColumnConfiguration: React.FC<{
   dataView: IDataView
@@ -63,6 +64,7 @@ export const ColumnConfiguration: React.FC<{
         <input
           className={S.input}
           type="number"
+          autoComplete={"new-password"}
           min={0}
           value={"" + configModel.columnsConfiguration.fixedColumnCount}
           onChange={configModel.handleFixedColumnsCountChange}
@@ -117,7 +119,7 @@ export const ColumnConfig: React.FC<{
   const selectedTimeUnitOption = timeunitOptions.find(option => option.value === props.config.timeGroupingUnit)!;
 
   const {
-    name,
+    gridCaption,
     entity,
     canGroup,
     canAggregate,
@@ -199,6 +201,7 @@ export const ColumnConfig: React.FC<{
           <input
             className={S.input}
             type="number"
+            autoComplete={"new-password"}
             onChange={(event: any) => props.model.setWidth(props.index, event.target.value)}
             value={props.config.width}
           />
@@ -209,7 +212,7 @@ export const ColumnConfig: React.FC<{
 
   return (
     <NavigationButton
-      label={name}
+      label={gridCaption}
       onClick={() => setIsExpanded(!isExpanded)}
       isOpen={isExpanded}
     >

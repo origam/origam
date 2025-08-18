@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
+  <xt:Transformation
+    asi:abstract="false"
+    x:id="48f4b0c0-5a4c-41cd-a4fc-5642473bd1e9"
+    asi:name="InvalidJson"
+    xt:text="-***-ExternalFile:InvalidJson.origam___text___48f4b0c0-5a4c-41cd-a4fc-5642473bd1e9.xslt" />
+</x:file>

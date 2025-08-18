@@ -24,75 +24,69 @@ using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+class DataSetConverter : newton.DataSetConverter
 {
-    class DataSetConverter : newton.DataSetConverter
+    private readonly bool omitRootElement;
+    private readonly bool omitMainElement;
+    public DataSetConverter(bool omitRootElement, bool omitMainElement)
     {
-        private bool _omitRootObject = false;
-        public bool OmitRootObject
+        this.omitRootElement = omitRootElement;
+        this.omitMainElement = omitMainElement;
+    }
+    public override bool CanConvert(Type valueType)
+    {
+        return typeof(DataSet).IsAssignableFrom(valueType);
+    }
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+        Newtonsoft.Json.JsonSerializer serializer)
+    {
+        DataSet dataSet = (DataSet)value;
+        DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+        DataTableConverter converter = new DataTableConverter();
+        if (!omitRootElement)
         {
-            get
-            {
-                return _omitRootObject;
-            }
-            set
-            {
-                _omitRootObject = value;
-            }
-        }
-        public override bool CanConvert(Type valueType)
-        {
-            return typeof(DataSet).IsAssignableFrom(valueType);
-        }
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-            Newtonsoft.Json.JsonSerializer serializer)
-        {
-            DataSet dataSet = (DataSet)value;
-            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-
-            DataTableConverter converter = new DataTableConverter();
-
-            if (!OmitRootObject)
-            {
-                string name = dataSet.DataSetName;
-                writer.WriteStartObject();
-                writer.WritePropertyName((resolver != null) 
-                    ? resolver.GetResolvedPropertyName(name) 
-                    : name);
-            }
-
+            string name = dataSet.DataSetName;
             writer.WriteStartObject();
-
-            foreach (DataTable table in dataSet.Tables)
-            {
-                if (IsRoot(table))
-                {
-                    writer.WritePropertyName((resolver != null) 
-                        ? resolver.GetResolvedPropertyName(table.TableName) 
-                        : table.TableName);
-
-                    converter.WriteJson(writer, table, serializer);
-                }
-            }
-
-            writer.WriteEndObject();
-
-            if (!OmitRootObject)
-            {
-                writer.WriteEndObject();
-            }
+            writer.WritePropertyName((resolver != null) 
+                ? resolver.GetResolvedPropertyName(name) 
+                : name);
         }
-
-        private bool IsRoot(DataTable table)
+        if (!omitMainElement)
         {
-            foreach (DataRelation relation in table.DataSet.Relations)
-            {
-                if (relation.Nested && relation.ChildTable.Equals(table))
-                {
-                    return false;
-                }
-            }
-            return true;
+            writer.WriteStartObject();
         }
+        foreach (DataTable table in dataSet.Tables)
+        {
+            if (IsRoot(table))
+            {
+                if (!omitMainElement)
+                {
+                    writer.WritePropertyName((resolver != null)
+                        ? resolver.GetResolvedPropertyName(table.TableName)
+                        : table.TableName);
+                }
+                converter.WriteJson(writer, table, serializer);
+            }
+        }
+        if (!omitMainElement)
+        {
+            writer.WriteEndObject();
+        }
+        if (!omitRootElement)
+        {
+            writer.WriteEndObject();
+        }
+    }
+    private bool IsRoot(DataTable table)
+    {
+        foreach (DataRelation relation in table.DataSet.Relations)
+        {
+            if (relation.Nested && relation.ChildTable.Equals(table))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -19,18 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for LineSeriesForm.
+/// </summary>
+public enum LineSeriesForm
 {
-	/// <summary>
-	/// Summary description for LineSeriesForm.
-	/// </summary>
-	public enum LineSeriesForm
-	{
-		Segment,
-		Curve,
-		Horizontal,
-		Vertical,
-		Step,
-		ReverseStep
-	}
+	Segment,
+	Curve,
+	Horizontal,
+	Vertical,
+	Step,
+	ReverseStep
 }

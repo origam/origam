@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/ScreenHeader/ScreenHeader.module.scss";
+import cx from "classnames";
 
 export class ScreenHeader extends React.Component<{
   isLoading?: boolean;
 }> {
   render() {
     return (
-      <div className={S.root + " noPrint"}>
+      <div className={cx(S.root, "noPrint", "screenHeader")}>
         {this.props.children}
         {(this.props.isLoading || window.localStorage.getItem("debugKeepProgressIndicatorsOn")) && (
           <div className={S.progressIndicator}>

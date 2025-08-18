@@ -17,7 +17,11 @@
 
 @{
     var currentCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
-    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    var returnUrl = !string.IsNullOrEmpty(Model.ReturnUrl)
+        ? Model.ReturnUrl
+        : string.IsNullOrEmpty(Context.Request.Path)
+            ? "~/"
+            : $"~{Context.Request.Path}";
 }
 
 @if (Model.EnableLocalLogin)
@@ -36,16 +40,7 @@
                         <label asp-for="Password">@SharedLocalizer["Password"]</label>
                         <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
                     </div>
-
-                    @if (Model.AllowRememberLogin)
-                    {
-                        <div class="form-group login-remember">
-                            <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin">
-                                <strong>@SharedLocalizer["RememberLogin"]</strong>
-                            </label>
-                        </div>
-                    }
+                    
                     <div class="input-row">
                         <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
                         <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
@@ -82,7 +77,8 @@
 {
     <div class="centered">
         <div class="reset-password-statement">
-            @SharedLocalizer["ToResetPassword1"]<a class="in-page-link" href="/account/forgotpassword">@SharedLocalizer["ToResetPassword2"]</a>@SharedLocalizer["ToResetPassword3"]
+            @SharedLocalizer["ToResetPassword1"]<a class="in-page-link" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">
+                @SharedLocalizer["ToResetPassword2"]</a>@SharedLocalizer["ToResetPassword3"]
         </div>
     </div>
 }

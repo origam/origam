@@ -47,9 +47,13 @@ export class BoolEditor extends React.Component<{
     }
   }
 
+  readOnly = (): string => {
+    return (this.props.isReadOnly) ? "readOnly" : "";
+  }
+
   render() {
     return (
-      <div className={cx(S.editorContainer)}>
+      <div className={cx(S.editorContainer, this.readOnly())}>
         <input
           id={this.props.id ? this.props.id : undefined}
           className="editor"
@@ -62,6 +66,7 @@ export class BoolEditor extends React.Component<{
             !this.props.isReadOnly &&
             this.props.onChange(event, event.target.checked);
           }}
+          autoComplete={"new-password"}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
           onBlur={this.props.onBlur}

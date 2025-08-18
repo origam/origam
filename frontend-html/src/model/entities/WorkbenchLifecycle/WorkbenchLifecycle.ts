@@ -21,7 +21,6 @@ import bind from "bind-decorator";
 import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
 import { handleError } from "model/actions/handleError";
 import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
-import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
 import { getSearcher } from "model/selectors/getSearcher";
@@ -31,7 +30,7 @@ import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemByI
 import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import { findMenu } from "xmlInterpreters/menuXml";
 import { MainMenuContent } from "../MainMenu";
-import { DialogInfo } from "../OpenedScreen";
+import { DialogInfo, OpenedScreen } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
@@ -46,7 +45,7 @@ import { observable } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
-import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
@@ -55,8 +54,10 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { produce } from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
-import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
+import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
+import { EventHandler } from "utils/EventHandler";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -77,6 +78,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+  keyBuffer =  new KeyBuffer(this);
   mainMenuItemClickHandler = new EventHandler();
 
   *onMainMenuItemClick(args: {
@@ -150,21 +152,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           yield*this.openNewUrl(url, args.item.attributes["label"]);
           return;
         } else {
-          yield*this.openNewForm(
-            id,
-            type,
-            label,
-            lazyLoading === "true",
-            dialogInfo,
-            args.idParameter ? {id: args.idParameter} : {},
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            args.isSingleRecordEdit
-          );
+          yield*this.openNewForm({
+            id: id,
+            type: type,
+            label: label,
+            isLazyLoading: lazyLoading === "true",
+            dialogInfo: dialogInfo,
+            parameters: args.idParameter ? {id: args.idParameter} : {},
+            newRecordInitialValues: args.isSingleRecordEdit? {} : undefined
+          });
         }
       }
     }
@@ -173,21 +169,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield*this.openNewUrl(url, args.item.attributes["label"]);
       return;
     } else {
-      yield*this.openNewForm(
-        id,
-        type,
-        label,
-        lazyLoading === "true",
-        dialogInfo,
-        args.idParameter ? {id: args.idParameter} : {},
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        args.isSingleRecordEdit
-      );
+      yield*this.openNewForm({
+        id: id,
+        type: type,
+        label: label,
+        isLazyLoading: lazyLoading === "true",
+        dialogInfo: dialogInfo,
+        parameters: args.idParameter ? {id: args.idParameter} : {},
+        isSingleRecordEdit: args.isSingleRecordEdit
+      });
     }
   }
 
@@ -207,7 +197,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       delete menuItem.parent;
       delete menuItem.elements;
       menuItem = produce(menuItem, (draft: any) => {
-        draft.attributes.isLazyLoading = "false";
+        draft.attributes.lazyLoading = "false";
       });
     }
     if (menuItem) {
@@ -258,10 +248,24 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield*this.openNewForm(id, type, label, true, dialogInfo, {});
+        yield*this.openNewForm({
+          id: id,
+          type: type,
+          label: label,
+          isLazyLoading: true,
+          dialogInfo: dialogInfo,
+          parameters: { }
+      });
       }
     } else {
-      yield*this.openNewForm(id, type, label, true, dialogInfo, {});
+      yield*this.openNewForm({
+        id: id,
+        type: type,
+        label: label,
+        isLazyLoading: true,
+        dialogInfo: dialogInfo,
+        parameters: { }
+      });
     }
   }
 
@@ -293,7 +297,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         }
       }
     } else {
-      yield*openNewUrl(this)(url, IUrlUpenMethod.OrigamTab, item.topic);
+      yield*openNewUrl(this)(url, IUrlOpenMethod.OrigamTab, item.topic);
     }
   }
 
@@ -380,12 +384,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (scope) scope.disposeWithChildren();
     }
     openedScreen.isClosed = true;
+    openedScreen.content.formScreen?.formScreenLifecycle?.onClose?.();
   }
 
   *destroyUI(openedScreen: IOpenedScreen) {
     const api = getApi(this);
     if (openedScreen.content) {
       if (openedScreen.content.formScreen) {
+        openedScreen.content.formScreen.dispose();
         yield api.destroyUI({FormSessionId: getSessionId(openedScreen.content.formScreen)});
       } else if (openedScreen.content.preloadedSessionId) {
         yield api.destroyUI({FormSessionId: openedScreen.content.preloadedSessionId});
@@ -394,7 +400,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   @bind
-  *openNewForm(
+  *openNewForm(args: {
     id: string,
     type: IMainMenuItemType,
     label: string,
@@ -407,43 +413,54 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
     refreshOnReturnType?: IRefreshOnReturnType,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    newRecordInitialValues?: {[p:string]: string},
+    onClose?: ()=> void
+  }
   ) {
     const openedScreens = getOpenedScreens(this);
-    const existingItem = openedScreens.findLastExistingTabItem(id);
-    const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
-    const newScreen = yield*createOpenedScreen(
-      this,
-      id,
-      type,
-      existingItem ? existingItem.order + 1 : 0,
-      label,
-      newFormScreen,
-      isLazyLoading,
-      dialogInfo,
-      parameters,
-      isSessionRebirth,
-      isSleepingDirty
-    );
+    const existingItem = openedScreens.findLastExistingTabItem(args.id);
+    const newFormScreen = createFormScreenEnvelope(args.formSessionId, args.refreshOnReturnType);
+    newFormScreen.formScreenLifecycle.onClose = args.onClose;
+
+    const newScreen = new OpenedScreen({
+      menuItemId: args.id,
+      menuItemType: args.type,
+      order: existingItem ? existingItem.order + 1 : 0,
+      tabTitle: args.label,
+      content: newFormScreen,
+      dialogInfo: args.dialogInfo,
+      lazyLoading: args.isLazyLoading,
+      parameters: args.parameters,
+      isSleeping: args.isSessionRebirth,
+      isSleepingDirty: args.isSleepingDirty,
+      isNewRecordScreen: !!args.newRecordInitialValues,
+    });
     try {
       openedScreens.pushItem(newScreen);
-      if (!isSessionRebirth) {
-        newScreen.parentContext = parentContext;
+      if (!args.isSessionRebirth) {
+        newScreen.parentContext = args.parentContext;
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
       }
 
-      if (isSessionRebirth) {
+      if (args.isSessionRebirth) {
         return;
       }
 
       const initUIResult = yield*this.initUIForScreen(
         newScreen,
-        !isSessionRebirth,
-        requestParameters,
-        isSingleRecordEdit
+        !args.isSessionRebirth,
+        args.requestParameters,
+        args.isSingleRecordEdit,
+        args.newRecordInitialValues
       );
-      yield*newFormScreen.start({initUIResult: initUIResult});
-      const rowIdToSelect = parameters["id"];
+      yield*newFormScreen.start(
+        {
+          initUIResult: initUIResult,
+          preloadIsDirty: initUIResult.isDirty,
+          createNewRecord: !!args.newRecordInitialValues,
+        });
+      const rowIdToSelect = args.parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
       if (formScreen?.autoWorkflowNext) {
@@ -462,7 +479,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const hasTheRow = (dataView as IDataView).dataTable.rows
           .find(row => dataView.dataTable.getRowId(row) === rowIdToSelect) !== undefined;
         if (hasTheRow && dataView.activateFormView && !dataView.isHeadless) {
-          dataView.setSelectedRowId(rowIdToSelect);
+          yield*dataView.setSelectedRowId(rowIdToSelect);
           yield dataView.activateFormView({saveNewState: false});
           break;
         }
@@ -474,7 +491,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     screen: IOpenedScreen,
     isNewSession: boolean,
     requestParameters?: object | undefined,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    newRecordInitialValues?: {[p:string]: string}
   ): any {
     const api = getApi(this);
     if (requestParameters) {
@@ -490,6 +508,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
       IsSingleRecordEdit: isSingleRecordEdit,
+      NewRecordInitialValues: newRecordInitialValues,
       RequestCurrentRecordId: true
     });
   }
@@ -507,7 +526,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const reportId = url.split("/")[2];
       const api = getApi(this);
       const reportInfo = (yield api.getReportInfo({ReportId: reportId})) as any;
-      return reportInfo.isWebReport === "true";
+      return reportInfo.isWebReport === true;
     }else{
       return true;
     }
@@ -549,13 +568,16 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       showChat: portalInfo.chatRefreshInterval > 0,
       showWorkQueues: portalInfo.workQueueListRefreshInterval > 0,
       helpUrl: portalInfo.helpUrl,
-      showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
+      showTooltipsForMemoFieldsOnly: portalInfo.showTooltipsForMemoFieldsOnly,
       rowStatesDebouncingDelayMilliseconds: portalInfo.rowStatesDebouncingDelayMilliseconds,
+      dropDownTypingDebouncingDelayMilliseconds: portalInfo.dropDownTypingDebouncingDelayMilliseconds,
       filterConfig: {
         caseSensitive: portalInfo.filteringConfig.caseSensitive,
         accentSensitive: portalInfo.filteringConfig.accentSensitive
       }
     };
+    getWorkbench(this).lookupMultiEngine.lookupLoaderMulti.getLookupLabelExDebouncingDelayMillis =
+      portalInfo.getLookupLabelExDebouncingDelayMilliseconds
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
@@ -577,19 +599,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const lazyLoading = menuItem
           ? menuItem?.attributes?.lazyLoading === "true"
           : session.type === IMainMenuItemType.WorkQueue;
-        yield*this.openNewForm(
-          session.objectId,
-          session.type,
-          session.caption, // TODO: Find in menu
-          lazyLoading,
-          undefined, // TODO: Find in... menu?
-          {},
-          undefined,
-          undefined,
-          session.formSessionId,
-          true,
-          session.isDirty
-        );
+        yield*this.openNewForm( {
+          id: session.objectId,
+          type: session.type,
+          label: session.caption,
+          isLazyLoading: lazyLoading,
+          dialogInfo: undefined,
+          parameters: {},
+          formSessionId: session.formSessionId,
+          isSessionRebirth: true,
+          isSleepingDirty: session.isDirty
+        });
       }
     } else {
       for (let session of portalInfo.sessions) {

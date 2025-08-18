@@ -122,8 +122,8 @@ export function drawGroupCell() {
       y: currentRowTop(),
       w: groupCellWidth,
       h: 20,
-      handler(event: any) {
-        flow(function*() {
+      async handler(event: any) {
+        await flow(function*() {
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
@@ -136,19 +136,19 @@ export function drawGroupCell() {
           }
           row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
 
-          unselectRowIfInClosedGroup(ctx, row);
+          yield*unselectRowIfInClosedGroup(ctx, row);
         })();
       },
     });
   }
 }
 
-function unselectRowIfInClosedGroup(ctx: any, row: IGroupRow) {
+function* unselectRowIfInClosedGroup(ctx: any, row: IGroupRow): Generator {
   const dataView = getDataView(ctx);
   if (!row.sourceGroup.isExpanded && dataView.selectedRowId) {
     const containsSelectedRow = !!row.sourceGroup.getRowById(dataView.selectedRowId);
     if (containsSelectedRow) {
-      dataView.selectedRowId = undefined;
+      yield*dataView.setSelectedRowId(undefined);
     }
   }
 }

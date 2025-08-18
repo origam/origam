@@ -33,6 +33,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IDockType } from "model/entities/types/IProperty";
 import { AutoSizer, List, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
+import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -54,20 +55,20 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onMount?(onChange?: (value: any) => void): void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
   disposers: any[] = [];
-  currentValue = this.props.value;
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;
-  refGrid = React.createRef<MultiGrid>();
   @observable.ref
   longTextRowList: string[] = [];
 
   componentDidMount() {
     this.updateTextOverflowState();
     this.updateBigTextRowList();
+    this.props.onMount?.(value => this.props.onChange?.(null, value));
   }
 
   componentDidUpdate(prevProps: any) {
@@ -102,6 +103,7 @@ export class TextEditor extends React.Component<{
   }
 
   componentWillUnmount() {
+    this.props.onEditorBlur?.({target: this.elmInput});
     this.disposers.forEach((d) => d());
   }
 
@@ -129,6 +131,9 @@ export class TextEditor extends React.Component<{
       this.elmInput.selectionEnd = newCursorPosition;
       this.props.onChange?.(null, newValue);
       return 
+    }
+    if(isSaveShortcut(event) || isRefreshShortcut(event)){
+      this.onChange(event);
     }
     this.props.onKeyDown?.(event)
   }
@@ -181,6 +186,11 @@ export class TextEditor extends React.Component<{
     return S.readonlyDiv + " " + S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
   }
 
+  private onChange(event: any) {
+    this.props.onChange && this.props.onChange(event, event.target.value)
+    this.updateTextOverflowState();
+  }
+
   private renderValueTag() {
     const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
     if (this.props.isRichText) {
@@ -205,10 +215,7 @@ export class TextEditor extends React.Component<{
           <div className={S.richTextWrappContainer} >
               <RichTextEditor 
                 value={this.props.value ?? ""}
-                onChange={(newValue: any) => {
-                  this.currentValue = newValue;
-                  this.props.onChange?.(undefined, newValue);
-                }}
+                onChange={(event: any) => this.onChange(event)}
                 refInput={this.refInput}
                 onBlur={this.props.onEditorBlur}
                 onFocus={this.handleFocus}
@@ -224,21 +231,18 @@ export class TextEditor extends React.Component<{
           style={this.getStyle()}
           className={S.input}
           type={this.props.isPassword ? "password" : "text"}
-          autoComplete={this.props.isPassword ? "new-password" : undefined}
+          autoComplete={"new-password"}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
           ref={this.refInput}
-          onChange={(event: any) => {
-            this.props.onChange && this.props.onChange(event, event.target.value)
-            this.updateTextOverflowState();
-          }
-          }
+          onChange={(event: any) => this.onChange(event)}
           onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onBlur={this.props.onEditorBlur}
           onFocus={this.handleFocus}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       );
     }
@@ -285,14 +289,12 @@ export class TextEditor extends React.Component<{
           id={this.props.id}
           style={this.getStyle()}
           className={S.input}
+          autoComplete={"new-password"}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
           maxLength={maxLength}
-          onChange={(event: any) => {
-            this.currentValue = event.target.value;
-            this.props.onChange && this.props.onChange(event, event.target.value);
-          }}
+          onChange={(event: any) => this.onChange(event)}
           onKeyDown={this.handleKeyDown}
           onDoubleClick={this.props.onDoubleClick}
           onClick={this.props.onClick}
@@ -313,7 +315,7 @@ function isMultiLine(text: string | null) {
 
 function RichTextEditor(props: {
   value: any;
-  onChange?: (newValue: any) => void;
+  onChange?: (event: any) => void;
   onBlur?: (event: any) => void;
   onFocus?: (event: any) => void;
   refInput?: (elm: any) => void;
@@ -327,7 +329,7 @@ function RichTextEditor(props: {
       setInternalEditorState(newEditorState);
       const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
       setInternalEditorStateHtml(html);
-      props.onChange?.(html);
+      props.onChange?.({target: {value: html}});
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setInternalEditorState, setInternalEditorStateHtml, props.onChange]

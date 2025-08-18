@@ -24,32 +24,27 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for AbstractDataStructure.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+// [ClassMetaVersion("6.0.0")]
+public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 {
-	/// <summary>
-	/// Summary description for AbstractDataStructure.
-	/// </summary>
-	[XmlModelRoot(CategoryConst)]
-    // [ClassMetaVersion("6.0.0")]
-	public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
+	public const string CategoryConst = "DataStructure";
+	public AbstractDataStructure() : base(){}
+	
+	public AbstractDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractDataStructure(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden ISchemaItem Members
+	
+	public override string ItemType
 	{
-		public const string CategoryConst = "DataStructure";
-
-		public AbstractDataStructure() : base(){}
-		
-		public AbstractDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public AbstractDataStructure(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return DataStructure.CategoryConst;
-			}
+			return DataStructure.CategoryConst;
 		}
-		#endregion
 	}
+	#endregion
 }

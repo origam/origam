@@ -1,0 +1,11 @@
+{
+  "pathToOrigamRepo": "C:\\Repos\\origam",
+  "plugins": {
+    "somePlugin": {
+      "pluginSourcePath": "C:\\Repos\\somePlugin\\plugins\\src",
+      "packageJsonPath": "C:\\Repos\\somePlugin\\plugins\\package.json",
+      "registrationFilePath": "C:\\Repos\\somePlugin\\PluginRegistration.ts",
+      "yarnLockPath": ""
+    }
+  }
+}

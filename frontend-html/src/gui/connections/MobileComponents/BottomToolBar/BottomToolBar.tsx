@@ -23,14 +23,16 @@ import "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { MobXProviderContext, observer } from "mobx-react";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { Button } from "@origam/components";
 import { T } from "utils/translation";
+import { Button } from "gui/Components/Button/Button";
+import { BottomButton } from "gui/connections/MobileComponents/BottomToolBar/BottomButton";
+import { ScreenLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -49,26 +51,43 @@ export class BottomToolBar extends React.Component<{
     return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
-
   showNextButton() {
-    return this.activeScreen && this.activeScreen.showWorkflowNextButton;
+    return (
+      this.mobileState.layoutState instanceof ScreenLayoutState &&
+      this.activeScreen && 
+      this.activeScreen.showWorkflowNextButton);
   }
 
   render() {
-    const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
+    const actionButtonsState = getScreenActionButtonsState(this.props.ctx);
     const buttons = [];
-    if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
+    const layoutState = this.props.mobileState.layoutState;
+    if (
+      layoutState.showCloseButton(!!this.activeScreen) &&
+      layoutState.topLeftComponent !== TopLeftComponent.Close) {
+      { layoutState.showBackButton &&
+        buttons.push(
+          <BottomButton
+            key={"back"}
+            disabled={!this.activeScreen || !this.props.mobileState.breadCrumbsState.canGoBack}
+            caption={T("Back", "back_tool_tip")}
+            iconPath={"./icons/back-mobile.svg"}
+            onClick={() => this.props.mobileState.breadCrumbsState.goBack()}
+          />
+        );
+      }
       buttons.push(
-        <BottomIcon
+        <BottomButton
           key={"close"}
-          iconPath={"./icons/noun-close-25798.svg"}
+          caption={T("Close", "close")}
+          iconPath={"./icons/close-mobile.svg"}
           onClick={async () => {
             await this.props.mobileState.close()
           }}
         />
       );
     }
-    if (this.props.mobileState.layoutState.showOkButton) {
+    if (layoutState.showOkButton) {
       buttons.push(
         <Button
           key={"ok"}
@@ -79,7 +98,7 @@ export class BottomToolBar extends React.Component<{
         />
       );
     }
-    if (!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
+    if (!layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
       buttons.push(
         <BottomIcon
           key={"refresh"}
@@ -88,7 +107,7 @@ export class BottomToolBar extends React.Component<{
         />
       );
     }
-    if (!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
+    if (!layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
       buttons.push(
         <BottomIcon
           key={"save"}

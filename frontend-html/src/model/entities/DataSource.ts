@@ -51,4 +51,8 @@ export class DataSource implements IDataSource {
   getFieldByIndex(index: number): IDataSourceField | undefined {
     return this.fields.find(field => field.index === index);
   }
+
+  dispose(){
+    this.rowState.dispose();
+  }
 }

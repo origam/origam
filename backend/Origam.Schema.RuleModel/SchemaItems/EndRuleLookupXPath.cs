@@ -21,16 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using Origam.Schema.EntityModel.Interfaces;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+[SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]
+[HelpTopic("Validation+Rule+Lookup+XPath")]
+[ClassMetaVersion("6.0.0")]
+public class EndRuleLookupXPath : XPathRule, IEndRule
 {
-    [SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]
-    [HelpTopic("Validation+Rule+Lookup+XPath")]
-    [ClassMetaVersion("6.0.0")]
-    public class EndRuleLookupXPath : XPathRule, IEndRule
-    {
-        public EndRuleLookupXPath() : base() {}
-		public EndRuleLookupXPath(Guid schemaExtensionId) : base(schemaExtensionId) {}
-        public EndRuleLookupXPath(Key primaryKey) : base(primaryKey) { }
-    }
+    public EndRuleLookupXPath() : base() {}
+	public EndRuleLookupXPath(Guid schemaExtensionId) : base(schemaExtensionId) {}
+    public EndRuleLookupXPath(Key primaryKey) : base(primaryKey) { }
 }

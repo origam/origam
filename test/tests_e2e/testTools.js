@@ -46,7 +46,7 @@ async function beforeEachTest(){
     // slowMo: 50,
     headless: false,
     defaultViewport: {
-      width: 1024,
+      width: 1800,
       height: 2000, // to make all 30 lines visible and avoid the need for scrolling
     },
     args: [
@@ -122,7 +122,6 @@ async function takeScreenShot(page, name){
     .replace(/\./, '_')
     .replace(/:/, '_')
     .replace(/:/, '_')
-  console.log("dateTime: "+ dateTime)
   await page.screenshot({path: `${screenDir}/${name}_${dateTime}.png`});
 }
 
@@ -215,7 +214,6 @@ async function typeAndWaitForSelector(args){
       );
 
     }catch(TimeoutError){
-      console.log(TimeoutError)
       await sleep(30000);
       await args.page.focus(`#${args.inputId}`)
       await args.page.keyboard.type(args.value)
@@ -229,7 +227,7 @@ async function clickAndWaitForSelector(args){
   try{
     await args.clickable.click();
   }catch(error){
-    console.log(error);
+    console.error(error);
     await sleep(200);
   }
   for (let i = 0; i < 3; i++) {
@@ -240,12 +238,12 @@ async function clickAndWaitForSelector(args){
       )
     }catch(error){
       if(error.name !== "TimeoutError"){
-        console.log(error);
+        console.error(error);
       }
       try {
         await args.clickable.click();
       }catch(error){
-        console.log(error)
+        console.error(error)
         await args.page.evaluate(x => x.click(), args.clickable);
       }
     }
@@ -263,7 +261,7 @@ async function clickAndWaitForXPath(args){
       );
     }catch(error){
       if(error.name !== "TimeoutError"){
-        console.log(error);
+        console.error(error);
       }
       await args.clickable.click();
     }

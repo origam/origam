@@ -27,29 +27,26 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule.Xslt
+namespace Origam.Rule.Xslt;
+/// <summary>
+/// Summary description for AsXslTransform.
+/// </summary>
+public interface IXsltEngine : ITraceInfoContainer
 {
-    /// <summary>
-    /// Summary description for AsXslTransform.
-    /// </summary>
-    public interface IXsltEngine : ITraceInfoContainer
-    {
-        IPersistenceProvider PersistenceProvider {get; set;}
-        string TraceStepName {get; set;}
-        Guid TraceStepId {get; set;}
-        Guid TraceWorkflowId {get; set;}
-        bool Trace { get; set; }
-
-        void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
-        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
-            IDataStructure outputStructure, bool validateOnly);
-        IXmlContainer Transform(IXmlContainer data, Guid transformationId, 
-            Guid retransformationId, Hashtable parameters, string transactionId, Hashtable retransformationParameters,
-            IDataStructure outputStructure, bool validateOnly);
-        IXmlContainer Transform(IXmlContainer data, string xsl, Hashtable parameters,
-            string transactionId, IDataStructure outputStructure, bool validateOnly);
-        void Transform(
-            IXPathNavigable input, Guid transformationId, Hashtable parameters, 
-            string transactionId, Stream output);
-    }
+    IPersistenceProvider PersistenceProvider {get; set;}
+    string TraceStepName {get; set;}
+    Guid TraceStepId {get; set;}
+    Guid TraceWorkflowId {get; set;}
+    bool Trace { get; set; }
+    new void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
+    IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
+        IDataStructure outputStructure, bool validateOnly);
+    IXmlContainer Transform(IXmlContainer data, Guid transformationId, 
+        Guid retransformationId, Hashtable parameters, string transactionId, Hashtable retransformationParameters,
+        IDataStructure outputStructure, bool validateOnly);
+    IXmlContainer Transform(IXmlContainer data, string xsl, Hashtable parameters,
+        string transactionId, IDataStructure outputStructure, bool validateOnly);
+    void Transform(
+        IXPathNavigable input, Guid transformationId, Hashtable parameters, 
+        string transactionId, Stream output);
 }

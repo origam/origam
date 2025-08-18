@@ -28,49 +28,45 @@ using System.Threading;
 using Origam.Rule;
 using Origam.OrigamEngine;
 
-namespace Origam.Utils
+namespace Origam.Utils;
+class RulesProcessor
 {
-    class RulesProcessor
+            
+    public RulesProcessor()
     {
-                
-        public RulesProcessor()
+    }
+    internal int Run()
+    {
+        RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
+        OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
+        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+        FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
+        List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
+            .SetSchemaProvider(persistence.SchemaProvider)
+            .GetAll();
+        List<Dictionary<ISchemaItem, string>> errorFragments
+                = ModelRules.GetErrors(
+                    allproviders,
+                    persistence,
+                    new CancellationTokenSource().Token);
+        if (errorFragments.Count != 0)
         {
+            StringBuilder sb = new StringBuilder("Rule violations in ");
+            sb.Append(settings.ModelSourceControlLocation.ToUpper());
+            sb.Append("\n");
+            foreach (Dictionary<ISchemaItem, string> dict in errorFragments)
+            {
+                ISchemaItem retrievedObj = dict.First().Key;
+                sb.Append("Object with Id: \"" + retrievedObj.Id +
+                           "\" in file: \"" + retrievedObj.RelativeFilePath +
+                            "\" --> " + string.Join("\n", dict.First().Value) + "\n");
+            }
+            System.Console.Write(sb.ToString());
+            return 1;
         }
-
-        internal int Run()
+        else
         {
-            RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
-            OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
-
-            List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
-                .SetSchemaProvider(persistence.SchemaProvider)
-                .GetAll();
-            List<Dictionary<IFilePersistent, string>> errorFragments
-                    = ModelRules.GetErrors(
-                        allproviders,
-                        persistence,
-                        new CancellationTokenSource().Token);
-            if (errorFragments.Count != 0)
-            {
-                StringBuilder sb = new StringBuilder("Rule violations in ");
-                sb.Append(settings.ModelSourceControlLocation.ToUpper());
-                sb.Append("\n");
-                foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
-                {
-                    IFilePersistent retrievedObj = dict.First().Key;
-                    sb.Append("Object with Id: \"" + retrievedObj.Id +
-                               "\" in file: \"" + retrievedObj.RelativeFilePath +
-                                "\" --> " + string.Join("\n", dict.First().Value) + "\n");
-                }
-                System.Console.Write(sb.ToString());
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
     }
 }

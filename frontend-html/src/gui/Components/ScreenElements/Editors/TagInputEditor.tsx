@@ -27,13 +27,16 @@ import { inject, observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
-import { CtxDropdownRefCtrl } from "@origam/components";
 import { requestFocus } from "utils/focus";
+import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
   return {
     textualValues: value?.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
+    ctx: property
   };
 })(
   observer(
@@ -52,6 +55,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       customInputClass?: string;
       autoFocus?: boolean;
       id?: string;
+      ctx? : any
     }) => {
       const beh = useContext(CtxDropdownEditor).behavior;
       const ref = useContext(CtxDropdownRefCtrl);
@@ -102,7 +106,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
         if (props.autoFocus) {
-          setTimeout(() => inputElement?.focus());
+          setTimeout(() => requestFocus(inputElement));
         }
       }, [beh, inputElement, props.autoFocus]);
 
@@ -121,12 +125,24 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
         beh.elmInputElement?.value, // eslint-disable-line react-hooks/exhaustive-deps
       ]);
 
-      function handleInputKeyDown(event: any) {
+      useEffect(() => {
+        beh.mount();
+        return () => {
+         props.onEditorBlur?.({target: beh.elmInputElement});
+        }
+      }, []);
+
+      async function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
           removeItem(event, value[value.length - 1]);
         }
-        beh.handleInputKeyDown(event);
-        props.onKeyDown?.(event);
+        runInFlowWithHandler({
+          ctx: props.ctx,
+          action: async () => {
+            await beh.handleInputKeyDown(event);
+            props.onKeyDown?.(event);
+          }
+        });
       }
 
       return (
@@ -161,9 +177,10 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
-              autoComplete={"off"}
+              autoComplete={"new-password"}
               style={getStyle()}
               size={1}
+              onDragStart={(e: any) =>  e.preventDefault()}
             />
           </TagInput>
         </div>

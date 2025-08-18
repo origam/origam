@@ -34,97 +34,98 @@ using log4net;
 using Origam.BI.SSRS.SSRSWebReference;
 using Origam.Service.Core;
 
-namespace Origam.BI.SSRS
+namespace Origam.BI.SSRS;
+public class SSRSService : IReportService
 {
-    public class SSRSService : IReportService
+    private TraceTaskInfo traceTaskInfo = null;
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType);
+	public object GetReport(Guid reportId, IXmlContainer data, string format, 
+        Hashtable parameters, string dbTransaction)
     {
-        private TraceTaskInfo traceTaskInfo = null;
-        private static readonly ILog log = LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
-		public object GetReport(Guid reportId, IXmlContainer data, string format, 
-            Hashtable parameters, string dbTransaction)
-        {
-			IPersistenceService persistenceService = ServiceManager.Services
-                .GetService(typeof(IPersistenceService)) as IPersistenceService;
-			SSRSReport report = persistenceService.SchemaProvider
-                .RetrieveInstance(typeof(AbstractReport), 
-                new ModelElementKey(reportId)) as SSRSReport;
-			if (report == null)
-			{
-				throw new ArgumentOutOfRangeException("reportId", reportId, 
-                    Strings.DefinitionNotInModel);
-			}
-            if (parameters == null)
-            {
-                parameters = new Hashtable();
-            }
-            ReportHelper.PopulateDefaultValues(report, parameters);
-            ReportHelper.ComputeXsltValueParameters(report, parameters, traceTaskInfo);
-            ReportExecutionService reportService = new ReportExecutionService();
-            OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-            reportService.Url = settings.SQLReportServiceUrl;
-            if (String.IsNullOrEmpty(settings.SQLReportServiceAccount))
-            {
-                reportService.Credentials = CredentialCache.DefaultCredentials;
-            }
-            else
-            {
-                reportService.Credentials = new NetworkCredential(
-                    settings.SQLReportServiceAccount,
-                    settings.SQLReportServicePassword);
-            }
-            reportService.Timeout = settings.SQLReportServiceTimeout;
-            if (log.IsDebugEnabled)
-            {
-                log.DebugFormat("SSRSService Timeout: {0}", 
-                    reportService?.Timeout);
-            }
-            byte[] result = null;
-            string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
-            string historyID = null;
-            string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings = null;
-            string[] streamIDs = null;
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-            reportService.ExecutionHeaderValue = execHeader;
-            execInfo = reportService.LoadReport(reportPath, historyID);
-            if ((parameters != null) && (parameters.Count > 0))
-            {
-                ParameterValue[] reportParameters 
-                    = new ParameterValue[parameters.Count];
-                int index = 0;
-                foreach (string key in parameters.Keys)
-                {
-                    ParameterValue parameterValue = new ParameterValue();
-                    parameterValue.Name = key;
-                    parameterValue.Value = parameters[key].ToString();
-                    reportParameters[index] = parameterValue;
-                    index++;
-                }
-                reportService.SetExecutionParameters(reportParameters,
-                    Thread.CurrentThread.CurrentCulture.IetfLanguageTag);
-            }
-            result = reportService.Render(format, devInfo, out extension, 
-                out encoding, out mimeType, out warnings, out streamIDs);
-            execInfo = reportService.GetExecutionInfo();
-            return result;
-        }
-
-		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
-            int copies, Hashtable parameters)
+		IPersistenceService persistenceService = ServiceManager.Services
+            .GetService(typeof(IPersistenceService)) as IPersistenceService;
+		SSRSReport report = persistenceService.SchemaProvider
+            .RetrieveInstance(typeof(AbstractReport), 
+            new ModelElementKey(reportId)) as SSRSReport;
+		if (report == null)
 		{
-			throw new NotSupportedException();
+			throw new ArgumentOutOfRangeException("reportId", reportId, 
+                Strings.DefinitionNotInModel);
 		}
-
-        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        if (parameters == null)
         {
-            this.traceTaskInfo = traceTaskInfo;
+            parameters = new Hashtable();
         }
+        ReportHelper.PopulateDefaultValues(report, parameters);
+        ReportHelper.ComputeXsltValueParameters(report, parameters, traceTaskInfo);
+        ReportExecutionService reportService = new ReportExecutionService();
+        OrigamSettings settings 
+            = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+        reportService.Url = settings.SQLReportServiceUrl;
+        if (String.IsNullOrEmpty(settings.SQLReportServiceAccount))
+        {
+            reportService.Credentials = CredentialCache.DefaultCredentials;
+        }
+        else
+        {
+            reportService.Credentials = new NetworkCredential(
+                settings.SQLReportServiceAccount,
+                settings.SQLReportServicePassword);
+        }
+        reportService.Timeout = settings.SQLReportServiceTimeout;
+        if (log.IsDebugEnabled)
+        {
+            log.DebugFormat("SSRSService Timeout: {0}", 
+                reportService?.Timeout);
+        }
+        byte[] result = null;
+        string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
+        string historyID = null;
+        string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
+        string encoding;
+        string mimeType;
+        string extension;
+        Warning[] warnings = null;
+        string[] streamIDs = null;
+        ExecutionInfo execInfo = new ExecutionInfo();
+        ExecutionHeader execHeader = new ExecutionHeader();
+        reportService.ExecutionHeaderValue = execHeader;
+        execInfo = reportService.LoadReport(reportPath, historyID);
+        if ((parameters != null) && (parameters.Count > 0))
+        {
+            ParameterValue[] reportParameters 
+                = new ParameterValue[parameters.Count];
+            int index = 0;
+            foreach (string key in parameters.Keys)
+            {
+                ParameterValue parameterValue = new ParameterValue();
+                parameterValue.Name = key;
+                parameterValue.Value = parameters[key].ToString();
+                reportParameters[index] = parameterValue;
+                index++;
+            }
+            reportService.SetExecutionParameters(reportParameters,
+                Thread.CurrentThread.CurrentCulture.IetfLanguageTag);
+        }
+        result = reportService.Render(format, devInfo, out extension, 
+            out encoding, out mimeType, out warnings, out streamIDs);
+        execInfo = reportService.GetExecutionInfo();
+        return result;
+    }
+	public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
+        int copies, Hashtable parameters)
+	{
+		throw new NotSupportedException();
+	}
+    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+    {
+        this.traceTaskInfo = traceTaskInfo;
+    }
+    public string PrepareExternalReportViewer(Guid reportId,
+        IXmlContainer data, string format,
+        Hashtable parameters, string dbTransaction)
+    {
+        throw new NotImplementedException();
     }
 }

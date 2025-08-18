@@ -39,12 +39,12 @@ export class LookupLoaderIndividual {
 
   resultListeners = new PubSub<ILookupIndividualResultListenerArgs>();
 
-  setInterrest(key: any) {
-    this.loader.setInterrest(this.lookupId, key);
+  setInterest(key: any) {
+    this.loader.setInterest(this.lookupId, key);
   }
 
-  resetInterrest(key: any) {
-    this.loader.resetInterrest(this.lookupId, key);
+  resetInterest(key: any) {
+    this.loader.resetInterest(this.lookupId, key);
   }
 
   async loadList(labelIds: Set<any>) {

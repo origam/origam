@@ -26,34 +26,30 @@ using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+public class XmlFileDataFactory
 {
-    public class XmlFileDataFactory
+    public Result<XmlFileData, XmlLoadError> Create(FileInfo fileInfo)
     {
-
-        public Result<XmlFileData, XmlLoadError> Create(FileInfo fileInfo)
+        Result<OrigamXmlDocument> documentResult = LoadXmlDoc(fileInfo);
+        if (documentResult.IsFailure)
         {
-            Result<OrigamXmlDocument> documentResult = LoadXmlDoc(fileInfo);
-            if (documentResult.IsFailure)
-            {
-                return Result.Fail<XmlFileData, XmlLoadError>(
-                    new XmlLoadError(documentResult.Error));
-            }
-            return Result.Ok<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
+            return Result.Fail<XmlFileData, XmlLoadError>(
+                new XmlLoadError(documentResult.Error));
         }
-
-        private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
+        return Result.Ok<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
+    }
+    private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
+    {
+        OrigamXmlDocument xmlDocument = new OrigamXmlDocument();
+        try
         {
-            OrigamXmlDocument xmlDocument = new OrigamXmlDocument();
-            try
-            {
-                xmlDocument.Load(fileInfo.FullName);
-            } catch (XmlException ex)
-            {
-                return Result.Fail<OrigamXmlDocument>(
-                    $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}");
-            }
-            return Result.Ok(xmlDocument);
+            xmlDocument.Load(fileInfo.FullName);
+        } catch (XmlException ex)
+        {
+            return Result.Fail<OrigamXmlDocument>(
+                $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}");
         }
+        return Result.Ok(xmlDocument);
     }
 }

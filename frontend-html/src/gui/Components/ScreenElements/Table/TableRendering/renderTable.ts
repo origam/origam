@@ -120,6 +120,7 @@ export function renderTable(
     }
     visibleRowsChanged.trigger(
       {
+        dataViewModelInstanceId: dataView().modelInstanceId,
         dataSourceId: dataView().dataSource.identifier,
         rowIds: visibleRowIds
       });
@@ -185,6 +186,7 @@ export function renderCell(columnIdx: number) {
 }
 
 export interface IVisibleRowData{
+  dataViewModelInstanceId: string,
   dataSourceId: string;
   rowIds: string[];
 }

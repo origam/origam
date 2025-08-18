@@ -22,46 +22,40 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI;
 
-namespace Origam.Schema.Wizards
+namespace Origam.Schema.Wizards;
+/// <summary>
+/// Summary description for SetInheritanceOff.
+/// </summary>
+public class SetInheritanceOff : AbstractMenuCommand
 {
-	/// <summary>
-	/// Summary description for SetInheritanceOff.
-	/// </summary>
-	public class SetInheritanceOff : AbstractMenuCommand
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
-                AbstractSchemaItem item = Owner as AbstractSchemaItem;
-                return item != null && item.Inheritable;
-			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
+            ISchemaItem item = Owner as ISchemaItem;
+            return item != null && item.Inheritable;
 		}
-
-		public override void Run()
+		set
 		{
-			AbstractSchemaItem item = Owner as AbstractSchemaItem;
-
-			SetInheritance(item, false);
-			item.ClearCacheOnPersist = false;
-			item.Persist();
-			item.ClearCacheOnPersist = true;
+			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
-
-		private static void SetInheritance(AbstractSchemaItem item, bool value)
+	}
+	public override void Run()
+	{
+		ISchemaItem item = Owner as ISchemaItem;
+		SetInheritance(item, false);
+		item.ClearCacheOnPersist = false;
+		item.Persist();
+		item.ClearCacheOnPersist = true;
+	}
+	private static void SetInheritance(ISchemaItem item, bool value)
+	{
+		item.Inheritable = value;
+		foreach(ISchemaItem child in item.ChildItems)
 		{
-			item.Inheritable = value;
-
-			foreach(AbstractSchemaItem child in item.ChildItems)
+			if(child.DerivedFrom == null)
 			{
-				if(child.DerivedFrom == null)
-				{
-					SetInheritance(child, value);
-				}
+				SetInheritance(child, value);
 			}
 		}
 	}

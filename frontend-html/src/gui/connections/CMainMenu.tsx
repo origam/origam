@@ -18,10 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { RefObject } from "react";
-import { MainMenuUL } from "gui/Components/MainMenu/MainMenuUL";
-import { MainMenuLI } from "gui/Components/MainMenu/MainMenuLI";
 import { MainMenuItem } from "gui/Components/MainMenu/MainMenuItem";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { inject, MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
@@ -48,9 +46,10 @@ import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivi
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
-import { IMainMenuState } from "model/entities/types/IMainMenu";
+import { IEditingState, IMainMenuState } from "model/entities/types/IMainMenu";
 import cx from "classnames";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { listFromNode, MenuItemList } from "./MenuItemList";
 
 @inject(mainMenuState => mainMenuState)
 @observer
@@ -77,9 +76,9 @@ export class CMainMenu extends React.Component<{
 
   @action
   onEditClick() {
-    this.props.mainMenuState!.editing = !this.props.mainMenuState!.editing;
+    this.props.mainMenuState!.flipEditEnabled()
     const mainMenu = getMainMenu(this.application)!;
-    if (this.props.mainMenuState!.editing) {
+    if (this.props.mainMenuState!.editingEnabled) {
       this.props.onClick();
       if (!this.isAnyCommandVisible(mainMenu.menuUI)) {
         this.ensureAtLeastOneCommandVisible(mainMenu.menuUI);
@@ -151,7 +150,7 @@ export class CMainMenu extends React.Component<{
             {() =>
               <EditButton
                 isVisible={this.mouseInHeader}
-                isEnabled={this.props.mainMenuState!.editing}
+                isEnabled={this.props.mainMenuState!.editingEnabled}
                 onClick={() => this.onEditClick()}
                 tooltip={T("Manage Favourites", "manage_favorites")}
               />
@@ -159,49 +158,20 @@ export class CMainMenu extends React.Component<{
           </Observer>
         </div>
         <SidebarSectionBody isActive={this.props.isActive}>
-          {listFromNode(mainMenu.menuUI, 1, true)}
+          <MenuItemList ctx={application} editingState={this.props.mainMenuState!}/>
         </SidebarSectionBody>
       </>
     );
   }
 }
 
-export function itemForNode(node: any, level: number, isOpen: boolean) {
-  switch (node.name) {
-    case "Submenu":
-      return (
-        <MainMenuLI key={node.$iid}>
-          <CMainMenuFolderItem node={node} level={level} isOpen={isOpen}/>
-        </MainMenuLI>
-      );
-    case "Command":
-      return (
-        <MainMenuLI key={node.$iid}>
-          <CMainMenuCommandItem node={node} level={level} isOpen={isOpen}/>
-        </MainMenuLI>
-      );
-    default:
-      return <></>;
-  }
-}
 
-function listFromNode(node: any, level: number, isOpen: boolean) {
-  return (
-    <MainMenuUL>
-      {node.elements
-        .filter((childNode: any) => childNode.attributes.isHidden !== "true")
-        .map((node: any) => itemForNode(node, level, isOpen))}
-    </MainMenuUL>
-  );
-}
-
-@inject(mainMenuState => mainMenuState)
 @observer
-class CMainMenuCommandItem extends React.Component<{
+export class CMainMenuCommandItem extends React.Component<{
   node: any;
   level: number;
   isOpen: boolean;
-  mainMenuState?: IMainMenuState;
+  editingState?: IEditingState;
 }> {
   static contextType = MobXProviderContext;
 
@@ -261,7 +231,7 @@ class CMainMenuCommandItem extends React.Component<{
                 event.stopPropagation();
               }}
             />
-            {this.props.mainMenuState!.editing &&
+            {this.props.editingState?.editingEnabled &&
               <FavoritesAddRemoveButton
                 isVisible={props.isOpen}
                 menuId={this.menuId}
@@ -531,10 +501,11 @@ class FavoritesAddRemoveButton extends React.Component<{
 }
 
 @observer
-class CMainMenuFolderItem extends React.Component<{
+export class CMainMenuFolderItem extends React.Component<{
   node: any;
   level: number;
   isOpen: boolean;
+  editingState: IEditingState
 }> {
   static contextType = MobXProviderContext;
   itemRef: RefObject<HTMLDivElement> = React.createRef();
@@ -587,7 +558,8 @@ class CMainMenuFolderItem extends React.Component<{
         {listFromNode(
           props.node,
           props.level + 1,
-          this.props.isOpen && this.mainMenuState.isOpen(this.id)
+          this.props.isOpen && this.mainMenuState.isOpen(this.id),
+          this.props.editingState
         )}
       </div>
     );

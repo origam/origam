@@ -28,74 +28,77 @@ using FastReport.Export.PdfSimple;
 using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 
-namespace Origam.BI.FastReport
+namespace Origam.BI.FastReport;
+public class FastReportService : IReportService
 {
-    public class FastReportService : IReportService
+    public object GetReport(Guid reportId, IXmlContainer data, 
+        string format, Hashtable parameters, string dbTransaction)
     {
-        public object GetReport(Guid reportId, IXmlContainer data, 
-            string format, Hashtable parameters, string dbTransaction)
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        parameters ??= new Hashtable();
+        ReportHelper.PopulateDefaultValues(
+            report, parameters);
+        IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
+            report, data, parameters, dbTransaction);
+        DataSet dataset = xmlDataDoc.DataSet;
+        using var languageSwitcher = new LanguageSwitcher(
+            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
+        using var reportDoc = new Report();
+        OrigamSettings settings 
+            = ConfigurationManager.GetActiveConfiguration();
+        string path = Path.Combine(
+            settings.ReportsFolder(), 
+            ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
+                report.ReportFileName,
+                parameters));
+        if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
         {
-            var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
-            IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-                report, data, parameters, dbTransaction);
-            DataSet dataset = xmlDataDoc.DataSet;
-            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-                ReportHelper.ResolveLanguage(xmlDataDoc, report)))
-            {
-                using (var reportDoc = new Report())
-                {
-                    if (File.Exists(report.ReportFileName))
-                    {
-                        reportDoc.Load(report.ReportFileName);
-                    }
-                    else
-                    {
-                        OrigamSettings settings 
-                            = ConfigurationManager.GetActiveConfiguration();
-                        string path = Path.Combine(
-                            settings.ReportsFolder(), report.ReportFileName);
-                        if (File.Exists(path))
-                        {
-                            reportDoc.Load(path);
-                        }
-                        else
-                        {
-                            throw new Exception(
-                                ResourceUtils.GetString("PathNotFound", path));
-                        }
-                    }
-                    foreach (DataTable table in dataset.Tables)
-                    {
-                        reportDoc.RegisterData(table, table.TableName);
-                    }
-                    reportDoc.Prepare();
-                    if (format != "PDF")
-                    {
-                        throw new ArgumentOutOfRangeException("format", 
-                            format, 
-                            ResourceUtils.GetString("FormatNotSupported"));
-                    }
-                    ReportHelper.LogInfo(
-                        System.Reflection.MethodBase.GetCurrentMethod()
-                        .DeclaringType, 
-                        "Exporting report '" + report.Name + "' to " + format);
-                    using (var stream = new MemoryStream())
-                    {
-                        PDFSimpleExport pdf = new PDFSimpleExport();
-                        reportDoc.Export(pdf, stream);
-                        return stream.ToArray();
-                    }
-                }
-            }
+            throw new Exception(Strings.PathNotOnReportPath);
         }
-
-        public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+        if (File.Exists(path))
         {
-            throw new NotImplementedException();
+            reportDoc.Load(path);
         }
-
-        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        else
         {
+            throw new Exception(
+                ResourceUtils.GetString("PathNotFound", path));
         }
+        foreach (DataTable table in dataset.Tables)
+        {
+            reportDoc.RegisterData(table, table.TableName);
+        }
+        reportDoc.Prepare();
+        if (format != "PDF")
+        {
+            throw new ArgumentOutOfRangeException(nameof(format), format, 
+                ResourceUtils.GetString("FormatNotSupported"));
+        }
+        ReportHelper.LogInfo(
+            System.Reflection.MethodBase.GetCurrentMethod()
+                ?.DeclaringType, 
+            $"Exporting report '{report.Name}' to {format}");
+        using var stream = new MemoryStream();
+        var pdf = new PDFSimpleExport();
+        reportDoc.Export(pdf, stream);
+        return stream.ToArray();
+    }
+    public string PrepareExternalReportViewer(Guid reportId,
+        IXmlContainer data, string format, Hashtable parameters,
+        string dbTransaction)
+    {
+        throw new NotImplementedException();
+    }
+    public void PrintReport(
+        Guid reportId, 
+        IXmlContainer data, 
+        string printerName, 
+        int copies, 
+        Hashtable parameters)
+    {
+        throw new NotImplementedException();
+    }
+    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+    {
     }
 }

@@ -37,6 +37,8 @@ export interface IDataSource extends IDataSourceData {
   getFieldByIndex(idex: number): IDataSourceField | undefined;
 
   parent?: any;
+
+  dispose(): void;
 }
 
 export const isIDataSource = (o: any): o is IDataSource => o.$type_IDataSource;

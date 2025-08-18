@@ -21,113 +21,99 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema.TestModel
+namespace Origam.Schema.TestModel;
+public enum TestCaseStepType
 {
-	public enum TestCaseStepType
+	InitialCheck,
+	Step,
+	FinalCheck
+}
+/// <summary>
+/// Summary description for TestCaseStep.
+/// </summary>
+[SchemaItemDescription("Step", "Steps", 24)]
+[ClassMetaVersion("6.0.0")]
+public class TestCaseStep : AbstractSchemaItem
+{
+	public const string CategoryConst = "TestCaseStep";
+	public TestCaseStep() : base() {}
+	public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden ISchemaItem Members
+	
+	public override string ItemType
 	{
-		InitialCheck,
-		Step,
-		FinalCheck
+		get
+		{
+			return CategoryConst;
+		}
 	}
-
-	/// <summary>
-	/// Summary description for TestCaseStep.
-	/// </summary>
-	[SchemaItemDescription("Step", "Steps", 24)]
-    [ClassMetaVersion("6.0.0")]
-	public class TestCaseStep : AbstractSchemaItem
+	public override string Icon
 	{
-		public const string CategoryConst = "TestCaseStep";
-
-		public TestCaseStep() : base() {}
-
-		public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType
+		get
 		{
-			get
+			switch(this.StepType)
 			{
-				return CategoryConst;
+				case TestCaseStepType.InitialCheck:
+					return "23";
+				case TestCaseStepType.Step:
+					return "24";
+			
+				case TestCaseStepType.FinalCheck:
+					return "25";
 			}
+			return "0";
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				switch(this.StepType)
-				{
-					case TestCaseStepType.InitialCheck:
-						return "23";
-
-					case TestCaseStepType.Step:
-						return "24";
-				
-					case TestCaseStepType.FinalCheck:
-						return "25";
-				}
-
-				return "0";
-			}
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.ChecklistRule);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override SchemaItemCollection ChildItems
-		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
-		}
-		#endregion
-
-		#region Properties
-		private TestCaseStepType _stepType = TestCaseStepType.Step;
-		
-		[Category("Test Step")]
-		public TestCaseStepType StepType
-		{
-			get
-			{
-				return _stepType;
-			}
-			set
-			{
-				_stepType = value;
-			}
-		}
-		
-		public Guid ChecklistRuleId;
-
-		[Category("Test Step")]
-		[TypeConverter(typeof(TestChecklistRuleConverter))]
-		public TestChecklistRule ChecklistRule
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ChecklistRuleId;
-
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as TestChecklistRule;
-			}
-			set
-			{
-				this.ChecklistRuleId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion
 	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.ChecklistRule);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override ISchemaItemCollection ChildItems
+	{
+		get
+		{
+			return SchemaItemCollection.Create();
+		}
+	}
+	#endregion
+	#region Properties
+	private TestCaseStepType _stepType = TestCaseStepType.Step;
+	
+	[Category("Test Step")]
+	public TestCaseStepType StepType
+	{
+		get
+		{
+			return _stepType;
+		}
+		set
+		{
+			_stepType = value;
+		}
+	}
+	
+	public Guid ChecklistRuleId;
+	[Category("Test Step")]
+	[TypeConverter(typeof(TestChecklistRuleConverter))]
+	public TestChecklistRule ChecklistRule
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.ChecklistRuleId;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as TestChecklistRule;
+		}
+		set
+		{
+			this.ChecklistRuleId = (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion
 }

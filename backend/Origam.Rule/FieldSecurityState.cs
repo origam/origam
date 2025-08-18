@@ -19,100 +19,91 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Rule
+namespace Origam.Rule;
+/// <summary>
+/// Summary description for ColumnSecurityState.
+/// </summary>
+public class FieldSecurityState
 {
-	/// <summary>
-	/// Summary description for ColumnSecurityState.
-	/// </summary>
-	public class FieldSecurityState
+	string _name;
+	bool _allowUpdate;
+	bool _allowRead;
+	string _dynamicLabel;
+	int _backgroundColor;
+	int _foregroundColor;
+	public FieldSecurityState(string name, bool allowUpdate, bool allowRead, string dynamicLabel, int backgroundColor, int foregroundColor)
 	{
-		string _name;
-		bool _allowUpdate;
-		bool _allowRead;
-		string _dynamicLabel;
-		int _backgroundColor;
-		int _foregroundColor;
-
-		public FieldSecurityState(string name, bool allowUpdate, bool allowRead, string dynamicLabel, int backgroundColor, int foregroundColor)
+		_name = name;
+		_allowUpdate = allowUpdate;
+		_allowRead = allowRead;
+		_dynamicLabel = dynamicLabel;
+		_backgroundColor = backgroundColor;
+		_foregroundColor = foregroundColor;
+	}
+	public string Name 
+	{
+		get
 		{
-			_name = name;
-			_allowUpdate = allowUpdate;
-			_allowRead = allowRead;
-			_dynamicLabel = dynamicLabel;
-			_backgroundColor = backgroundColor;
-			_foregroundColor = foregroundColor;
+			return _name;
 		}
-
-		public string Name 
+		set
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			_name = value;
 		}
-
-		public string DynamicLabel
+	}
+	public string DynamicLabel
+	{
+		get
 		{
-			get
-			{
-				return _dynamicLabel;
-			}
-			set
-			{
-				_dynamicLabel = value;
-			}
+			return _dynamicLabel;
 		}
-
-		public int BackgroundColor
+		set
 		{
-			get
-			{
-				return _backgroundColor;
-			}
-			set
-			{
-				_backgroundColor = value;
-			}
+			_dynamicLabel = value;
 		}
-
-		public int ForegroundColor
+	}
+	public int BackgroundColor
+	{
+		get
 		{
-			get
-			{
-				return _foregroundColor;
-			}
-			set
-			{
-				_foregroundColor = value;
-			}
+			return _backgroundColor;
 		}
-
-		public bool AllowUpdate
+		set
 		{
-			get
-			{
-				return _allowUpdate;
-			}
-			set
-			{
-				_allowUpdate = value;
-			}
+			_backgroundColor = value;
 		}
-
-		public bool AllowRead
+	}
+	public int ForegroundColor
+	{
+		get
 		{
-			get
-			{
-				return _allowRead;
-			}
-			set
-			{
-				_allowRead = value;
-			}
+			return _foregroundColor;
+		}
+		set
+		{
+			_foregroundColor = value;
+		}
+	}
+	public bool AllowUpdate
+	{
+		get
+		{
+			return _allowUpdate;
+		}
+		set
+		{
+			_allowUpdate = value;
+		}
+	}
+	public bool AllowRead
+	{
+		get
+		{
+			return _allowRead;
+		}
+		set
+		{
+			_allowRead = value;
 		}
 	}
 }

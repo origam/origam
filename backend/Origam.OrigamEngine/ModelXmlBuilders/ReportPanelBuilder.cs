@@ -27,37 +27,35 @@ using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using Origam.Schema;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for ReportPanelBuilder.
+/// </summary>
+public class ReportPanelBuilder
 {
-	/// <summary>
-	/// Summary description for ReportPanelBuilder.
-	/// </summary>
-	public class ReportPanelBuilder
+	public static void Build(XmlElement parentNode, UIElementRenderData renderData, 
+		DataTable table, ControlSetItem control)
 	{
-		public static void Build(XmlElement parentNode, UIElementRenderData renderData, 
-			DataTable table, ControlSetItem control)
+		IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService))
+			as IPersistenceService;
+		AbstractReport report = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractReport), 
+			new ModelElementKey(new Guid(renderData.ReportId))) as AbstractReport;
+		parentNode.SetAttribute("X", XmlConvert.ToString(renderData.Left));
+		parentNode.SetAttribute("Y", XmlConvert.ToString(renderData.Top));
+		parentNode.SetAttribute("Width", XmlConvert.ToString(renderData.Width));
+		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+		parentNode.SetAttribute("Type", "ReportButton");
+		parentNode.SetAttribute("Entity", table.TableName);
+		parentNode.SetAttribute("ReportId", renderData.ReportId);
+		parentNode.SetAttribute("Text", (report.Caption == null ? report.Name : report.Caption));
+		XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement("ReportParameters");
+		parentNode.AppendChild(reportParametersElement);
+		foreach(var mapping in control.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService))
-				as IPersistenceService;
-			AbstractReport report = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractReport), 
-				new ModelElementKey(new Guid(renderData.ReportId))) as AbstractReport;
-			parentNode.SetAttribute("X", XmlConvert.ToString(renderData.Left));
-			parentNode.SetAttribute("Y", XmlConvert.ToString(renderData.Top));
-			parentNode.SetAttribute("Width", XmlConvert.ToString(renderData.Width));
-			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-			parentNode.SetAttribute("Type", "ReportButton");
-			parentNode.SetAttribute("Entity", table.TableName);
-			parentNode.SetAttribute("ReportId", renderData.ReportId);
-			parentNode.SetAttribute("Text", (report.Caption == null ? report.Name : report.Caption));
-			XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement("ReportParameters");
-			parentNode.AppendChild(reportParametersElement);
-			foreach(ColumnParameterMapping mapping in control.ChildItemsByType(ColumnParameterMapping.CategoryConst))
-			{
-				XmlElement reportParamElement = parentNode.OwnerDocument.CreateElement("ReportParameterMapping");
-				reportParametersElement.AppendChild(reportParamElement);
-				reportParamElement.SetAttribute("ParameterName", mapping.Name);
-				reportParamElement.SetAttribute("FieldName", mapping.ColumnName);
-			}
+			XmlElement reportParamElement = parentNode.OwnerDocument.CreateElement("ReportParameterMapping");
+			reportParametersElement.AppendChild(reportParamElement);
+			reportParamElement.SetAttribute("ParameterName", mapping.Name);
+			reportParamElement.SetAttribute("FieldName", mapping.ColumnName);
 		}
 	}
 }

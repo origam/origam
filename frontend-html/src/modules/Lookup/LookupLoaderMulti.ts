@@ -32,8 +32,12 @@ export class LookupLoaderMulti {
     this.triggerLoadDeb = clock.debounce(this.triggerLoadImm, 667);
   }
 
+  set getLookupLabelExDebouncingDelayMillis(value: number) {
+    this.triggerLoadDeb = this.clock.debounce(this.triggerLoadImm, value);
+  }
+
   // lookupId -> lookupKey -> something 🦄
-  interrests = new Map<string, Map<any, any>>();
+  interests = new Map<string, Map<any, any>>();
   loading = new Map<string, Map<any, any>>();
   loadingAtom = createAtom(
     "LookupLoading",
@@ -55,17 +59,17 @@ export class LookupLoaderMulti {
       do {
         this.isLoading = true;
         /*console.log("Will load:");
-        for (let [l1k, l1v] of this.interrests.entries()) {
+        for (let [l1k, l1v] of this.interests.entries()) {
           console.log(`  ${l1k}:`);
           for (let [l2k, l2v] of l1v.entries()) {
             console.log(`    ${l2k}`);
           }
         }*/
 
-        for (let [k, v] of this.interrests.entries()) {
+        for (let [k, v] of this.interests.entries()) {
           this.loading.set(k, v);
         }
-        this.interrests.clear();
+        this.interests.clear();
         this.loadingAtom.reportChanged();
 
         const result = await this.api.getLookupLabels(this.loading);
@@ -84,7 +88,7 @@ export class LookupLoaderMulti {
         this.loadingAtom.reportChanged();
 
         this.resultListeners.trigger({labels: result});
-      } while (this.interrests.size > 0);
+      } while (this.interests.size > 0);
     } finally {
       this.isLoading = false;
     }
@@ -93,29 +97,29 @@ export class LookupLoaderMulti {
   triggerLoadDeb = () => {
   };
 
-  setInterrest(lookupId: string, key: any) {
+  setInterest(lookupId: string, key: any) {
     // Maybe it is loading right now.
     if (this.loading.has(lookupId) && this.loading.get(lookupId)!.has(key)) return;
 
-    // Not yet loading, record that someon is interrested.
-    if (!this.interrests.has(lookupId)) {
-      this.interrests.set(lookupId, new Map());
+    // Not yet loading, record that someone is interested.
+    if (!this.interests.has(lookupId)) {
+      this.interests.set(lookupId, new Map());
     }
-    const lookupInterrests = this.interrests.get(lookupId)!;
-    lookupInterrests.set(key, true);
+    const lookupInterests = this.interests.get(lookupId)!;
+    lookupInterests.set(key, true);
 
     // Schedule actual loading.
     this.triggerLoadDeb();
   }
 
-  resetInterrest(lookupId: string, key: any) {
-    if (!this.interrests.has(lookupId)) {
+  resetInterest(lookupId: string, key: any) {
+    if (!this.interests.has(lookupId)) {
       return;
     }
-    const lookupInterrests = this.interrests.get(lookupId)!;
-    lookupInterrests.delete(key);
-    if (lookupInterrests.size === 0) {
-      this.interrests.delete(lookupId);
+    const lookupInterests = this.interests.get(lookupId)!;
+    lookupInterests.delete(key);
+    if (lookupInterests.size === 0) {
+      this.interests.delete(lookupId);
     }
   }
 

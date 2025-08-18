@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes_ApiOutputSamples.origam#AllDataTypes_ApiOutputSamples/96797e21-a780-4b45-ac3e-165ec56772b0"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="b6536a7d-e4aa-4ee4-a7c5-9c29187298ff"
+    xdp:method="Widgets/DataStructure/Widgets/AllDataTypes_ApiOutputSamples.origam#AllDataTypes_ApiOutputSamples/GetTop3/baaaaa21-7a4f-4dfa-895d-0a1e744245d1"
+    ap:mimeType="application/json"
+    asi:name="OmitJsonMainElement"
+    xdp:omitJsonMainElement="true"
+    xdp:omitJsonRootElement="true"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    ap:url="api/public/omit-json-main-element" />
+</x:file>

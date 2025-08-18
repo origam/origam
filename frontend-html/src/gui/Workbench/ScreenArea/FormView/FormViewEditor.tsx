@@ -42,10 +42,33 @@ import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
+import {
+  isAddRecordShortcut,
+  isDeleteRecordShortcut,
+  isDuplicateRecordShortcut, 
+  isFilterRecordShortcut,
+  isRefreshShortcut,
+  isSaveShortcut
+} from "utils/keyShortcuts";
+import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
+import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
+import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
+import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
+import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
+import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { makeOnAddNewRecordClick, onSaveClick } from "gui/connections/NewRecordScreen";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { IUpdateChanges } from "model/entities/types/IFormScreenLifecycle";
 
 
 @inject(({property, formPanelView}) => {
@@ -76,7 +99,7 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: () => Promise<any>;
   backgroundColor?: string;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
   focusManager: FormFocusManager;
@@ -87,32 +110,33 @@ export class FormViewEditor extends React.Component<{
   }
 
   getEditor() {
-    const rowId = getSelectedRowId(this.props.property);
-    const row = getSelectedRow(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const  dataView = getDataView(this.props.property);
+    const property = this.props.property!;
+    const rowId = getSelectedRowId(property);
+    const row = getSelectedRow(property);
+    const foregroundColor = getRowStateForegroundColor(property, rowId || "");
+    const dataView = getDataView(property);
     const readOnly =
       !row ||
-      isReadOnly(this.props.property!, rowId) ||
-      (dataView.orderProperty !== undefined && this.props.property?.name === dataView.orderProperty.name);
+      isReadOnly(property, rowId) ||
+      (dataView.orderProperty !== undefined && property?.name === dataView.orderProperty.name);
     const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
 
-    switch (this.props.property!.column) {
+    switch (property.column) {
       case "Number":
         return (
           <NumberEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
-            isPassword={this.props.property!.isPassword}
-            property={this.props.property}
-            maxLength={this.props.property?.maxLength}
+            isPassword={property.isPassword}
+            property={property}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customNumberFormat={this.props.property!.customNumericFormat}
-            customStyle={resolveNumericCellAlignment(this.props.property?.style)}
+            customNumberFormat={property.customNumericFormat}
+            customStyle={resolveNumericCellAlignment(property.style)}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onEditorBlur={this.props.onEditorBlur}
@@ -120,8 +144,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 onBlur);
               }
             }
@@ -130,14 +154,14 @@ export class FormViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
-            isMultiline={this.props.property!.multiline}
-            isAllowTab={this.props.property!.isAllowTab}
-            isPassword={this.props.property!.isPassword}
-            customStyle={this.props.property?.style}
-            maxLength={this.props.property?.maxLength}
+            isMultiline={property.multiline}
+            isAllowTab={property.isAllowTab}
+            isPassword={property.isPassword}
+            customStyle={property.style}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
@@ -149,8 +173,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 this.props.onEditorBlur
               )
             }
@@ -161,8 +185,8 @@ export class FormViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.value}
-            outputFormat={this.props.property!.formatterPattern}
-            outputFormatToShow={this.props.property!.modelFormatterPattern}
+            outputFormat={property.formatterPattern}
+            outputFormatToShow={property.modelFormatterPattern}
             isReadOnly={readOnly}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
@@ -171,8 +195,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 onBlur);
             }
             }
@@ -190,8 +214,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
           />
@@ -206,17 +230,19 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
-            autoSort={this.props.property?.autoSort}
+            autoSort={property.autoSort}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customStyle={this.props.property?.style}
-            isLink={this.props.property?.isLink}
+            customStyle={property.style}
+            newRecordScreen={this.props.property?.lookup?.newRecordScreen}
+            onAddNewRecordClick={makeOnAddNewRecordClick(this.props.property!)}
+            isLink={property.isLink}
             onClick={(event) => {
-              onDropdownEditorClick(this.props.property)(event, this.props.property, row);
+              onDropdownEditorClick(property)(event, property, row);
             }}
             onKeyDown={this.makeOnKeyDownCallBack()}
           />
@@ -230,18 +256,18 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(
                 firstCheckInput,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
-            autoSort={this.props.property?.autoSort}
+            autoSort={property.autoSort}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
                 isReadOnly={readOnly}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
-                customStyle={this.props.property?.style}
+                customStyle={property.style}
                 onChange={this.props.onChange}
                 onKeyDown={this.makeOnKeyDownCallBack()}
                 onEditorBlur={this.props.onEditorBlur}
@@ -258,8 +284,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(
                 firstCheckInput,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
@@ -277,8 +303,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
           />
@@ -286,7 +312,7 @@ export class FormViewEditor extends React.Component<{
       case "Image":
         return <ImageEditor value={this.props.value}/>;
       case "Blob":
-        const isDirty = getIsFormScreenDirty(this.props.property);
+        const isDirty = getIsFormScreenDirty(property);
         return (
           <BlobEditor
             isReadOnly={readOnly}
@@ -296,8 +322,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(
                 inputEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
             onChange={this.props.onChange}
@@ -308,7 +334,7 @@ export class FormViewEditor extends React.Component<{
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`); // eslint-disable-line no-console
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered` // eslint-disable-line no-console
+        console.warn(`Unknown column type "${property.column}", no editor was rendered` // eslint-disable-line no-console
         );
         return "";
     }
@@ -322,6 +348,7 @@ export class FormViewEditor extends React.Component<{
         ctx: this.props.property,
         action: async () => {
           dataView.formFocusManager.stopAutoFocus();
+          const openedScreen = getOpenedScreen(this.props.property);
           if (event.key === "Tab") {
             DomEvent.preventDefault(event);
             if (event.shiftKey) {
@@ -331,12 +358,64 @@ export class FormViewEditor extends React.Component<{
             }
             return;
           }
+          if (isSaveShortcut(event)) {
+            await runGeneratorInFlowWithHandler({
+              ctx: dataView,
+              generator: function*() {
+                yield*flushCurrentRowData(dataView)();
+                if (getScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
+                  const formScreenLifecycle = getFormScreenLifecycle(dataView);
+                  yield*formScreenLifecycle.onSaveSession();
+                }
+              }()
+            });
+            return;
+          }
+          if (isRefreshShortcut(event) && getScreenActionButtonsState(dataView)?.isRefreshButtonVisible) {
+            await runGeneratorInFlowWithHandler({
+              ctx: dataView,
+              generator: function*() {
+                yield*flushCurrentRowData(dataView)();
+                const formScreenLifecycle = getFormScreenLifecycle(dataView);
+                yield*formScreenLifecycle.onRequestScreenReload();
+              }()
+            });
+            return;
+          }
+          if (isAddRecordShortcut(event) && getIsAddButtonVisible(dataView)) {
+            await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (isDeleteRecordShortcut(event) && getIsDelButtonVisible(dataView)) {
+            await onDeleteRowClick(dataView)(event);
+            return;
+          }
+          if (isDuplicateRecordShortcut(event) && getIsCopyButtonVisible(dataView)) {
+            await onCopyRowClick(dataView)(event);
+            return;
+          }
+          if (isFilterRecordShortcut(event) && !dataView.isHeadless) {
+            await onFilterButtonClick(dataView)(event);
+            return;
+          }
+          if (event.key === "Escape") {
+            if (openedScreen.isNewRecordScreen){
+              onScreenTabCloseClick(openedScreen)(event, true);
+              return;
+            }
+            await onEscapePressed(dataView, event);
+            return;
+          }
           if (this.props.property!.multiline) {
             return;
           }
           if (event.key === "Enter") {
-            await this.props.onEditorBlur?.();
-            if (dataView.firstEnabledDefaultAction) {
+            const updates = (await this.props.onEditorBlur?.()) as IUpdateChanges[];
+            if (openedScreen.isNewRecordScreen){
+              await onSaveClick(openedScreen);
+              return;
+            }
+            if (dataView.firstEnabledDefaultAction && !didServerChangeAdditionalFields(updates)) {
               uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
                 event,
                 dataView.firstEnabledDefaultAction
@@ -352,6 +431,25 @@ export class FormViewEditor extends React.Component<{
     return this.getEditor();
   }
 }
+
+function didServerChangeAdditionalFields(updates: IUpdateChanges[]){
+  return updates.length > 0 &&
+    updates.some(update => containsAdditionalChanges(update));
+}
+
+function containsAdditionalChanges(update: IUpdateChanges){
+  for (const column of update.columnsChangedOnServer) {
+    if (
+      !update.columnsChangedOnClient.includes(column) &&
+      column !== "RecordUpdated" &&
+      column !== "RecordUpdatedBy"
+    ) {
+        return true;
+    }
+  }
+  return false;
+}
+
 
 export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined) {
   let cellAlignment = new CellAlignment(false, "Number", customStyle);

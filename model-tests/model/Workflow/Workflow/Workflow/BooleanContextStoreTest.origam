@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:uct="http://schemas.origam.com/Origam.Schema.WorkflowModel.UpdateContextTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="9234cf7f-9d25-453f-aab0-315eaf0463a5"
+    asi:name="BooleanContextStoreTest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="129ac776-8825-4dd1-9eda-cf173a97ed07"
+      cs:isReturnValue="false"
+      asi:name="BusinessUnit"
+      cs:structure="Root/DataStructure/Organization Management/BusinessUnit.origam#BusinessUnit/ab2cfd9e-f22a-4575-8003-bdf212ec1dd0" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="32ff1cd9-22a9-4089-a9f1-00be334e298f"
+      cs:isReturnValue="false"
+      asi:name="StringContextStore" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Boolean"
+      cs:disableConstraints="false"
+      x:id="f2e66048-6c0c-4369-92d5-e86f12feb004"
+      cs:isReturnValue="false"
+      asi:name="BooleanContextStore" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="e5476eca-045e-4618-ae5f-8072535b60d0"
+      asi:name="0200_Transform_FillStringContextStore"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/StringContextStore/32ff1cd9-22a9-4089-a9f1-00be334e298f"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="2c5babe4-1b52-4e9d-9cde-85d5a77c2afa"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/BusinessUnit/129ac776-8825-4dd1-9eda-cf173a97ed07"
+          x:id="89973b13-9ffa-46f5-8b52-a832155cd5cd"
+          asi:name="BusinessUnit"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="80f2f7c3-db4c-4004-b7de-fb40d30ccb44"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Boolean"
+          cr:contextStore="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/BooleanContextStore/f2e66048-6c0c-4369-92d5-e86f12feb004"
+          x:id="76eee100-7395-4baa-b0a1-2b854a2a5513"
+          asi:name="boolean"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="cc540a0a-0b54-4d6b-915f-56f674297da3"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="3b03e973-ff01-40de-8ed5-3c6acd5d7197"
+          asi:name="BooleanContextStoreTest"
+          tr:transformation="Workflow/Transformation/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/e051384d-e187-4cfa-8ba8-b9813ce7749f" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="7d7f6f35-532d-40dc-8d31-a8ab868c39af"
+        asi:name="After_0100_Set_BooleanToTrue"
+        wtd:startEvent="Success"
+        wtd:task="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/0100_Set_BooleanToTrue/0123fac8-cdd0-437b-9558-ea204dcc359d" />
+    </smct:WorkflowTask>
+    <uct:WorkflowTask
+      asi:abstract="false"
+      x:id="0123fac8-cdd0-437b-9558-ea204dcc359d"
+      asi:name="0100_Set_BooleanToTrue"
+      aws:onFailure="WorkflowFails"
+      uct:outputContextStore="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/BooleanContextStore/f2e66048-6c0c-4369-92d5-e86f12feb004"
+      aws:roles="*"
+      uct:valueXPath="'true'"
+      uct:xPathContextStore="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/BooleanContextStore/f2e66048-6c0c-4369-92d5-e86f12feb004" />
+  </w:Workflow>
+</x:file>

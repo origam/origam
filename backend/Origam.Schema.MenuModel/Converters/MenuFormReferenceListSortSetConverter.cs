@@ -21,72 +21,61 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+public class MenuFormReferenceListSortSetConverter : TypeConverter
 {
-    public class MenuFormReferenceListSortSetConverter : TypeConverter
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		//true means show a combobox
+		return true;
+	}
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+		//true will limit to list. false will show the list, 
+		//but allow free-form entry
+		return true;
+	}
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
+		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
+		if(currentItem == null) return new StandardValuesCollection(new List<DataStructureSortSet>());
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new List<DataStructureSortSet>());
+		List<DataStructureSortSet> sortSets = currentItem.ListDataStructure.SortSets;
+		var array = new List<DataStructureSortSet>(sortSets.Count);
+		foreach(DataStructureSortSet item in sortSets)
 		{
-			//true means show a combobox
-			return true;
+			array.Add(item);
 		}
-
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+		array.Add(null);
+		
+		array.Sort();
+		return new StandardValuesCollection(array);
+	}
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
+		if( sourceType == typeof(string) )
 			return true;
-		}
-
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
+		else 
+			return base.CanConvertFrom(context, sourceType);
+	}
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
+		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			if(currentItem == null) return new StandardValuesCollection(new ArrayList());
-			if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-
-			ArrayList sortSets = currentItem.ListDataStructure.SortSets;
-
-			ArrayList array = new ArrayList(sortSets.Count);
-			foreach(AbstractSchemaItem item in sortSets)
+			List<DataStructureSortSet> sortSets = currentItem.ListDataStructure.SortSets;
+			foreach(DataStructureSortSet item in sortSets)
 			{
-				array.Add(item);
+				if(item.Name == value.ToString())
+					return item;
 			}
-
-			array.Add(null);
-			
-			array.Sort();
-
-			return new StandardValuesCollection(array);
+			return null;
 		}
-
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
-			if( sourceType == typeof(string) )
-				return true;
-			else 
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if( value.GetType() == typeof(string) )
-			{
-				FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-				ArrayList sortSets = currentItem.ListDataStructure.SortSets;
-
-				foreach(AbstractSchemaItem item in sortSets)
-				{
-					if(item.Name == value.ToString())
-						return item as DataStructureSortSet;
-				}
-				return null;
-			}
-			else
-				return base.ConvertFrom(context, culture, value);
-		}
+		else
+			return base.ConvertFrom(context, culture, value);
 	}
-
 }

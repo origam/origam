@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../Components/Splitter/Splitter.module";
-@import "~@origam/styles/dist/styles/definitions";
+@use "src/gui/definitions" as definitions;
+@use "../../Components/Splitter/Splitter.module" as splitter;
 
 .divider {
   background: var(--background1);
@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     position: relative;
     z-index: 1000;
     background: var(--foreground1);
-    @include opacity(0.8);
+    @include definitions.opacity(0.8);
     border-color: var(--foreground1) !important;
   }
   &:not(:global(.isDragging)):hover {
@@ -35,4 +35,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
     background: var(--background1);
   }
+}
+
+.root {
+  @include splitter.root;
+}
+
+.panel {
+  @include splitter.panel;
 }

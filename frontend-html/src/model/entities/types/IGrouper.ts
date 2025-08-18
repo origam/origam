@@ -35,7 +35,7 @@ export interface IGrouper {
 
   getCellOffset(rowId: string): ICellOffset;
 
-  substituteRecord(row: any[]): void;
+  substituteRecords(rows: any[][]): void;
 
   getNextRowId(rowId: string): string;
 

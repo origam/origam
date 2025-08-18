@@ -23,104 +23,98 @@ using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.UI.WizardForm
+namespace Origam.UI.WizardForm;
+public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
 {
-    public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
+    private IDataEntity _entity;
+    public IDataEntity Entity
     {
-        private IDataEntity _entity;
-        public IDataEntity Entity
+        get
         {
-            get
-            {
-                return _entity;
-            }
-            set
-            {
-                _entity = value;
-            }
+            return _entity;
         }
-        private AbstractSchemaItem _relatedEntity = null;
-        public AbstractSchemaItem RelatedEntity
+        set
         {
-            get
-            {
-                return _relatedEntity;
-            }
-            set
-            {
-                _relatedEntity = value;
-            }
+            _entity = value;
         }
-
-        private AbstractSchemaItem _baseEntityField = null;
-        public AbstractSchemaItem BaseEntityFieldSelect
+    }
+    private ISchemaItem _relatedEntity = null;
+    public ISchemaItem RelatedEntity
+    {
+        get
         {
-            get
-            {
-                return _baseEntityField;
-            }
-            set
-            {
-                _baseEntityField = value;
-            }
+            return _relatedEntity;
         }
-
-        private AbstractSchemaItem _relatedEntityField = null;
-        public AbstractSchemaItem RelatedEntityFieldSelect
+        set
         {
-            get
-            {
-                return _relatedEntityField;
-            }
-            set
-            {
-                _relatedEntityField = value;
-            }
+            _relatedEntity = value;
         }
-
-        private Boolean _isparentChild = false;
-        public Boolean ParentChildCheckbox
+    }
+    private ISchemaItem _baseEntityField = null;
+    public ISchemaItem BaseEntityFieldSelect
+    {
+        get
         {
-            get
-            {
-                return _isparentChild;
-            }
-            set
-            {
-                _isparentChild = value;
-            }
+            return _baseEntityField;
         }
-
-        public string EnterAllInfo { get; set; }
-        public string LookupWiz { get; set; }
-        public string LookupName { get; internal set; }
-        public string LookupKeyName { get; internal set; }
-        internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
+        set
         {
-            if (tableRelation.Items.Count == 0)
-            {
-                if (this.Entity == null) return;
-                txtRelationName.Text = this.Entity.Name;
-                foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
-                {
-                    tableRelation.Items.Add(abstractSchemaIttem);
-                }
-            }
+            _baseEntityField = value;
         }
-        internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
+    }
+    private ISchemaItem _relatedEntityField = null;
+    public ISchemaItem RelatedEntityFieldSelect
+    {
+        get
         {
-            BaseEntityField.Items.Clear();
-            RelatedEntityField.Items.Clear();
+            return _relatedEntityField;
+        }
+        set
+        {
+            _relatedEntityField = value;
+        }
+    }
+    private Boolean _isparentChild = false;
+    public Boolean ParentChildCheckbox
+    {
+        get
+        {
+            return _isparentChild;
+        }
+        set
+        {
+            _isparentChild = value;
+        }
+    }
+    public string EnterAllInfo { get; set; }
+    public string LookupWiz { get; set; }
+    public string LookupName { get; internal set; }
+    public string LookupKeyName { get; internal set; }
+    internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
+    {
+        if (tableRelation.Items.Count == 0)
+        {
             if (this.Entity == null) return;
-            txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
-            foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+            txtRelationName.Text = this.Entity.Name;
+            foreach (ISchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
             {
-                RelatedEntityField.Items.Add(filter);
+                tableRelation.Items.Add(abstractSchemaIttem);
             }
-            foreach (IDataEntityColumn column in this.Entity.EntityColumns)
-            {
-                BaseEntityField.Items.Add(column);
-            }
+        }
+    }
+    internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
+    {
+        BaseEntityField.Items.Clear();
+        RelatedEntityField.Items.Clear();
+        if (this.Entity == null) return;
+        txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
+        foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
+        {
+            RelatedEntityField.Items.Add(filter);
+        }
+        foreach (IDataEntityColumn column in this.Entity.EntityColumns)
+        {
+            BaseEntityField.Items.Add(column);
         }
     }
 }

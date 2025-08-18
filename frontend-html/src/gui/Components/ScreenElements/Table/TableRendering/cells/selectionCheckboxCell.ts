@@ -23,8 +23,10 @@ import {
   currentDataRow,
   dataView,
   isCheckBoxedTable,
+  isLastRow,
   recordId,
   rowId,
+  rowIndex,
   tablePanelView
 } from "../renderingValues";
 import {
@@ -44,7 +46,7 @@ import {
   topTextOffset
 } from "./cellsCommon";
 import { CPR } from "utils/canvas";
-import { onClick } from "../onClick";
+import { onClick, onMouseMove } from "../onClick";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
@@ -52,6 +54,8 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { flow } from "mobx";
 import { hasSelectedRowId, setSelectedStateRowId, } from "model/actions-tree/selectionCheckboxes";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { drawBottomLineBorder } from "./dataCell";
 
 export const selectionCheckBoxColumnWidth = 20;
 
@@ -67,10 +71,28 @@ export function selectionCheckboxCellsDraws() {
         drawSelectionCheckboxBackground();
         const ctx2d = context2d();
         ctx2d.fillStyle = "black";
-        ctx2d.font = `${CPR() * checkBoxCharacterFontSize}px "Font Awesome 5 Free"`;
         const state = dataView().isSelected(rowId());
+
+        const {
+          selectionRangeIndex0, 
+          selectionRangeIndex1, 
+          selectionInProgress, 
+          selectionTargetState
+        } = tablePanelView();
+      
+        const isSelectionCandidate = 
+          selectionInProgress 
+          && selectionRangeIndex0 !== undefined 
+          && selectionRangeIndex1 !== undefined 
+          && Math.min(selectionRangeIndex0, selectionRangeIndex1) <= rowIndex() 
+          && rowIndex() <= Math.max(selectionRangeIndex0, selectionRangeIndex1)
+
+        ctx2d.font = `${(isSelectionCandidate) ? 'bold' : ""} ${CPR() * checkBoxCharacterFontSize}px "Font Awesome 5 Free"`;
+
         ctx2d.fillText(
-          state ? "\uf14a" : "\uf0c8",
+          ((!isSelectionCandidate && state) || 
+          (isSelectionCandidate && selectionTargetState) ) 
+            ? "\uf14a" : "\uf0c8",
           CPR() * (currentColumnLeft() + checkBoxCellPaddingLeft),
           CPR() * (currentRowTop() + topTextOffset)
         );
@@ -88,30 +110,29 @@ function registerClickHandler() {
     y: currentRowTop(),
     w: currentColumnWidthVisible(),
     h: currentRowHeight(),
-    handler(event: any) {
-      flow(function*() {
-        // TODO: Move to tablePanelView
-        let newSelectionState = false;
+    async handler(event: any) {
+      await flow(function*() {
+        const tablePanelView = getTablePanelView(ctx);
         const dataTable = getDataTable(ctx);
         const rowId = dataTable.getRowId(row);
-        const selectionMember = getSelectionMember(ctx);
-        if (!!selectionMember) {
-          const dataSourceField = getDataSourceFieldByName(ctx, selectionMember);
-          if (dataSourceField) {
-            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dataSourceField);
-            dataTable.setDirtyValue(row, selectionMember, newSelectionState);
-            yield*getFormScreenLifecycle(ctx).onFlushData();
-            const updatedRow = dataTable.getRowById(rowId)!;
-            newSelectionState = dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
-            yield*setSelectedStateRowId(ctx)(rowId, newSelectionState);
-          }
-        } else {
-          newSelectionState = !hasSelectedRowId(ctx, rowId);
-          yield*setSelectedStateRowId(ctx)(rowId, newSelectionState);
-        }
+        yield* tablePanelView.onSelectionCellClick(event, row, rowId)
       })();
     },
   });
+  onMouseMove({
+    x: currentColumnLeftVisible(),
+    y: currentRowTop(),
+    w: currentColumnWidthVisible(),
+    h: currentRowHeight(),
+    handler(event: any) {
+      flow(function*() {
+        const tablePanelView = getTablePanelView(ctx);
+        const dataTable = getDataTable(ctx);
+        const rowId = dataTable.getRowId(row);
+        yield* tablePanelView.onSelectionCellMouseMove(event, row, rowId)
+      })();  
+    }
+  })
 }
 
 export function selectionCheckboxEmptyCellsWidths() {
@@ -142,5 +163,8 @@ export function drawSelectionCheckboxBackground() {
   );
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth / 2);
+  }
+  if (isLastRow()) {
+    drawBottomLineBorder();
   }
 }

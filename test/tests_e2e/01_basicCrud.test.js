@@ -4,7 +4,7 @@ const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRe
 const {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId} = require("./modelIds");
 const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
-const {installMouseHelper} = require("./instalMouseHelper_");
+const {installMouseHelper} = require("./installMouseHelper_");
 
 let browser;
 let page;
@@ -140,6 +140,7 @@ describe("Html client", () => {
     const rowCountDataBeforeDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataBeforeDelete.selectedRow).toBe("2");
     expect(rowCountDataBeforeDelete.rowCount).toBe("3");
+    await sleep(200);
     await deleteRowButton.click();
 
     const yesRowButton = await page.waitForXPath(

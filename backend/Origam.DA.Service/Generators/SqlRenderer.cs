@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Configuration;
+using Origam.DA.Service;
 
 public abstract class SqlRenderer
 {
@@ -35,6 +36,11 @@ public abstract class SqlRenderer
     public abstract string ConvertGeoToTextClause(string argument);
     internal abstract string Sequence(string entityName, string primaryKeyName);
     internal abstract string IsNull();
+    
+    // Will omit the time part if the time is 00:00:00.
+    // The result should be the same as the the result of C# DateTime.ToString() / DateTime.ToShortDateString()
+    // Because that is what is used in C# code in the UIService/GetLookupLabelsEx endpoint
+    internal abstract string Format(string date, string culture);
     internal abstract string CountAggregate();
     internal abstract string DeclareAsSql();
     internal abstract string FunctionPrefix();

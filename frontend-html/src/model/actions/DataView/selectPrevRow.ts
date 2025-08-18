@@ -24,7 +24,7 @@ import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function selectPrevRow(ctx: any) {
   return function*selectPrevRow() {
-    getDataView(ctx).selectPrevRow();
+    yield*getDataView(ctx).selectPrevRow();
     getTablePanelView(ctx).scrollToCurrentRow();
     if (!isLazyLoading(ctx)) {
       setTimeout(() => {

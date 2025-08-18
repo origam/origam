@@ -21,136 +21,120 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Summary description for StateMachineState.
+/// </summary>
+[SchemaItemDescription("Transition", "Operations", "transition-2.png")]
+[HelpTopic("State+Transition")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class StateMachineOperation : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for StateMachineState.
-	/// </summary>
-	[SchemaItemDescription("Transition", "Operations", "transition-2.png")]
-    [HelpTopic("State+Transition")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class StateMachineOperation : AbstractSchemaItem
+	public const string CategoryConst = "StateMachineOperation";
+	public StateMachineOperation() : base() {}
+	public StateMachineOperation(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public StateMachineOperation(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden ISchemaItem Members
+	
+	public override string ItemType
 	{
-		public const string CategoryConst = "StateMachineOperation";
-
-		public StateMachineOperation() : base() {}
-
-		public StateMachineOperation(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public StateMachineOperation(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.TargetState);
+		if(this.Rule != null)	dependencies.Add(this.Rule);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override void UpdateReferences()
+	{
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 		{
-			dependencies.Add(this.TargetState);
-			if(this.Rule != null)	dependencies.Add(this.Rule);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			if(item.OldPrimaryKey != null)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey.Equals(this.TargetState.PrimaryKey))
 				{
-					if(item.OldPrimaryKey.Equals(this.TargetState.PrimaryKey))
-					{
-						this.TargetState = item as StateMachineState;
-						break;
-					}
+					this.TargetState = item as StateMachineState;
+					break;
 				}
 			}
-
-			base.UpdateReferences ();
 		}
-		#endregion
-
-		#region Properties
-		private string _roles = "*";
-		[NotNullModelElementRule()]
-        [DefaultValue("*")]
-        [XmlAttribute("roles")]
-		public string Roles
-		{
-			get
-			{
-				return _roles;
-			}
-			set
-			{
-				_roles = value;
-			}
-		}
-
-		private string _features;
-		[XmlAttribute("features")]
-        public string Features
-		{
-			get
-			{
-				return _features;
-			}
-			set
-			{
-				_features = value;
-			}
-		}		
-        
-		public Guid RuleId;
-
-		[TypeConverter(typeof(EntityRuleConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("rule", "RuleId")]
-		public IEntityRule Rule
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey(this.RuleId);
-
-                return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				this.RuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		
-		public Guid TargetStateId;
-
-		[TypeConverter(typeof(StateMachineStateConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("targetState", "TargetStateId")]
-		public StateMachineState TargetState
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey(this.TargetStateId);
-
-				return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				this.TargetStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion
-
+		base.UpdateReferences ();
 	}
+	#endregion
+	#region Properties
+	private string _roles = "*";
+	[NotNullModelElementRule()]
+    [DefaultValue("*")]
+    [XmlAttribute("roles")]
+	public string Roles
+	{
+		get
+		{
+			return _roles;
+		}
+		set
+		{
+			_roles = value;
+		}
+	}
+	private string _features;
+	[XmlAttribute("features")]
+    public string Features
+	{
+		get
+		{
+			return _features;
+		}
+		set
+		{
+			_features = value;
+		}
+	}		
+    
+	public Guid RuleId;
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("rule", "RuleId")]
+	public IEntityRule Rule
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey(this.RuleId);
+            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+		}
+		set
+		{
+			this.RuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	
+	public Guid TargetStateId;
+	[TypeConverter(typeof(StateMachineStateConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("targetState", "TargetStateId")]
+	public StateMachineState TargetState
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey(this.TargetStateId);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+		}
+		set
+		{
+			this.TargetStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion
 }

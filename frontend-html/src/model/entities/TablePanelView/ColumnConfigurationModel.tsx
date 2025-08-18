@@ -22,24 +22,34 @@ import { action, computed } from "mobx";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { ITableConfiguration } from "./types/IConfigurationManager";
-import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import {
+  runGeneratorInFlowWithHandler,
+  runInFlowWithHandler,
+} from "utils/runInFlowWithHandler";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { NewConfigurationDialog } from "gui/Components/Dialogs/NewConfigurationDialog";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { compareStrings } from "utils/string";
-import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
-import { AggregationType, tryParseAggregationType } from "model/entities/types/AggregationType";
+import {
+  GroupingUnit,
+  groupingUnitToLabel,
+} from "model/entities/types/GroupingUnit";
+import {
+  AggregationType,
+  tryParseAggregationType,
+} from "model/entities/types/AggregationType";
 import { T } from "utils/translation";
-import { IOption } from "@origam/components";
 import _ from "lodash";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { IOption } from "gui/Components/Dialogs/SimpleDropdown";
 
 export interface IColumnOptions {
   canGroup: boolean;
   canAggregate: boolean;
   entity: string;
-  name: string;
+  gridCaption: string;
   modelInstanceId: string;
 }
 
@@ -66,7 +76,7 @@ export class ColumnConfigurationModel{
           canAggregate: groupingOnClient ||
             (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
           entity: property.entity,
-          name: property.name,
+          gridCaption: property.gridCaption,
           modelInstanceId: property.modelInstanceId
         })
     }
@@ -86,7 +96,7 @@ export class ColumnConfigurationModel{
       (a, b) => {
         const optionA = this.columnOptions.get(a.propertyId)!;
         const optionB = this.columnOptions.get(b.propertyId)!;
-        return compareStrings(optionA.name, optionB.name)
+        return compareStrings(optionA.gridCaption, optionB.gridCaption)
       }
     );
   }
@@ -145,12 +155,12 @@ export class ColumnConfigurationModel{
   @action.bound
   onColumnConfSubmit(configuration: ITableConfiguration): void {
     const aggregationsBefore = this.tablePanelView?.aggregations.aggregationList;
-    const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;
+    const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;      
     configuration.apply(this.tablePanelView);
     const groupingIsOnNow = this.tablePanelView?.groupingConfiguration.isGrouping;
     const aggregationsNow = this.tablePanelView?.aggregations.aggregationList;
     if (groupingWasOnBefore && !groupingIsOnNow ||
-        groupingIsOnNow && !_.isEqual(aggregationsBefore, aggregationsNow))
+      groupingIsOnNow && !_.isEqual(aggregationsBefore, aggregationsNow))
     {
       getFormScreenLifecycle(this).loadInitialData();
     }
@@ -211,6 +221,23 @@ export class ColumnConfigurationModel{
     this.columnsConfiguration.fixedColumnCount = parseInt(event.target.value, 10);
   }
 
+  @action.bound
+  setOrderIds(ids: any[]) {
+    const idsSet = new Set(ids);
+    const restOfIds = this.columnsConfiguration.columnConfigurations
+      .map(item => item.propertyId)
+      .filter(id => !idsSet.has(id))
+
+    this.columnsConfiguration.columnConfigurations = [
+      ...ids.map(id => this.columnsConfiguration.columnConfigurations.find(item => item.propertyId === id)!), 
+      ...restOfIds.map(id => this.columnsConfiguration.columnConfigurations.find(item => item.propertyId === id)!)
+    ]
+  }
+
+  @computed get tableViewProperties() {
+    return getTableViewProperties(this.tablePanelView);
+  }
+
   @computed get tablePanelView() {
     return getTablePanelView(this);
   }
@@ -236,7 +263,7 @@ export class TimeUnitOption implements IOption<GroupingUnit>{
     public value: GroupingUnit,
   ){
   }
-}
+} 
 
 
 export const aggregationOptions =  [

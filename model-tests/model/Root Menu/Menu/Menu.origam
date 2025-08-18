@@ -243,6 +243,7 @@
           frmi:screen="Root/FormControlSet/__system/OrigamFeatureList.origam#OrigamFeatureList/4fa26924-e501-4072-a703-f1dc09b5a564" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           frmi:defaultSet="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/Defaults/55e80c28-bb3b-4300-a6d4-1be87f0febf3"
           ami:displayName="Work Queues"
@@ -256,7 +257,9 @@
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
           ami:roles="FRM_WorkQueue"
-          frmi:screen="Root/FormControlSet/Work Queue/WorkQueue.origam#WorkQueue/a634efc2-456e-4b46-ad13-9f63eaaed357" />
+          frmi:ruleSet="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/Default/5a2136b2-cb60-4044-85ba-57260d6629a2"
+          frmi:screen="Root/FormControlSet/Work Queue/WorkQueue.origam#WorkQueue/a634efc2-456e-4b46-ad13-9f63eaaed357"
+          frmi:sortSet="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/Sort/37dbbb2b-6068-44a7-8765-826f15ca061e" />
         <frmi:MenuItem
           asi:abstract="false"
           frmi:autoSaveOnListRecordChange="false"

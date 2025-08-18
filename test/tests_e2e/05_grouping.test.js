@@ -1,7 +1,7 @@
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected, beforeEachTest, afterEachTest
 } = require('./testTools');
-const {installMouseHelper} = require('./instalMouseHelper_');
+const {installMouseHelper} = require('./installMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
@@ -135,7 +135,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(
@@ -189,7 +188,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(

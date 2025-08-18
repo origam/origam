@@ -35,11 +35,11 @@ import { requestFocus } from "utils/focus";
 
 class DesktopEditorState implements IEditorState{
   constructor(value: string | null) {
-    this.value = value;
+    this.initialValue = value;
   }
 
   @observable
-  value : string | null;
+  initialValue : string | null;
 }
 
 @observer
@@ -57,8 +57,8 @@ export class DateTimeEditor extends React.Component<{
   onClick?: (event: any) => void;
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
+  onMount?(onChange?: (value: any) => void): void;
   onEditorBlur?: (event: any) => Promise<void>;
-  refocuser?: (cb: () => void) => () => void;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   className?: string;
 }> {
@@ -118,9 +118,17 @@ export class DateTimeEditor extends React.Component<{
           await this.handleInputBlur(event)();
         });
     }
+    this.props.onMount?.(value => {
+      if (this.elmInput) {
+        this.elmInput.value = value;
+        const event = {target: this.elmInput};
+        this.handleTextFieldChange(event);
+      }
+    });
   }
 
   componentWillUnmount() {
+    this.props.onEditorBlur?.({target: this.elmInput});
     this.disposers.forEach((d) => d());
   }
 
@@ -130,7 +138,7 @@ export class DateTimeEditor extends React.Component<{
         this.editorModel.dirtyTextualValue = "";
       }
     });
-    this.editorState.value = this.props.value;
+    this.editorState.initialValue = this.props.value;
   }
 
   @action.bound
@@ -174,8 +182,12 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Escape") {
-      this.setShowFormatHint(false);
+    if (event.key === "Escape" || event.key === "Tab") {
+      this.setShowFormatHint(false)
+      if(this.elmDropdowner?.isDropped){
+        event.closedADropdown = true;
+        this.elmDropdowner.setDropped(false);
+      }
     }
     this.editorModel.handleKeyDown(event);
   }
@@ -267,6 +279,7 @@ export class DateTimeEditor extends React.Component<{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
                     }}
+                    autoComplete={"new-password"}
                     className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
                     type="text"
                     onBlur={event => this.handleInputBlur(event)()}
@@ -280,6 +293,7 @@ export class DateTimeEditor extends React.Component<{
                     onClick={this.props.onClick}
                     onDoubleClick={this.props.onDoubleClick}
                     onKeyDown={this.handleKeyDown}
+                    onDragStart={(e: any) =>  e.preventDefault()}
                   />
                 </>
               )}
@@ -324,6 +338,7 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
+          autoComplete={"new-password"}
           title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
           type="text"
@@ -336,6 +351,7 @@ export class DateTimeEditor extends React.Component<{
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onKeyDown={this.handleKeyDown}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       </div>
     );

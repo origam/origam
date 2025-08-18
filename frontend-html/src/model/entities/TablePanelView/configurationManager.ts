@@ -123,7 +123,7 @@ export class ConfigurationManager implements IConfigurationManager {
     this.activeTableConfiguration.updateColumnWidth(propertyId, width);
   }
 
-  *onColumnOrderChanged(): Generator {
+  *onColumnOrderChanged() {
     if (!this.defaultTableConfiguration.isActive) {
       return;
     }

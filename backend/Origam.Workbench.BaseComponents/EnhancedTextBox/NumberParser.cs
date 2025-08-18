@@ -21,53 +21,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+public class NumberParser
 {
-    public class NumberParser
+    private readonly Type ValueType;
+    private readonly Func<string, object> textParseFunc;
+    private readonly IErrorReporter errorReporter;
+    
+    public NumberParser(Func<string,object> textParseFunc,
+        IErrorReporter errorReporter) 
     {
-        private readonly Type ValueType;
-        private readonly Func<string, object> textParseFunc;
-        private readonly IErrorReporter errorReporter;
-        
-        public NumberParser(Func<string,object> textParseFunc,
-            IErrorReporter errorReporter) 
+        this.textParseFunc = textParseFunc;
+        ValueType = GetValueType(textParseFunc); 
+        this.errorReporter = errorReporter;
+    }
+    public object Parse(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return 0;
+        try
         {
-            this.textParseFunc = textParseFunc;
-            ValueType = GetValueType(textParseFunc); 
-            this.errorReporter = errorReporter;
-        }
-
-        public object Parse(string text)
+            return textParseFunc.Invoke(text);
+        } catch (OverflowException) 
         {
-            if (string.IsNullOrEmpty(text)) return 0;
-            try
-            {
-                return textParseFunc.Invoke(text);
-            } catch (OverflowException) 
-            {
-                // TODO: fix error message tooltip which does not show up above 
-                // the textBox (commented lines below)
+            // TODO: fix error message tooltip which does not show up above 
+            // the textBox (commented lines below)
 //                errorReporter.NotifyInputError($"The value {text} " +
 //                                 $"is too big or too small for {ValueType.Name}");
-                throw;
-            } catch (FormatException)
-            {
-                errorReporter.NotifyInputError($"Cannot parse \"{text}\" to" +
-                                               $" {ValueType.Name}");
-                return "";
-            }
+            throw;
+        } catch (FormatException)
+        {
+            errorReporter.NotifyInputError($"Cannot parse \"{text}\" to" +
+                                           $" {ValueType.Name}");
+            return "";
         }
-
-        private Type GetValueType(Func<string, object> textParseFunc){
-            try
-            {
-               return  textParseFunc.Invoke("1").GetType();
-            } 
-            catch 
-            {
-                throw new ArgumentException(
-                    "textParseFunc cannot parse numeric values");
-            }
+    }
+    private Type GetValueType(Func<string, object> textParseFunc){
+        try
+        {
+           return  textParseFunc.Invoke("1").GetType();
+        } 
+        catch 
+        {
+            throw new ArgumentException(
+                "textParseFunc cannot parse numeric values");
         }
     }
 }

@@ -21,9 +21,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { action, computed, observable } from "mobx";
-import S from "./TreeView.module.css";
+import S from "./TreeView.module.scss";
 import cx from "classnames";
 import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeDataTable";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class TreeView extends React.Component<{ dataView: IDataView }> {
@@ -71,7 +72,13 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   expanded: string[] = []
 
   onRowClick(node: Node) {
-    this.props.dataView.setSelectedRowId(node.id);
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this.props.dataView,
+      generator: function*(){
+        yield*self.props.dataView.setSelectedRowId  (node.id);
+      }()
+    })
   }
 
   onCaretClick(node: Node) {

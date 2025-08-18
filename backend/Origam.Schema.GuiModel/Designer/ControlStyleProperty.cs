@@ -23,39 +23,32 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+[SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
+[HelpTopic("Styles")]
+[XmlModelRoot(CategoryConst)]
+public class ControlStyleProperty : AbstractSchemaItem
 {
-    [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
-    [HelpTopic("Styles")]
-    [XmlModelRoot(CategoryConst)]
-    public class ControlStyleProperty : AbstractSchemaItem
+    public const string CategoryConst = "ControlStyleProperty";
+    public ControlStyleProperty() : base() { }
+    public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
+    public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
+    #region Overriden ISchemaItem Members
+    public override string ItemType
     {
-        public const string CategoryConst = "ControlStyleProperty";
-
-        public ControlStyleProperty() : base() { }
-
-        public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
-
-        public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
-
-        #region Overriden AbstractSchemaItem Members
-        public override string ItemType
+        get
         {
-            get
-            {
-                return ControlStyleProperty.CategoryConst;
-            }
+            return ControlStyleProperty.CategoryConst;
         }
-
-        public override SchemaItemCollection ChildItems
-        {
-            get
-            {
-                return new SchemaItemCollection();
-            }
-        }
-        #endregion
-
     }
+    public override ISchemaItemCollection ChildItems
+    {
+        get
+        {
+            return SchemaItemCollection.Create();
+        }
+    }
+    #endregion
 }

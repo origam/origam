@@ -21,53 +21,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+/// <summary>
+/// Summary description for XPathRule.
+/// </summary>
+[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
+[ClassMetaVersion("6.0.0")]
+public class XPathRule : AbstractRule
 {
-	/// <summary>
-	/// Summary description for XPathRule.
-	/// </summary>
-	[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class XPathRule : AbstractRule
+	public XPathRule() : base() {}
+	public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public XPathRule(Key primaryKey) : base(primaryKey)	{}
+	public override ISchemaItemCollection ChildItems
 	{
-		public XPathRule() : base() {}
-
-		public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public XPathRule(Key primaryKey) : base(primaryKey)	{}
-
-		public override SchemaItemCollection ChildItems
+		get
 		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
+			return SchemaItemCollection.Create();
 		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		#region Properties
-		[XmlAttribute("xPath")]
-#if !NETSTANDARD
-        [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
-#endif
-        public string XPath { get; set; } = "";
-
-		[DefaultValue(false)] 
-        [XmlAttribute("isPathRelative")]
-		public override bool IsPathRelative { get; set; } = false;
-		#endregion
-
 	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
+		base.GetExtraDependencies (dependencies);
+	}
+	#region Properties
+	[XmlAttribute("xPath")]
+#if !NETSTANDARD
+    [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
+#endif
+    public string XPath { get; set; } = "";
+	[DefaultValue(false)] 
+    [XmlAttribute("isPathRelative")]
+	public override bool IsPathRelative { get; set; } = false;
+	#endregion
 }

@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "ThrottlingItemsPerInterval" Integer NOT NULL CONSTRAINT "DF_WorkQueue_ThrottlingItemsPerInterval" DEFAULT 10;
+ALTER TABLE "WorkQueue" ALTER COLUMN "ThrottlingItemsPerInterval" DROP DEFAULT;

@@ -29,104 +29,93 @@ using Origam.Schema.GuiModel;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for EntitySecurityRule.
+/// </summary>
+[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
+[HelpTopic("Report+Action")]
+[ClassMetaVersion("6.0.0")]
+public class EntityReportAction : EntityUIAction
 {
-	/// <summary>
-	/// Summary description for EntitySecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
-    [HelpTopic("Report+Action")]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityReportAction : EntityUIAction
-	{
-		public EntityReportAction() : base() {}
+	public EntityReportAction() : base() {}
+	public EntityReportAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityReportAction(Key primaryKey) : base(primaryKey)	{}
 
-		public EntityReportAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityReportAction(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractDataEntityColumn Members
 	
-		#region Overriden AbstractDataEntityColumn Members
-		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Report);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override IList<string> NewTypeNames
-		{
-			get
-			{
-				try
-				{
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent("DataService", null, null);
-					return agent.ExpectedParameterNames(this.Report, "LoadData", "Parameters");
-				}
-				catch
-				{
-					return new string[] {};
-				}
-			}
-		}
-		#endregion
-
-		#region Properties
-		[Browsable(false)]
-		public override PanelActionType ActionType
-		{
-			get
-			{
-				return PanelActionType.Report;
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		public Guid ReportId;
-
-		[Category("References")]
-		[TypeConverter(typeof(ReportConverter))]
-        [XmlReference("report", "ReportId")]
-		[NotNullModelElementRule]
-		public AbstractReport Report
-		{
-			get
-			{
-				return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
-			}
-			set
-			{
-				this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		private DataReportExportFormatType _exportFormatType;
-		[Category("Data Report")]
-		[Description("Export Format Type")]
-        [XmlAttribute("exportFormatType")]
-		public DataReportExportFormatType ExportFormatType
-		{
-			get
-			{
-				return _exportFormatType;
-			}
-			set
-			{
-				_exportFormatType = value;
-			}
-		}
-		#endregion
 	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.Report);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override IList<string> NewTypeNames
+	{
+		get
+		{
+			try
+			{
+				IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
+				IServiceAgent agent = agents.GetAgent("DataService", null, null);
+				return agent.ExpectedParameterNames(this.Report, "LoadData", "Parameters");
+			}
+			catch
+			{
+				return new string[] {};
+			}
+		}
+	}
+	#endregion
+	#region Properties
+	[Browsable(false)]
+	public override PanelActionType ActionType
+	{
+		get
+		{
+			return PanelActionType.Report;
+		}
+		set
+		{
+			throw new InvalidOperationException();
+		}
+	}
+	public Guid ReportId;
+	[Category("References")]
+	[TypeConverter(typeof(ReportConverter))]
+    [XmlReference("report", "ReportId")]
+	[NotNullModelElementRule]
+	public AbstractReport Report
+	{
+		get
+		{
+			return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
+		}
+		set
+		{
+			this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	private DataReportExportFormatType _exportFormatType;
+	[Category("Data Report")]
+	[Description("Export Format Type")]
+    [XmlAttribute("exportFormatType")]
+	public DataReportExportFormatType ExportFormatType
+	{
+		get
+		{
+			return _exportFormatType;
+		}
+		set
+		{
+			_exportFormatType = value;
+		}
+	}
+	#endregion
 }

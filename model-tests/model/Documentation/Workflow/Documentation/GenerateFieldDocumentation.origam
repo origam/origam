@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="22c88a92-4cc1-46fa-9ace-81420a9ba723"
+    asi:name="GenerateFieldDocumentation"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="cdcb7a92-02f1-4afd-a7fa-785c56deeaaf"
+      cs:isReturnValue="true"
+      asi:name="OrigamFieldDocumentation"
+      cs:structure="Documentation/DataStructure/Documentation/OrigamFieldDocumentation.origam#OrigamFieldDocumentation/214c9cf7-5459-45e2-b3ff-7ee813bb85f4" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="5f2d4fc4-2f9d-43ba-912e-a6d7eb4d1119"
+      asi:name="0100_GetDatabaseFieldsMetaData"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Documentation/Workflow/Documentation/GenerateFieldDocumentation.origam#GenerateFieldDocumentation/OrigamFieldDocumentation/cdcb7a92-02f1-4afd-a7fa-785c56deeaaf"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/ModelService.origam#ModelService/92d3277e-dabc-4093-bd25-bc010078b925"
+      smct:serviceMethod="Root/Service/ModelService.origam#ModelService/GetDatabaseFieldsMetaData/ea57fd1a-d89f-474f-83ae-720052afb30c" />
+  </w:Workflow>
+</x:file>

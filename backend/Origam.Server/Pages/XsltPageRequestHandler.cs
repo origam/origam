@@ -19,27 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-#region license
-/*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
-
-This file is part of ORIGAM.
-
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
-*/
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,282 +29,321 @@ using System.Data;
 using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.JSON;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Collections;
-using Origam.Server;
 using System.Linq;
-using MoreLinq;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
-using Origam.Schema;
 using Origam.Service.Core;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+
+internal class XsltPageRequestHandler : AbstractPageRequestHandler
 {
-    class XsltPageRequestHandler : AbstractPageRequestHandler
+    private const string MimeJson = "application/json";
+    private const string MimeHtml = "text/html";
+
+    public override void Execute(
+        AbstractPage page, 
+        Dictionary<string, object> parameters, 
+        IRequestWrapper request, 
+        IResponseWrapper response)
     {
-        private const string MIME_JSON = "application/json";
-        private const string MIME_HTML = "text/html";
-        private const string MIME_OCTET_STREAM = "application/octet-stream";
-
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+        var xsltPage = page as XsltDataPage;
+        var persistenceService = ServiceManager.Services
+            .GetService<IPersistenceService>();
+        var ruleEngine = RuleEngine.Create(
+            contextStores:null, transactionId:null);
+        var transformParams = new Hashtable();
+        var queryParameterCollection = new QueryParameterCollection();
+        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
+        foreach (KeyValuePair<string, object> parameter in parameters)
         {
-            XsltDataPage xsltPage = page as XsltDataPage;
-            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            IXsltEngine transformer = null;
-            RuleEngine ruleEngine = RuleEngine.Create(null, null);
-            Hashtable transformParams = new Hashtable();
-            QueryParameterCollection qparams = new QueryParameterCollection();
-            Hashtable preprocessorParams = GetPreprocessorParameters(request);
-
-            // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
-            foreach (KeyValuePair<string, object> p in parameters)
+            queryParameterCollection.Add(
+                new QueryParameter(parameter.Key, parameter.Value));
+            transformParams.Add(parameter.Key, parameter.Value);
+        }
+        // copy also the preprocessor parameters to the transformation parameters
+        foreach (DictionaryEntry parameter in preprocessorParams)
+        {
+            transformParams.Add(parameter.Key, parameter.Value);
+        }
+        Validate(data:null, transformParams, ruleEngine, 
+            xsltPage!.InputValidationRule);
+        if (xsltPage.DisableConstraintForInputValidation)
+        {
+            // reenable constraints for context parameter
+            foreach (KeyValuePair<string, object> parameter in parameters)
             {
-                qparams.Add(new QueryParameter(p.Key, p.Value));
-                transformParams.Add(p.Key, p.Value);
+                if (parameter.Value is IDataDocument dataDocument)
+                {
+                    dataDocument.DataSet.EnforceConstraints = true;
+                } 
             }
-
-            // copy also the preprocessor parameters to the transformation parameters
-            foreach (DictionaryEntry rp in preprocessorParams)
+        }
+        IXmlContainer xmlData;
+        DataSet data = null;
+        var isProcessed = false;
+        bool xpath = !string.IsNullOrEmpty(xsltPage.ResultXPath);
+        if (xsltPage.DataStructure == null)
+        {
+            // no data source
+            xmlData = new XmlContainer("<ROOT/>");
+        }
+        else
+        {
+            data = CoreServices.DataService.Instance.LoadData(
+                xsltPage.DataStructureId, 
+                xsltPage.DataStructureMethodId, 
+                defaultSetId:Guid.Empty, 
+                xsltPage.DataStructureSortSetId, 
+                transactionId:null, 
+                queryParameterCollection);
+            if ((request.HttpMethod != "DELETE") 
+                && (request.HttpMethod != "PUT"))
             {
-                transformParams.Add(rp.Key, rp.Value);
+                if (xsltPage.ProcessReadFieldRowLevelRulesForGetRequests)
+                {
+                    ProcessReadFieldRuleState(data, ruleEngine);
+                }
             }
-
-			Validate(null, transformParams, ruleEngine, xsltPage.InputValidationRule);
-			if (xsltPage.DisableConstraintForInputValidation)
-			{
-				// reenable constraints for context parameter
-				foreach (KeyValuePair<string, object> p in parameters)
-				{
-					if (p.Value as IDataDocument != null)
-					{
-						(p.Value as IDataDocument).DataSet.EnforceConstraints = true;
-					} 
-				}
-			}
-
-            IXmlContainer xmlData;
-            DataSet data = null;
-            bool isProcessed = false;
-            bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
-
-            if (xsltPage.DataStructure == null)
+            if ((xsltPage.Transformation == null) 
+                && !xpath 
+                && (page.MimeType == MimeJson)
+                && (request.HttpMethod != "DELETE") 
+                && (request.HttpMethod != "PUT"))
             {
-                // no data source
-                xmlData = new XmlContainer("<ROOT/>");
+                // pure dataset > json serialization
+                response.WriteToOutput(textWriter 
+                    => JsonUtils.SerializeToJson(
+                        textWriter, 
+                        data, 
+                        xsltPage.OmitJsonRootElement,
+                        xsltPage.OmitJsonMainElement
+                    ));
+                xmlData = null;
+                isProcessed = true;
             }
             else
             {
-                data = core.DataService.Instance.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
-                if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                xmlData = DataDocumentFactory.New(data);
+            }
+            switch (request.HttpMethod)
+            {
+                case "DELETE":
                 {
-                    if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
-                    {
-                        ProcessReadFieldRuleState(data, ruleEngine);
-                    }
+                    HandleDelete(xsltPage, data, transformParams, ruleEngine);
+                    return;
                 }
-                if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
-                    && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                case "PUT":
                 {
-                    // pure dataset > json serialization
-                    response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
-                    xmlData = null;
+                    HandlePut(parameters, xsltPage, (IDataDocument)xmlData, 
+                        transformParams, ruleEngine);
+                    return;
+                }
+            }
+        }
+        IXmlContainer result;
+        if (!isProcessed)
+        {
+            if (xsltPage.Transformation == null)
+            {
+                // no transformation
+                result = xmlData;
+            }
+            else
+            {
+                var transformer =
+                    new CompiledXsltEngine(persistenceService.SchemaProvider);
+                result = transformer.Transform(xmlData,
+                    xsltPage.TransformationId,
+                    retransformationId:new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
+                    parameters:transformParams, 
+                    transactionId:null, 
+                    retransformationParameters:preprocessorParams,
+                    xsltPage.TransformationOutputStructure, 
+                    validateOnly:false);
+                // pure dataset > json serialization
+                if ((result is IDataDocument resultDataDocument) 
+                    && !xpath 
+                    && (page.MimeType == MimeJson))
+                {
+                    response.WriteToOutput(textWriter 
+                        => JsonUtils.SerializeToJson(
+                            textWriter, 
+                            resultDataDocument.DataSet, 
+                            xsltPage.OmitJsonRootElement,
+                            xsltPage.OmitJsonMainElement));
                     isProcessed = true;
                 }
-                else
-                {
-                    xmlData = DataDocumentFactory.New(data);
-                }
-
-                if (request.HttpMethod == "DELETE")
-                {
-                    HandleDELETE(xsltPage, data, transformParams, ruleEngine);
-                    return;
-                }
-
-                if (request.HttpMethod == "PUT")
-                {
-                    HandlePUT(parameters, xsltPage, (IDataDocument)xmlData, transformParams, ruleEngine);
-                    return;
-                }
-                
             }
-
-            IXmlContainer result = null;
-
             if (!isProcessed)
             {
-                if (xsltPage.Transformation == null)
+                if (xpath)
                 {
-                    // no transformation
-                    result = xmlData;
+                    // subset of the returned xml - json | html not supported
+                    // it is mainly used for extracting pure text out of the result xml
+                    // so json | html serialization would have to be produced by the
+                    // xslt or stored directly in the resulting data
+                    XPathNavigator xPathNavigator 
+                        = result.Xml.CreateNavigator();
+                    xPathNavigator!.Select(xsltPage.ResultXPath);
+                    byte[] bytes = Encoding.UTF8.GetBytes(xPathNavigator.Value);
+                    response.AddHeader(
+                        "Content-Length", 
+                        bytes.LongLength.ToString());
+                    response.BinaryWrite(bytes);
                 }
                 else
                 {
-                    transformer = AsTransform.GetXsltEngine(
-                        persistence.SchemaProvider, xsltPage.TransformationId);
-                    result = transformer.Transform(xmlData,
-                        xsltPage.TransformationId,
-                        new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
-                        transformParams, null, preprocessorParams,
-                        xsltPage.TransformationOutputStructure, false);
-
-                    IDataDocument resultDataDocument = result as IDataDocument;
-                    // pure dataset > json serialization
-                    if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
+                    if (page.MimeType == MimeJson)
                     {
-                        response.WriteToOutput(textWriter =>
-                            JsonUtils.SerializeToJson(textWriter, resultDataDocument.DataSet, false));
-                        isProcessed = true;
-                    }
-                }
-                if (!isProcessed)
-                {
-                    if (xpath)
-                    {
-                        // subset of the returned xml - json | html not supported
-                        // it is mainly used for extracting pure text out of the result xml
-                        // so json | html serialization would have to be produced by the
-                        // xslt or stored directly in the resulting data
-                        XPathNavigator nav = result.Xml.CreateNavigator();
-                        nav.Select(xsltPage.ResultXPath);
-                        byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
-                        response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                        response.BinaryWrite(bytes);
+                        response.WriteToOutput(textWriter 
+                            => JsonUtils.SerializeToJson(
+                                textWriter, 
+                                result.Xml, 
+                                xsltPage.OmitJsonRootElement,
+                                xsltPage.OmitJsonMainElement));
                     }
                     else
                     {
-                        if (page.MimeType == MIME_JSON)
+                        if (page.MimeType == MimeHtml)
                         {
-                            response.WriteToOutput(textWriter =>
-                                JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
+                            response.Write("<!DOCTYPE html>");
                         }
-                        else
-                        {
-                            if (page.MimeType == MIME_HTML)
-                            {
-                                response.Write("<!DOCTYPE html>");
-                            }
-                            response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
-                        }
+                        response.WriteToOutput(textWriter 
+                            => textWriter.Write(result.Xml.InnerXml));
                     }
-                }
-            }
-
-            if (Analytics.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
-            {
-                if (xmlData == null)
-                {
-                    xmlData = DataDocumentFactory.New(data);
-                }
-                Type type = this.GetType();
-                IXsltEngine logTransformer = AsTransform.GetXsltEngine(
-                    persistence.SchemaProvider, xsltPage.LogTransformationId);
-                IXmlContainer log = logTransformer.Transform(
-                    xmlData, xsltPage.LogTransformationId, transformParams, 
-                    null, null, false);
-
-                XPathNavigator nav = log.Xml.CreateNavigator();
-                XPathNodeIterator iter = nav.Select("/ROOT/LogContext");
-                while (iter.MoveNext())
-                {
-                    Dictionary<string, string> properties = new Dictionary<string, string>();
-                    XPathNavigator current = iter.Current;
-                    string message;
-                    if (current.Value == string.Empty)
-                    {
-                        message = "DATA_ACCESS";
-                    }
-                    else
-                    {
-                        message = current.Value;
-                    }
-                    current.MoveToFirstAttribute();
-                    do
-                    {
-                        properties[current.Name] = current.Value;
-                    } while (current.MoveToNextAttribute());
-                    Analytics.Instance.Log(type, message, properties);
                 }
             }
         }
+        if (!Analytics.Instance.IsAnalyticsEnabled
+            || (xsltPage.LogTransformation == null))
+        {
+            return;
+        }
+        xmlData ??= DataDocumentFactory.New(data);
+        Type type = GetType();
+        IXsltEngine logTransformer =
+            new CompiledXsltEngine(persistenceService.SchemaProvider);
+        IXmlContainer log = logTransformer.Transform(
+            xmlData, 
+            xsltPage.LogTransformationId, 
+            transformParams, 
+            transactionId:null, 
+            outputStructure:null, 
+            validateOnly:false);
+        XPathNavigator logXPathNavigator = log.Xml.CreateNavigator();
+        XPathNodeIterator xPathNodeIterator 
+            = logXPathNavigator!.Select("/ROOT/LogContext");
+        while (xPathNodeIterator.MoveNext())
+        {
+            var properties = new Dictionary<string, string>();
+            XPathNavigator currentNode = xPathNodeIterator.Current;
+            string message = currentNode!.Value == string.Empty 
+                ? "DATA_ACCESS" : currentNode.Value;
+            currentNode.MoveToFirstAttribute();
+            do
+            {
+                properties[currentNode.Name] = currentNode.Value;
+            } while (currentNode.MoveToNextAttribute());
+            Analytics.Instance.Log(type, message, properties);
+        }
+    }
         
-        private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
+    private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
+    {
+        DataTableCollection dataTables = data.Tables;
+        var persistence = ServiceManager.Services
+            .GetService<IPersistenceService>();
+        foreach (DataTable dataTable in dataTables)
         {
-            DataTableCollection datatables = data.Tables;
-            object profileId = SecurityTools.CurrentUserProfile().Id;
-            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-            foreach (DataTable dt in datatables)
+            var entityId = (Guid)dataTable.ExtendedProperties["EntityId"]!;
+            IDataEntity entity = persistence.SchemaProvider
+                .RetrieveInstance<IDataEntity>(entityId);
+            if (!entity.HasEntityAFieldDenyReadRule())
             {
-                Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
-                IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
-
-                if (entity.HasEntityAFieldDenyReadRule())
+                continue;
+            }
+            // we do this to disable constrains if column is AllowDBNull = false,
+            // in order to allow field to be set DBNull if it has Deny Read rule. 
+            dataTable.Columns.Cast<DataColumn>().ToList().ForEach(
+                column => column.AllowDBNull = true );
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                RowSecurityState rowSecurity = RowSecurityStateBuilder
+                    .BuildWithoutRelationsAndActions(ruleEngine, dataRow);
+                if (rowSecurity == null)
                 {
-                    //we do this for disable contrains if column is AllowDBNull = false.
-                    //for allow field set Dbnull if has Deny Read rule. 
-                    dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
-                    foreach (DataRow dataRow in dt.Rows)
-                    {
-                        RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
-                        if (rowSecurity != null)
-                        {
-                            List<FieldSecurityState> listState = rowSecurity.Columns.Cast<FieldSecurityState>().Where(columnState => !columnState.AllowRead).ToList();
-                            foreach (FieldSecurityState securityState in listState)
-                            {
-                                dataRow[securityState.Name] = DBNull.Value;
-                            }
-                        }
-                    }
+                    continue;
+                }
+                List<FieldSecurityState> listState = rowSecurity.Columns.Where(
+                        columnState => !columnState.AllowRead).ToList();
+                foreach (FieldSecurityState securityState in listState)
+                {
+                    dataRow[securityState.Name] = DBNull.Value;
                 }
             }
         }
+    }
 
-        private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
+    private static void HandlePut(
+        Dictionary<string, object> parameters, 
+        XsltDataPage xsltPage, 
+        IDataDocument data, 
+        Hashtable transformParams, 
+        RuleEngine ruleEngine)
+    {
+        Validate(data, transformParams, ruleEngine, 
+            xsltPage.SaveValidationBeforeMerge);
+        string bodyKey = parameters.Keys.FirstOrDefault(
+            key => parameters[key] is IDataDocument);
+        if (bodyKey == null)
         {
-            Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
-            
-            string bodyKey = null;
-            foreach (string key in parameters.Keys)
-            {
-                if (parameters[key] is IDataDocument)
-                {
-                    bodyKey = key;
-                    break;
-                }
-            }
-            if (bodyKey == null)
-            {
-                throw new Exception(Resources.ErrorPseudoparameterBodyNotDefined);
-            }
-            UserProfile profile = SecurityManager.CurrentUserProfile();
-            DataSet original = (parameters[bodyKey] as IDataDocument).DataSet;
-            MergeParams mergeParams = new MergeParams(profile.Id);
-            mergeParams.TrueDelete = true;
-            DatasetTools.MergeDataSet(data.DataSet, original, null, mergeParams);
-            
-            Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationAfterMerge);
-
-            core.DataService.Instance.StoreData(xsltPage.DataStructureId, data.DataSet, false, null);
-            return;
+            throw new Exception(Resources.ErrorPseudoparameterBodyNotDefined);
         }
+        UserProfile profile = SecurityManager.CurrentUserProfile();
+        DataSet original = (parameters[bodyKey] as IDataDocument)?.DataSet;
+        var mergeParams = new MergeParams(profile.Id)
+            {
+                TrueDelete = true
+            };
+        DatasetTools.MergeDataSet(
+            inout_dsTarget:data.DataSet, 
+            in_dsSource:original, 
+            changeList:null, 
+            mergeParams);
+        Validate(data, transformParams, ruleEngine, 
+            xsltPage.SaveValidationAfterMerge);
+        CoreServices.DataService.Instance.StoreData(
+            xsltPage.DataStructureId, 
+            data.DataSet, 
+            loadActualValuesAfterUpdate:false, 
+            transactionId:null);
+    }
 
-        private static void HandleDELETE(XsltDataPage xsltPage, DataSet data, Hashtable transformParams, RuleEngine ruleEngine)
+    private static void HandleDelete(
+        XsltDataPage xsltPage, 
+        DataSet data, 
+        Hashtable transformParams, 
+        RuleEngine ruleEngine)
+    {
+        IXmlContainer xmlContainer = new XmlContainer();
+        xmlContainer.Xml.LoadXml(data.GetXml());
+        Validate(xmlContainer, transformParams, ruleEngine, 
+            xsltPage.SaveValidationBeforeMerge);
+        foreach (DataTable table in data.Tables)
         {
-            IXmlContainer xmldoc = new XmlContainer();
-            xmldoc.Xml.LoadXml(data.GetXml());
-            Validate(xmldoc, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
-
-            foreach (DataTable table in data.Tables)
+            foreach (DataRow row in table.Rows)
             {
-                foreach (DataRow row in table.Rows)
-                {
-                    row.Delete();
-                }
+                row.Delete();
             }
-            core.DataService.Instance.StoreData(xsltPage.DataStructureId, data, false, null);
-            return;
         }
+        CoreServices.DataService.Instance.StoreData(
+            xsltPage.DataStructureId, 
+            data, 
+            loadActualValuesAfterUpdate:false, 
+            transactionId:null);
     }
 }

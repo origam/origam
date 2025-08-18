@@ -37,6 +37,11 @@ export function ValueBox<T>() {
     _active = false;
   }
 
+  function isSet() {
+    return _active;
+  }
+
+  get.isSet = isSet;
   get.get = get;
   get.set = set;
   get.clear = clear;

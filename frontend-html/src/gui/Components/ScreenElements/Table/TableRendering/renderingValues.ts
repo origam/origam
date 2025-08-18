@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ValueBox } from "./common/ValueBox";
-import { IClickSubsItem, IMouseOverSubsItem, ITableRow } from "./types";
+import { IClickSubsItem, IMouseMoveSubsItem, IMouseOverSubsItem, ITableRow } from "./types";
 import { Memoized } from "./common/Memoized";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -51,6 +51,13 @@ export function getCurrentRowRightBorderDrawn() {
 }
 
 export const rowId = () => dataTable().getRowId(currentDataRow());
+
+export const isLastRow = () => {
+  const rows = dataTable().rows;
+  if (rows.length === 0) return false;
+  const lastRowId = dataTable().getRowId(rows[rows.length-1]);
+  return lastRowId === rowId();
+}
 
 export const selectionColumnShown = () => getIsSelectionCheckboxesShown(context());
 
@@ -140,7 +147,7 @@ scRenderTable.push(() => {
   clickSubscriptions.clear();
 });
 
-export const mouseMoveSubscriptions = ValueBox<IClickSubsItem[]>();
+export const mouseMoveSubscriptions = ValueBox<IMouseMoveSubsItem[]>();
 scRenderTable.push(() => {
   mouseMoveSubscriptions.clear();
 });

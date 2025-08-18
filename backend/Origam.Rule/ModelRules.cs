@@ -27,51 +27,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+public class ModelRules
 {
-    public class ModelRules
+    public static List<Dictionary<ISchemaItem, string>> GetErrors(
+        List<AbstractSchemaItemProvider> schemaProviders,
+        FilePersistenceService independentPersistenceService,
+        CancellationToken cancellationToken)
     {
-        public static List<Dictionary<IFilePersistent, string>> GetErrors(
-            List<AbstractSchemaItemProvider> schemaProviders,
-            FilePersistenceService independentPersistenceService,
-            CancellationToken cancellationToken)
-        {
-            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
-                    .SchemaProvider
-                    .RetrieveList<IFilePersistent>()
-                    .OfType<AbstractSchemaItem>()
-                    .AsParallel()
-                    .Select(retrievedObj => {
-                        retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
-                        cancellationToken.ThrowIfCancellationRequested();
-                        return retrievedObj;
-                    })
-                    .AsParallel()
-                    .Select(retrievedObj =>
+        List<Dictionary<ISchemaItem, string>> errorFragments = independentPersistenceService
+                .SchemaProvider
+                .RetrieveList<IFilePersistent>()
+                .OfType<ISchemaItem>()
+                .AsParallel()
+                .Select(retrievedObj => {
+                    retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
+                    cancellationToken.ThrowIfCancellationRequested();
+                    return retrievedObj;
+                })
+                .AsParallel()
+                .Select(retrievedObj =>
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
+                        .Select(exception => exception.Message)
+                        .ToList();
+                    if (errorMessages.Count == 0) return null;
+                    return new Dictionary<ISchemaItem, string>
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        var errorMessages = RuleTools.GetExceptions(retrievedObj)
-                            .Select(exception => exception.Message)
-                            .ToList();
-                        if (errorMessages.Count == 0) return null;
-
-                        return new Dictionary<IFilePersistent, string>
-                        {
-                            { retrievedObj, string.Join("\n", errorMessages) }
-                        };
-                    })
-                    .Where(x => x != null)
-                    .ToList();
-            return errorFragments;
-        }
-
-        private static bool BelongsToProvider(
-            ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
-        {
-            return String.Compare(
-                retrievedObj.ItemType, 
-                ((AbstractSchemaItemProvider)provider).RootItemType,
-                true) == 0;
-        }
+                        { retrievedObj, string.Join("\n", errorMessages) }
+                    };
+                })
+                .Where(x => x != null)
+                .ToList();
+        return errorFragments;
+    }
+    private static bool BelongsToProvider(
+        ISchemaItemProvider provider, ISchemaItem retrievedObj)
+    {
+        return String.Compare(
+            retrievedObj.ItemType, 
+            ((AbstractSchemaItemProvider)provider).RootItemType,
+            true) == 0;
     }
 }

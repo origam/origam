@@ -24,6 +24,7 @@ import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
 import cx from "classnames";
+import { formatTooltipPlaintext } from "gui/Components/ToolTip/FormatTooltipText";
 
 const MIN_COLUMN_WIDTH = 30;
 
@@ -38,6 +39,7 @@ export class Header extends React.Component<{
   columnIndex: number;
   orderingDirection: IOrderByDirection;
   orderingOrder: number;
+  tooltip?: string
   additionalHeaderContent?: () => React.ReactNode;
   onColumnWidthChange: (id: string, newWidth: number) => void;
   onColumnWidthChangeFinished: (id: string, newWidth: number) => void;
@@ -96,11 +98,18 @@ export class Header extends React.Component<{
         draggableId={this.props.id}
         index={this.props.columnIndex}
         key={this.props.id}
-        isDragDisabled={this.props.isDragDisabled}
+        isDragDisabled={true}
       >
         {(provided) => this.renderHeader(provided)}
       </Draggable>
     );
+  }
+
+  getTooltip() {
+    const formattedTooltip = formatTooltipPlaintext(this.props.tooltip);
+    return formattedTooltip 
+      ? formattedTooltip 
+      : this.props.label;
   }
 
   private renderHeader(provided?: DraggableProvided) {
@@ -113,7 +122,7 @@ export class Header extends React.Component<{
         onClick={(event) => this.onHeaderClick(event)}
         className={cx(S.header, "headerClickable")}
         style={this.makeHeaderStyle()}
-        title={this.props.label}
+        title={this.getTooltip()}
       >
         <div
           className={cx(S.inHeaderRow, "headerClickable")}>

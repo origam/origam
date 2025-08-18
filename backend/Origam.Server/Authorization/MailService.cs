@@ -29,94 +29,91 @@ using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Configuration;
 
-namespace Origam.Server.Authorization
+namespace Origam.Server.Authorization;
+class MailService : IMailService
 {
-    class MailService : IMailService
+    private AccountMailSender mailSender;
+    private LanguageConfig languageConfig;
+    public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, 
+        IConfiguration configuration)
     {
-        private AccountMailSender mailSender;
-        private LanguageConfig languageConfig;
-        public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, 
-            IConfiguration configuration)
-        {
-            this.languageConfig = languageConfig;
-            string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
-                ?.Replace(";",",")
-                ?.Split(",")
-                ?.FirstOrDefault(url => url.StartsWith("https")) 
-                ?? throw new ArgumentException("Could not find server's https url");
-            mailSender = new AccountMailSender(
-                portalBaseUrl: baseUrl,
-                registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
-                fromAddress: userConfig.Value.FromAddress,
-                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
-                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
-                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
-                resetPwdBodyFilename: GetDefaultResetPasswordFileName(),
-                resetPwdSubject: GetDefaultResetPasswordSubject(),
-                mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
-                mfaSubject: userConfig.Value.MultiFactorMailSubject,
-                applicationBasePath: AppContext.BaseDirectory,
-                mailQueueName: userConfig.Value.MailQueueName); 
-        }
-        private string GetDefaultResetPasswordSubject()
-        {
-                return languageConfig.CultureItems.Where(cultname => 
-                        cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
-                        .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
-                        FirstOrDefault();
-        }
-        private string GetDefaultResetPasswordFileName()
-        {
+        this.languageConfig = languageConfig;
+        string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
+            ?.Replace(";",",")
+            ?.Split(",")
+            ?.FirstOrDefault(url => url.StartsWith("https")) 
+            ?? throw new ArgumentException("Could not find server's https url");
+        mailSender = new AccountMailSender(
+            portalBaseUrl: baseUrl,
+            registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
+            fromAddress: userConfig.Value.FromAddress,
+            registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
+            userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
+            userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
+            resetPwdBodyFilename: GetDefaultResetPasswordFileName(),
+            resetPwdSubject: GetDefaultResetPasswordSubject(),
+            mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
+            mfaSubject: userConfig.Value.MultiFactorMailSubject,
+            applicationBasePath: AppContext.BaseDirectory,
+            mailQueueName: userConfig.Value.MailQueueName); 
+    }
+    private string GetDefaultResetPasswordSubject()
+    {
             return languageConfig.CultureItems.Where(cultname => 
                     cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
-                    .Select(cultname => { return cultname.ResetPasswordMailBodyFileName; }).
+                    .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
                     FirstOrDefault();
-
-        }
-        public void SendPasswordResetToken(IOrigamUser user, string token,
-            int tokenValidityHours)
-        {
-            SetResetPasswordItems();
-            mailSender.SendPasswordResetToken(
-                username: user.UserName,
-                name: user.Name,
-                email: user.Email,
-                languageId: user.LanguageId.ToString(),
-                firstName: user.FirstName,
-                token: token,
-                tokenValidityHours: tokenValidityHours,
-                resultMessage: out string _);
-        }
-
-        private void SetResetPasswordItems()
-        {
-            mailSender.ResetPasswordSubject = GetDefaultResetPasswordSubject();
-            mailSender.ResetPasswordBodyFilename = GetDefaultResetPasswordFileName();
-        }
-        public void SendNewUserToken(IOrigamUser user, string token)
-        {
-            SetResetPasswordItems();
-            mailSender.SendNewUserToken(
-                userId: user.BusinessPartnerId,
-                email: user.Email,
-                username: user.UserName,
-                name: user.Name,
-                firstName: user.FirstName,
-                token: token);
-        }
-        public void SendMultiFactorAuthCode(IOrigamUser user, string token)
-        {
-            mailSender.SendMultiFactorAuthCode(
-                email: user.Email,
-                code: token);
-        }
-        public void SendUserUnlockedMessage(IOrigamUser user)
-        {
-            mailSender.SendUserUnlockingNotification(
-                username: user.UserName,
-                email: user.Email,
-                firstNameAndName: user.FirstName + " " + user.Name,
-                languageId: user.LanguageId.ToString());
-        }
+    }
+    private string GetDefaultResetPasswordFileName()
+    {
+        return languageConfig.CultureItems.Where(cultname => 
+                cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
+                .Select(cultname => { return cultname.ResetPasswordMailBodyFileName; }).
+                FirstOrDefault();
+    }
+    public void SendPasswordResetToken(IOrigamUser user, string token,
+        string returnUrl, int tokenValidityHours)
+    {
+        SetResetPasswordItems();
+        mailSender.SendPasswordResetToken(
+            username: user.UserName,
+            name: user.Name,
+            email: user.Email,
+            languageId: user.LanguageId.ToString(),
+            firstName: user.FirstName,
+            returnUrl: returnUrl,
+            token: token,
+            tokenValidityHours: tokenValidityHours,
+            resultMessage: out string _);
+    }
+    private void SetResetPasswordItems()
+    {
+        mailSender.ResetPasswordSubject = GetDefaultResetPasswordSubject();
+        mailSender.ResetPasswordBodyFilename = GetDefaultResetPasswordFileName();
+    }
+    public void SendNewUserToken(IOrigamUser user, string token)
+    {
+        SetResetPasswordItems();
+        mailSender.SendNewUserToken(
+            userId: user.BusinessPartnerId,
+            email: user.Email,
+            username: user.UserName,
+            name: user.Name,
+            firstName: user.FirstName,
+            token: token);
+    }
+    public void SendMultiFactorAuthCode(IOrigamUser user, string token)
+    {
+        mailSender.SendMultiFactorAuthCode(
+            email: user.Email,
+            code: token);
+    }
+    public void SendUserUnlockedMessage(IOrigamUser user)
+    {
+        mailSender.SendUserUnlockingNotification(
+            username: user.UserName,
+            email: user.Email,
+            firstNameAndName: user.FirstName + " " + user.Name,
+            languageId: user.LanguageId.ToString());
     }
 }

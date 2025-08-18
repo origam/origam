@@ -165,6 +165,8 @@ export class DropdownColumnDrivers {
   @observable
   allDrivers: IDropdownColumnDriver[] = [];
 
+  customFieldStyle: { [key: string]: string } | undefined;
+
   driversFilter = (driver: IDropdownColumnDriver) => {
     return true;
   };

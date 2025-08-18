@@ -21,6 +21,7 @@ import { TypeSymbol } from "dic/Container";
 import { IDataTable } from "model/entities/types/IDataTable";
 import { IProperty } from "model/entities/types/IProperty";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class DataViewData {
   constructor(
@@ -33,7 +34,6 @@ export class DataViewData {
     const dataTable = this.dataTable();
     const property = this.propertyById(propertyId);
     const row = dataTable.getRowById(rowId);
-    //dataTable.resolveCellText(property, value)
     if (property && row) {
       return dataTable.getCellValue(row, property);
     } else return null;
@@ -53,12 +53,12 @@ export class DataViewData {
     } else return false;
   }
 
-  setNewValue(rowId: string, propertyId: string, value: any) {
+  async setNewValue(rowId: string, propertyId: string, value: any) {
     const dataTable = this.dataTable();
     const row = dataTable.getRowById(rowId);
     const property = this.propertyById(propertyId);
     if (property && row) {
-      onFieldChange(property)({
+      await onFieldChange(property)({
         event: undefined,
         row: row,
         property: property,

@@ -40,8 +40,10 @@ import { IInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/Infini
 import { IAggregation } from "./IAggregation";
 import { GridFocusManager } from "../GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
+import {ITabIndexOwner} from "../TabIndexOwner";
+import { IResponseOperation } from "model/actions/DataLoading/processCRUDResult";
 
-export interface IDataViewData {
+export interface IDataViewData extends ITabIndexOwner {
   id: string;
   modelInstanceId: string;
   name: string;
@@ -102,6 +104,7 @@ export interface IDataView extends IDataViewData {
   bindingParent: IDataView | undefined;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
+  rowIdForImmediateDeletion: string | undefined;
   selectedRowIndex: number | undefined;
   trueSelectedRowIndex: number | undefined;
   totalRowCount: number | undefined;
@@ -131,9 +134,9 @@ export interface IDataView extends IDataViewData {
 
   setSelectedState(rowId: string, newState: boolean): void;
 
-  selectNextRow(): void;
+  selectNextRow(): Generator;
 
-  selectPrevRow(): void;
+  selectPrevRow(): Generator;
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
 
@@ -141,15 +144,15 @@ export interface IDataView extends IDataViewData {
 
   loadLastPage(): Generator;
 
-  selectFirstRow(): void;
+  selectFirstRow(): Generator;
 
-  selectLastRow(): void;
+  selectLastRow(): Generator;
 
-  reselectOrSelectFirst(): void;
+  reselectOrSelectFirst(): Generator;
 
-  selectRow(row: any[]): void;
+  selectRow(row: any[]): Generator;
 
-  setSelectedRowId(id: string | undefined): void;
+  setSelectedRowId(id: string | undefined): Generator<any>;
 
   focusFormViewControl(fieldId: string): void;
 
@@ -157,9 +160,11 @@ export interface IDataView extends IDataViewData {
 
   appendRecords(rows: any[][]): void;
 
-  substituteRecord(row: any[]): void;
+  substituteRecords(rows: any[]): void;
 
-  deleteRowAndSelectNext(row: any[]): void;
+  deleteRowAndSelectNext(row: any[]): Generator<any>;
+
+  getRowIndexById(rowId: any): number | undefined;
 
   clear(): void;
 
@@ -167,7 +172,7 @@ export interface IDataView extends IDataViewData {
 
   saveViewState(): void;
 
-  restoreViewState(): void;
+  restoreViewState():  Generator;
 
   start(): void;
 
@@ -200,6 +205,10 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 
   isLazyLoading: Boolean;
+
+  updateSelectedIds(): void;
+
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 }
 
 export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;

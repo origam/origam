@@ -86,7 +86,7 @@ public class UserApiTokenAuthenticationMiddleware
         }
         else
         {
-            context.Response.StatusCode = 401;
+            await _next(context);
             return;
         }
         await _next(context);
@@ -95,15 +95,15 @@ public class UserApiTokenAuthenticationMiddleware
 
 class OrigamAuthenticationFeatures : IAuthenticateResultFeature, IHttpAuthenticationFeature
 {
-    private ClaimsPrincipal? _user;
-    private AuthenticateResult? _result;
+    private ClaimsPrincipal _user;
+    private AuthenticateResult _result;
 
     public OrigamAuthenticationFeatures(AuthenticateResult result)
     {
         AuthenticateResult = result;
     }
 
-    public AuthenticateResult? AuthenticateResult
+    public AuthenticateResult AuthenticateResult
     {
         get => _result;
         set
@@ -113,7 +113,7 @@ class OrigamAuthenticationFeatures : IAuthenticateResultFeature, IHttpAuthentica
         }
     }
 
-    public ClaimsPrincipal? User
+    public ClaimsPrincipal User
     {
         get => _user;
         set

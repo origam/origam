@@ -22,12 +22,14 @@ import { bodyCellClass } from "./CellsCommon";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import { TypeSymbol } from "dic/Container";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
+import Highlighter from "react-highlight-words";
 
 export class TextCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private driverState: IDriverState
+    private driverState: IDriverState,
+    private customStyle?: {[key: string]: string} | undefined
   ) {
   }
 
@@ -40,6 +42,10 @@ export class TextCellDriver implements IBodyCellDriver {
 
   render(rowIndex: number) {
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
+    if(rowId === null || rowId === ""){
+      console.error("There are rows with missing identifier in the dropdown. This causes confusing row coloring. Fix your model!")
+    }
+
     return (
       <div
         className={bodyCellClass(
@@ -47,12 +53,17 @@ export class TextCellDriver implements IBodyCellDriver {
           this.driverState.chosenRowId === rowId,
           this.driverState.cursorRowId === rowId
         )}
+        style={this.customStyle}
         onClick={(e) => {
           this.driverState.handleTableCellClicked(e, rowIndex)
         }
         }
       >
-        {this.formattedText(rowIndex)}
+      <Highlighter
+        searchWords={[this.dataTable.filterPhrase]}
+        textToHighlight={this.formattedText(rowIndex)}
+        autoEscape={true}
+      />
       </div>
     );
   }

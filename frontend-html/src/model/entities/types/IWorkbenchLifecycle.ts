@@ -21,7 +21,9 @@ import { IDialogInfo, IOpenedScreen } from "./IOpenedScreen";
 import { IMainMenuItemType } from "./IMainMenu";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { IPortalSettings } from "model/entities/types/IPortalSettings";
-import { EventHandler } from "@origam/utils";
+import { EventHandler } from "utils/EventHandler";
+import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
@@ -50,18 +52,26 @@ export interface IWorkbenchLifecycle {
   logoUrl: string | undefined;
   customAssetsRoute: string | undefined;
   portalSettings: IPortalSettings | undefined;
-
+  keyBuffer: KeyBuffer;
   mainMenuItemClickHandler: EventHandler;
 
-  openNewForm(
-    id: string,
-    type: IMainMenuItemType,
-    label: string,
-    isLazyLoading: boolean,
-    dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any },
-    parentContext: any,
-    additionalRequestParameters?: object | undefined
+  openNewForm(args: {
+      id: string,
+      type: IMainMenuItemType,
+      label: string,
+      isLazyLoading: boolean,
+      dialogInfo: IDialogInfo | undefined,
+      parameters: { [key: string]: any },
+      parentContext?: any,
+      requestParameters?: object | undefined,
+      formSessionId?: string,
+      isSessionRebirth?: boolean,
+      isSleepingDirty?: boolean,
+      refreshOnReturnType?: IRefreshOnReturnType,
+      isSingleRecordEdit?: boolean,
+      newRecordInitialValues?: {[p:string]: string},
+      onClose?: ()=> void
+    }
   ): Generator;
 
   openNewUrl(url: string, title: string): Generator;

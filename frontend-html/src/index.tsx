@@ -42,18 +42,21 @@ import 'moment/dist/locale/fr-ca.js';
 import 'moment/dist/locale/cs';
 import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ArrayPrototypes } from "@origam/utils"
 import {
-  isAddRecordShortcut,
+  isAddRecordShortcut, 
+  isCycleSectionsShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
-  isFilterRecordShortcut
+  isFilterRecordShortcut,
+  isSaveShortcut
 } from "utils/keyShortcuts";
 
 if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
+}
+if ("virtualKeyboard" in navigator) {
+  (navigator.virtualKeyboard as any).overlaysContent = true;
 }
 
 (window as any).ORIGAM_CUSTOM_CLIENT_BUILD = import.meta.env.VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
@@ -72,9 +75,11 @@ function disableAutoZoomingOnIPhone(){
 function disableCollidingBrowserShortcuts() {
   const ignoreShortcuts = (event: KeyboardEvent) => {
     if (
+      isCycleSectionsShortcut(event) ||
       isAddRecordShortcut(event) ||
       isDuplicateRecordShortcut(event) ||
       isDeleteRecordShortcut(event) ||
+      isSaveShortcut(event) ||
       isFilterRecordShortcut(event)
     ) {
       event.preventDefault();

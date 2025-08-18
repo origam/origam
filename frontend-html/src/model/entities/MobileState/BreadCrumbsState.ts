@@ -1,3 +1,21 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { action, computed, observable } from "mobx";
 import { IFormScreen } from "model/entities/types/IFormScreen";
@@ -89,6 +107,25 @@ export class BreadCrumbsState {
       onClick: () => {},
       disabled: false
     });
+  }
+
+  @computed
+  get visibleNodes(){
+    return (this.activeBreadCrumbList ?? [])
+      .filter(x => x.isVisible());
+  }
+
+  get canGoBack() {
+    return this.visibleNodes.length >= 2;
+  }
+
+  @action
+  goBack(){
+    if(!this.canGoBack){
+      return;
+    }
+    const previousElement = this.visibleNodes[this.visibleNodes!.length - 2];
+    previousElement.onClick();
   }
 
   onFormClose(formScreen: IFormScreen) {

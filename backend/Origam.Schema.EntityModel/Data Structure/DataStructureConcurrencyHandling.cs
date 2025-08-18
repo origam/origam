@@ -19,11 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+public enum DataStructureConcurrencyHandling
 {
-    public enum DataStructureConcurrencyHandling
-    {
-        Standard,
-        LastWins
-    }
+    Standard,
+    LastWins
 }

@@ -22,14 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 using Origam.Workbench.BaseComponents;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+public class BigArrowToolStripDropDownButton : ToolStripDropDownButton
 {
-    public class BigArrowToolStripDropDownButton : ToolStripDropDownButton
+    public BigArrowToolStripDropDownButton()
     {
-        public BigArrowToolStripDropDownButton()
-        {
-            ShowDropDownArrow = false;
-            Image = ImageRes.Arrow;
-        }
+        ShowDropDownArrow = false;
+        Image = ImageRes.Arrow;
     }
 }

@@ -52,6 +52,11 @@ import { IConfigurationManager } from "model/entities/TablePanelView/types/IConf
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { hasSelectedRowId, setSelectedStateRowId } from "model/actions-tree/selectionCheckboxes";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -78,12 +83,15 @@ export class TablePanelView implements ITablePanelView {
   @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number,
     Map<number, ICellRectangle>>();
 
+  expandEditorAfterMounting = false;
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
+
+  @observable property: IProperty | undefined = undefined;
 
   @observable _currentTooltipText?: string = undefined;
   @computed get currentTooltipText() {
@@ -165,9 +173,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): any {
+  *onCellClick(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}): any {
     const dataView = getDataView(this);
-    const rowId = this.dataTable.getRowId(row);
+    const rowId = this.dataTable.getRowId(args.row);
 
     getTablePanelView(this).setEditing(false);
     yield*flushCurrentRowData(this)();
@@ -180,61 +188,59 @@ export class TablePanelView implements ITablePanelView {
       }
     }
     if(isMobileLayoutActive(dataView)){
-      yield*this.onCellClickInternalMobile(event, row, columnId, isControlInteraction);
+      yield*this.onCellClickInternalMobile(args);
       yield dataView.activateFormView!({saveNewState: false});
     }else{
-      yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+      yield*this.onCellClickInternal(args);
     }
   }
 
-  *onCellClickInternalMobile(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
-    const property = this.propertyMap.get(columnId)!;
-    if (property.column !== "CheckBox" || !isControlInteraction) {
+  *onCellClickInternalMobile(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean}) {
+    const property = this.propertyMap.get(args.columnId)!;
+    if (property.column !== "CheckBox" || !args.isControlInteraction) {
       this.setEditing(false);
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+      yield*this.selectCell(this.dataTable.getRowId(args.row) as string, property.id);
     } else {
-      const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(rowId, columnId);
+      const rowId = this.dataTable.getRowId(args.row);
+      yield*this.selectCellAsync(rowId, args.columnId);
     }
     if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();
     }
   }
 
-  *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
-    const property = this.propertyMap.get(columnId)!;
-    if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
-        yield*getDataView(this).navigateLookupLink(property, row);
+  *onCellClickInternal(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}) {
+    const property = this.propertyMap.get(args.columnId)!;
+    if (property.column !== "CheckBox" || !args.isControlInteraction) {
+      if (property.isLink && property.column !== "TagInput" && (args.event.ctrlKey || args.event.metaKey)) {
+        yield*this.selectCellAsync(this.dataTable.getRowId(args.row) as string, property.id);
+        yield*getDataView(this).navigateLookupLink(property, args.row);
       } else {
-        if (this.dataTable.getRowId(row) === this.selectedRowId) {
-          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+        if (this.dataTable.getRowId(args.row) === this.selectedRowId) {
+          yield*this.selectCell(this.dataTable.getRowId(args.row) as string, property.id);
+          if(args.isDoubleClick && property.column === "ComboBox") {
+            this.expandEditorAfterMounting = true;
+          }
           this.setEditing(true);
         } else {
-          const {isEditing} = this;
-          if (isEditing) {
-            this.setEditing(false);
-          }
-          yield*this.selectCellAsync(this.dataTable.getRowId(row) as string, property.id);
-          if (isEditing) {
-            this.setEditing(true);
-          }
+          this.setEditing(false);
+          yield*this.selectCellAsync(this.dataTable.getRowId(args.row) as string, property.id);
         }
       }
     } else {
-      const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(rowId, columnId);
+      const rowId = this.dataTable.getRowId(args.row);
+      yield*this.selectCellAsync(rowId, args.columnId);
 
       if (!isReadOnly(property!, rowId)) {
         yield*onFieldChangeG(this)({
           event: undefined,
-          row: row,
+          row: args.row,
           property: property,
-          value: !getCellValue(this, row, property),
+          value: !getCellValue(this, args.row, property),
         });
       }
     }
-    if (!getGroupingConfiguration(this).isGrouping) {
+    if (!getGroupingConfiguration(this).isGrouping && !(args.event.ctrlKey || args.event.metaKey)) {
       this.scrollToCurrentCell();
     }
   }
@@ -245,9 +251,7 @@ export class TablePanelView implements ITablePanelView {
     if (dataView.selectedRowId === rowId) {
       return;
     }
-    yield dataView.lifecycle.runRecordChangedReaction(function*() {
-      yield dataView.setSelectedRowId(rowId);
-    });
+    yield*dataView.setSelectedRowId(rowId);
   }
 
   *onNoCellClick() {
@@ -256,6 +260,166 @@ export class TablePanelView implements ITablePanelView {
       yield*flushCurrentRowData(this)();
     }
   }
+
+
+  lastSelectionRowIdUnderMouse: any = undefined;
+  windowMouseMoveDeadPeriod = false;
+  @observable shiftPressed = false;
+  @observable ctrlOrCmdPressed = false;
+  @observable selectionCellHoveredId: any = undefined;
+  @observable selectionTargetState: boolean = true;
+  @observable lastSelectedRowId: any = undefined;
+
+  @computed get isMultiSelectEnabled() {
+    return !(
+      this.groupingConfiguration.isGrouping ||
+      isLazyLoading(this) && !!getSelectionMember(this)
+    )
+  }
+
+  @computed get selectionInProgress() {
+    return this.isMultiSelectEnabled && this.shiftPressed;
+  }
+
+  @computed get selectionRangeIndex0() {
+    if(this.isMultiSelectEnabled && this.lastSelectedRowId !== undefined) {
+      const dataTable = getDataTable(this);
+      return dataTable.getExistingRowIdxById(this.lastSelectedRowId)
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed get selectionRangeIndex1() {
+    if(this.isMultiSelectEnabled && this.selectionCellHoveredId !== undefined) {
+      const dataTable = getDataTable(this);
+      return dataTable.getExistingRowIdxById(this.selectionCellHoveredId);
+    } else {
+      return undefined;
+    }
+  }
+
+  windowMouseMoveDeadPeriodTimerHandle: any;
+  *onSelectionCellMouseMove(event: any, row: any[], rowId: any) {
+    if(this.lastSelectionRowIdUnderMouse !== rowId) {
+      if(this.lastSelectionRowIdUnderMouse) {
+        yield* this.onSelectionCellMouseOut(event, this.lastSelectionRowIdUnderMouse)
+      }
+      yield* this.onSelectionCellMouseIn(event, rowId)
+    }
+    this.lastSelectionRowIdUnderMouse = rowId;
+    this.windowMouseMoveDeadPeriod = true;
+    clearTimeout(this.windowMouseMoveDeadPeriodTimerHandle);
+    this.windowMouseMoveDeadPeriodTimerHandle = setTimeout(() => {
+      this.windowMouseMoveDeadPeriod = false;
+    }, 0)
+  }
+
+  *onSelectionCellClick(event: any, row: any[], rowId: any) {
+    const dataTable = getDataTable(this);
+    const rowsToSelect: {id: any, row: any[]}[] = [];
+    if(this.isMultiSelectEnabled && event.shiftKey && this.lastSelectedRowId !== undefined) {
+        const rowRangeStart = dataTable.getExistingRowIdxById(this.lastSelectedRowId);
+        const rowRangeEnd = dataTable.getExistingRowIdxById(rowId);
+        if(rowRangeStart !== undefined && rowRangeEnd !== undefined) {
+          for(
+            let i = Math.min(rowRangeStart, rowRangeEnd); 
+            i <= Math.max(rowRangeStart, rowRangeEnd); 
+            i++
+          ) {
+            const rowItem = dataTable.getRowByExistingIdx(i)
+            const rowItemId = dataTable.getRowId(rowItem);
+            rowsToSelect.push({row: rowItem, id: rowItemId})
+          }
+        } else {
+          rowsToSelect.push({row, id: rowId})
+        }
+    } else {
+      rowsToSelect.push({row, id: rowId});
+    }
+
+    if(rowsToSelect.length > 0) {
+      this.lastSelectedRowId = rowsToSelect.slice(-1)[0].id;
+    }
+
+    const newSelectionState = rowsToSelect.length === 1 
+      ? !this.getIsRowSelected(rowId, row) 
+      : this.selectionTargetState;
+
+    if (rowsToSelect.length === 1) {
+      this.selectionTargetState = newSelectionState;
+    }
+    
+    const selectionMember = getSelectionMember(this);
+    if (!!selectionMember) {
+      const dataSourceField = getDataSourceFieldByName(this, selectionMember);
+      if (dataSourceField) {
+        for (let rowToSelect of rowsToSelect) {
+          dataTable.setDirtyValue(rowToSelect.row, selectionMember, newSelectionState);
+        }
+        yield*getFormScreenLifecycle(this).onFlushData();
+        for (let rowToSelect of rowsToSelect) {
+          const updatedRow = dataTable.getRowById(rowToSelect.id)!;
+          const updatedSelectionState = dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
+          yield*setSelectedStateRowId(this)(rowToSelect.id, updatedSelectionState);
+        }
+      }
+    } else {
+      for (let rowToSelect of rowsToSelect) {
+        yield*setSelectedStateRowId(this)(rowToSelect.id, newSelectionState);
+      }
+    }
+  }
+
+
+  getIsRowSelected(rowId: any, row: any[]) {
+    const dataTable = getDataTable(this);
+    const selectionMember = getSelectionMember(this);
+    if(!!selectionMember) {
+      const dataSourceField = getDataSourceFieldByName(this, selectionMember);  
+      return !!dataSourceField && dataTable.getCellValueByDataSourceField(row, dataSourceField);
+    } else {
+      return hasSelectedRowId(this, rowId)
+    }
+  }
+
+
+  *onWindowMouseMove(event: any) {
+    if(!event.shiftKey) {
+      this.shiftPressed = false;
+    }
+    if(!this.windowMouseMoveDeadPeriod) {
+      if(this.lastSelectionRowIdUnderMouse !== undefined) {
+        yield* this.onSelectionCellMouseOut(event, this.lastSelectionRowIdUnderMouse)
+        this.lastSelectionRowIdUnderMouse = undefined;
+      }
+    }
+  }
+  
+  *onSelectionCellMouseIn(event: any, rowId: any) {
+    this.selectionCellHoveredId = rowId;
+  }
+
+  *onSelectionCellMouseOut(event: any, rowId: any) {
+    this.selectionCellHoveredId = undefined;
+  }
+
+  *onWindowKeyDown(event: any) {
+    if (event.key == 'Shift')
+      this.shiftPressed = true;
+
+    else if (event.ctrlKey || event.metaKey)
+      this.ctrlOrCmdPressed = true;
+  }
+
+  *onWindowKeyUp(event: any) {
+    if (event.key == 'Shift')
+      this.shiftPressed = false;
+
+    else if (!event.ctrlKey && !event.metaKey)
+      this.ctrlOrCmdPressed = false;
+  }
+
 
   @action.bound
   handleTableScroll(event: any, scrollTop: number, scrollLeft: number) {
@@ -270,6 +434,7 @@ export class TablePanelView implements ITablePanelView {
         if(!_this.isScrollByKeyboard) {
           _this.setEditing(false);
         }
+        _this.isScrollByKeyboard = false;
         yield*flushCurrentRowData(_this)();
       }
     })();
@@ -281,10 +446,11 @@ export class TablePanelView implements ITablePanelView {
     if (event.key === "Tab" || event.key === "Enter") {
       clearTimeout(this.hScrollDead);
       this.isScrollByKeyboard = true;
-      this.hScrollDead = setTimeout(() => {
-        this.isScrollByKeyboard = false;
-      });
     }
+  }
+
+  onMouseMoveOutsideCells() {
+    this.currentTooltipText = undefined;
   }
 
   dontHandleNextScroll() {
@@ -298,9 +464,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound selectCell(rowId: string | undefined, columnId: string | undefined) {
+  *selectCell(rowId: string | undefined, columnId: string | undefined): Generator {
     this.selectedColumnId = columnId;
-    getDataView(this).setSelectedRowId(rowId);
+    yield*getDataView(this).setSelectedRowId(rowId);
   }
 
   isFirstColumnSelected(): boolean {
@@ -324,7 +490,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  selectNextColumn(nextRowWhenEnd?: boolean): void {
+  *selectNextColumn(nextRowWhenEnd?: boolean) {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -334,7 +500,7 @@ export class TablePanelView implements ITablePanelView {
         this.setSelectedColumnId(newProp.id);
       } else if (nextRowWhenEnd && properties.length > 1) {
         const rowId = getSelectedRowId(this);
-        getDataView(this).selectNextRow();
+        yield*getDataView(this).selectNextRow();
         if (rowId !== getSelectedRowId(this)) {
           this.selectFirstColumn();
         }
@@ -342,8 +508,7 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound
-  selectPrevColumn(prevRowWhenStart?: boolean): void {
+  *selectPrevColumn(prevRowWhenStart?: boolean) {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -353,7 +518,7 @@ export class TablePanelView implements ITablePanelView {
         this.setSelectedColumnId(newProp.id);
       } else if (prevRowWhenStart && properties.length > 1) {
         const rowId = getSelectedRowId(this);
-        getDataView(this).selectPrevRow();
+        yield*getDataView(this).selectPrevRow();
         if (rowId !== getSelectedRowId(this)) {
           this.selectLastColumn();
         }
@@ -380,7 +545,14 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   setEditing(state: boolean): void {
+    if(state && !this.selectedColumnId){
+      const properties = getTableViewProperties(this);
+      this.setSelectedColumnId(properties[0].id);
+    }
     this.isEditing = state;
+    if(!this.isEditing){
+      this.expandEditorAfterMounting = false;
+    }
   }
 
   @action.bound
@@ -409,8 +581,9 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound scrollToCurrentRow() {
     const rowIdx = getSelectedRowIndex(this);
+    const columnIndex = getSelectedColumnIndex(this);
     if (rowIdx !== undefined) {
-      this.triggerOnScrollToCellShortest(rowIdx, 0);
+      this.triggerOnScrollToCellShortest(rowIdx, columnIndex ? columnIndex : 0);
     }
   }
 

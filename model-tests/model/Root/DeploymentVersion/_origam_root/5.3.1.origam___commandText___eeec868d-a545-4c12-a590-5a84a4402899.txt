@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "refWorkQueueRetryTypeId" Uuid NOT NULL CONSTRAINT "DF_WorkQueue_refWorkQueueRetryTypeId" DEFAULT '69460bcf-81d4-4a97-94f7-5a391d16f771';
+ALTER TABLE "WorkQueue" ALTER COLUMN "refWorkQueueRetryTypeId" DROP DEFAULT;

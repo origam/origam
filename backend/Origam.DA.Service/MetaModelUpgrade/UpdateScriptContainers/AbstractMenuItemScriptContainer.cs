@@ -25,26 +25,23 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+class AbstractMenuItemScriptContainer : UpgradeScriptContainer
 {
-    class AbstractMenuItemScriptContainer : UpgradeScriptContainer
+    public override string FullTypeName { get; } = "Origam.Schema.MenuModel.AbstractMenuItem";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+    public AbstractMenuItemScriptContainer()
     {
-        public override string FullTypeName { get; } = "Origam.Schema.MenuModel.AbstractMenuItem";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
-
-        public AbstractMenuItemScriptContainer()
-        {
-            AddEmptyUpgrade("6.0.0", "6.0.1");
-            upgradeScripts.Add(
-                new UpgradeScript(
-                    new Version("6.0.1"),
-                    new Version("6.0.2"),
-                    (node, doc) =>
-                    {
-                        XNamespace newNameSpace= "http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2";
-                        node.Add(new XAttribute(newNameSpace+"order", 100));
-                    }));
-        }
+        AddEmptyUpgrade("6.0.0", "6.0.1");
+        upgradeScripts.Add(
+            new UpgradeScript(
+                new Version("6.0.1"),
+                new Version("6.0.2"),
+                (node, doc) =>
+                {
+                    XNamespace newNameSpace= "http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2";
+                    node.Add(new XAttribute(newNameSpace+"order", 100));
+                }));
     }
 }

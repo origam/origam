@@ -22,13 +22,23 @@ import { stopWorkQueues } from "./WorkQueues/stopWorkQueues";
 import { performLogout } from "./User/performLogout";
 import { T } from "utils/translation";
 import { flow } from "mobx";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function*handleError(error: any) {
+    const openedScreen = getOpenedScreen(ctx);
+    if(openedScreen){
+      const openedScreens = getOpenedScreens(openedScreen);
+      if (!openedScreens.items.includes(openedScreen)) {
+        // error on an already closed screen
+        return;
+      }
+    }
     if (error.response && error.response.status === 474) {
-      // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
+      // 474 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
       // finished (RowStates for example)
       return;
     }
@@ -43,7 +53,7 @@ export function handleError(ctx: any) {
     }
     if (error.response &&
         error.response.status === 404 &&
-        error.response.data.message.includes("Origam.Server.RowNotFoundException")) {
+        error.response.data.message.includes("row not found")) {
       yield*selectors.error.getDialogController(ctx).pushError(
         T(
           `The row you requested was not found on the server. Please refresh the data.`,
@@ -64,14 +74,14 @@ export function handleError(ctx: any) {
       );
       yield*performLogout(ctx)();
       return;
-    } else {
-      if (error[HANDLED]) {
-        yield error[HANDLED];
-        return;
-      }
-      const promise = flow(() => selectors.error.getDialogController(ctx).pushError(error))()
-      error[HANDLED] = promise;
-      yield promise;
     }
+    if (error[HANDLED]) {
+      yield error[HANDLED];
+      return;
+    }
+    const promise = flow(() => selectors.error.getDialogController(ctx).pushError(error))()
+    error[HANDLED] = promise;
+    yield promise;
+
   };
 }

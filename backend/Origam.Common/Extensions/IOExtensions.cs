@@ -26,144 +26,114 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class IOExtensions
 {
-    public static class IOExtensions
+    public static byte[] GetFileHash(this FileInfo fileInfo)
     {
-        public static byte[] GetFileHash(this FileInfo fileInfo)
+        using (MD5 md5 = MD5.Create())
         {
-            using (MD5 md5 = MD5.Create())
+            Exception lastException = null;
+            Stream stream = null;
+            for (int i = 0; i < 20; i++)
             {
-                Exception lastException = null;
-                Stream stream = null;
-                for (int i = 0; i < 20; i++)
+                try
                 {
-                    try
-                    {
-                        stream = fileInfo.OpenRead();
-                        return md5.ComputeHash(stream);
-                    }
-                    catch (IOException ex)
-                    {
-                        lastException = ex;
-                        Thread.Sleep(100);
-                    }
-                    finally
-                    {
-                        stream?.Dispose();
-                    }
+                    stream = fileInfo.OpenRead();
+                    return md5.ComputeHash(stream);
                 }
-                throw new Exception("Could not get hash of: "+fileInfo,
-                    lastException);
-            }
-        }
-
-        public static bool ExistsNow(this FileInfo file)
-        {
-            return File.Exists(file.FullName);
-        }
-
-        public static string GetFileBase64Hash(this FileInfo fileInfo)
-        {
-            return Convert.ToBase64String(GetFileHash(fileInfo));
-        }
-
-        public static IEnumerable<DirectoryInfo> GetAllSubDirectories(
-            this DirectoryInfo directory)
-        {
-            foreach (DirectoryInfo directoryInfo in directory.GetDirectories())
-            {
-                yield return directoryInfo;
-                foreach (DirectoryInfo subDirInfo in directoryInfo
-                    .GetAllSubDirectories())
+                catch (IOException ex)
                 {
-                    yield return subDirInfo;
+                    lastException = ex;
+                    Thread.Sleep(100);
+                }
+                finally
+                {
+                    stream?.Dispose();
                 }
             }
+            throw new Exception("Could not get hash of: "+fileInfo,
+                lastException);
         }
-
-        public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
+    }
+    public static bool ExistsNow(this FileInfo file)
+    {
+        return File.Exists(file.FullName);
+    }
+    public static string GetFileBase64Hash(this FileInfo fileInfo)
+    {
+        return Convert.ToBase64String(GetFileHash(fileInfo));
+    }
+    public static IEnumerable<DirectoryInfo> GetAllSubDirectories(
+        this DirectoryInfo directory)
+    {
+        foreach (DirectoryInfo directoryInfo in directory.GetDirectories())
         {
-            return !directory.Contains(fileName);
+            yield return directoryInfo;
+            foreach (DirectoryInfo subDirInfo in directoryInfo
+                .GetAllSubDirectories())
+            {
+                yield return subDirInfo;
+            }
         }
-
-        public static bool Contains(this DirectoryInfo directory, string fileName)
+    }
+    public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
+    {
+        return !directory.Contains(fileName);
+    }
+    public static bool Contains(this DirectoryInfo directory, string fileName)
+    {
+        return directory.Contains(file => file.Name == fileName);
+    }
+    public static bool Contains(this DirectoryInfo directory, Func<FileInfo,bool> predicate)
+    {
+        return directory
+            .GetFiles()
+            .Any(predicate);
+    }
+    public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(
+        this DirectoryInfo directory)
+    {
+        foreach (FileInfo fileInfo in directory.GetFiles())
         {
-            return directory.Contains(file => file.Name == fileName);
+            yield return fileInfo;
         }
-
-
-        public static bool Contains(this DirectoryInfo directory, Func<FileInfo,bool> predicate)
+        foreach (DirectoryInfo subDirInfo in
+            directory.GetAllSubDirectories())
         {
-            return directory
-                .GetFiles()
-                .Any(predicate);
-        }
-
-        public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(
-            this DirectoryInfo directory)
-        {
-            foreach (FileInfo fileInfo in directory.GetFiles())
+            foreach (FileInfo fileInfo in subDirInfo.GetFiles())
             {
                 yield return fileInfo;
             }
-            foreach (DirectoryInfo subDirinfo in
-                directory.GetAllSubDirectories())
-            {
-                foreach (FileInfo fileInfo in subDirinfo.GetFiles())
-                {
-                    yield return fileInfo;
-                }
-            }
         }
-
-        public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
-            DirectoryInfo other)
+    }
+    public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
+        DirectoryInfo other)
+    {
+        return IOTools.IsSubPathOf(other.FullName, thisDirInfo.FullName);
+    }
+    public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
+        string otherPath)
+    {
+        return IOTools.IsSubPathOf(otherPath, thisDirInfo.FullName);
+    }
+    public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
+    {
+        if (!dir.Exists) return;
+        foreach (FileInfo file in dir.GetAllFilesInSubDirectories())
         {
-            return IsOnPathOf(thisDirInfo.FullName, other.FullName);
+            File.SetAttributes(file.FullName, FileAttributes.Normal);
         }
-
-        public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
-            string otherPath)
-        {
-            return IsOnPathOf(thisDirInfo.FullName, otherPath);
-        }
-
-        private static bool IsOnPathOf(string path,
-            string otherPath)
-        {
-            string[] otherDirNames =
-                otherPath.Split(Path.DirectorySeparatorChar);
-
-            string[] thisDirNames = path
-                .Split(Path.DirectorySeparatorChar);
-
-            if (thisDirNames.Length > otherDirNames.Length) return false;
-
-            return !thisDirNames
-                .Where((dir, i) => dir != otherDirNames[i])
-                .Any();
-        }
-
-        public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
-        {
-            if (!dir.Exists) return;
-            foreach (FileInfo file in dir.GetAllFilesInSubDirectories())
-            {
-                File.SetAttributes(file.FullName, FileAttributes.Normal);
-            }
-            
-            dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
-            dir.Delete(true);
-        }
-
-        public static FileInfo MakeNew( this FileInfo file, string newExtension)
-        {
-            int extensionLength = file.Extension.Length;
-            int fullNameLength = file.FullName.Length;
-            string baseName = file.FullName.Substring(0,
-                fullNameLength - extensionLength);
-            return new FileInfo(baseName + "." + newExtension);  
-        }
+        
+        dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+        dir.Delete(true);
+    }
+    public static FileInfo MakeNew( this FileInfo file, string newExtension)
+    {
+        int extensionLength = file.Extension.Length;
+        int fullNameLength = file.FullName.Length;
+        string baseName = file.FullName.Substring(0,
+            fullNameLength - extensionLength);
+        return new FileInfo(baseName + "." + newExtension);  
     }
 }

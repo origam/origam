@@ -29,7 +29,7 @@ function format(dateTime: moment.Moment, expectedFormat: string): string {
   return dateTime.format(expectedFormat)
 }
 
-const dateCompleterUs = new DateCompleter(DateSequence.MonthDayYear, "M/D/YYYY h:mm:ss A", "/",
+const dateCompleterUs = new DateCompleter(DateSequence.MonthDayYear, "/",
   ":", " ", () => moment("3/15/2020", "M/D/YYYY"))
 
 test.each([
@@ -41,18 +41,19 @@ test.each([
   ["129 12", "12/9/2020 12:00:00 PM"],
   ["1209 12", "12/9/2020 12:00:00 PM"],
   ["12092020 123020", "12/9/2020 12:30:20 PM"],
-  ["5/5", "5/5/2020"],
-  ["5/5 14", "5/5/2020 2:00:00 PM"],
-  ["5/5 1430", "5/5/2020 2:30:00 PM"],
-  ["5/5 14:30", "5/5/2020 2:30:00 PM"],
-  ["5/5/16", "5/5/2016"],
-])('Should auto complete %s to: %s', (incompleteDate, expected) => {
+  ["6/5/2020", "6/5/2020"],
+  ["6/5", "6/5/2020"],
+  ["6/5 14", "6/5/2020 2:00:00 PM"],
+  ["6/5 1430", "6/5/2020 2:30:00 PM"],
+  ["6/5 14:30", "6/5/2020 2:30:00 PM"],
+  ["6/5/16", "6/5/2016"],
+])('Should auto complete %s to: %s using dateCompleterUs', (incompleteDate, expected) => {
   const momentValue = dateCompleterUs.autoComplete(incompleteDate)
   expect(format(momentValue!, "M/D/YYYY h:mm:ss A")).toBe(expected);
 });
 
 
-const dateCompleterCz = new DateCompleter(DateSequence.DayMonthYear, "DD.MM.YYYY h:mm:ss", ".",
+const dateCompleterCz = new DateCompleter(DateSequence.DayMonthYear, ".",
   ":", " ", () => moment("12/15/2017", "M/D/YYYY"))
 
 test.each([
@@ -65,7 +66,46 @@ test.each([
   ["09122020 123020", "09.12.2020 12:30:20"],
   ["5 ", "05.12.2017"],
   ["05 ", "05.12.2017"],
-])('Should auto complete %s to: %s', (incompleteDate, expected) => {
+  ["5.6", "05.06.2017"],
+  ["5.6.", "05.06.2017"],
+  ["5.6.2018", "05.06.2018"],
+  ["5.6 14", "05.06.2017 14:00:00"],
+  ["5.6 1430", "05.06.2017 14:30:00"],
+  ["5.6 14:30", "05.06.2017 14:30:00"],
+  ["5.6.16", "05.06.2016"],
+])('Should auto complete %s to: %s using dateCompleterCz', (incompleteDate, expected) => {
   const momentValue = dateCompleterCz.autoComplete(incompleteDate)
-  expect(format(momentValue!, "DD.MM.YYYY h:mm:ss")).toBe(expected);
+  expect(format(momentValue!, "DD.MM.YYYY HH:mm:ss")).toBe(expected);
+});
+
+test.each([
+  ["12:30"],
+  ["12:30:14"],
+  ["12:30:14.16"],
+])('Should not try to complete time alone using dateCompleterCz', (incompleteDate) => {
+  const momentValue = dateCompleterCz.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
+
+test.each([
+  ["12:30"],
+  ["12:30:14"],
+  ["12:30:14.16"],
+])('Should not try to complete time alone using dateCompleterUs', (incompleteDate) => {
+  const momentValue = dateCompleterUs.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
+
+test.each([
+  ["13. září 2020 10:00"],
+])('Should not try to complete time when input is in incompatible format using dateCompleterCz', (incompleteDate) => {
+  const momentValue = dateCompleterCz.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
+
+test.each([
+  ["13. september 2020 10:00"],
+])('Should not try to complete time when input is in incompatible format using dateCompleterUs', (incompleteDate) => {
+  const momentValue = dateCompleterUs.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
 });

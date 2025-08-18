@@ -27,7 +27,7 @@ export function getColumnHeaders(ctx: any): IColumnHeader[] {
   return tableViewProperties.map(prop => {
     const ordering = getPropertyOrdering(ctx, prop.id);
     return {
-      label: prop.name,
+      label: prop.gridCaption,
       id: prop.id,
       ordering: ordering.ordering,
       order: ordering.order

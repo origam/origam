@@ -17,9 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import S from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel.module.scss";
 import { T } from "utils/translation";
+import cx from "classnames";
+import { MultiGrid } from "react-virtualized";
+import { requestFocus } from "utils/focus";
 
 export const WorkflowFinishedPanel: React.FC<{
   isCloseButton: boolean;
@@ -27,11 +30,19 @@ export const WorkflowFinishedPanel: React.FC<{
   onCloseClick?(event: any): void;
   onRepeatClick?(event: any): void;
   message: string;
-}> = (props) => (
-  <div className={S.root}>
-    {props.isRepeatButton && <button onClick={props.onRepeatClick}>{T("Repeat", "button_repeat")}</button>}
-    {props.isCloseButton && <button onClick={props.onCloseClick}>{T("Close", "button_close")}</button>}
-    {/*<iframe className={S.message} srcDoc={} />*/}
-    <div className={S.message} dangerouslySetInnerHTML={{__html: `${props.message}`}}/>
-  </div>
-);
+}> = (props) => {
+  const repeatButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (repeatButton.current) {
+      requestFocus(repeatButton.current);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div className={S.root}>
+      {props.isRepeatButton && <button ref={repeatButton} onClick={props.onRepeatClick}>{T("Repeat", "button_repeat")}</button>}
+      {props.isCloseButton && <button onClick={props.onCloseClick}>{T("Close", "button_close")}</button>}
+      <div className={cx(S.message, "workflowMessage")} dangerouslySetInnerHTML={{__html: `${props.message}`}}/>
+    </div>)
+};

@@ -21,52 +21,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+public class NotificationBoxSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class NotificationBoxSchemaItemProvider : AbstractSchemaItemProvider
+	public NotificationBoxSchemaItemProvider() {}
+	#region ISchemaItemProvider Members
+	public override string RootItemType => NotificationBox.CategoryConst;
+	public override string Group => "UI";
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_19_notification-boxes.png";
+	public override string NodeText
 	{
-		public NotificationBoxSchemaItemProvider() {}
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType => NotificationBox.CategoryConst;
-
-		public override string Group => "UI";
-
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_19_notification-boxes.png";
-
-		public override string NodeText
-		{
-			get => "Notification Boxes";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(NotificationBox)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(NotificationBox) ?
-					"NewNotificationBox" : null);
-		}
-
-		#endregion
+		get => "Notification Boxes";
+		set => base.NodeText = value;
 	}
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		null;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(NotificationBox)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(NotificationBox) ?
+				"NewNotificationBox" : null);
+	}
+	#endregion
 }

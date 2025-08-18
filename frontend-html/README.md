@@ -5,7 +5,7 @@
 To build the app you need:
 
 - nodejs 14.*
-- yarn (any recent version should be fine)
+- yarn 4.5.0 (newer will probably be fine too)
 
 ### How to build
 
@@ -61,5 +61,15 @@ Emitted 'error' event on ChildProcess instance at:
 Try running it with the browser path specified:
 
 ```BROWSER=/usr/bin/firefox yarn start```
+
+#### Debug Constants
+You can set these constants in the browser's local storage:
+
+`debugNoPolling` will prevent work queue refresh from running
+
+`debugNoPolling_notificationBox` will prevent notifications refresh from running
+
+`debugNoPolling_chatrooms` will prevent chat refresh from running
+
 
 

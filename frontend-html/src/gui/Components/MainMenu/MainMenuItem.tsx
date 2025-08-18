@@ -24,13 +24,9 @@ import cx from "classnames";
 import S from "gui/Components/MainMenu/MainMenuItem.module.scss";
 
 export class MainMenuItem extends React.Component<{
-  /** Content to render as an icon. */
   icon: React.ReactNode;
-  /** Content to render as a label. */
   label: string;
-  /** Level of nestedness for making tree structured menus. */
   level: number;
-  /** Indicates that the item is currently active. */
   isActive: boolean;
   isHidden: boolean;
   isHighLighted?: boolean;

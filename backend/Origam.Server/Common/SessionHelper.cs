@@ -46,83 +46,69 @@ using System.Collections.Generic;
 using Origam.Schema.MenuModel;
 using Origam.Gui;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class SessionHelper
 {
-    public class SessionHelper
+    private readonly SessionManager sessionManager;
+    public SessionHelper(SessionManager sessionManager)
     {
-        private readonly SessionManager sessionManager;
-
-        public SessionHelper(SessionManager sessionManager)
+        this.sessionManager = sessionManager;
+    }
+    public void DeleteSession(Guid sessionFormIdentifier)
+    {
+        SessionStore ss = null;
+        // if session not found, we just remove it from the list of sessions
+        try
         {
-            this.sessionManager = sessionManager;
+            ss = sessionManager.GetSession(sessionFormIdentifier, true);
+            // if the form was a modal dialog that needs to pass data to its parent,
+            // we do it here
+            if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
+            {
+                SessionStore parentSession = sessionManager.GetSession(new Guid(ss.Request.ParentSessionId));
+                parentSession.PendingChanges = new List<ChangeInfo>();
+                EntityWorkflowAction ewa = UIActionTools.GetAction(
+                    ss.Request.SourceActionId) as EntityWorkflowAction;
+                var actionRunnerClient = new ServerEntityUIActionRunnerClient(
+                    sessionManager, parentSession);
+                actionRunnerClient.ProcessWorkflowResults(
+                    profile: SecurityTools.CurrentUserProfile(),
+                    processData: null,
+                    sourceData: ss.Data,
+                    targetData: parentSession.Data,
+                    entityWorkflowAction: ewa,
+                    changes: parentSession.PendingChanges);
+                actionRunnerClient.PostProcessWorkflowAction(
+                    data: parentSession.Data,
+                    entityWorkflowAction: ewa,
+                    changes: parentSession.PendingChanges);
+            }
+            ss.Dispose();
         }
-
-        public void DeleteSession(Guid sessionFormIdentifier)
+        catch
         {
-            SessionStore ss = null;
-
-            // if session not found, we just remove it from the list of sessions
-            try
+            if (ss != null && ss.IsModalDialog)
             {
-                ss = sessionManager.GetSession(sessionFormIdentifier, true);
-
-                // if the form was a modal dialog that needs to pass data to its parent,
-                // we do it here
-                if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
-                {
-                    SessionStore parentSession = sessionManager.GetSession(new Guid(ss.Request.ParentSessionId));
-                    parentSession.PendingChanges = new ArrayList();
-                    EntityWorkflowAction ewa = UIActionTools.GetAction(
-                        ss.Request.SourceActionId) as EntityWorkflowAction;
-
-                    var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-                        sessionManager, parentSession);
-
-                    actionRunnerClient.ProcessWorkflowResults(
-                        profile: SecurityTools.CurrentUserProfile(),
-                        processData: null,
-                        sourceData: ss.Data,
-                        targetData: parentSession.Data,
-                        entityWorkflowAction: ewa,
-                        changes: parentSession.PendingChanges);
-
-                    actionRunnerClient.PostProcessWorkflowAction(
-                        data: parentSession.Data,
-                        entityWorkflowAction: ewa,
-                        changes: parentSession.PendingChanges);
-                }
-
-                ss.Dispose();
+                ss.IsModalDialogCommited = false;
+                throw;
             }
-            catch
+        }
+        sessionManager.RemoveFormSession(sessionFormIdentifier);
+        if (ss != null && !ss.Request.IsStandalone)
+        {
+            PortalSessionStore pss = sessionManager.GetPortalSession();
+            IList<SessionStore> toRemove = new List<SessionStore>();
+            foreach (SessionStore childSS in pss.FormSessions)
             {
-                if (ss != null && ss.IsModalDialog)
+                if (childSS.Id.Equals(ss.Id))
                 {
-                    ss.IsModalDialogCommited = false;
-                    throw;
+                    toRemove.Add(childSS);
                 }
             }
-
-            sessionManager.RemoveFormSession(sessionFormIdentifier);
-
-            if (ss != null && !ss.Request.IsStandalone)
+            foreach (SessionStore rem in toRemove)
             {
-                PortalSessionStore pss = sessionManager.GetPortalSession();
-                IList<SessionStore> toRemove = new List<SessionStore>();
-
-                foreach (SessionStore childSS in pss.FormSessions)
-                {
-                    if (childSS.Id.Equals(ss.Id))
-                    {
-                        toRemove.Add(childSS);
-                    }
-                }
-
-                foreach (SessionStore rem in toRemove)
-                {
-                    pss.FormSessions.Remove(rem);
-                    pss.IsExclusiveScreenOpen = false;
-                }
+                pss.FormSessions.Remove(rem);
+                pss.IsExclusiveScreenOpen = false;
             }
         }
     }

@@ -24,40 +24,36 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench;
 using Origam.Gui;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+public class DesktopEntityUIActionRunner: EntityUIActionRunner
 {
-    public class DesktopEntityUIActionRunner: EntityUIActionRunner
+    public DesktopEntityUIActionRunner(
+        IEntityUIActionRunnerClient actionRunnerClient) : base(actionRunnerClient)
     {
-        public DesktopEntityUIActionRunner(
-            IEntityUIActionRunnerClient actionRunnerClient) : base(actionRunnerClient)
+    }
+    protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
+    {
+        object menuItem;
+        switch (processData.Action)
         {
+            case EntityMenuAction action:
+                menuItem = action.Menu;
+                break;
+            case EntityWorkflowAction action:
+                menuItem = action.Workflow;
+                break;
+            case EntityReportAction action:
+                menuItem = action.Report;
+                break;
+            default:
+                throw new NotImplementedException(
+                    $"Cannot execule action type {processData.Action.GetType()}");
         }
-
-        protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
-        {
-            object menuItem;
-            switch (processData.Action)
-            {
-                case EntityMenuAction action:
-                    menuItem = action.Menu;
-                    break;
-                case EntityWorkflowAction action:
-                    menuItem = action.Workflow;
-                    break;
-                case EntityReportAction action:
-                    menuItem = action.Report;
-                    break;
-                default:
-                    throw new NotImplementedException(
-                        $"Cannot execule action type {processData.Action.GetType()}");
-            }
-            WorkbenchSingleton.Workbench.OpenForm(menuItem,processData.Parameters);
-        }
-
-        protected override void SetTransactionId(ExecuteActionProcessData processData,
-            string transactionId)
-        {
-           
-        }
+        WorkbenchSingleton.Workbench.OpenForm(menuItem,processData.Parameters);
+    }
+    protected override void SetTransactionId(ExecuteActionProcessData processData,
+        string transactionId)
+    {
+       
     }
 }

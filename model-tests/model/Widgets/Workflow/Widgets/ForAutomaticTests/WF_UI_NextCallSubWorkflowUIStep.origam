@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:csl="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStoreLink/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="555e8446-f18e-4ad2-a282-7bd453761869"
+    asi:name="WF_UI_NextCallSubWorkflowUIStep"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="0d759520-60be-49a6-951f-6bae8a309b9a"
+      asi:name="0100_CreateRow"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="0fc3347e-8384-4870-98e0-4b55e1b75748"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="4c5f75dd-5607-4d11-b471-25065c320dea"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="62b86930-9773-4186-9b3b-f581ae0911cd"
+          asi:name="AllDataTypes_New_record"
+          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_New_record.origam#AllDataTypes_New_record/ee4763fd-7a25-4b4d-9c9d-8995aa93dbec" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="fd9b2fa7-c208-4c3d-8585-8cf4e5400b6c"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+          x:id="ad902f39-26e8-454b-a4ef-69c2bb212d95"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="d2cf1e23-850b-478f-8cc7-297420354dc0"
+      uift:isFinalForm="false"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="0200_UIStep"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="ca80077e-82d6-46c7-b88b-d8294d3c3a76"
+        asi:name="After_0100_CreateRow"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/0100_CreateRow/0d759520-60be-49a6-951f-6bae8a309b9a" />
+    </uift:WorkflowTask>
+    <wct:WorkflowTask
+      asi:abstract="false"
+      x:id="c59b05ba-8a4c-4970-9acd-63a1fae3f953"
+      asi:name="0300_CallWorflow"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      wct:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b">
+      <csl:ContextStoreLink
+        asi:abstract="false"
+        csl:callerContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+        csl:direction="Input"
+        x:id="2707e47d-006b-4bd7-b2a2-df92970f1087"
+        asi:name="IN_AllDataTypes"
+        csl:targetContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+        csl:xPath="/" />
+      <csl:ContextStoreLink
+        asi:abstract="false"
+        csl:callerContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/AllDataTypes/d2830be2-4073-42a0-8291-c3ed7ff5d1b9"
+        csl:direction="Input"
+        x:id="5e3bd388-dca6-4288-8bdc-f11f2bb34e4e"
+        asi:name="OUT_AllDataTypes"
+        csl:targetContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+        csl:xPath="/" />
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="95a8e123-7848-4756-ba23-02fa32f4097b"
+        asi:name="After_0200_UIStep"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/0200_UIStep/d2cf1e23-850b-478f-8cc7-297420354dc0" />
+    </wct:WorkflowTask>
+  </w:Workflow>
+</x:file>

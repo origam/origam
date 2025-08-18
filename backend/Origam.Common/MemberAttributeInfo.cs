@@ -24,21 +24,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
-namespace Origam
+namespace Origam;
+public class MemberAttributeInfo
 {
-	public class MemberAttributeInfo
+	public readonly MemberInfo MemberInfo;
+	public readonly Attribute Attribute;
+	public readonly List<Attribute> MemberAttributes;
+
+	public MemberAttributeInfo( MemberInfo memberInfo, Attribute attribute, List<Attribute> memberAttributes )
 	{
-		public readonly MemberInfo MemberInfo;
-		public readonly Attribute Attribute;
-		public readonly IList MemberAttributes;
-	
-		public MemberAttributeInfo( MemberInfo memberInfo, Attribute attribute, IList memberAttributes )
-		{
-			this.MemberInfo = memberInfo;
-			this.Attribute = attribute;
-			this.MemberAttributes = memberAttributes;
-		}
+		this.MemberInfo = memberInfo;
+		this.Attribute = attribute;
+		this.MemberAttributes = memberAttributes;
 	}
 }

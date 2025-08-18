@@ -8,6 +8,10 @@
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsr1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRule/6.0.0"
+  xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
+  xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0"
   xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
   xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
@@ -115,6 +119,39 @@
         asi:name="WorkQueue_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="5a2136b2-cb60-4044-85ba-57260d6629a2"
+      asi:name="Default">
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
+        x:id="13c6bb1c-02d1-4c79-ba3d-f9931b25a8bb"
+        asi:name="FillRetryValues"
+        dsr1:priority="100"
+        dsr1:valueRule="Root/Rule/Work Queue/WorkQueue_FillRetryValues.origam#WorkQueue_FillRetryValues/dcc3e0e1-a1bd-4525-a9cf-1372a3f9fb8e">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
+          dsrd:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+          x:id="3fdb4ff0-c56a-4195-817f-4ec353eaf15b"
+          asi:name="WorkQueue_refWorkQueueRetryTypeId" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
+        x:id="5874b58f-33af-4fc5-913a-94d1e8bbd65d"
+        asi:name="FillThrottlingValues"
+        dsr1:priority="100"
+        dsr1:valueRule="Root/Rule/Work Queue/WorkQueue_FillThrottlingValues.origam#WorkQueue_FillThrottlingValues/bd5d2105-f93b-4efc-b73a-b39872647f14">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
+          dsrd:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+          x:id="f8e1f29f-d61d-44d1-811f-eb7ffe3c6f48"
+          asi:name="WorkQueue_EnableThrottling" />
+      </dsr1:DataStructureRule>
+    </dsrs:DataStructureRuleSet>
     <dsss:DataStructureSortSet
       asi:abstract="false"
       x:id="37dbbb2b-6068-44a7-8765-826f15ca061e"

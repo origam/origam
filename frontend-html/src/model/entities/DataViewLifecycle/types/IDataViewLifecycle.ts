@@ -32,11 +32,11 @@ export interface IDataViewLifecycle extends IDataViewLifecycleData {
 
   start(): void;
 
-  startSelectedRowReaction(fireImmediatelly?: boolean): void;
+  runRecordChangedReaction(): Generator;
+
+  startSelectedRowReaction(fireImmediately?: boolean): Generator;
 
   stopSelectedRowReaction(): void;
-
-  runRecordChangedReaction(action?: () => Generator): Promise<void>;
 
   parent?: any;
 }

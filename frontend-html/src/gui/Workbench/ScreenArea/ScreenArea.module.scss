@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/commonStyles";
-@import "~@origam/styles/dist/styles/definitions";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions;
 
 .Root {
   width: 100%;
@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   background-color: var(--background7);
-  user-select: none;
+  @include styles.noSelect;
 }
 
 .TabHandle {
@@ -81,31 +81,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 100%;
 }
 
-.actionButtonHeader{
-  display: flex;
-  flex-direction: row;
-}
-
 .workflowActionBtn {
-@include dialogButton();
-  background: var(--background3);
-  border: 1px solid var(--background5);
+  @include styles.dialogButton();
   box-sizing: border-box;
-  color: var(--background8);
-  font-size: $font-size;
+  font-size: definitions.$font-size;
   height: 2em;
   margin: 0 0.5em;
   padding: 0 1.5em;
-@include border-radius(3em);
-&:first-of-type {
-   margin-left: 0;
- }
-&:last-of-type {
-   margin-right: 0;
- }
-&:hover {
-   background: var(--background5);
-   color: var(--background8);
- }
+  @include definitions.border-radius(3em);
+  &:first-of-type {
+     margin-left: 0;
+   }
+  &:last-of-type {
+     margin-right: 0;
+   }
 }
 

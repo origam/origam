@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import bind from "bind-decorator";
-import { action, computed, observable } from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React, { useContext } from "react";
@@ -59,6 +59,7 @@ import S from "./TableView.module.scss";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import cx from "classnames";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
+import { getScreenFocusManager } from "model/selectors/FormScreen/getScreenFocusManager";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -91,17 +92,47 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
 
   componentDidMount() {
     const openScreen = getOpenedScreen(this.props.dataView);
-    const dataViews = openScreen.content.formScreen?.dataViews;
-    const isMainDataView =
-      (dataViews && dataViews.length > 0 && this.props.dataView?.isBindingRoot) ||
-      dataViews?.length === 1;
-
-    if (openScreen.isActive && isMainDataView) {
+    const screenFocusManager = getScreenFocusManager(this.props.dataView);
+    if (openScreen.isActive && this.props.dataView?.modelInstanceId === screenFocusManager.dataViewModelInstanceIdToFocusAfterOpening) {
       if (!this.props.dataView?.isFormViewActive()) {
         const tablePanelView = getTablePanelView(this.props.dataView);
         tablePanelView.triggerOnFocusTable();
       }
     }
+
+    window.addEventListener('mousemove', this.handleWindowMouseMove);
+    window.addEventListener('keydown', this.handleWindowKeyDown);
+    window.addEventListener('keyup', this.handleWindowKeyUp);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousemove', this.handleWindowMouseMove);
+    window.removeEventListener('keydown', this.handleWindowKeyDown);
+    window.removeEventListener('keyup', this.handleWindowKeyUp);
+  }
+
+  @action.bound handleWindowMouseMove(event: any) {
+    const thisInstance = this;
+    flow(function* () {
+      if(thisInstance.props.tablePanelView)
+        yield* thisInstance.props.tablePanelView.onWindowMouseMove(event)
+    })();
+  }
+
+  @action.bound handleWindowKeyDown(event: any) {
+    const thisInstance = this;
+    flow(function* () {
+      if(thisInstance.props.tablePanelView)
+        yield* thisInstance.props.tablePanelView.onWindowKeyDown(event)
+    })();
+  }
+
+  @action.bound handleWindowKeyUp(event: any) {
+    const thisInstance = this;
+    flow(function* () {
+      if(thisInstance.props.tablePanelView)
+        yield* thisInstance.props.tablePanelView.onWindowKeyUp(event)
+    })();
   }
 
   refTableDisposer: any;
@@ -109,10 +140,7 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
     this.elmTable = elmTable;
     if (elmTable) {
       const d1 = this.props.tablePanelView!.subOnFocusTable(() => {
-        const gridFocusManager = getGridFocusManager(this.props.dataView);
-        if(gridFocusManager.canFocusTable){
-          elmTable.focusTable();
-        }
+        elmTable.focusTable();
       });
       const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
         elmTable.scrollToCellShortest
@@ -181,7 +209,9 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
             fixedColumnCount={fixedColumnCount}
             headerContainers={self.headerRenderer.headerContainers}
             renderEditor={() => (
-              <TableViewEditor key={`${editingRowIndex}@${editingColumnIndex}`}/>
+              <TableViewEditor
+                expand={this.props.tablePanelView?.expandEditorAfterMounting}
+                key={`${editingRowIndex}@${editingColumnIndex}`}/>
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
@@ -376,6 +406,7 @@ class HeaderRenderer implements IHeaderRendererData {
           isFirst={args.isFirst}
           width={args.columnWidth}
           label={header.label}
+          tooltip={property.tooltip}
           orderingDirection={header.ordering}
           orderingOrder={header.order + 1}
           onColumnWidthChange={this.onColumnWidthChange}

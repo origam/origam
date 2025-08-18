@@ -18,11 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { observer, Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo, createRef } from "react";
+import React, { createRef, useContext, useEffect, useMemo } from "react";
 import { GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
-import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
-import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "@origam/components";
+import S from "gui/Components/Dropdown/Dropdown.module.scss";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import cx from "classnames";
@@ -31,6 +30,8 @@ import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/Dropdo
 import { BoundingRect } from "react-measure";
 import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { observable } from "mobx";
+import { T } from "utils/translation";
+import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "gui/Components/Dropdown/DropdownCommon";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);
@@ -57,16 +58,37 @@ export function DropdownEditorBody() {
     <Observer>
       {() => (
         <div ref={ref} className={S.body} onMouseDown={beh.handleBodyMouseDown}>
-          <DropdownEditorTable
-            drivers={drivers}
-            dataTable={dataTable}
-            rectCtrl={rectCtrl}
-            beh={beh}
-            rowHeight={rowHeight}
-          />
+          { beh.addNewDropDownVisible
+            ? <AddNewDropDown
+                rowHeight={rowHeight}/>
+            : <DropdownEditorTable
+                drivers={drivers}
+                dataTable={dataTable}
+                rectCtrl={rectCtrl}
+                beh={beh}
+                rowHeight={rowHeight}
+            />
+          }
         </div>
       )}
     </Observer>
+  );
+}
+
+function AddNewDropDown(props: {rowHeight: number}) {
+  const beh = useContext(CtxDropdownEditor).behavior;
+
+  return (
+    <div
+      style={{height: props.rowHeight}}
+      className={S.table}>
+      <div
+        className={"cell withCursor"}
+        onClick={() => beh.onAddNewRecordClick?.(beh.userEnteredValue)}
+      >
+        {T("Add New Record", "add_new_record")}
+      </div>
+    </div>
   );
 }
 
@@ -82,14 +104,25 @@ export class DropdownEditorTable extends  React.Component<{
   refMultiGrid = createRef<MultiGrid>();
   @observable
   scrollbarSize = { horiz: 0, vert: 0 };
-  hasHeader: boolean;
   hoveredRowIndex= - 1;
-  columnCount = 0;
   readonly cellPadding = 20;
-  readonly maxHeight = 150;
+  readonly maxHeight = 8 * this.props.rowHeight;
+  disposer: any;
+
+  componentDidMount() {
+    this.refMultiGrid.current?.recomputeGridSize();
+  }
 
   get rowCount(){
     return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
+  }
+
+  get columnCount(){
+      return this.props.drivers.driverCount;
+  }
+
+  get hasHeader(){
+    return this.columnCount > 1
   }
 
   get height(){
@@ -105,8 +138,6 @@ export class DropdownEditorTable extends  React.Component<{
 
   constructor(props: any) {
     super(props);
-    this.columnCount = this.props.drivers.driverCount;
-    this.hasHeader = this.columnCount > 1;
   }
 
   handleScrollbarPresenceChange(args: {
@@ -221,7 +252,9 @@ export class DropdownEditorTable extends  React.Component<{
       let cellWidth = 100;
       for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
         const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding;
+        const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
+        const currentCellWidth =
+          Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
         if (currentCellWidth > cellWidth) {
           cellWidth = currentCellWidth;
         }
@@ -230,4 +263,16 @@ export class DropdownEditorTable extends  React.Component<{
     }
     return widths;
   }
+}
+
+function parsePaddingValue(paddingValue: string | undefined){
+  if(!paddingValue){
+    return 0;
+  }
+  const regExp = new RegExp("(\\d+)px");
+  const result = regExp.exec(paddingValue);
+  if(result){
+    return parseInt(result[0]);
+  }
+  return 0;
 }

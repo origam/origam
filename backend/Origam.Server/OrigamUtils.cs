@@ -22,54 +22,60 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Origam.DA;
+using Origam.DA.Common;
 using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
 
-namespace Origam.Server
+namespace Origam.Server;
+public static class OrigamUtils
 {
-    public static class OrigamUtils
+    public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
+        bool reloadModelWhenFilesChangesDetected)
     {
-        public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
-            bool reloadModelWhenFilesChangesDetected)
+        OrigamEngine.OrigamEngine.ConnectRuntime();
+        if (!reloadModelWhenFilesChangesDetected)
         {
-            OrigamEngine.OrigamEngine.ConnectRuntime();
-
-            if (!reloadModelWhenFilesChangesDetected)
-            {
-                return;
-            }
-
-            IPersistenceService persistence 
-                = ServiceManager.Services.GetService<IPersistenceService>();
-            if (persistence is FilePersistenceService filePersistenceService)
-            {
-                filePersistenceService.ReloadNeeded += (sender, args) =>
-                {
-                    string errorMessage = "";
-                    try
-                    {
-                        Maybe<XmlLoadError> maybeError =
-                            filePersistenceService.Reload();
-                        if (maybeError.HasValue)
-                        {
-                            errorMessage = maybeError.Value.Message;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        errorMessage += ex.Message + "\n" + ex.StackTrace;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(errorMessage))
-                    {
-                        FatalErrorMiddleware.ErrorMessage =
-                            "An error has occured during automatic model reload. Please restart the server.\n" + errorMessage;
-                        loggerFactory.CreateLogger("Model Reload")
-                            .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
-                    }
-                };
-            }
+            return;
         }
+        IPersistenceService persistence 
+            = ServiceManager.Services.GetService<IPersistenceService>();
+        if (persistence is FilePersistenceService filePersistenceService)
+        {
+            filePersistenceService.ReloadNeeded += (sender, args) =>
+            {
+                string errorMessage = "";
+                try
+                {
+                    Maybe<XmlLoadError> maybeError =
+                        filePersistenceService.Reload();
+                    if (maybeError.HasValue)
+                    {
+                        errorMessage = maybeError.Value.Message;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage += ex.Message + "\n" + ex.StackTrace;
+                }
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    FatalErrorMiddleware.ErrorMessage =
+                        "An error has occured during automatic model reload. Please restart the server.\n" + errorMessage;
+                    loggerFactory.CreateLogger("Model Reload")
+                        .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
+                }
+            };
+        }
+    }
+
+    public static void CleanUpDatabase()
+    {
+        IDataService dataService = DataServiceFactory.GetDataService();
+        dataService.ExecuteProcedure(
+            "OrigamIdentityGrantCleanup", "", new DataStructureQuery(), null);
     }
 }

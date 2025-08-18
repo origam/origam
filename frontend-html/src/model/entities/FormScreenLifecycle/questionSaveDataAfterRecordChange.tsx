@@ -33,6 +33,8 @@ import { processCRUDResult } from "../../actions/DataLoading/processCRUDResult";
 import { processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { IApi } from "model/entities/types/IApi";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 
 export function questionSaveDataAfterRecordChange(ctx: any) {
   return new Promise(
@@ -65,32 +67,19 @@ export enum IQuestionDeleteDataAnswer {
 }
 
 export async function handleUserInputOnChangingRow(dataView: IDataView) {
-  const api = getApi(dataView);
   const openedScreen = getOpenedScreen(dataView);
   const sessionId = getSessionId(openedScreen.content.formScreen);
   const formScreen = getFormScreen(dataView);
 
   if (isInfiniteScrollingActive(dataView)) {
+    if (formScreen.autoSaveOnListRecordChange) {
+      return await saveChanges(dataView, sessionId);
+    }
     switch (await questionSaveDataAfterRecordChange(dataView)) {
       case IQuestionChangeRecordAnswer.Cancel: // eslint-disable-line @typescript-eslint/no-use-before-define
         return false;
       case IQuestionChangeRecordAnswer.Yes: // eslint-disable-line @typescript-eslint/no-use-before-define
-        return runGeneratorInFlowWithHandler({
-          ctx: dataView,
-          generator: function*(): Generator<any> {
-            const queryResult = yield api.saveSessionQuery(sessionId);
-            const processQueryInfoResult = yield*processActionQueryInfo(dataView)(
-              queryResult as any[],
-              formScreen.title
-            );
-            if (!processQueryInfoResult.canContinue) {
-              return false;
-            }
-            const saveResult = yield api.saveSession(sessionId);
-            yield*processCRUDResult(dataView, saveResult as any);
-            return true;
-          }()
-        });
+        return await saveChanges(dataView, sessionId);
       case IQuestionChangeRecordAnswer.No: // eslint-disable-line @typescript-eslint/no-use-before-define
         await flow(() =>
           getFormScreenLifecycle(dataView).throwChangesAway(dataView)
@@ -114,6 +103,27 @@ export async function handleUserInputOnChangingRow(dataView: IDataView) {
     }
   }
   return true;
+}
+
+async function saveChanges(dataView: IDataView, sessionId: string) {
+  const api = getApi(dataView);
+  const formScreen = getFormScreen(dataView);
+  return runGeneratorInFlowWithHandler({
+    ctx: dataView,
+    generator: function*(): Generator<any> {
+      const queryResult = yield api.saveSessionQuery(sessionId);
+      const processQueryInfoResult = yield*processActionQueryInfo(dataView)(
+        queryResult as any[],
+        formScreen.title
+      );
+      if (!processQueryInfoResult.canContinue) {
+        return false;
+      }
+      const saveResult = yield api.saveSession(sessionId);
+      yield*processCRUDResult(dataView, saveResult as any);
+      return true;
+    }()
+  });
 }
 
 enum IQuestionChangeRecordAnswer {

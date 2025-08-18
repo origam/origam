@@ -46,150 +46,131 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Data;
 using System.Linq;
+using Origam.Gui;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Session_Stores;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Workbench.Services;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class WorkQueueSessionStore : SessionStore
 {
-    public class WorkQueueSessionStore : SessionStore
+    private object _getRowDataLock = new object();
+    private DataSetBuilder datasetbuilder = new DataSetBuilder();
+    
+    public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
+        Analytics analytics)
+        : base(service, request, name, analytics)
     {
-        private object _getRowDataLock = new object();
-        private DataSetBuilder datasetbuilder = new DataSetBuilder();
-        
-        public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
-            Analytics analytics)
-            : base(service, request, name, analytics)
+        IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
+        Guid workQueueId = new Guid(request.ObjectId);
+        this.WQClass = wqs.WQClass(workQueueId) as WorkQueueClass;
+        this.SortSet = this.WQClass.WorkQueueStructureSortSet;
+        this.RefreshOnInitUI = true;
+    }
+    #region Overriden SessionStore Methods
+    private void PrepareData()
+    {
+        var data = InitializeFullStructure(null);
+        SetDataSource(data);
+        IsDelayedLoading = true;
+        DataListEntity = "WorkQueueEntry";
+    }
+    private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+    {
+        return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
+    }
+    public override List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
+    {
+        var result = new List<ChangeInfo>();
+        lock (_getRowDataLock)
         {
-            IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
-            Guid workQueueId = new Guid(request.ObjectId);
-            this.WQClass = wqs.WQClass(workQueueId) as WorkQueueClass;
-            this.SortSet = this.WQClass.WorkQueueStructureSortSet;
-            this.RefreshOnInitUI = true;
-        }
-
-        #region Overriden SessionStore Methods
-
-        public override bool HasChanges()
-        {
-            throw new NotImplementedException();
-        }
-        
-        private void PrepareData()
-        {
-            var data = InitializeFullStructure(null);
-            SetDataSource(data);
-            IsDelayedLoading = true;
-            DataListEntity = "WorkQueueEntry";
-        }
-
-        private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
-        {
-            return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
-        }
-
-        public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
-        {
-            ArrayList result = new ArrayList();
-            lock (_getRowDataLock)
+            if (id == null)
             {
-                if (id == null)
-                {
-                    CurrentRecordId = null;
-                    return result;
-                }
-        
-                DataRow row = GetSessionRow(entity, id);
-        
-                // for new rows we don't even try to load the data from the database
-                if (row == null || row.RowState != DataRowState.Added)
-                {
-                    if (!ignoreDirtyState && this.Data.HasChanges())
-                    {
-                        throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
-                    }
-        
-                    this.CurrentRecordId = null;
-        
-                    SetDataSource(LoadDataPiece(id));
-                }
-        
-                this.CurrentRecordId = id;
-        
-                DataRow actualDataRow = GetSessionRow(entity, id);
-                if (actualDataRow == null)
-                {
-                    throw new RowNotFoundException();
-                }
-                UpdateListRow(actualDataRow);
-        
-                ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
-                result.Add(ci);
-        
-                if (actualDataRow.RowState == DataRowState.Unchanged)
-                {
-                    result.Add(ChangeInfo.SavedChangeInfo());
-                }
+                CurrentRecordId = null;
+                return result;
             }
-        
-            return result;
-        }
-       
-        private DataSet LoadDataPiece(object parentId)
-        {
-            Guid? methodId = WQClass
-                .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
-                .FirstOrDefault(x => x.Name == "GetById")
-                ?.Id;
-            if (methodId == null)
+    
+            DataRow row = GetSessionRow(entity, id);
+    
+            // for new rows we don't even try to load the data from the database
+            if (row == null || row.RowState != DataRowState.Added)
             {
-                throw new Exception($"Data structure filter set with name GetById was not found under WorkQueueStructure {WQClass.WorkQueueStructure.Id}");
+                if (!ignoreDirtyState && this.Data.HasChanges())
+                {
+                    throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
+                }
+    
+                this.CurrentRecordId = null;
+    
+                SetDataSource(LoadDataPiece(id));
             }
-
-            return core.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId.Value, 
-                Guid.Empty, WQClass.WorkQueueStructureSortSetId, null, 
-                "WorkQueueEntry_parId", parentId);
-        }
-
-        public override void Init()
-        {
-            PrepareData();
-        }
-
-        public override object ExecuteAction(string actionId)
-        {
-            switch (actionId)
+    
+            this.CurrentRecordId = id;
+    
+            DataRow actualDataRow = GetSessionRow(entity, id);
+            if (actualDataRow == null)
             {
-                case ACTION_REFRESH:
-                    return Refresh();
-
-                default:
-                    throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                throw new RowNotFoundException();
+            }
+            UpdateListRow(actualDataRow);
+    
+            ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
+            result.Add(ci);
+    
+            if (actualDataRow.RowState == DataRowState.Unchanged)
+            {
+                result.Add(ChangeInfo.SavedChangeInfo());
             }
         }
-
-        public override XmlDocument GetFormXml()
+    
+        return result;
+    }
+   
+    private DataSet LoadDataPiece(object parentId)
+    {
+        Guid? methodId = WQClass
+            .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
+            .FirstOrDefault(x => x.Name == "GetById")
+            ?.Id;
+        if (methodId == null)
         {
-            XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(WQClass, Data, Request.Caption, new Guid(Request.ObjectId));
-
-            return formXml;
-        } 
-
-        private object Refresh()
-        {
-            Init();
-            return this.Data;
+            throw new Exception($"Data structure filter set with name GetById was not found under WorkQueueStructure {WQClass.WorkQueueStructure.Id}");
         }
-        #endregion
-
-        private WorkQueueClass _wqClass;
-
-        public WorkQueueClass WQClass
+        return CoreServices.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId.Value, 
+            Guid.Empty, WQClass.WorkQueueStructureSortSetId, null, 
+            "WorkQueueEntry_parId", parentId);
+    }
+    public override void Init()
+    {
+        PrepareData();
+    }
+    public override object ExecuteActionInternal(string actionId)
+    {
+        switch (actionId)
         {
-            get { return _wqClass; }
-            set { _wqClass = value; }
+            case ACTION_REFRESH:
+                return Refresh();
+            default:
+                throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
         }
+    }
+    public override XmlDocument GetFormXml()
+    {
+        XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(WQClass, Data, Request.Caption, new Guid(Request.ObjectId));
+        return formXml;
+    } 
+    private object Refresh()
+    {
+        Init();
+        return this.Data;
+    }
+    #endregion
+    private WorkQueueClass _wqClass;
+    public WorkQueueClass WQClass
+    {
+        get { return _wqClass; }
+        set { _wqClass = value; }
     }
 }

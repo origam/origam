@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./TabbedPanel.module.css";
+import S from "./TabbedPanel.module.scss";
 import { observer } from "mobx-react";
 
 @observer

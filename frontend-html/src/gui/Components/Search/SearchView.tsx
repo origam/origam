@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import S from "gui/Components/Search/SearchView.module.scss";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { T } from "utils/translation";
 import { ResultGroup } from "gui/Components/Search/ResultGroup";
 import { getSearcher } from "model/selectors/getSearcher";
@@ -61,6 +61,7 @@ export class SearchView extends React.Component<{
           <input
             ref={this.viewState.refInput}
             className={S.input}
+            autoComplete={"new-password"}
             placeholder={T("Search for anything here", "type_search_here")}
             onChange={(event) => this.viewState.onInputChange(event)}
           />

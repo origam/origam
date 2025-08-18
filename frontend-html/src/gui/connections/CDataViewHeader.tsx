@@ -26,7 +26,7 @@ import { DataViewHeaderButtonGroup } from "gui/Components/DataViewHeader/DataVie
 import { DataViewHeaderGroup } from "gui/Components/DataViewHeader/DataViewHeaderGroup";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { FilterDropDown } from "gui/connections/FilterDropDown";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import uiActions from "model/actions-ui-tree";

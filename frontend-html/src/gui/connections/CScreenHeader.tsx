@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ScreenHeader } from "gui/Components/ScreenHeader/ScreenHeader";
 import { ScreenHeaderAction } from "gui/Components/ScreenHeader/ScreenHeaderAction";
 import { ScreenHeaderPusher } from "gui/Components/ScreenHeader/ScreenHeaderPusher";
@@ -36,6 +36,12 @@ import { T } from "utils/translation";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
+import { isAddRecordShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
+import { WorkflowAction } from "gui/connections/WorkflowAction";
+import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import { getTopmostOpenedNonDialogScreenItem } from "model/selectors/getTopmostNonDialogScreenItem";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -65,31 +71,34 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
     const {content} = activeScreen;
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
     if (!content) return null;
-    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
-    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
+    const isTopMostNonDialogScreen = getIsTopmostNonDialogScreen(activeScreen);
+    const formTitle = (activeScreen.formTitle || getTopmostOpenedNonDialogScreenItem(activeScreen)?.formTitle) ?? "";
+
+    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton && isTopMostNonDialogScreen;
+    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton && isTopMostNonDialogScreen;
     return (
       <>
-        <h1 className={"printOnly"}>{activeScreen.formTitle}</h1>
+        <h1 className={"printOnly"}>{formTitle}</h1>
         <ScreenHeader
           isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
         >
-          <h1>{activeScreen.formTitle}</h1>
+          <h1>{formTitle}</h1>
           {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
           {isCancelButton && (
-            <button
+            <WorkflowAction
               className={S.workflowActionBtn}
               onClick={onWorkflowAbortClick(content.formScreen!)}
-            >
-              {T("Cancel", "button_cancel")}
-            </button>
+              label= {T("Cancel", "button_cancel")}
+            />
           )}
           {isNextButton && (
-            <button
+            <WorkflowAction
               className={S.workflowActionBtn}
               onClick={onWorkflowNextClick(content.formScreen!)}
-            >
-              {T("Next", "button_next")}
-            </button>
+              onShortcut={onWorkflowNextClick(content.formScreen!)}
+              shortcutPredicate={isSaveShortcut}
+              label= {T("Next", "button_next")}
+            />
           )}
           <ScreenHeaderPusher/>
           <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>

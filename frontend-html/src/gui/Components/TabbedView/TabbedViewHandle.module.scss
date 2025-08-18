@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/commonStyles";
+@use "src/gui/commonStyles" as styles;
 
 .root {
   color: var(--background7);
@@ -31,7 +31,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-radius: 0px 0px 0 0;
 
   cursor: pointer;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
 
   &:global(.isActive) {
     .label {
@@ -83,7 +83,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     stroke: var(--background6);
     stroke-width: 1;
     overflow: inherit;
-    @include hoverItemAnimation;
+    @include styles.hoverItemAnimation;
   }
   &:hover {
     svg {

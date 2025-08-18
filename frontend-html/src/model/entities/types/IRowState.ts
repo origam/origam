@@ -31,6 +31,8 @@ export interface IRowState extends IRowStateData {
 
   loadValues(keys: string[]): Promise<any>;
 
+  clearValue(rowId: string): void;
+
   putValue(state: any): void;
 
   hasValue(key: string): boolean;
@@ -41,6 +43,8 @@ export interface IRowState extends IRowStateData {
   reload(): void;
 
   parent?: any;
+
+  dispose(): void;
 }
 
 export interface IRowStateItem {
@@ -50,7 +54,7 @@ export interface IRowStateItem {
   foregroundColor: string | undefined;
   backgroundColor: string | undefined;
   columns: Map<string, IRowStateColumnItem>;
-  disabledActions: Set<string>;
+  disabledActions: Set<string> | undefined;
   relations: any[];
 }
 

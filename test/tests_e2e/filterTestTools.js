@@ -6,10 +6,8 @@ async function removeFocusFromDateInput(page, inputId) {
   await sleep(300);
 
   for (let i = 0; i < 5; i++) {
-    console.log(inputId)
     const activeElement = await page.evaluateHandle(() => document.activeElement);
     const inputIsActive = await page.evaluate(activeElement => activeElement.attributes["id"], activeElement) === inputId;
-    console.log(inputIsActive)
     if(inputIsActive){
       await page.keyboard.press("Tab");
       await sleep(300);

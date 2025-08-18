@@ -21,90 +21,85 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Configuration;
 
-namespace OrigamArchitect
+namespace OrigamArchitect;
+public class NewProjectWizardSettings : ApplicationSettingsBase
 {
-    public class NewProjectWizardSettings : ApplicationSettingsBase
+    [UserScopedSetting()]
+    [DefaultSettingValue(@"localhost")]
+    public string DatabaseServerName
     {
-        [UserScopedSetting()]
-        [DefaultSettingValue(@".")]
-        public string DatabaseServerName
+        get
         {
-            get
-            {
-                return (string)this["DatabaseServerName"];
-            }
-            set
-            {
-                this["DatabaseServerName"] = value;
-            }
+            return (string)this["DatabaseServerName"];
         }
-
-        [UserScopedSetting()]
-		[DefaultSettingValue("c:\\OrigamProjects")]
-        public string SourcesFolder
+        set
         {
-            get
-            {
-                return (string)this["SourcesFolder"];
-            }
-            set
-            {
-                this["SourcesFolder"] = value;
-            }
+            this["DatabaseServerName"] = value;
         }
-
-        [UserScopedSetting()]
-        [DefaultSettingValue(@"C:\inetpub")]
-        public string BinFolder
+    }
+    [UserScopedSetting()]
+	[DefaultSettingValue("c:\\OrigamProjects")]
+    public string SourcesFolder
+    {
+        get
         {
-            get
-            {
-                return (string)this["BinFolder"];
-            }
-            set
-            {
-                this["BinFolder"] = value;
-            }
+            return (string)this["SourcesFolder"];
         }
-
-        [UserScopedSetting()]
-        [DefaultSettingValue("Microsoft Sql Server")]
-        public string DatabaseTypeText
+        set
         {
-            get
-            {
-                return (string)this["DatabaseTypeText"];
-            }
-            set
-            {
-                this["DatabaseTypeText"] = value;
-            }
+            this["SourcesFolder"] = value;
         }
-        [UserScopedSetting()]
-        [DefaultSettingValue("http://localhost:2375")]
-        public string DockerApiAdress
+    }
+    [UserScopedSetting()]
+    [DefaultSettingValue(@"C:\inetpub")]
+    public string BinFolder
+    {
+        get
         {
-            get
-            {
-                return (string)this["DockerApiAdress"];
-            }
-            set
-            {
-                this["DockerApiAdress"] = value;
-            }
+            return (string)this["BinFolder"];
         }
-        [UserScopedSetting()]
-        [DefaultSettingValue("")]
-        public string DockerSourceFolder
+        set
         {
-            get
-            {
-                return (string)this["DockerSourceFolder"];
-            }
-            set
-            {
-                this["DockerSourceFolder"] = value;
-            }
+            this["BinFolder"] = value;
+        }
+    }
+    [UserScopedSetting()]
+    [DefaultSettingValue("Microsoft Sql Server")]
+    public string DatabaseTypeText
+    {
+        get
+        {
+            return (string)this["DatabaseTypeText"];
+        }
+        set
+        {
+            this["DatabaseTypeText"] = value;
+        }
+    }
+    [UserScopedSetting()]
+    [DefaultSettingValue("http://localhost:2375")]
+    public string DockerApiAdress
+    {
+        get
+        {
+            return (string)this["DockerApiAdress"];
+        }
+        set
+        {
+            this["DockerApiAdress"] = value;
+        }
+    }
+    [UserScopedSetting()]
+    [DefaultSettingValue("")]
+    public string DockerSourceFolder
+    {
+        get
+        {
+            return (string)this["DockerSourceFolder"];
+        }
+        set
+        {
+            this["DockerSourceFolder"] = value;
         }
     }
 }

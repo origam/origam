@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/commonStyles";
-@import "~@origam/styles/dist/styles/definitions";
+@use "src/gui/commonStyles" as styles;
+@use "src/gui/definitions" as definitions;
 
 .root {
   cursor: pointer;
@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
-  @include hoverItemAnimation;
+  @include styles.hoverItemAnimation;
   color: var(--foreground1);
   height: 30px;
   padding: 0 1em;

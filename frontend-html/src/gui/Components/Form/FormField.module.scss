@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/EditorsCommon.module";
+@use "src/gui/Components/EditorsCommon.module" as editors;
 
 .root {
   position: absolute;
@@ -27,10 +27,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   top: 0;
   left: 0;
-  display: block;
+  display: flex;
+  align-items: center;
   overflow: hidden;
   padding: 0 0.5em 0 0;
   white-space: nowrap;
+  height: 20px;
 }
 
 .editor {
@@ -43,5 +45,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 .notification {
-  @include notification;
+  @include editors.notification;
 }

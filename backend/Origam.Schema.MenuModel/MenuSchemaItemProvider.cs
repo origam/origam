@@ -22,76 +22,67 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Linq;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for MenuSchemaItemProvider.
+/// </summary>
+public class MenuSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for MenuSchemaItemProvider.
-	/// </summary>
-	public class MenuSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public MenuSchemaItemProvider() 
 	{
-		public MenuSchemaItemProvider() 
-		{
-			ChildItemTypes.Add(typeof(Menu));
-			ChildItemTypes.Add(typeof(ContextMenu));
-		}
-
-		/// <summary>
-		/// Returns the first child Menu, skipping all the ContextMenu types.
-		/// </summary>
-		public Menu MainMenu =>
-			ChildItemsByType(Menu.CategoryConst)
-				.OfType<Menu>()
-				.FirstOrDefault();
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return Menu.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_18_menu.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{	
-				return "Menu";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
-
-		#endregion
+		ChildItemTypes.Add(typeof(Menu));
+		ChildItemTypes.Add(typeof(ContextMenu));
 	}
+	/// <summary>
+	/// Returns the first child Menu, skipping all the ContextMenu types.
+	/// </summary>
+	public Menu MainMenu =>
+		ChildItemsByType<ISchemaItem>(Menu.CategoryConst)
+			.OfType<Menu>()
+			.FirstOrDefault();
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
+		{
+			return Menu.CategoryConst;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "UI";
+		}
+	}
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			return "icon_18_menu.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{	
+			return "Menu";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			return null;
+		}
+	}
+	#endregion
 }

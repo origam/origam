@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="faa85d8f-85f3-433f-8d85-e962e4d1a92e"
+    asi:name="Basic WF_2StepFail"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="6790c53a-d99f-4fca-96b0-54fb32d2b854"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="1a15fc2f-a147-4969-a1cb-946dbec4a3c4"
+      asi:name="0200_StepFail"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/AllDataTypes/6790c53a-d99f-4fca-96b0-54fb32d2b854"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
+      aws:validationRule="Widgets/Rule/Widgets/FailRule.origam#FailRule/74e2265d-17cb-4c8b-95c0-bde126b888b9"
+      aws:validationRuleContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/AllDataTypes/6790c53a-d99f-4fca-96b0-54fb32d2b854">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="32302e06-1f28-4fa3-af1a-2b8647df5e06"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/AllDataTypes/6790c53a-d99f-4fca-96b0-54fb32d2b854"
+          x:id="64138ac8-cdf6-45f4-b10c-8f036075711a"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="6805c14f-bb15-47e9-89df-91fb270c87a4"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8d996a3c-8332-4cf4-a88d-5a310fb61752"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="23e80bab-3591-4c9b-acc5-c49d57cae08f"
+          asi:name="AllDataTypes_New_record_fail"
+          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_New_record_fail.origam#AllDataTypes_New_record_fail/4e7a349d-6e6c-4307-b0e6-828acba1e7c2" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="f849de9f-5f11-4276-b194-28b8d4c35485"
+        asi:name="After_0100_Transform"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailsWorkflows/WF_2StepFail.origam#WF_2StepFail/0100_Transform/a384f307-1d43-4f93-9d67-0d8f8d5daf5b" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="a384f307-1d43-4f93-9d67-0d8f8d5daf5b"
+      asi:name="0100_Transform"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/AllDataTypes/6790c53a-d99f-4fca-96b0-54fb32d2b854"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="45876744-e7fa-4ffd-9a45-9133e97d4460"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="37e62c92-48ec-4d1a-a0a0-4701bb249687"
+          asi:name="AllDataTypes_New_record"
+          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_New_record.origam#AllDataTypes_New_record/ee4763fd-7a25-4b4d-9c9d-8995aa93dbec" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="71e3ba80-05b7-4dcd-8930-dcfa99109264"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/AllDataTypes/6790c53a-d99f-4fca-96b0-54fb32d2b854"
+          x:id="57dd71a0-5127-4eb7-8292-be92a2078aa3"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a223c879-489f-48f5-8b69-5e6df3378c60"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.1"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="25ffec97-ed70-4580-98e8-05a3a30355e5"
+    xdp:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/LookupWithArrayParameterTest/bcc840f2-a3ea-4bab-aa84-7cc4c0afebf2"
+    ap:mimeType="application/json"
+    asi:name="ArrayParameterTest"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    ap:url="api/public/arrayParameter/{id}">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="48a3957e-945e-4195-9570-a69b9f9fa5e1"
+      ppm:isList="true"
+      ppm:mappedParameter="id"
+      asi:name="AllDataTypesIds" />
+  </xdp:Page>
+</x:file>

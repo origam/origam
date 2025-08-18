@@ -112,7 +112,7 @@ public class WorkQueueThrottle
             row.Table.DataSet, false, null);
     }
 
-    private DataRow? GetThrottlingState(Guid queueId)
+    private DataRow GetThrottlingState(Guid queueId)
     {
         var parameters = new QueryParameterCollection
         {

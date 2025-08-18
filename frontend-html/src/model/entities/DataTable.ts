@@ -182,7 +182,7 @@ export class DataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    return this.rowsContainer.rows.find((row) => this.getRowId(row) === id);
+    return this.rowsContainer.getRowById(id);
   }
 
   getTrueIndexById(id: string) {
@@ -365,30 +365,38 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  clearRecordDirtyValues(id: string, newRow: any[]): void {
-    const rowData = this.getAdditionalRowDataById(id);
-    if (rowData) {
-      const oldRow = this.getRowById(id)!;
-      for (let i = 0; i < newRow.length; i++) {
-        const dataSourceField = getDataSourceFieldByIndex(this, i)!;
-        if (newRow[i] !== oldRow[i]) {
-          rowData.dirtyFormValues.delete(dataSourceField.name);
-          rowData.dirtyValues.delete(dataSourceField.name);
+  clearRecordDirtyValues(rows: any[]): void {
+    for (let row of rows) {
+      const rowId = this.getRowId(row);
+      const rowData = this.getAdditionalRowDataById(rowId);
+      if (rowData) {
+        const oldRow = this.getRowById(rowId)!;
+        for (let i = 0; i < row.length; i++) {
+          const dataSourceField = getDataSourceFieldByIndex(this, i)!;
+          if (row[i] !== oldRow[i]) {
+            rowData.dirtyFormValues.delete(dataSourceField.name);
+            rowData.dirtyValues.delete(dataSourceField.name);
+          }
+          if (rowData.dirtyFormValues.get(dataSourceField.name) === row[i]) {
+            rowData.dirtyFormValues.delete(dataSourceField.name);
+          }
+          if (rowData.dirtyValues.get(dataSourceField.name) === row[i]) {
+            rowData.dirtyValues.delete(dataSourceField.name);
+          }
         }
-        if (rowData.dirtyFormValues.get(dataSourceField.name) === newRow[i]) {
-          rowData.dirtyFormValues.delete(dataSourceField.name);
-        }
-        if (rowData.dirtyValues.get(dataSourceField.name) === newRow[i]) {
-          rowData.dirtyValues.delete(dataSourceField.name);
-        }
+        this.clearUnneededAdditionalRowData();
       }
-      this.clearUnneededAdditionalRowData();
     }
   }
 
   @action.bound
   substituteRecord(row: any[]): void {
-    this.rowsContainer.substitute(row);
+    this.rowsContainer.substituteRows([row]);
+  }
+
+  @action.bound
+  substituteRecords(rows: any[][]): void {
+    this.rowsContainer.substituteRows(rows);
   }
 
   @action.bound

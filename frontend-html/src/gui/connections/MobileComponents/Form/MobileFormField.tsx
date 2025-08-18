@@ -18,10 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
+import "gui/connections/MobileComponents/Form/MobileForm.scss";
 import {
   getCaptionStyle, getFormFieldStyle,
-  getToolTip,
+  getTooltip,
   ICaptionPosition,
   IFormFieldProps
 } from "gui/Components/Form/FormField";
@@ -48,7 +48,7 @@ import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/Mobi
 export class MobileFormField extends React.Component<IFormFieldProps> {
 
   @observable
-  toolTip: string | undefined | null;
+  dynamicTooltip: string | undefined | null;
 
   render() {
     const row = getSelectedRow(this.props.property);
@@ -62,7 +62,7 @@ export class MobileFormField extends React.Component<IFormFieldProps> {
           <label
             className={S.caption}
             style={getCaptionStyle(this.props)}
-            title={getToolTip(this.props, this.toolTip)}
+            title={getTooltip(this.props.tooltip, this.dynamicTooltip)}
           >
             {this.props.caption}
           </label>
@@ -70,7 +70,7 @@ export class MobileFormField extends React.Component<IFormFieldProps> {
         <div
           className={S.editor}
           style={getFormFieldStyle(this.props)}
-          title={getToolTip(this.props, this.toolTip)}
+          title={getTooltip(this.props.tooltip, this.dynamicTooltip)}
         >
           <MobileFormViewEditor
             value={this.props.value}
@@ -78,7 +78,7 @@ export class MobileFormField extends React.Component<IFormFieldProps> {
             textualValue={this.props.textualValue}
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
-            onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            onTextOverflowChanged={tooltip => this.dynamicTooltip = tooltip}
             property={this.props.property!}
           />
           {invalidMessage && (

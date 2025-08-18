@@ -28,6 +28,7 @@ import { IDataSourceField } from "./types/IDataSourceField";
 import { LookupResolver } from "modules/Lookup/LookupResolver";
 import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { TabIndex } from "model/entities/TabIndexOwner";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -37,13 +38,17 @@ export class Property implements IProperty {
     if (this.lookup) {
       this.lookup.parent = this;
     }
+    if (!this.gridCaption) {
+      this.gridCaption = this.name;
+    }
   }
 
   autoSort: boolean = false;
   id: string = "";
-  tabIndex: string | undefined;
+  tabIndex: TabIndex = null as any;
   modelInstanceId: string = "";
   name: string = "";
+  gridCaption: string = "";
   nameOverride: string | null | undefined = null;
   readOnly: boolean = false;
   x: number = 0;
@@ -76,10 +81,10 @@ export class Property implements IProperty {
   isLookupColumn: boolean = false;
   style: any;
   controlPropertyId?: string;
-  toolTip: string = null as any;
+  tooltip: string = null as any;
   suppressEmptyColumns: boolean = false;
   supportsServerSideSorting: boolean = false;
-
+  isInteger = false;
   linkToMenuId?: string = undefined;
   linkDependsOnValue: boolean = false;
   fieldType: string = null as any;

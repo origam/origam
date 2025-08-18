@@ -4,6 +4,7 @@
   xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
@@ -12,7 +13,8 @@
   xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
   xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0"
   xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
-  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0"
+  xmlns:dswm="http://schemas.origam.com/Origam.Schema.WorkflowModel.DataStructureWorkflowMethod/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="31791c3b-7265-439e-ac96-ddd57aa82579"
@@ -29,6 +31,19 @@
       asi:name="AllDataTypes"
       dse:relationType="Normal"
       dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        dsc:hideInOutput="false"
+        x:id="064a4ffa-4576-4e9d-b52f-7e161cb5e84c"
+        dsc:lookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+        asi:name="TagInputSourceLabel_DataStructure"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="true"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
       <dse:DataStructureEntity
         asi:abstract="false"
         dse:allFields="true"
@@ -41,6 +56,19 @@
         dse:relationType="Normal"
         dse:useUpsert="false" />
     </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="26450535-2aad-489f-a275-aa8acbcb5139"
+      asi:name="GetByIdList">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByIdList/edb7e242-435b-4c8f-8022-8613fdd4a441"
+        x:id="cd3ee7e5-a986-40ef-8de6-03fea9b0ec8e"
+        asi:name="AllDataTypes_GetByIdList"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -99,5 +127,10 @@
         asi:name="AllDataTypes_0_Date1"
         dsssi:sortDirection="Ascending" />
     </dsss:DataStructureSortSet>
+    <dswm:DataStructureFilterSet
+      asi:abstract="false"
+      x:id="bcc840f2-a3ea-4bab-aa84-7cc4c0afebf2"
+      dswm:loadWorkflow="Widgets/Workflow/Widgets/ArrayParameterTest.origam#ArrayParameterTest/f3cee170-f68d-4ee2-a08b-cfc2ab3f5f2f"
+      asi:name="ArrayParameterTest" />
   </ds:DataStructure>
 </x:file>

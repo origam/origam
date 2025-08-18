@@ -25,3 +25,7 @@ _Resharper*/
 /Origam.ServerCore/log4net.config
 /Origam.ServerCore/appsettings.Development.json
 /Origam.Server/Properties/launchSettings.json
+/Origam.Architect.Server/appsettings.json
+/Origam.Architect.Server/appsettings.Development.json
+/Origam.Architect.Server/log4net.config
+/Origam.Architect.Server/OrigamSettings.config

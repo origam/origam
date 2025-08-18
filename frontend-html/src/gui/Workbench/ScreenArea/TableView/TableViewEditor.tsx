@@ -44,8 +44,13 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
+import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
+import S from "./TableViewEditor.module.scss";
+import { makeOnAddNewRecordClick } from "gui/connections/NewRecordScreen";
+import { getKeyBuffer } from "model/selectors/getKeyBuffer";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -62,11 +67,13 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
         property: actualProperty,
         value: value,
       }),
-    onEditorBlur: async () => {
-      await onFieldBlur(tablePanelView)();
+    onEditorBlur: async (event: any) => {
       const gridFocusManager = getGridFocusManager(tablePanelView);
-      gridFocusManager.activeEditor = undefined;
-      gridFocusManager.editorBlur = undefined;
+      if(!event?.target || gridFocusManager.activeEditor === event.target){
+        gridFocusManager.activeEditor = undefined;
+        gridFocusManager.editorBlur = undefined;
+      }
+      await onFieldBlur(tablePanelView)();
     },
     onEditorKeyDown: (event: any) => {
       event.persist();
@@ -79,8 +86,9 @@ export class TableViewEditor extends React.Component<{
   property?: IProperty;
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => Promise<void>;
-  onEditorBlur?: () => Promise<void>;
+  onEditorBlur?: (event: any) => Promise<void>;
   onEditorKeyDown?: (event: any) => void;
+  expand?: boolean
 }> {
 
   componentDidMount() {
@@ -89,39 +97,44 @@ export class TableViewEditor extends React.Component<{
   }
 
   getEditor() {
-    const rowId = getSelectedRowId(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const dataView = getDataView(this.props.property);
+    const property = this.props.property!;
+    const rowId = getSelectedRowId(property);
+    const row = getSelectedRow(property);
+    const foregroundColor = getRowStateForegroundColor(property, rowId || "");
+    const dataView = getDataView(property);
+    const tablePanelView = getTablePanelView(property);
     const readOnly =
-      isReadOnly(this.props.property!, rowId) ||
+      isReadOnly(property!, rowId) ||
       (dataView.orderProperty !== undefined &&
-        this.props.property?.name === dataView.orderProperty.name);
+        property.name === dataView.orderProperty.name);
 
     const customBackgroundColor = getRowStateRowBgColor(dataView, rowId);
     const backgroundColor = readOnly
       ? shadeHexColor(customBackgroundColor, -0.1)
       : customBackgroundColor;
 
-    const isFirstColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
-    const gridFocusManager = getGridFocusManager(this.props.property);
-    switch (this.props.property!.column) {
+    const isFirstColumn = getTablePanelView(dataView)?.firstColumn === property;
+    const gridFocusManager = getGridFocusManager(property);
+    const portalSettings = getWorkbenchLifecycle(property).portalSettings;
+    switch (property.column) {
       case "Number":
         return (
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            property={this.props.property}
-            isPassword={this.props.property!.isPassword}
-            maxLength={this.props.property?.maxLength}
+            property={property}
+            isPassword={property.isPassword}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customNumberFormat={this.props.property!.customNumericFormat}
+            customNumberFormat={property.customNumericFormat}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
+            onMount={(onChange) => this.onEditorMount(onChange)}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Number")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Number")}
             subscribeToFocusManager={(editor, onBlur) =>{
                 gridFocusManager.activeEditor = editor
                 gridFocusManager.editorBlur = onBlur;
@@ -132,23 +145,24 @@ export class TableViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            isPassword={this.props.property!.isPassword}
+            isPassword={property.isPassword}
             isAllowTab={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            maxLength={this.props.property?.maxLength}
+            maxLength={property.maxLength}
             onChange={this.props.onChange}
+            onMount={(onChange) => this.onEditorMount(onChange)}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             wrapText={false}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Text")}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
-            isMultiline={this.props.property!.multiline}
+            isMultiline={property.multiline}
             subscribeToFocusManager={(editor) =>
             {
               gridFocusManager.activeEditor = editor
@@ -160,13 +174,14 @@ export class TableViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.getCellValue!()}
-            outputFormat={this.props.property!.formatterPattern}
-            outputFormatToShow={this.props.property!.modelFormatterPattern}
+            outputFormat={property.formatterPattern}
+            outputFormatToShow={property.modelFormatterPattern}
             isReadOnly={readOnly}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
             onClick={undefined}
+            onMount={(onChange) => this.onEditorMount(onChange)}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             onKeyDown={this.props.onEditorKeyDown}
@@ -194,18 +209,35 @@ export class TableViewEditor extends React.Component<{
       case "ComboBox":
         return (
           <XmlBuildDropdownEditor
-            key={this.props.property!.xmlNode.$iid}
-            xmlNode={this.props.property!.xmlNode}
+            key={property.xmlNode.$iid}
+            xmlNode={property.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
-            autoSort={this.props.property!.autoSort}
+            onMount={(onChange) => this.onEditorMount(onChange)}
+            onBlur={(target: any)=>{
+              const gridFocusManager = getGridFocusManager(dataView);
+              if(gridFocusManager.activeEditor === target){
+                gridFocusManager.activeEditor = undefined;
+                gridFocusManager.editorBlur = undefined;
+              }
+            }}
+            expandAfterMounting={this.props.expand}
+            newRecordScreen={property.lookup?.newRecordScreen}
+            onAddNewRecordClick={makeOnAddNewRecordClick(property)}
+            autoSort={property.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
               gridFocusManager.activeEditor = editor
             }
+            typingDelayMillis={portalSettings?.dropDownTypingDebouncingDelayMilliseconds}
+            isLink={property.isLink}
+            onClick={(event) => {
+              tablePanelView.setEditing(false);
+              onDropdownEditorClick(property)(event, property, row);
+            }}
           />
         );
       case "Checklist":
@@ -215,7 +247,7 @@ export class TableViewEditor extends React.Component<{
           <ColorEditor
             value={flashColor2htmlColor(this.props.getCellValue!()) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
-            onBlur={() => this.props.onEditorBlur?.()}
+            onBlur={(event: any) => this.props.onEditorBlur?.(event)}
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
             subscribeToFocusManager={(editor) =>
@@ -227,10 +259,11 @@ export class TableViewEditor extends React.Component<{
         return (
           <div style={{height: rowHeight * 5 + "px", backgroundColor: "white"}}>
             <XmlBuildDropdownEditor
-              key={this.props.property!.xmlNode.$iid}
-              xmlNode={this.props.property!.xmlNode}
+              key={property.xmlNode.$iid}
+              xmlNode={property.xmlNode}
               isReadOnly={readOnly}
-              autoSort={this.props.property!.autoSort}
+              autoSort={property.autoSort}
+              onMount={(onChange) => this.onEditorMount(onChange)}
               subscribeToFocusManager={(editor) =>
                 gridFocusManager.activeEditor = editor
               }
@@ -266,17 +299,25 @@ export class TableViewEditor extends React.Component<{
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`); // eslint-disable-line no-console
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`) // eslint-disable-line no-console
+        console.warn(`Unknown column type "${property.column}", no editor was rendered`) // eslint-disable-line no-console
         return "";
     }
   }
 
+  async onEditorMount(onChange?: (value: any) => void) {
+    const keyBuffer = getKeyBuffer(this.props.property);
+    const bufferedText = keyBuffer.getAndClear();
+    if (bufferedText !== "" && this.props.onChange) {
+      onChange?.(bufferedText);
+    }
+  }
+
   onDoubleClick(event: any) {
-    getTablePanelView(this.props.property).setEditing(false);
     const dataView = getDataView(this.props.property);
     if (!dataView.firstEnabledDefaultAction) {
       return;
     }
+    getTablePanelView(this.props.property).setEditing(false);
     uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
       event,
       dataView.firstEnabledDefaultAction
@@ -284,17 +325,16 @@ export class TableViewEditor extends React.Component<{
   }
 
   render() {
-    return <Provider property={this.props.property}>{this.getEditor()}</Provider>;
+    const dataView = getDataView(this.props.property);
+    return <Provider property={this.props.property}>
+      {
+        <div
+          id={"editor_dataView_" + dataView.modelInstanceId}
+          className={S.container}
+        >
+          {this.getEditor()}
+        </div>
+      }
+    </Provider>;
   }
-}
-
-// Makes sure the editor alignment will be the same as the table cell alignment.
-// Needed on columns where the alignment can be set in the model.
-function resolveCellAlignment(customStyle: { [p: string]: string } | undefined, isFirsColumn: boolean, type: string){
-  let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);
-  const style = customStyle ?Object.assign({},customStyle) :{};
-  style["paddingRight"] = cellAlignment.paddingRight - 1 + "px";
-  style["paddingLeft"] = cellAlignment.paddingLeft + "px";
-  style["textAlign"] = cellAlignment.alignment;
-  return style;
 }

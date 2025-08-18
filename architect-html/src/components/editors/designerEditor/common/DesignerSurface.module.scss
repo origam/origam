@@ -1,0 +1,115 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.designSurface {
+  flex: 1;
+  position: relative;
+  background-color: var(--background1);
+  overflow: auto;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+
+.innerContainer {
+  position: absolute;
+  overflow: auto;
+}
+
+.componentLabel {
+  position: absolute;
+}
+
+.designComponent {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  user-select: none;
+
+  border: 1px solid var(--background8);
+
+  &.selected {
+    border: 1px solid var(--foreground3);
+  }
+
+  &.dragging {
+    opacity: 0.8;
+    border: 1px solid var(--background6);
+  }
+}
+
+.resizeHandle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: var(--background1);
+  border: 1px solid var(--foreground3);
+  border-radius: 50%;
+
+  &.top {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: n-resize;
+  }
+
+  &.right {
+    top: 50%;
+    right: -4px;
+    transform: translateY(-50%);
+    cursor: e-resize;
+  }
+
+  &.bottom {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: s-resize;
+  }
+
+  &.left {
+    top: 50%;
+    left: -4px;
+    transform: translateY(-50%);
+    cursor: w-resize;
+  }
+
+  &.topLeft {
+    top: -4px;
+    left: -4px;
+    cursor: nw-resize;
+  }
+
+  &.topRight {
+    top: -4px;
+    right: -4px;
+    cursor: ne-resize;
+  }
+
+  &.bottomRight {
+    bottom: -4px;
+    right: -4px;
+    cursor: se-resize;
+  }
+
+  &.bottomLeft {
+    bottom: -4px;
+    left: -4px;
+    cursor: sw-resize;
+  }
+}

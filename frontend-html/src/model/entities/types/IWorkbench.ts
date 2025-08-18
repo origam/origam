@@ -29,9 +29,8 @@ import { Chatrooms } from "../Chatrooms";
 import { Notifications } from "../Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "../SidebarState";
-import { observable } from "mobx";
-import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { About } from "model/entities/AboutInfo";
+import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -48,13 +47,13 @@ export interface IWorkbenchData {
   about: About;
   lookupListCache: LookupListCacheMulti;
   lookupMultiEngine: IMultiLookupEngine;
+  newRecordScreenData?: NewRecordScreenData
 }
 
 export interface IWorkbench extends IWorkbenchData {
   $type_IWorkbench: 1;
   isFullScreen: boolean;
 
-  // loggedUserName: any
   mainMenuEnvelope: IMainMenuEnvelope;
 
   run(): Generator;

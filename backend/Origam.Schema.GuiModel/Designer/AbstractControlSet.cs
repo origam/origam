@@ -22,59 +22,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI; 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet 
 {
-	public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet 
+	public AbstractControlSet() {}
+	public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
+	public Guid DataSourceId;
+	public BrowserNodeCollection Alternatives
 	{
-		public AbstractControlSet() {}
-		public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-		public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
-
-		public BrowserNodeCollection Alternatives
-		{
-			get {
-				var result = new BrowserNodeCollection ();
-				foreach (ControlSetItem item 
-				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
-					if (item.IsAlternative) {
-						result.Add (item);
-					}
+		get {
+			var result = new BrowserNodeCollection ();
+			foreach (var item 
+			         in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)) {
+				if (item.IsAlternative) {
+					result.Add (item);
 				}
-				return result;
 			}
+			return result;
 		}
-
-		public ControlSetItem MainItem
-		{
-			get {
-				foreach (ControlSetItem item 
-				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
-					if(!item.IsAlternative) {
-						return item;
-					}
+	}
+	public ControlSetItem MainItem
+	{
+		get {
+			foreach (var item 
+			         in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)) {
+				if(!item.IsAlternative) {
+					return item;
 				}
-				throw new Exception (
-					$"Main item was not found for a control set {Path}");
 			}
+			throw new Exception (
+				$"Main item was not found for a control set {Path}");
 		}
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(ControlSetItem)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(ControlSetItem) ?
-					"NewComponent" : null);
-		}
-	
-		#endregion
+	}
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(ControlSetItem)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(ControlSetItem) ?
+				"NewComponent" : null);
 	}
 
-	
+	#endregion
 }
+

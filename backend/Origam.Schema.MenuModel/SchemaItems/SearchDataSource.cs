@@ -26,181 +26,162 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for Graphics.
+/// </summary>
+[SchemaItemDescription("Search Data Source", 9)]
+[HelpTopic("Search Data Sources")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
 {
-	/// <summary>
-	/// Summary description for Graphics.
-	/// </summary>
-	[SchemaItemDescription("Search Data Source", 9)]
-    [HelpTopic("Search Data Sources")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
+	public const string CategoryConst = "SearchDataSource";
+    public SearchDataSource() : base() { Init(); }
+    public SearchDataSource(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+    public SearchDataSource(Key primaryKey) : base(primaryKey) { Init(); }
+    private void Init()
     {
-		public const string CategoryConst = "SearchDataSource";
-
-        public SearchDataSource() : base() { Init(); }
-
-        public SearchDataSource(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-        public SearchDataSource(Key primaryKey) : base(primaryKey) { Init(); }
-
-        private void Init()
+    }
+    #region Properties
+    public Guid DataStructureId;
+    [TypeConverter(typeof(DataStructureConverter))]
+    [NotNullModelElementRule()]
+    [Category("Data Source")]
+    [DisplayName("Data Structure")]
+    [Description("Data structure that will be used to retrieve search results. Must contain columns: Name, ReferenceId; optional column: Description.")]
+    [XmlReference("dataStructure", "DataStructureId")]
+    public DataStructure DataStructure
+    {
+        get
         {
+            return (DataStructure)this.PersistenceProvider.RetrieveInstance(
+                typeof(DataStructure), new ModelElementKey(this.DataStructureId));
         }
-
-        #region Properties
-        public Guid DataStructureId;
-
-        [TypeConverter(typeof(DataStructureConverter))]
-        [NotNullModelElementRule()]
-        [Category("Data Source")]
-        [DisplayName("Data Structure")]
-        [Description("Data structure that will be used to retrieve search results. Must contain columns: Name, ReferenceId; optional column: Description.")]
-        [XmlReference("dataStructure", "DataStructureId")]
-        public DataStructure DataStructure
+        set
         {
-            get
-            {
-                return (DataStructure)this.PersistenceProvider.RetrieveInstance(
-                    typeof(DataStructure), new ModelElementKey(this.DataStructureId));
-            }
-            set
-            {
-                this.DataStructureId = (Guid)value.PrimaryKey["Id"];
-            }
+            this.DataStructureId = (Guid)value.PrimaryKey["Id"];
         }
-
-        public Guid DataStructureMethodId;
-
-        [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-        [Category("Data Source")]
-        [DisplayName("Data Structure Method")]
-        [Description("Method that will accept a string parameter to return search results.")]
-        [NotNullModelElementRule()]
-        [XmlReference("method", "DataStructureMethodId")]
-        public DataStructureMethod Method
+    }
+    public Guid DataStructureMethodId;
+    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+    [Category("Data Source")]
+    [DisplayName("Data Structure Method")]
+    [Description("Method that will accept a string parameter to return search results.")]
+    [NotNullModelElementRule()]
+    [XmlReference("method", "DataStructureMethodId")]
+    public DataStructureMethod Method
+    {
+        get
         {
-            get
-            {
-                return (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-                    typeof(AbstractSchemaItem), 
-                    new ModelElementKey(DataStructureMethodId));
-            }
-            set
-            {
-                DataStructureMethodId = (value == null ? Guid.Empty : 
-                    (Guid)value.PrimaryKey["Id"]);
-            }
+            return (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+                typeof(ISchemaItem), 
+                new ModelElementKey(DataStructureMethodId));
         }
-
-        private string _groupLabel;
-        [Category("Results")]
-        [DisplayName("Group Label")]
-        [Description("A text under which the search results will be grouped.")]
-        [NotNullModelElementRule()]
-        [Localizable(true)]
-        [XmlAttribute("groupLabel")]
-        public string GroupLabel
+        set
         {
-            get
-            {
-                return _groupLabel;
-            }
-            set
-            {
-                _groupLabel = value;
-            }
+            DataStructureMethodId = (value == null ? Guid.Empty : 
+                (Guid)value.PrimaryKey["Id"]);
         }
-
-        private string _filterParameter;
-        [Category("Data Source")]
-        [DisplayName("Filter Parameter")]
-        [Description("String parameter that will accept the searched text.")]
-        [NotNullModelElementRule()]
-        [XmlAttribute("filterParameter")]
-        public string FilterParameter
+    }
+    private string _groupLabel;
+    [Category("Results")]
+    [DisplayName("Group Label")]
+    [Description("A text under which the search results will be grouped.")]
+    [NotNullModelElementRule()]
+    [Localizable(true)]
+    [XmlAttribute("groupLabel")]
+    public string GroupLabel
+    {
+        get
         {
-            get
-            {
-                return _filterParameter;
-            }
-            set
-            {
-                _filterParameter = value;
-            }
+            return _groupLabel;
         }
-
-        public Guid LookupId;
-
-        [Category("Reference")]
-        [TypeConverter(typeof(DataLookupConverter))]
-        [NotNullModelElementRule()]
-        [XmlReference("lookup", "LookupId")]
-        public IDataLookup Lookup
+        set
         {
-            get
-            {
-                return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                    typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId));
-            }
-            set
-            {
-                this.LookupId = (value == null ? Guid.Empty 
-                    : (Guid)value.PrimaryKey["Id"]);
-            }
+            _groupLabel = value;
         }
-
-        private string _roles = "*";
-        [Category("Security")]
-        [NotNullModelElementRule()]
-        [XmlAttribute("roles")]
-        public string Roles
+    }
+    private string _filterParameter;
+    [Category("Data Source")]
+    [DisplayName("Filter Parameter")]
+    [Description("String parameter that will accept the searched text.")]
+    [NotNullModelElementRule()]
+    [XmlAttribute("filterParameter")]
+    public string FilterParameter
+    {
+        get
         {
-            get
-            {
-                return _roles;
-            }
-            set
-            {
-                _roles = value;
-            }
+            return _filterParameter;
         }
-
-        #endregion
-
-        #region Overriden AbstractSchemaItem Members
-        public override void GetExtraDependencies(ArrayList dependencies)
+        set
         {
-            dependencies.Add(this.DataStructure);
-            base.GetExtraDependencies(dependencies);
+            _filterParameter = value;
         }
-
-        public override bool UseFolders
+    }
+    public Guid LookupId;
+    [Category("Reference")]
+    [TypeConverter(typeof(DataLookupConverter))]
+    [NotNullModelElementRule()]
+    [XmlReference("lookup", "LookupId")]
+    public IDataLookup Lookup
+    {
+        get
         {
-            get
-            {
-                return false;
-            }
+            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
+                typeof(ISchemaItem), new ModelElementKey(this.LookupId));
         }
-
-		public override string ItemType
+        set
+        {
+            this.LookupId = (value == null ? Guid.Empty 
+                : (Guid)value.PrimaryKey["Id"]);
+        }
+    }
+    private string _roles = "*";
+    [Category("Security")]
+    [NotNullModelElementRule()]
+    [XmlAttribute("roles")]
+    public string Roles
+    {
+        get
+        {
+            return _roles;
+        }
+        set
+        {
+            _roles = value;
+        }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.DataStructure);
+        base.GetExtraDependencies(dependencies);
+    }
+    public override bool UseFolders
+    {
+        get
+        {
+            return false;
+        }
+    }
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "9";
-			}
-		}
-		#endregion
 	}
+	public override string Icon
+	{
+		get
+		{
+			return "9";
+		}
+	}
+	#endregion
 }

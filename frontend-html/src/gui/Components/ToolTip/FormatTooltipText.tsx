@@ -47,7 +47,7 @@ function formatToolTipLines(content: string[]) {
   return (
     <div className={S.tooltipContent}>
       {linesToShow.map((line) => (
-        <div className={S.toolTipLine}>{line}</div>
+        <div className={S.tooltipLine}>{line}</div>
       ))}
     </div>
   );

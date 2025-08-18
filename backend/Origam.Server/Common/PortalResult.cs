@@ -43,107 +43,91 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class PortalResult
 {
-    public class PortalResult
+    private string _menu;
+    private HelpTooltip _tooltip;
+    private string _favorites;
+    private IList<PortalResultSession> _sessions = new List<PortalResultSession>();
+    private int _workQueueListRefreshInterval;
+    private int _notificationBoxRefreshInterval;
+    private string _slogan;
+    private string _helpUrl;
+    private PortalStyle _style = new PortalStyle();
+    private int _maxRequestLength;
+    public PortalResult(string menu)
     {
-        private string _menu;
-        private HelpTooltip _tooltip;
-        private string _favorites;
-        private IList<PortalResultSession> _sessions = new List<PortalResultSession>();
-        private int _workQueueListRefreshInterval;
-        private int _notificationBoxRefreshInterval;
-        private string _slogan;
-        private string _helpUrl;
-        private PortalStyle _style = new PortalStyle();
-        private int _maxRequestLength;
-
-        public PortalResult(string menu)
-        {
-            _menu = menu;
-        }
-
-        public string Menu
-        {
-            get { return _menu; }
-            set { _menu = value; }
-        }
-
-        public string Favorites
-        {
-            get { return _favorites; }
-            set { _favorites = value; }
-        }
-
-        public HelpTooltip Tooltip
-        {
-            get { return _tooltip; }
-            set { _tooltip = value; }
-        }
-	
-        public IList<PortalResultSession> Sessions
-        {
-            get { return _sessions; }
-        }
-
-        private string _userName;
-
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
-
-        public Guid UserId { private get; set; }
-        public string AvatarLink => "internalApi/Avatar/" + UserId;
-
-        public int WorkQueueListRefreshInterval
-        {
-            get { return _workQueueListRefreshInterval; }
-            set { _workQueueListRefreshInterval = value; }
-        }
-
-        public int NotificationBoxRefreshInterval
-        {
-            get { return _notificationBoxRefreshInterval; }
-            set { _notificationBoxRefreshInterval = value; }
-        }
-
-        public string Slogan
-        {
-            get { return _slogan; }
-            set { _slogan = value; }
-        }
-
-        public string HelpUrl
-        {
-            get { return _helpUrl; }
-            set { _helpUrl = value; }
-        }
-
-        public PortalStyle Style
-        {
-            get
-            {
-                return _style;
-            }
-        }
-
-        public int MaxRequestLength
-        {
-            get { return _maxRequestLength; }
-            set { _maxRequestLength = value; }
-        }
-
-        public string LogoUrl { get; set; }
-        public string CustomAssetsRoute { get; set; }
-
-        public int ChatRefreshInterval { get; set; }
-        public string Title { get; set; }
-        public bool ShowToolTipsForMemoFieldsOnly { get; set; }
-        public IFilteringConfig FilteringConfig { get; set; }
-
-        public string InitialScreenId { get; set; }
-        public int RowStatesDebouncingDelayMilliseconds { get; set; }
+        _menu = menu;
     }
+    public string Menu
+    {
+        get { return _menu; }
+        set { _menu = value; }
+    }
+    public string Favorites
+    {
+        get { return _favorites; }
+        set { _favorites = value; }
+    }
+    public HelpTooltip Tooltip
+    {
+        get { return _tooltip; }
+        set { _tooltip = value; }
+    }
+
+    public IList<PortalResultSession> Sessions
+    {
+        get { return _sessions; }
+    }
+    private string _userName;
+    public string UserName
+    {
+        get { return _userName; }
+        set { _userName = value; }
+    }
+    public Guid UserId { private get; set; }
+    public string AvatarLink => "internalApi/Avatar/" + UserId;
+    public int WorkQueueListRefreshInterval
+    {
+        get { return _workQueueListRefreshInterval; }
+        set { _workQueueListRefreshInterval = value; }
+    }
+    public int NotificationBoxRefreshInterval
+    {
+        get { return _notificationBoxRefreshInterval; }
+        set { _notificationBoxRefreshInterval = value; }
+    }
+    public string Slogan
+    {
+        get { return _slogan; }
+        set { _slogan = value; }
+    }
+    public string HelpUrl
+    {
+        get { return _helpUrl; }
+        set { _helpUrl = value; }
+    }
+    public PortalStyle Style
+    {
+        get
+        {
+            return _style;
+        }
+    }
+    public int MaxRequestLength
+    {
+        get { return _maxRequestLength; }
+        set { _maxRequestLength = value; }
+    }
+    public string LogoUrl { get; set; }
+    public string CustomAssetsRoute { get; set; }
+    public int ChatRefreshInterval { get; set; }
+    public string Title { get; set; }
+    public bool ShowToolTipsForMemoFieldsOnly { get; set; }
+    public IFilteringConfig FilteringConfig { get; set; }
+    public string InitialScreenId { get; set; }
+    public int RowStatesDebouncingDelayMilliseconds { get; set; }
+    public int DropDownTypingDebouncingDelayMilliseconds { get; set; }
+    public int GetLookupLabelExDebouncingDelayMilliseconds { get; set; }
 }

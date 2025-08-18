@@ -51,13 +51,13 @@ export class TagInputEditorData implements IDropdownEditorData {
     return this.dropdownEditorData.isResolving;
   }
 
-  @action.bound chooseNewValue(value: any) {
+  @action.bound async chooseNewValue(value: any) {
     if (this.value && this.value.includes(value)) {
       return;
     }
     const newArray = [...this.value ?? [], value];
     if (this.rowCursor.selectedId) {
-      this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
+      await this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
     }
   }
 

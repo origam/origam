@@ -20,47 +20,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+[SchemaItemDescription("Panel Widget", "icon_panel-widget.png")]
+public class PanelDashboardWidget : AbstractDataDashboardWidget
 {
-	[SchemaItemDescription("Panel Widget", "icon_panel-widget.png")]
-	public class PanelDashboardWidget : AbstractDataDashboardWidget
+	public PanelDashboardWidget() : base() {Init();}
+	public PanelDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public PanelDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+	private void Init()
 	{
-		public PanelDashboardWidget() : base() {Init();}
-		public PanelDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public PanelDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Panel);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		#region Properties
-		public Guid PanelId;
-
-		[Category("UI")]
-		[TypeConverter(typeof(PanelControlSetConverter))]
-        [XmlReference("screenSection", "PanelId")]
-		public PanelControlSet Panel
-		{
-			get
-			{
-				return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
-			}
-			set
-			{
-				this.PanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion			
 	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.Panel);
+		base.GetExtraDependencies (dependencies);
+	}
+	#region Properties
+	public Guid PanelId;
+	[Category("UI")]
+	[TypeConverter(typeof(PanelControlSetConverter))]
+    [XmlReference("screenSection", "PanelId")]
+	public PanelControlSet Panel
+	{
+		get
+		{
+			return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.PanelId));
+		}
+		set
+		{
+			this.PanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion			
 }

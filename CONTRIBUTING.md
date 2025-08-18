@@ -6,11 +6,12 @@ If you wish to contribute to the code, the pull requests should be made for the 
 
 The pull request title needs to contain a prefix describing the general intent of the pull request. The accepted prefixes are following:
 
-- FIX - a change that fixed a bug
-- SECURITY - a change that fixes a security problem
-- FEATURE - a change that adds a new feature to Origam
-- BUILD - a change related to CI/CD
-- DEV - a change that modifies Origam internals, without falling into one of the above categories
+- FIX: - a change that fixed a bug
+- SECURITY: - a change that fixes a security problem
+- FEATURE: - a change that adds a new feature to Origam
+- BUILD: - a change related to CI/CD
+- UX: - a change that improves user experience with Origam, but it is not considered as a feature
+- DEV: - a change that modifies Origam internals, without falling into one of the above categories
 
 The pull request should be linked to the topic on the [community.origam.com](https://community.origam.com). It is done by posting the link to the pull request in a reply to the topic on the [community.origam.com](https://community.origam.com). `origambot` will do the rest.
 If the contribution is a new feature, there should be an article on [community.origam.com](https://community.origam.com) documenting this new feature.

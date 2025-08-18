@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:er1="http://schemas.origam.com/Origam.Schema.RuleModel.EndRule/6.0.0"
+  xmlns:xr="http://schemas.origam.com/Origam.Schema.RuleModel.XslRule/6.0.0">
+  <er1:Rule
+    asi:abstract="false"
+    ar1:dataType="Boolean"
+    x:id="74e2265d-17cb-4c8b-95c0-bde126b888b9"
+    asi:name="FailRule"
+    xr:xsl="-***-ExternalFile:FailRule.origam___xsl___74e2265d-17cb-4c8b-95c0-bde126b888b9.xslt" />
+</x:file>

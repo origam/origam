@@ -42,9 +42,11 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
-import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import CS from "gui/Components/Dropdown/Dropdown.module.scss";
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import moment from "moment";
+import { toOrigamServerString } from "utils/moment";
 
 @inject(({property}: { property: IProperty }, {value}) => {
   return {
@@ -141,8 +143,8 @@ export class BlobEditor extends React.Component<{
             Property: this.props.Property!,
             FileName: this.props.value,
             parameters: this.props.parameters,
-            DateCreated: "2010-01-01",
-            DateLastModified: "2010-01-01",
+            DateCreated: toOrigamServerString(moment(file.lastModifiedDate)), // DateCreated is not available in the browser
+            DateLastModified: toOrigamServerString(moment(file.lastModifiedDate)),
           });
 
           let lastTime: number | undefined;
@@ -298,6 +300,7 @@ export class BlobEditor extends React.Component<{
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
               ref={this.refInput}
+              autoComplete={"new-password"}
               onFocus={() => this.onFocus()}
               onBlur={() => this.onBlur()}
               onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
@@ -323,6 +326,7 @@ export class BlobEditor extends React.Component<{
           className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
           disabled={this.props.isReadOnly}
+          autoComplete={"new-password"}
           onChange={(event: any) =>
             !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
           }

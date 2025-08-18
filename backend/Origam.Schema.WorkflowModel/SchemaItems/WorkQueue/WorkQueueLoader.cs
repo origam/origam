@@ -21,68 +21,58 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Summary description for WorkqueueLoader.
+/// </summary>
+[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkqueueLoader : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for WorkqueueLoader.
-	/// </summary>
-	[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkqueueLoader : AbstractSchemaItem
+	public const string CategoryConst = "WorkqueueLoader";
+	public WorkqueueLoader() : base() {Init();}
+	public WorkqueueLoader(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public WorkqueueLoader(Key primaryKey) : base(primaryKey)	{Init();}
+
+	private void Init()
 	{
-		public const string CategoryConst = "WorkqueueLoader";
-
-		public WorkqueueLoader() : base() {Init();}
-
-		public WorkqueueLoader(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-
-		public WorkqueueLoader(Key primaryKey) : base(primaryKey)	{Init();}
-	
-		private void Init()
-		{
-		}
-
-		#region Overriden AbstractDataEntityColumn Members
-		
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Workflow);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		#endregion
-
-		#region Properties
-		public Guid WorkflowId;
-
-		[Category("References")]
-		[TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
-        [XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
-		{
-			get
-			{
-				return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
-			}
-			set
-			{
-				this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-		#endregion
 	}
+	#region Overriden AbstractDataEntityColumn Members
+	
+	public override string ItemType
+	{
+		get
+		{
+			return CategoryConst;
+		}
+	}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(this.Workflow);
+		base.GetExtraDependencies (dependencies);
+	}
+	#endregion
+	#region Properties
+	public Guid WorkflowId;
+	[Category("References")]
+	[TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
+    [XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
+	{
+		get
+		{
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
+		}
+		set
+		{
+			this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	#endregion
 }

@@ -30,73 +30,62 @@ using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+/// <summary>
+/// Summary description for SetWorkflowPropertyEngineTask.
+/// </summary>
+public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for SetWorkflowPropertyEngineTask.
-	/// </summary>
-	public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
+	public SetWorkflowPropertyEngineTask() : base()
 	{
-		public SetWorkflowPropertyEngineTask() : base()
+	}
+	protected override void OnExecute()
+	{
+		SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
+	    IXmlContainer data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
+		if(setProperty.Transformation != null)
 		{
+			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+			IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
+			data = transform.Transform(data, setProperty.TransformationId, new Hashtable(), Engine.TransactionId, null, false);
 		}
-
-		protected override void OnExecute()
+		string propertyValue = (string)this.Engine.RuleEngine.EvaluateContext(setProperty.XPath, data, OrigamDataType.String, null);
+		string delimiter = (setProperty.Delimiter == @"\n" ? Environment.NewLine : setProperty.Delimiter);
+							
+		switch(setProperty.WorkflowProperty)
 		{
-			SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
-
-		    IXmlContainer data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
-
-			if(setProperty.Transformation != null)
-			{
-				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-				IXsltEngine transform = AsTransform.GetXsltEngine(
-                    persistence.SchemaProvider, setProperty.TransformationId);
-				data = transform.Transform(data, setProperty.TransformationId, new Hashtable(), Engine.TransactionId, null, false);
-			}
-
-			string propertyValue = (string)this.Engine.RuleEngine.EvaluateContext(setProperty.XPath, data, OrigamDataType.String, null);
-
-			string delimiter = (setProperty.Delimiter == @"\n" ? Environment.NewLine : setProperty.Delimiter);
-								
-			switch(setProperty.WorkflowProperty)
-			{
-				case WorkflowProperty.Title:
-					if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.RuntimeDescription != "")
-					{
-						this.Engine.RuntimeDescription += delimiter + propertyValue;
-					}
-					else
-					{
-						this.Engine.RuntimeDescription = propertyValue;
-					}
-					break;
-
-				case WorkflowProperty.Notification:
-					if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.Notification != "")
-					{
-						this.Engine.Notification += delimiter + propertyValue;
-					}
-					else
-					{
-						this.Engine.Notification = propertyValue;
-					}
-					break;
-
-				case WorkflowProperty.ResultMessage:
-					if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.ResultMessage != "")
-					{
-						this.Engine.ResultMessage += delimiter + propertyValue;
-					}
-					else
-					{
-						this.Engine.ResultMessage = propertyValue;
-					}
-					break;
-
-				default:
-					throw new ArgumentOutOfRangeException("WorkflowProperty", setProperty.WorkflowProperty, ResourceUtils.GetString("ErrorUnknownWorkflow"));
-			}
+			case WorkflowProperty.Title:
+				if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.RuntimeDescription != "")
+				{
+					this.Engine.RuntimeDescription += delimiter + propertyValue;
+				}
+				else
+				{
+					this.Engine.RuntimeDescription = propertyValue;
+				}
+				break;
+			case WorkflowProperty.Notification:
+				if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.Notification != "")
+				{
+					this.Engine.Notification += delimiter + propertyValue;
+				}
+				else
+				{
+					this.Engine.Notification = propertyValue;
+				}
+				break;
+			case WorkflowProperty.ResultMessage:
+				if(setProperty.Method == SetWorkflowPropertyMethod.Add && this.Engine.ResultMessage != "")
+				{
+					this.Engine.ResultMessage += delimiter + propertyValue;
+				}
+				else
+				{
+					this.Engine.ResultMessage = propertyValue;
+				}
+				break;
+			default:
+				throw new ArgumentOutOfRangeException("WorkflowProperty", setProperty.WorkflowProperty, ResourceUtils.GetString("ErrorUnknownWorkflow"));
 		}
 	}
 }

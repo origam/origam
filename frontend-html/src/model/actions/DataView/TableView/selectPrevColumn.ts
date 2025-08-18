@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { getTablePanelView } from "../../../selectors/TablePanelView/getTablePanelView";
 
 export function selectPrevColumn(ctx: any) {
-  return function selectPrevColumn(prevRowWhenStart?: boolean) {
-    getTablePanelView(ctx).selectPrevColumn(prevRowWhenStart);
+  return function* selectPrevColumn(prevRowWhenStart?: boolean) {
+    yield*getTablePanelView(ctx).selectPrevColumn(prevRowWhenStart);
   };
 }

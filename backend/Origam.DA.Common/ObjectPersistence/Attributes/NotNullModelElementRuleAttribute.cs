@@ -21,79 +21,71 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class NotNullModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class NotNullModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	private string _conditionField = null;
+	private string _conditionField2 = null;
+    private object _conditionValue = null;
+    private object _conditionValue2 = null;
+	public NotNullModelElementRuleAttribute()
 	{
-		private string _conditionField = null;
-		private string _conditionField2 = null;
-        private object _conditionValue = null;
-        private object _conditionValue2 = null;
-
-		public NotNullModelElementRuleAttribute()
-		{
-		}
-
-		/// <summary>
-		/// Will raise an exception when conditionField is not empty and the checked field is empty.
-		/// </summary>
-		/// <param name="conditionField">Field that will be checked. If empty, no checking will be done. If this field is filled, the checked field will be checked if it is empty.</param>
-		public NotNullModelElementRuleAttribute(string conditionField)
-		{
-			_conditionField = conditionField;
-		}
-
-		public NotNullModelElementRuleAttribute(string conditionField1, string conditionField2)
-		{
-			_conditionField = conditionField1;
-			_conditionField2 = conditionField2;
-		}
-
-        public NotNullModelElementRuleAttribute(string conditionField1, string conditionField2,
-            object conditionValue1, object conditionValue2)
+	}
+	/// <summary>
+	/// Will raise an exception when conditionField is not empty and the checked field is empty.
+	/// </summary>
+	/// <param name="conditionField">Field that will be checked. If empty, no checking will be done. If this field is filled, the checked field will be checked if it is empty.</param>
+	public NotNullModelElementRuleAttribute(string conditionField)
+	{
+		_conditionField = conditionField;
+	}
+	public NotNullModelElementRuleAttribute(string conditionField1, string conditionField2)
+	{
+		_conditionField = conditionField1;
+		_conditionField2 = conditionField2;
+	}
+    public NotNullModelElementRuleAttribute(string conditionField1, string conditionField2,
+        object conditionValue1, object conditionValue2)
+    {
+        _conditionField = conditionField1;
+        _conditionField2 = conditionField2;
+        _conditionValue = conditionValue1;
+        _conditionValue2 = conditionValue2;
+    }
+    public override Exception CheckRule(object instance)
+	{
+		return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+	}
+	public override Exception CheckRule(object instance, string memberName)
+	{
+		if(memberName == String.Empty || memberName == null) CheckRule(instance);
+		object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+        object field1Value = null;
+        object field2Value = null;
+        if (_conditionField != null)
         {
-            _conditionField = conditionField1;
-            _conditionField2 = conditionField2;
-            _conditionValue = conditionValue1;
-            _conditionValue2 = conditionValue2;
+            field1Value = Reflector.GetValue(instance.GetType(), instance, _conditionField);
         }
-
-        public override Exception CheckRule(object instance)
+        if (_conditionField2 != null)
+        {
+            field2Value = Reflector.GetValue(instance.GetType(), instance, _conditionField2);
+        }
+        if (value == null || (value as string) == string.Empty)
 		{
-			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
-		}
-
-		public override Exception CheckRule(object instance, string memberName)
-		{
-			if(memberName == String.Empty || memberName == null) CheckRule(instance);
-			object value = Reflector.GetValue(instance.GetType(), instance, memberName);
-            object field1Value = null;
-            object field2Value = null;
-            if (_conditionField != null)
+			if(_conditionField == null
+				|| (_conditionField !=  null && _conditionValue == null && field1Value != null)
+				|| (_conditionField2 != null && _conditionValue2 == null && field2Value != null)
+                || (_conditionField != null && _conditionValue != null && field1Value.Equals(_conditionValue))
+                || (_conditionField2 != null && _conditionValue2 != null && field2Value.Equals(_conditionValue2))
+                )
             {
-                field1Value = Reflector.GetValue(instance.GetType(), instance, _conditionField);
-            }
-            if (_conditionField2 != null)
-            {
-                field2Value = Reflector.GetValue(instance.GetType(), instance, _conditionField2);
-            }
-            if (value == null || (value as string) == string.Empty)
-			{
-				if(_conditionField == null
-					|| (_conditionField !=  null && _conditionValue == null && field1Value != null)
-					|| (_conditionField2 != null && _conditionValue2 == null && field2Value != null)
-                    || (_conditionField != null && _conditionValue != null && field1Value.Equals(_conditionValue))
-                    || (_conditionField2 != null && _conditionValue2 != null && field2Value.Equals(_conditionValue2))
-                    )
-                {
-					return new NullReferenceException(ResourceUtils.GetString("CantBeNull", memberName));
-				}
+				return new NullReferenceException(ResourceUtils.GetString("CantBeNull", memberName));
 			}
-            return null;
 		}
+        return null;
 	}
 }

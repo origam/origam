@@ -12,6 +12,14 @@
     dv:version="5.3.1">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="140"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___0484b06e-d10f-48fa-aa65-485529e71037.txt"
+      x:id="0484b06e-d10f-48fa-aa65-485529e71037"
+      asi:name="00140_PG_Database_Entity_WorkQueueState"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="70"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___06458f21-4fb0-4f6a-b005-76da9f734f9f.txt"
       x:id="06458f21-4fb0-4f6a-b005-76da9f734f9f"
@@ -28,11 +36,67 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="110"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___13539cca-58cf-4643-a418-5a7635cd3545.txt"
+      x:id="13539cca-58cf-4643-a418-5a7635cd3545"
+      asi:name="00110_PG_Database_Entity_WorkQueueState"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="180"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___13aa1c8f-877a-48e8-a835-c4a013775e8f.txt"
+      x:id="13aa1c8f-877a-48e8-a835-c4a013775e8f"
+      asi:name="00180_PG_Database_Field_WorkQueue.RetryIntervalSeconds"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="190"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___1570c1f5-d030-48a5-a7aa-79602fa418d2.txt"
+      x:id="1570c1f5-d030-48a5-a7aa-79602fa418d2"
+      asi:name="00190_PG_Database_Field_WorkQueue.ExponentialRetryBase"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="230"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___4e1bb4b4-b38a-44a8-9c20-57b24b9b7a5b.txt"
+      x:id="4e1bb4b4-b38a-44a8-9c20-57b24b9b7a5b"
+      asi:name="00230_PG_Database_Field_WorkQueueEntry.InRetry"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="200"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___65efa4eb-1676-4b19-a449-b1667663673a.txt"
+      x:id="65efa4eb-1676-4b19-a449-b1667663673a"
+      asi:name="00200_PG_Database_Field_WorkQueue.EnableThrottling"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="50"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___6714f7f1-4d87-4a5f-967b-f6b5f25665da.txt"
       x:id="6714f7f1-4d87-4a5f-967b-f6b5f25665da"
       asi:name="00050_Database_Entity_WorkQueueState"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="120"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___6778529d-7a21-4dcc-b68c-0a77fb383eb5.txt"
+      x:id="6778529d-7a21-4dcc-b68c-0a77fb383eb5"
+      asi:name="00120_PG_Database_Entity_WorkQueueRetryType"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="250"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___6ea1a764-e3a3-477d-b979-6272741c5bc4.txt"
+      x:id="6ea1a764-e3a3-477d-b979-6272741c5bc4"
+      asi:name="00250_PG_Database_Field_WorkQueueEntry.NextAttemptTime"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
@@ -52,6 +116,30 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___8540a8c9-a023-4b14-8d66-bf372233a481.txt"
+      x:id="8540a8c9-a023-4b14-8d66-bf372233a481"
+      asi:name="00100_PG_Database_Entity_WorkQueueRetryType_l10n"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="240"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___97018f40-2630-4ad6-9d34-6f60ab8984ca.txt"
+      x:id="97018f40-2630-4ad6-9d34-6f60ab8984ca"
+      asi:name="00240_PG_Database_Field_WorkQueueEntry.LastAttemptTime"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="170"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___9a2e4cc3-f77e-4b33-8826-c8648386d008.txt"
+      x:id="9a2e4cc3-f77e-4b33-8826-c8648386d008"
+      asi:name="00170_PG_Database_Field_WorkQueue.ThrottlingItemsPerInterval"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="30"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___c7d5843f-8325-4c80-9f84-5bcc4edc831b.txt"
       x:id="c7d5843f-8325-4c80-9f84-5bcc4edc831b"
@@ -60,11 +148,43 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="150"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___ceec9b47-ea4f-4d3d-8d95-d28ecbf5e658.txt"
+      x:id="ceec9b47-ea4f-4d3d-8d95-d28ecbf5e658"
+      asi:name="00150_PG_Database_Field_WorkQueue.ThrottlingIntervalSeconds"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="220"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___d26c6e6d-ee73-48ee-9e4b-8c1989c4e8bc.txt"
+      x:id="d26c6e6d-ee73-48ee-9e4b-8c1989c4e8bc"
+      asi:name="00220_PG_Database_Field_WorkQueueEntry.AttemptCount"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="60"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___ec3ab0ca-61f6-4462-b06d-bd7f8cafbeb2.txt"
       x:id="ec3ab0ca-61f6-4462-b06d-bd7f8cafbeb2"
       asi:name="00060_Database_Field_WorkQueueState.ThrottlingIntervalStart"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="160"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___eeec868d-a545-4c12-a590-5a84a4402899.txt"
+      x:id="eeec868d-a545-4c12-a590-5a84a4402899"
+      asi:name="00160_PG_Database_Field_WorkQueue.refWorkQueueRetryTypeId"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="130"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___efca4439-c2a6-42c7-b7aa-58446c07c8d4.txt"
+      x:id="efca4439-c2a6-42c7-b7aa-58446c07c8d4"
+      asi:name="00130_PG_Database_Entity_WorkQueueRetryType_l10n"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
@@ -81,6 +201,14 @@
       x:id="f997df5c-0b57-4a3b-b12c-a1a56ded8d7f"
       asi:name="00080_Database_Entity_WorkQueueState_UniqueConstraint"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="210"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___fc062c21-3776-41a6-82b4-a6067bada481.txt"
+      x:id="fc062c21-3776-41a6-82b4-a6067bada481"
+      asi:name="00210_PG_Database_Field_WorkQueue.MaxRetries"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>

@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueueEntry" ADD "InRetry" Boolean NOT NULL CONSTRAINT "DF_WorkQueueEntry_InRetry" DEFAULT false;
+ALTER TABLE "WorkQueueEntry" ALTER COLUMN "InRetry" DROP DEFAULT;

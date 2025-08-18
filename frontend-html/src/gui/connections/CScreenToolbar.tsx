@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ScreenToolbar } from "gui/Components/ScreenToolbar/ScreenToolbar";
 import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
 import { ScreenToolbarPusher } from "gui/Components/ScreenToolbar/ScreenToolbarPusher";
@@ -51,7 +51,7 @@ import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
 import { showDialog } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
@@ -154,6 +154,7 @@ export class CScreenToolbar extends React.Component<{}> {
       );
       return (
         <Dropdowner
+          key={action.id}
           style={{width: "auto"}}
           trigger={({refTrigger, setDropped, isDropped}) => (
             <Observer key={action.id}>
@@ -203,7 +204,7 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   renderForFormScreen() {
-    const actionButtonsState = geScreenActionButtonsState(this.application);
+    const actionButtonsState = getScreenActionButtonsState(this.application);
     if(!actionButtonsState){
       return null;
     }
@@ -219,7 +220,11 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
                   onClick={onSaveSessionClick(actionButtonsState.formScreen)}
-                  onShortcut={onSaveSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={event => {
+                    if(event.target.tagName !== "INPUT"){
+                      onSaveSessionClick(actionButtonsState.formScreen)
+                    }
+                  }}
                   id={"saveButton"}
                   shortcutPredicate={isSaveShortcut}
                   icon={
@@ -235,7 +240,11 @@ export class CScreenToolbar extends React.Component<{}> {
               {actionButtonsState.isRefreshButtonVisible && (
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
-                  onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={event => {
+                    if(event.target.tagName !== "INPUT"){
+                      onRefreshSessionClick(actionButtonsState.formScreen)
+                    }
+                  }}
                   id={"refreshButton"}
                   className={"isHoverBlue"}
                   shortcutPredicate={isRefreshShortcut}

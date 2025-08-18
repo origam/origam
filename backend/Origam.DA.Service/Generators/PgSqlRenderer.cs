@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Text;
+using Origam.DA.Service;
 
 class PgSqlRenderer : SqlRenderer
 {
@@ -233,6 +234,12 @@ class PgSqlRenderer : SqlRenderer
     {
         return "COALESCE";
     }
+    
+    internal override string Format(string date, string culture)
+    {
+        return @$" CASE when TO_CHAR({date} ,'HH24:MI:SS AM') = '00:00:00 AM' then CAST({date}::TIMESTAMP::DATE as TEXT) else CAST({date}::TIMESTAMP as TEXT) END ";
+    }
+    
     internal override string CountAggregate()
     {
         return "COUNT";

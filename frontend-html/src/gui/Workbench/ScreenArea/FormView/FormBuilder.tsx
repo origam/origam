@@ -26,7 +26,7 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormField } from "gui/Components/Form/FormField";
+import { FormField, getTooltip } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
 import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
@@ -42,6 +42,8 @@ import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
 import { findStrings } from "xmlInterpreters/xmlUtils";
+import { TabIndex } from "model/entities/TabIndexOwner";
+import { BackupFocusPlaceHolder } from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder";
 
 
 @inject(({dataView}) => {
@@ -53,18 +55,6 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   static contextType = CtxPanelVisibility
-
-  componentDidMount() {
-    document.addEventListener("click", event => this.notifyClick(event))
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("click", event => this.notifyClick(event));
-  }
-
-  notifyClick(event: any) {
-    this.props.dataView!.formFocusManager.setLastFocused(event.target);
-  }
 
   onKeyDown(event: any) {
     if (event.key === "Tab") {
@@ -97,8 +87,13 @@ export class FormBuilder extends React.Component<{
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot key={xfo.$iid} style={{backgroundColor}}>
+          <FormRoot
+            key={xfo.$iid}
+            dataView={self.props.dataView!}
+            style={{backgroundColor}}
+          >
             {xfo.elements.map((child: any) => recursive(child))}
+            <BackupFocusPlaceHolder ctx={self.props.dataView}/>
           </FormRoot>
         );
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
@@ -139,7 +134,7 @@ export class FormBuilder extends React.Component<{
             checked={checked}
             onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
+              focusManager.subscribe(radioInput, xfo.attributes.Id, TabIndex.create(xfo.attributes.TabIndex))
             }
             labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
@@ -178,25 +173,27 @@ export class FormBuilder extends React.Component<{
                   return <></>;
                 }
 
-                const isHidden =
-                  (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                    getRowStateMayCauseFlicker(property)) && !!row;
+                let mayCauseFlicker = getRowStateMayCauseFlicker(property);
+                let rowStateAllowRead = getRowStateAllowRead(property, rowId || "", property.id);
+                const isHidden = (!rowStateAllowRead || mayCauseFlicker) && !!row;
 
                   if (property.column === "CheckBox") {
                     return (
                       <Provider property={property}>
-                        <CheckBox
-                          fieldDimensions={dimensionsFromProperty(property)}
-                          isHidden={isHidden}
-                          checked={value}
-                          readOnly={!row || isReadOnly(property, rowId)}
-                          onKeyDown={(event) => self.onKeyDown(event)}
-                          subscribeToFocusManager={(radioInput) =>
-                            focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
-                          }
-                          onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
-                          labelColor={foreGroundColor}
-                        />
+                        <div title={getTooltip(property.tooltip)}>
+                           <CheckBox
+                            fieldDimensions={dimensionsFromProperty(property)}
+                            isHidden={isHidden}
+                            checked={value}
+                            readOnly={!row || isReadOnly(property, rowId)}
+                            onKeyDown={(event) => self.onKeyDown(event)}
+                            subscribeToFocusManager={(radioInput) =>
+                              focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
+                            }
+                            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+                            labelColor={foreGroundColor}
+                            />
+                        </div>
                       </Provider>
                     );
                   }
@@ -212,7 +209,7 @@ export class FormBuilder extends React.Component<{
                         captionColor={foreGroundColor}
                         dock={property.dock}
                         fieldDimensions={dimensionsFromProperty(property)}
-                        toolTip={property.toolTip}
+                        tooltip={property.tooltip}
                         value={value}
                         isRichText={property.isRichText}
                         textualValue={textualValue}

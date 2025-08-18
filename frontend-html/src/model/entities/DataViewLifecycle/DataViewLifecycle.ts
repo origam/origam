@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Axios from "axios";
-import { action, comparer, flow, reaction } from "mobx";
+import { action, flow } from "mobx";
 import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
 import { handleError } from "model/actions/handleError";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
@@ -43,10 +43,12 @@ import { joinWithAND, toFilterItem } from "../OrigamApiHelpers";
 import { FlowBusyMonitor } from "utils/flow";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
+  reactToRowChanges = true;
 
   get isWorking() {
     return this.monitor.isWorkingDelayed;
@@ -55,80 +57,48 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   @action.bound
   start(): void {
     if (isLazyLoading(this)) {
-      this.startSelectedRowReaction();
+      const self = this;
+      runGeneratorInFlowWithHandler({
+        ctx: this,
+        generator: function*() {
+            yield*self.startSelectedRowReaction(true);
+        }()
+      });
     }
   }
 
-  onSelectedRowIdChangeImm = flow(
-    function*(this: DataViewLifecycle) {
-      if(!isLazyLoading(this)){
-        return;
-      }
-      try {
-        this.monitor.inFlow++;
-        if (getIsBindingRoot(this)) {
-          yield*this.changeMasterRow();
-          yield*this.navigateChildren();
-        } else if (getIsBindingParent(this)) {
-          yield*this.navigateChildren();
-        }
-      } catch (e) {
-        // TODO: Move this method to action handler file?
-        yield*handleError(this)(e);
-        throw e;
-      } finally {
-        this.monitor.inFlow--;
-      }
-    }.bind(this)
-  );
-
-  _selectedRowReactionDisposer: any;
-
-  @action.bound
-  async startSelectedRowReaction(fireImmediately?: boolean) {
-    if (fireImmediately) {
-      await this.onSelectedRowIdChangeImm();
-    }
-
-    if (this._selectedRowReactionDisposer){
+  *runRecordChangedReaction(this: DataViewLifecycle){
+    if (!this.reactToRowChanges || !isLazyLoading(this)) {
       return;
     }
-
-    this.stopSelectedRowReaction();
-
-    const self = this;
-    return (this._selectedRowReactionDisposer = reaction(
-      () => {
-        return getSelectedRowId(this);
-      },
-      () => self.onSelectedRowIdChangeImm(),
-      {equals: comparer.structural}
-    ));
+    try {
+      this.monitor.inFlow++;
+      if (getIsBindingRoot(this)) {
+        yield*this.changeMasterRow();
+        yield*this.navigateChildren();
+      } else if (getIsBindingParent(this)) {
+        yield*this.navigateChildren();
+      }
+    } catch (e) {
+      // TODO: Move this method to action handler file?
+      yield*handleError(this)(e);
+      throw e;
+    } finally {
+      this.monitor.inFlow--;
+    }
   }
 
-  async runRecordChangedReaction(action?: () => Generator) {
-    let wasRunning = false;
-    try {
-      wasRunning = this.stopSelectedRowReaction();
-      if (action) {
-        await flow(action)();
-      }
-    } finally {
-      if (wasRunning) {
-        await this.startSelectedRowReaction(true);
-      } else {
-        await this.onSelectedRowIdChangeImm();
-      }
+  *startSelectedRowReaction(fireImmediately?: boolean): Generator {
+    this.reactToRowChanges = true;
+    if (fireImmediately) {
+      yield*this.runRecordChangedReaction();
     }
   }
 
   @action.bound stopSelectedRowReaction() {
-    if (this._selectedRowReactionDisposer) {
-      this._selectedRowReactionDisposer();
-      this._selectedRowReactionDisposer = undefined;
-      return true;
-    }
-    return false;
+    const wasRunning = this.reactToRowChanges;
+    this.reactToRowChanges = false;
+    return wasRunning;
   }
 
   *navigateAsChild(rows?: any[]) {
@@ -227,9 +197,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       } else {
         const parentRowId = getParentRowId(this);
         const masterRowId = getMasterRowId(this);
+        let entity = getEntity(this);
         data = !parentRowId || !masterRowId
           ? []
-          : yield getFormScreen(this).getData(getEntity(this), dataView.modelInstanceId, parentRowId, masterRowId);
+          : yield getFormScreen(this).getData(entity, dataView.modelInstanceId, parentRowId, masterRowId);
       }
       yield dataView.setRecords(data);
       dataView.selectFirstRow();

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0">
   <ema:EntityUIAction
     asi:abstract="true"
     euia:actionType="OpenForm"
@@ -19,8 +24,14 @@
     <euiapm:EntityUIActionParameterMapping
       asi:abstract="true"
       euiapm:field="Id"
+      x:id="c6880d74-bdda-43da-bc15-bdbdc4c91aa7"
+      asi:name="OrigamDataAuditLog_Secondary_parRefParentRecordId"
+      euiapm:type="Current" />
+    <euiapm:EntityUIActionParameterMapping
+      asi:abstract="true"
+      euiapm:field="Id"
       x:id="db569732-c8d5-482e-8d22-e60748153687"
-      asi:name="OrigamDataAuditLog_parRefParentRecordId"
+      asi:name="OrigamDataAuditLog_Primary_parRefParentRecordId"
       euiapm:type="Current" />
   </ema:EntityUIAction>
 </x:file>

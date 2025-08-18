@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -27,139 +28,121 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for AbstractDataReport.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractDataReport : AbstractReport
 {
-    /// <summary>
-    /// Summary description for AbstractDataReport.
-    /// </summary>
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractDataReport : AbstractReport
+    public AbstractDataReport() : base() { }
+    public AbstractDataReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+    public AbstractDataReport(Key primaryKey) : base(primaryKey) { }
+    #region Properties
+    private string _reportFileName;
+    public Guid DataStructureId;
+    [TypeConverter(typeof(DataStructureConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("dataStructure", "DataStructureId")]
+    public DataStructure DataStructure
     {
-        public AbstractDataReport() : base() { }
-
-        public AbstractDataReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-
-        public AbstractDataReport(Key primaryKey) : base(primaryKey) { }
-
-        #region Properties
-
-        private string _reportFileName;
-
-        public Guid DataStructureId;
-
-        [TypeConverter(typeof(DataStructureConverter))]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("dataStructure", "DataStructureId")]
-        public DataStructure DataStructure
+        get
         {
-            get
-            {
-                return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
-            }
-            set
-            {
-                this.Method = null;
-                this.SortSet = null;
-                this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-            }
+            return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
         }
-
-        public Guid DataStructureMethodId;
-
-        [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-        [XmlReference("method", "DataStructureMethodId")]
-        public DataStructureMethod Method
+        set
         {
-            get
-            {
-                return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
-            }
-            set
-            {
-                this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-            }
+            this.Method = null;
+            this.SortSet = null;
+            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
         }
-
-        public Guid DataStructureSortSetId;
-
-        [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-        [XmlReference("sortSet", "DataStructureSortSetId")]
-        public DataStructureSortSet SortSet
+    }
+    public Guid DataStructureMethodId;
+    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference("method", "DataStructureMethodId")]
+    public DataStructureMethod Method
+    {
+        get
         {
-            get
-            {
-                return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
-            }
-            set
-            {
-                this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-            }
+            return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
         }
-        public Guid TransformationId;
-
-        [TypeConverter(typeof(TransformationConverter))]
-        [XmlReference("transformation", "TransformationId")]
-        public AbstractTransformation Transformation
+        set
         {
-            get
-            {
-                return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TransformationId));
-            }
-            set
-            {
-                this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-            }
+            this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
         }
-
-        [XmlAttribute("reportFileName")]
-        public string ReportFileName
+    }
+    public Guid DataStructureSortSetId;
+    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+    [XmlReference("sortSet", "DataStructureSortSetId")]
+    public DataStructureSortSet SortSet
+    {
+        get
         {
-            get
-            {
-                return _reportFileName;
-            }
-            set
-            {
-                _reportFileName = value;
-            }
+            return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
         }
-
-        string _localeXPath;
-        [Description("XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report.")]
-        [XmlAttribute("localeXPath")]
-        public string LocaleXPath
+        set
         {
-            get
-            {
-                return _localeXPath;
-            }
-            set
-            {
-                _localeXPath = value;
-            }
+            this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
         }
-        #endregion
-
-        public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+    }
+    public Guid TransformationId;
+    [TypeConverter(typeof(TransformationConverter))]
+    [XmlReference("transformation", "TransformationId")]
+    public AbstractTransformation Transformation
+    {
+        get
         {
-            if (this.Method != null)
-            {
-                base.GetParameterReferences(this.Method as AbstractSchemaItem, list);
-            }
-            else
-            {
-                base.GetParameterReferences(this.DataStructure as AbstractSchemaItem, list);
-            }
+            return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.TransformationId));
         }
-
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+        set
         {
-            dependencies.Add(this.DataStructure);
-            if (this.Method != null) dependencies.Add(this.Method);
-            if (this.SortSet != null) dependencies.Add(this.SortSet);
-            if (this.Transformation != null) dependencies.Add(this.Transformation);
-
-            base.GetExtraDependencies(dependencies);
+            this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
         }
+    }
+    [XmlAttribute("reportFileName")]
+    public string ReportFileName
+    {
+        get
+        {
+            return _reportFileName;
+        }
+        set
+        {
+            _reportFileName = value;
+        }
+    }
+    string _localeXPath;
+    [Description("XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report.")]
+    [XmlAttribute("localeXPath")]
+    public string LocaleXPath
+    {
+        get
+        {
+            return _localeXPath;
+        }
+        set
+        {
+            _localeXPath = value;
+        }
+    }
+    #endregion
+    public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
+    {
+        if (this.Method != null)
+        {
+            base.GetParameterReferences(Method, list);
+        }
+        else
+        {
+            base.GetParameterReferences(DataStructure, list);
+        }
+    }
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.DataStructure);
+        if (this.Method != null) dependencies.Add(this.Method);
+        if (this.SortSet != null) dependencies.Add(this.SortSet);
+        if (this.Transformation != null) dependencies.Add(this.Transformation);
+        base.GetExtraDependencies(dependencies);
     }
 }

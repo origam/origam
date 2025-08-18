@@ -45,7 +45,7 @@ export function closeForm(ctx: any) {
           }
           for (let dataView of parentFormScreen.dataViews) {
             const dataViewLifecycle = getDataViewLifecycle(dataView);
-            yield dataViewLifecycle.runRecordChangedReaction();
+            yield*dataViewLifecycle.runRecordChangedReaction();
           }
           break;
         case IRefreshOnReturnType.RefreshCompleteForm:
@@ -55,9 +55,7 @@ export function closeForm(ctx: any) {
           const api = getApi(ctx);
           const parentScreenSessionId = parentScreen!.content!.formScreen!.sessionId;
           const changes = (yield api.pendingChanges({sessionFormIdentifier: parentScreenSessionId})) as ICRUDResult[];
-          for (let change of changes) {
-            yield*processCRUDResult(openedScreen.parentContext, change);
-          }
+          yield*processCRUDResult(openedScreen.parentContext, changes);
           const dataViews = parentScreen?.content?.formScreen?.dataViews ?? [];
           for (const dataView of dataViews) {
             dataView.dataTable.unlockAddedRowPosition();

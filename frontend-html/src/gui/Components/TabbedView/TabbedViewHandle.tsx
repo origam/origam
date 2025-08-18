@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/TabbedView/TabbedViewHandle.module.scss";
 import cx from "classnames";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 
 export class TabbedViewHandle extends React.Component<{
   title?: string;
@@ -43,7 +43,7 @@ export class TabbedViewHandle extends React.Component<{
         <div className={S.label}>{this.props.children}</div>
         {this.props.hasCloseBtn && (
           <a
-            className={S.closeBtn}
+            className={S.closeBtn + " tabHandle"}
             onClick={this.props.onCloseClick}
             onMouseDown={this.props.onCloseMouseDown}
           >

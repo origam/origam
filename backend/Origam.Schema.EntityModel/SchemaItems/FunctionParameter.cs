@@ -23,66 +23,58 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for FunctionParameter.
+/// </summary>
+[SchemaItemDescription("Parameter", 15)]
+[HelpTopic("Function+Parameter")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class FunctionParameter : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for FunctionParameter.
-	/// </summary>
-	[SchemaItemDescription("Parameter", 15)]
-    [HelpTopic("Function+Parameter")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class FunctionParameter : AbstractSchemaItem
+	public const string CategoryConst = "FunctionParameter";
+	public FunctionParameter() : base() {}
+	public FunctionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractDataEntityColumn Members
+
+	public override string ItemType
 	{
-		public const string CategoryConst = "FunctionParameter";
-
-		public FunctionParameter() : base() {}
-
-		public FunctionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
-	
-		#region Overriden AbstractDataEntityColumn Members
-	
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		public override string Icon
+	}
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
-				return "15";
-			}
+			return "15";
 		}
-
-		public override SchemaItemCollection ChildItems
+	}
+	public override ISchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
+			return SchemaItemCollection.Create();
 		}
-		#endregion
-
-		private int _ordinalPosition;
-		[XmlAttribute("ordinalPosition")]
-        public int OrdinalPosition
+	}
+	#endregion
+	private int _ordinalPosition;
+	[XmlAttribute("ordinalPosition")]
+    public int OrdinalPosition
+	{
+		get
 		{
-			get
-			{
-				return _ordinalPosition;
-			}
-			set
-			{
-				_ordinalPosition = value;
-			}
+			return _ordinalPosition;
 		}
-
+		set
+		{
+			_ordinalPosition = value;
+		}
 	}
 }

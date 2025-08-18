@@ -18,45 +18,41 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.OrigamEngine;
 using Origam.Workbench.Services;
 
-namespace Origam.Utils
+namespace Origam.Utils;
+class RuntimeServiceFactoryProcessor : IRuntimeServiceFactory
 {
-    class RuntimeServiceFactoryProcessor : IRuntimeServiceFactory
+    public IPersistenceService CreatePersistenceService()
     {
-        public IPersistenceService CreatePersistenceService()
-        {
-            return GetPersistenceBuilder().GetPersistenceService();
-        }
-
-        public IDocumentationService CreateDocumentationService()
-        {
-            return GetPersistenceBuilder().GetDocumentationService();
-        }
-
-        private static IPersistenceBuilder GetPersistenceBuilder()
-        {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string[] classpath = settings.ModelProvider.Split(',');
-            return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
-        }
-
-        public void InitializeServices()
-        {
-            ServiceManager.Services.AddService(CreatePersistenceService());
-            ServiceManager.Services.AddService(new SchemaService());
-            ServiceManager.Services.AddService(new NullParameterService());
-        }
-
-        protected virtual IParameterService CreateParameterService()
-        {
-            return new ParameterService();
-        }
-
-        public void UnloadServices()
-        {
-            throw new System.NotImplementedException();
-        }
+        return GetPersistenceBuilder().GetPersistenceService();
+    }
+    public IDocumentationService CreateDocumentationService()
+    {
+        return GetPersistenceBuilder().GetDocumentationService();
+    }
+    private static IPersistenceBuilder GetPersistenceBuilder()
+    {
+        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+        string[] classpath = settings.ModelProvider.Split(',');
+        return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
+    }
+    public void InitializeServices()
+    {
+        ServiceManager.Services.AddService(new MetaModelUpgradeService());
+        ServiceManager.Services.AddService(CreatePersistenceService());
+        ServiceManager.Services.AddService(new SchemaService());
+        ServiceManager.Services.AddService(new NullParameterService());
+    }
+    protected virtual IParameterService CreateParameterService()
+    {
+        return new ParameterService();
+    }
+    public void UnloadServices()
+    {
+        throw new System.NotImplementedException();
     }
 }

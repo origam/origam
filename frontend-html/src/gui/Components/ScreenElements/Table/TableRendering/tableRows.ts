@@ -30,7 +30,7 @@ export class TableGroupRow implements IGroupRow {
   }
 
   get columnValue(): string {
-    return this.sourceGroup.columnDisplayValue;
+    return this.sourceGroup.getColumnDisplayValue();
   }
 
   get isExpanded(): boolean {

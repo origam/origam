@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { action } from "mobx";
 import { showDialog } from "model/selectors/getDialogStack";
-import { YesNoQuestion } from "@origam/components";
 import { T } from "utils/translation";
+import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 
 export function askYesNoQuestion(ctx: any, title: string, question: string) {
   return new Promise(

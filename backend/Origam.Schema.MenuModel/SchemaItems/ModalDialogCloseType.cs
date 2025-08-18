@@ -19,15 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for ModalDialogCloseType.
+/// </summary>
+public enum ModalDialogCloseType
 {
-	/// <summary>
-	/// Summary description for ModalDialogCloseType.
-	/// </summary>
-	public enum ModalDialogCloseType
-	{
-		None,
-		CloseAndCommit,
-		CloseAndCancel
-	}
+	None,
+	CloseAndCommit,
+	CloseAndCancel,
+	CloseAndCommitWithErrors
 }

@@ -27,7 +27,12 @@ import { RefObject } from "react";
 import { IMainMenuState } from "./types/IMainMenu";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
-export class SidebarState {
+export interface ISidebarState {
+  activeSection: string;
+  resultCount: number;
+}
+
+export class SidebarState implements ISidebarState{
 
   @observable
   searchResultGroups: ISearchResultGroup[] = [];
@@ -78,16 +83,53 @@ export class SidebarState {
 
 export class MainMenuState implements IMainMenuState {
 
-  @observable
-  editing = false;
+  private readonly folderStateKey = "folderState";
+
+  constructor() {
+    this.folderStateMap = this.restoreFolderState();
+  }
+
+  flipEditEnabled(): void {
+    this.editingEnabled = !this.editingEnabled;
+  }
 
   @observable
-  folderStateMap: Map<string, boolean> = new Map();
+  editingEnabled = false;
+
+  @observable
+  private readonly folderStateMap: Map<string, boolean>;
 
   refMap: Map<string, RefObject<HTMLElement>> = new Map();
 
   @observable
   private _highLightedItemId: string | undefined;
+
+  private restoreFolderState(): Map<string, boolean> {
+    try
+    {
+      const folderStateJson = localStorage.getItem(this.folderStateKey);
+      return folderStateJson
+        ? new Map(JSON.parse(folderStateJson))
+        : new Map();
+    }
+    catch (error)
+    {
+      console.warn(error);
+      return new Map();
+    }
+  }
+
+  private persistFolderState(){
+    const folderStateJson = JSON.stringify(Array.from(this.folderStateMap.entries()));
+    try
+    {
+      localStorage.setItem(this.folderStateKey, folderStateJson);
+    }
+    catch (error)
+    {
+      console.warn(error);
+    }
+  }
 
   closeAll() {
     this.folderStateMap.clear();
@@ -99,6 +141,7 @@ export class MainMenuState implements IMainMenuState {
 
   setIsOpen(menuId: string, state: boolean) {
     this.folderStateMap.set(menuId, state);
+    this.persistFolderState();
   }
 
   flipIsOpen(menuId: string) {

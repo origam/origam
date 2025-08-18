@@ -18,13 +18,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { clickSubscriptions, mouseMoveSubscriptions, mouseOverSubscriptions, } from "./renderingValues";
-import { IClickSubsItem, IMouseOverSubsItem } from "./types";
+import { IClickSubsItem, IMouseMoveSubsItem, IMouseOverSubsItem } from "./types";
 
 export function onClick(item: IClickSubsItem) {
   clickSubscriptions().push(item);
 }
 
-export function handleTableClick(
+export async function handleTableClick(
   event: any,
   canvasX: number,
   canvasY: number,
@@ -35,15 +35,15 @@ export function handleTableClick(
   let handled = false;
   for (let h of clickSubscriptions) {
     if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
-      h.handler(event, canvasX, canvasY, canvasX, canvasY);
+      await h.handler(event, canvasX, canvasY, canvasX, canvasY);
       handled = true;
       break;
     }
   }
-  return {handled};
+  return handled;
 }
 
-export function onMouseMove(item: IClickSubsItem) {
+export function onMouseMove(item: IMouseMoveSubsItem) {
   mouseMoveSubscriptions().push(item);
 }
 
@@ -77,7 +77,7 @@ export function getTooltip(
 ) {
   for (let h of mouseOverSubscriptions) {
     if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
-      return h.toolTipGetter(canvasX, canvasY, canvasX, canvasY);
+      return h.tooltipGetter(canvasX, canvasY, canvasX, canvasY);
     }
   }
   return undefined;

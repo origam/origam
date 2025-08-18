@@ -21,43 +21,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Workbench.Services;
 using System;
-using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class NewPackageBuilder : AbstractBuilder
 {
-    public class NewPackageBuilder : AbstractBuilder
+    public override string Name => "Create New Package";
+
+    public override void Execute(Project project)
     {
-        public override string Name
-        {
-            get
-            {
-                return "Create New Package";
-            }
-        }
-
-        public override void Execute(Project project)
-        {
-            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
-                as SchemaService;
-            schema.UnloadSchema();
-            switch (project.TypeTemplate)
-            {
-                case TypeTemplate.Default:
-                    PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
-                    new Guid(project.BasePackageId));
-                    break;
-                case TypeTemplate.Open:
-                case TypeTemplate.Template:
-                    schema.LoadSchema(new Guid(project.NewPackageId));
-                    break;
-                default:
-                    throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
-            }
-            schema.UnloadSchema();
-        }
-
-        public override void Rollback()
-        {
-        }
+        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
+            as SchemaService;
+        schema.UnloadSchema();
+        PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
+        new Guid(project.BasePackageId));
+        schema.UnloadSchema();
+    }
+    public override void Rollback()
+    {
     }
 }

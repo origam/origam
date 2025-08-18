@@ -113,7 +113,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       if (sessionStorageKey.startsWith("oidc.user")) {
         // That is an oauth session...
         api.resetAccessToken();
-        userManager.signoutRedirect();
+        yield userManager.signoutRedirect();
         return;
       }
     }

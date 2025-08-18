@@ -40,125 +40,115 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
+namespace Origam.Server;
+public class HelpTooltip
 {
-    public class HelpTooltip
+    private string _id;
+    public string Id
     {
-        private string _id;
-        public string Id
+        get
         {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
+            return _id;
         }
-
-        private string _context;
-        public string Context
+        set
         {
-            get
-            {
-                return _context;
-            }
-            set
-            {
-                _context = value;
-            }
+            _id = value;
         }
-
-        private string _subContext;
-        public string SubContext
+    }
+    private string _context;
+    public string Context
+    {
+        get
         {
-            get
-            {
-                return _subContext;
-            }
-            set
-            {
-                _subContext = value;
-            }
+            return _context;
         }
-
-        private string _relatedComponent;
-        public string RelatedComponent
+        set
         {
-            get
-            {
-                return _relatedComponent;
-            }
-            set
-            {
-                _relatedComponent = value;
-            }
+            _context = value;
         }
-
-        private string _objectId;
-        public string ObjectId
+    }
+    private string _subContext;
+    public string SubContext
+    {
+        get
         {
-            get
-            {
-                return _objectId;
-            }
-            set
-            {
-                _objectId = value;
-            }
+            return _subContext;
         }
-
-        private string _text;
-        public string Text
+        set
         {
-            get
-            {
-                return _text;
-            }
-            set
-            {
-                _text = value;
-            }
+            _subContext = value;
         }
-
-        private int _position;
-        public int Position
+    }
+    private string _relatedComponent;
+    public string RelatedComponent
+    {
+        get
         {
-            get
-            {
-                return _position;
-            }
-            set
-            {
-                _position = value;
-            }
+            return _relatedComponent;
         }
-
-        private int _destroyCondition;
-        public int DestroyCondition
+        set
         {
-            get
-            {
-                return _destroyCondition;
-            }
-            set
-            {
-                _destroyCondition = value;
-            }
+            _relatedComponent = value;
         }
-
-        private string _destroyParameter;
-        public string DestroyParameter
+    }
+    private string _objectId;
+    public string ObjectId
+    {
+        get
         {
-            get
-            {
-                return _destroyParameter;
-            }
-            set
-            {
-                _destroyParameter = value;
-            }
+            return _objectId;
+        }
+        set
+        {
+            _objectId = value;
+        }
+    }
+    private string _text;
+    public string Text
+    {
+        get
+        {
+            return _text;
+        }
+        set
+        {
+            _text = value;
+        }
+    }
+    private int _position;
+    public int Position
+    {
+        get
+        {
+            return _position;
+        }
+        set
+        {
+            _position = value;
+        }
+    }
+    private int _destroyCondition;
+    public int DestroyCondition
+    {
+        get
+        {
+            return _destroyCondition;
+        }
+        set
+        {
+            _destroyCondition = value;
+        }
+    }
+    private string _destroyParameter;
+    public string DestroyParameter
+    {
+        get
+        {
+            return _destroyParameter;
+        }
+        set
+        {
+            _destroyParameter = value;
         }
     }
 }

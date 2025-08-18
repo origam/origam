@@ -18,15 +18,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer } from "mobx-react";
-import React, { useContext, useState } from "react";
-import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import React, { useContext, useEffect, useState } from "react";
+import CS from "gui/Components/Dropdown/Dropdown.module.scss";
 import cx from "classnames";
-import { CtxDropdownRefCtrl } from "@origam/components";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
+import { T } from "utils/translation";
+import DR from "gui/Components/Dropdowner/Dropdowner.module.scss";
+import DI from "gui/Components/Dropdown/DropdownItem.module.scss";
+import DD from "gui/Components/Dropdown/Dropdown.module.scss";
 
 export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
   return (
@@ -36,16 +40,16 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
           {props.state.isDropped
             ? createPortal(
               <div
-                className={"Dropdowner_droppedBox"}
+                className={DR.droppedBox}
                 style={{top: props.state.top, left: props.state.left}}
               >
-                <div className="Dropdown_root">
+                <div className={DD.root}>
                   <div
-                    className={"DropdownItem_root"}
+                    className={DI.root}
                     onMouseDown={(e) => e.stopPropagation()}
                     onClick={props.state.handleRefreshClick}
                   >
-                    Refresh
+                    {T("Refresh", "refresh_dropdown")}
                   </div>
                 </div>
               </div>,
@@ -107,6 +111,7 @@ export function DropdownEditorControl(props: {
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
   const [triggerContextMenu] = useState(() => new TriggerContextMenuState(beh));
+  useEffect(()=> beh.onEditorMounted(), []);
 
   return (
     <Observer>
@@ -117,22 +122,31 @@ export function DropdownEditorControl(props: {
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}
           />
-          <div
-            className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
-            tabIndex={-1}
-            onClick={!beh.isReadOnly ? beh.handleInputBtnClick : undefined}
-            onContextMenu={(event) => {
-              beh.handleTriggerContextMenu(event);
-              triggerContextMenu.handleTriggerContextMenu(event);
-            }}
-            onMouseDown={!beh.isReadOnly ? beh.handleControlMouseDown : undefined}
-          >
-            {!beh.isWorking ? (
-              <i className="fas fa-caret-down"/>
-            ) : (
-              <i className="fas fa-spinner fa-spin"/>
-            )}
-          </div>
+          {!beh.isReadOnly && beh.hasNewScreenButton
+             && <div
+              className={"inputBtn"}
+              onClick={() => beh.onAddNewRecordClick?.(beh.userEnteredValue)}
+            >
+              +
+            </div>
+          }
+          {!beh.isReadOnly
+            && <div
+              className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
+              tabIndex={-1}
+              onClick={!beh.isReadOnly ? beh.handleInputBtnClick : undefined}
+              onContextMenu={(event) => {
+                beh.handleTriggerContextMenu(event);
+                triggerContextMenu.handleTriggerContextMenu(event);
+              }}
+              onMouseDown={!beh.isReadOnly ? beh.handleControlMouseDown : undefined}
+            >
+              {!beh.isWorking ? (
+                <i className="fas fa-caret-down"/>
+              ) : (
+                <i className="fas fa-spinner fa-spin"/>
+              )}
+            </div>}
 
           <TriggerContextMenu state={triggerContextMenu}/>
         </div>

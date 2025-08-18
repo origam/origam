@@ -24,42 +24,30 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
+[HelpTopic("Filters")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityFilter : AbstractSchemaItem
 {
-	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
-    [HelpTopic("Filters")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityFilter : AbstractSchemaItem
+	public const string CategoryConst = "EntityFilter";
+	public EntityFilter() {}
+	public EntityFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityFilter(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden ISchemaItem Members
+	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
-		public const string CategoryConst = "EntityFilter";
-
-		public EntityFilter() {}
-
-		public EntityFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityFilter(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override bool CanMove(UI.IBrowserNode2 newNode)
-		{
-			return newNode is IDataEntity;
-		}
-
-		public override string ItemType => CategoryConst;
-
-		public override bool UseFolders => false;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(FunctionCall)
-		};
-		#endregion
-
+		return newNode is IDataEntity;
 	}
+	public override string ItemType => CategoryConst;
+	public override bool UseFolders => false;
+	#endregion
+	#region ISchemaItemFactory Members
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(FunctionCall)
+	};
+	#endregion
 }

@@ -24,10 +24,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
 
-  & > .hBox, & > .vBox {
-    &.noWidth {
-      flex-grow: 1;
-    }
+  &.noWidth.noHeight {
+    flex-grow: 1;
   }
 }
 
@@ -39,9 +37,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
 
-  & > .hBox, & > .vBox {
-    &.noHeight {
-      flex-grow: 1;
-    }
+  &.noHeight.noWidth {
+    flex-grow: 1;
   }
 }

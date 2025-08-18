@@ -19,10 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
- namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+public abstract class BlockEngineTask: AbstractWorkflowEngineTask
 {
-    public abstract class BlockEngineTask: AbstractWorkflowEngineTask
-    {
-        protected override string WorkflowItemType => "Block";
-    }
+    protected override string WorkflowItemType => "Block";
 }

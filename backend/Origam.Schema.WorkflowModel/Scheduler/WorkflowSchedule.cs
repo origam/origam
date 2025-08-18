@@ -21,130 +21,114 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkflowSchedule : AbstractSchemaItem
 {
-	[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class WorkflowSchedule : AbstractSchemaItem
+	public const string CategoryConst = "WorkflowSchedule";
+	public WorkflowSchedule() {}
+	public WorkflowSchedule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public WorkflowSchedule(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	public Guid WorkflowId;
+	[TypeConverter(typeof(WorkflowConverter))]
+    [XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
 	{
-		public const string CategoryConst = "WorkflowSchedule";
-
-		public WorkflowSchedule() {}
-
-		public WorkflowSchedule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WorkflowSchedule(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		public Guid WorkflowId;
-
-		[TypeConverter(typeof(WorkflowConverter))]
-        [XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
+		get
 		{
-			get
+			var key = new ModelElementKey
 			{
-				var key = new ModelElementKey
-				{
-					Id = WorkflowId
-				};
-				return (IWorkflow)PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), key);
+				Id = WorkflowId
+			};
+			return (IWorkflow)PersistenceProvider.RetrieveInstance(
+				typeof(ISchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				WorkflowId = Guid.Empty;
 			}
-			set
+			else
 			{
-				if(value == null)
-				{
-					WorkflowId = Guid.Empty;
-				}
-				else
-				{
-					WorkflowId = (Guid)value.PrimaryKey["Id"];
-				}
+				WorkflowId = (Guid)value.PrimaryKey["Id"];
 			}
 		}
-		
-		public Guid ScheduleTimeId;
-
-		[TypeConverter(typeof(ScheduleTimeConverter))]
-        [XmlReference("scheduleTime", "ScheduleTimeId")]
-		public AbstractScheduleTime ScheduleTime
-		{
-			get
-			{
-				var key = new ModelElementKey
-				{
-					Id = ScheduleTimeId
-				};
-				return (AbstractScheduleTime)PersistenceProvider
-					.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(value == null)
-				{
-					ScheduleTimeId = Guid.Empty;
-				}
-				else
-				{
-					ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
-				}
-			}
-		}
-		#endregion
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType => CategoryConst;
-
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(Workflow);
-			dependencies.Add(ScheduleTime);
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override bool UseFolders => false;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(DataConstantReference), 
-			typeof(SystemFunctionCall), 
-			typeof(ReportReference)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			string itemName = null;
-			if(typeof(T) == typeof(DataConstantReference))
-			{
-				itemName = "NewDataConstantReference";
-			}
-			else if(typeof(T) == typeof(ReportReference))
-			{
-				itemName = "NewReportReference";
-			}
-			else if(typeof(T) == typeof(SystemFunctionCall))
-			{
-				itemName = "NewSystemFunctionCall";
-			}
-			return base.NewItem<T>(schemaExtensionId, group, itemName);
-		}
-
-		#endregion
-
 	}
+	
+	public Guid ScheduleTimeId;
+	[TypeConverter(typeof(ScheduleTimeConverter))]
+    [XmlReference("scheduleTime", "ScheduleTimeId")]
+	public AbstractScheduleTime ScheduleTime
+	{
+		get
+		{
+			var key = new ModelElementKey
+			{
+				Id = ScheduleTimeId
+			};
+			return (AbstractScheduleTime)PersistenceProvider
+				.RetrieveInstance(typeof(ISchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				ScheduleTimeId = Guid.Empty;
+			}
+			else
+			{
+				ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+	}
+	#endregion
+	#region Overriden ISchemaItem Members
+	
+	public override string ItemType => CategoryConst;
+	public override void GetExtraDependencies(
+		List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(Workflow);
+		dependencies.Add(ScheduleTime);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override bool UseFolders => false;
+	#endregion
+	#region ISchemaItemFactory Members
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(DataConstantReference), 
+		typeof(SystemFunctionCall), 
+		typeof(ReportReference)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		string itemName = null;
+		if(typeof(T) == typeof(DataConstantReference))
+		{
+			itemName = "NewDataConstantReference";
+		}
+		else if(typeof(T) == typeof(ReportReference))
+		{
+			itemName = "NewReportReference";
+		}
+		else if(typeof(T) == typeof(SystemFunctionCall))
+		{
+			itemName = "NewSystemFunctionCall";
+		}
+		return base.NewItem<T>(schemaExtensionId, group, itemName);
+	}
+	#endregion
 }

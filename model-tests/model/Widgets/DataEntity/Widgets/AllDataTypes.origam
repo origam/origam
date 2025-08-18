@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:aesr="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractEntitySecurityRule/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
   xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
@@ -11,7 +12,9 @@
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:esr1="http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0"
   xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
   xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
   xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
   xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
@@ -28,6 +31,7 @@
     tmi:databaseObjectType="Table"
     tmi:generateDeploymentScript="true"
     x:id="7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+    ade:label="sdf"
     tmi:mappedObjectName="AllDataTypes"
     asi:name="AllDataTypes"
     ade:readOnly="false">
@@ -57,6 +61,12 @@
       asi:name="VirtualTest"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="Array"
+      x:id="78cddd1d-44e7-470e-93d9-878c62516c5d"
+      asi:name="parIdList" />
     <dp:Parameter
       asi:abstract="false"
       sip:allowNulls="true"
@@ -176,6 +186,88 @@
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="cb9f8c35-a9c8-4566-b082-fb43a28dbd3d"
+      asi:name="GetTop3">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
+        x:id="54a9e105-f7f4-4696-9fad-bdc6c4237898"
+        adec:isPrimaryKey="false"
+        asi:name="&lt;="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="012dbd15-be4c-4799-b01e-f55a501ce9e3"
+          asi:name="Right"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+            x:id="3d6c2625-fdca-4672-891c-e7ef24291c94"
+            asi:name="_Number_3" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="d37c773f-59c1-491a-8b95-5f2a6ba4026b"
+          asi:name="Left"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+            x:id="31ea799e-b50e-4a4e-9812-237fa9f8702f"
+            asi:name="Integer1" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="edb7e242-435b-4c8f-8022-8613fdd4a441"
+      asi:name="GetByIdList">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="UniqueIdentifier"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/In.origam#In/ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
+        x:id="41333304-a366-4853-9ca1-a04444df7a60"
+        adec:isPrimaryKey="false"
+        asi:name="In"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="35282448-b640-4a39-bc90-620eaa2361ef"
+          asi:name="FilterExpression"
+          fcp:parameter="Root/Function/In.origam#In/FilterExpression/32e47284-2c22-4aa8-b9d5-445012257b52">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+            x:id="961cfc70-961a-44ea-b663-67fd090744f1"
+            asi:name="Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="83d3b8c8-f65d-46e5-a4a4-da6e27c74155"
+          asi:name="List"
+          fcp:parameter="Root/Function/In.origam#In/List/06ad3693-55ff-404c-a813-16b41cd5751b">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="fd5aa6b9-cc9a-4e75-a540-3b2509324ae9"
+            asi:name="parIdList"
+            pr1:parameter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/parIdList/78cddd1d-44e7-470e-93d9-878c62516c5d" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
       x:id="9a7b8c2c-f8a8-4fed-8470-895d2618499a"
@@ -191,6 +283,106 @@
         asi:name="TagInputBindingKey1"
         ercpi:relatedEntityField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
     </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="f8f1b85f-54ff-4107-933a-3bb178048523"
+      asi:name="TagInputSource"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        x:id="3fca4f51-ca4c-411f-872c-5d9b9184284d"
+        asi:name="TagInputSourceKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
+    </eri:EntityRelation>
+    <esr1:EntitySecurityRule
+      asi:abstract="false"
+      esr1:createCredential="false"
+      esr1:deleteCredential="false"
+      esr1:exportCredential="true"
+      x:id="babf74ff-8245-4159-bbc8-1832aa2b0f13"
+      aesr:level="100"
+      asi:name="100_Deny_Export_*"
+      aesr:roles="*"
+      aesr:type="Deny"
+      esr1:updateCredential="false"
+      aesr:valueType="SavedValue" />
+    <esr1:EntitySecurityRule
+      asi:abstract="false"
+      esr1:createCredential="true"
+      esr1:deleteCredential="true"
+      esr1:exportCredential="false"
+      x:id="c4849e36-8545-414f-956b-f544d6a0c990"
+      aesr:level="999"
+      asi:name="999_Permit_CreateUpdateDelete_*"
+      aesr:roles="*"
+      aesr:type="Permit"
+      esr1:updateCredential="true"
+      aesr:valueType="SavedValue" />
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="18a531da-d49c-4846-93e0-ac9b57c8048e"
+      euia:label="ArrayParameterTest"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="ArrayParameterTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/ArrayParameterTest_Input.origam#ArrayParameterTest_Input/a0506116-547f-430f-a557-9c9603c040c7">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="Id"
+        x:id="8f204d29-a00b-4c21-93f2-9145ce1937c8"
+        asi:name="IN_AllDataTypesId"
+        euiapm:type="Current" />
+    </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="89db5c33-c5ea-4165-9a39-e3f67735f128"
+      euia:label="MultistepWorkflowInModalDialog"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="true"
+      euia:modalDialogHeight="600"
+      euia:modalDialogWidth="800"
+      euia:mode="Always"
+      asi:name="MultistepWorkflowInModalDialog"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="03cf98a0-a1d4-438c-997e-b2639c915d21"
+        asi:name="AllDataTypes"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"
@@ -200,7 +392,7 @@
       euia:default="false"
       x:id="942488fa-96ea-48e5-96b0-c0eeaf5f0b69"
       euia:label="Multiple checkboxes action test"
-      ewa:mergeType="AppendMergeExisting"
+      ewa:mergeType="Ignore"
       euia:modal="false"
       euia:mode="MultipleCheckboxes"
       asi:name="MultipleCheckboxesTest"
@@ -229,7 +421,7 @@
       euia:default="false"
       x:id="a6076c0b-2c28-4d55-bb99-ebff40f13b16"
       euia:label="Active record action test"
-      ewa:mergeType="AppendMergeExisting"
+      ewa:mergeType="Ignore"
       euia:modal="false"
       euia:mode="ActiveRecord"
       asi:name="ActiveRecordTest"
@@ -249,6 +441,54 @@
         asi:name="AllDataTypes"
         sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="a901c648-de34-4a81-8bef-016bbe155ec5"
+      euia:label="LoopTest_True"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="LoopTest_True"
+      euia:order="100"
+      euia:placement="PanelHeader"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      euia:rule="Widgets/Rule/Widgets/AllDataTypes_Boolean1_True.origam#AllDataTypes_Boolean1_True/8eaff3da-6e70-48b6-ad38-70514ce9a9fc"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="ecbfac22-0033-4507-9413-665ee29270c2"
+      euia:label="LoopTest_False"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="LoopTest_False"
+      euia:order="100"
+      euia:placement="PanelHeader"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      euia:rule="Widgets/Rule/Widgets/AllDataTypes_Boolean1_False.origam#AllDataTypes_Boolean1_False/3ae7302d-cb19-4340-934b-1f97582a709e"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/541f17de-efdf-43e8-99eb-afd477870606" />
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -308,10 +548,10 @@
       adec:label="Text 1"
       fmi:mappedColumnName="Text1"
       asi:name="Text1"
-      adec:onCopyAction="Copy"
+      adec:onCopyAction="PrependCopyText"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
-      asi:abstract="false"
+      asi:abstract="true"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Currency"
@@ -353,7 +593,7 @@
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
-      asi:abstract="false"
+      asi:abstract="true"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Boolean"

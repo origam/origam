@@ -30,7 +30,6 @@ import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundar
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import { getApi } from "model/selectors/getApi";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const {openedScreen} = props;
@@ -52,17 +51,6 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     if (openedScreen.screenUrl) {
       setLoading(true);
     }
-    const frameWindow = refIFrame.current as HTMLIFrameElement;
-    const fetchData = async () => {
-      if(!props.openedScreen.screenUrl){
-        return;
-      }
-      const api = getApi(props.openedScreen);
-      const url = props.openedScreen.screenUrl.replace("internalApi/", "")
-      const content = await api.callUserApi(url);
-      frameWindow.src = URL.createObjectURL(content)
-    }
-    fetchData().catch(error => console.error(error));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handle = setInterval(() => {
@@ -112,7 +100,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   return (
     <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
       <WebScreen
-        url={openedScreen.screenUrl || ""}
+        source={openedScreen.screenUrl || ""}
         isLoading={isLoading}
         onLoad={(event: any) => {
           event.persist();

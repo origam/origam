@@ -22,40 +22,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for DummyFilterPart.
+/// </summary>
+public class DummyFilterPart : FilterPart
 {
-	/// <summary>
-	/// Summary description for DummyFilterPart.
-	/// </summary>
-	public class DummyFilterPart : FilterPart
+	public DummyFilterPart(Control filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 	{
-		public DummyFilterPart(Control filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+	}
+	public override FilterOperator[] AllowedOperators
+	{
+		get
 		{
+			return new FilterOperator[0] {};
 		}
-
-		public override FilterOperator[] AllowedOperators
+	}
+	public override FilterOperator DefaultOperator
+	{
+		get
 		{
-			get
-			{
-				return new FilterOperator[0] {};
-			}
+			return FilterOperator.None;
 		}
-
-		public override FilterOperator DefaultOperator
-		{
-			get
-			{
-				return FilterOperator.None;
-			}
-		}
-
-		public override void CreateFilterControls()
-		{
-		}
-
-		public override void LoadValues()
-		{
-			
-		}
+	}
+	public override void CreateFilterControls()
+	{
+	}
+	public override void LoadValues()
+	{
+		
 	}
 }

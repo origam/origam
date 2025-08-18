@@ -19,14 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Common
+namespace Origam.DA.Common;
+public class Enums
 {
-    public class Enums
+    public enum DatabaseType
     {
-        public enum DatabaseType
-        {
-            MsSql,
-            PgSql
-        }
+        MsSql,
+        PgSql
     }
 }

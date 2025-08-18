@@ -19,12 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA
+namespace Origam.DA;
+public enum OnCopyActionType
 {
-	public enum OnCopyActionType
-	{
-		Copy = 0,
-		Initialize = 1,
-		PrependCopyText = 2
-	}
+	Copy = 0,
+	Initialize = 1,
+	PrependCopyText = 2
 }

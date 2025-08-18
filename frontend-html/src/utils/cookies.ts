@@ -80,9 +80,9 @@ export function getDefaultCsDateFormatDataFromCookie(): IDefaultDateFormats {
       const parameters = getCookieParameters(cookieValue);
 
       _defaultDateFormats = {
-        defaultDateSeparator: getParameter("defaultDateSeparator", parameters),
-        defaultTimeSeparator: getParameter("defaultTimeSeparator", parameters),
-        defaultDateTimeSeparator: getParameter("defaultDateTimeSeparator", parameters),
+        defaultDateSeparator: getSeparator("defaultDateSeparator", parameters),
+        defaultTimeSeparator: getSeparator("defaultTimeSeparator", parameters),
+        defaultDateTimeSeparator: getSeparator("defaultDateTimeSeparator", parameters),
         defaultDateSequence: parseDateSequence(getParameter("defaultDateSequence", parameters)),
         defaultLongDateFormat: getParameter("defaultLongDateFormat", parameters),
         defaultShortDateFormat: getParameter("defaultShortDateFormat", parameters),
@@ -116,6 +116,13 @@ function isValidLocalizationCookie(cookieValue: string) {
     console.warn("Error when parsing localization cookie:" + e); // eslint-disable-line no-console
     return false;
   }
+}
+
+function getSeparator(name: string, parameters: { [key: string]: string }) {
+  let value = getParameter(name, parameters);
+  return value === ""
+    ? " "
+    : value;
 }
 
 function getParameter(name: string, parameters: { [key: string]: string }) {

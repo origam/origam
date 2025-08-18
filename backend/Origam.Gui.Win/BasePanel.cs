@@ -26,187 +26,164 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for BasePanel.
+/// </summary>
+public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReference
 {
-	/// <summary>
-	/// Summary description for BasePanel.
+	/// <summary> 
+	/// Required designer variable.
 	/// </summary>
-	public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReference
+	private System.ComponentModel.Container components = null;
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	public BasePanel()
 	{
-		/// <summary> 
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-		public BasePanel()
-		{
-			// This call is required by the Windows.Forms Form Designer.
-			InitializeComponent();
-
-			// TODO: Add any initialization after the InitializeComponent call
-
-		}
-
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				OrigamMetadata = null;
-				components?.Dispose();
-			}
-			base.Dispose( disposing );
-		}
-
-		#region Component Designer generated code
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
-			components = new System.ComponentModel.Container();
-		}
-		#endregion
-
-		#region Properties
-
-		public AbstractSchemaItem OrigamMetadata { get; set; }
-
-		[Browsable(false)]
-		public Guid IndependentDataSourceId { get; set; }
-
-		[Category("Independent Data Source")]
-		[TypeConverter(typeof(DataStructureConverter))]
-		public DataStructure IndependentDataSource
-		{
-			get
-			{
-				return (DataStructure)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceId));
-			}
-			set
-			{
-				this.IndependentDataSourceId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		private Guid _independentDataSourceMethodId;
-
-		[Browsable(false)]
-		public Guid IndependentDataSourceMethodId
-		{
-			get
-			{
-				return _independentDataSourceMethodId;
-			}
-			set
-			{
-				_independentDataSourceMethodId = value;
-			}
-		}
-
-		[Category("Independent Data Source")]
-		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-		public DataStructureMethod IndependentDataSourceMethod
-		{
-			get
-			{
-				return (DataStructureMethod)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceMethodId));
-			}
-			set
-			{
-				this.IndependentDataSourceMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		private Guid _independentDataSourceSortId;
-
-		[Browsable(false)]
-		public Guid IndependentDataSourceSortId
-		{
-			get
-			{
-				return _independentDataSourceSortId;
-			}
-			set
-			{
-				_independentDataSourceSortId = value;
-			}
-		}
-
-		[Category("Independent Data Source")]
-		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-		public DataStructureSortSet IndependentDataSourceSort
-		{
-			get
-			{
-				return (DataStructureSortSet)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceSortId));
-			}
-			set
-			{
-				this.IndependentDataSourceSortId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
-		{
-			get
-			{
-				return _styleId;
-			}
-			set
-			{
-				_styleId = value;
-			}
-		}
-
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
-		{
-			get
-			{
-				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-			}
-			set
-			{
-				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-		#endregion
-
-		#region IDataStructureReference Members
-
-		[Browsable(false)]
-		public DataStructureMethod Method
-		{
-			get
-			{
-				return this.IndependentDataSourceMethod;
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		[Browsable(false)]
-		public DataStructure DataStructure
-		{
-			get
-			{
-				return this.IndependentDataSource;
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
-		}
-
-		#endregion
+		// This call is required by the Windows.Forms Form Designer.
+		InitializeComponent();
+		// TODO: Add any initialization after the InitializeComponent call
 	}
+	/// <summary> 
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
+		if( disposing )
+		{
+			OrigamMetadata = null;
+			components?.Dispose();
+		}
+		base.Dispose( disposing );
+	}
+	#region Component Designer generated code
+	/// <summary> 
+	/// Required method for Designer support - do not modify 
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
+		components = new System.ComponentModel.Container();
+	}
+	#endregion
+	#region Properties
+	public ISchemaItem OrigamMetadata { get; set; }
+	[Browsable(false)]
+	public Guid IndependentDataSourceId { get; set; }
+	[Category("Independent Data Source")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	public DataStructure IndependentDataSource
+	{
+		get
+		{
+			return (DataStructure)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceId));
+		}
+		set
+		{
+			this.IndependentDataSourceId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	private Guid _independentDataSourceMethodId;
+	[Browsable(false)]
+	public Guid IndependentDataSourceMethodId
+	{
+		get
+		{
+			return _independentDataSourceMethodId;
+		}
+		set
+		{
+			_independentDataSourceMethodId = value;
+		}
+	}
+	[Category("Independent Data Source")]
+	[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+	public DataStructureMethod IndependentDataSourceMethod
+	{
+		get
+		{
+			return (DataStructureMethod)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceMethodId));
+		}
+		set
+		{
+			this.IndependentDataSourceMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	private Guid _independentDataSourceSortId;
+	[Browsable(false)]
+	public Guid IndependentDataSourceSortId
+	{
+		get
+		{
+			return _independentDataSourceSortId;
+		}
+		set
+		{
+			_independentDataSourceSortId = value;
+		}
+	}
+	[Category("Independent Data Source")]
+	[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+	public DataStructureSortSet IndependentDataSourceSort
+	{
+		get
+		{
+			return (DataStructureSortSet)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceSortId));
+		}
+		set
+		{
+			this.IndependentDataSourceSortId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
+		{
+			return _styleId;
+		}
+		set
+		{
+			_styleId = value;
+		}
+	}
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
+		{
+			return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
+		}
+		set
+		{
+			this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	#endregion
+	#region IDataStructureReference Members
+	[Browsable(false)]
+	public DataStructureMethod Method
+	{
+		get
+		{
+			return this.IndependentDataSourceMethod;
+		}
+		set
+		{
+			throw new InvalidOperationException();
+		}
+	}
+	[Browsable(false)]
+	public DataStructure DataStructure
+	{
+		get
+		{
+			return this.IndependentDataSource;
+		}
+		set
+		{
+			throw new InvalidOperationException();
+		}
+	}
+	#endregion
 }

@@ -20,30 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+/// <summary>
+/// Summary description for RowSecurityState.
+/// </summary>
+public class RowSecurityState
 {
-	/// <summary>
-	/// Summary description for RowSecurityState.
-	/// </summary>
-	public class RowSecurityState
-	{
-        public object Id { get; set; }
-
-        public int BackgroundColor { get; set; }
-
-        public int ForegroundColor { get; set; }
-
-        public bool AllowDelete { get; set; }
-
-        public bool AllowCreate { get; set; }
-
-        public ArrayList Columns { get; } = new ArrayList();
-
-        public ArrayList Relations { get; } = new ArrayList();
-
-        public ArrayList DisabledActions { get; set; } = new ArrayList();
-
-        public bool NotFound { get; set; }
-    }
+    public object Id { get; set; }
+    public int BackgroundColor { get; set; }
+    public int ForegroundColor { get; set; }
+    public bool AllowDelete { get; set; }
+    public bool AllowCreate { get; set; }
+    public List<FieldSecurityState> Columns { get; } = new ();
+    public List<RelationSecurityState> Relations { get; } = new ();
+    public List<string> DisabledActions { get; set; } = null;
+    public bool NotFound { get; set; }
 }

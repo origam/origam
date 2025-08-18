@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:fdp="http://schemas.origam.com/Origam.Schema.GuiModel.FileDownloadPage/6.0.0"
+  xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.1">
+  <fdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    fdp:contentField="Data"
+    fdp:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
+    fdp:fileNameField="FileName"
+    x:id="adaf85bc-ea6b-46e7-8504-dcac6d8e7432"
+    fdp:method="Widgets/DataStructure/__system/Attachment.origam#Attachment/GetById/058b705d-9722-4645-9d2d-b6271d3da197"
+    ap:mimeType="?"
+    asi:name="Attachment"
+    ap:roles="*"
+    ap:url="api/public/Attachment/{Id}">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="0c18fef3-af11-40e8-94b7-6551dc7e6414"
+      ppm:isList="false"
+      ppm:mappedParameter="Id"
+      asi:name="Attachment_parId" />
+  </fdp:Page>
+</x:file>

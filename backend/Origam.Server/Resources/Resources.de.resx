@@ -240,9 +240,6 @@
   <data name="ErrorCreateRecordNotAllowed" xml:space="preserve">
     <value>Fehlende Berechtigung zum Anlegen neuer Datensätze.</value>
   </data>
-  <data name="ErrorWorkflowNotSet" xml:space="preserve">
-    <value>Workflow für die UIWorkflowAction nicht definiert.</value>
-  </data>
   <data name="ErrorTooManyTabsOpen" xml:space="preserve">
     <value>Zu viele Fenster geöffnet. Bitte schliessen Sie unbenötigte Reiter vor dem Öffnen neuer Fenster.</value>
   </data>
@@ -257,5 +254,41 @@
   </data>
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>Sie haben keinen Zugriff auf {0}</value>
+  </data>
+  <data name="BlobFileNotAvailable" xml:space="preserve">
+    <value>Datei ist nicht verfügbar.</value>
+  </data>
+  <data name="ErrorCannotOpenFormExclusively" xml:space="preserve">
+    <value>'{0}' kann nicht geöffnet werden, während andere Daten bearbeitet werden. Bitte schließen Sie zuerst alle Bildschirme.</value>
+  </data>
+  <data name="ErrorCannotOpenScreenWhenExclusiveIsOpen" xml:space="preserve">
+    <value>Schließen Sie '{0}', bevor Sie neue Bildschirme öffnen.</value>
+  </data>
+  <data name="ErrorContextUnknownAction" xml:space="preserve">
+    <value>Unbekannte Aktion.</value>
+  </data>
+  <data name="ErrorUnknownPageType" xml:space="preserve">
+    <value>Unbekannter Seitentyp.</value>
+  </data>
+  <data name="ErrorUnknownRowChangeState" xml:space="preserve">
+    <value>Unbekannter Zeilenänderungszustand.</value>
+  </data>
+  <data name="ErrorUnknownSessionType" xml:space="preserve">
+    <value>Sitzungstyp konnte nicht aufgelöst werden.</value>
+  </data>
+  <data name="ErrorUnknownWorkflowPageAction" xml:space="preserve">
+    <value>Unbekannte WorkflowPage-Aktion.</value>
+  </data>
+  <data name="ErrorUnknownWorkQueueCommandValueType" xml:space="preserve">
+    <value>Unbekannter Befehlwerttyp in der Arbeitswarteschlange.</value>
+  </data>
+  <data name="ErrorUnsupportedMenuItemType" xml:space="preserve">
+    <value>Nicht unterstützter Menüelementtyp</value>
+  </data>
+  <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
+    <value>Workflow-Sitzung ungültig</value>
+  </data>
+  <data name="ErrorWorkQueueCommandNotFound" xml:space="preserve">
+    <value>Befehl nicht gefunden.</value>
   </data>
 </root>

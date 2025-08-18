@@ -21,13 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
+namespace Origam;
+public class TraceTaskInfo
 {
-    public class TraceTaskInfo
-    {
-        public bool Trace { get; set; }
-        public string TraceStepName { get; set; }
-        public Guid TraceWorkflowId { get; set; }
-        public Guid TraceStepId { get; set; }
-    }
+    public bool Trace { get; set; }
+    public string TraceStepName { get; set; }
+    public Guid TraceWorkflowId { get; set; }
+    public Guid TraceStepId { get; set; }
 }

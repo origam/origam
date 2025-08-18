@@ -19,52 +19,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.UI;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+/// <summary>
+/// Root of different types of schema items (e.g. Form provider, Entity provider, Roles provider).
+/// </summary>
+public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2, IProviderContainer
 {
-	/// <summary>
-	/// Root of different types of schema items (e.g. Form provider, Entity provider, Roles provider).
-	/// </summary>
-	public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
-	{
 //		event EventHandler SchemaItemDeleted;
-
 //		event EventHandler SchemaItemChanged;
-
-		/// <summary>
-		/// Persistence provider used to retrieve data.
-		/// </summary>
-		IPersistenceProvider PersistenceProvider{get; set;}
-
-		/// <summary>
-		/// Gets all schema items.
-		/// </summary>
-		SchemaItemCollection ChildItems{get;}
-		ArrayList ChildItemTypes{get;}
-		AbstractSchemaItem GetChildByName(string name, string itemType);
-
-		ArrayList ChildItemsRecursive{get;}
-
-		ArrayList ChildItemsByType(string itemType);
-
-		ArrayList ChildItemsByGroup(SchemaItemGroup group);
-
-		bool HasChildItems{get;}
-
-		bool HasChildItemsByType(string itemType);
-
-		bool HasChildItemsByGroup(SchemaItemGroup group);
-
-		List<SchemaItemGroup> ChildGroups{get;}
-
-		ISchemaItemProvider RootProvider{get; set;}
-
-		bool AutoCreateFolder{get;}
-
-        void ClearCache();
-	}
+	/// <summary>
+	/// Gets all schema items.
+	/// </summary>
+	ISchemaItemCollection ChildItems{get;}
+	List<Type> ChildItemTypes{get;}
+	ISchemaItem GetChildByName(string name, string itemType);
+	List<ISchemaItem> ChildItemsRecursive{get;}
+	List<T> ChildItemsByType<T>(string itemType) where T : ISchemaItem;
+	List<ISchemaItem> ChildItemsByGroup(SchemaItemGroup group);
+	bool HasChildItems{get;}
+	bool HasChildItemsByType(string itemType);
+	bool HasChildItemsByGroup(SchemaItemGroup group);
+	List<SchemaItemGroup> ChildGroups{get;}
+	ISchemaItemProvider RootProvider{get; set;}
+	bool AutoCreateFolder{get;}
+    void ClearCache();
 }

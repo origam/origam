@@ -1,0 +1,27 @@
+# Extend origam-server by Postgres.
+
+FROM origam/server:master-latest AS base
+RUN sudo su -
+USER root
+ENV PG_MAJOR 13
+RUN apt-get update
+RUN apt install -y locales locales-all
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+RUN apt-get -y install gnupg curl bundler
+RUN curl https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" | \
+        tee /etc/apt/sources.list.d/postgres.list
+RUN apt-get update
+RUN apt-get -y install postgresql-${PG_MAJOR} postgresql-client-${PG_MAJOR} \
+                       postgresql-contrib-${PG_MAJOR}
+RUN gem install pups
+USER origam
+WORKDIR /home/origam
+COPY --chown=origam:origam ["linux_postgres\postgres.13.template.yml","/home/origam"]
+COPY --chown=origam:origam ["linux_postgres\pgServer.sh","/home/origam"]
+COPY --chown=origam:origam ["linux_postgres\startOrigamServer.sh","/home/origam"]
+RUN chmod +x pgServer.sh
+RUN chmod +x startOrigamServer.sh
+CMD sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh & ./pgServer.sh

@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -313,8 +314,8 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         }
         else
         {
-            ArrayList sorted = SortedArray(iterator);
-            return (string)sorted[0];
+            List<string> sorted = SortedArray(iterator);
+            return sorted[0];
         }
     }
 
@@ -326,14 +327,14 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         }
         else
         {
-            ArrayList sorted = SortedArray(iterator);
-            return (string)sorted[sorted.Count - 1];
+            List<string> sorted = SortedArray(iterator);
+            return sorted[sorted.Count - 1];
         }
     }
 
-    private ArrayList SortedArray(XPathNodeIterator iterator)
+    private List<string> SortedArray(XPathNodeIterator iterator)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<string>();
 
         while (iterator.MoveNext())
         {
@@ -356,9 +357,11 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     public string LookupValue(string lookupId, string paramName1, string param1,
         string paramName2, string param2)
     {
-        Hashtable parameters = new Hashtable(3);
-        parameters[paramName1] = param1;
-        parameters[paramName2] = param2;
+        var parameters = new Dictionary<string, object>
+        {
+            [paramName1] = param1,
+            [paramName2] = param2
+        };
 
         object result = LookupService.GetDisplayText(new Guid(lookupId),
             parameters, false, false, this.TransactionId);
@@ -369,12 +372,14 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     public string LookupValue(string lookupId, string paramName1, string param1,
         string paramName2, string param2, string paramName3, string param3)
     {
-        Hashtable parameters = new Hashtable(3);
-        parameters[paramName1] = param1;
-        parameters[paramName2] = param2;
-        parameters[paramName3] = param3;
+       var parameters = new Dictionary<string, object>
+       {
+           [paramName1] = param1,
+           [paramName2] = param2,
+           [paramName3] = param3
+       };
 
-        object result = LookupService.GetDisplayText(new Guid(lookupId),
+       object result = LookupService.GetDisplayText(new Guid(lookupId),
             parameters, false, false, this.TransactionId);
 
         return XmlTools.FormatXmlString(result);
@@ -384,11 +389,13 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         string paramName2, string param2, string paramName3, string param3,
         string paramName4, string param4)
     {
-        Hashtable parameters = new Hashtable(4);
-        parameters[paramName1] = param1;
-        parameters[paramName2] = param2;
-        parameters[paramName3] = param3;
-        parameters[paramName4] = param4;
+        var parameters = new Dictionary<string, object>
+        {
+            [paramName1] = param1,
+            [paramName2] = param2,
+            [paramName3] = param3,
+            [paramName4] = param4
+        };
 
         object result = LookupService.GetDisplayText(new Guid(lookupId),
             parameters, false, false, this.TransactionId);
@@ -398,14 +405,13 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
     public XPathNodeIterator LookupList(string lookupId)
     {
-        return LookupList(lookupId, new Hashtable());
+        return LookupList(lookupId, new Dictionary<string, object>());
     }
 
     public XPathNodeIterator LookupList(string lookupId, string paramName1,
         string param1)
     {
-        Hashtable parameters = new Hashtable();
-        parameters.Add(paramName1, param1);
+        var parameters = new Dictionary<string, object> { { paramName1, param1 } };
 
         return LookupList(lookupId, parameters);
     }
@@ -413,9 +419,11 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     public XPathNodeIterator LookupList(string lookupId, string paramName1,
         string param1, string paramName2, string param2)
     {
-        Hashtable parameters = new Hashtable();
-        parameters.Add(paramName1, param1);
-        parameters.Add(paramName2, param2);
+        var parameters = new Dictionary<string, object>
+        {
+            { paramName1, param1 },
+            { paramName2, param2 }
+        };
 
         return LookupList(lookupId, parameters);
     }
@@ -424,15 +432,17 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         string param1, string paramName2, string param2, string paramName3,
         string param3)
     {
-        Hashtable parameters = new Hashtable();
-        parameters.Add(paramName1, param1);
-        parameters.Add(paramName2, param2);
-        parameters.Add(paramName3, param3);
+        var parameters = new Dictionary<string, object>
+        {
+            { paramName1, param1 },
+            { paramName2, param2 },
+            { paramName3, param3 }
+        };
 
         return LookupList(lookupId, parameters);
     }
 
-    private XPathNodeIterator LookupList(string lookupId, Hashtable parameters)
+    private XPathNodeIterator LookupList(string lookupId, Dictionary<string, object> parameters)
     {
         DataView view = LookupService.GetList(new Guid(lookupId), parameters,
             TransactionId);
@@ -472,7 +482,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
     public string LookupValueEx(string lookupId, XPathNavigator parameters)
     {
-        Hashtable lookupParameters = RetrieveParameters(parameters);
+        Dictionary<string, object> lookupParameters = RetrieveParameters(parameters);
         object result = LookupService.GetDisplayText(
             new Guid(lookupId), lookupParameters, false, false, TransactionId);
         return XmlTools.FormatXmlString(result);
@@ -507,11 +517,11 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return result;
     }
 
-    private static Hashtable RetrieveParameters(XPathNavigator parameters)
+    private static Dictionary<string, object> RetrieveParameters(XPathNavigator parameters)
     {
         XPathNodeIterator iter =
             ((XPathNodeIterator)parameters.Evaluate("parameter"));
-        Hashtable lookupParameters = new Hashtable(iter.Count);
+        var lookupParameters = new Dictionary<string, object>();
         while (iter.MoveNext())
         {
             XPathNodeIterator keyIterator =
@@ -1406,7 +1416,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             ((XPathNodeIterator)parameters.Evaluate("/parameter"));
 
         int total = 0;
-        ArrayList parameterList = new ArrayList(iter.Count);
+        var parameterList = new List<Tuple<string, int>>(iter.Count);
 
         while (iter.MoveNext())
         {
@@ -1427,17 +1437,16 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             int value = Convert.ToInt32(valueIterator.Current.Value);
             total += value;
 
-            parameterList.Add(new DictionaryEntry(key, value));
+            parameterList.Add(new Tuple<string, int>(key, value));
         }
 
         string[] result = new string[total];
         int min = 0;
         int max = total - 1;
 
-        foreach (DictionaryEntry entry in parameterList)
+        foreach (var entry in parameterList)
         {
-            string key = (string)entry.Key;
-            int quantity = (int)entry.Value;
+            (string key, int quantity) = entry;
             int used = 0;
 
             while (used < quantity)
@@ -1956,13 +1965,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public static string PointFromJtsk(double x, double y)
     {
-        Origam.Geo.JtskConverter.Wgs84 wgs;
-        Origam.Geo.JtskConverter.Jtsk jtsk = new Origam.Geo.JtskConverter.Jtsk();
-        jtsk.X = x;
-        jtsk.Y = y;
-        wgs = Origam.Geo.JtskConverter.JTSKtoWGS84(jtsk);
-
-        return string.Format("POINT({0} {1})", XmlConvert.ToString(wgs.Longitude), XmlConvert.ToString(wgs.Latitude));			
+        Coordinates coordinates = CoordinateConverter.JtskToWgs(x, y);
+        return
+            $"POINT({XmlConvert.ToString(coordinates.Longitude)} {XmlConvert.ToString(coordinates.Latitude)})";			
     }
     
     public static string abs(string num)
@@ -2038,9 +2043,17 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 		}
 
 		// SEND REQUEST
-		object result = HttpTools.SendRequest(url, method, content, contentType,
-            headersCollection, authenticationType, userName, password, false,
-            null);
+		object result = HttpTools.SendRequest(
+            new Request (
+                url:url,
+                method: method, 
+                content: content, 
+                contentType: contentType,
+                headers: headersCollection, 
+                authenticationType: authenticationType, 
+                userName: userName,
+                password: password)
+            ).Content;
 
 		string stringResult = result as string;
 		byte[] byteResult = result as byte[];

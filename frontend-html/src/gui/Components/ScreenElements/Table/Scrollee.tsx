@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import { IScrolleeProps } from "./types";
 import S from "./Scrollee.module.css";
+import { action } from "mobx";
 
 /*
   Component translating its content according to scrollOffsetSource.
@@ -29,6 +30,25 @@ import S from "./Scrollee.module.css";
 // TODO: Maybe add hideOverflow property to disable content clipping? (or allow some custom class?)
 @observer
 export default class Scrollee extends React.Component<IScrolleeProps> {
+
+  @action.bound
+  handleFocus(event: any)  {
+    const tableElement = event.target.closest(this.props.controlScrollStateSelector);
+    const tableRect = tableElement?.getBoundingClientRect();
+    const targetRect = event.target.getBoundingClientRect();
+    const overLeft = Math.min(0, targetRect.left - tableRect.left);
+    const overRight = Math.max(0, targetRect.right - tableRect?.right);
+    if(overRight) {
+      this.props.scrollOffsetSource.scrollBy({
+        deltaLeft: overRight + (this.props.controlScrollStatePadding?.right || 0)
+      })
+    } else if(overLeft) {
+      this.props.scrollOffsetSource.scrollBy({
+        deltaLeft: overLeft - (this.props.controlScrollStatePadding?.left || 0)
+      })
+    }
+  }
+
   public render() {
     return (
       <div
@@ -38,6 +58,7 @@ export default class Scrollee extends React.Component<IScrolleeProps> {
           height: this.props.height,
           zIndex: this.props.zIndex || 0,
         }}
+        onFocus={this.props.controlScrollStateByFocus ? this.handleFocus : undefined}
       >
         <div
           className={S.scrolleeShifted}

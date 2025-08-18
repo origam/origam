@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="5f3693fe-1836-4ef0-b4a0-aeca95420503"
+    asi:name="MergeThroughDifferentEntitySecondPhase"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="9e470665-ed66-4d21-850d-3852ae22e2f5"
+      cs:isReturnValue="false"
+      asi:name="MergeThroughDifferentEntity"
+      cs:structure="Workflow/DataStructure/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/2ddb9548-2649-4f92-b63f-745799ba317f" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="50e0049d-0684-4faa-95b9-30d2d1a2b366"
+      asi:name="0100_SD_NewRecord"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/MergeThroughDifferentEntity/9e470665-ed66-4d21-850d-3852ae22e2f5"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="42961d7d-9d7a-4be4-96bd-80b219941275"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/MergeThroughDifferentEntity/9e470665-ed66-4d21-850d-3852ae22e2f5"
+          x:id="c01c8c90-61dd-4525-a77c-eed11a739b10"
+          asi:name="MergeThroughDifferentEntity"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="b8c20b6e-7fab-4b52-8759-cb69ad8cbffd"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="eebc2b07-b748-4dfc-a779-0aa621096740"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="905745a1-4f26-4084-9477-ea371a1699f5"
+          asi:name="MergeThroughDifferentEntitySecondPhase_NewSdRecord"
+          tr:transformation="Workflow/Transformation/Workflow/MergeThroughDifferentEntitySecondPhase_NewSdRecord.origam#MergeThroughDifferentEntitySecondPhase_NewSdRecord/7acd0146-e7c6-4d8e-aca0-98c817d07b8e" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="89996a3b-2ff3-4f11-8f6b-236c51870935"
+      asi:name="0150_SecondPhaseTransformation"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/MergeThroughDifferentEntity/9e470665-ed66-4d21-850d-3852ae22e2f5"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="18d1153c-eba7-4b66-9c23-72475d38b012"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Xml"
+          cr:contextStore="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/MergeThroughDifferentEntity/9e470665-ed66-4d21-850d-3852ae22e2f5"
+          x:id="0ba829a7-3525-4183-9171-360606080707"
+          asi:name="MergeThroughDifferentEntity"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7f29cdb1-c66c-42ed-865f-8727821a91ee"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c052d19d-d3ca-4707-a5ba-f865dffe0b01"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="e06a6a24-9cce-4d3e-b9cb-c910a43f4f77"
+          asi:name="MergeThroughDifferentEntitySecondPhase_TransformWorkflowMergeTestEntity"
+          tr:transformation="Workflow/Transformation/Workflow/MergeThroughDifferentEntitySecondPhase_TransformWorkflowMergeTestEntity.origam#MergeThroughDifferentEntitySecondPhase_TransformWorkflowMergeTestEntity/44309002-6bfe-4086-b0ef-95409c4232b6" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="0aec5a42-5433-490b-b01c-9d1f8c18c232"
+        asi:name="After_0100_SD_NewRecord"
+        wtd:startEvent="Success"
+        wtd:task="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/0100_SD_NewRecord/50e0049d-0684-4faa-95b9-30d2d1a2b366" />
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="3413a602-2e68-483c-b073-44bb8ef2ddc6"
+      uift:isFinalForm="true"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="0200_UI"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/MergeThroughDifferentEntity/9e470665-ed66-4d21-850d-3852ae22e2f5"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Workflow/FormControlSet/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/143feb0a-5dbd-4bfe-b342-9308c6e1322d">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="544cac5b-14ca-41d8-9012-b7e0f99582a2"
+        asi:name="After_0150_TransformWorkflowMergeTestEntity"
+        wtd:startEvent="Success"
+        wtd:task="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/0150_TransformWorkflowMergeTestEntity/89996a3b-2ff3-4f11-8f6b-236c51870935" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>

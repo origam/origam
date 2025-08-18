@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior} from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
@@ -33,6 +32,9 @@ import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
+import { DropdownLayout } from "gui/Components/Dropdown/DropdownLayout";
+import { DropdownLayoutBody } from "gui/Components/Dropdown/DropdownLayoutBody";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -56,6 +58,7 @@ export function DropdownEditor(props: {
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
   const workbench = useContext(MobXProviderContext).workbench as IWorkbench;
+  const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   return (
     <Observer>
       {() => (
@@ -90,15 +93,21 @@ export function XmlBuildDropdownEditor(props: {
   isReadOnly: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
-  customStyle?: any;
+  customStyle?: {[key: string]: string};
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  expandAfterMounting?: boolean;
+  onMount?(onChange?: (value: any) => void): void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
+  onBlur?: (target: any) => void;
+  newRecordScreen? : NewRecordScreen;
+  onAddNewRecordClick?: (searchText?: string) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
+  typingDelayMillis?: number;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const {dataViewRowCursor, dataViewApi, dataViewData} = mobxContext.dataView;
@@ -134,14 +143,24 @@ export function XmlBuildDropdownEditor(props: {
       isReadOnly: props.isReadOnly,
       onDoubleClick: props.onDoubleClick,
       onClick: props.onClick,
+      onBlur: props.onBlur,
+      onMount: props.onMount,
       subscribeToFocusManager: props.subscribeToFocusManager,
       onKeyDown: props.onKeyDown,
       autoSort: props.autoSort,
+      expandAfterMounting: props.expandAfterMounting,
       onTextOverflowChanged: props.onTextOverflowChanged,
+      newRecordScreen: props.newRecordScreen,
+      onAddNewRecordClick: props.onAddNewRecordClick,
+      typingDelayMillis: props.typingDelayMillis
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(
-      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
+      props.xmlNode,
+      dropdownEditorDataTable,
+      dropdownEditorBehavior,
+      props.customStyle,
+      props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,

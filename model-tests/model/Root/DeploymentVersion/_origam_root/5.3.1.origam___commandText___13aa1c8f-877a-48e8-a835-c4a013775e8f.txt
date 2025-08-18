@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "RetryIntervalSeconds" Integer NOT NULL CONSTRAINT "DF_WorkQueue_RetryIntervalSeconds" DEFAULT 30;
+ALTER TABLE "WorkQueue" ALTER COLUMN "RetryIntervalSeconds" DROP DEFAULT;

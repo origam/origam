@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:csl="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStoreLink/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="ce868031-8e6b-474e-ac98-7de595dc51f0"
+    asi:name="CallSubWorkflowUIstep"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="6e83fa0f-feb2-4960-b963-a7b64fd2b96e"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <wct:WorkflowTask
+      asi:abstract="false"
+      x:id="3100058d-85b4-4a3b-9904-234264beda73"
+      asi:name="0100_CallSubWorkflow"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallSubWorkflowUIstep.origam#CallSubWorkflowUIstep/AllDataTypes/6e83fa0f-feb2-4960-b963-a7b64fd2b96e"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      wct:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b">
+      <csl:ContextStoreLink
+        asi:abstract="false"
+        csl:callerContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallSubWorkflowUIstep.origam#CallSubWorkflowUIstep/AllDataTypes/6e83fa0f-feb2-4960-b963-a7b64fd2b96e"
+        csl:direction="Input"
+        x:id="68416f47-0ca9-423d-980f-e52e4ed0d405"
+        asi:name="IN_AllDataTypes"
+        csl:targetContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+        csl:xPath="/" />
+    </wct:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { action, observable } from "mobx";
 import * as React from "react";
 import { IScrollerProps } from "./types";
-import { observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import S from "./Scroller.module.css";
 import { busyDelayMillis } from "../../../../utils/flow";
 import { requestFocus } from "utils/focus";
@@ -30,6 +30,8 @@ import { requestFocus } from "utils/focus";
 */
 @observer
 export default class Scroller extends React.Component<IScrollerProps> {
+  static contextType = MobXProviderContext;
+
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
   private lastScrollLeft: number = 0;
   private lastScrollTop: number = 0;
@@ -100,7 +102,13 @@ export default class Scroller extends React.Component<IScrollerProps> {
 
   public focus() {
     setTimeout(()=>{
-      requestFocus(this.elmScrollerDiv);
+      if(this.elmScrollerDiv?.style["width"] === "0px"){
+        console.warn("Focus was requested on an invisible table. This should not happen.");
+        return;
+      }
+      if (this.props.canFocus()) {
+        requestFocus(this.elmScrollerDiv);
+      }
     });
   }
 

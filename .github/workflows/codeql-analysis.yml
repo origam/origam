@@ -4,7 +4,6 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ master, 20* ]
 
 jobs:
@@ -25,8 +24,12 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+    - name: Run license header check
+      shell: pwsh
+      run: .github/scripts/check-license-headers.ps1
+
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
 
@@ -39,4 +42,4 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3

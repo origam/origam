@@ -19,15 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Docker
+namespace Origam.Docker;
+public class DockerContainerParameter
 {
-    public class DockerContainerParameter
-    {
-        public string DockerEnvPath { get; set; }
-        public string AdminPassword { get; set; }
-        public string ProjectName { get; set; }
-        public string SourceFolder { get; set; }
-        public string DockerPort { get; set; }
-        public string DockerSourcePath { get; set; }
-    }
+    public string DockerEnvPath { get; set; }
+    public string AdminPassword { get; set; }
+    public string ProjectName { get; set; }
+    public string SourceFolder { get; set; }
+    public string DockerPort { get; set; }
+    public string DockerSourcePath { get; set; }
 }

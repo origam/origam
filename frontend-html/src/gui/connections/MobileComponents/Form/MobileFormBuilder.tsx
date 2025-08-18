@@ -35,9 +35,9 @@ import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowState
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
-import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
+import { compareTabIndexOwners, ITabIndexOwner, TabIndex } from "model/entities/TabIndexOwner";
 import { FormRoot } from "gui/Workbench/ScreenArea/FormView/FormRoot";
-import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
+import "gui/connections/MobileComponents/Form/MobileForm.scss";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
@@ -105,7 +105,7 @@ export class MobileFormBuilder extends React.Component<{
 
     function recursiveParse(xfo: any, parent: FormItem | null): FormItem[] | undefined {
       if (xfo.name === "FormRoot") {
-        let formItem = new FormItem("-1",
+        let formItem = new FormItem(TabIndex.Min,
           parent,
           xfo,
           []
@@ -149,6 +149,7 @@ export class MobileFormBuilder extends React.Component<{
         return (
           <FormRoot
             key={formItem.xfo.$iid}
+            dataView={self.props.dataView!}
             style={{backgroundColor}}
             className={"formRootMobile"}
           >
@@ -223,7 +224,7 @@ export class MobileFormBuilder extends React.Component<{
             checked={checked}
             onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, formItem.xfo.attributes.Id, formItem.xfo.attributes.TabIndex)
+              focusManager.subscribe(radioInput, formItem.xfo.attributes.Id, TabIndex.create(formItem.xfo.attributes.TabIndex))
             }
             labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
@@ -281,7 +282,7 @@ export class MobileFormBuilder extends React.Component<{
                   captionLength={property.captionLength}
                   captionColor={foreGroundColor}
                   dock={property.dock}
-                  toolTip={property.toolTip}
+                  tooltip={property.tooltip}
                   value={value}
                   isRichText={property.isRichText}
                   textualValue={textualValue}
@@ -320,7 +321,7 @@ export class MobileFormBuilder extends React.Component<{
 
 class FormItem implements ITabIndexOwner {
   constructor(
-    public tabIndex: string | undefined,
+    public tabIndex: TabIndex,
     public parent: FormItem | null,
     public xfo: any,
     public children: FormItem[],

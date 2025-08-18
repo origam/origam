@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
+  <xt:Transformation
+    asi:abstract="false"
+    x:id="bd12c2f4-169c-4364-a885-31def6415af9"
+    asi:name="TlsCheckResponseToTlsCheckResult"
+    xt:text="-***-ExternalFile:TlsCheckResponseToTlsCheckResult.origam___text___bd12c2f4-169c-4364-a885-31def6415af9.xslt" />
+</x:file>

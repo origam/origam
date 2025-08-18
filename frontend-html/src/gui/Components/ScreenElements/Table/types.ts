@@ -48,8 +48,6 @@ export interface ITableProps {
 
   renderEditor?: IRenderEditor;
 
-  listenForScrollToCell?: IListenForScrollToCell;
-
   onOutsideTableClick?(event: any): void;
 
   onNoCellClick?(event: any): void;
@@ -89,12 +87,12 @@ export interface IGridDimensions {
   displayedColumnDimensionsCom: { left: number, width: number, right: number }[]
 }
 
-export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
-
 export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
 
   scrollTo(coords: { scrollLeft?: number; scrollTop?: number }): void;
+
+  scrollBy(coords: {deltaLeft?: number; deltaTop?: number}): void;
 }
 
 export interface IScrollOffsetSource {
@@ -180,6 +178,7 @@ export interface IScrollerProps {
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onFocus: () => void;
+  canFocus: () => boolean;
 }
 
 export interface IScrolleeProps {
@@ -188,9 +187,15 @@ export interface IScrolleeProps {
   fixedHoriz?: boolean;
   fixedVert?: boolean;
   zIndex?: number | undefined;
-  scrollOffsetSource: IScrollOffsetSource;
+  scrollOffsetSource: IScrollState;
   offsetLeft?: number;
   offsetTop?: number;
+  controlScrollStateByFocus?: boolean;
+  controlScrollStateSelector?: string;
+  controlScrollStatePadding?: {
+    left: number, 
+    right: number, 
+  }
 }
 
 export interface IHeaderRowProps {

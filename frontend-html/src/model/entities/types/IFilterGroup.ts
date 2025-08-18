@@ -24,4 +24,5 @@ export interface IFilterGroup {
   id: string;
   isGlobal: boolean;
   name: string;
+  selectionCheckboxFilter: boolean | null;
 }

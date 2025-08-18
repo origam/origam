@@ -23,49 +23,42 @@ using System;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.Wizards
+namespace Origam.Schema.Wizards;
+/// <summary>
+/// Summary description for SetInheritanceOff.
+/// </summary>
+public class CreatePackageFolders : AbstractMenuCommand
 {
-	/// <summary>
-	/// Summary description for SetInheritanceOff.
-	/// </summary>
-	public class CreatePackageFolders : AbstractMenuCommand
+	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+	public override bool IsEnabled
 	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
-				return _schema.ActiveNode is Package;
-			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
+			return _schema.ActiveNode is Package;
 		}
-
-		public override void Run()
+		set
 		{
-			foreach(ISchemaItemProvider provider in _schema.Providers)
-			{
-				SchemaItemGroup group = provider.NewGroup(_schema.ActiveSchemaExtensionId);
-				group.Name = _schema.ActiveExtension.Name;
-				group.Persist();
-			}
-
-			(_schema.ActiveNode as Package).Refresh();
+			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
-
-		private static void SetInheritance(AbstractSchemaItem item, bool value)
+	}
+	public override void Run()
+	{
+		foreach(ISchemaItemProvider provider in _schema.Providers)
 		{
-			item.Inheritable = value;
-
-			foreach(AbstractSchemaItem child in item.ChildItems)
+			SchemaItemGroup group = provider.NewGroup(_schema.ActiveSchemaExtensionId);
+			group.Name = _schema.ActiveExtension.Name;
+			group.Persist();
+		}
+		(_schema.ActiveNode as Package).Refresh();
+	}
+	private static void SetInheritance(ISchemaItem item, bool value)
+	{
+		item.Inheritable = value;
+		foreach(ISchemaItem child in item.ChildItems)
+		{
+			if(child.DerivedFrom == null)
 			{
-				if(child.DerivedFrom == null)
-				{
-					SetInheritance(child, value);
-				}
+				SetInheritance(child, value);
 			}
 		}
 	}

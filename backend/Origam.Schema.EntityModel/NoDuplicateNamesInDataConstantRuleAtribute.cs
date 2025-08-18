@@ -26,43 +26,36 @@ using Origam.DA.ObjectPersistence;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel
-{   
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-    public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRuleAttribute 
+namespace Origam.Schema.EntityModel;
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRuleAttribute 
+{
+    public NoDuplicateNamesInDataConstantRuleAtribute()
     {
-        public NoDuplicateNamesInDataConstantRuleAtribute()
+    }
+    public override Exception CheckRule(object instance)
+    {
+        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+    }
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
+        if(memberName != "Name") throw new Exception(nameof(NoDuplicateNamesInDataConstantRuleAtribute) +" can be only applied to Name properties");  
+        if (!(instance is DataConstant dataconstant)) return null;
+        if (dataconstant.RootProvider == null)
         {
+            
         }
-
-        public override Exception CheckRule(object instance)
+        string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
+        var itemWithDuplicateName = dataconstant
+            .RootProvider.ChildItems
+            .Where(item => item is DataConstant)
+            .Where(item => item.Name == instanceName)
+            .FirstOrDefault(item => item.Id != dataconstant.Id);
+        if (itemWithDuplicateName != null)
         {
-            return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+            return new DataException(dataconstant.Name+" contains duplicate  names ");
         }
-
-        public override Exception CheckRule(object instance, string memberName)
-        {
-            if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
-            if(memberName != "Name") throw new Exception(nameof(NoDuplicateNamesInDataConstantRuleAtribute) +" can be only applied to Name properties");  
-            if (!(instance is DataConstant dataconstant)) return null;
-            if (dataconstant.RootProvider == null)
-            {
-                
-            }
-            string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
-
-            var itemWithDuplicateName = dataconstant
-                .RootProvider.ChildItems
-                .ToGeneric()
-                .Where(item => item is DataConstant)
-                .Where(item => item.Name == instanceName)
-                .FirstOrDefault(item => item.Id != dataconstant.Id);
-
-            if (itemWithDuplicateName != null)
-            {
-                return new DataException(dataconstant.Name+" contains duplicate  names ");
-            }
-            return null;
-        }
+        return null;
     }
 }

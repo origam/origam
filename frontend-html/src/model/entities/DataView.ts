@@ -78,27 +78,32 @@ import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLook
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrdering";
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
-
 import selectors from "model/selectors-tree";
 import { produce } from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import { runInFlowWithHandler, } from "utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
+import {TabIndex} from "./TabIndexOwner";
+import {
+  openScreenIgnoreSelectionDialog
+} from "model/actions/Workbench/openScreenIgnoreSelectionDialog";
 
 class SavedViewState {
-  constructor(public selectedRowId: string | undefined) {
+  constructor(
+    public selectedRowId: string | undefined,
+    public selectedRowIndex: number | undefined
+  ) {
   }
 }
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  formFocusManager: FormFocusManager = new FormFocusManager(this);
-  gridFocusManager: GridFocusManager = new GridFocusManager(this);
+  formFocusManager: FormFocusManager;
+  gridFocusManager: GridFocusManager;
 
   @observable aggregationData: IAggregation[] = [];
 
@@ -114,8 +119,12 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
-    this.focusManager.registerGridFocusManager(this.gridFocusManager);
-    this.focusManager.registerFormFocusManager(this.formFocusManager);
+    this.formFocusManager = new FormFocusManager(this);
+    this.gridFocusManager = new GridFocusManager(this);
+    this.focusManager.focusOutsideOfGridEditor.subscribe(
+      (event?: FocusEvent) => {
+          this.rowIdForImmediateDeletion = undefined
+      });
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
@@ -133,6 +142,8 @@ export class DataView implements IDataView {
       () => (this.selectAllCheckboxChecked = false)
     );
   }
+
+  tabIndex: TabIndex = null as any;
 
   private _isFormViewActive = () => false;
 
@@ -229,6 +240,15 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
 
   @observable selectedRowId: string | undefined;
+  private _rowIdForImmediateDeletion: string | undefined;
+
+  get rowIdForImmediateDeletion(): string | undefined {
+    return this._rowIdForImmediateDeletion;
+  }
+
+  set rowIdForImmediateDeletion(value: string | undefined) {
+    this._rowIdForImmediateDeletion = value;
+  }
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
@@ -297,6 +317,18 @@ export class DataView implements IDataView {
     this.selectAllCheckboxChecked = false;
   }
 
+  updateSelectedIds() {
+    const currentRowIds = this.dataTable.rows
+      .map(row => this.dataTable.getRowId(row));
+    for (let rowId of Array.from(this.selectedRowIds)) {
+      if (!currentRowIds.includes(rowId)) {
+        this.selectedRowIds.delete(rowId);
+      }
+    }
+    this.selectAllCheckboxChecked = currentRowIds.length > 0
+      && currentRowIds.every(rowId => this.selectedRowIds.has(rowId));
+  }
+
   @action.bound
   clear() {
     this.selectedRowIds.clear();
@@ -304,7 +336,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  deleteRowAndSelectNext(row: any[]) {
+  *deleteRowAndSelectNext(row: any[]) {
     const id = this.dataTable.getRowId(row);
     let idToSelectNext = this.dataTable.getNextExistingRowId(id);
     if (!idToSelectNext) {
@@ -314,14 +346,15 @@ export class DataView implements IDataView {
     this.selectedRowIds.delete(id);
     this.dataTable.deleteRow(row);
 
-    this.setSelectedRowId(idToSelectNext);
+    yield*this.setSelectedRowId(idToSelectNext);
   }
 
   @action.bound
-  substituteRecord(row: any[]) {
-    this.dataTable.substituteRecord(row);
+  substituteRecords(rows: any[][]) {
+    this.dataTable.clearRecordDirtyValues(rows);
+    this.dataTable.substituteRecords(rows);
     if (getGroupingConfiguration(this).isGrouping) {
-      getGrouper(this).substituteRecord(row);
+      getGrouper(this).substituteRecords(rows);
     }
   }
 
@@ -333,16 +366,20 @@ export class DataView implements IDataView {
     }
   }
 
-  @computed get selectedRowIndex(): number | undefined {
+  getRowIndexById(rowId: any) {
     if (getGroupingConfiguration(this).isGrouping) {
       return getGrouper(this).allGroups.some((group) => group.isExpanded)
-        ? getGrouper(this).getRowIndex(this.selectedRowId!)
+        ? getGrouper(this).getRowIndex(rowId)
         : undefined;
     } else {
-      return this.selectedRowId
-        ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+      return (rowId !== null && rowId !== undefined)
+        ? this.dataTable.getExistingRowIdxById(rowId)
         : undefined;
     }
+  }
+
+  @computed get selectedRowIndex(): number | undefined {
+    return this.getRowIndexById(this.selectedRowId)
   }
 
   @computed get trueSelectedRowIndex(): number | undefined {
@@ -588,7 +625,7 @@ export class DataView implements IDataView {
     );
   }
 
-  @action.bound selectNextRow() {
+ *selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
 
     let newId = undefined;
@@ -598,11 +635,11 @@ export class DataView implements IDataView {
         : getDataTable(this).getNextExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.setSelectedRowId(newId);
+      yield*this.setSelectedRowId(newId);
     }
   }
 
-  @action.bound selectPrevRow() {
+  *selectPrevRow() {
     const selectedRowId = getSelectedRowId(this);
 
     let newId = undefined;
@@ -612,33 +649,22 @@ export class DataView implements IDataView {
         : getDataTable(this).getPrevExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.setSelectedRowId(newId);
+      yield*this.setSelectedRowId(newId);
     }
   }
 
   *navigateLookupLink(property: IProperty, row: any[]): any {
     const columnId = property.id;
     const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
-    if (fieldIndex === undefined) return;
-    const value = row[fieldIndex];
-    const menuId = yield selectors.column.getLinkMenuId(property, value);
-    let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
-    if (menuItem) {
-      menuItem = {...menuItem, parent: undefined, elements: []};
-      menuItem = produce(menuItem, (draft: any) => {
-        if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
-          draft.attributes.type = "FormReferenceMenuItem";
-        }
-        draft.attributes.lazyLoading = "false";
-      });
-
-      yield onMainMenuItemClick(this)({
-        event: undefined,
-        item: menuItem,
-        idParameter: value,
-        isSingleRecordEdit: true,
-      });
+    if (fieldIndex === undefined) {
+      return;
     }
+    const value = row[fieldIndex];
+    if (!value){
+      return;
+    }
+    const menuId = yield selectors.column.getLinkMenuId(property, value);
+    yield *openScreenIgnoreSelectionDialog(menuId, value, this);
   }
 
   @action.bound onFieldChange(
@@ -666,48 +692,50 @@ export class DataView implements IDataView {
     if (this.infiniteScrollLoader) yield*this.infiniteScrollLoader!.loadLastPage();
   }
 
-  @action.bound selectFirstRow() {
+  *selectFirstRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.setSelectedRowId(dataTable.getRowId(firstRow));
+      yield*this.setSelectedRowId(dataTable.getRowId(firstRow));
     } else {
-      this.setSelectedRowId(undefined);
+      yield*this.setSelectedRowId(undefined);
     }
   }
 
-  @action.bound selectLastRow() {
+  *selectLastRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
-      this.setSelectedRowId(dataTable.getRowId(lastRow));
+      yield*this.setSelectedRowId(dataTable.getRowId(lastRow));
     } else {
-      this.setSelectedRowId(undefined);
+      yield*this.setSelectedRowId(undefined);
     }
   }
 
-  reselectOrSelectFirst() {
+  *reselectOrSelectFirst() {
     const previouslySelectedRowExists =
       this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
     if (!this.isRootGrid || !previouslySelectedRowExists || !this.selectedRow) {
-      this.selectFirstRow();
+      yield*this.selectFirstRow();
     }
   }
 
-  @action.bound selectRow(row: any[]) {
-    this.setSelectedRowId(this.dataTable.getRowId(row));
+  *selectRow(row: any[]) {
+    yield*this.setSelectedRowId(this.dataTable.getRowId(row));
   }
 
-  @action.bound
-  setSelectedRowId(id: string | undefined): void {
+  *setSelectedRowId(id: string | undefined): Generator {
     if (this.selectedRowId === id) {
       return;
+    }
+    if (id != this._rowIdForImmediateDeletion) {
+      this.rowIdForImmediateDeletion = undefined;
     }
     this.selectedRowId = id;
     if (this.isBindingParent) {
@@ -715,39 +743,40 @@ export class DataView implements IDataView {
         binding.childDataView.dataTable.updateSortAndFilter()
       );
     }
-    const self = this;
-    if (!this.selectedRowId) {
-      return;
-    }
-
-    if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {
-      runInFlowWithHandler({
-        ctx: self,
-        action: async () => {
-          await onSelectedRowChange(self)(
-            getMenuItemId(self),
-            getDataStructureEntityId(self),
-            self.selectedRowId
-          );
-        },
-      });
-    }
+    yield*this.lifecycle.runRecordChangedReaction();
   }
 
   viewStateStack: SavedViewState[] = [];
 
   @action.bound
   saveViewState(): void {
-    this.viewStateStack.push(new SavedViewState(this.selectedRowId));
+    this.viewStateStack.push(
+      new SavedViewState(
+        this.selectedRowId,
+        this.getRowIndexById(this.selectedRowId)
+      )
+    );
   }
 
   @action.bound
-  restoreViewState(): void {
+  *restoreViewState() {
     const state = this.viewStateStack.pop();
     if (state && state.selectedRowId) {
-      this.setSelectedRowId(state.selectedRowId);
+      const row = this.dataTable.getRowById(state.selectedRowId);
+      if(row) {
+        yield*this.setSelectedRowId(state.selectedRowId);
+      }
+      else if (state.selectedRowIndex) {
+        const nextRow = this.tableRows[state.selectedRowIndex];
+        const isDataRow = Array.isArray(nextRow);
+        if(isDataRow){
+          const nextRowId = this.dataTable.getRowId(nextRow);
+          yield*this.setSelectedRowId(nextRowId);
+          return;
+        }
+      }
       if (!getSelectedRow(this)) {
-        this.selectFirstRow();
+        yield*this.reselectOrSelectFirst();
       }
       getTablePanelView(this).scrollToCurrentCell();
     }
@@ -779,7 +808,13 @@ export class DataView implements IDataView {
             return;
           }
           if (reData.selectedRowId === undefined && reData.rowsCount > 0) {
-            this.reselectOrSelectFirst();
+            const self = this;
+            runGeneratorInFlowWithHandler({
+              ctx: this,
+              generator: function*(){
+                yield*self.reselectOrSelectFirst();
+              }()
+            })
           }
         },
         {
@@ -862,6 +897,11 @@ export class DataView implements IDataView {
     this.dataTable.unlockAddedRowPosition();
   }
 
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean){
+    this.rowIdForImmediateDeletion = this.dataTable.getRowId(row);
+    return this.dataTable.insertRecord(index, row, shouldLockNewRowAtTop);
+  }
+
   attributes: any;
 
   async exportToExcel() {
@@ -876,7 +916,7 @@ export class DataView implements IDataView {
       )
       .map((property) => {
         return {
-          Caption: property.name,
+          Caption: property.gridCaption,
           FieldName: property.id,
           LookupId: property.lookupId,
           Format: property.formatterPattern,

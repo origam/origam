@@ -13,6 +13,7 @@
 					<xsl:with-param name="EntityName"><xsl:value-of select="'WorkQueueEntry'"/></xsl:with-param>
 					<xsl:with-param name="Message"><xsl:value-of select="AS:GetString('TestError')"/></xsl:with-param>
 					<xsl:with-param name="Severity"><xsl:value-of select="'High'"/></xsl:with-param>
+					<xsl:with-param name="HttpStatusCode"><xsl:value-of select="402"/></xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
 		</RuleExceptionDataCollection>

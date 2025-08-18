@@ -28,7 +28,7 @@ export function flushCurrentRowData(ctx: any) {
     if (row) {
       getDataTable(ctx).flushFormToTable(row);
       if (finishEditing) getTablePanelView(ctx).setEditing(false);
-      yield*getFormScreenLifecycle(ctx).onFlushData();
+      return yield*getFormScreenLifecycle(ctx).onFlushData();
     }
   }
 }

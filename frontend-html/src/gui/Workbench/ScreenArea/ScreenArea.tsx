@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CloseButton } from "@origam/components";
 import { observer, Observer } from "mobx-react";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
@@ -36,19 +35,22 @@ import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
+  bottomButtons: JSX.Element | null;
+  showCloseButton: boolean
 }> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
 
-  function renderActionButtons() {
+  function renderWorkflowButtons() {
     const content = props.openedScreen.content;
     const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
     const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
     return (
-      <div className={S.actionButtonHeader}>
+      <>
         {isCancelButton && (
           <button
             className={S.workflowActionBtn}
@@ -65,8 +67,30 @@ export const DialogScreen: React.FC<{
             {T("Next", "button_next")}
           </button>
         )}
-      </div>
+      </>
     );
+  }
+
+  function renderActionButtons() {
+    return props.openedScreen.content
+      .formScreen!.dialogActions.filter(
+      (action) =>
+        action.placement !== IActionPlacement.PanelHeader &&
+        action.placement !== IActionPlacement.PanelMenu &&
+        action.isEnabled
+    )
+      .map((action, idx) => (
+        <button
+          className={cx({isPrimary: action.isDefault})}
+          tabIndex={0}
+          key={action.id}
+          onClick={(event: any) => {
+            onSelectionDialogActionButtonClick(action)(event, action);
+          }}
+        >
+          {action.caption}
+        </button>
+      ));
   }
 
   useEffect(() => {
@@ -82,35 +106,22 @@ export const DialogScreen: React.FC<{
               !!window.localStorage.getItem("debugKeepProgressIndicatorsOn")
             }
             titleButtons={
-              <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
+            props.showCloseButton
+              ? <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
+              : null
             }
             buttonsCenter={null}
             buttonsLeft={null}
             onWindowMove={(top, left)=> props.openedScreen.onWindowMove(top, left)}
+            mustRunFullScreenInMobile={true}
             buttonsRight={
               <Observer>
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content
-                        .formScreen!.dialogActions.filter(
-                        (action) =>
-                          action.placement !== IActionPlacement.PanelHeader &&
-                          action.placement !== IActionPlacement.PanelMenu &&
-                          action.isEnabled
-                      )
-                        .map((action, idx) => (
-                          <button
-                            className={cx({isPrimary: action.isDefault})}
-                            tabIndex={0}
-                            key={action.id}
-                            onClick={(event: any) => {
-                              onSelectionDialogActionButtonClick(action)(event, action);
-                            }}
-                          >
-                            {action.caption}
-                          </button>
-                        ))}
+                      {renderActionButtons()}
+                      {props.bottomButtons}
+                      {renderWorkflowButtons()}
                     </>
                   ) : (
                     <></>
@@ -132,7 +143,6 @@ export const DialogScreen: React.FC<{
                   {
                     !props.openedScreen.content.isLoading ? (
                       <CtxPanelVisibility.Provider value={{isVisible: true}}>
-                        {renderActionButtons()}
                         <DialogScreenBuilder openedScreen={props.openedScreen}/>
                       </CtxPanelVisibility.Provider>
                     ) : null /*<DialogLoadingContent />*/
@@ -142,7 +152,8 @@ export const DialogScreen: React.FC<{
             </Observer>
           </ModalDialog>
         )}
-      </Observer>
+      </Observer>,
+      true
     );
     return closeFunction;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

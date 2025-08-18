@@ -72,7 +72,6 @@ export const MobileCheckBox: React.FC<{
   return (
     <div>
       <label
-        htmlFor={props.property!.modelInstanceId}
         style={captionStyle()}
       >
         {label}

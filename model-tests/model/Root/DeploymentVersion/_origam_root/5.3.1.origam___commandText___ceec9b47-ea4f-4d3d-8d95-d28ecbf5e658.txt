@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "ThrottlingIntervalSeconds" Integer NOT NULL CONSTRAINT "DF_WorkQueue_ThrottlingIntervalSeconds" DEFAULT 60;
+ALTER TABLE "WorkQueue" ALTER COLUMN "ThrottlingIntervalSeconds" DROP DEFAULT;

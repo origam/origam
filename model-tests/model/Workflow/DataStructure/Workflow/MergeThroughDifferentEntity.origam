@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="2ddb9548-2649-4f92-b63f-745799ba317f"
+    ds1:localized="false"
+    asi:name="MergeThroughDifferentEntity">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Workflow/DataEntity/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/cd988e55-2fbd-4e93-bc2d-af98071f157e"
+      x:id="10fc3a39-0c24-4609-a9f3-344bec4bf3af"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkflowMergeTestEntity"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/SD.origam#SD/a9770d71-2ee1-464a-8e17-1fae683edd34"
+      x:id="8e1606a5-c0eb-49b1-9415-b6620b006ecd"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="SD"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Workflow/DataEntity/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/cd988e55-2fbd-4e93-bc2d-af98071f157e"
+      x:id="e8a7641b-8998-4386-b1c7-e3d343c3af34"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="SecondaryWorkflowMergeTestEntity"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+  </ds1:DataStructure>
+</x:file>

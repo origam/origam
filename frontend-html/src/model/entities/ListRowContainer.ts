@@ -60,6 +60,10 @@ export class ListRowContainer implements IRowsContainer {
     return new Map<any, any[]>(entries);
   }
 
+  getRowById(id: string): any[] | undefined {
+    return this.idToRow.get(id);
+  }
+
   async start() {
     this.reactionDisposer = reaction(
       () => [
@@ -69,6 +73,7 @@ export class ListRowContainer implements IRowsContainer {
           Array.isArray(filter.setting.val2) ? [...filter.setting.val2] : filter.setting.val2,
           filter.setting.type,
         ]),
+        this.filterConfiguration.selectionCheckboxFilter,
         this.orderingConfiguration.orderings.map((x) => [x.columnId, x.direction])],
       () => this.updateSortAndFilterDebounced(),
       {
@@ -90,7 +95,7 @@ export class ListRowContainer implements IRowsContainer {
       .map(ordering => this.getOrderingProperty(dataView, ordering))
       .filter((prop) => prop.column === "ComboBox");
 
-    const filterComboProps = this.filterConfiguration.activeFilters
+    const filterComboProps = this.filterConfiguration.activeCompleteFilters
       .map((term) => getDataViewPropertyById(this.filterConfiguration, term.propertyId)!)
       .filter((prop) => prop.column === "ComboBox");
     const allComboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));
@@ -132,8 +137,9 @@ export class ListRowContainer implements IRowsContainer {
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
         const dataView = getDataView(self);
+        dataView.updateSelectedIds();
         if (!data?.retainPreviousSelection) {
-          dataView.reselectOrSelectFirst();
+          yield*dataView.reselectOrSelectFirst();
         }
       }
     )();
@@ -197,7 +203,7 @@ export class ListRowContainer implements IRowsContainer {
     if (shouldLockNewRowPosition) {
       this.forcedLastRowId = this.rowIdGetter(row);
     }
-    await this.updateSortAndFilter();
+    await this.updateSortAndFilter({retainPreviousSelection: true});
   }
 
   async set(rowsIn: any[][], rowOffset: number): Promise<any> {
@@ -219,12 +225,14 @@ export class ListRowContainer implements IRowsContainer {
     throw new Error("Not implemented");
   }
 
-  substitute(row: any[]): void {
-    const dataTable = getDataTable(this);
-    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
-    const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 1, row);
+  substituteRows(rows: any[][]): void {
+    const entries = this.allRows.map((row, i) => [this.rowIdGetter(row), i] as [any, number]);
+    let rowToIndex = new Map<any, number>(entries);
+    for (let row of rows) {
+      const dataTable = getDataTable(this);
+      const newRow = fixRowIdentifier(row, dataTable.identifierDataIndex);
+      const rowId = this.rowIdGetter(row);
+      this.allRows[rowToIndex.get(rowId)!] = newRow;
     }
   }
 

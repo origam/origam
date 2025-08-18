@@ -34,219 +34,210 @@ using Origam.Gui;
 using System.Linq;
 using Origam.Service.Core;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
 {
-    public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
+    private readonly FormGenerator generator;
+    private readonly DataSet dataSource;
+    public DesktopEntityUIActionRunnerClient(FormGenerator generator, DataSet dataSource)
     {
-        private readonly FormGenerator generator;
-        private readonly DataSet dataSource;
-
-        public DesktopEntityUIActionRunnerClient(FormGenerator generator, DataSet dataSource)
+        this.generator = generator;
+        this.dataSource = dataSource;
+    }
+    public ExecuteActionProcessData CreateExecuteActionProcessData(
+        string sessionFormIdentifier, string requestingGrid,
+        string actionType, string entity, List<string> selectedIds,
+        string actionId, Hashtable parameterMappings,
+        Hashtable inputParameters)
+    {
+        string dataTableName = entity.Split(".".ToCharArray()).Last();
+        var processData = new ExecuteActionProcessData();
+        processData.SessionFormIdentifier = sessionFormIdentifier;
+        processData.RequestingGrid = requestingGrid;
+        processData.ActionId = actionId;
+        processData.Entity = dataTableName;
+        processData.SelectedIds = selectedIds;
+        processData.Type = (PanelActionType)Enum.Parse(
+            typeof(PanelActionType), actionType);
+        processData.DataTable = dataSource.Tables[dataTableName];
+        IList<DataRow> rows = new List<DataRow>();
+        foreach(string id in selectedIds)
         {
-            this.generator = generator;
-            this.dataSource = dataSource;
-        }
-
-        public ExecuteActionProcessData CreateExecuteActionProcessData(
-            string sessionFormIdentifier, string requestingGrid,
-            string actionType, string entity, List<string> selectedIds,
-            string actionId, Hashtable parameterMappings,
-            Hashtable inputParameters)
-        {
-            string dataTableName = entity.Split(".".ToCharArray()).Last();
-            var processData = new ExecuteActionProcessData();
-            processData.SessionFormIdentifier = sessionFormIdentifier;
-            processData.RequestingGrid = requestingGrid;
-            processData.ActionId = actionId;
-            processData.Entity = dataTableName;
-            processData.SelectedIds = selectedIds;
-            processData.Type = (PanelActionType)Enum.Parse(
-                typeof(PanelActionType), actionType);
-            processData.DataTable = dataSource.Tables[dataTableName];
-            IList<DataRow> rows = new List<DataRow>();
-            foreach(string id in selectedIds)
+            DataRow row = null;
+            if((dataSource != null) && dataSource.Tables.Contains(dataTableName))
             {
-                DataRow row = null;
-                if((dataSource != null) && dataSource.Tables.Contains(dataTableName))
-                {
-                    row = dataSource.Tables[dataTableName].Rows.Find(id);
-                }
-                if (row == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        "id", id, ResourceUtils.GetString(
-                        "ErrorRecordNotFound"));
-                }
-	            rows.Add(row);
+                row = dataSource.Tables[dataTableName].Rows.Find(id);
             }
-            processData.SelectedRows = rows;
-            processData.ParameterService = ServiceManager.Services.GetService(
-                typeof(IParameterService)) as IParameterService;
-            if((processData.Type != PanelActionType.QueueAction)
-            && (processData.Type != PanelActionType.SelectionDialogAction))
+            if (row == null)
             {
-                // get action
-                processData.Action = UIActionTools.GetAction(actionId);
-                // retrieve parameter mappings
-                ArrayList originalDataParameters 
-                    = UIActionTools.GetOriginalParameters(processData.Action);
-                processData.Parameters = DatasetTools.RetrieveParemeters(
-                    parameterMappings, processData.SelectedRows, originalDataParameters,
-                    processData.DataTable.DataSet);
-                // add input parameters
-                foreach(DictionaryEntry inputParameter in inputParameters)
-                {
-                    processData.Parameters.Add(inputParameter.Key, inputParameter.Value);
-                }
+                throw new ArgumentOutOfRangeException(
+                    "id", id, ResourceUtils.GetString(
+                    "ErrorRecordNotFound"));
             }
-            return processData;
+            rows.Add(row);
         }
-
-        public void CheckActionConditions(ExecuteActionProcessData processData)
+        processData.SelectedRows = rows;
+        processData.ParameterService = ServiceManager.Services.GetService(
+            typeof(IParameterService)) as IParameterService;
+        if((processData.Type != PanelActionType.QueueAction)
+        && (processData.Type != PanelActionType.SelectionDialogAction))
         {
-        }
-
-        public void SetModalDialogSize(ArrayList resultList,
-            ExecuteActionProcessData processData)
-        {
-        }
-
-        public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
-            DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-            ArrayList changes)
-        {
-            EntityWorkflowAction action 
-                = processData.Action as EntityWorkflowAction;
-            try
+            // get action
+            processData.Action = UIActionTools.GetAction(actionId);
+            // retrieve parameter mappings
+            List<string> originalDataParameters 
+                = UIActionTools.GetOriginalParameters(processData.Action);
+            processData.Parameters = DatasetTools.RetrieveParameters(
+                parameterMappings, processData.SelectedRows, originalDataParameters,
+                processData.DataTable.DataSet);
+            // add input parameters
+            foreach(DictionaryEntry inputParameter in inputParameters)
             {
-                targetData.EnforceConstraints = false;
-                foreach(DataTable table in targetData.Tables)
-                {
-                    table.BeginLoadData();
-                }
-                IDictionary<string, 
-                    IList<KeyValuePair<object, DataMergeChange>>> changeList 
-                    = new Dictionary<string, 
-                        IList<KeyValuePair<object, DataMergeChange>>>();
-                Dictionary<DataRow, List<DataRow>> deletedRowsParents = null;
-                if(action.CleanDataBeforeMerge)
-                {
-                    generator.FormRuleEngine.PauseRuleProcessing();
-                    targetData.AcceptChanges();
-                    DatasetTools.Clear(targetData);
-                }
-                deletedRowsParents = DatasetTools.GetDeletedRows(
-                    sourceData, targetData);
-                MergeParams mergeParams = new MergeParams(
-                    processData.Profile.Id);
-                mergeParams.TrueDelete
-                    = action.MergeType == ServiceOutputMethod.FullMerge;
-                DatasetTools.MergeDataSet(
-                    targetData, sourceData, changeList, mergeParams);
-                // process rules (but not after clean merge, there we expect processed data
-                // we process the rules after merge so all data were merged before we start firing any
-                // events... If we would process rules WHILE merging, there would be a race condition - e.g.
-                // a column change would trigger a rule recalculation of another column that has not been
-                // merged yet, so after successful rule execution the column would be reset to the original
-                // value when being merged, thus, resulting in a not-rule-processed data.
-                if(!action.CleanDataBeforeMerge 
-                && DatasetTools.HasDataSetRules(
-                    targetData, generator.RuleSet))
-                {
-                    ProcessRulesForWorkflowResults(
-                        changeList, targetData, deletedRowsParents);
-                }
-            }
-            finally
-            {
-                generator.FormRuleEngine.ResumeRuleProcessing();
-                foreach(DataTable table in targetData.Tables)
-                {
-                    table.EndLoadData();
-                }
-                targetData.EnforceConstraints = true;
+                processData.Parameters.Add(inputParameter.Key, inputParameter.Value);
             }
         }
-
-        private void ProcessRulesForWorkflowResults(
-            IDictionary<string, IList<KeyValuePair<object, DataMergeChange>>> 
-                changeList,
-            DataSet targetData, 
-            Dictionary<DataRow, List<DataRow>> deletedRowsParents)
+        return processData;
+    }
+    public void CheckActionConditions(ExecuteActionProcessData processData)
+    {
+    }
+    public void SetModalDialogSize(List<object> resultList,
+        ExecuteActionProcessData processData)
+    {
+    }
+    public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
+        DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
+        List<ChangeInfo> changes)
+    {
+        EntityWorkflowAction action 
+            = processData.Action as EntityWorkflowAction;
+        try
         {
-            // is rule handler right way, is conversion to xml data correct?
-            DatasetRuleHandler ruleHandler = new DatasetRuleHandler();
-            IDataDocument xmlData = DataDocumentFactory.New(targetData);
-            foreach(var entry in changeList)
+            targetData.EnforceConstraints = false;
+            foreach(DataTable table in targetData.Tables)
             {
-                string tableName = entry.Key;
-                foreach(var rowEntry in entry.Value)
+                table.BeginLoadData();
+            }
+            IDictionary<string, 
+                IList<KeyValuePair<object, DataMergeChange>>> changeList 
+                = new Dictionary<string, 
+                    IList<KeyValuePair<object, DataMergeChange>>>();
+            Dictionary<DataRow, List<DataRow>> deletedRowsParents = null;
+            if(action.CleanDataBeforeMerge)
+            {
+                generator.FormRuleEngine.PauseRuleProcessing();
+                targetData.AcceptChanges();
+                DatasetTools.Clear(targetData);
+            }
+            deletedRowsParents = DatasetTools.GetDeletedRows(
+                sourceData, targetData);
+            MergeParams mergeParams = new MergeParams(
+                processData.Profile.Id);
+            mergeParams.TrueDelete
+                = action.MergeType == ServiceOutputMethod.FullMerge;
+            DatasetTools.MergeDataSet(
+                targetData, sourceData, changeList, mergeParams);
+            // process rules (but not after clean merge, there we expect processed data
+            // we process the rules after merge so all data were merged before we start firing any
+            // events... If we would process rules WHILE merging, there would be a race condition - e.g.
+            // a column change would trigger a rule recalculation of another column that has not been
+            // merged yet, so after successful rule execution the column would be reset to the original
+            // value when being merged, thus, resulting in a not-rule-processed data.
+            if(!action.CleanDataBeforeMerge 
+            && DatasetTools.HasDataSetRules(
+                targetData, generator.RuleSet))
+            {
+                ProcessRulesForWorkflowResults(
+                    changeList, targetData, deletedRowsParents);
+            }
+        }
+        finally
+        {
+            generator.FormRuleEngine.ResumeRuleProcessing();
+            foreach(DataTable table in targetData.Tables)
+            {
+                table.EndLoadData();
+            }
+            targetData.EnforceConstraints = true;
+        }
+    }
+    private void ProcessRulesForWorkflowResults(
+        IDictionary<string, IList<KeyValuePair<object, DataMergeChange>>> 
+            changeList,
+        DataSet targetData, 
+        Dictionary<DataRow, List<DataRow>> deletedRowsParents)
+    {
+        // is rule handler right way, is conversion to xml data correct?
+        DatasetRuleHandler ruleHandler = new DatasetRuleHandler();
+        IDataDocument xmlData = DataDocumentFactory.New(targetData);
+        foreach(var entry in changeList)
+        {
+            string tableName = entry.Key;
+            foreach(var rowEntry in entry.Value)
+            {
+                DataRow row = targetData.Tables[tableName].Rows.Find(
+                    rowEntry.Key);
+                DataRowState changeType 
+                    = rowEntry.Value.State;
+                if(changeType == DataRowState.Added)
                 {
-                    DataRow row = targetData.Tables[tableName].Rows.Find(
-                        rowEntry.Key);
-                    DataRowState changeType 
-                        = rowEntry.Value.State;
-                    if(changeType == DataRowState.Added)
-                    {
-                        ruleHandler.OnRowChanged(
-                            new DataRowChangeEventArgs(row, DataRowAction.Add), 
-                            xmlData, generator.RuleSet, 
+                    ruleHandler.OnRowChanged(
+                        new DataRowChangeEventArgs(row, DataRowAction.Add), 
+                        xmlData, generator.RuleSet, 
+                        generator.FormRuleEngine);
+                }
+                switch(changeType)
+                {
+                    case DataRowState.Added:
+                        ruleHandler.OnRowCopied(row, xmlData, 
+                            generator.RuleSet, 
                             generator.FormRuleEngine);
-                    }
-                    switch(changeType)
-                    {
-                        case DataRowState.Added:
-                            ruleHandler.OnRowCopied(row, xmlData, 
-                                generator.RuleSet, 
-                                generator.FormRuleEngine);
-                            break;
-                        case DataRowState.Modified:
-                            row.BeginEdit();
-                            Hashtable changedColumns 
-                                = rowEntry.Value.Columns;
-                            if(changedColumns != null)
+                        break;
+                    case DataRowState.Modified:
+                        row.BeginEdit();
+                        Hashtable changedColumns 
+                            = rowEntry.Value.Columns;
+                        if(changedColumns != null)
+                        {
+                            foreach(DictionaryEntry changedColumnEntry 
+                                in changedColumns)
                             {
-                                foreach(DictionaryEntry changedColumnEntry 
-                                    in changedColumns)
-                                {
-                                    DataColumn changedColumn 
-                                        = (DataColumn)changedColumnEntry.Value;
-                                    object newValue = row[changedColumn];
-                                    ruleHandler.OnColumnChanged(
-                                        new DataColumnChangeEventArgs(
-                                            row, changedColumn, newValue), 
-                                        xmlData, generator.RuleSet, 
-                                        generator.FormRuleEngine);
-                                }
+                                DataColumn changedColumn 
+                                    = (DataColumn)changedColumnEntry.Value;
+                                object newValue = row[changedColumn];
+                                ruleHandler.OnColumnChanged(
+                                    new DataColumnChangeEventArgs(
+                                        row, changedColumn, newValue), 
+                                    xmlData, generator.RuleSet, 
+                                    generator.FormRuleEngine);
                             }
-                            row.EndEdit();
-                            break;
-                        case DataRowState.Deleted:
-                            // deletions later
-                            break;
-                        default:
-                            throw new Exception(ResourceUtils.GetString(
-                                "ErrorUnknownRowChangeState"));
-                    }
+                        }
+                        row.EndEdit();
+                        break;
+                    case DataRowState.Deleted:
+                        // deletions later
+                        break;
+                    default:
+                        throw new Exception(ResourceUtils.GetString(
+                            "ErrorUnknownRowChangeState"));
                 }
             }
-            foreach(var deletedItem in deletedRowsParents)
-            {
-                ruleHandler.OnRowDeleted(
-                    deletedItem.Value.ToArray(), 
-                    deletedItem.Key, xmlData, generator.RuleSet, 
-                    generator.FormRuleEngine);
-                }
         }
-
-        public void PostProcessWorkflowAction(DataSet data,
-            EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        foreach(var deletedItem in deletedRowsParents)
         {
-        }       
-       
-        public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
-            EntityWorkflowAction entityWorkflowAction)
-        {
-        }
+            ruleHandler.OnRowDeleted(
+                deletedItem.Value.ToArray(), 
+                deletedItem.Key, xmlData, generator.RuleSet, 
+                generator.FormRuleEngine);
+            }
+    }
+    public void PostProcessWorkflowAction(DataSet data,
+        EntityWorkflowAction entityWorkflowAction, List<ChangeInfo> changes)
+    {
+    }       
+   
+    public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
+        EntityWorkflowAction entityWorkflowAction)
+    {
     }
 }

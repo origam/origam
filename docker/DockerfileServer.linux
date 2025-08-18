@@ -1,0 +1,89 @@
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see https://aka.ms/containercompat
+
+# Fix of https://community.origam.com/t/not-displaying-c-at-the-end-of-words-in-pdf-generated-from-fastreport/755/19
+# Rebuilding libgdiplus library to correctly display international characters
+# in FastReports. i.e. in czech language it doesn't display è located in the end
+# of string. Instead of Kè it printed just K.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /tmp
+#INSTALL YARN & NODEJS 18
+RUN apt-get update \
+&& apt-get -y install ca-certificates curl sudo gnupg \
+&& sudo mkdir -p /etc/apt/keyrings \
+&& curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list \
+&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+&& apt-get update \
+&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git nginx ssh yarn nodejs \
+&& git clone https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
+&& cd libgdiplus \
+&& ./autogen.sh --with-pango --prefix=/usr \
+&& make \
+&& make install \
+&& apt-get -y purge autoconf automake build-essential \
+&& apt-get -y autoremove \
+&& cd .. \
+&& rm -r libgdiplus \
+&& useradd -ms /bin/bash origam \
+&& usermod -aG sudo origam \
+&& echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+RUN apt-get update && apt-get install -y -qq xmlstarlet
+
+WORKDIR /root
+COPY server/linux/updateTimezone.sh \
+server/linux/reverse-proxy.conf \
+/root/
+RUN mv reverse-proxy.conf /etc/nginx/sites-available \
+&& unlink /etc/nginx/sites-enabled/default \
+&& ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf \
+&& nginx -t \
+&& chmod +x updateTimezone.sh \
+&& cd /home \
+&& su origam 
+USER origam
+
+# nginx and SSL setup
+COPY server/linux/createSslCertificate.sh /etc/nginx/ssl/createSslCertificate.sh
+RUN sudo chmod +x /etc/nginx/ssl/createSslCertificate.sh
+COPY server/nginx.conf /etc/nginx/nginx.conf
+
+WORKDIR /home/origam
+RUN mkdir HTML5 HTML5-SOURCE Scheduler Setup
+COPY --chown=origam:origam server/HTML5-SOURCE /home/origam/HTML5-SOURCE/
+COPY --chown=origam:origam server/Scheduler \
+server/_OrigamSettings.mssql.template \
+server/_OrigamSettings.postgres.template \
+server/linux/configureScheduler.sh \
+server/linux/fill_origam_settings_config.sh \
+server/log4net.scheduler.config \
+/home/origam/Scheduler/
+RUN mv /home/origam/Scheduler/log4net.scheduler.config /home/origam/Scheduler//log4net.config
+COPY --chown=origam:origam server/HTML5 server/_appsettings.template \
+server/_OrigamSettings.mssql.template \
+server/_OrigamSettings.postgres.template \
+server/linux/configureServer.sh \
+server/linux/fill_origam_settings_config.sh \
+server/linux/entrypoint.sh \
+server/log4net.server.config \
+server/linux/updateEnvironment.sh \
+server/linux/updateEnvironmentRoot.sh \
+/home/origam/HTML5/
+RUN mv /home/origam/HTML5/log4net.server.config /home/origam/HTML5/log4net.config
+COPY --chown=origam:origam server/linux/updateEnvironment.sh \
+server/linux/updateEnvironmentRoot.sh \
+/home/origam/Setup/
+WORKDIR /home/origam/Scheduler \
+RUN chmod +x configureScheduler.sh \
+&& chmod +x fill_origam_settings_config.sh
+WORKDIR /home/origam/HTML5
+RUN mkdir logs \
+&& chmod +x configureServer.sh \
+&& chmod +x fill_origam_settings_config.sh \
+&& chmod +x entrypoint.sh \
+&& chmod +x updateEnvironment.sh \
+&& chmod +x updateEnvironmentRoot.sh
+ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]

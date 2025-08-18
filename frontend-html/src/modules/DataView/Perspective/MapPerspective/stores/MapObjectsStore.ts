@@ -29,6 +29,8 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import _ from "lodash";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class MapObjectsStore {
   constructor(private root: MapRootStore) {
@@ -156,11 +158,18 @@ export class MapObjectsStore {
 
   @action.bound
   handleLayerClick(id: string) {
-    if (this.setup.isReadOnlyView) {
-      getDataView(this.dataView).setSelectedRowId(id);
-      this.search.selectSearchResultById(id);
-      this.navigationStore.highlightSelectedSearchResult();
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this.dataView,
+      generator: function*(){
+        if (self.setup.isReadOnlyView) {
+          getDataView(self.dataView).setSelectedRowId(id);
+        }
+        getTablePanelView(self.dataView).scrollToCurrentRow();
+        self.search.selectSearchResultById(id);
+        self.navigationStore.highlightSelectedSearchResult();
+      }()
+    });
   }
 
   @action.bound

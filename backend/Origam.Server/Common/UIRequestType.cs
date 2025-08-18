@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -39,17 +40,15 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
+namespace Origam.Server;
+public enum UIRequestType
 {
-    public enum UIRequestType
-    {
-        FormReferenceMenuItem,
-        FormReferenceMenuItem_WithSelection,
-        WorkflowReferenceMenuItem,
-        ReportReferenceMenuItem,
-        ReportReferenceMenuItem_WithSelection,
-        WorkQueue,
-        DataConstantReferenceMenuItem,
-        Dashboard
-    }
+    FormReferenceMenuItem,
+    FormReferenceMenuItem_WithSelection,
+    WorkflowReferenceMenuItem,
+    ReportReferenceMenuItem,
+    ReportReferenceMenuItem_WithSelection,
+    WorkQueue,
+    DataConstantReferenceMenuItem,
+    Dashboard
 }

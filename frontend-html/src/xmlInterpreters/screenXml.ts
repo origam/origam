@@ -96,6 +96,8 @@ import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePan
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import {getCommonTabIndex, TabIndex} from "../model/entities/TabIndexOwner";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 
 function getPropertyParameters(node: any) {
@@ -103,6 +105,14 @@ function getPropertyParameters(node: any) {
   const result: { [key: string]: any } = {};
   for (let p of parameters) {
     result[p.attributes.Name] = p.attributes.Value;
+  }
+  return result;
+}
+function getParameterMappings(node: any) {
+  const parameters = findStopping(node, (n) => n.name === "ParameterMapping");
+  const result: { [key: string]: any } = {};
+  for (let p of parameters) {
+    result[p.attributes.ParameterName] = p.attributes.TargetRootEntityField;
   }
   return result;
 }
@@ -118,15 +128,34 @@ export function fixColumnWidth(width: number) {
   }
 }
 
+function getNewRecordScreen(node: any){
+  const childNodes = findStopping(node, (n) => n.name === "NewRecordScreen");
+  if (childNodes.length === 0) {
+    return undefined;
+  }
+  if(childNodes.length > 1) {
+    throw new Error("More than one NewRecordScreenBinding node found in xml");
+  }
+  const newRecordScreenNode = childNodes[0];
+  return new NewRecordScreen(
+    {
+      width: parseInt(newRecordScreenNode.attributes.Width),
+      height: parseInt(newRecordScreenNode.attributes.Height),
+      menuItemId: newRecordScreenNode.attributes.MenuItemId,
+      parameterMappings: getParameterMappings(newRecordScreenNode)
+    });
+}
+
 function parseProperty(node: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: node,
     id: node.attributes.Id,
-    tabIndex: node.attributes.TabIndex,
+    tabIndex: TabIndex.create(node.attributes.TabIndex),
     controlPropertyId: node.attributes.ControlPropertyId,
     controlPropertyValue: node.attributes.ControlPropertyValue,
     modelInstanceId: node.attributes.ModelInstanceId || "",
     name: node.attributes.Name,
+    gridCaption: node.attributes.GridColumnCaption,
     readOnly: node.attributes.ReadOnly === "true",
     x: parseInt(node.attributes.X, 10),
     y: parseInt(node.attributes.Y, 10),
@@ -146,6 +175,7 @@ function parseProperty(node: any, idx: number): IProperty {
     autoSort: node.attributes.AutoSort === "true",
     maxLength: parseInt(node.attributes.MaxLength, 10),
     modelFormatterPattern: replaceDefaultDateFormats(node.attributes.FormatterPattern),
+    isInteger: node.attributes.IsInteger === "true",
     formatterPattern: node.attributes.FormatterPattern
       ? getMomentFormat(node)
       : "",
@@ -162,6 +192,7 @@ function parseProperty(node: any, idx: number): IProperty {
     lookup: !node.attributes.LookupId
       ? undefined
       : new Lookup({
+        newRecordScreen: getNewRecordScreen(node),
         dropDownShowUniqueValues: node.attributes.DropDownShowUniqueValues === "true",
         lookupId: node.attributes.LookupId,
         identifier: node.attributes.Identifier,
@@ -196,7 +227,7 @@ function parseProperty(node: any, idx: number): IProperty {
     isAggregatedColumn: node.attributes.Aggregated || false,
     isLookupColumn: node.attributes.IsLookupColumn || false,
     style: cssString2Object(node.attributes.Style),
-    toolTip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
+    tooltip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
     supportsServerSideSorting: node.attributes.SupportsServerSideSorting === "true",
     fieldType: node.attributes.FieldType
   });
@@ -221,7 +252,8 @@ export function*interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string,
   workflowTaskId: string | null,
-  isLazyLoading: boolean
+  isLazyLoading: boolean,
+  createNewRecord?: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
   const workbenchLifeCycle = getWorkbenchLifecycle(formScreenLifecycle);
@@ -306,7 +338,7 @@ export function*interpretScreenXml(
   const foundLookupIds = new Set<string>();
   const uiRoot = findUIRoot(windowXml);
 
-  const focusManager = new ScreenFocusManager();
+  const focusManager = new ScreenFocusManager(uiRoot);
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
     focusManager: focusManager,
@@ -366,6 +398,7 @@ export function*interpretScreenXml(
             caption: action.attributes.Caption,
             groupId: action.attributes.GroupId,
             type: action.attributes.Type,
+            showAlways: action.attributes.ShowAlways === "true",
             iconUrl: action.attributes.IconUrl,
             mode: action.attributes.Mode,
             isDefault: action.attributes.IsDefault === "true",
@@ -391,15 +424,26 @@ export function*interpretScreenXml(
       const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
 
-      const filterConfiguration = new FilterConfiguration(implicitFilters);
-      const filterGroupManager = new FilterGroupManager(filterConfiguration);
+      const alwaysShowFilters = getAlwaysShowFilters(configuration);
+      const filterConfiguration = new FilterConfiguration(implicitFilters, alwaysShowFilters);
+      const filterGroupManager = new FilterGroupManager(filterConfiguration, alwaysShowFilters);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
+        .forEach((conf: any) => addFilterGroups(
+          filterGroupManager, properties, conf, dataView.attributes.SelectionMember
+        ));
+
+      function getDefaultPanelView(){
+        if(createNewRecord){
+          return IPanelViewType.Form;
+        }
+        return panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView));
+      }
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
+        tabIndex: getCommonTabIndex(properties),
         focusManager: focusManager,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
@@ -407,10 +451,10 @@ export function*interpretScreenXml(
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
         newRecordView: dataView.attributes.NewRecordView,
-        defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
-        activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
+        defaultPanelView: getDefaultPanelView(),
+        activePanelView: getDefaultPanelView(),
         isMapSupported: dataView.attributes.IsMapSupported === "true",
-        isHeadless: dataView.attributes.IsHeadless === "true",
+        isHeadless: createNewRecord || dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
         hideCopyButton: dataView.attributes.HideCopyButton === "true",
@@ -478,7 +522,7 @@ export function*interpretScreenXml(
       );
       const configurationNode =
         gridConfigurationNodes.length === 1 ? gridConfigurationNodes[0] : undefined;
-      if (configurationNode) {
+      if (!createNewRecord && configurationNode) {
         const defaultView = findStopping(
           configurationNode,
           (n) => n.name === "view" && n.parent.name === "defaultView"
@@ -489,6 +533,8 @@ export function*interpretScreenXml(
           }
         });
       }
+      filterConfiguration.isFilterControlsDisplayed = alwaysShowFilters;
+      filterGroupManager.alwaysShowFilters = alwaysShowFilters;
       const configurationManager = createConfigurationManager(
         gridConfigurationNodes,
         dataViewInstance.tablePanelView.tableProperties,
@@ -658,6 +704,17 @@ export function*interpretScreenXml(
   $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
 
   return {formScreen: scr, foundLookupIds};
+}
+
+function getAlwaysShowFilters(configuration: any){
+  const gridConfigurationNodes = configuration.filter(
+  (node: any) => node?.parent?.attributes?.Type === "Grid");
+  if (gridConfigurationNodes.length === 0) {
+    return false;
+  }
+  return findStopping(
+    gridConfigurationNodes[0], (n) => n.name === "alwaysShowFilters")
+    ?.[0]?.elements[0]?.text === 'true';
 }
 
 function getImplicitFilters(dataViewXml: any) {

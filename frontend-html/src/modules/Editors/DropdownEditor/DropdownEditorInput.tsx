@@ -18,10 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
-import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import S from "gui/Components/Dropdown/Dropdown.module.scss";
+import { T } from "utils/translation";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
@@ -31,6 +32,9 @@ export function DropdownEditorInput(props: {
   const beh = useContext(CtxDropdownEditor).behavior;
   const data = useContext(CtxDropdownEditor).editorData;
   const setup = useContext(CtxDropdownEditor).setup;
+  const [ctrlOrCmdKeyPressed, setCtrlOrCmdKeyPressed] = useState<boolean>(false);
+  const isMacOS = () => {return navigator.userAgent.toLowerCase().includes("mac")};
+
   const refInput = useMemo(() => {
     return (elm: any) => {
       beh.refInputElement(elm);
@@ -42,6 +46,8 @@ export function DropdownEditorInput(props: {
       beh.subscribeToFocusManager(beh.elmInputElement);
     }
     beh.updateTextOverflowState();
+    beh.mount();
+    return ()=> beh.onBlur?.(beh.elmInputElement);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -58,27 +64,71 @@ export function DropdownEditorInput(props: {
     }
   }
 
+  useEffect(() => {
+    const keyDownListener = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey)
+        setCtrlOrCmdKeyPressed(true);
+    }
+    const keyUpListener = (event: KeyboardEvent) => {
+      if (!event.ctrlKey && !event.metaKey)
+        setCtrlOrCmdKeyPressed(false);
+    }
+
+    document.addEventListener('keydown', keyDownListener);
+    document.addEventListener('keyup', keyUpListener);
+    return () => {
+      document.removeEventListener('keydown', keyDownListener);
+      document.removeEventListener('keyup', keyUpListener);
+    }
+  }, [])
+
+
+  const getTitle = () => {
+    if (!setup.isLink || data.value == null)
+      return "";
+    
+    else if (isMacOS())
+      return T("Hold Cmd and click to open link", "hold_cmd_tool_tip");
+
+    return T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+  }
+
+  const getClassNames = () => {
+    let classNames = ["input", S.input];
+    
+    if (setup.isLink) {
+      classNames.push("isLink", S.isLink);
+    }
+  
+    if (setup.isLink && ctrlOrCmdKeyPressed && data.value != null) {
+      classNames.push("isCursorPointer", S.isCursorPointer);
+    }
+  
+    return classNames;
+  }
 
   return (
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input, {isLink: setup.isLink})}
+          className={cx(getClassNames())}
+          title={getTitle()}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}
           onKeyDown={beh.handleInputKeyDown}
-          onFocus={!beh.isReadOnly ? beh.handleInputFocus : undefined}
+          onFocus={beh.handleInputFocus}
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
-          onDoubleClick={beh.onDoubleClick}
+          onDoubleClick={event => beh.handleDoubleClick(event)}
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}
-          autoComplete={"off"}
+          autoComplete={"new-password"}
           autoCorrect={"off"}
           autoCapitalize={"off"}
           spellCheck={"false"}
+          onDragStart={(e: any) =>  e.preventDefault()}
         />
       )}
     </Observer>

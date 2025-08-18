@@ -1,0 +1,61 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*  ---------------------------------------------------------------------- */
+/*  
+Name: origam.app
+Date: June 2020
+Version: 1.0
+Author: Daniel Baumgartner
+Autor URI: icontel.com
+*/
+/*  ---------------------------------------------------------------------- */
+
+/*  ---------------------------------------------------------------------- */
+/*  settings */
+/*  ---------------------------------------------------------------------- */
+
+$font-size:         12px;
+
+$h1-fontsize:       1.5em;
+$h1-lineheight:     1.3em;
+$h2-fontsize:       1.25em;
+$h2-lineheight:     1.4em;
+
+/*  ---------------------------------------------------------------------- */
+
+@mixin transition {
+	-webkit-transition: all 200ms linear;
+	   -moz-transition: all 200ms linear;
+		-ms-transition: all 200ms linear;
+		 -o-transition: all 200ms linear;
+			transition: all 200ms linear;
+}
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	   -moz-border-radius: $radius;
+		-ms-border-radius: $radius;
+		 -o-border-radius: $radius;
+			border-radius: $radius;
+}
+@mixin opacity($opacity) {
+    opacity: $opacity;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie); //IE8
+}

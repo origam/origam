@@ -4,8 +4,14 @@
     "PathToChatApp": "",
     "ChatRefreshInterval": 1000
   },
+  "SupportedSecurityProtocols": [ "Tls12", "Tls11", "Tls" ],
   "ExtensionDlls": ["C:\\someDirectory\\controller.dll"],
   "ReloadModelWhenFilesChangesDetected": "false",
+  "HttpFormSettings": {
+    "MultipartBodyLengthLimit": 134217728,
+    "MultipartHeadersLengthLimit": 16384,
+    "ValueLengthLimit": 4194304
+  },
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
@@ -143,7 +149,9 @@
   },
   "HtmlClientConfig":{
     "ShowToolTipsForMemoFieldsOnly" : "false",
-    "RowStatesDebouncingDelayMilliseconds": 200
+    "RowStatesDebouncingDelayMilliseconds": 0,
+    "DropDownTypingDebouncingDelayMilliseconds": 300,
+    "GetLookupLabelExDebouncingDelayMilliseconds": 667
   },
   "Logging": {
 	"LogLevel": {

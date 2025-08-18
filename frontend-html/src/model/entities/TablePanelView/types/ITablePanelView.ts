@@ -51,6 +51,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
   isEditing: boolean;
+  expandEditorAfterMounting: boolean;
   fixedColumnCount: number;
   configurationManager: IConfigurationManager;
 
@@ -65,6 +66,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   allTableProperties: IProperty[];
   propertyMap: Map<string, IProperty>;
 
+  property: IProperty | undefined;
+
   hiddenPropertyIds: Map<string, boolean>;
   aggregations: AggregationContainer;
 
@@ -74,9 +77,30 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 
-  onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): Generator;
+  onCellClick(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}): Generator;
 
   onNoCellClick(): Generator;
+
+  onSelectionCellMouseMove(event: any, row: any[], rowId: any): Generator;
+
+  onSelectionCellClick(event: any, row: any[], rowId: any): Generator;
+
+  selectionRangeIndex0: number | undefined;
+  selectionRangeIndex1: number | undefined;
+  shiftPressed: boolean;
+  ctrlOrCmdPressed: boolean;
+  selectionTargetState: boolean;
+  selectionInProgress: boolean;
+
+  onWindowMouseMove(event: any): Generator;
+
+  onWindowKeyDown(event: any): Generator;
+
+  onWindowKeyUp(event: any): Generator;
+
+  selectionCellHoveredId: any;
+
+  onMouseMoveOutsideCells(): void;
 
   onOutsideTableClick(): Generator;
 
@@ -84,9 +108,9 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setEditing(state: boolean): void;
 
-  selectNextColumn(nextRowWhenEnd?: boolean): void;
+  selectNextColumn(nextRowWhenEnd?: boolean): Generator;
 
-  selectPrevColumn(prevRowWhenStart?: boolean): void;
+  selectPrevColumn(prevRowWhenStart?: boolean): Generator;
 
   setSelectedColumnId(id: string | undefined): void;
 

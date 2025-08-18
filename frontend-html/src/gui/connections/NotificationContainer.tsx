@@ -22,8 +22,8 @@ import S from "./NotificationContainer.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { Icon } from "@origam/components";
 import cx from "classnames";
+import { Icon } from "gui/Components/Icon/Icon";
 
 @observer
 export class NotificationContainer extends React.Component<{}> {
@@ -49,14 +49,14 @@ export class NotificationContainer extends React.Component<{}> {
 
   render() {
     const activeScreen = getActiveScreen(this.workbench);
-    const formScreen = activeScreen?.content.formScreen;
+    const formScreen = activeScreen?.content?.formScreen;
     if(!formScreen || formScreen.notifications.length === 0){
       return null;
     }
     return (
       <div className={S.root}>
         {formScreen.notifications.map(x =>
-          <div className={S.row}>
+          <div key={x.text + x.icon} className={S.row}>
             <div className={S.iconContainer}>
               {this.getIcon(x.icon)}
             </div>

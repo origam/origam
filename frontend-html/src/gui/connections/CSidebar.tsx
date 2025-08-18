@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { LogoSection } from "gui/Components/Sidebar/LogoSection";
 import { Sidebar } from "gui/Components/Sidebar/Sidebar";
@@ -45,7 +45,7 @@ import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
 import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import { SearchResults } from "gui/Components/Search/SearchResults";
-import { CFavorites } from "gui/connections/CFavorites";
+import { CFavorites, onDragEndAction } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { DragDropContext } from 'react-beautiful-dnd';
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
@@ -149,34 +149,6 @@ export class CSidebar extends React.Component {
     );
   }
 
-  @action
-  async onDragEnd(result: any) {
-    if (!result.destination) return;
-
-    let sourceFolderId = this.getIdFromDropIdentifier(result.source.droppableId);
-    let destinationFolderId = this.getIdFromDropIdentifier(result.destination.droppableId);
-    let itemId = this.getIdFromDropIdentifier(result.draggableId);
-
-    const favorites = getFavorites(this.workbench);
-    const destinationFolder = favorites.favoriteFolders
-      .find(folder => folder.id === destinationFolderId)!;
-    const sourceFolder = favorites.favoriteFolders
-      .find(folder => folder.id === sourceFolderId)!;
-    if (sourceFolderId === destinationFolderId) {
-      if (result.source.index === result.destination.index) {
-        return;
-      }
-      await favorites.moveItemInFolder(sourceFolder.itemIds, result.source.index, result.destination.index)
-      return;
-    }
-    await favorites.moveItemBetweenFolders(itemId, sourceFolder, destinationFolder);
-  }
-
-  getIdFromDropIdentifier(droppableId: string) {
-    let split = droppableId.split("_");
-    return split[split.length - 1]
-  }
-
   render() {
     const showChat = getShowChat(this.workbench);
     const showWorkQues = getShowWorkQues(this.workbench);
@@ -195,7 +167,7 @@ export class CSidebar extends React.Component {
             )}
           </div>
         </LogoSection>
-        <DragDropContext onDragEnd={(result) => this.onDragEnd(result)}>
+        <DragDropContext onDragEnd={(result) => onDragEndAction(result, this.workbench)}>
           {favorites.favoriteFolders
             .filter((folder) => folder.isPinned)
             .map((folder) => (

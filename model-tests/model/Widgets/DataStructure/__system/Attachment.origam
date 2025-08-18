@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <dsfs:DataStructureFilterSet
+    asi:abstract="false"
+    dsfs:dynamic="false"
+    x:id="058b705d-9722-4645-9d2d-b6271d3da197"
+    asi:name="GetById"
+    x:parentId="04a07967-4b59-4c14-8320-e6d073f6f77f">
+    <dsfsf:DataStructureFilterSetFilter
+      asi:abstract="false"
+      dsfsf:entity="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/500d0e9a-25eb-4ed8-aef5-fc220f40b00a"
+      dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+      x:id="0c2fc182-3331-40b1-bfe9-8f8c7a1ffa67"
+      asi:name="Attachment_GetId"
+      dsfsf:passWhenParameterMatch="false" />
+  </dsfs:DataStructureFilterSet>
+</x:file>

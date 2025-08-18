@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   max-height: 100%;
   display: flex;
   flex-direction: column;
+  padding-bottom: env(keyboard-inset-height);
 }
 
 .root :global(.sidebar) {

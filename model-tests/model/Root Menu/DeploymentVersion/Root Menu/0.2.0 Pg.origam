@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="873ca723-45a1-41ac-b1a9-b22417ef3fd4"
@@ -7,10 +12,10 @@
     dv:version="0.2.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___3ad1c76f-01d8-4270-a680-fe15686ed94f.txt"
-      x:id="3ad1c76f-01d8-4270-a680-fe15686ed94f"
-      asi:name="00010_AddRole_FRM_UserProfile"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___03e64201-e71b-43dd-9192-1ff705ec06cb.txt"
+      x:id="03e64201-e71b-43dd-9192-1ff705ec06cb"
+      asi:name="00040_AddRole_FRM_OrigamOnlineUser"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -23,18 +28,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="30"
-      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___e2ec342f-6b1a-42de-afd8-fd39785db6f7.txt"
-      x:id="e2ec342f-6b1a-42de-afd8-fd39785db6f7"
-      asi:name="00030_AddRole_FRM_NotificationTemplate"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___03e64201-e71b-43dd-9192-1ff705ec06cb.txt"
-      x:id="03e64201-e71b-43dd-9192-1ff705ec06cb"
-      asi:name="00040_AddRole_FRM_OrigamOnlineUser"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___3ad1c76f-01d8-4270-a680-fe15686ed94f.txt"
+      x:id="3ad1c76f-01d8-4270-a680-fe15686ed94f"
+      asi:name="00010_AddRole_FRM_UserProfile"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -43,6 +40,14 @@
       scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___80ce0444-c24c-4f7a-8312-06e3da11f355.txt"
       x:id="80ce0444-c24c-4f7a-8312-06e3da11f355"
       asi:name="00050_AddRole_FRM_UserPermissionsOverview"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___e2ec342f-6b1a-42de-afd8-fd39785db6f7.txt"
+      x:id="e2ec342f-6b1a-42de-afd8-fd39785db6f7"
+      asi:name="00030_AddRole_FRM_NotificationTemplate"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

@@ -21,58 +21,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for DeaultValueParameter.
+/// </summary>
+[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
+[HelpTopic("Default+Value+Parameter")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DefaultValueParameter : SchemaItemParameter
 {
-	/// <summary>
-	/// Summary description for DeaultValueParameter.
-	/// </summary>
-	[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
-    [HelpTopic("Default+Value+Parameter")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DefaultValueParameter : SchemaItemParameter
+	public DefaultValueParameter() : base() {}
+	public DefaultValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DefaultValueParameter(Key primaryKey) : base(primaryKey)	{}
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
-		public DefaultValueParameter() : base() {}
-
-		public DefaultValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DefaultValueParameter(Key primaryKey) : base(primaryKey)	{}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.DefaultValue);
-		}
-
-		#region Properties
-		public Guid DefaultValueId;
-
-		[Category("Reference")]
-		[TypeConverter(typeof(DataConstantConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("defaultValue", "DefaultValueId")]
-		public DataConstant DefaultValue
-		{
-			get
-			{
-				try
-				{
-					return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
-				}
-				catch
-				{
-					throw new Exception(ResourceUtils.GetString("ErrorDataConstantNotFound", this.Name));
-				}
-			}
-			set
-			{
-				this.DefaultValueId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion
+		dependencies.Add(this.DefaultValue);
 	}
+	#region Properties
+	public Guid DefaultValueId;
+	[Category("Reference")]
+	[TypeConverter(typeof(DataConstantConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+    [XmlReference("defaultValue", "DefaultValueId")]
+	public DataConstant DefaultValue
+	{
+		get
+		{
+			try
+			{
+				return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
+			}
+			catch
+			{
+				throw new Exception(ResourceUtils.GetString("ErrorDataConstantNotFound", this.Name));
+			}
+		}
+		set
+		{
+			this.DefaultValueId = (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion
 }

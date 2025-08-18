@@ -26,7 +26,7 @@ export function selectFirstRow(ctx: any) {
   return function*selectFirstRow() {
     let dataView = getDataView(ctx);
     if (dataView.infiniteScrollLoader) yield*dataView.infiniteScrollLoader!.loadFirstPage();
-    dataView.selectFirstRow();
+    yield*dataView.selectFirstRow();
     getTablePanelView(ctx).scrollToCurrentRow();
     if (!isLazyLoading(ctx)) {
       setTimeout(() => {

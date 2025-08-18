@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "WorkQueueState" ADD CONSTRAINT "FK_WorkQueueState_refWorkQueueId_WorkQueue"
+	FOREIGN KEY (
+		"refWorkQueueId"
+	)
+
+	REFERENCES "WorkQueue" (
+		"Id"
+	);

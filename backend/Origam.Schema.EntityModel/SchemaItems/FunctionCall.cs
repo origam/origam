@@ -21,195 +21,176 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
+[HelpTopic("Function+Call+Field")]
+[DefaultProperty("Function")]
+[ClassMetaVersion("6.0.0")]
+public class FunctionCall : AbstractDataEntityColumn
 {
-	[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
-    [HelpTopic("Function+Call+Field")]
-    [DefaultProperty("Function")]
-    [ClassMetaVersion("6.0.0")]
-    public class FunctionCall : AbstractDataEntityColumn
+	public FunctionCall() {}
+	public FunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public FunctionCall(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractDataEntityColumn Members
+	
+	[Browsable(false)]
+	public override bool UseFolders => false;
+	public override string FieldType => "FunctionCall";
+	public override bool ReadOnly
 	{
-		public FunctionCall() {}
-
-		public FunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public FunctionCall(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractDataEntityColumn Members
-		
-		[Browsable(false)]
-		public override bool UseFolders => false;
-
-		public override string FieldType => "FunctionCall";
-
-		public override bool ReadOnly
+		get
 		{
-			get
+			if(Function == null)
 			{
-				if(Function == null)
-				{
-					return true;
-				}
-				return Function.FunctionType == OrigamFunctionType.Standard;
+				return true;
+			}
+			return Function.FunctionType == OrigamFunctionType.Standard;
+		}
+	}
+	public override string Icon 
+		=> Function == null ? "icon_function-call.png" : Function.Icon;
+	public override bool CanMove(UI.IBrowserNode2 newNode)
+	{
+		// can move inside the same entity 
+		return RootItem == ((ISchemaItem)newNode).RootItem;
+	}
+	public override void GetExtraDependencies(
+		List<ISchemaItem> dependencies)
+	{
+		dependencies.Add(Function);
+		base.GetExtraDependencies (dependencies);
+	}
+	#endregion
+	#region Properties
+	public Guid FunctionId;
+	[Category("Function")]
+	[TypeConverter(typeof(FunctionConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+    [XmlReference("function", "FunctionId")]
+    public Function Function
+	{
+		get
+		{
+			var key = new ModelElementKey
+			{
+				Id = this.FunctionId
+			};
+			try
+			{
+				return (Function)PersistenceProvider.RetrieveInstance(
+					typeof(Function), key);
+			}
+			catch
+			{
+				return null;
 			}
 		}
-
-		public override string Icon 
-			=> Function == null ? "icon_function-call.png" : Function.Icon;
-
-		public override bool CanMove(UI.IBrowserNode2 newNode)
+		set
 		{
-			// can move inside the same entity 
-			return RootItem == ((ISchemaItem)newNode).RootItem;
-		}
-
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(Function);
-			base.GetExtraDependencies (dependencies);
-		}
-		#endregion
-
-		#region Properties
-		public Guid FunctionId;
-
-		[Category("Function")]
-		[TypeConverter(typeof(FunctionConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("function", "FunctionId")]
-        public Function Function
-		{
-			get
+			// We have to delete all child items
+			foreach(ISchemaItem item in ChildItems)
 			{
-				var key = new ModelElementKey
-				{
-					Id = this.FunctionId
-				};
-				try
-				{
-					return (Function)PersistenceProvider.RetrieveInstance(
-						typeof(Function), key);
-				}
-				catch
-				{
-					return null;
-				}
+				item.IsDeleted = true;
 			}
-			set
+			if(value == null)
 			{
-				// We have to delete all child items
-				foreach(ISchemaItem item in ChildItems)
-				{
-					item.IsDeleted = true;
-				}
-				if(value == null)
-				{
-					FunctionId = Guid.Empty;
-					Name = "";
-				}
-				else
-				{
-					FunctionId = (Guid)value.PrimaryKey["Id"];
-					if(Name == null)
-					{
-						Name = Function.Name;
-					}
-					// We generate all parameters to the function
-					foreach(var abstractSchemaItem in Function.ChildItems)
-					{
-						var parameter = (FunctionParameter)abstractSchemaItem;
-						var functionCallParameter 
-							= NewItem<FunctionCallParameter>(
-								SchemaExtensionId, null);
-						functionCallParameter.FunctionParameter = parameter;
-						functionCallParameter.Name = parameter.Name;
-					}
-				}
-			}
-		}
-
-		private bool _forceDatabaseCalculation = false;
-		[Category("Function"), DefaultValue(false)]
-		[XmlAttribute("forceDatabaseCalculation")]
-        public bool ForceDatabaseCalculation
-		{
-			get => _forceDatabaseCalculation;
-			set => _forceDatabaseCalculation = value;
-		}
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		[Browsable(false)]
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				var functionCallParameterType 
-					= new[] {typeof(FunctionCallParameter)};
-				return ParentItem is IDataEntity 
-					? functionCallParameterType.Concat(base.NewItemTypes)
-						.ToArray() 
-					: functionCallParameterType;
-			}
-		}
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(FunctionCallParameter) ?
-					"NewFunctionCallParameter" : null);
-		}
-
-		#endregion
-
-		#region Convert
-		public override bool CanConvertTo(Type type)
-		{
-			return
-				(
-					(
-						type == typeof(FieldMappingItem)
-						|| type == typeof(DetachedField)
-					)
-				&&
-					(
-						ParentItem is IDataEntity
-					)
-				);
-		}
-
-		protected override ISchemaItem ConvertTo<T>()
-		{
-			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
-			if(converted is AbstractDataEntityColumn column)
-			{
-				CopyFieldMembers(this, column);
-			}
-			if(converted is FieldMappingItem fieldMappingItem)
-			{
-				fieldMappingItem.MappedColumnName = Name;
-			}
-			else if(typeof(T) == typeof(DetachedField))
-			{
+				FunctionId = Guid.Empty;
+				Name = "";
 			}
 			else
 			{
-				return base.ConvertTo<T>();
+				FunctionId = (Guid)value.PrimaryKey["Id"];
+				if(Name == null)
+				{
+					Name = Function.Name;
+				}
+				// We generate all parameters to the function
+				foreach(var abstractSchemaItem in Function.ChildItems)
+				{
+					var parameter = (FunctionParameter)abstractSchemaItem;
+					var functionCallParameter 
+						= NewItem<FunctionCallParameter>(
+							SchemaExtensionId, null);
+					functionCallParameter.FunctionParameter = parameter;
+					functionCallParameter.Name = parameter.Name;
+				}
 			}
-			// does the common conversion tasks and persists both this and converted objects
-			FinishConversion(this, converted);
-			return converted;
 		}
-
-		#endregion
 	}
+	private bool _forceDatabaseCalculation = false;
+	[Category("Function"), DefaultValue(false)]
+	[XmlAttribute("forceDatabaseCalculation")]
+    public bool ForceDatabaseCalculation
+	{
+		get => _forceDatabaseCalculation;
+		set => _forceDatabaseCalculation = value;
+	}
+	#endregion
+	#region ISchemaItemFactory Members
+	[Browsable(false)]
+	public override Type[] NewItemTypes
+	{
+		get
+		{
+			var functionCallParameterType 
+				= new[] {typeof(FunctionCallParameter)};
+			return ParentItem is IDataEntity 
+				? functionCallParameterType.Concat(base.NewItemTypes)
+					.ToArray() 
+				: functionCallParameterType;
+		}
+	}
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(FunctionCallParameter) ?
+				"NewFunctionCallParameter" : null);
+	}
+	#endregion
+	#region Convert
+	public override bool CanConvertTo(Type type)
+	{
+		return
+			(
+				(
+					type == typeof(FieldMappingItem)
+					|| type == typeof(DetachedField)
+				)
+			&&
+				(
+					ParentItem is IDataEntity
+				)
+			);
+	}
+	protected override ISchemaItem ConvertTo<T>()
+	{
+		var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+		if(converted is AbstractDataEntityColumn column)
+		{
+			CopyFieldMembers(this, column);
+		}
+		if(converted is FieldMappingItem fieldMappingItem)
+		{
+			fieldMappingItem.MappedColumnName = Name;
+		}
+		else if(typeof(T) == typeof(DetachedField))
+		{
+		}
+		else
+		{
+			return base.ConvertTo<T>();
+		}
+		// does the common conversion tasks and persists both this and converted objects
+		FinishConversion(this, converted);
+		return converted;
+	}
+	#endregion
 }

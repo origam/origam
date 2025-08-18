@@ -29,12 +29,15 @@ import { compareStrings } from "../../../utils/string";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { requestFocus } from "utils/focus";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export const  dropdownPageSize = 100;
 
 export interface IDropdownEditorBehavior extends IDriverState{
+  onAddNewRecordClick?: (searchText?: string) => void;
   scrollToRowIndex: number | undefined;
   willLoadPage: number;
+  hasNewScreenButton: boolean;
   handleScroll(args: {
     clientHeight: number;
     clientWidth: number;
@@ -54,13 +57,19 @@ export interface IBehaviorData {
   isReadOnly: boolean,
   onDoubleClick?: (event: any) => void,
   onClick?: (event: any) => void,
+  onBlur?: (target: any) => void,
+  onMount?(onChange?: (value: any) => void): void,
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  expandAfterMounting?: boolean,
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void,
+  newRecordScreen?: NewRecordScreen,
+  onAddNewRecordClick?: (searchText?: string) => void;
+  typingDelayMillis?: number;
 }
 
-export class DropdownEditorBehavior implements IDropdownEditorBehavior{
+export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   private api: IDropdownEditorApi;
   private data: IDropdownEditorData;
@@ -70,10 +79,25 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   public isReadOnly: boolean;
   public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
+  public onBlur?: (target?: any) => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
   private onKeyDown?: (event: any) => void;
+  private onMount?(onChange?: (value: any) => void): void;
   private autoSort?: boolean;
-  private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
+  private expandAfterMounting?: boolean;
+  private newRecordScreen?: NewRecordScreen;
+  public onAddNewRecordClick?: (searchText?: string) => void;
+  private forceRequestFinish = false;
+  private readonly handleInputChangeDeb: _.DebouncedFunc<() => void>;
+
+  get hasNewScreenButton() {
+    return !!this.newRecordScreen;
+  }
+
+  get addNewDropDownVisible() {
+    return this.hasNewScreenButton && this.dataTable.rowCount === 0 && this.isBodyDisplayed;
+  }
 
   constructor(args: IBehaviorData) {
     this.api = args.api;
@@ -84,10 +108,16 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
     this.isReadOnly = args.isReadOnly;
     this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
+    this.onBlur = args.onBlur;
+    this.onMount = args.onMount;
     this.subscribeToFocusManager = args.subscribeToFocusManager;
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
+    this.newRecordScreen = args.newRecordScreen;
+    this.onAddNewRecordClick = args.onAddNewRecordClick;
+    this.expandAfterMounting = args.expandAfterMounting;
+    this.handleInputChangeDeb = _.debounce(this.handleInputChangeImm, args.typingDelayMillis ?? 300);
   }
 
   @observable isDropped = false;
@@ -95,14 +125,31 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
+  handlingNewValue = false;
 
   @observable cursorRowId = "";
 
   willLoadPage = 1;
   willLoadNextPage = true;
 
+  public handleDoubleClick(event: any){
+    if (this.isReadOnly) {
+      return;
+    }
+    this.onDoubleClick?.(event);
+    this.dropDown();
+  }
+
+  public onEditorMounted(){
+    if(this.isReadOnly){
+      return;
+    }
+    if(this.expandAfterMounting) {
+      this.dropDown();
+    }
+  }
   @computed get isBodyDisplayed() {
-    return this.isDropped && this.dataTable.rowCount > 0;
+    return this.isDropped && (this.dataTable.rowCount > 0 || this.hasNewScreenButton);
   }
 
   @computed get chosenRowId() {
@@ -116,13 +163,28 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   @action.bound
   dropUp() {
     if (this.isDropped) {
+      this.isDropped = false;
+      if (!this.forceRequestFinish) {
+        this.clear();
+      }
+    }
+  }
+
+  @action.bound
+  private async clear() {
+    try {
+      if (this.handlingNewValue) {
+        await this.runningPromise;
+      }
+    } finally {
       this.ensureRequestCancelled();
       this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
       this.dataTable.clearData();
-      this.isDropped = false;
       this.willLoadPage = 1;
       this.willLoadNextPage = true;
       this.scrollToRowIndex = 0;
+      this.handlingNewValue = false;
     }
   }
 
@@ -157,6 +219,16 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
     }
   }
 
+  mount(){
+    this.onMount?.((value) => {
+      if (this.elmInputElement) {
+        this.elmInputElement.value = value;
+        const event = {target: this.elmInputElement};
+        this.handleInputChange(event);
+      }
+    });
+  }
+
   @action.bound
   private scrollToChosenRowIfPossible() {
     if (this.chosenRowId && !_.isArray(this.chosenRowId)) {
@@ -187,11 +259,13 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleInputBlur(event: any) {
-    if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
-      this.data.chooseNewValue(this.cursorRowId);
-    } else if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
+  async handleInputBlur(event: any) {
+    if (!this.handlingNewValue) {
+      if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
+        await this.data.chooseNewValue(this.cursorRowId);
+      } else if (this.userEnteredValue === "") {
+        await this.data.chooseNewValue(null);
+      }
     }
     this.dropUp();
   }
@@ -206,16 +280,34 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleInputKeyDown(event: any) {
+  async handleInputKeyDown(event: any) {
+    const wasDropped = this.isDropped;
     switch (event.key) {
       case "Escape":
         this.dropUp();
         this.userEnteredValue = undefined;
+        this.dataTable.setFilterPhrase("");
+        if (wasDropped) {
+          event.closedADropdown = true;
+          return;
+        }
         break;
       case "Enter":
-        const wasDropped = this.isDropped;
+        if (this.addNewDropDownVisible) {
+          this.onAddNewRecordClick?.(this.userEnteredValue);
+        }
         if (this.isDropped && !this.isWorking) {
-          this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          this.handleInputChangeDeb.flush();
+          (async() => {
+            try {
+              this.handlingNewValue = true;
+              await this.runningPromise;
+            } finally {
+              this.handlingNewValue = false;
+              this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+                .catch(error => console.error('Error when setting a new value:', error));
+            }
+          })();
           this.dropUp();
         }
         if (wasDropped) {
@@ -227,15 +319,35 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
         break;
       case "Tab":
         if (this.isDropped) {
-          if (this.cursorRowId) {
-            this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          if (this.handlingNewValue) {
+            break;
           }
+          if (this.cursorRowId) {
+            this.handleInputChangeDeb.flush();
+            (async() => {
+              try {
+                this.handlingNewValue = true;
+                await this.runningPromise;
+              } finally {
+                this.handlingNewValue = false;
+                this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+                  .catch(error => console.error('Error when setting a new value:', error));
+              }
+            })();
+          }
+          else {
+            this.handleTabPressedBeforeDropdownReady(event);
+          }
+        }
+        else if (!this.isDropped && this.userEnteredValue === ""){
+          this.data.chooseNewValue(null)
+              .catch(error => console.error('Error when setting a new value:', error));
         }
         break;
       case "Delete":
-        this.userEnteredValue = undefined;
-        this.cursorRowId = "";
-        this.data.chooseNewValue(null);
+        if (!this.isReadOnly) {
+          await this.clearSelection();
+        }
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -270,19 +382,57 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
           this.trySelectFirstRow();
         }
         break;
+      case "Backspace":
+        if (this.isReadOnly) {
+          return;
+        }
+        if (document.getSelection()?.toString() === event.target.value ||
+          this.userEnteredValue?.length === 1)
+        {
+          await this.clearSelection();
+        }
+        break;
     }
     this.onKeyDown && this.onKeyDown(event);
   }
 
-  handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
+  private handleTabPressedBeforeDropdownReady(event: any) {
+    if (this.dataTable.allRows.length !== 0 || !event.target.value) {
+      return;
+    }
+    this.forceRequestFinish = true;
+    setTimeout(async () => {
+      this.handleInputChangeDeb.cancel();
+      this.handleInputChangeImm();
+      try {
+        this.handlingNewValue = true;
+        await this.runningPromise;
+      } finally {
+        this.handlingNewValue = false;
+        this.forceRequestFinish = false;
+        await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
+          .catch(error => console.error('Error when setting a new value:', error));
+      }
+      this.clear();
+    });
+  }
+
+  private async clearSelection() {
+    this.userEnteredValue = undefined;
+    this.cursorRowId = "";
+    await this.data.chooseNewValue(null);
+    this.dataTable.setFilterPhrase("");
+  }
 
   @action.bound
   handleInputChange(event: any) {
+    if (this.userEnteredValue || event.target.value){
+      this.isDropped = true;
+    }
     this.userEnteredValue = event.target.value;
-    this.isDropped = true;
 
+    this.dataTable.setFilterPhrase(this.userEnteredValue || "");
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
-      this.dataTable.setFilterPhrase(this.userEnteredValue || "");
       if (this.setup().cached && this.cache.hasCachedListRows()) {
         this.dataTable.setData(this.cache.getCachedListRows());
       } else {
@@ -309,10 +459,18 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleTableCellClicked(event: any, visibleRowIndex: any) {
-    const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    this.data.chooseNewValue(id);
-    this.dropUp();
+  async handleTableCellClicked(event: any, visibleRowIndex: any) {
+    this.handlingNewValue = true;
+    try {
+      const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
+      await this.data.chooseNewValue(id);
+      this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
+      this.dropUp();
+    }
+    finally {
+       this.handlingNewValue = false;
+    }
   }
 
   @action.bound
@@ -337,9 +495,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleWindowMouseDown(event: any) {
+  async handleWindowMouseDown(event: any) {
     if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
+      await this.data.chooseNewValue(null);
     }
     if (this.isDropped) {
       this.dropUp();
@@ -384,7 +542,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
 
   @action.bound
   private ensureRequestCancelled() {
-    if (this.runningPromise) this.runningPromise.cancel();
+    if (this.runningPromise && !this.forceRequestFinish) {
+      this.runningPromise.cancel();
+    }
   }
 
   runningPromise: CancellablePromise<any> | undefined;
@@ -460,6 +620,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
 
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
+    if (!elm) {
+      return;
+    }
     this.elmInputElement = elm;
   };
 
@@ -481,6 +644,3 @@ decorate(DropdownEditorBehavior, {
   isReadOnly: observable,
 });
 
-// export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
-//   "IDropdownEditorBehavior"
-// );

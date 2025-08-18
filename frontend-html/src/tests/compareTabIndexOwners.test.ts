@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { compareTabIndexOwners } from "model/entities/TabIndexOwner";
+import {compareTabIndexOwners, TabIndex} from "model/entities/TabIndexOwner";
 
 
 test.each([
@@ -32,12 +32,13 @@ test.each([
   [["5.12.5", "5.12.15"], -1],
   [["5.12.5", "5.12.5"], 0],
   [["5", "5.12.5"], -1],
+  [["1000000", "1"], 1],
   [[undefined, undefined], 0],
   [[undefined, "1"], 1],
   [["1", undefined], -1],
 ])('Compare %s to: %s', (values, expectedNormalizedResult) => {
-  const val1 = {tabIndex: values[0]}
-  const val2 = {tabIndex: values[1]}
+  const val1 = {tabIndex: TabIndex.create(values[0])}
+  const val2 = {tabIndex: TabIndex.create(values[1])}
   const comparisonResult = compareTabIndexOwners(val1, val2)
 
   const sign = Math.sign(comparisonResult);

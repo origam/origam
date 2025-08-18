@@ -31,8 +31,6 @@ namespace Origam.WorkflowTests;
 [TestFixture]
 public class WorkQueueIntegrationTests
 {
-    private readonly SqlManager sqlManager = new (DataService.Instance);
-
     public WorkQueueIntegrationTests()
     {
         XmlConfigurator.Configure(new FileInfo("log4net.config")); 
@@ -47,6 +45,7 @@ public class WorkQueueIntegrationTests
     [TearDown]
     public void TearDown()
     {
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         sqlManager.DeleteWorkQueueEntries();
         Console.WriteLine("\nRunning DisconnectRuntime.");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
@@ -61,15 +60,16 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: configName,
             customServiceFactory: new TestRuntimeServiceFactory());
-        
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
         
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
         
-        // MonitoredMsSqlDataService must be set in "DataDataService" element
+        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
-        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+        var dataService 
+            = (ITraceService)DataServiceFactory.GetDataService();
         var deletedWorkQueueEntryIds = dataService.Operations.OfType<DeleteWorkQueueEntryOperation>()
             .Select(x => x.RowId)
             .Reverse()
@@ -89,17 +89,17 @@ public class WorkQueueIntegrationTests
             configName: "RoundRobinWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
 
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3 
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
-        // MonitoredMsSqlDataService must be set in "DataDataService" element
+        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
-        var dataService =
-            DataServiceFactory
-                .GetDataService() as MonitoredMsSqlDataService;
+        var dataService 
+            = (ITraceService)DataServiceFactory.GetDataService();
         var deleteOperations = dataService.Operations
             .OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
@@ -144,6 +144,7 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         try
         {
             sqlManager.EnableThrottlingOnTestQueue3(
@@ -154,9 +155,10 @@ public class WorkQueueIntegrationTests
             Thread.Sleep(1000);
             sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
             
-            // MonitoredMsSqlDataService must be set in "DataDataService" element
+            // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
             // in OrigamSettings.config
-            var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+            var dataService 
+                = (ITraceService)DataServiceFactory.GetDataService();
             var deleteOperations = dataService.Operations
                 .OfType<DeleteWorkQueueEntryOperation>()
                 .OrderBy(operation => operation.ExecutedAt)
@@ -205,7 +207,7 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         int maxRetries = 3;
         sqlManager.SetupQueue(
             queueId: SqlManager.FailingQueue,
@@ -243,7 +245,7 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         sqlManager.SetupQueue(
             queueId: SqlManager.FailingQueue,
             retryType: WorkQueueRetryType.NoRetry,
@@ -264,6 +266,7 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, DataServiceFactory.GetDataService());
         try
         {
             sqlManager.CreateWorkQueueModificationTrigger();

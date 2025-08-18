@@ -9,15 +9,15 @@ variables:
 - name: BRANCH # branch to be used
   value: 2022.4
 - name: VERSION_NUMBER # version number of the build
-  value: 2022.4.3.$(Build.BuildId)
+  value: 2022.4.8.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 22.4.3.$(Build.BuildId)
+  value: 22.4.8.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.4.3
+  value: 2022.4.8
 - name: TAG_LATEST # tag to be used
-  value: 2022.4.3
+  value: 2022.4.8
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2022.4.2
+  value: 2022.4.7
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
@@ -521,12 +521,18 @@ jobs:
          releaseNotesSource: 'inline'
          releaseNotesInline: |
            The latest $(TAG) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG)">origam-source/$(TAG)</a>
+           Downloads at <a href="https://github.com/origam/origam/releases/tag/$(TAG)">origam/$(TAG)</a>
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub origam-html-chat/$(TAG) release
+     - task: ado-discord-webhook@2
+       inputs:
+         webhookId: '1159149912907333722'
+         webhookKey: 'fltKzMh0vLlA7nCIMk7-WLeWWQ5pJsU9EhSf0ouHd695fbLjIg_p9Lsds-n8iYH8_p5L'
+         content: 'New $(TAG) build: https://github.com/origam/origam/releases/tag/$(TAG)'
+       displayName: 'discord message'
   # ------------------------------------
   # DOCKER
   # ------------------------------------

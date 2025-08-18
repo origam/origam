@@ -49,30 +49,23 @@ using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Origam.Service.Core;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
 {
-    class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
+    public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
     {
-        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
+        RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
+        RuleEngine re = RuleEngine.Create(new Hashtable(), null);
+        IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
+        XPathNavigator nav = doc.Xml.CreateNavigator();
+        string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
+        Hashtable parameters = new Hashtable();
+        foreach (var actionParameter in action.ChildItemsByType<WorkflowPageActionParameter>(WorkflowPageActionParameter.CategoryConst))
         {
-            RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
-
-            RuleEngine re = RuleEngine.Create(new Hashtable(), null);
-            IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
-            XPathNavigator nav = doc.Xml.CreateNavigator();
-            string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
-
-            Hashtable parameters = new Hashtable();
-
-            foreach (WorkflowPageActionParameter actionParameter in action.ChildItemsByType(WorkflowPageActionParameter.CategoryConst))
-            {
-                string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
-                parameters.Add(actionParameter.Name, parameterResult);
-            }
-
-            string result = HttpTools.Instance.BuildUrl(url, parameters, false, "http", redirectAction.IsUrlEscaped);
-
-            response.Redirect(result);
+            string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
+            parameters.Add(actionParameter.Name, parameterResult);
         }
+        string result = HttpTools.Instance.BuildUrl(url, parameters, false, "http", redirectAction.IsUrlEscaped);
+        response.Redirect(result);
     }
 }
