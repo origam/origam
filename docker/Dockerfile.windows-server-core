@@ -25,7 +25,7 @@ COPY server/log4net.server.config log4net.config
 WORKDIR /home/origam/Scheduler
 COPY server/log4net.scheduler.config log4net.config
 WORKDIR /home/origam
-COPY server/_OrigamSettings.mssql.template .
+COPY server/_OrigamSettings.template .
 COPY server/windows/Install.ps1 .
 COPY server/windows/Utils.ps1 .
 COPY server/windows/CreateSslCertificate.ps1 .
