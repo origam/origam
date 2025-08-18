@@ -62,6 +62,7 @@
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
@@ -74,9 +75,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.AspNetCore.Mvc\MiniProfiler.AspNetCore.Mvc.csproj" />
-    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.AspNetCore\MiniProfiler.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.Shared\MiniProfiler.Shared.csproj" />
     <ProjectReference Include="..\origam-utils\origam-utils.csproj" />
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj" />
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj" />
