@@ -26,6 +26,7 @@ using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Security.Principal;
+using System.Xml;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -445,7 +446,7 @@ public abstract class AbstractDataService : IDataService
 									}
 									else
 									{
-										value = System.Xml.XmlConvert.ToDateTime(param.Value.ToString());
+                                                                                value = System.Xml.XmlConvert.ToDateTime(param.Value.ToString(), XmlDateTimeSerializationMode.RoundtripKind);
 									}
 									break;
 								case DbType.String:

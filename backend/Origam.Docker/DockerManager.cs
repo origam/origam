@@ -99,8 +99,8 @@ public class DockerManager
     }
     public async Task<Stream> GetDockerLogsAsync(string id)
     {
-        ContainerLogsParameters logparams = new ContainerLogsParameters { ShowStdout=true};
-       return await client.Containers.GetContainerLogsAsync(id, logparams);
+        ContainerLogsParameters logparams = new ContainerLogsParameters { ShowStdout = true };
+        return await client.Containers.GetContainerLogsAsync(id, false, logparams, CancellationToken.None);
     }
     public async Task<CreateContainerResponse> StartDockerContainerAsync(DockerContainerParameter containerParameter)
     {

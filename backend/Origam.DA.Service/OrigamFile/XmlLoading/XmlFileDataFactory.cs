@@ -34,10 +34,10 @@ public class XmlFileDataFactory
         Result<OrigamXmlDocument> documentResult = LoadXmlDoc(fileInfo);
         if (documentResult.IsFailure)
         {
-            return Result.Fail<XmlFileData, XmlLoadError>(
+            return Result.Failure<XmlFileData, XmlLoadError>(
                 new XmlLoadError(documentResult.Error));
         }
-        return Result.Ok<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
+        return Result.Success<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
     }
     private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
     {
@@ -47,9 +47,9 @@ public class XmlFileDataFactory
             xmlDocument.Load(fileInfo.FullName);
         } catch (XmlException ex)
         {
-            return Result.Fail<OrigamXmlDocument>(
+            return Result.Failure<OrigamXmlDocument>(
                 $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}");
         }
-        return Result.Ok(xmlDocument);
+        return Result.Success(xmlDocument);
     }
 }

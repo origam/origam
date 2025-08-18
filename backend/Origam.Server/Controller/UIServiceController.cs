@@ -742,14 +742,14 @@ public class UIServiceController : AbstractController
         var rowList = readerResult?.ToList();
         if(rowList == null || rowList.Count == 0)
         {
-            return Result.Ok<object, IActionResult>(new List<Dictionary<string, object>>());
+            return Result.Success<object, IActionResult>(new List<Dictionary<string, object>>());
         }
         var firstRow = rowList[0];
         if(firstRow == null || !firstRow.ContainsKey("aggregations"))
         {
-            return Result.Ok<object, IActionResult>(new List<Dictionary<string, object>>());
+            return Result.Success<object, IActionResult>(new List<Dictionary<string, object>>());
         }
-        return Result.Ok<object, IActionResult>(firstRow["aggregations"]);
+        return Result.Success<object, IActionResult>(firstRow["aggregations"]);
     }
     private Result<IEnumerable<object>, IActionResult> StreamlineFilterListValues(
         IEnumerable<IEnumerable<KeyValuePair<string, object>>> fullReaderResult)
@@ -759,7 +759,7 @@ public class UIServiceController : AbstractController
         {
             streamlinedList.Add(entry.First().Value);
         }
-        return Result.Ok<IEnumerable<object>, IActionResult>(streamlinedList);
+        return Result.Success<IEnumerable<object>, IActionResult>(streamlinedList);
     }
     private Dictionary<object, string> GetLookupLabelsInternal(
         LookupLabelsInput input)

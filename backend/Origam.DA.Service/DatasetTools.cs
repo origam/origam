@@ -832,7 +832,7 @@ public class DatasetTools
 				}
 				else if(rowValue is DateTime)
 				{
-					val = XmlConvert.ToString((DateTime)rowValue);
+                                    val = XmlConvert.ToString((DateTime)rowValue, XmlDateTimeSerializationMode.RoundtripKind);
 				}
 				else
 				{
@@ -1546,7 +1546,7 @@ public class DatasetTools
 			}
 			else if(value is DateTime)
 			{
-				return XmlConvert.ToString((DateTime)value);
+                           return XmlConvert.ToString((DateTime)value, XmlDateTimeSerializationMode.RoundtripKind);
 			}
 			else
 			{
@@ -1559,7 +1559,7 @@ public class DatasetTools
 		}
 		else if (targetType == typeof(DateTime))
 		{
-			return XmlConvert.ToDateTime(value.ToString());
+                   return XmlConvert.ToDateTime(value.ToString(), XmlDateTimeSerializationMode.RoundtripKind);
 		}
 		else if (targetType == typeof(bool))
 		{

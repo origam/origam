@@ -153,7 +153,7 @@ public class ExcelExportController: AbstractController
             Rows = result.Value as IEnumerable<IEnumerable<object>>
         };
         return result.IsSuccess
-            ? Result.Ok<ReadResult, IActionResult>(readerResult)
+            ? Result.Success<ReadResult, IActionResult>(readerResult)
             : Result.Failure<ReadResult, IActionResult>(result.Error);
     }
 
@@ -195,6 +195,6 @@ public class ExcelExportController: AbstractController
                     readResult.Rows));
         }
         IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
-        return Result.Ok<IWorkbook, IActionResult>(workBook) ;
+        return Result.Success<IWorkbook, IActionResult>(workBook) ;
     }
 }

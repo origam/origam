@@ -203,13 +203,12 @@ public class XmlTools
     {
         if(date.Hour == 0 & date.Minute == 0 & date.Second == 0 & date.Millisecond == 0)
         {
-	        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(date);
-	        int daylight = TimeZone.CurrentTimeZone.GetDaylightChanges(date.Year).Delta.Hours;
-	        int hours = offset.Duration().Hours;
-	        int finalHours = hours; // + daylight;
-	        string sign = finalHours >= 0 ? "+" : "-";
-	        string result = date.ToString("yyyy-MM-dd") + "T00:00:00.0000000" + sign + finalHours.ToString("00") + ":" + offset.Minutes.ToString("00");
-	        return result;
+                TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(date);
+                int hours = offset.Duration().Hours;
+                int finalHours = hours;
+                string sign = finalHours >= 0 ? "+" : "-";
+                string result = date.ToString("yyyy-MM-dd") + "T00:00:00.0000000" + sign + finalHours.ToString("00") + ":" + offset.Minutes.ToString("00");
+                return result;
         }
         else
         {
