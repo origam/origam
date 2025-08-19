@@ -532,7 +532,6 @@ public class WorkflowEngine : IDisposable
 					SetStepStatus(
 						currentModelStep, WorkflowStepResult.Running);
 					engineTask.Finished += OnEngineTaskFinished;
-					engineTask.Execute();
 					using (MiniProfiler.Current.Step(
 						       WorkflowBlock.Name + ":" + currentModelStep?.Name))
 					{
