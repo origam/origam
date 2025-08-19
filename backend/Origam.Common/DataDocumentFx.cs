@@ -25,9 +25,9 @@ using Origam.Service.Core;
 
 namespace Origam;
 #if !NETSTANDARD
-#pragma warning disable 618 // XmlDataDocument is obsolete
 public class DataDocumentFx : IDataDocument
 {
+#pragma warning disable 618 // XmlDataDocument is obsolete, but we cannot get rid of it just yet
     private readonly XmlDataDocument xmlDataDocument;
     public DataDocumentFx(DataSet dataSet)
     {
@@ -42,6 +42,7 @@ public class DataDocumentFx : IDataDocument
             xmlDataDocument.AppendChild(importNode);
         }
     }
+#pragma warning restore 618
     public XmlDocument Xml => xmlDataDocument;
     public DataSet DataSet => xmlDataDocument.DataSet;
     public void AppendChild(XmlNodeType element, string prefix, string name)
@@ -72,5 +73,4 @@ public class DataDocumentFx : IDataDocument
         return new DataDocumentFx(xmlDataDocument);
     }
 }
-#pragma warning restore 618
 #endif
