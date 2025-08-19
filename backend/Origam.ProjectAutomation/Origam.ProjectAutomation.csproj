@@ -60,7 +60,6 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Docker.DotNet, Version=3.125.0.0, Culture=neutral, PublicKeyToken=e628c633e2cf4146"/>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
@@ -109,10 +108,6 @@
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Docker\Origam.Docker.csproj">
-      <Project>{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}</Project>
-      <Name>Origam.Docker</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">
       <Project>{17625F1F-B028-47DB-8C76-05C8F8F4E158}</Project>

@@ -298,14 +298,6 @@
               <File Id="ORIGAM.PROJECTAUTOMATION.DLL" Name="Origam.ProjectAutomation.dll" Source="source\Origam.ProjectAutomation.dll">
               </File>
             </Component>
-			<Component Id="ORIGAM.DOCKER.DLL" DiskId="1" Guid="F66345D5-6A6C-4DD6-A184-E3A47ABBDC29">
-              <File Id="ORIGAM.DOCKER.DLL" Name="Origam.Docker.dll" Source="source\Origam.Docker.dll">
-              </File>
-            </Component>
-			<Component Id="DOCKER.DOTNET.DLL" DiskId="1" Guid="4B1CBEDE-FB85-4287-903F-21725B27F5FA">
-              <File Id="DOCKER.DOTNET.DLL" Name="Docker.DotNet.dll" Source="source\Docker.DotNet.dll">
-              </File>
-            </Component>
             <Component Id="SCHEDULETIMER.DLL" DiskId="1" Guid="12EFEE6F-AB86-4F76-9B34-6B0272B18B58">
               <File Id="SCHEDULETIMER.DLL" Name="ScheduleTimer.dll" Source="source\ScheduleTimer.dll">
               </File>
@@ -783,10 +775,6 @@
       <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL">
-      </ComponentRef>
-	  <ComponentRef Id="ORIGAM.DOCKER.DLL">
-      </ComponentRef>
-	  <ComponentRef Id="DOCKER.DOTNET.DLL">
       </ComponentRef>
       <ComponentRef Id="SCHEDULETIMER.DLL">
       </ComponentRef>
