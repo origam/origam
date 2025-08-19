@@ -1210,12 +1210,12 @@ public class XsltTests
         TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
         string expectedResultXpath = "<list>" + Environment.NewLine +
-                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
-                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
-                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-01T00:00:00+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-02T00:00:00+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-03T00:00:00+{offset:hh}:00</item>" + Environment.NewLine +
                                      "</list>";
         string expectedResultXslt =
-            $"2022-01-01T00:00:00.0000000+{offset:hh}:002022-01-02T00:00:00.0000000+{offset:hh}:002022-01-03T00:00:00.0000000+{offset:hh}:00";
+            $"2022-01-01T00:00:00+{offset:hh}:002022-01-02T00:00:00+{offset:hh}:002022-01-03T00:00:00+{offset:hh}:00";
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.InstanceOf<XPathNodeIterator>());

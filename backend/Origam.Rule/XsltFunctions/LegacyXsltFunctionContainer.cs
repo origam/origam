@@ -1527,8 +1527,8 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public static XPathNodeIterator ListDays(string startDate, string endDate)
     {
-        DateTime start = XmlConvert.ToDateTime(startDate, XmlDateTimeSerializationMode.RoundtripKind);
-        DateTime end = XmlConvert.ToDateTime(endDate, XmlDateTimeSerializationMode.RoundtripKind);
+        DateTime start = XmlConvert.ToDateTime(startDate, XmlDateTimeSerializationMode.Local);
+        DateTime end = XmlConvert.ToDateTime(endDate, XmlDateTimeSerializationMode.Local);
         XmlDocument resultDoc = new XmlDocument();
         XmlElement listElement = resultDoc.CreateElement("list");
         resultDoc.AppendChild(listElement);
@@ -1536,7 +1536,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         for(DateTime date = start; date.Date <= end.Date; date = date.AddDays(1))
         {
             XmlElement itemElement = resultDoc.CreateElement("item");
-            itemElement.InnerText = XmlConvert.ToString(date, XmlDateTimeSerializationMode.RoundtripKind);
+            itemElement.InnerText = XmlConvert.ToString(date, XmlDateTimeSerializationMode.Local);
             listElement.AppendChild(itemElement);
         }
 
