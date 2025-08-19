@@ -136,6 +136,7 @@ internal class DataLoader
 			}
 			finally
 			{
+				profiledAdapter.Dispose();
 				((IDbDataAdapter)adapter).SelectCommand.Transaction = null;
 				((IDbDataAdapter)adapter).SelectCommand.Connection = null;
 			}
@@ -1053,6 +1054,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				query.IsolationLevel);
 			connection = transaction.Connection;
 		}
+
+		ProfiledDbCommand profiledDbCommand = null;
 		try
 		{
 			BuildParameters(
@@ -1060,8 +1063,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			command.Connection = connection;
 			command.Transaction = transaction;
 			TraceCommand(command, transactionId);
-			result = command.ExecuteScalar();
-			var profiledDbCommand = new ProfiledDbCommand(command as DbCommand, (command as DbCommand).Connection, MiniProfiler.Current);
+			profiledDbCommand = new ProfiledDbCommand(command as DbCommand, (command as DbCommand).Connection, MiniProfiler.Current);
 			result = profiledDbCommand.ExecuteScalar();
 			var dataType = OrigamDataType.Xml;
 			foreach(DataStructureColumn column 
@@ -1115,7 +1117,6 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
 			// For more information about isolation levels, see SQL Server Books Online.
 			ResetTransactionIsolationLevel(profiledDbCommand);
-			profiledDbCommand.Dispose();
 		}
 		catch(Exception ex)
 		{
@@ -1125,6 +1126,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		}
 		finally
 		{
+			profiledDbCommand?.Dispose();
 			if(transactionId == null)
 			{
 				try

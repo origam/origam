@@ -534,8 +534,7 @@ public class WorkflowEngine : IDisposable
 					engineTask.Finished += OnEngineTaskFinished;
 					engineTask.Execute();
 					using (MiniProfiler.Current.Step(
-						       WorkflowBlock.Name + ":"
-						                          + currentModelStep?.Name))
+						       WorkflowBlock.Name + ":" + currentModelStep?.Name))
 					{
 						engineTask.Execute();
 					}
