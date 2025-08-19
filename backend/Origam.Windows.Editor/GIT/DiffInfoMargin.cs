@@ -51,12 +51,14 @@ public class DiffInfoMargin : AbstractMargin
             textToUse,
             CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
             tf, (double)GetValue(TextBlock.FontSizeProperty),
-            BackBrush);
+            BackBrush, 
+            VisualTreeHelper.GetDpi(this).PixelsPerDip);
         _plusMinusFt = new FormattedText(
             "+ ",
             CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
             tf, (double)GetValue(TextBlock.FontSizeProperty),
-            BackBrush);
+            BackBrush,
+            VisualTreeHelper.GetDpi(this).PixelsPerDip);
         // NB: This is a bit tricky. We use the margin control to actually
         // draw the diff "+/-" prefix, so that it's not selectable. So, looking
         // at this from the perspective of a single line, the arrangement is:
@@ -105,7 +107,7 @@ public class DiffInfoMargin : AbstractMargin
             {
                 ft = new FormattedText(diffLine.LineNumber,
                     CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    tf, fontSize, ForegroundBrush);
+                    tf, fontSize, ForegroundBrush, VisualTreeHelper.GetDpi(this).PixelsPerDip);
                 var left = TextHorizontalMargin;
                 drawingContext.DrawText(ft, new Point(left, rcs[0].Top));
             }
@@ -114,7 +116,7 @@ public class DiffInfoMargin : AbstractMargin
                 var prefix = diffLine.PrefixForStyle;
                 ft = new FormattedText(prefix,
                     CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    tf, fontSize, (Brush)TextView.GetValue(Control.ForegroundProperty));
+                    tf, fontSize, (Brush)TextView.GetValue(Control.ForegroundProperty), VisualTreeHelper.GetDpi(this).PixelsPerDip);
                 drawingContext.DrawText(ft, new Point(lineNumberWidth + TextHorizontalMargin, rcs[0].Top));
             }
         }

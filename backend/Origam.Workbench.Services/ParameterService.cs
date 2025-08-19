@@ -671,7 +671,7 @@ public class ParameterService : IParameterService
 				}
 				else if(value is DateTime)
 				{
-					return System.Xml.XmlConvert.ToString((DateTime)value);
+					return System.Xml.XmlConvert.ToString((DateTime)value, System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
 				}
 				else
 				{

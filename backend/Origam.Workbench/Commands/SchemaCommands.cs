@@ -245,7 +245,7 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
 				return;
 			}
 		}
-		System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Workbench.Diagram");
+		Assembly a = Assembly.Load("Origam.Workbench.Diagram");
 		IViewContent editor = a.CreateInstance("Origam.Workbench.Editors.DiagramEditor") as IViewContent;
 		// Set editor to dirty, if object has not been persisted, yet (new item)
 		if(!item.IsPersisted)
@@ -378,7 +378,7 @@ public class EditSchemaItem : AbstractCommand
 			|| itemType == "Origam.Schema.GuiModel.PanelControlSet"
 			|| itemType == "Origam.Schema.GuiModel.ControlSetItem")
 		{
-			System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Gui.Designer");
+			System.Reflection.Assembly a = Assembly.Load("Origam.Gui.Designer");
 			editor = a.CreateInstance("Origam.Gui.Designer.ControlSetEditor") as IViewContent;
 			if(editor == null)
 				throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
@@ -388,21 +388,21 @@ public class EditSchemaItem : AbstractCommand
             || itemType == "Origam.Schema.RuleModel.EndRule"
             || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
 		{
-			System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Workbench");
+			System.Reflection.Assembly a = Assembly.Load("Origam.Workbench");
 			editor = a.CreateInstance("Origam.Workbench.Editors.XslEditor") as IViewContent;
 			if(editor == null)
 				throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
 		}
 		else if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
 		{
-			System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Schema.EntityModel.UI");
+			System.Reflection.Assembly a = Assembly.Load("Origam.Schema.EntityModel.UI");
 			editor = a.CreateInstance("Origam.Schema.EntityModel.UI.XsdEditor") as IViewContent;
 			if(editor == null)
 				throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
 		}
 		else if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
 		{
-			System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Schema.DeploymentModel.UI");
+			System.Reflection.Assembly a = Assembly.Load("Origam.Schema.DeploymentModel.UI");
 			editor = a.CreateInstance("Origam.Schema.DeploymentModel.ServiceScriptCommandEditor") as IViewContent;
 			if(editor == null)
 				throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));

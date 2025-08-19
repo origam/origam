@@ -26,6 +26,10 @@ using System.ComponentModel.Design;
 using System.Collections;
 using System.Windows.Forms;
 using System.Diagnostics;
+
+// CS0618 Type or member is obsolete warnings are suppressed here because this is legacy code, and it should be removed soon 
+#pragma warning disable CS0618
+
 /// This class keeps track of the selected component(s) and provides events
 /// to notify about selection changes.
 internal class SelectionServiceImpl : ISelectionService 
@@ -503,3 +507,4 @@ internal class SelectionServiceImpl : ISelectionService
 		}
 	}
 }
+#pragma warning restore CS0618
