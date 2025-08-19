@@ -533,6 +533,12 @@ public class WorkflowEngine : IDisposable
 						currentModelStep, WorkflowStepResult.Running);
 					engineTask.Finished += OnEngineTaskFinished;
 					engineTask.Execute();
+					using (MiniProfiler.Current.Step(
+						       WorkflowBlock.Name + ":"
+						                          + currentModelStep?.Name))
+					{
+						engineTask.Execute();
+					}
 					break;
 				}
 				// Task will never run, startup rule returned false
