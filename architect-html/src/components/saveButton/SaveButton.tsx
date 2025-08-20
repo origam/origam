@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from 'src/main.tsx';
-import { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
+import { RootStoreContext, T } from 'src/main.tsx';
+import S from './SaveButton.module.scss';
 
 export const SaveButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -45,9 +46,14 @@ export const SaveButton = observer(() => {
 
   return (
     <button
+      className={S.root}
       onClick={handleSave}
       disabled={!activeEditor.isDirty}
-      style={{ backgroundColor: activeEditor.isDirty ? 'red' : 'initial' }}
+      style={{
+        backgroundColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--background1)',
+        borderColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--foreground1)',
+        color: activeEditor.isDirty ? '#fff' : 'var(--foreground1)',
+      }}
     >
       {T('Save', 'save_button_label')}
     </button>
