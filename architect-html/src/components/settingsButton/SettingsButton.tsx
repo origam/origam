@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,16 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  width: 100%;
-  border-bottom: 1px solid #ccc;
-}
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { RootStoreContext, T } from 'src/main.tsx';
+import S from './SettingsButton.module.scss';
 
-.buttonsBox {
-  padding-top: 1rem;
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  justify-content: space-between;
-}
+export const SettingsButton = observer(() => {
+  const rootStore = useContext(RootStoreContext);
+  const uiState = rootStore.uiState;
+
+  return (
+    <div className={S.root}>
+      <span onClick={() => uiState.openSettingsModal()} style={{ cursor: 'pointer' }}>
+        {T('Settings', 'settings_button_open_label')}
+      </span>
+    </div>
+  );
+});

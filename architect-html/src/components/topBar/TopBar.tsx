@@ -20,13 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from './TopBar.module.scss';
 import { SaveButton } from 'src/components/saveButton/SaveButton.tsx';
 import { ProgressBar } from 'src/components/topBar/ProgressBar.tsx';
+import { SettingsButton } from 'src/components/settingsButton/SettingsButton.tsx';
 
 export const TopBar = () => {
   return (
     <div className={S.root}>
       <ProgressBar />
-      <div className={S.buttons}>
-        <SaveButton />
+      <div className={S.buttonsBox}>
+        <div>
+          <SaveButton />
+        </div>
+        <div>
+          <SettingsButton />
+        </div>
       </div>
     </div>
   );
