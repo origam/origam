@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IArchitectApi } from 'src/API/IArchitectApi.ts';
 import { EditorTabViewState } from 'src/components/editorTabView/EditorTabViewState.ts';
 import { TabViewState } from 'src/components/tabView/TabViewState.ts';
-import { UIState } from 'src/stores/UIState.ts';
+import { UIState } from 'src/stores/UiState.ts';
 import { PackagesState } from 'src/components/packages/PackagesState.ts';
 import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
 import { ArchitectApi } from 'src/API/ArchitectApi.ts';

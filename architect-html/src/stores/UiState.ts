@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 
 enum EStorageKeys {
   TREE_EXPANDED_NODES = 'treeExpandedNodes',
@@ -35,6 +35,7 @@ const defaultSettings: TSettings = {
 export class UIState {
   @observable accessor expandedNodes: string[] = [];
   @observable accessor settings: TSettings = { ...defaultSettings };
+  @observable accessor isSettingsModalOpen: boolean = false;
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -82,8 +83,19 @@ export class UIState {
     localStorage.setItem(EStorageKeys.TREE_EXPANDED_NODES, JSON.stringify(this.expandedNodes));
   }
 
+  @action
   toggleVimEnabled() {
     this.settings.isVimEnabled = !this.settings.isVimEnabled;
     localStorage.setItem(EStorageKeys.SETTINGS, JSON.stringify(this.settings));
+  }
+
+  @action
+  openSettingsModal() {
+    this.isSettingsModalOpen = true;
+  }
+
+  @action
+  closeSettingsModal() {
+    this.isSettingsModalOpen = false;
   }
 }

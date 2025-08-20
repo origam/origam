@@ -22,7 +22,7 @@ import { IArchitectApi, IPackage, IPackagesInfo } from 'src/API/IArchitectApi.ts
 import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
 import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
-import { UIState } from 'src/stores/UIState.ts';
+import { UIState } from 'src/stores/UiState.ts';
 
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
