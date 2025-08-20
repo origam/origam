@@ -21,16 +21,23 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { RootStoreContext, T } from 'src/main.tsx';
 import S from './SettingsButton.module.scss';
+import { SettingsModal } from './SettingsModal.tsx';
 
 export const SettingsButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
-  const uiState = rootStore.uiState;
+
+  const handleOnClick = () => {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      'settings_modal',
+      <SettingsModal onClose={() => closeDialog()} />,
+      { width: 600, height: 400 },
+      true,
+    );
+  };
 
   return (
-    <div className={S.root}>
-      <span onClick={() => uiState.openSettingsModal()} style={{ cursor: 'pointer' }}>
-        {T('Settings', 'settings_button_open_label')}
-      </span>
+    <div className={S.root} onClick={handleOnClick}>
+      {T('Settings', 'settings_button_open_label')}
     </div>
   );
 });

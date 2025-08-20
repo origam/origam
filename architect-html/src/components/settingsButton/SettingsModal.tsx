@@ -17,20 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import _ from 'lodash';
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { ModalWindow } from 'src/dialog/ModalWindow.tsx';
 import { RootStoreContext, T } from 'src/main';
 import S from './SettingsModal.module.scss';
 
-export const SettingsModal: React.FC = observer(() => {
+export const SettingsModal = observer(({ onClose }: { onClose: () => void }) => {
   const rootStore = useContext(RootStoreContext);
   const uiState = rootStore.uiState;
-
-  if (!uiState.isSettingsModalOpen) {
-    return null;
-  }
 
   return (
     <ModalWindow
@@ -38,12 +33,12 @@ export const SettingsModal: React.FC = observer(() => {
       width={600}
       height={400}
       titleButtons={
-        <button tabIndex={0} autoFocus={true} onClick={() => uiState.closeSettingsModal()}>
+        <button tabIndex={0} autoFocus={true} onClick={onClose}>
           X
         </button>
       }
       buttonsRight={
-        <button tabIndex={0} autoFocus={true} onClick={() => uiState.closeSettingsModal()}>
+        <button tabIndex={0} autoFocus={true} onClick={onClose}>
           {T('Close', 'settings_button_close_label')}
         </button>
       }

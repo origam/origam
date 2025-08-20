@@ -26,6 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background-color: var(--background1);
   font-size: 1rem;
   color: var(--foreground6);
+  user-select: none;
 }
 
 .root:hover {

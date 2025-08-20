@@ -35,7 +35,6 @@ const defaultSettings: TSettings = {
 export class UIState {
   @observable accessor expandedNodes: string[] = [];
   @observable accessor settings: TSettings = { ...defaultSettings };
-  @observable accessor isSettingsModalOpen: boolean = false;
 
   constructor() {
     this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
@@ -87,15 +86,5 @@ export class UIState {
   toggleVimEnabled() {
     this.settings.isVimEnabled = !this.settings.isVimEnabled;
     localStorage.setItem(EStorageKeys.SETTINGS, JSON.stringify(this.settings));
-  }
-
-  @action
-  openSettingsModal() {
-    this.isSettingsModalOpen = true;
-  }
-
-  @action
-  closeSettingsModal() {
-    this.isSettingsModalOpen = false;
   }
 }
