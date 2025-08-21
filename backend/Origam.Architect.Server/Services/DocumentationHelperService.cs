@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -25,7 +25,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class DocumentationHelperService()
+public class DocumentationHelperService
 {
     public DocumentationEditorData GetData(
         DocumentationComplete documentationComplete,

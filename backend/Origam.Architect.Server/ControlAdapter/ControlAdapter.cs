@@ -276,4 +276,4 @@ public class ControlAdapter(
 }
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SchemaItemPropertyAttribute : Attribute { }
+public class SchemaItemPropertyAttribute : Attribute;
