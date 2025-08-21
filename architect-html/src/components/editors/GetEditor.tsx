@@ -97,7 +97,6 @@ export function getEditor(args: {
       args.runGeneratorHandled,
     );
     return new Editor(state, <ScreenSectionEditor designerState={state} />);
-    return new Editor(state, <ScreenSectionEditor designerState={state} />);
   }
   if (editorType === 'ScreenEditor') {
     const screenData = data as IScreenEditorData;
@@ -112,7 +111,6 @@ export function getEditor(args: {
       architectApi,
       args.runGeneratorHandled,
     );
-    return new Editor(state, <ScreenEditor designerState={state} />);
     return new Editor(state, <ScreenEditor designerState={state} />);
   }
   if (editorType === 'DocumentationEditor') {
