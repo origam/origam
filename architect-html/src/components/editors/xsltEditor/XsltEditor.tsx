@@ -31,14 +31,21 @@ import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorSta
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { RootStoreContext, T } from 'src/main.tsx';
 
-export const XsltEditor = (props: { editorState: GridEditorState }) => {
+export const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
+  const getFieldName = (): 'TextStore' | 'Xsl' => {
+    if (editorState.properties.find(x => x.name === 'TextStore')) {
+      return 'TextStore';
+    }
+    return 'Xsl';
+  };
+
   const handleInputChange = (value: any) => {
-    const textProperty = props.editorState.properties.find(x => x.name === 'TextStore')!;
+    const textProperty = editorState.properties.find(x => x.name === getFieldName())!;
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
-        yield* props.editorState.onPropertyUpdated(textProperty, value);
+        yield* editorState.onPropertyUpdated(textProperty, value);
       },
     });
   };
@@ -53,7 +60,7 @@ export const XsltEditor = (props: { editorState: GridEditorState }) => {
             label: T('XSL', 'xsl_editor_tab1'),
             node: (
               <CodeEditor
-                value={props.editorState.properties.find(x => x.name === 'TextStore')?.value ?? ''}
+                value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
                 onChange={text => handleInputChange(text)}
               />
             ),
@@ -62,8 +69,8 @@ export const XsltEditor = (props: { editorState: GridEditorState }) => {
             label: T('Settings', 'xsl_editor_tab2'),
             node: (
               <PropertyEditor
-                propertyManager={props.editorState}
-                properties={props.editorState.properties.filter(x => x.name !== 'TextStore')}
+                propertyManager={editorState}
+                properties={editorState.properties.filter(x => x.name !== getFieldName())}
               />
             ),
           },
