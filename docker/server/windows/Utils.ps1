@@ -53,8 +53,8 @@ function Initialize-OrigamSettingsConfig {
         {
             $env:OrigamSettings__ModelSourceControlLocation = "C:\home\origam\projectData\model"
         }
-        Copy-Item -Path "..\_OrigamSettings.mssql.template" -Destination "OrigamSettings.config"
-        Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config"
+        Copy-Item -Path "..\_OrigamSettings.template" -Destination "OrigamSettings.config"
+        Fill-OrigamSettingsConfig -ConfigFile "OrigamSettings.config" -DatabaseType $env:DatabaseType
     }
     catch
     {
@@ -63,10 +63,28 @@ function Initialize-OrigamSettingsConfig {
     }
 }
 
+ # Helper to set or create a simple text node at a given xpath
+function Set-OrCreateNode([xml]$xmlDoc, [string]$parentXpath, [string]$nodeName, [string]$value) {
+    $node = $xmlDoc.SelectSingleNode("$parentXpath/$nodeName")
+    if ($node) {
+        $node.InnerText = $value
+    } else {
+        $parent = $xmlDoc.SelectSingleNode($parentXpath)
+        if ($parent) {
+            $newNode = $xmlDoc.CreateElement($nodeName)
+            $newNode.InnerText = $value
+            $parent.AppendChild($newNode) | Out-Null
+        }
+    }
+}
+
 function Fill-OrigamSettingsConfig {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$ConfigFile
+        [string]$ConfigFile,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseType
     )
 
     # Check if file exists.
@@ -105,23 +123,27 @@ function Fill-OrigamSettingsConfig {
     # Load the XML config file.
     [xml]$xml = Get-Content $ConfigFile
 
-    # Compose the DataConnectionString.
-    $connectionString = "Data Source=$($env:OrigamSettings__DatabaseHost),$($env:OrigamSettings__DatabasePort);Initial Catalog=$($env:OrigamSettings__DatabaseName);User ID=$($env:OrigamSettings__DatabaseUsername);Password=$($env:OrigamSettings__DatabasePassword);"
-
-    # Update the DataConnectionString node.
-    $dataConnNode = $xml.SelectSingleNode("$origamSettingNodeXpath/DataConnectionString")
-    if ($dataConnNode) {
-        $dataConnNode.InnerText = $connectionString
-    }
-    else {
-        # If the node doesn't exist, create it.
-        $parentNode = $xml.SelectSingleNode($origamSettingNodeXpath)
-        if ($parentNode) {
-            $newNode = $xml.CreateElement("DataConnectionString")
-            $newNode.InnerText = $connectionString
-            $parentNode.AppendChild($newNode) | Out-Null
+    # Compose connection string + data service types
+    switch ($DatabaseType) {
+        "mssql" {
+            $connectionString   = "Data Source=$($env:OrigamSettings__DatabaseHost),$($env:OrigamSettings__DatabasePort);Initial Catalog=$($env:OrigamSettings__DatabaseName);User ID=$($env:OrigamSettings__DatabaseUsername);Password=$($env:OrigamSettings__DatabasePassword);"
+            $schemaDataService  = "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+            $dataDataService    = "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+        }
+        "postgresql" {
+            $connectionString   = "Host=$($env:OrigamSettings__DatabaseHost);Port=$($env:OrigamSettings__DatabasePort);Database=$($env:OrigamSettings__DatabaseName);Username=$($env:OrigamSettings__DatabaseUsername);Password=$($env:OrigamSettings__DatabasePassword);"
+            $schemaDataService  = "Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
+            $dataDataService    = "Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
+        }
+        default {
+            Write-Error "Unsupported or missing DatabaseType. Use: mssql or postgresql."
+            exit 1
         }
     }
+    # Update/create DataConnectionString, SchemaDataService, DataDataService
+    Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "DataConnectionString" -value $connectionString
+    Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "SchemaDataService"  -value $schemaDataService
+    Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "DataDataService"    -value $dataDataService
 
     # Iterate through environment variables starting with 'OrigamSettings__'
     # excluding those starting with 'OrigamSettings__Database'

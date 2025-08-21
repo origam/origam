@@ -55,16 +55,14 @@ WORKDIR /home/origam
 RUN mkdir HTML5 HTML5-SOURCE Scheduler Setup
 COPY --chown=origam:origam server/HTML5-SOURCE /home/origam/HTML5-SOURCE/
 COPY --chown=origam:origam server/Scheduler \
-server/_OrigamSettings.mssql.template \
-server/_OrigamSettings.postgres.template \
+server/_OrigamSettings.template \
 server/linux/configureScheduler.sh \
 server/linux/fill_origam_settings_config.sh \
 server/log4net.scheduler.config \
 /home/origam/Scheduler/
 RUN mv /home/origam/Scheduler/log4net.scheduler.config /home/origam/Scheduler//log4net.config
 COPY --chown=origam:origam server/HTML5 server/_appsettings.template \
-server/_OrigamSettings.mssql.template \
-server/_OrigamSettings.postgres.template \
+server/_OrigamSettings.template \
 server/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 server/linux/entrypoint.sh \
