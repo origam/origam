@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Workbench.Services;
-using Origam;
 
 namespace Origam.ProjectAutomation;
 public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder

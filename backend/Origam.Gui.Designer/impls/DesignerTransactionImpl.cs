@@ -43,7 +43,7 @@ internal class DesignerTransactionImpl : DesignerTransaction
 			//
 			if (--host.TransactionCount == 0) 
 			{
-				DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(false);
+				DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(false, false);
 				host.OnTransactionClosing(dtc);
 				host.OnTransactionClosed(dtc);
 			}
@@ -61,7 +61,7 @@ internal class DesignerTransactionImpl : DesignerTransaction
 			//
 			if (--host.TransactionCount == 0) 
 			{
-				DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(true);
+				DesignerTransactionCloseEventArgs dtc = new DesignerTransactionCloseEventArgs(true, true);
 				host.OnTransactionClosing(dtc);
 				host.OnTransactionClosed(dtc);
 			}

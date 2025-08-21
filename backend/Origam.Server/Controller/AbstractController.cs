@@ -332,7 +332,7 @@ public abstract class AbstractController: ControllerBase
     protected Result<Guid, IActionResult> EntityDataToEntityId(
         EntityData entityData)
     {
-        return Result.Ok<Guid, IActionResult>(entityData.Entity.EntityId);
+        return Result.Success<Guid, IActionResult>(entityData.Entity.EntityId);
     }
     protected IActionResult ToActionResult(object obj)
     {
@@ -391,7 +391,7 @@ public abstract class AbstractController: ControllerBase
             query.SortSetId = entityData.MenuItem.SortSetId;
             query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
         }
-        return Result.Ok<DataStructureQuery, IActionResult>(query);
+        return Result.Success<DataStructureQuery, IActionResult>(query);
     }
     protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
     {
@@ -461,7 +461,7 @@ public abstract class AbstractController: ControllerBase
     {
         var linesAsPairs = dataService
             .ExecuteDataReaderReturnPairs(dataStructureQuery);
-        return Result.Ok<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
+        return Result.Success<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
     }
     protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
         DataStructureQuery dataStructureQuery, Guid methodId)
@@ -477,13 +477,13 @@ public abstract class AbstractController: ControllerBase
                     .Value;
                 IEnumerable<object> result = LoadData(
                     menuItem,dataStructureQuery).ToList();
-                return Result.Ok<IEnumerable<object>, IActionResult>(result);
+                return Result.Success<IEnumerable<object>, IActionResult>(result);
             }
         }
         var linesAsArrays = dataService
             .ExecuteDataReader(dataStructureQuery)
             .ToList();
-        return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
+        return Result.Success<IEnumerable<object>, IActionResult>(linesAsArrays);
     }
     
     private IEnumerable<object> LoadData(

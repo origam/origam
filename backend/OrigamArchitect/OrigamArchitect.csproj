@@ -124,10 +124,6 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Docker\Origam.Docker.csproj">
-      <Project>{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}</Project>
-      <Name>Origam.Docker</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj">
       <Project>{EAB7C8D5-A75D-4940-9DDE-D6788FC9CD93}</Project>
       <Name>Origam.Excel</Name>

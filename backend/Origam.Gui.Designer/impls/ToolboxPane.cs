@@ -387,7 +387,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 		// try to load it with a partial name
 		// Assembly asm = Assembly.Load(classname + "," + assembly);
 		
-		Assembly asm = Assembly.LoadWithPartialName(assembly);
+		Assembly asm = Assembly.Load(assembly);
 		if(asm!=null)
 		{
 			return asm.GetType(classname);

@@ -157,7 +157,7 @@ public class XpathEvaluator : IXpathEvaluator
                     }
                     else
                     {
-                        return XmlConvert.ToDateTime(result.ToString());
+                        return XmlConvert.ToDateTime(result.ToString(), XmlDateTimeSerializationMode.RoundtripKind);
                     }
 
                 case OrigamDataType.Long:

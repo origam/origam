@@ -186,7 +186,7 @@ public class RuleEngine
                         contextValue = XmlConvert.ToDecimal(inputString);
                         break;
                     case OrigamDataType.Date:
-                        contextValue = XmlConvert.ToDateTime(inputString);
+                        contextValue = XmlConvert.ToDateTime(inputString, XmlDateTimeSerializationMode.RoundtripKind);
                         break;
                     case OrigamDataType.Boolean:
                         contextValue = XmlConvert.ToBoolean(inputString);
@@ -546,7 +546,7 @@ public class RuleEngine
 					case OrigamDataType.Date:
 						if(! (result is DateTime) && result != null)
 						{
-							result = XmlConvert.ToDateTime(result.ToString());
+							result = XmlConvert.ToDateTime(result.ToString(), XmlDateTimeSerializationMode.RoundtripKind);
 						}
 						break;
 				}
@@ -1501,9 +1501,8 @@ public class RuleEngine
         XmlContainer originalData, XmlContainer actualData, Guid entityId, Guid formId)
     {
         var result = new List<string>();
-        IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
-            typeof(ISchemaItem), new ModelElementKey(entityId))
-            as IDataEntity;
+        IDataEntity entity = _persistence.SchemaProvider
+            .RetrieveInstance<IDataEntity>(entityId);
         foreach(EntityUIAction action in entity.ChildItemsByTypeRecursive(
             EntityUIAction.CategoryConst))
         {
@@ -1844,7 +1843,7 @@ public class RuleEngine
 		}
 		else if (data is DateTime)
 		{
-			data = XmlConvert.ToString((DateTime)data);
+			data = XmlConvert.ToString((DateTime)data, XmlDateTimeSerializationMode.RoundtripKind);
 		}
 		else if (data == null)
 		{
