@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Controllers;
+using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Workbench.Services;
 
