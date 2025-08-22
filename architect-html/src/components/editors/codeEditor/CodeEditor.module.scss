@@ -19,5 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   display: flex;
+  flex-direction: column;
   flex: 1;
+  height: 100%;
+
+  .editorContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .vimStatus {
+    flex-shrink: 0;
+    padding: 5px;
+    background: var(--background3);
+  }
 }
