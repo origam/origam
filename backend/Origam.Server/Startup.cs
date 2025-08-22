@@ -221,7 +221,7 @@ public class Startup
                 options.PopupDecimalPlaces = 1;
                 options.ResultsAuthorize = request =>
                     SecurityManager.GetAuthorizationProvider()
-                        .Authorize(SecurityManager.CurrentPrincipal, "ViewMiniProfilerResults");
+                        .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
             });
         }
     }
