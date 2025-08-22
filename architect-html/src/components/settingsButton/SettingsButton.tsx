@@ -17,23 +17,27 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from './TopBar.module.scss';
-import { SaveButton } from 'src/components/saveButton/SaveButton.tsx';
-import { ProgressBar } from 'src/components/topBar/ProgressBar.tsx';
-import { SettingsButton } from 'src/components/settingsButton/SettingsButton.tsx';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { RootStoreContext, T } from 'src/main.tsx';
+import S from './SettingsButton.module.scss';
+import { SettingsModal } from './SettingsModal.tsx';
 
-export const TopBar = () => {
+export const SettingsButton = observer(() => {
+  const rootStore = useContext(RootStoreContext);
+
+  const handleOnClick = () => {
+    const closeDialog = rootStore.dialogStack.pushDialog(
+      'settings_modal',
+      <SettingsModal onClose={() => closeDialog()} />,
+      { width: 600, height: 400 },
+      true,
+    );
+  };
+
   return (
-    <div className={S.root}>
-      <ProgressBar />
-      <div className={S.buttonsBox}>
-        <div>
-          <SaveButton />
-        </div>
-        <div>
-          <SettingsButton />
-        </div>
-      </div>
+    <div className={S.root} onClick={handleOnClick}>
+      {T('Settings', 'settings_button_open_label')}
     </div>
   );
-};
+});

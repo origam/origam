@@ -18,15 +18,40 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  display: flex;
-  width: 100%;
-  border-bottom: 1px solid #ccc;
+  padding: 1rem;
 }
 
-.buttonsBox {
-  padding-top: 1rem;
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  justify-content: space-between;
+.table {
+  & > tbody > tr {
+    td,
+    th {
+      vertical-align: top;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--background4);
+    }
+    &:last-child {
+      td,
+      th {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .label input[type='checkbox'] {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .description {
+    color: var(--background6);
+  }
 }

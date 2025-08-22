@@ -18,15 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  display: flex;
-  width: 100%;
-  border-bottom: 1px solid #ccc;
+  position: relative;
+  border: 1px solid var(--foreground6);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  background-color: var(--background1);
+  font-size: 1rem;
+  color: var(--foreground6);
+  user-select: none;
 }
 
-.buttonsBox {
-  padding-top: 1rem;
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  justify-content: space-between;
+.root:hover {
+  background-color: #f5f5f5;
 }
