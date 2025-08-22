@@ -213,6 +213,17 @@ public class Startup
         var providerFactory = 
             LoadClientAuthenticationProviders(Configuration, startUpConfiguration);
         services.AddSingleton(providerFactory);
+        if (startUpConfiguration.EnableMiniProfiler)
+        {
+            services.AddMiniProfiler(options =>
+            {
+                options.RouteBasePath = "/profiler";
+                options.PopupDecimalPlaces = 1;
+                options.ResultsAuthorize = request =>
+                    SecurityManager.GetAuthorizationProvider()
+                        .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
+            });
+        }
     }
     private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders( 
         IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
@@ -379,6 +390,10 @@ public class Startup
         });
         app.UseCors(builder => 
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        if (startUpConfiguration.EnableMiniProfiler)
+        {
+            app.UseMiniProfiler();
+        }
         app.UseMvc(routes =>
         {
             routes.MapRoute("default", "{controller}/{action=Index}/{id?}");

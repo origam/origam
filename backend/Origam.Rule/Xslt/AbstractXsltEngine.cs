@@ -31,6 +31,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
+using StackExchange.Profiling;
 
 namespace Origam.Rule.Xslt;
 /// <summary>
@@ -160,7 +161,11 @@ public abstract class AbstractXsltEngine : IXsltEngine
 			}
 		}
 #endif
-        return Transform(data, xsltEngine, parameters, transactionId, outputStructure, validateOnly);
+		using (MiniProfiler.Current.CustomTiming("xsl", "transformationId:"
+		                                                + transformationId, "XslTransform"))
+		{
+			return Transform(data, xsltEngine, parameters, transactionId, outputStructure, validateOnly);
+		}
 	}
     public void Transform(IXPathNavigable input, Guid transformationId, Hashtable parameters, string transactionId, Stream output)
     {

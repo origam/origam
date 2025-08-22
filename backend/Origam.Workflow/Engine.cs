@@ -41,6 +41,7 @@ using System.Linq;
 using Origam.Extensions;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
+using StackExchange.Profiling;
 
 namespace Origam.Workflow;
 
@@ -531,7 +532,11 @@ public class WorkflowEngine : IDisposable
 					SetStepStatus(
 						currentModelStep, WorkflowStepResult.Running);
 					engineTask.Finished += OnEngineTaskFinished;
-					engineTask.Execute();
+					using (MiniProfiler.Current.Step(
+						       WorkflowBlock.Name + ":" + currentModelStep?.Name))
+					{
+						engineTask.Execute();
+					}
 					break;
 				}
 				// Task will never run, startup rule returned false

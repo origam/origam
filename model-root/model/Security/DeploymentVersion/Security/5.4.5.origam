@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.3.3"
+    x:id="788d4002-0ad0-437f-91c4-4bf5f1b497ff"
+    asi:name="5.4.5"
+    dv:version="5.4.5">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.4.5.origam___commandText___2d2ee75e-f666-48ac-a49f-7edcf6414a70.txt"
+      x:id="2d2ee75e-f666-48ac-a49f-7edcf6414a70"
+      asi:name="00020_PG_AddRole_SYS_ViewMiniProfilerResults"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.4.5.origam___commandText___ae7f00cb-e8c5-447d-a63d-b8884fb308e4.txt"
+      x:id="ae7f00cb-e8c5-447d-a63d-b8884fb308e4"
+      asi:name="00010_AddRole_SYS_ViewMiniProfilerResults"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

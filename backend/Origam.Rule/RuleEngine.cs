@@ -43,6 +43,7 @@ using Origam.Service.Core;
 using Origam.Workbench;
 using System.Data.Common;
 using Origam.Schema.EntityModel.Interfaces;
+using StackExchange.Profiling;
 
 namespace Origam.Rule;
 /// <summary>
@@ -1912,17 +1913,26 @@ public class RuleEngine
 			log.Debug("  Input data: " + xmlDocument.OuterXml);
 		}
 		XPathNavigator nav = xmlDocument.CreateNavigator();
-		return XpathEvaluator.Instance.Evaluate(
-			rule.XPath, rule.IsPathRelative, rule.DataType, nav, 
-			contextPosition, _transactionId);
+		using (MiniProfiler.Current.CustomTiming("rule", rule.Name,
+			       "XPathRuleEvaluation"))
+		{
+			return XpathEvaluator.Instance.Evaluate(
+				rule.XPath, rule.IsPathRelative, rule.DataType, nav,
+				contextPosition, _transactionId);
+		}
 	}
 	
 	private object EvaluateRule(XslRule rule, IXmlContainer context)
 	{
 		try
 		{
-		    IXmlContainer result = _transformer.Transform(context, rule.Id, null, _transactionId, rule.Structure, false);
-			return result;
+			using (MiniProfiler.Current.CustomTiming("rule", rule.Name,
+				       "XslRuleEvaluation"))
+			{
+				IXmlContainer result =
+					_transformer.Transform(context, rule.Id, null, _transactionId, rule.Structure, false);
+				return result;
+			}
 		}
 		catch(OrigamRuleException)
 		{
