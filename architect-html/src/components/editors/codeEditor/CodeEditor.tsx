@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Editor, { EditorProps } from '@monaco-editor/react';
-import { useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import S from './CodeEditor.module.scss';
 // @ts-expect-error types for monaco-vim are missing
 import * as monacoVim from 'monaco-vim';
@@ -40,6 +40,17 @@ export default observer(function CodeEditor({
 
   const rootStore = useContext(RootStoreContext);
   const uiState = rootStore.uiState;
+
+  const initVim = useCallback(() => {
+    if (
+      uiState.settings.isVimEnabled &&
+      editorRef.current &&
+      vimStatusBarRef.current &&
+      !vimModeRef.current
+    ) {
+      vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
+    }
+  }, [uiState.settings.isVimEnabled]);
 
   useEffect(() => {
     return () => {
@@ -67,18 +78,7 @@ export default observer(function CodeEditor({
         }
       });
     }
-  }, [uiState.settings.isVimEnabled]);
-
-  const initVim = () => {
-    if (
-      uiState.settings.isVimEnabled &&
-      editorRef.current &&
-      vimStatusBarRef.current &&
-      !vimModeRef.current
-    ) {
-      vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
-    }
-  };
+  }, [uiState.settings.isVimEnabled, initVim]);
 
   const handleEditorDidMount: EditorProps['onMount'] = editor => {
     editorRef.current = editor;
