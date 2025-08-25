@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from 'react';
 import { GridEditor } from 'src/components/editors/gridEditor/GridEditor.tsx';
-import { XsltEditor } from 'src/components/editors/xsltEditor/XsltEditor.tsx';
+import XsltEditor from 'src/components/editors/xsltEditor/XsltEditor.tsx';
 import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
 import {
   DocumentationEditorData,

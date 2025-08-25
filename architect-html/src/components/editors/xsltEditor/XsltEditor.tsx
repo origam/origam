@@ -18,16 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { useContext } from 'react';
+import CodeEditor from 'src/components/editors/codeEditor/CodeEditor';
 import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
 import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor.tsx';
 import { TabView } from 'src/components/tabView/TabView.tsx';
 import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { RootStoreContext, T } from 'src/main.tsx';
-import CodeEditor from 'src/components/editors/codeEditor/CodeEditor';
 import S from './XsltEditor.module.scss';
 
-export const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
+export default function XsltEditor({ editorState }: { editorState: GridEditorState }) {
   const rootStore = useContext(RootStoreContext);
 
   const getFieldName = (): 'TextStore' | 'Xsl' => {
@@ -75,4 +75,4 @@ export const XsltEditor = ({ editorState }: { editorState: GridEditorState }) =>
       />
     </div>
   );
-};
+}
