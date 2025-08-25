@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import Editor, { EditorProps } from '@monaco-editor/react';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useContext, useEffect, useRef } from 'react';
-import S from './CodeEditor.module.scss';
+import S from 'src/components/editors/codeEditor/CodeEditor.module.scss';
 // @ts-expect-error types for monaco-vim are missing
 import * as monacoVim from 'monaco-vim';
 import { RootStoreContext } from 'src/main';
