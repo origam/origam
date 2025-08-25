@@ -43,8 +43,7 @@ WORKDIR /home/origam
 RUN mkdir Architect
 COPY --chown=origam:origam architect/bin /home/origam/Architect/
 COPY --chown=origam:origam architect/bin architect/linux/appsettings.json \
-server/_OrigamSettings.mssql.template \
-server/_OrigamSettings.postgres.template \
+server/_OrigamSettings.template \
 architect/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 architect/linux/entrypoint.sh \
