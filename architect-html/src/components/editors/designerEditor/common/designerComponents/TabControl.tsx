@@ -17,21 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { screenLayer } from 'src/components/editors/designerEditor/common/Layers.ts';
-import {
-  ComponentType,
-  IComponentData,
-} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { RootStoreContext } from '@/main.tsx';
+import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { screenLayer } from '@editors/designerEditor/common/Layers.ts';
+import { DesignerStateContext } from '@editors/designerEditor/screenEditor/ScreenEditor.tsx';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { action, observable } from 'mobx';
-import { ReactElement, useContext } from 'react';
-import S from 'src/components/editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Observer, observer } from 'mobx-react-lite';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { ReactElement, useContext } from 'react';
 import { TriggerEvent, useContextMenu } from 'react-contexify';
-import { RootStoreContext } from 'src/main.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { DesignerStateContext } from 'src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx';
 
 export class TabControl extends Component {
   @observable private accessor tabs: TabPage[] = [];

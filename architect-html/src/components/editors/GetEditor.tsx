@@ -17,10 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from 'react';
-import { GridEditor } from 'src/components/editors/gridEditor/GridEditor.tsx';
-import XsltEditor from 'src/components/editors/xsltEditor/XsltEditor.tsx';
-import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
+import { T } from '@/main.tsx';
 import {
   DocumentationEditorData,
   EditorType,
@@ -28,21 +25,24 @@ import {
   IArchitectApi,
   IScreenEditorData,
   ISectionEditorData,
-} from 'src/API/IArchitectApi.ts';
-import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
-import { EditorData } from 'src/components/modelTree/EditorData.ts';
-import ScreenSectionEditor from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx';
-import { ScreenSectionEditorState } from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
-import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
-import { ScreenEditorState } from 'src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx';
-import ScreenEditor from 'src/components/editors/designerEditor/screenEditor/ScreenEditor.tsx';
-import { ScreenToolboxState } from 'src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
-import { SectionToolboxState } from 'src/components/editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
-import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+} from '@api/IArchitectApi.ts';
+import { IEditorState } from '@components/editorTabView/IEditorState.ts';
+import { EditorData } from '@components/modelTree/EditorData.ts';
+import { PropertiesState } from '@components/properties/PropertiesState.ts';
+import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor.tsx';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
+import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
+import ScreenSectionEditor from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx';
+import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
+import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
+import { DocumentationEditorState } from '@editors/documentationEditor/DocumentationEditorState.ts';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { GridEditor } from '@editors/gridEditor/GridEditor.tsx';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
+import XsltEditor from '@editors/xsltEditor/XsltEditor.tsx';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import { DocumentationEditorState } from 'src/components/editors/documentationEditor/DocumentationEditorState.ts';
-import { T } from 'src/main.tsx';
+import React from 'react';
 
 export function getEditor(args: {
   editorType: EditorType;

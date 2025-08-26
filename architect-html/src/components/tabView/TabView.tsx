@@ -16,11 +16,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import { ReactNode } from 'react';
-import S from './TabView.module.scss';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
-import { observer } from 'mobx-react-lite';
+
+import S from '@components/tabView/TabView.module.scss';
+import { TabViewState } from '@components/tabView/TabViewState.ts';
 import { action } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import { ReactNode } from 'react';
 
 export const TabView: React.FC<{
   items: ITabViewItem[];

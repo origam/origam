@@ -18,17 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  EditorSubType,
-  IApiEditorNode,
-  IApiEditorData,
-  IApiEditorProperty,
-  ISectionEditorData,
-  IScreenEditorData,
-  EditorType,
   DocumentationEditorData,
-} from 'src/API/IArchitectApi.ts';
-import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
-import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+  EditorSubType,
+  EditorType,
+  IApiEditorData,
+  IApiEditorNode,
+  IApiEditorProperty,
+  IScreenEditorData,
+  ISectionEditorData,
+} from '@api/IArchitectApi.ts';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { TreeNode } from '@components/modelTree/TreeNode.ts';
 
 export class EditorNode implements IEditorNode {
   id: string;

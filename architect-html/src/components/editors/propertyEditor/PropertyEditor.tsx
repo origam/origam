@@ -17,15 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from 'react';
-import S from 'src/components/editors/propertyEditor/PropertyEditor.module.scss';
+import { RootStoreContext } from '@/main.tsx';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
+import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
+import S from '@editors/propertyEditor/PropertyEditor.module.scss';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { RootStoreContext } from 'src/main.tsx';
-import { useContext } from 'react';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
-import { IPropertyManager } from 'src/components/editors/propertyEditor/IPropertyManager.tsx';
-import { NumericPropertyInput } from 'src/components/editors/propertyEditor/NumericPropertyInput.tsx';
+import React, { useContext } from 'react';
 
 export const PropertyEditor: React.FC<{
   properties: EditorProperty[];

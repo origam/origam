@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import S from '@dialogs/ModalWindow.module.scss';
+import { ModalWindow } from '@dialogs/ModalWindow.tsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-import S from 'src/dialog/ModalWindow.module.scss';
-import { ModalWindow } from 'src/dialog/ModalWindow.tsx';
 
 interface YesNoQuestionProps {
   screenTitle: string;

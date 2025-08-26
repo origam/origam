@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { computed, observable } from 'mobx';
 import {
   IApiEditorProperty,
   IDropDownValue,
@@ -24,7 +25,6 @@ import {
   IPropertyUpdate,
   PropertyType,
 } from 'src/API/IArchitectApi.ts';
-import { computed, observable } from 'mobx';
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;

@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from './ModalWindow.module.scss';
-import React, { useCallback, useEffect, useRef } from 'react';
+import S from '@dialogs/ModalWindow.module.scss';
+import { requestFocus } from '@utils/focus.ts';
 import { observer } from 'mobx-react-lite';
-import { requestFocus } from 'src/utils/focus.ts';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 interface ModalWindowProps {
   title: React.ReactNode;

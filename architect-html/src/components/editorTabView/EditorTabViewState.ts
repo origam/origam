@@ -17,20 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { EditorType, IApiEditorData, IApiEditorNode, IArchitectApi } from '@api/IArchitectApi.ts';
+import { EditorData } from '@components/modelTree/EditorData.ts';
+import { TreeNode } from '@components/modelTree/TreeNode.ts';
+import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils.tsx';
+import { Editor, getEditor } from '@editors/GetEditor.tsx';
+import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { RootStore } from '@stores/RootStore.ts';
 import { observable } from 'mobx';
-import { Editor, getEditor } from 'src/components/editors/GetEditor.tsx';
-import {
-  IApiEditorNode,
-  IArchitectApi,
-  IApiEditorData,
-  EditorType,
-} from 'src/API/IArchitectApi.ts';
-import { EditorData } from 'src/components/modelTree/EditorData.ts';
-
-import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
-import { RootStore } from 'src/stores/RootStore.ts';
-import { askYesNoQuestion, YesNoResult } from 'src/dialog/DialogUtils.tsx';
-import { FlowHandlerInput, runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 export class EditorTabViewState {

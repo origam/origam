@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IPackage } from 'src/API/IArchitectApi.ts';
+import { RootStoreContext } from '@/main.tsx';
+import { IPackage } from '@api/IArchitectApi.ts';
+import S from '@components/packages/PackageItem.module.scss';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { useContext } from 'react';
-import { RootStoreContext } from 'src/main.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import S from 'src/components/packages/PackageItem.module.scss';
 
 export function PackageItem(props: { package: IPackage; isSelected?: boolean }) {
   const rootStore = useContext(RootStoreContext);

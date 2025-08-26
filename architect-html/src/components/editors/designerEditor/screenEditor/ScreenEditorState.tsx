@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
-import { IArchitectApi, IScreenEditorData } from 'src/API/IArchitectApi.ts';
-import { toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
-import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
-import { ScreenToolboxState } from 'src/components/editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
-import { DesignerEditorState } from 'src/components/editors/designerEditor/common/DesignerEditorState.tsx';
+import { IArchitectApi, IScreenEditorData } from '@api/IArchitectApi.ts';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { PropertiesState } from '@components/properties/PropertiesState.ts';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 import {
   controlToComponent,
   toComponentRecursive,
-} from 'src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
-import { SectionItem } from 'src/components/editors/designerEditor/common/SectionItem.tsx';
-import { ReactElement } from 'react';
-import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
+} from '@editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
+import { TabControl } from '@editors/designerEditor/common/designerComponents/TabControl.tsx';
+import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState.tsx';
+import { SectionItem } from '@editors/designerEditor/common/SectionItem.tsx';
+import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
+import { toChanges } from '@editors/gridEditor/EditorProperty.ts';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import { TabControl } from 'src/components/editors/designerEditor/common/designerComponents/TabControl.tsx';
+import { ReactElement } from 'react';
 
 export class ScreenEditorState extends DesignerEditorState {
   public screenToolbox: ScreenToolboxState;

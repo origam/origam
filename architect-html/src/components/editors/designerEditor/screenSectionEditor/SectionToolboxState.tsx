@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
 import {
   IArchitectApi,
   IEditorField,
   ISectionEditorData,
   ISectionEditorModel,
-} from 'src/API/IArchitectApi.ts';
-import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
+} from '@api/IArchitectApi.ts';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
+import { observable } from 'mobx';
 
 export class SectionToolboxState {
   toolboxState: ToolboxState;

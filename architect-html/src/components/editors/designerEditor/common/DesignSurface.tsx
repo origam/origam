@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect, useRef } from 'react';
+import { RootStoreContext } from '@/main.tsx';
+import { ComponentType } from '@editors/designerEditor/common/ComponentType.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
+import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState.tsx';
+import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState.tsx';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from 'src/main.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
-import S from 'src/components/editors/designerEditor/common/DesignerSurface.module.scss';
-import { IDesignerEditorState } from 'src/components/editors/designerEditor/common/IDesignerEditorState.tsx';
-import { ResizeHandle } from 'src/components/editors/designerEditor/common/DesignSurfaceState.tsx';
-import { ComponentType } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Item, Menu } from 'react-contexify';
 
 export const DesignSurface: React.FC<{

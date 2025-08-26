@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext, T } from '@/main.tsx';
+import { TabView } from '@components/tabView/TabView.tsx';
+import { TabViewState } from '@components/tabView/TabViewState.ts';
+import CodeEditor from '@editors/codeEditor/CodeEditor';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
+import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor.tsx';
+import S from '@editors/xsltEditor/XsltEditor.module.scss';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { useContext } from 'react';
-import CodeEditor from 'src/components/editors/codeEditor/CodeEditor';
-import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
-import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor.tsx';
-import S from 'src/components/editors/xsltEditor/XsltEditor.module.scss';
-import { TabView } from 'src/components/tabView/TabView.tsx';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { RootStoreContext, T } from 'src/main.tsx';
 
 export default function XsltEditor({ editorState }: { editorState: GridEditorState }) {
   const rootStore = useContext(RootStoreContext);

@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observable } from 'mobx';
 import { IArchitectApi, IPackage, IPackagesInfo } from 'src/API/IArchitectApi.ts';
-import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
+import { TabViewState } from 'src/components/tabView/TabViewState.ts';
+import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
 import { UIState } from 'src/stores/UiState.ts';
 
 export class PackagesState {

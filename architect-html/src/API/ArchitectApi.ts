@@ -17,21 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import axios, { AxiosInstance } from 'axios';
 import {
+  IApiControl,
+  IApiEditorData,
   IApiTreeNode,
   IArchitectApi,
-  IApiEditorData,
   IMenuItemInfo,
-  IApiControl,
   IModelChange,
+  IPackagesInfo,
   IPropertyChange,
+  IScreenEditorItem,
+  IScreenEditorModel,
   ISectionEditorModel,
   IUpdatePropertiesResult,
-  IPackagesInfo,
-  IScreenEditorModel,
-  IScreenEditorItem,
-} from 'src/API/IArchitectApi.ts';
+} from '@api/IArchitectApi.ts';
+import axios, { AxiosInstance } from 'axios';
 
 export class ArchitectApi implements IArchitectApi {
   errorHandler: (error: any) => void;

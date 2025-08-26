@@ -17,19 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi } from 'src/API/IArchitectApi.ts';
-import { EditorTabViewState } from 'src/components/editorTabView/EditorTabViewState.ts';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
-import { UIState } from 'src/stores/UiState.ts';
-import { PackagesState } from 'src/components/packages/PackagesState.ts';
-import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
-import { ArchitectApi } from 'src/API/ArchitectApi.ts';
-import { DialogStackState } from 'src/dialog/DialogStackState.tsx';
-import { IDialogStackState } from 'src/dialog/types.ts';
-import { ErrorDialogController } from 'src/errorHandling/ErrorDialog.tsx';
-import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
-import { PropertiesState } from 'src/components/properties/PropertiesState';
-import { TranslationsStore } from 'src/stores/TranslationsStore.tsx';
+import { ArchitectApi } from '@api/ArchitectApi.ts';
+import { IArchitectApi } from '@api/IArchitectApi.ts';
+import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState.ts';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState.ts';
+import { PackagesState } from '@components/packages/PackagesState.ts';
+import { PropertiesState } from '@components/properties/PropertiesState';
+import { TabViewState } from '@components/tabView/TabViewState.ts';
+import { ProgressBarState } from '@components/topBar/ProgressBarState.ts';
+import { DialogStackState } from '@dialogs/DialogStackState.tsx';
+import { IDialogStackState } from '@dialogs/types.ts';
+import { ErrorDialogController } from '@errors/ErrorDialog.tsx';
+import { TranslationsStore } from '@stores/TranslationsStore.tsx';
+import { UIState } from '@stores/UiState.ts';
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;

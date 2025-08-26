@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { screenLayer } from 'src/components/editors/designerEditor/common/Layers.ts';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { screenLayer } from '@editors/designerEditor/common/Layers.ts';
 import { ReactElement } from 'react';
-import S from 'src/components/editors/designerEditor/common/designerComponents/Components.module.scss';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
 
 export class AsForm extends Component {
   get canHaveChildren(): boolean {

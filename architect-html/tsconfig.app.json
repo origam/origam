@@ -26,7 +26,14 @@
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@api/*": ["src/API/*"],
+      "@dialogs/*": ["src/dialog/*"],
+      "@errors/*": ["src/errorHandling/*"],
+      "@stores/*": ["src/stores/*"],
+      "@utils/*": ["src/utils/*"],
+      "@components/*": ["src/components/*"],
+      "@editors/*": ["src/components/editors/*"]
     },
     "allowSyntheticDefaultImports": true
   },
