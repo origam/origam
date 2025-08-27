@@ -1,18 +1,16 @@
 ﻿const {
   sleep, openMenuItem, login, afterEachTest,
-  beforeEachTest
+  beforeEachTest, switchToFormPerspective, inputByPressingKeys, waitForFocus, catchRequests
 } = require('./testTools');
 const {
   topMenuHeader
 } = require("./modelIds");
-const {switchToFormPerspective, inputByPressingKeys, waitForFocus, catchRequests} = require("testTools");
 
 let browser;
 let page;
 
 beforeEach(async () => {
   [browser, page] = await beforeEachTest();
-  await login(page);
 });
 
 afterEach(async () => {
@@ -30,14 +28,21 @@ async function clickElement(elementText, elementType) {
   await element.click();
 }
 
-async function waitForWorkflowMessage(messageBegging) {
+async function waitForErrorMessage(messageBegging) {
   const messageElement = await page.waitForXPath(
-    `//div[contains(@class, 'workflowMessage')]/font/div`,
+    `//div[contains(@class, 'dialogMessage')]`,
     {visible: true}
   );
-  const errorMessage = await page.evaluate(name => name.innerText, messageElement);
-  if (!errorMessage || !errorMessage.startsWith(messageBegging)) {
-    throw new Error(`Error message does not start with: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
+  let errorMessage=''
+  for (let i = 0; i < 5; i++) {
+    errorMessage = await page.evaluate(name => name.innerText, messageElement);
+    if (!errorMessage || !errorMessage.includes(messageBegging)) {
+      await sleep(500);
+    }
+    return;
+  }
+  if (!errorMessage || !errorMessage.includes(messageBegging)) {
+    throw new Error(`Error message does not contain: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
   }
 }
 
@@ -61,14 +66,17 @@ describe("Html client", () => {
     });
 
     await sleep(300);
-    const numberEditor = await page.waitForSelector(
+    const stateEditor = await page.waitForSelector(
       `#editor_${statePropertyId}`,
       {visible: true});
-    await page.evaluate(x => x.focus(), numberEditor);
+    await page.evaluate(x => {
+      x.focus()
+      x.value = ""
+    }, stateEditor);
     await sleep(500);
 
     await waitForRequests;
-    await inputByPressingKeys({page: page, value: `End`})
+    await inputByPressingKeys({page: page, value: `end`})
 
     await sleep(200);
 
@@ -77,14 +85,11 @@ describe("Html client", () => {
       page: page
     })
     await sleep(200);
-    await page.keyboard.press("Enter");
-
+    await page.keyboard.press("Tab");
 
     await page.waitForSelector('#saveButton .isRed');
     await page.$eval("#saveButton", elem => elem.click())
 
-
-    await waitForWorkflowMessage("Merge context 'AllDataTypes', Step 'Basic WF_1stepfail/0100_StepFail' failed.");
-    await clickElement("Close", "button");
+    await waitForErrorMessage("State of 'State Transition' cannot enter the state 'Error'. Current state: 'end'");
   });
 });
