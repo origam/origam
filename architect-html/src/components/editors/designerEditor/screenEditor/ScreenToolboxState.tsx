@@ -22,8 +22,8 @@ import {
   IScreenEditorData,
   IScreenEditorModel,
   IToolBoxItem,
-} from 'src/API/IArchitectApi.ts';
-import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
+} from '@api/IArchitectApi.ts';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
 
 export class ScreenToolboxState {
   toolboxState: ToolboxState;

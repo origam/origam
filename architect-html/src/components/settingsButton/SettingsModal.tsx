@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext, T } from '@/main';
+import S from '@components/settingsButton/SettingsModal.module.scss';
+import { ModalWindow } from '@dialogs/ModalWindow.tsx';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { ModalWindow } from 'src/dialog/ModalWindow.tsx';
-import { RootStoreContext, T } from 'src/main';
-import S from './SettingsModal.module.scss';
 
 export const SettingsModal = observer(({ onClose }: { onClose: () => void }) => {
   const rootStore = useContext(RootStoreContext);

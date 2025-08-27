@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { ReactElement } from 'react';
-import { IComponentData } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
 
 export class FormPanel extends Component {
   reactElement: ReactElement;

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ErrorDialogController } from '@errors/ErrorDialog.tsx';
+import { handleError } from '@errors/handleError.tsx';
 import { flow } from 'mobx';
-import { handleError } from 'src/errorHandling/handleError.tsx';
-import { ErrorDialogController } from 'src/errorHandling/ErrorDialog.tsx';
 
 type GeneratorFunction = (...args: any[]) => Generator;
 type GeneratorInput = Generator | GeneratorFunction;

@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EditorProperty, toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
 import {
   DocumentationEditorData,
   IArchitectApi,
   IUpdatePropertiesResult,
-} from 'src/API/IArchitectApi.ts';
-import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
-import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
+} from '@api/IArchitectApi.ts';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty.ts';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 
 export class DocumentationEditorState extends GridEditorState {
   constructor(

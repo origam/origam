@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { DesignSurface } from '@editors/designerEditor/common/DesignSurface.tsx';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
+import { ScreenToolbox } from '@editors/designerEditor/screenEditor/ScreenToolbox.tsx';
+import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import React, { createContext } from 'react';
-import S from 'src/components/editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
-import { DesignSurface } from 'src/components/editors/designerEditor/common/DesignSurface.tsx';
-import { ScreenEditorState } from 'src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx';
-import { ScreenToolbox } from 'src/components/editors/designerEditor/screenEditor/ScreenToolbox.tsx';
 
 export const DesignerStateContext = createContext<ScreenEditorState | null>(null);
 

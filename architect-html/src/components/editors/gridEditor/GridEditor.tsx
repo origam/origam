@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from 'react';
-import S from 'src/components/editors/gridEditor/GridEditor.module.scss';
-import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor.tsx';
-import { GridEditorState } from 'src/components/editors/gridEditor/GridEditorState.ts';
+import S from '@editors/gridEditor/GridEditor.module.scss';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
+import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor.tsx';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 export const GridEditor: React.FC<{
   editorState: GridEditorState;

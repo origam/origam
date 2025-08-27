@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from 'react';
-import { observer } from 'mobx-react-lite';
-import { IToolBoxItem } from 'src/API/IArchitectApi.ts';
-import S from 'src/components/editors/designerEditor/common/Toolbox.module.scss';
-import { Toolbox } from 'src/components/editors/designerEditor/common/Toolbox.tsx';
-import { ScreenEditorState } from 'src/components/editors/designerEditor/screenEditor/ScreenEditorState.tsx';
-import { ComponentType } from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+import { T } from '@/main.tsx';
+import { IToolBoxItem } from '@api/IArchitectApi.ts';
+import { ComponentType } from '@editors/designerEditor/common/ComponentType.tsx';
+import S from '@editors/designerEditor/common/Toolbox.module.scss';
+import { Toolbox } from '@editors/designerEditor/common/Toolbox.tsx';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
 import { action } from 'mobx';
-import { T } from 'src/main.tsx';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 export const ScreenToolbox: React.FC<{
   designerState: ScreenEditorState;

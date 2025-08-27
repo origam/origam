@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IApiTreeNode, IArchitectApi } from '@api/IArchitectApi.ts';
+import { TreeNode } from '@components/modelTree/TreeNode.ts';
+import { RootStore } from '@stores/RootStore.ts';
 import { observable } from 'mobx';
-import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
-import { IApiTreeNode, IArchitectApi } from 'src/API/IArchitectApi.ts';
-import { RootStore } from 'src/stores/RootStore.ts';
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];

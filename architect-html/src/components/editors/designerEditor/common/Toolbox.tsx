@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext } from 'react';
+import { RootStoreContext, T } from '@/main.tsx';
+import { ITabViewItem, TabView } from '@components/tabView/TabView.tsx';
+import S from '@editors/designerEditor/common/Toolbox.module.scss';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext, T } from 'src/main.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import S from 'src/components/editors/designerEditor/common/Toolbox.module.scss';
-import { ITabViewItem, TabView } from 'src/components/tabView/TabView.tsx';
-import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
+import React, { useContext } from 'react';
 
 export const Toolbox: React.FC<{
   toolboxState: ToolboxState;

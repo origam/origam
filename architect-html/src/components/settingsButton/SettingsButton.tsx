@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext, T } from '@/main.tsx';
+import S from '@components/settingsButton/SettingsButton.module.scss';
+import { SettingsModal } from '@components/settingsButton/SettingsModal.tsx';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { RootStoreContext, T } from 'src/main.tsx';
-import S from './SettingsButton.module.scss';
-import { SettingsModal } from './SettingsModal.tsx';
 
 export const SettingsButton = observer(() => {
   const rootStore = useContext(RootStoreContext);

@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext } from '@/main';
+import S from '@editors/codeEditor/CodeEditor.module.scss';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import { observer } from 'mobx-react-lite';
-import { useCallback, useContext, useEffect, useRef } from 'react';
-import S from 'src/components/editors/codeEditor/CodeEditor.module.scss';
 // @ts-expect-error types for monaco-vim are missing
 import * as monacoVim from 'monaco-vim';
-import { RootStoreContext } from 'src/main';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 
 export default observer(function CodeEditor({
   value,

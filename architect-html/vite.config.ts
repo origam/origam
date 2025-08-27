@@ -14,7 +14,14 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      src: path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, 'src'),
+      '@api': path.resolve(__dirname, 'src/API'),
+      '@dialogs': path.resolve(__dirname, 'src/dialog'),
+      '@errors': path.resolve(__dirname, 'src/errorHandling'),
+      '@stores': path.resolve(__dirname, 'src/stores'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@editors': path.resolve(__dirname, 'src/components/editors'),
     },
   },
   css: {

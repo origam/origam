@@ -1,6 +1,7 @@
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
+import importPlugin from 'eslint-plugin-import';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -25,7 +26,6 @@ export default [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ),
-
   {
     files: ['src/**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
@@ -38,11 +38,24 @@ export default [
         ecmaFeatures: { jsx: true },
       },
     },
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       'prettier/prettier': ['error'],
       '@typescript-eslint/no-unused-vars': ['error'],
       '@typescript-eslint/no-explicit-any': 'off',
       'react/react-in-jsx-scope': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['.*'],
+        },
+      ],
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
+      'import/no-dynamic-require': 'error',
+      'import/no-nodejs-modules': 'warn',
     },
     settings: {
       react: { version: 'detect' },
