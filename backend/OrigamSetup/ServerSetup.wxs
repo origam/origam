@@ -616,18 +616,18 @@
                             <Component Id="MICROSOFT.VBE.INTEROP.DLL" DiskId="1" Guid="7BB9250B-6E01-406F-B168-9790955366A7">
                                 <File Id="MICROSOFT.VBE.INTEROP.DLL" Name="Microsoft.Vbe.Interop.dll" Source="server_source\bin\Microsoft.Vbe.Interop.dll" />
                             </Component>
-            <Component Id="MINIPROFILER.ASPNETCORE.DLL" DiskId="1" Guid="7388850F-9A21-473D-8618-B9C53362F271">
-                <File Id="MINIPROFILER.ASPNETCORE.DLL" Name="MiniProfiler.AspNetCore.dll" Source="server_source\bin\MiniProfiler.AspNetCore.dll" />
-            </Component>
-            <Component Id="MINIPROFILER.ASPNETCORE.MVC.DLL" DiskId="1" Guid="19DF4B83-B1D4-45B0-A9A9-5CDD4368D0F3">
-                <File Id="MINIPROFILER.ASPNETCORE.MVC.DLL" Name="MiniProfiler.AspNetCore.Mvc.dll" Source="server_source\bin\MiniProfiler.AspNetCore.Mvc.dll" />
-            </Component>
-            <Component Id="MINIPROFILER.MINIMAL.DLL" DiskId="1" Guid="A6F9F44B-B9E4-433C-BFA3-77DA9DB9F8F0">
-                <File Id="MINIPROFILER.MINIMAL.DLL" Name="MiniProfiler.Minimal.dll" Source="server_source\bin\MiniProfiler.Minimal.dll" />
-            </Component>
-            <Component Id="MINIPROFILER.SHARED.DLL" DiskId="1" Guid="4C98A43A-561B-4CD9-86F4-2BA81623528F">
-                <File Id="MINIPROFILER.SHARED.DLL" Name="MiniProfiler.Shared.dll" Source="server_source\bin\MiniProfiler.Shared.dll" />
-            </Component>
+                            <Component Id="MINIPROFILER.ASPNETCORE.DLL" DiskId="1" Guid="7388850F-9A21-473D-8618-B9C53362F271">
+                                <File Id="MINIPROFILER.ASPNETCORE.DLL" Name="MiniProfiler.AspNetCore.dll" Source="server_source\bin\MiniProfiler.AspNetCore.dll" />
+                            </Component>
+                            <Component Id="MINIPROFILER.ASPNETCORE.MVC.DLL" DiskId="1" Guid="19DF4B83-B1D4-45B0-A9A9-5CDD4368D0F3">
+                                <File Id="MINIPROFILER.ASPNETCORE.MVC.DLL" Name="MiniProfiler.AspNetCore.Mvc.dll" Source="server_source\bin\MiniProfiler.AspNetCore.Mvc.dll" />
+                            </Component>
+                            <Component Id="MINIPROFILER.MINIMAL.DLL" DiskId="1" Guid="A6F9F44B-B9E4-433C-BFA3-77DA9DB9F8F0">
+                                <File Id="MINIPROFILER.MINIMAL.DLL" Name="MiniProfiler.Minimal.dll" Source="server_source\bin\MiniProfiler.Minimal.dll" />
+                            </Component>
+                            <Component Id="MINIPROFILER.SHARED.DLL" DiskId="1" Guid="4C98A43A-561B-4CD9-86F4-2BA81623528F">
+                                <File Id="MINIPROFILER.SHARED.DLL" Name="MiniProfiler.Shared.dll" Source="server_source\bin\MiniProfiler.Shared.dll" />
+                            </Component>
                             <Component Id="MIMEPARSER.DLL" DiskId="1" Guid="7CF3B39F-EEDF-4EF2-B15F-F09193F8786C">
                                 <File Id="MIMEPARSER.DLL" Name="MIMEParser.dll" Source="server_source\bin\MIMEParser.dll" />
                             </Component>
