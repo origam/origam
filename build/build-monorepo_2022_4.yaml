@@ -123,12 +123,7 @@ jobs:
        displayName: 'Copy external architect dlls to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:
          SourceFolder: '$(Agent.BuildDirectory)\s\backend\'
-         Contents: |
-          EnterpriseLibrary\Interop.MSCommLib.dll
-          EnterpriseLibrary\MiniProfiler.AspNetCore.dll
-          EnterpriseLibrary\MiniProfiler.AspNetCore.Mvc.dll
-          EnterpriseLibrary\MiniProfiler.Minimal.dll
-          EnterpriseLibrary\MiniProfiler.Shared.dll
+         Contents: 'EnterpriseLibrary\Interop.MSCommLib.dll'
          TargetFolder: '$(build.artifactstagingdirectory)\origam-architect'
          flattenFolders: true
        condition: succeededOrFailed()
