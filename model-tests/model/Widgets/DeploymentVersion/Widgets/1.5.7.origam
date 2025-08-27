@@ -29,6 +29,14 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___303ad5af-3702-42f2-92ea-2606c3f2d8a0.txt"
+      x:id="303ad5af-3702-42f2-92ea-2606c3f2d8a0"
+      asi:name="00050_Insert_Value_StateTransation"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___5d924c19-bb05-4b6f-9c71-ab880bc16d19.txt"
       x:id="5d924c19-bb05-4b6f-9c71-ab880bc16d19"
