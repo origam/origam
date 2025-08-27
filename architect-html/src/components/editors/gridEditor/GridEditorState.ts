@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IArchitectApi, IUpdatePropertiesResult } from '@api/IArchitectApi.ts';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { IEditorState } from '@components/editorTabView/IEditorState.ts';
+import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty.ts';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { computed, observable } from 'mobx';
-import { IArchitectApi, IUpdatePropertiesResult } from 'src/API/IArchitectApi.ts';
-import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
-import { IEditorState } from 'src/components/editorTabView/IEditorState.ts';
-import { EditorProperty, toChanges } from 'src/components/editors/gridEditor/EditorProperty.ts';
-
-import { IPropertyManager } from 'src/components/editors/propertyEditor/IPropertyManager.tsx';
 
 export class GridEditorState implements IEditorState, IPropertyManager {
   @observable accessor properties: EditorProperty[];

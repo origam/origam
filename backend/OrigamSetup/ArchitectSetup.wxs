@@ -1,6 +1,6 @@
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="d7791cd7-aa05-474a-b1f1-edd0dbf78ef4">
+  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="2d68afaa-0d80-4131-9631-96638d21356b">
     <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine">
     </Package>
     <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high">
@@ -296,14 +296,6 @@
             </Component>
             <Component Id="ORIGAM.PROJECTAUTOMATION.DLL" DiskId="1" Guid="065D8E2C-762C-4C16-B760-4B896DA3BF9F">
               <File Id="ORIGAM.PROJECTAUTOMATION.DLL" Name="Origam.ProjectAutomation.dll" Source="source\Origam.ProjectAutomation.dll">
-              </File>
-            </Component>
-			<Component Id="ORIGAM.DOCKER.DLL" DiskId="1" Guid="F66345D5-6A6C-4DD6-A184-E3A47ABBDC29">
-              <File Id="ORIGAM.DOCKER.DLL" Name="Origam.Docker.dll" Source="source\Origam.Docker.dll">
-              </File>
-            </Component>
-			<Component Id="DOCKER.DOTNET.DLL" DiskId="1" Guid="4B1CBEDE-FB85-4287-903F-21725B27F5FA">
-              <File Id="DOCKER.DOTNET.DLL" Name="Docker.DotNet.dll" Source="source\Docker.DotNet.dll">
               </File>
             </Component>
             <Component Id="SCHEDULETIMER.DLL" DiskId="1" Guid="12EFEE6F-AB86-4F76-9B34-6B0272B18B58">
@@ -783,10 +775,6 @@
       <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL">
-      </ComponentRef>
-	  <ComponentRef Id="ORIGAM.DOCKER.DLL">
-      </ComponentRef>
-	  <ComponentRef Id="DOCKER.DOTNET.DLL">
       </ComponentRef>
       <ComponentRef Id="SCHEDULETIMER.DLL">
       </ComponentRef>

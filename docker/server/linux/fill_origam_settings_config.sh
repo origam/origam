@@ -2,6 +2,7 @@
 
 fill_origam_settings_config() {
     local config_file="$1"
+    local database_type="$2"
 
     if [[ ! -f "$config_file" ]]; then
       echo "Error: File '$config_file' not found."
@@ -33,12 +34,38 @@ fill_origam_settings_config() {
     OrigamSettingNodeXpath="/OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings/OrigamSettings"
 
     # Compose the DataConnectionString using the required connection string variables.
-    local CONNECTION_STRING="Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
-
-    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/DataConnectionString" "$config_file" &>/dev/null; then
-        xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataConnectionString" -v "${CONNECTION_STRING}" "$config_file"
+    if [[ "$database_type" == "mssql" ]]; then
+      local connection_string="Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
+      local schema_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+      local data_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
+    elif [[ "$database_type" == "postgresql" ]]; then
+      local connection_string="Host=${OrigamSettings__DatabaseHost};Port=${OrigamSettings__DatabasePort};Database=${OrigamSettings__DatabaseName};Username=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
+      local schema_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
+      local data_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
     else
-        xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataConnectionString" -v "${CONNECTION_STRING}" "$config_file"
+      echo "Unsupported or missing DatabaseType. Please set DatabaseType to mssql or postgresql."
+      exit 1
+    fi
+
+    # DataConnectionString (update or create)
+    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/DataConnectionString" "$config_file" >/dev/null 2>&1; then
+      xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataConnectionString" -v "$connection_string" "$config_file"
+    else
+      xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataConnectionString" -v "$connection_string" "$config_file"
+    fi
+
+    # SchemaDataService (update or create)
+    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/SchemaDataService" "$config_file" >/dev/null 2>&1; then
+      xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/SchemaDataService" -v "$schema_data_service" "$config_file"
+    else
+      xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "SchemaDataService" -v "$schema_data_service" "$config_file"
+    fi
+
+    # DataDataService (update or create)
+    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/DataDataService" "$config_file" >/dev/null 2>&1; then
+      xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataDataService" -v "$data_data_service" "$config_file"
+    else
+      xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataDataService" -v "$data_data_service" "$config_file"
     fi
 
     for env_entry in $(env | grep '^OrigamSettings__' | grep -v '^OrigamSettings__Database'); do
@@ -54,8 +81,6 @@ fill_origam_settings_config() {
         else
             xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "${node_name}" -v "${value}" "$config_file"
         fi
-
-        echo "---------------------------------------"
     done
 
     echo "${config_file} file updated successfully."

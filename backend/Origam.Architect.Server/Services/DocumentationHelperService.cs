@@ -25,51 +25,55 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class DocumentationHelperService(IDocumentationService documentationService)
+public class DocumentationHelperService()
 {
-    public DocumentationEditorData GetData(DocumentationComplete documentationComplete, string label)
+    public DocumentationEditorData GetData(
+        DocumentationComplete documentationComplete,
+        string label
+    )
     {
         var entries = Enum.GetValues(typeof(DocumentationType))
             .Cast<DocumentationType>()
             .Select(docType => new EditorProperty(
                 name: docType.ToString(),
-                type: "string",
-                category: Strings.CategoryDocumentation,
                 controlPropertyId: null,
-                description: "",
+                type: "string",
+                value: null,
                 dropDownValues: [],
-                readOnly: false,
-                value: null)
-            )
+                category: Strings.CategoryDocumentation,
+                description: "",
+                readOnly: false
+            ))
             .ToDictionary(prop => prop.Name, prop => prop);
 
-        foreach (DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows)
+        foreach (
+            DocumentationComplete.DocumentationRow row in documentationComplete.Documentation.Rows
+        )
         {
             entries[row.Category] = new EditorProperty(
                 name: row.Category,
-                type: "string",
-                category: Strings.CategoryDocumentation,
                 controlPropertyId: null,
-                description: "",
+                type: "string",
+                value: row.Data,
                 dropDownValues: [],
-                readOnly: false,
-                value: row.Data);
+                category: Strings.CategoryDocumentation,
+                description: "",
+                readOnly: false
+            );
         }
 
-        return new DocumentationEditorData
-        {
-            Label = label,
-            Properties = entries.Values.ToList()
-        };
+        return new DocumentationEditorData { Label = label, Properties = entries.Values.ToList() };
     }
 
     public void Update(ChangesModel changes, EditorData editor)
     {
         foreach (PropertyChange propertyChange in changes.Changes)
         {
-            DocumentationComplete.DocumentationDataTable table = editor.DocumentationData.Documentation;
-            DocumentationComplete.DocumentationRow row = table.Rows
-                .Cast<DocumentationComplete.DocumentationRow>()
+            DocumentationComplete.DocumentationDataTable table = editor
+                .DocumentationData
+                .Documentation;
+            DocumentationComplete.DocumentationRow row = table
+                .Rows.Cast<DocumentationComplete.DocumentationRow>()
                 .FirstOrDefault(row => row.Category == propertyChange.Name);
             if (string.IsNullOrEmpty(propertyChange.Value))
             {

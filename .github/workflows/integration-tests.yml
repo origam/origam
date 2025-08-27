@@ -111,6 +111,35 @@ jobs:
           yarn build
         shell: bash
 
+  build-architect-server:
+    name: build-server
+    runs-on: windows-2025
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Restore Packages
+        run: |
+          cd backend
+          msbuild Origam.sln -t:restore /p:Configuration="Release Architect Server" -v:m
+      - name: Build Server Architect
+        run: |
+          cd backend
+          msbuild Origam.sln -warnaserror -warnNotAsError:NU1901,NU1902,NU1903,NU1904 -t:build /p:Configuration="Release Architect Server" /t:Architect\Origam_Architect_Server:Publish -v:m
+
   build-server:
     name: build-server
     runs-on: windows-2025
@@ -158,9 +187,9 @@ jobs:
           path: "backend/Origam.WorkflowTests/bin/Release/net8.0-windows"
           retention-days: 1
 
-  integration-tests:
+  integration-tests-mssql:
     needs: [ build-frontend,build-server ]
-    name: integration-tests
+    name: integration-tests-mssql
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -205,13 +234,13 @@ jobs:
         run: |
           cd test
           mkdir output
-          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit
 
       - name: Clean up
         if: always()
         run: |
           cd test
-          docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+          docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down
 
       - name: Produce frontend integration test report
         uses: dorny/test-reporter@v1
@@ -231,6 +260,87 @@ jobs:
           reporter: dotnet-trx
           max-annotations: '0'
 
+  integration-tests-postgres:
+    needs: [ build-frontend,build-server ]
+    name: integration-tests-pgsql
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      actions: read
+      contents: read
+      checks: write
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: test/HTML5
+
+      - name: Download Frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: test/HTML5/clients/origam
+
+      - name: Download workflow integration tests artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workflowbuild
+          path: test/HTML5_TESTS
+
+      - name: Copy model to test directory
+        run: |
+          mkdir test/model
+          cp -r model-tests test/model
+
+      - name: Run Tests
+        run: |
+          cd test
+          mkdir output
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test up --abort-on-container-exit
+
+      - name: Clean up
+        if: always()
+        run: |
+          cd test
+          docker compose --env-file envFilePostgres.env -f "docker-compose-postgresql.yml" --profile test down
+
+      - name: Produce frontend integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Frontend Integration Test Results
+          path: test/output/frontend-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+      - name: Produce workflow integration test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Workflow Integration Test Results
+          path: test/output/workflow-integration-test-results.trx
+          reporter: dotnet-trx
+          max-annotations: '0'
+
+  cleanup-artifacts:
+    name: cleanup-artifacts
+    runs-on: ubuntu-latest
+    needs:
+      - integration-tests-mssql
+      - integration-tests-postgres
+    if: always()
+    steps:
       - name: Delete artifacts
         uses: geekyeggo/delete-artifact@v5
         with:
@@ -239,3 +349,4 @@ jobs:
             htmlfrontendbuild
             workflowbuild
           failOnError: false
+

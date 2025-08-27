@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult } from 'src/API/IArchitectApi';
-import { IPropertyManager } from 'src/components/editors/propertyEditor/IPropertyManager.tsx';
-import { EditorProperty } from '../editors/gridEditor/EditorProperty';
+import { IUpdatePropertiesResult } from '@api/IArchitectApi';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { observable } from 'mobx';
 
 export class PropertiesState implements IPropertyManager {

@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Icon } from '@components/icon/Icon.tsx';
+import { ModalWindow } from '@dialogs/ModalWindow.tsx';
+import { IDialogStackState } from '@dialogs/types.ts';
+import S from '@errors/ErrorDialog.module.scss';
+import { requestFocus } from '@utils/focus.ts';
 import _ from 'lodash';
 import { action, computed, observable } from 'mobx';
-import { observer, Observer } from 'mobx-react-lite';
+import { Observer, observer } from 'mobx-react-lite';
 import React from 'react';
-import S from './ErrorDialog.module.scss';
-import { requestFocus } from 'src/utils/focus.ts';
-import { IDialogStackState } from 'src/dialog/types.ts';
-import { Icon } from 'src/components/icon/Icon.tsx';
-import { ModalWindow } from 'src/dialog/ModalWindow.tsx';
 
 function NewExternalPromise<T>() {
   let resolveFn: any;

@@ -531,12 +531,12 @@ public class ServerCoreUIService : IBasicUIService
         switch(sessionStore)
         {
             case null:
-                return Result.Ok<RowData, IActionResult>(
+                return Result.Success<RowData, IActionResult>(
                     new RowData{Row = null, Entity = null});
             default:
             {
                 var row = sessionStore.GetSessionRow(entity, rowId);
-                return Result.Ok<RowData, IActionResult>(
+                return Result.Success<RowData, IActionResult>(
                     new RowData{Row = row, Entity = dataStructureEntity});
             }
         }
@@ -548,7 +548,7 @@ public class ServerCoreUIService : IBasicUIService
         switch(sessionStore)
         {
             case null:
-                return Result.Ok<Guid, IActionResult>(Guid.Empty);
+                return Result.Success<Guid, IActionResult>(Guid.Empty);
             default:
             {
                 var table = sessionStore.GetDataTable(entity, sessionStore.Data);
@@ -557,7 +557,7 @@ public class ServerCoreUIService : IBasicUIService
                 {
                     entityId = (Guid)table.ExtendedProperties["EntityId"];
                 }
-                return Result.Ok<Guid, IActionResult>(entityId);
+                return Result.Success<Guid, IActionResult>(entityId);
             }
         }
     }
@@ -943,7 +943,7 @@ public class ServerCoreUIService : IBasicUIService
                 filterDetail.Value1, filterDetail.Value2);
         }
         OrigamPanelFilterDA.PersistFilter(storedFilter);
-        return Result.Ok<Guid, IActionResult>(filterRow.Id);
+        return Result.Success<Guid, IActionResult>(filterRow.Id);
     }
     private static void ConvertValues(DataStructureEntity entity,
         UIGridFilterFieldConfiguration filterDetail)

@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiControl } from 'src/API/IArchitectApi.ts';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { IApiControl } from '@api/IArchitectApi.ts';
 import {
   ComponentType,
   parseComponentType,
-} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
+} from '@editors/designerEditor/common/ComponentType.tsx';
+import { AsCheckBox } from '@editors/designerEditor/common/designerComponents/AsCheckBox.tsx';
+import { AsForm } from '@editors/designerEditor/common/designerComponents/AsForm.tsx';
+import { AsPanel } from '@editors/designerEditor/common/designerComponents/AsPanel.tsx';
 import {
   AsCombo,
   AsDateBox,
@@ -32,17 +34,15 @@ import {
   GroupBox,
   TagInput,
   TextArea,
-} from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
-import { ReactElement } from 'react';
-import { SplitPanel } from 'src/components/editors/designerEditor/common/designerComponents/SplitPanel.tsx';
-import { AsForm } from 'src/components/editors/designerEditor/common/designerComponents/AsForm.tsx';
-import { AsPanel } from 'src/components/editors/designerEditor/common/designerComponents/AsPanel.tsx';
-import { FormPanel } from 'src/components/editors/designerEditor/common/designerComponents/FormPanel.tsx';
-import { AsCheckBox } from 'src/components/editors/designerEditor/common/designerComponents/AsCheckBox.tsx';
+} from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { FormPanel } from '@editors/designerEditor/common/designerComponents/FormPanel.tsx';
+import { SplitPanel } from '@editors/designerEditor/common/designerComponents/SplitPanel.tsx';
 import {
   TabControl,
   TabPage,
-} from 'src/components/editors/designerEditor/common/designerComponents/TabControl.tsx';
+} from '@editors/designerEditor/common/designerComponents/TabControl.tsx';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { ReactElement } from 'react';
 
 export async function controlToComponent(
   control: IApiControl,

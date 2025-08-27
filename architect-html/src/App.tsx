@@ -17,20 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect } from 'react';
-import { Packages } from 'src/components/packages/Packages.tsx';
-import './App.css';
-import 'src/colors.scss';
-import { TopLayout } from 'src/components/topLayout/TopLayout.tsx';
-import { TabView } from 'src/components/tabView/TabView.tsx';
-import { RootStoreContext, T } from 'src/main.tsx';
+import '@/App.css';
+import '@/colors.scss';
+import { RootStoreContext, T } from '@/main.tsx';
+import { EditorTabView } from '@components/editorTabView/EditorTabView.tsx';
+import ModelTree from '@components/modelTree/ModelTree.tsx';
+import { Packages } from '@components/packages/Packages.tsx';
+import { Properties } from '@components/properties/Properties.tsx';
+import { TabView } from '@components/tabView/TabView.tsx';
+import { TopBar } from '@components/topBar/TopBar.tsx';
+import { TopLayout } from '@components/topLayout/TopLayout.tsx';
+import { ApplicationDialogStack } from '@dialogs/DialogStack.tsx';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { EditorTabView } from 'src/components/editorTabView/EditorTabView.tsx';
-import ModelTree from 'src/components/modelTree/ModelTree.tsx';
-import { TopBar } from 'src/components/topBar/TopBar.tsx';
-import { ApplicationDialogStack } from 'src/dialog/DialogStack.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { Properties } from 'src/components/properties/Properties.tsx';
+import React, { useContext, useEffect } from 'react';
 
 const App: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);

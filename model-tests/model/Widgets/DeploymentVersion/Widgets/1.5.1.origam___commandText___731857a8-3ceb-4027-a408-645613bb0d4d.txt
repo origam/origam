@@ -1,0 +1,8 @@
+﻿CREATE TABLE "TagInputSource" (
+	"Label" VARCHAR(100),
+	"RecordCreatedBy" UUID,
+	"RecordUpdatedBy" UUID,
+	"Id" UUID PRIMARY KEY,
+	"RecordCreated" TIMESTAMP,
+	"RecordUpdated" TIMESTAMP
+);

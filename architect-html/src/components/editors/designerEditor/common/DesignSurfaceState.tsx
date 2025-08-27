@@ -17,18 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IApiControl, IDesignerEditorData } from '@api/IArchitectApi.ts';
+import { PropertiesState } from '@components/properties/PropertiesState.ts';
+import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
 import { action, observable } from 'mobx';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
-import {
-  ComponentType,
-  IComponentData,
-} from 'src/components/editors/designerEditor/common/ComponentType.tsx';
-import { IApiControl, IDesignerEditorData } from 'src/API/IArchitectApi.ts';
-import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
-import { toComponentRecursive } from 'src/components/editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
-import { ReactElement } from 'react';
-import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { CancellablePromise } from 'mobx/dist/api/flow';
+import { ReactElement } from 'react';
 
 export class DesignSurfaceState {
   @observable accessor components: Component[] = [];

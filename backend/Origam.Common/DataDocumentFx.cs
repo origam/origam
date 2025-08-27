@@ -19,12 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Origam.Service.Core;
 
@@ -32,6 +27,7 @@ namespace Origam;
 #if !NETSTANDARD
 public class DataDocumentFx : IDataDocument
 {
+#pragma warning disable 618 // XmlDataDocument is obsolete, but we cannot get rid of it just yet
     private readonly XmlDataDocument xmlDataDocument;
     public DataDocumentFx(DataSet dataSet)
     {
@@ -46,6 +42,7 @@ public class DataDocumentFx : IDataDocument
             xmlDataDocument.AppendChild(importNode);
         }
     }
+#pragma warning restore 618
     public XmlDocument Xml => xmlDataDocument;
     public DataSet DataSet => xmlDataDocument.DataSet;
     public void AppendChild(XmlNodeType element, string prefix, string name)
@@ -63,7 +60,7 @@ public class DataDocumentFx : IDataDocument
         XmlNode newNode = xmlDataDocument.ImportNode(node, true);
         xmlDataDocument.DocumentElement.AppendChild(newNode);
     }
-    public void Load(XmlReader xmlReader,bool doProcessing)
+    public void Load(XmlReader xmlReader, bool doProcessing)
     {
         xmlDataDocument.Load(xmlReader);
     }

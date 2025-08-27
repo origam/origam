@@ -52,18 +52,31 @@ RUN sudo chmod +x /etc/nginx/ssl/createSslCertificate.sh
 COPY server/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /home/origam
-RUN mkdir HTML5 HTML5-SOURCE
+RUN mkdir HTML5 HTML5-SOURCE Scheduler Setup
 COPY --chown=origam:origam server/HTML5-SOURCE /home/origam/HTML5-SOURCE/
+COPY --chown=origam:origam server/Scheduler \
+server/_OrigamSettings.template \
+server/linux/configureScheduler.sh \
+server/linux/fill_origam_settings_config.sh \
+server/log4net.scheduler.config \
+/home/origam/Scheduler/
+RUN mv /home/origam/Scheduler/log4net.scheduler.config /home/origam/Scheduler//log4net.config
 COPY --chown=origam:origam server/HTML5 server/_appsettings.template \
-server/_OrigamSettings.mssql.template \
-server/_OrigamSettings.postgres.template \
+server/_OrigamSettings.template \
 server/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 server/linux/entrypoint.sh \
-server/log4net.config \
+server/log4net.server.config \
 server/linux/updateEnvironment.sh \
 server/linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
+RUN mv /home/origam/HTML5/log4net.server.config /home/origam/HTML5/log4net.config
+COPY --chown=origam:origam server/linux/updateEnvironment.sh \
+server/linux/updateEnvironmentRoot.sh \
+/home/origam/Setup/
+WORKDIR /home/origam/Scheduler \
+RUN chmod +x configureScheduler.sh \
+&& chmod +x fill_origam_settings_config.sh
 WORKDIR /home/origam/HTML5
 RUN mkdir logs \
 && chmod +x configureServer.sh \

@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from 'react';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import SD from '@editors/designerEditor/common/DesignerSurface.module.scss';
+import S from '@editors/designerEditor/common/SectionItem.module.scss';
 import { observer } from 'mobx-react-lite';
-import SD from 'src/components/editors/designerEditor/common/DesignerSurface.module.scss';
-import S from 'src/components/editors/designerEditor/common/SectionItem.module.scss';
+import React from 'react';
 
 export const SectionItem: React.FC<{
   components: Component[];

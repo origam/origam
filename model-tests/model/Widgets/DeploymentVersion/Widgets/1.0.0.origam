@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.2"
@@ -8,18 +13,18 @@
     dv:version="1.0.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___b106b4d5-3ce6-4cbc-b823-b58db1adde17.txt"
-      x:id="b106b4d5-3ce6-4cbc-b823-b58db1adde17"
-      asi:name="00010_Database_Entity_WidgetPlainTextTest"
-      scusa:platform="PgSql"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___35505c2d-d7fd-4218-8a1a-27ff38f8405d.txt"
+      x:id="35505c2d-d7fd-4218-8a1a-27ff38f8405d"
+      asi:name="00060_AddRole_WidgetPlainTextTest"
+      scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___5f4831f1-ed84-44fe-9bb4-59a863ce7bad.txt"
       x:id="5f4831f1-ed84-44fe-9bb4-59a863ce7bad"
-      asi:name="00020_Database_Entity_WidgetRichTextTest"
+      asi:name="00020_PG_Database_Entity_WidgetRichTextTest"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -29,6 +34,22 @@
       x:id="6711b370-c910-4742-857f-f79007fec362"
       asi:name="00030_Database_Entity_WidgetPlainTextTest"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___6ebcca0b-8fa6-462c-997e-7f1660edcb58.txt"
+      x:id="6ebcca0b-8fa6-462c-997e-7f1660edcb58"
+      asi:name="00080_AddRole_WidgetRichTextTest"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___b106b4d5-3ce6-4cbc-b823-b58db1adde17.txt"
+      x:id="b106b4d5-3ce6-4cbc-b823-b58db1adde17"
+      asi:name="00010_PG_Database_Entity_WidgetPlainTextTest"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
@@ -43,32 +64,16 @@
       ausa:activityOrder="50"
       scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___edf289c5-a0ec-4e50-a922-80aa8e3fbf3f.txt"
       x:id="edf289c5-a0ec-4e50-a922-80aa8e3fbf3f"
-      asi:name="00050_AddRole_WidgetPlainTextTest"
+      asi:name="00050_PG_AddRole_WidgetPlainTextTest"
       scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="60"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___35505c2d-d7fd-4218-8a1a-27ff38f8405d.txt"
-      x:id="35505c2d-d7fd-4218-8a1a-27ff38f8405d"
-      asi:name="00060_AddRole_WidgetPlainTextTest"
-      scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="70"
       scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___f6b9942d-c200-414f-aa4a-eb4119fef224.txt"
       x:id="f6b9942d-c200-414f-aa4a-eb4119fef224"
-      asi:name="00070_AddRole_WidgetRichTextTest"
+      asi:name="00070_PG_AddRole_WidgetRichTextTest"
       scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="80"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___6ebcca0b-8fa6-462c-997e-7f1660edcb58.txt"
-      x:id="6ebcca0b-8fa6-462c-997e-7f1660edcb58"
-      asi:name="00080_AddRole_WidgetRichTextTest"
-      scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>

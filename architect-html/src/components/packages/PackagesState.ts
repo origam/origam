@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observable } from 'mobx';
 import { IArchitectApi, IPackage, IPackagesInfo } from 'src/API/IArchitectApi.ts';
-import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
 import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
-import { UiState } from 'src/stores/UiState.ts';
+import { TabViewState } from 'src/components/tabView/TabViewState.ts';
+import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
+import { UIState } from 'src/stores/UiState.ts';
 
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];
@@ -33,7 +33,7 @@ export class PackagesState {
     private progressBarState: ProgressBarState,
     private sideBarTabViewState: TabViewState,
     private modelTreeState: ModelTreeState,
-    private uiState: UiState,
+    private uiState: UIState,
     private architectApi: IArchitectApi,
   ) {}
 
@@ -64,7 +64,7 @@ export class PackagesState {
     return function* (this: PackagesState) {
       yield* this.setActivePackage(packageId)();
       if (this.activePackageChanged) {
-        this.uiState.clear();
+        this.uiState.clearExpandedNodes();
       }
       this.activePackageChanged = true;
     }.bind(this);

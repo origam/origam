@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import S from '@components/topLayout/TopLayout.module.scss';
 import React, { ReactNode } from 'react';
-import S from './TopLayout.module.scss';
 
 export const TopLayout: React.FC<{
   topToolBar: ReactNode;

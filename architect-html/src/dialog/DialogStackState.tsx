@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { IDialogDimensions, IDialogInfo, IDialogStackState } from '@dialogs/types.ts';
 import { action, observable } from 'mobx';
 import React from 'react';
-import { IDialogDimensions, IDialogInfo, IDialogStackState } from 'src/dialog/types.ts';
 
 let nextId = 0;
 

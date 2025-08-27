@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { OrigamDataType } from 'src/API/IArchitectApi.ts';
+import { OrigamDataType } from '@api/IArchitectApi.ts';
 
 export enum ComponentType {
   AsCombo = 'Origam.Gui.Win.AsDropDown',

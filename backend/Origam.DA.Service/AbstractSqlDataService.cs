@@ -38,6 +38,8 @@ using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.Workbench.Services;
 using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 
 namespace Origam.DA.Service;
 #region Data Loader
@@ -108,6 +110,9 @@ internal class DataLoader
 				Query.Parameters, 
 				dbDataAdapter.SelectCommand.Parameters, 
 				CurrentProfile);
+			ProfiledDbDataAdapter profiledAdapter =
+				new ProfiledDbDataAdapter(dbDataAdapter,
+					MiniProfiler.Current);
 			try
 			{
 				if(Transaction == null)
@@ -116,8 +121,8 @@ internal class DataLoader
 				}
 				Dataset.Tables[Entity.Name].BeginLoadData();
 				DataService.TraceCommand(
-					dbDataAdapter.SelectCommand, TransactionId);
-				adapter.Fill(Dataset);
+					profiledAdapter.SelectCommand, TransactionId);					
+				profiledAdapter.Fill(Dataset);
 				Dataset.Tables[Entity.Name].EndLoadData();
 			}
 			catch(Exception ex)
@@ -131,6 +136,7 @@ internal class DataLoader
 			}
 			finally
 			{
+				profiledAdapter.Dispose();
 				((IDbDataAdapter)adapter).SelectCommand.Transaction = null;
 				((IDbDataAdapter)adapter).SelectCommand.Connection = null;
 			}
@@ -1048,6 +1054,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				query.IsolationLevel);
 			connection = transaction.Connection;
 		}
+
+		ProfiledDbCommand profiledDbCommand = null;
 		try
 		{
 			BuildParameters(
@@ -1055,7 +1063,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			command.Connection = connection;
 			command.Transaction = transaction;
 			TraceCommand(command, transactionId);
-			result = command.ExecuteScalar();
+			profiledDbCommand = new ProfiledDbCommand(command as DbCommand, (command as DbCommand).Connection, MiniProfiler.Current);
+			result = profiledDbCommand.ExecuteScalar();
 			var dataType = OrigamDataType.Xml;
 			foreach(DataStructureColumn column 
 			        in (dataStructure.Entities[0] as DataStructureEntity)
@@ -1107,7 +1116,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 
 			// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
 			// For more information about isolation levels, see SQL Server Books Online.
-			ResetTransactionIsolationLevel(command);
+			ResetTransactionIsolationLevel(profiledDbCommand);
 		}
 		catch(Exception ex)
 		{
@@ -1117,6 +1126,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		}
 		finally
 		{
+			profiledDbCommand?.Dispose();
 			if(transactionId == null)
 			{
 				try
@@ -1171,26 +1181,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				// no output data structure - no results - execute non-query
 				if(result == null)
 				{
-					command = DbDataAdapterFactory.GetCommand(
-						name, connection);
-					command.Transaction = transaction;
-					command.CommandTimeout 
-						= settings.DataServiceExecuteProcedureTimeout;
-					foreach(QueryParameter parameter in query.Parameters)
-					{
-						if(parameter.Value != null)
-						{
-							IDbDataParameter dataParameter 
-								= DbDataAdapterFactory
-									.GetParameter(parameter.Name, 
-										parameter.Value.GetType());
-							dataParameter.Value = parameter.Value;
-							command.Parameters.Add(dataParameter);
-						}
-					}
-					command.CommandType = CommandType.StoredProcedure;
-					command.Prepare();
-					command.ExecuteNonQuery();
+					command = ExecuteNonQuery(
+						name: name, 
+						parameters: query.Parameters, 
+						connection: connection, 
+						transaction: transaction, 
+						timeOut: settings.DataServiceExecuteProcedureTimeout);
 				}
 				// results present - we take the first entity of the output
 				// data structure and fill the results into it
@@ -1275,6 +1271,32 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		}
 		return result;
 	}
+
+	protected virtual IDbCommand ExecuteNonQuery(string name, QueryParameterCollection parameters, IDbConnection connection,
+		IDbTransaction transaction, int timeOut)
+	{
+		IDbCommand command = DbDataAdapterFactory.GetCommand(
+			name, connection);
+		command.Transaction = transaction;
+		command.CommandTimeout = timeOut;
+		foreach(QueryParameter parameter in parameters)
+		{
+			if(parameter.Value != null)
+			{
+				IDbDataParameter dataParameter 
+					= DbDataAdapterFactory
+						.GetParameter(parameter.Name, 
+							parameter.Value.GetType());
+				dataParameter.Value = parameter.Value;
+				command.Parameters.Add(dataParameter);
+			}
+		}
+		command.CommandType = CommandType.StoredProcedure;
+		command.Prepare();
+		command.ExecuteNonQuery();
+		return command;
+	}
+
 	public override int UpdateField(
 		Guid entityId, 
 		Guid fieldId, 
@@ -1713,7 +1735,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
             connection.Open();
         }
-        return adapter.SelectCommand.ExecuteReader(commandBehavior);
+        var profiledCommand = new ProfiledDbCommand(adapter.SelectCommand, adapter.SelectCommand.Connection, MiniProfiler.Current);
+        DbDataReader reader = profiledCommand.ExecuteReader(commandBehavior);
+        profiledCommand.Dispose();
+        return reader;
     }
     
     public override IEnumerable<IEnumerable<object>> ExecuteDataReader(

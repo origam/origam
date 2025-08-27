@@ -11,13 +11,6 @@ run_silently() {
     fi
 }
 
-# ENV variable default values specific to linux
-# OrigamSettings.config
-if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
-  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
-fi
-
-
 cd /home/origam
 PROJECT_DATA_DIRECTORY="/home/origam/projectData"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
@@ -170,17 +163,10 @@ else
 fi
 
 ORIGAM_SETTINGS_FILE="OrigamSettings.config"
-if [[ "${DatabaseType}" == "mssql" ]]; then
-    cp _OrigamSettings.mssql.template "$ORIGAM_SETTINGS_FILE"
-elif [[ "${DatabaseType}" == "postgresql" ]]; then
-    cp _OrigamSettings.postgres.template "$ORIGAM_SETTINGS_FILE"
-else
-    echo "Unsupported or missing DatabaseType. Please set DatabaseType to mssql or postgresql."
-    exit 1
-fi
+cp _OrigamSettings.template "$ORIGAM_SETTINGS_FILE"
 
 source fill_origam_settings_config.sh
-fill_origam_settings_config "$ORIGAM_SETTINGS_FILE"
+fill_origam_settings_config "$ORIGAM_SETTINGS_FILE" "${DatabaseType}"
 
 export gitUrl
 export gitBranch
@@ -198,5 +184,3 @@ export gitConfSshKey
 export gitConfSshDomain
 export OrigamSettings_DbUsername
 export OrigamSettings_DbPassword
-./updateEnvironment.sh
-sudo ./updateEnvironmentRoot.sh

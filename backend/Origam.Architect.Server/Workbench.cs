@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 using MoreLinq.Extensions;
 using Origam.DA.ObjectPersistence;
@@ -34,9 +35,9 @@ namespace Origam.Architect.Server;
 
 public class Workbench
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
 
     private readonly CancellationTokenSource modelCheckCancellationTokenSource = new();
     private SchemaService schema;
@@ -58,10 +59,9 @@ public class Workbench
     private void _schema_SchemaLoaded(object sender, bool isInteractive)
     {
         OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schema);
-        IDeploymentService deployment
-            = ServiceManager.Services.GetService<IDeploymentService>();
-        IParameterService parameterService
-            = ServiceManager.Services.GetService<IParameterService>();
+        IDeploymentService deployment = ServiceManager.Services.GetService<IDeploymentService>();
+        IParameterService parameterService =
+            ServiceManager.Services.GetService<IParameterService>();
 
         bool isEmpty = deployment.IsEmptyDatabase();
         switch (isEmpty)
@@ -71,8 +71,10 @@ public class Workbench
             case true when !PopulateEmptyDatabaseOnLoad:
                 return;
             case true:
+            {
                 deployment.Deploy();
                 break;
+            }
         }
 
         RunDeploymentScripts(deployment, isInteractive);
@@ -87,9 +89,7 @@ public class Workbench
         }
     }
 
-    private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive)
-    {
-    }
+    private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive) { }
 
     public void Connect()
     {
@@ -105,19 +105,20 @@ public class Workbench
 
     private void InitPersistenceService()
     {
-        IPersistenceService persistence =
-            OrigamEngine.OrigamEngine.CreatePersistenceService();
+        IPersistenceService persistence = OrigamEngine.OrigamEngine.CreatePersistenceService();
         ServiceManager.Services.AddService(persistence);
     }
 
     private bool LoadConfiguration()
     {
-        string origamSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
-        OrigamSettingsCollection configurations =
-            ConfigurationManager.GetAllUserHomeConfigurations(origamSettingsPath);
-        var configuration = configurations
-            .Cast<OrigamSettings>()
-            .FirstOrDefault();
+        string origamSettingsPath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "OrigamSettings.config"
+        );
+        OrigamSettingsCollection configurations = ConfigurationManager.GetAllUserHomeConfigurations(
+            origamSettingsPath
+        );
+        var configuration = configurations.Cast<OrigamSettings>().FirstOrDefault();
         if (configuration != null)
         {
             ConfigurationManager.SetActiveConfiguration(configuration);
@@ -130,42 +131,42 @@ public class Workbench
     private void InitializeConnectedServices()
     {
         ServiceManager.Services.AddService(
-            new ServiceAgentFactory(externalAgent =>
-                new ExternalAgentWrapper(externalAgent)));
+            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent))
+        );
         ServiceManager.Services.AddService(new StateMachineService());
-        ServiceManager.Services.AddService(OrigamEngine.OrigamEngine
-            .CreateDocumentationService());
+        ServiceManager.Services.AddService(OrigamEngine.OrigamEngine.CreateDocumentationService());
         ServiceManager.Services.AddService(new TracingService());
         ServiceManager.Services.AddService(new DataLookupService());
         ServiceManager.Services.AddService(new DeploymentService());
         ServiceManager.Services.AddService(new ParameterService());
-        ServiceManager.Services.AddService(
-            new Origam.Workflow.WorkQueue.WorkQueueService());
+        ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
     }
 
     public void RunBackgroundInitializationTasks()
     {
-        var currentPersistenceService =
-            ServiceManager.Services.GetService<IPersistenceService>();
-        if (!(currentPersistenceService is FilePersistenceService)) return;
-        var cancellationToken =
-            modelCheckCancellationTokenSource.Token;
-        Task.Factory.StartNew(() =>
+        var currentPersistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+        if (!(currentPersistenceService is FilePersistenceService))
         {
-            using (FilePersistenceService independentPersistenceService =
-                   new FilePersistenceBuilder()
-                       .CreateNoBinFilePersistenceService())
-            {
-                IndexReferences(
-                    independentPersistenceService,
-                    cancellationToken);
-                DoModelChecks(
-                    independentPersistenceService,
-                    cancellationToken);
-            }
-        }, cancellationToken).ContinueWith(TaskErrorHandler);
+            return;
+        }
+        var cancellationToken = modelCheckCancellationTokenSource.Token;
+        Task.Factory.StartNew(
+                () =>
+                {
+                    using (
+                        FilePersistenceService independentPersistenceService =
+                            new FilePersistenceBuilder().CreateNoBinFilePersistenceService()
+                    )
+                    {
+                        IndexReferences(independentPersistenceService, cancellationToken);
+                        DoModelChecks(independentPersistenceService, cancellationToken);
+                    }
+                },
+                cancellationToken
+            )
+            .ContinueWith(TaskErrorHandler);
     }
 
     private void TaskErrorHandler(Task previousTask)
@@ -177,21 +178,22 @@ public class Workbench
         catch (AggregateException ae)
         {
             bool actualExceptionsExist = ae.Flatten()
-                .InnerExceptions
-                .Any(x => !(x is OperationCanceledException));
+                .InnerExceptions.Any(x => !(x is OperationCanceledException));
             if (actualExceptionsExist)
             {
                 log.LogOrigamError(ae);
             }
         }
     }
-    private void IndexReferences(FilePersistenceService independentPersistenceService,
-        CancellationToken cancellationToken)
+
+    private void IndexReferences(
+        FilePersistenceService independentPersistenceService,
+        CancellationToken cancellationToken
+    )
     {
-        ReferenceIndexManager.Clear(false);
+        ReferenceIndexManager.Clear(fullClear: false);
         independentPersistenceService
-            .SchemaProvider
-            .RetrieveList<IFilePersistent>()
+            .SchemaProvider.RetrieveList<IFilePersistent>()
             .OfType<ISchemaItem>()
             .AsParallel()
             .ForEach(item =>
@@ -204,15 +206,17 @@ public class Workbench
 
     private void DoModelChecks(
         FilePersistenceService independentPersistenceService,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
-        List<Dictionary<ISchemaItem, string>> errorFragments =
-            ModelRules.GetErrors(
-                schemaProviders: new OrigamProviderBuilder()
-                    .SetSchemaProvider(independentPersistenceService.SchemaProvider)
-                    .GetAll(),
-                independentPersistenceService: independentPersistenceService,
-                cancellationToken: cancellationToken);
-        var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
+        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
+            schemaProviders: new OrigamProviderBuilder()
+                .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                .GetAll(),
+            independentPersistenceService: independentPersistenceService,
+            cancellationToken: cancellationToken
+        );
+        var persistenceProvider = (FilePersistenceProvider)
+            independentPersistenceService.SchemaProvider;
     }
 }

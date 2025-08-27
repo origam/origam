@@ -17,15 +17,30 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 
-export class UiState {
-  storageKey = 'treeExpandedNodes';
+enum EStorageKeys {
+  TREE_EXPANDED_NODES = 'treeExpandedNodes',
+  SETTINGS = 'settings',
+}
 
+type TSettings = {
+  isVimEnabled: boolean;
+};
+
+const defaultSettings: TSettings = {
+  isVimEnabled: false,
+};
+
+export class UIState {
   @observable accessor expandedNodes: string[] = [];
+  @observable accessor settings: TSettings = { ...defaultSettings };
 
   constructor() {
-    this.expandedNodes = this.loadStateFromLocalStorage();
+    this.expandedNodes = this.loadStateFromLocalStorage(EStorageKeys.TREE_EXPANDED_NODES);
+
+    const loadedSettings = this.loadStateFromLocalStorage(EStorageKeys.SETTINGS);
+    this.settings.isVimEnabled = loadedSettings.isVimEnabled;
   }
 
   setExpanded(nodeId: string, expanded: boolean) {
@@ -36,25 +51,40 @@ export class UiState {
     } else {
       this.expandedNodes = this.expandedNodes.filter(x => x !== nodeId);
     }
-    localStorage.setItem(this.storageKey, JSON.stringify(this.expandedNodes));
+    localStorage.setItem(EStorageKeys.TREE_EXPANDED_NODES, JSON.stringify(this.expandedNodes));
   }
 
   isExpanded(nodeId: string) {
     return this.expandedNodes.includes(nodeId);
   }
 
-  loadStateFromLocalStorage() {
+  loadStateFromLocalStorage(key: EStorageKeys) {
     try {
-      const serializedState = localStorage.getItem(this.storageKey) ?? '';
-      return JSON.parse(serializedState) ?? [];
+      if (key === EStorageKeys.TREE_EXPANDED_NODES) {
+        const serializedState = localStorage.getItem(key) ?? '';
+        return JSON.parse(serializedState) ?? [];
+      }
+      if (key === EStorageKeys.SETTINGS) {
+        const serializedState = localStorage.getItem(key) ?? '';
+        return JSON.parse(serializedState) ?? { ...defaultSettings };
+      }
     } catch (err) {
       console.error('Error loading state from local storage:', err);
+      if (key === EStorageKeys.SETTINGS) {
+        return { ...defaultSettings };
+      }
       return [];
     }
   }
 
-  clear() {
+  clearExpandedNodes() {
     this.expandedNodes = [];
-    localStorage.setItem(this.storageKey, JSON.stringify(this.expandedNodes));
+    localStorage.setItem(EStorageKeys.TREE_EXPANDED_NODES, JSON.stringify(this.expandedNodes));
+  }
+
+  @action
+  toggleVimEnabled() {
+    this.settings.isVimEnabled = !this.settings.isVimEnabled;
+    localStorage.setItem(EStorageKeys.SETTINGS, JSON.stringify(this.settings));
   }
 }

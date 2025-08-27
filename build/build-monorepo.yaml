@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2025.8.0.$(Build.BuildId)
+  value: 2025.9.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 25.8.0.$(Build.BuildId)
+  value: 25.9.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2025.8.alpha
+  value: 2025.9.alpha
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2025.7.0
+  value: 2025.8.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2025.8
+  value: 2025.9
 
 
 resources:
@@ -596,9 +596,17 @@ jobs:
          downloadType: 'single'
          artifactName: 'origam'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-scheduler artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-scheduler'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - bash: |
         cp -R ../frontend-html server/HTML5-SOURCE
         mv origam server/HTML5
+        mv origam-scheduler server/Scheduler
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2

@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext } from '@/main';
+import S from '@components/properties/Properties.module.scss';
+import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { RootStoreContext } from 'src/main';
-import { PropertyEditor } from 'src/components/editors/propertyEditor/PropertyEditor';
-import S from 'src/components/properties/Properties.module.scss';
 
 export const Properties: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);

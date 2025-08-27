@@ -291,7 +291,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             return "";
         }
 
-        DateTime d = XmlConvert.ToDateTime(date);
+        DateTime d = XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind);
         return d.ToString(format);
     }
 
@@ -878,7 +878,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result;
 
-        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date)
+        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddDays(XmlConvert.ToDouble(days)));
 
         if (log.IsDebugEnabled)
@@ -893,7 +893,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result;
 
-        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date)
+        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddHours(XmlConvert.ToDouble(hours)));
 
         if (log.IsDebugEnabled)
@@ -908,7 +908,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result;
 
-        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date)
+        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddMinutes(XmlConvert.ToDouble(minutes)));
 
         if (log.IsDebugEnabled)
@@ -923,7 +923,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result;
 
-        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date)
+        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddYears(XmlConvert.ToInt32(years)));
 
         if (log.IsDebugEnabled)
@@ -938,7 +938,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result;
 
-        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date)
+        result = XmlTools.FormatXmlDateTime(XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind)
             .AddSeconds(XmlConvert.ToDouble(seconds)));
 
         if (log.IsDebugEnabled)
@@ -957,7 +957,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            testDate = XmlConvert.ToDateTime(date);
+            testDate = XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -993,7 +993,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            periodStartDate = XmlConvert.ToDateTime(periodStart);
+            periodStartDate = XmlConvert.ToDateTime(periodStart, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1003,7 +1003,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            periodEndDate = XmlConvert.ToDateTime(periodEnd);
+            periodEndDate = XmlConvert.ToDateTime(periodEnd, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1023,7 +1023,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         DateTime periodEndDate;
         try
         {
-            periodStartDate = XmlConvert.ToDateTime(periodStart);
+            periodStartDate = XmlConvert.ToDateTime(periodStart, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1033,7 +1033,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            periodEndDate = XmlConvert.ToDateTime(periodEnd);
+            periodEndDate = XmlConvert.ToDateTime(periodEnd, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1054,7 +1054,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            dateFrom = XmlConvert.ToDateTime(periodStart);
+            dateFrom = XmlConvert.ToDateTime(periodStart, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1064,7 +1064,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            dateTo = XmlConvert.ToDateTime(periodEnd);
+            dateTo = XmlConvert.ToDateTime(periodEnd, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch (Exception ex)
         {
@@ -1171,7 +1171,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             counter = new Counter(BusinessService);
         }
 
-        DateTime date = XmlConvert.ToDateTime(dateString);
+        DateTime date = XmlConvert.ToDateTime(dateString, XmlDateTimeSerializationMode.RoundtripKind);
         return counter.GetNewCounter(counterCode, date, this.TransactionId);
     }
 
@@ -1527,8 +1527,8 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public static XPathNodeIterator ListDays(string startDate, string endDate)
     {
-        DateTime start = XmlConvert.ToDateTime(startDate);
-        DateTime end = XmlConvert.ToDateTime(endDate);
+        DateTime start = XmlConvert.ToDateTime(startDate, XmlDateTimeSerializationMode.Local);
+        DateTime end = XmlConvert.ToDateTime(endDate, XmlDateTimeSerializationMode.Local);
         XmlDocument resultDoc = new XmlDocument();
         XmlElement listElement = resultDoc.CreateElement("list");
         resultDoc.AppendChild(listElement);
@@ -1536,7 +1536,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         for(DateTime date = start; date.Date <= end.Date; date = date.AddDays(1))
         {
             XmlElement itemElement = resultDoc.CreateElement("item");
-            itemElement.InnerText = XmlConvert.ToString(date);
+            itemElement.InnerText = XmlConvert.ToString(date, XmlDateTimeSerializationMode.Local);
             listElement.AppendChild(itemElement);
         }
 
@@ -1548,9 +1548,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public static bool IsDateBetween(string date, string startDate, string endDate)
     {
-        DateTime d = XmlConvert.ToDateTime(date);
-        DateTime start = XmlConvert.ToDateTime(startDate);
-        DateTime end = XmlConvert.ToDateTime(endDate);
+        DateTime d = XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind);
+        DateTime start = XmlConvert.ToDateTime(startDate, XmlDateTimeSerializationMode.RoundtripKind);
+        DateTime end = XmlConvert.ToDateTime(endDate, XmlDateTimeSerializationMode.RoundtripKind);
 
         return d >= start && d <= end;
     }
@@ -1560,7 +1560,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         Guid calendarGuid = new Guid(calendarId);
         decimal shift = XmlConvert.ToDecimal(days);
 
-        DateTime result = XmlConvert.ToDateTime(date);
+        DateTime result = XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind);
 
         // load holidays
         DataStructureQuery q = new DataStructureQuery(
@@ -1659,7 +1659,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public string FirstDayNextMonthDate(string date)
     {
-        return XmlConvert.ToDateTime(date).AddMonths(1).ToString("yyyy-MM-01");;
+        return XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind).AddMonths(1).ToString("yyyy-MM-01");;
     }
     
     public string LastDayOfMonth(string date)
@@ -1669,7 +1669,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         try
         {
-            testDate = XmlConvert.ToDateTime(date);
+            testDate = XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind);
         }
         catch(Exception ex)
         {
@@ -1685,12 +1685,12 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public string Year(string date)
     {
-        return XmlConvert.ToDateTime(date).ToString("yyyy");;
+        return XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind).ToString("yyyy");;
     }
 
     public string Month(string date)
     {
-        return XmlConvert.ToDateTime(date).ToString("MM");;
+        return XmlConvert.ToDateTime(date, XmlDateTimeSerializationMode.RoundtripKind).ToString("MM");;
     }
     
     public string DecimalNumber(string number)

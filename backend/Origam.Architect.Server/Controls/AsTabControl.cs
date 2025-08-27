@@ -17,11 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsTabControl: ControlBase
+public class AsTabControl : ControlBase
 {
     public int TabIndex { get; set; }
 

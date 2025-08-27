@@ -272,7 +272,7 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                     }
                     else if(param.Value is DateTime)
                     {
-                        val = XmlConvert.ToString((DateTime)param.Value);
+                        val = XmlConvert.ToString((DateTime)param.Value, XmlDateTimeSerializationMode.RoundtripKind);
                     }
                     else if(param.Value is XmlDocument)
                     {

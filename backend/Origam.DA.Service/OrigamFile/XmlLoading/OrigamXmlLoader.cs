@@ -111,8 +111,8 @@ public class OrigamXmlLoader
             .Select(res => res.Value);
             
         return errors.Count == 0
-            ? Result.Ok<List<XmlFileData>, XmlLoadError>(data.ToList())
-            : Result.Fail<List<XmlFileData>, XmlLoadError>(errors[0].Error);
+            ? Result.Success<List<XmlFileData>, XmlLoadError>(data.ToList())
+            : Result.Failure<List<XmlFileData>, XmlLoadError>(errors[0].Error);
     }
     
     private void RemoveOrigamFilesThatNoLongerExist(ItemTracker itemTracker)

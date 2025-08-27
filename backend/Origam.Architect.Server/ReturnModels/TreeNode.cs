@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 
@@ -36,12 +35,10 @@ public class TreeNode
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
     public EditorSubType? DefaultEditor { get; set; }
-    
+
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
-        return node == null 
-            ? null 
-            : node.NodeId + node.NodeText;
+        return node == null ? null : node.NodeId + node.NodeText;
     }
 }
 
@@ -57,7 +54,7 @@ public class TreeNodeFactory
             IsNonPersistentItem = node is NonpersistentSchemaItemNode,
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
-            IconUrl = GetIcon(node)
+            IconUrl = GetIcon(node),
         };
     }
 
@@ -79,27 +76,31 @@ public class TreeNodeFactory
         }
 
         string itemType = node.GetType().ToString();
-        if(itemType == "Origam.Schema.GuiModel.FormControlSet")
+        if (itemType == "Origam.Schema.GuiModel.FormControlSet")
         {
             return EditorSubType.ScreenEditor;
         }
-        if(itemType == "Origam.Schema.GuiModel.PanelControlSet"
-           || itemType == "Origam.Schema.GuiModel.ControlSetItem")
+        if (
+            itemType == "Origam.Schema.GuiModel.PanelControlSet"
+            || itemType == "Origam.Schema.GuiModel.ControlSetItem"
+        )
         {
             return EditorSubType.ScreenSectionEditor;
         }
-        if(itemType == "Origam.Schema.EntityModel.XslTransformation"
-           || itemType == "Origam.Schema.RuleModel.XslRule"
-           || itemType == "Origam.Schema.RuleModel.EndRule"
-           || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
+        if (
+            itemType == "Origam.Schema.EntityModel.XslTransformation"
+            || itemType == "Origam.Schema.RuleModel.XslRule"
+            || itemType == "Origam.Schema.RuleModel.EndRule"
+            || itemType == "Origam.Schema.RuleModel.ComplexDataRule"
+        )
         {
             return EditorSubType.XsltEditor;
         }
-        if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
+        if (itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
             return EditorSubType.GridEditor;
         }
-        if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
+        if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
             return EditorSubType.GridEditor;
         }
@@ -117,5 +118,8 @@ public class TreeNodeFactory
 
 public enum EditorSubType
 {
-    GridEditor, XsltEditor, ScreenSectionEditor, ScreenEditor
+    GridEditor,
+    XsltEditor,
+    ScreenSectionEditor,
+    ScreenEditor,
 }

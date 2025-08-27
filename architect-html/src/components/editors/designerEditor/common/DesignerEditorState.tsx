@@ -17,22 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IDesignerEditorState } from 'src/components/editors/designerEditor/common/IDesignerEditorState.tsx';
-import { DesignSurfaceState } from 'src/components/editors/designerEditor/common/DesignSurfaceState.tsx';
-import { ToolboxState } from 'src/components/editors/designerEditor/common/ToolboxState.tsx';
+import { IArchitectApi, IDesignerEditorData, IUpdatePropertiesResult } from '@api/IArchitectApi.ts';
+import { EditorProperty } from '@components/editors/gridEditor/EditorProperty.ts';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
+import { PropertiesState } from '@components/properties/PropertiesState.ts';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState.tsx';
+import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState.tsx';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
 import { observable } from 'mobx';
-import { IEditorNode } from 'src/components/editorTabView/EditorTabViewState.ts';
-import {
-  IArchitectApi,
-  IDesignerEditorData,
-  IUpdatePropertiesResult,
-} from 'src/API/IArchitectApi.ts';
-import { PropertiesState } from 'src/components/properties/PropertiesState.ts';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
-import { Component } from 'src/components/editors/designerEditor/common/designerComponents/Component.tsx';
-import { ReactElement } from 'react';
-import { FlowHandlerInput } from 'src/errorHandling/runInFlowWithHandler.ts';
 import { CancellablePromise } from 'mobx/dist/api/flow';
+import { ReactElement } from 'react';
 
 export abstract class DesignerEditorState implements IDesignerEditorState {
   public surface: DesignSurfaceState;

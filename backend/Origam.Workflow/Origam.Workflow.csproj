@@ -91,6 +91,9 @@
  
 
   <ItemGroup>
+    <Reference Include="MiniProfiler.Minimal">
+      <HintPath>..\EnterpriseLibrary\MiniProfiler.Minimal.dll</HintPath>
+    </Reference>
     <Reference Condition="'$(TargetFramework)'!='netstandard2.0'" Include="System.Transactions"> </Reference>
     <Reference Include="EDIFACT2XML">
       <HintPath>..\EnterpriseLibrary\EDIFACT2XML.dll</HintPath>

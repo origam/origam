@@ -126,7 +126,7 @@ public class DataReaderXPathNavigator : XPathNavigator
             else if(fieldType == typeof(DateTime))
             {
                 return XmlConvert.ToString(
-                    dataReader.GetDateTime(position - 1));
+                    dataReader.GetDateTime(position - 1), XmlDateTimeSerializationMode.RoundtripKind);
             }
             else
             {

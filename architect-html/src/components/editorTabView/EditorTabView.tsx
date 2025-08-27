@@ -16,12 +16,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-import React, { useContext, useEffect, useMemo } from 'react';
-import S from './EditorTabView.module.scss';
+
+import { RootStoreContext } from '@/main.tsx';
+import S from '@components/editorTabView/EditorTabView.module.scss';
+import { TabHeader } from '@components/editorTabView/TabHeader.tsx';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from 'src/main.tsx';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { TabHeader } from 'src/components/editorTabView/TabHeader.tsx';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 export const EditorTabView: React.FC = observer(() => {
   const rootStore = useContext(RootStoreContext);

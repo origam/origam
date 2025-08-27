@@ -241,6 +241,17 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MiniProfiler.AspNetCore">
+      <HintPath>..\EnterpriseLibrary\MiniProfiler.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler.AspNetCore.Mvc">
+      <HintPath>..\EnterpriseLibrary\MiniProfiler.AspNetCore.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler.Shared">
+      <HintPath>..\EnterpriseLibrary\MiniProfiler.Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties />

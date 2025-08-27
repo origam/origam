@@ -57,25 +57,19 @@ cd /home/origam/HTML5
 
 print_title "Start server and wait for database to be available"
 ./startServer.sh
-echo "Trying to connect to SQL server..."
-utils_result=$(dotnet origam-utils.dll test-db --attempts 10 --delay 5000 --sql-command "select 1")
-if [[ "$utils_result" != True ]]; then
-  print_error "Initial database connection test failed, SQL server is not responding"
-  exit 1
-else
-  echo "Initial database connection test passed, SQL server responds"
-fi 
+
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "Waiting for Origam.Server.dll to initialize DB..."
-utils_result=$(dotnet origam-utils.dll test-db --attempts 5 --delay 5000 --sql-command "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
-if [[ "$utils_result" != True ]]; then
-  print_error "DB initialization timed out"
+dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
+return_code=$?
+if [[ "$return_code" != 0 ]]; then
+  print_error "DB initialization failed"
   echo "Origam.Server.dll output:"
   print_file_contents origam-output.txt
   exit 1
 else
-  echo "DB initialized"
+  echo " DB initialized"
 fi
 
 print_title "Run frontend integration tests"
@@ -95,7 +89,16 @@ print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
 echo
 cd /home/origam/HTML5_TESTS
-cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+if [[ ${DatabaseType} == mssql ]]; then
+  cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+fi
+if [[ ${DatabaseType} == postgresql ]]; then
+  cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
+fi
+if [[ ! -f "OrigamSettings.config" ]]; then
+  echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
+  exit 1
+fi
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
 sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config

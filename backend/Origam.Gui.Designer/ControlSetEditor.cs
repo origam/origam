@@ -543,7 +543,7 @@ public class ControlSetEditor : AbstractEditor
 			throw new ArgumentException("Parameter is null or inner parameters are null", "cntrlSet");
 	
 		Type type;
-		Assembly asm = Assembly.LoadWithPartialName(cntrlSet.ControlItem.ControlNamespace);
+		Assembly asm = Assembly.Load(cntrlSet.ControlItem.ControlNamespace);
 		type = asm.GetType(cntrlSet.ControlItem.ControlType);
 		if(type==null)
 			throw new NullReferenceException("Unsupported type:" + cntrlSet.ControlItem.ControlType);
@@ -615,7 +615,7 @@ public class ControlSetEditor : AbstractEditor
 			throw new NullReferenceException("Component wasnt proprerly generated and will be null");
 		}
 		IRootDesigner rootDesigner = (IRootDesigner)_host.GetDesigner(_form);
-		_designView = (Control)rootDesigner.GetView(ViewTechnology.WindowsForms);
+		_designView = (Control)rootDesigner.GetView(ViewTechnology.Default);
 		_designView.Dock = DockStyle.Fill;
 		designSurfacePanel.Controls.Add(_designView);
 		// we need to subscribe to selection changed events so 
@@ -683,10 +683,13 @@ public class ControlSetEditor : AbstractEditor
 				}
 			}
 #if DEBUG
-			string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
-			string path = Path.Combine("C:\\Repos\\origam\\backend\\Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
+			string architectExePath = Assembly.GetExecutingAssembly().Location;
+			string architectBinDir = Path.GetDirectoryName(architectExePath)!;
+			string backendDir = Path.GetFullPath(Path.Combine(architectBinDir, "..", "..", ".."));
+			string path = Path.Combine(backendDir, "Origam.Architect.Server\\Controls",cntrl.GetType().Name + ".cs" );
 			if (!File.Exists(path))
 			{
+				string newClass = ClassGenerator.GenerateClass(cntrl.GetType().Name, properties);
 				File.WriteAllText(path, newClass);
 			}
 #endif

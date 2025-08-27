@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect } from 'react';
-import S from 'src/components/modelTree/ModelTree.module.scss';
-import { Menu, Item, useContextMenu, TriggerEvent, Separator, Submenu } from 'react-contexify';
-import 'react-contexify/ReactContexify.css';
-import { TreeNode } from 'src/components/modelTree/TreeNode.ts';
-import { RootStoreContext, T } from 'src/main.tsx';
+import { RootStoreContext, T } from '@/main.tsx';
+import { Icon } from '@components/icon/Icon.tsx';
+import S from '@components/modelTree/ModelTree.module.scss';
+import { TreeNode } from '@components/modelTree/TreeNode.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import { runInFlowWithHandler } from 'src/errorHandling/runInFlowWithHandler.ts';
-import { Icon } from 'src/components/icon/Icon.tsx';
+import React, { useContext, useEffect } from 'react';
+import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
+import 'react-contexify/ReactContexify.css';
 
 const ModelTreeNode: React.FC<{
   node: TreeNode;

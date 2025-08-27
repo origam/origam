@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext } from '@/main.tsx';
+import S from '@dialogs/DialogStack.module.scss';
+import { IDialogInfo } from '@dialogs/types.ts';
+import { observer } from 'mobx-react-lite';
 import React, { useCallback, useContext } from 'react';
 import { createPortal } from 'react-dom';
-import S from './DialogStack.module.scss';
-import { observer } from 'mobx-react-lite';
-import { RootStoreContext } from 'src/main.tsx';
-import { IDialogInfo } from 'src/dialog/types.ts';
 
 export const ApplicationDialogStack: React.FC = observer(() => {
   const dialogStack = useContext(RootStoreContext).dialogStack;

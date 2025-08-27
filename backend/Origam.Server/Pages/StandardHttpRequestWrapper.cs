@@ -60,10 +60,10 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
     public string UserAgent => httpContext.Request.GetUserAgent();
     public string Browser 
-        => clientInfo != null ? clientInfo.UserAgent.Family : "";
+        => clientInfo != null ? clientInfo.UA.Family : "";
     public string BrowserVersion 
         => clientInfo != null 
-            ? clientInfo.UserAgent.Major + "." + clientInfo.UserAgent.Minor
+            ? clientInfo.UA.Major + "." + clientInfo.UA.Minor
             : "";
     public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
     public string UserHostName => request.Host.Value;

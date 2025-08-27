@@ -80,11 +80,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.BaseCompon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C4C84F2C-1006-4323-BA1C-98C5639EC39B}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
 		DesignerOrigam.vsd = DesignerOrigam.vsd
 		Local.testsettings = Local.testsettings
 		OrigamArchitect-net2.vsmdi = OrigamArchitect-net2.vsmdi
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.PrintIt", "Origam.BI.PrintIt\Origam.BI.PrintIt.csproj", "{65CCC71C-287F-47C2-9B37-F1ECEFADC327}"
@@ -174,8 +174,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrigamSetup", "OrigamSetup"
 	ProjectSection(SolutionItems) = preProject
 		OrigamSetup\ArchitectSetup.wxs = OrigamSetup\ArchitectSetup.wxs
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Docker", "Origam.Docker\Origam.Docker.csproj", "{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.BI.Excel", "Origam.BI.Excel\Origam.BI.Excel.csproj", "{1D907319-08A1-4355-98CE-5E03EDA31556}"
 EndProject
@@ -1419,26 +1417,6 @@ Global
 		{17ADA218-6B4F-4A45-9499-54496D2FFB27}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{17ADA218-6B4F-4A45-9499-54496D2FFB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17ADA218-6B4F-4A45-9499-54496D2FFB27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Architect Server|Any CPU.ActiveCfg = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Architect Server|Any CPU.Build.0 = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Architect|Any CPU.Build.0 = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Client|Any CPU.Build.0 = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Server|Any CPU.Build.0 = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D907319-08A1-4355-98CE-5E03EDA31556}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{1D907319-08A1-4355-98CE-5E03EDA31556}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{1D907319-08A1-4355-98CE-5E03EDA31556}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
@@ -1465,6 +1443,7 @@ Global
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
 		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
+		{911951B0-9953-4C69-8FDF-4C0A13621860}.Release Architect Server|Any CPU.ActiveCfg = Release Server|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Debug Architect Server|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Debug Architect Server|Any CPU.Build.0 = Debug|Any CPU
 		{4E9545BA-B4EF-440E-9E03-723C3879C58D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1501,6 +1480,7 @@ Global
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
+		{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}.Release Architect Server|Any CPU.ActiveCfg = Release Architect Server|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

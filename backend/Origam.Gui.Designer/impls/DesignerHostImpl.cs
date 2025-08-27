@@ -88,7 +88,7 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 		// append to the parentProvider...
 		serviceContainer = new ServiceContainer(parentProvider);
 		// site name to ISite mapping
-		sites = new Hashtable(CaseInsensitiveHashCodeProvider.Default, CaseInsensitiveComparer.Default);
+		sites = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
 		// component to designer mapping
 		designers = new Hashtable();
 		// list of extender providers

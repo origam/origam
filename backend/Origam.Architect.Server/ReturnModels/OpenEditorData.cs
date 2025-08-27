@@ -33,14 +33,20 @@ public class OpenEditorData
     public string ParentNodeId { get; }
     public bool IsDirty { get; }
 
-    public OpenEditorData(EditorId editorId, TreeNode node, 
-        object data, bool isPersisted, string parentNodeId = null,
-        bool isDirty = false)
+    public OpenEditorData(
+        EditorId editorId,
+        TreeNode node,
+        object data,
+        bool isPersisted,
+        string parentNodeId = null,
+        bool isDirty = false
+    )
     {
         EditorId = editorId.ToString();
-        EditorType = editorId.Type == Services.EditorType.Default
-            ? node.DefaultEditor.ToString()
-            : editorId.Type.ToString();
+        EditorType =
+            editorId.Type == Services.EditorType.Default
+                ? node.DefaultEditor.ToString()
+                : editorId.Type.ToString();
         Node = node;
         Data = data;
         IsPersisted = isPersisted;

@@ -74,6 +74,7 @@ updateEnvironmentRoot.sh \
 /home/origam/HTML5/
 COPY --chown=origam:origam HTML5_TESTS \
 _OrigamSettings.wf.mssql.template \
+_OrigamSettings.wf.pgsql.template \
 log4net.config \
 /home/origam/HTML5_TESTS/
 COPY --chown=origam:origam tests_e2e /home/origam/HTML5/tests_e2e/
