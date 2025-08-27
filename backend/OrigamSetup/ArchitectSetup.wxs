@@ -70,6 +70,18 @@
               <File Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL" Name="System.Diagnostics.DiagnosticSource.dll" Source="source\System.Diagnostics.DiagnosticSource.dll">
               </File>
             </Component>
+            <Component Id="MINIPROFILER.ASPNETCORE.DLL" DiskId="1" Guid="6135B499-AF3C-4551-BA38-1CAF5FE3F563">
+              <File Id="MINIPROFILER.ASPNETCORE.DLL" Name="MiniProfiler.AspNetCore.dll" Source="source\MiniProfiler.AspNetCore.dll" />
+            </Component>
+            <Component Id="MINIPROFILER.ASPNETCORE.MVC.DLL" DiskId="1" Guid="63CFCE32-4412-4196-920E-F9AACCB1FA73">
+              <File Id="MINIPROFILER.ASPNETCORE.MVC.DLL" Name="MiniProfiler.AspNetCore.Mvc.dll" Source="source\MiniProfiler.AspNetCore.Mvc.dll" />
+            </Component>
+            <Component Id="MINIPROFILER.MINIMAL.DLL" DiskId="1" Guid="AE5210A9-0410-42A1-8B7C-AE18252253DF">
+              <File Id="MINIPROFILER.MINIMAL.DLL" Name="MiniProfiler.Minimal.dll" Source="source\MiniProfiler.Minimal.dll" />
+            </Component>
+            <Component Id="MINIPROFILER.SHARED.DLL" DiskId="1" Guid="E28A0CAB-56E0-4D48-888E-C0C4F9408CAA">
+              <File Id="MINIPROFILER.SHARED.DLL" Name="MiniProfiler.Shared.dll" Source="source\MiniProfiler.Shared.dll" />
+            </Component>
             <Component Id="ORIGAM.EXCEL.DLL" DiskId="1" Guid="32F0928A-4B26-4A4B-AB80-3564E8AF13A8">
               <File Id="ORIGAM.EXCEL.DLL" Name="Origam.Excel.dll" Source="source\Origam.Excel.dll">
               </File>
@@ -651,6 +663,10 @@
 	  <ComponentRef Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
+      <ComponentRef Id="MINIPROFILER.ASPNETCORE.DLL"></ComponentRef>
+      <ComponentRef Id="MINIPROFILER.ASPNETCORE.MVC.DLL"></ComponentRef>
+      <ComponentRef Id="MINIPROFILER.MINIMAL.DLL"></ComponentRef>
+      <ComponentRef Id="MINIPROFILER.SHARED.DLL"></ComponentRef>
       <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
       <ComponentRef Id="AEROWIZARD.DLL">
       </ComponentRef>
