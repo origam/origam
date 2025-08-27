@@ -13,6 +13,14 @@
     dv:version="1.5.7">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___03ca4a64-70b7-456d-b522-75cbf46b5e92.txt"
+      x:id="03ca4a64-70b7-456d-b522-75cbf46b5e92"
+      asi:name="00040_Insert_Values_WorkflowStates"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___2cfd4705-82ff-4c1d-8289-443d48c76180.txt"
       x:id="2cfd4705-82ff-4c1d-8289-443d48c76180"
