@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 namespace Origam.Server.Model.DeepLink;
+
 public class DeepLinkCategoryResult
 {
     public string DeepLinkName { get; set; }

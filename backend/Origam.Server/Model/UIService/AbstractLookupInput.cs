@@ -28,6 +28,7 @@ namespace Origam.Server.Model.UIService;
 
 public abstract class AbstractLookupInput
 {
-    [RequiredNonDefault] public Guid LookupId { get; set; }
+    [RequiredNonDefault]
+    public Guid LookupId { get; set; }
     public Guid MenuId { get; set; } = Guid.Empty;
 }

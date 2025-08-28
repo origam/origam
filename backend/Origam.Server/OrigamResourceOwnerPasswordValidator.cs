@@ -31,9 +31,11 @@ class OrigamResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
 {
     private readonly UserManager<IOrigamUser> userManager;
     private readonly SignInManager<IOrigamUser> signInManager;
-    
-    public OrigamResourceOwnerPasswordValidator(SignInManager<IOrigamUser> signInManager,
-        UserManager<IOrigamUser> userManager)
+
+    public OrigamResourceOwnerPasswordValidator(
+        SignInManager<IOrigamUser> signInManager,
+        UserManager<IOrigamUser> userManager
+    )
     {
         this.signInManager = signInManager;
         this.userManager = userManager;
@@ -45,24 +47,31 @@ class OrigamResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
         if (user == null)
         {
             context.Result = new GrantValidationResult(
-                TokenRequestErrors.UnauthorizedClient, "User not found");
+                TokenRequestErrors.UnauthorizedClient,
+                "User not found"
+            );
             return;
         }
         if (!await userManager.IsEmailConfirmedAsync(user))
         {
             context.Result = new GrantValidationResult(
-                TokenRequestErrors.UnauthorizedClient, "Mail not confirmed");
-            return; 
+                TokenRequestErrors.UnauthorizedClient,
+                "Mail not confirmed"
+            );
+            return;
         }
         SignInResult result = await signInManager.PasswordSignInAsync(
-            userName: context.UserName, 
-            password: context.Password, 
+            userName: context.UserName,
+            password: context.Password,
             isPersistent: false,
-            lockoutOnFailure: true);
+            lockoutOnFailure: true
+        );
         if (result.Succeeded)
         {
             context.Result = new GrantValidationResult(
-                user.BusinessPartnerId, GrantType.ResourceOwnerPassword);
+                user.BusinessPartnerId,
+                GrantType.ResourceOwnerPassword
+            );
         }
         else
         {
@@ -80,8 +89,9 @@ class OrigamResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
                 errorDescription = "This user requires two factor authentication";
             }
             context.Result = new GrantValidationResult(
-                error:TokenRequestErrors.UnauthorizedClient,
-                errorDescription: errorDescription);
+                error: TokenRequestErrors.UnauthorizedClient,
+                errorDescription: errorDescription
+            );
         }
     }
 }

@@ -24,21 +24,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Extensions.Configuration;
 
 namespace Origam.Server.Configuration;
+
 public class PasswordConfiguration
 {
     public bool RequireDigit { get; }
-    public int RequiredLength { get; } 
-    public bool RequireNonAlphanumeric { get;} 
-    public bool RequireUppercase { get;} 
-    public bool RequireLowercase { get; } 
+    public int RequiredLength { get; }
+    public bool RequireNonAlphanumeric { get; }
+    public bool RequireUppercase { get; }
+    public bool RequireLowercase { get; }
+
     public PasswordConfiguration(IConfiguration configuration)
     {
         IConfigurationSection passwordSection = configuration.GetSection("PasswordConfig");
-        
+
         RequireDigit = passwordSection.GetValue("RequireDigit", true);
-        RequiredLength =  passwordSection.GetValue("RequiredLength", 10);
-        RequireNonAlphanumeric =  passwordSection.GetValue("RequireNonAlphanumeric", true);
-        RequireUppercase =  passwordSection.GetValue("RequireUppercase", true);
-        RequireLowercase =  passwordSection.GetValue("RequireLowercase", true);
+        RequiredLength = passwordSection.GetValue("RequiredLength", 10);
+        RequireNonAlphanumeric = passwordSection.GetValue("RequireNonAlphanumeric", true);
+        RequireUppercase = passwordSection.GetValue("RequireUppercase", true);
+        RequireLowercase = passwordSection.GetValue("RequireLowercase", true);
     }
 }

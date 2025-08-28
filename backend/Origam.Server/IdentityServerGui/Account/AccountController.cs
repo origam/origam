@@ -1,7 +1,6 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
 using System;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +8,7 @@ using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -30,6 +30,7 @@ using Origam.Server.Configuration;
 using Origam.Server.IdentityServerGui.Home;
 
 namespace Origam.Server.IdentityServerGui.Account;
+
 [SecurityHeaders]
 [AllowAnonymous]
 [Route("/account/[action]")]
@@ -49,7 +50,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     private readonly ILogger<UserManager<IOrigamUser>> _logger;
     private readonly IdentityGuiConfig _configOptions;
     private readonly RequestLocalizationOptions _requestLocalizationOptions;
-    private readonly ResourceManager resourceManager = new ResourceManager("Origam.Server.SharedResources", Assembly.GetExecutingAssembly());
+    private readonly ResourceManager resourceManager = new ResourceManager(
+        "Origam.Server.SharedResources",
+        Assembly.GetExecutingAssembly()
+    );
+
     public AccountController(
         UserManager<IOrigamUser> userManager,
         SignInManager<IOrigamUser> signInManager,
@@ -58,11 +63,14 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         IAuthenticationSchemeProvider schemeProvider,
         IEventService events,
         IMailService mailService,
-        IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
-        IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
+        IOptions<UserConfig> userConfig,
+        IStringLocalizer<SharedResources> localizer,
+        IPersistedGrantStore persistedGrantStore,
+        SessionObjects sessionObjects,
         IOptions<RequestLocalizationOptions> requestLocalizationOptions,
         IOptions<IdentityGuiConfig> configOptions,
-        ILogger<UserManager<IOrigamUser>> logger)
+        ILogger<UserManager<IOrigamUser>> logger
+    )
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -79,6 +87,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         _userConfig = userConfig.Value;
         _requestLocalizationOptions = requestLocalizationOptions.Value;
     }
+
     /// <summary>
     /// Entry point into the login workflow
     /// </summary>
@@ -90,11 +99,15 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         if (vm.IsExternalLoginOnly)
         {
             // we only have one option for logging in and it's an external provider
-            return RedirectToAction("Challenge", "External", new { provider = vm.ExternalLoginScheme, returnUrl });
+            return RedirectToAction(
+                "Challenge",
+                "External",
+                new { provider = vm.ExternalLoginScheme, returnUrl }
+            );
         }
         return View(vm);
-    }       
-    
+    }
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ForgotPassword(string returnUrl = null)
@@ -105,7 +118,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         var model = new ForgotPasswordViewModel
         {
-            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl)
+            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl),
         };
         return View(model);
     }
@@ -121,7 +134,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         Match match = Regex.Match(decodedUrl, pattern);
         return match.Success ? match.Groups[1].Value : "/";
     }
-    
+
     // POST: /Account/ForgotPassword
     [HttpPost]
     [AllowAnonymous]
@@ -138,22 +151,31 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             if (user == null)
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                _logger.LogWarning("ForgotPassword - " +model.Email + " User does not exist.");
+                _logger.LogWarning("ForgotPassword - " + model.Email + " User does not exist.");
                 return View("ForgotPasswordConfirmation");
             }
             // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
             // Send an email with this link
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.BusinessPartnerId, code = passwordResetToken }, protocol: HttpContext.Request.Scheme);
-            _mailService.SendPasswordResetToken(user, passwordResetToken, 
-                model.ReturnUrl, tokenValidityHours: 24);
+            var callbackUrl = Url.Action(
+                "ResetPassword",
+                "Account",
+                new { userId = user.BusinessPartnerId, code = passwordResetToken },
+                protocol: HttpContext.Request.Scheme
+            );
+            _mailService.SendPasswordResetToken(
+                user,
+                passwordResetToken,
+                model.ReturnUrl,
+                tokenValidityHours: 24
+            );
             _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
             return View("ForgotPasswordConfirmation");
         }
         // If we got this far, something failed, redisplay form
         return View(model);
     }
-    
+
     //
     // GET: /Account/Register
     [HttpGet]
@@ -167,6 +189,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
+
     //
     // POST: /Account/Register
     [HttpPost]
@@ -186,7 +209,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 Email = model.Email,
                 FirstName = model.FirstName,
                 Name = model.Name,
-                RoleId = _userConfig.NewUserRoleId
+                RoleId = _userConfig.NewUserRoleId,
             };
             IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
             user = await _userManager.FindByNameAsync(user.UserName);
@@ -199,8 +222,8 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             AddErrors(result);
         }
         return View(model);
-    } 
-    
+    }
+
     //
     // GET: /Account/RegisterInitialUser
     [HttpGet]
@@ -213,6 +236,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View();
     }
+
     //
     // POST: /Account/RegisterInitialUser
     [HttpPost]
@@ -224,7 +248,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
         }
-        
+
         if (ModelState.IsValid)
         {
             IOrigamUser user = new User
@@ -234,14 +258,16 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 FirstName = model.FirstName,
                 Name = model.Name,
                 RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE,
-                SecurityStamp = ""
+                SecurityStamp = "",
             };
             IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
             user = await _userManager.FindByNameAsync(user.UserName);
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(
+                    user
+                );
                 await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
                 UserTools.SetInitialSetupComplete();
                 return Redirect("/");
@@ -250,7 +276,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View(model);
     }
-    
+
     // GET: /Account/ConfirmEmail
     [HttpGet]
     [AllowAnonymous]
@@ -276,15 +302,12 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             return View("EmailConfirmation");
         }
-        else
-        {
-            string errors = string.Join("\n",
-                result.Errors.Select(error => error.Description));
-            _logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
-            return View("Error");
-        }
+
+        string errors = string.Join("\n", result.Errors.Select(error => error.Description));
+        _logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
+        return View("Error");
     }
-            
+
     // GET: /Account/RegisterConfirmation
     [HttpGet]
     [AllowAnonymous]
@@ -292,12 +315,15 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         return View();
     }
-    
+
     // GET: /Account/ResetPassword
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(
-        string code = null, string mail = null, string returnUrl = null)
+        string code = null,
+        string mail = null,
+        string returnUrl = null
+    )
     {
         if (!_configOptions.AllowPasswordReset)
         {
@@ -316,13 +342,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         var model = new ResetPasswordViewModel
         {
             Email = mail,
-            ReturnUrl = string.IsNullOrEmpty(returnUrl)
-                ? null
-                : Uri.UnescapeDataString(returnUrl)
+            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
         };
-        return  View(model);
+        return View(model);
     }
-    
+
     // POST: /Account/ResetPassword
     [HttpPost]
     [AllowAnonymous]
@@ -342,29 +366,31 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             // Don't reveal that the user does not exist
             return RedirectToAction(
-                nameof(ResetPasswordConfirmation), 
-                controllerName:"Account",
+                nameof(ResetPasswordConfirmation),
+                controllerName: "Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
-                });
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                }
+            );
         }
         user.EmailConfirmed = true;
         var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
         if (result.Succeeded)
         {
             return RedirectToAction(
-                nameof(ResetPasswordConfirmation), 
-                controllerName:"Account",
+                nameof(ResetPasswordConfirmation),
+                controllerName: "Account",
                 routeValues: new
                 {
-                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login")
-                });
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                }
+            );
         }
         AddErrors(result);
         return View();
     }
-    
+
     // GET: /Account/ResetPasswordConfirmation
     [HttpGet]
     [AllowAnonymous]
@@ -372,13 +398,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         var model = new ResetPasswordConfirmationViewModel
         {
-            ReturnUrl = string.IsNullOrEmpty(returnUrl)
-                ? null
-                : Uri.UnescapeDataString(returnUrl)
+            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
         };
         return View(model);
     }
-    
+
     /// <summary>
     /// Handle postback from username/password login
     /// </summary>
@@ -393,7 +417,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             if (context != null)
             {
-                // if the user cancels, send a result back into IdentityServer as if they 
+                // if the user cancels, send a result back into IdentityServer as if they
                 // denied the consent (even if this client does not require consent).
                 // this will send back an access denied OIDC error response to the client.
                 await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
@@ -406,11 +430,9 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 }
                 return Redirect(model.ReturnUrl);
             }
-            else
-            {
-                // since we don't have a valid context, then we just go back to the home page
-                return Redirect("~/");
-            }
+
+            // since we don't have a valid context, then we just go back to the home page
+            return Redirect("~/");
         }
         if (ModelState.IsValid)
         {
@@ -419,11 +441,23 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             {
                 return View("EmailNotConfirmed");
             }
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: true);
+            var result = await _signInManager.PasswordSignInAsync(
+                model.Username,
+                model.Password,
+                false,
+                lockoutOnFailure: true
+            );
             if (result.Succeeded && user != null)
             {
-                await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
-                
+                await _events.RaiseAsync(
+                    new UserLoginSuccessEvent(
+                        user.UserName,
+                        user.UserName,
+                        user.Name,
+                        clientId: context?.Client.ClientId
+                    )
+                );
+
                 if (context != null)
                 {
                     if (context.IsNativeClient())
@@ -440,43 +474,65 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                else if (string.IsNullOrEmpty(model.ReturnUrl))
+
+                if (string.IsNullOrEmpty(model.ReturnUrl))
                 {
                     return Redirect("~/");
                 }
-                else
-                {
-                    // user might have clicked on a malicious link - should be logged
-                    throw new Exception("invalid return URL");
-                }
+
+                // user might have clicked on a malicious link - should be logged
+                throw new Exception("invalid return URL");
             }
-            else if (result.IsLockedOut)
+
+            if (result.IsLockedOut)
             {
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(
+                    new UserLoginFailureEvent(
+                        model.Username,
+                        "invalid credentials",
+                        clientId: context?.Client.ClientId
+                    )
+                );
                 ModelState.AddModelError(string.Empty, _localizer["UserLockedOut"]);
             }
             else
             {
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(
+                    new UserLoginFailureEvent(
+                        model.Username,
+                        "invalid credentials",
+                        clientId: context?.Client.ClientId
+                    )
+                );
                 ModelState.AddModelError(string.Empty, _localizer["InvalidLogin"]);
             }
             if (result.RequiresTwoFactor)
             {
-                return RedirectToAction(nameof(LoginTwoStep), new { user.UserName, model.ReturnUrl });
+                return RedirectToAction(
+                    nameof(LoginTwoStep),
+                    new { user.UserName, model.ReturnUrl }
+                );
             }
         }
         // something went wrong, show form with error
         var vm = await BuildLoginViewModelAsync(model);
         return View(vm);
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> LoginTwoStep(string userName, bool rememberLogin, string returnUrl = null)
+    public async Task<IActionResult> LoginTwoStep(
+        string userName,
+        bool rememberLogin,
+        string returnUrl = null
+    )
     {
         var user = await _userManager.FindByNameAsync(userName);
         if (user == null)
         {
-            return View("Error", new ErrorViewModel(resourceManager.GetString("ErrorUserNotFound")));
+            return View(
+                "Error",
+                new ErrorViewModel(resourceManager.GetString("ErrorUserNotFound"))
+            );
         }
         if (!await _userManager.IsEmailConfirmedAsync(user))
         {
@@ -493,7 +549,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         ViewData["RememberLogin"] = rememberLogin;
         return View();
     }
-    
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginTwoStep(TwoStepModel twoStepModel)
@@ -503,12 +559,17 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             return View(twoStepModel);
         }
         var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-        if(user == null)
+        if (user == null)
         {
             return View("Error", new ErrorViewModel(_localizer["LoginFailedUnknown"]));
         }
-        var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, false, rememberClient: false);
-        if(result.Succeeded)
+        var result = await _signInManager.TwoFactorSignInAsync(
+            "Email",
+            twoStepModel.TwoFactorCode,
+            false,
+            rememberClient: false
+        );
+        if (result.Succeeded)
         {
             if (Url.IsLocalUrl(twoStepModel.ReturnUrl))
             {
@@ -520,19 +581,18 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             }
             throw new Exception("invalid return URL");
         }
-        else if(result.IsLockedOut)
+
+        if (result.IsLockedOut)
         {
             //Same logic as in the Login action
             ModelState.AddModelError("", resourceManager.GetString("UserLockedOut"));
             return View();
         }
-        else
-        {
-            ModelState.AddModelError("", resourceManager.GetString("LoginFailedWrongCode"));
-            return View();
-        }
+
+        ModelState.AddModelError("", resourceManager.GetString("LoginFailedWrongCode"));
+        return View();
     }
-    
+
     /// <summary>
     /// Show logout page
     /// </summary>
@@ -549,6 +609,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View(vm);
     }
+
     /// <summary>
     /// Handle logout page postback
     /// </summary>
@@ -563,16 +624,18 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             // delete local authentication cookie
             await _signInManager.SignOutAsync();
             _sessionObjects.UIService.Logout();
-            
+
             var subjectId = HttpContext.User.Identity.GetSubjectId();
             var filter = new PersistedGrantFilter
             {
                 SubjectId = subjectId,
-                ClientId = vm.ClientName
+                ClientId = vm.ClientName,
             };
             await _persistedGrantStore.RemoveAllAsync(filter);
             // raise the logout event
-            await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            await _events.RaiseAsync(
+                new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName())
+            );
         }
         // check if we need to trigger sign-out at an upstream identity provider
         if (vm.TriggerExternalSignout)
@@ -582,15 +645,20 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             // complete our single sign-out processing.
             string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
             // this triggers a redirect to the external provider for sign-out
-            return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+            return SignOut(
+                new AuthenticationProperties { RedirectUri = url },
+                vm.ExternalAuthenticationScheme
+            );
         }
         return View("LoggedOut", vm);
     }
+
     [HttpGet]
     public IActionResult AccessDenied()
     {
         return View();
     }
+
     /*****************************************/
     /* helper APIs for the AccountController */
     /*****************************************/
@@ -599,7 +667,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
-            var local = context.IdP == IdentityServer4.IdentityServerConstants.LocalIdentityProvider;
+            var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
             // this is meant to short circuit the UI and only trigger the one external IdP
             var vm = new LoginViewModel
             {
@@ -609,20 +677,30 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             };
             if (!local)
             {
-                vm.ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } };
+                vm.ExternalProviders = new[]
+                {
+                    new ExternalProvider { AuthenticationScheme = context.IdP },
+                };
             }
             return vm;
         }
         var schemes = await _schemeProvider.GetAllSchemesAsync();
         var providers = schemes
-            .Where(x => x.DisplayName != null ||
-                        (x.Name.Equals(AccountOptions.WindowsAuthenticationSchemeName, StringComparison.OrdinalIgnoreCase))
+            .Where(x =>
+                x.DisplayName != null
+                || (
+                    x.Name.Equals(
+                        AccountOptions.WindowsAuthenticationSchemeName,
+                        StringComparison.OrdinalIgnoreCase
+                    )
+                )
             )
             .Select(x => new ExternalProvider
             {
                 DisplayName = x.DisplayName,
-                AuthenticationScheme = x.Name
-            }).ToList();
+                AuthenticationScheme = x.Name,
+            })
+            .ToList();
         var allowLocal = true;
         if (context?.Client.ClientId != null)
         {
@@ -630,9 +708,18 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             if (client != null)
             {
                 allowLocal = client.EnableLocalLogin;
-                if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
+                if (
+                    client.IdentityProviderRestrictions != null
+                    && client.IdentityProviderRestrictions.Any()
+                )
                 {
-                    providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
+                    providers = providers
+                        .Where(provider =>
+                            client.IdentityProviderRestrictions.Contains(
+                                provider.AuthenticationScheme
+                            )
+                        )
+                        .ToList();
                 }
             }
         }
@@ -641,18 +728,24 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
             ReturnUrl = returnUrl,
             Username = context?.LoginHint,
-            ExternalProviders = providers.ToArray()
+            ExternalProviders = providers.ToArray(),
         };
     }
+
     private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
     {
         var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
         vm.Username = model.Username;
         return vm;
     }
+
     private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
     {
-        var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
+        var vm = new LogoutViewModel
+        {
+            LogoutId = logoutId,
+            ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt,
+        };
         if (User?.Identity.IsAuthenticated != true)
         {
             // if the user is not authenticated, then just show logged out page
@@ -670,6 +763,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         // is automatically signed out by another malicious web page.
         return vm;
     }
+
     private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
     {
         // get context information (client name, post logout redirect URI and iframe for federated signout)
@@ -678,14 +772,16 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
             PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
-            ClientName = string.IsNullOrEmpty(logout?.ClientName) ? logout?.ClientId : logout?.ClientName,
+            ClientName = string.IsNullOrEmpty(logout?.ClientName)
+                ? logout?.ClientId
+                : logout?.ClientName,
             SignOutIframeUrl = logout?.SignOutIFrameUrl,
-            LogoutId = logoutId
+            LogoutId = logoutId,
         };
         if (User?.Identity.IsAuthenticated == true)
         {
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-            if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
             {
                 var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                 if (providerSupportsSignout)
@@ -703,7 +799,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return vm;
     }
-    
+
     private void AddErrors(IdentityResult result)
     {
         foreach (var error in result.Errors)
@@ -711,12 +807,13 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             ModelState.AddModelError(string.Empty, error.Description);
         }
     }
-    
+
     [HttpPost]
     public IActionResult SetLanguage(string culture, string returnUrl)
     {
-        var cultureProvider = _requestLocalizationOptions.RequestCultureProviders
-            .OfType<OrigamCookieRequestCultureProvider>().First();
+        var cultureProvider = _requestLocalizationOptions
+            .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
+            .First();
         Response.Cookies.Append(
             cultureProvider.CookieName,
             cultureProvider.MakeCookieValue(new RequestCulture(culture)),

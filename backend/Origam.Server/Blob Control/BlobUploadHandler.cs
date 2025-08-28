@@ -19,14 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Png;
 
-public class BlobUploadHandler 
+public class BlobUploadHandler
 {
     public static byte[] FixedSizeBytes(Image image, int width, int height)
     {
@@ -35,6 +36,7 @@ public class BlobUploadHandler
         thumbnail.SaveAsPng(memoryStream, new PngEncoder());
         return memoryStream.ToArray();
     }
+
     private static Image FixedSize(Image sourceImage, int width, int height)
     {
         int sourceWidth = sourceImage.Width;
@@ -42,29 +44,24 @@ public class BlobUploadHandler
         int destX = 0;
         int destY = 0;
         float nPercent;
-        float nPercentW = (float)width / (float)sourceWidth;
-        float nPercentH = (float)height / (float)sourceHeight;
+        float nPercentW = width / (float)sourceWidth;
+        float nPercentH = height / (float)sourceHeight;
         if (nPercentH < nPercentW)
         {
             nPercent = nPercentH;
-            destX = System.Convert.ToInt16((width -
-                (sourceWidth * nPercent)) / 2);
+            destX = Convert.ToInt16((width - (sourceWidth * nPercent)) / 2);
         }
         else
         {
             nPercent = nPercentW;
-            destY = System.Convert.ToInt16((height -
-                (sourceHeight * nPercent)) / 2);
+            destY = Convert.ToInt16((height - (sourceHeight * nPercent)) / 2);
         }
         int destWidth = (int)(sourceWidth * nPercent);
         int destHeight = (int)(sourceHeight * nPercent);
         Image backgroundImage = new Image<Rgba32>(width, height);
-        backgroundImage.Mutate(
-            x => x.Fill(Color.Black));
-        using Image resizedImage = sourceImage
-            .Clone(ctx => ctx.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(
-            x => x.DrawImage(resizedImage, new Point(destX, destY), 1f));
+        backgroundImage.Mutate(x => x.Fill(Color.Black));
+        using Image resizedImage = sourceImage.Clone(ctx => ctx.Resize(destWidth, destHeight));
+        backgroundImage.Mutate(x => x.DrawImage(resizedImage, new Point(destX, destY), 1f));
         return backgroundImage;
     }
 }

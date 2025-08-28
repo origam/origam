@@ -44,6 +44,7 @@ using System;
 using System.Security.Principal;
 
 namespace Origam.Server;
+
 public class AttachmentUploadRequest
 {
     public AttachmentUploadRequest(object id, Guid entityId, IPrincipal principal)
@@ -52,6 +53,7 @@ public class AttachmentUploadRequest
         _userName = principal.Identity.Name;
         _entityId = entityId;
     }
+
     private object _id;
     public object Id
     {

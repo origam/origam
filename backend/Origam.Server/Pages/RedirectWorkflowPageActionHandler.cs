@@ -41,18 +41,21 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
-using Origam.Schema.WorkflowModel;
-using System.Web;
-using Origam.Rule;
 using System.Xml.XPath;
-using System.Xml;
-using Microsoft.AspNetCore.Http;
+using Origam.Rule;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
 namespace Origam.Server.Pages;
+
 class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
 {
-    public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
+    public override void Execute(
+        AbstractWorkflowPageAction action,
+        object workflowResult,
+        IRequestWrapper request,
+        IResponseWrapper response
+    )
     {
         RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
         RuleEngine re = RuleEngine.Create(new Hashtable(), null);
@@ -60,12 +63,22 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
         XPathNavigator nav = doc.Xml.CreateNavigator();
         string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
         Hashtable parameters = new Hashtable();
-        foreach (var actionParameter in action.ChildItemsByType<WorkflowPageActionParameter>(WorkflowPageActionParameter.CategoryConst))
+        foreach (
+            var actionParameter in action.ChildItemsByType<WorkflowPageActionParameter>(
+                WorkflowPageActionParameter.CategoryConst
+            )
+        )
         {
             string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
             parameters.Add(actionParameter.Name, parameterResult);
         }
-        string result = HttpTools.Instance.BuildUrl(url, parameters, false, "http", redirectAction.IsUrlEscaped);
+        string result = HttpTools.Instance.BuildUrl(
+            url,
+            parameters,
+            false,
+            "http",
+            redirectAction.IsUrlEscaped
+        );
         response.Redirect(result);
     }
 }

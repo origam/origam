@@ -19,15 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Net.Mail;
-using System.Threading.Tasks;
 using Origam.Security.Common;
 
 namespace Origam.Server;
+
 public interface IMailService
 {
     void SendPasswordResetToken(
-        IOrigamUser user, string token, string returnUrl, int tokenValidityHours);
+        IOrigamUser user,
+        string token,
+        string returnUrl,
+        int tokenValidityHours
+    );
     void SendNewUserToken(IOrigamUser user, string token);
     void SendMultiFactorAuthCode(IOrigamUser user, string token);
     void SendUserUnlockedMessage(IOrigamUser user);

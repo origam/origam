@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 
 namespace Origam.Server.Model.Blob;
+
 public class BlobUploadTokenInput : AmbiguousInput
 {
     public string Property { get; set; }

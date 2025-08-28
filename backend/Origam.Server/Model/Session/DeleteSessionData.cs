@@ -20,11 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Origam.Server.Model.Session;
+
 public class DeleteSessionData
 {
     public Guid SessionId { get; set; }

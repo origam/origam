@@ -25,16 +25,20 @@ using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Server;
 
 namespace Origam.Server;
+
 internal static class RequestTools
 {
-    internal static UIRequest GetActionRequest(Hashtable parameters, IList selectedItems, EntityUIAction action)
+    internal static UIRequest GetActionRequest(
+        Hashtable parameters,
+        IList selectedItems,
+        EntityUIAction action
+    )
     {
         UIRequest uir = GetActionRequestBase(parameters, action.Caption);
         Graphics menuIcon = null;
-        
+
         EntityWorkflowAction ewa = action as EntityWorkflowAction;
         EntityMenuAction ema = action as EntityMenuAction;
         EntityReportAction era = action as EntityReportAction;
@@ -99,9 +103,9 @@ internal static class RequestTools
                 }
                 if (dialogPanel != null)
                 {
-                    int height; int width;
-                    MenuXmlBuilder.GetSelectionDialogSize(
-                        dialogPanel, out width, out height);
+                    int height;
+                    int width;
+                    MenuXmlBuilder.GetSelectionDialogSize(dialogPanel, out width, out height);
                     uir.DialogHeight = height;
                     uir.DialogWidth = width;
                 }
@@ -114,9 +118,8 @@ internal static class RequestTools
         uir.Icon = MenuXmlBuilder.ResolveMenuIcon(uir.Type.ToString(), menuIcon);
         return uir;
     }
-    
-    private static UIRequest GetActionRequestBase(
-        Hashtable parameters, string caption)
+
+    private static UIRequest GetActionRequestBase(Hashtable parameters, string caption)
     {
         return new UIRequest
         {
@@ -126,19 +129,28 @@ internal static class RequestTools
             Caption = caption,
         };
     }
-    private static UIRequest GetWorkflowActionRequest(Hashtable parameters, Guid workflowId, string caption)
+
+    private static UIRequest GetWorkflowActionRequest(
+        Hashtable parameters,
+        Guid workflowId,
+        string caption
+    )
     {
         UIRequest uir = GetActionRequestBase(parameters, caption);
         uir.Type = UIRequestType.WorkflowReferenceMenuItem;
         uir.ObjectId = workflowId.ToString();
         return uir;
     }
-    private static UIRequest GetReportActionRequest(Hashtable parameters, Guid reportId, string caption)
+
+    private static UIRequest GetReportActionRequest(
+        Hashtable parameters,
+        Guid reportId,
+        string caption
+    )
     {
         UIRequest uir = GetActionRequestBase(parameters, caption);
         uir.Type = UIRequestType.ReportReferenceMenuItem;
         uir.ObjectId = reportId.ToString();
         return uir;
     }
-    
 }

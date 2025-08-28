@@ -1,10 +1,10 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
-@inject IHtmlLocalizer<SharedResources> SharedLocalizer
-@using IdentityServer4.Extensions
+﻿@using IdentityServer4.Extensions
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
 @using Origam
 @using Origam.Server
 @using Origam.Server.Configuration
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
 @inject IOptions<CustomAssetsConfig> ConfigOptions;
 @{
     string name = null;

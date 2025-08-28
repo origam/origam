@@ -21,14 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using CoreServices = Origam.Workbench.Services.CoreServices;
+using System.Reflection;
 using System.Threading;
+using log4net;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public static class SecurityTools
 {
-    internal static readonly log4net.ILog log =
-        log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    internal static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     public static UserProfile CurrentUserProfile()
     {
         try
@@ -37,29 +42,31 @@ public static class SecurityTools
         }
         catch (Exception ex)
         {
-            log.DebugFormat("Couldn't get user profile for current thread {0}",
-                Thread.CurrentThread.ManagedThreadId);
+            log.DebugFormat(
+                "Couldn't get user profile for current thread {0}",
+                Thread.CurrentThread.ManagedThreadId
+            );
             throw new LoginFailedException(ex.Message, ex);
         }
     }
-    public static void CreateUpdateOrigamOnlineUser(
-        string username, SessionStats stats)
+
+    public static void CreateUpdateOrigamOnlineUser(string username, SessionStats stats)
     {
         DataSet data = CoreServices.DataService.Instance.LoadData(
             new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
-            Guid.Empty, 
-            Guid.Empty, 
+            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
+            Guid.Empty,
+            Guid.Empty,
             null,
             "OrigamOnlineUser_par_UserName",
-            username);
+            username
+        );
         DataRow row;
         if (data.Tables[0].Rows.Count == 0)
         {
             row = data.Tables[0].NewRow();
             row["Id"] = Guid.NewGuid();
-            row["UserName"] 
-                = SecurityManager.CurrentPrincipal.Identity.Name;
+            row["UserName"] = SecurityManager.CurrentPrincipal.Identity.Name;
             row["LastOperationTimestamp"] = DateTime.Now;
             row["DirtyScreens"] = stats.DirtyScreens;
             row["RunningWorkflows"] = stats.RunningWorkflows;
@@ -76,9 +83,10 @@ public static class SecurityTools
             new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
             data,
             false,
-            null);
+            null
+        );
     }
-   
+
     public static void RemoveOrigamOnlineUser(string username)
     {
         DataSet data = CoreServices.DataService.Instance.LoadData(
@@ -88,7 +96,8 @@ public static class SecurityTools
             Guid.Empty,
             null,
             "OrigamOnlineUser_par_UserName",
-            username);
+            username
+        );
         if (data.Tables[0].Rows.Count != 0)
         {
             data.Tables[0].Rows[0].Delete();
@@ -97,6 +106,7 @@ public static class SecurityTools
             new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
             data,
             false,
-            null);
+            null
+        );
     }
 }

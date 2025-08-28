@@ -26,18 +26,31 @@ using System.Data;
 using Origam.DA;
 
 namespace Origam.Server;
+
 public static class DataTools
 {
     public static IDictionary<string, object> DatasetToDictionary(DataSet data)
     {
         return DatasetToDictionary(data, null, 0, null, null, null);
     }
+
     public static IDictionary<string, object> DatasetToDictionary(
-        DataSet data, IList<string> columns, int firstPageRecords, object firstRecordId, 
-        string dataListEntity, SessionStore ss)
+        DataSet data,
+        IList<string> columns,
+        int firstPageRecords,
+        object firstRecordId,
+        string dataListEntity,
+        SessionStore ss
+    )
     {
-        if (data == null) return null;
-        IDictionary<string, object> resultDataset = new Dictionary<string, object>(data.Tables.Count);
+        if (data == null)
+        {
+            return null;
+        }
+
+        IDictionary<string, object> resultDataset = new Dictionary<string, object>(
+            data.Tables.Count
+        );
         foreach (DataTable t in data.Tables)
         {
             object recordId = null;
@@ -45,9 +58,17 @@ public static class DataTools
             {
                 if (t.TableName == dataListEntity)
                 {
-                    resultDataset.Add(t.TableName, DatatableToDictionary(
-                        t, columns, firstPageRecords, firstRecordId, false, 
-                        ss));
+                    resultDataset.Add(
+                        t.TableName,
+                        DatatableToDictionary(
+                            t,
+                            columns,
+                            firstPageRecords,
+                            firstRecordId,
+                            false,
+                            ss
+                        )
+                    );
                 }
                 else
                 {
@@ -58,20 +79,31 @@ public static class DataTools
             }
             else
             {
-                resultDataset.Add(t.TableName, DatatableToDictionary(t, columns,
-                    firstPageRecords, recordId, false, ss));
+                resultDataset.Add(
+                    t.TableName,
+                    DatatableToDictionary(t, columns, firstPageRecords, recordId, false, ss)
+                );
             }
         }
         return resultDataset;
     }
+
     public static IDictionary<string, List<object>> DatatableToDictionary(
-        DataTable t, bool includeColumnNames)
+        DataTable t,
+        bool includeColumnNames
+    )
     {
         return DatatableToDictionary(t, null, 0, null, includeColumnNames, null);
     }
+
     public static IDictionary<string, List<object>> DatatableToDictionary(
-        DataTable t, IList<string> columns, int initialPageRecords, 
-        object initialRecordId, bool includeColumnNames, SessionStore ss)
+        DataTable t,
+        IList<string> columns,
+        int initialPageRecords,
+        object initialRecordId,
+        bool includeColumnNames,
+        SessionStore ss
+    )
     {
         bool primaryKeysOnly = (columns != null);
         var resultTable = new Dictionary<string, List<object>>(2);
@@ -85,7 +117,7 @@ public static class DataTools
         {
             resultTable.Add("columnNames", new List<object>(allColumnNames));
         }
-        if (primaryKeysOnly && ! primaryKeysOnlyFinal && ss != null)
+        if (primaryKeysOnly && !primaryKeysOnlyFinal && ss != null)
         {
             // less than initialPageRecords was loaded - we have to load up all
             // records because we will return all of them to the frontend at once
@@ -118,12 +150,14 @@ public static class DataTools
         resultTable.Add("data", data);
         if (primaryKeysOnlyFinal)
         {
-            resultTable.Add("initialPage", 
-                DataTableToList(t, initialPageRecords, initialRecordId,
-                ss));
+            resultTable.Add(
+                "initialPage",
+                DataTableToList(t, initialPageRecords, initialRecordId, ss)
+            );
         }
         return resultTable;
     }
+
     public static List<object> DataTableToList(DataTable t, string[] columnNames)
     {
         var data = new List<object>(t.Rows.Count);
@@ -136,8 +170,13 @@ public static class DataTools
         }
         return data;
     }
-    public static List<object> DataTableToList(DataTable t, int pageSize, 
-        object startRecordId, SessionStore ss)
+
+    public static List<object> DataTableToList(
+        DataTable t,
+        int pageSize,
+        object startRecordId,
+        SessionStore ss
+    )
     {
         var data = new List<object>(pageSize);
         string[] columnNames = SessionStore.GetColumnNames(t);
@@ -145,7 +184,9 @@ public static class DataTools
         int startRowIndex = 0;
         if (t.Rows.Count <= pageSize)
         {
-            throw new Exception("Total number of rows is less than the page size. Paged data should not be used for so small number of records.");
+            throw new Exception(
+                "Total number of rows is less than the page size. Paged data should not be used for so small number of records."
+            );
         }
         if (startRecordId != null)
         {

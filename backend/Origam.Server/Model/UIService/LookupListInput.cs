@@ -28,11 +28,18 @@ namespace Origam.Server.Model.UIService;
 
 public class LookupListInput : AbstractLookupRowDataInput
 {
-    [Required] public string[] ColumnNames { get; set; }
-    [Required] public string Property { get; set; }
+    [Required]
+    public string[] ColumnNames { get; set; }
+
+    [Required]
+    public string Property { get; set; }
     public IDictionary<string, object> Parameters { get; set; }
     public bool ShowUniqueValues { get; set; }
     public string SearchText { get; set; }
-    [Range(-1, 10_000)] public int PageSize { get; set; } = -1;
-    [Range(1, 10_000)] public int PageNumber { get; set; } = -1;
+
+    [Range(-1, 10_000)]
+    public int PageSize { get; set; } = -1;
+
+    [Range(1, 10_000)]
+    public int PageNumber { get; set; } = -1;
 }

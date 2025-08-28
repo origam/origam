@@ -22,14 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Server.Model.User;
+
 public class ResetPasswordData
 {
     [Required]
     public string Id { get; set; }
+
     [Required]
     public string Token { get; set; }
+
     [Required]
     public string Password { get; set; }
+
     [Required]
     public string RePassword { get; set; }
 }

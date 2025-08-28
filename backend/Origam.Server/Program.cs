@@ -26,9 +26,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Origam.Server;
+
 public class Program
 {
     private static Log4NetProvider log4NetProvider;
+
     public static void Main(string[] args)
     {
         Log4NetProviderOptions options = new Log4NetProviderOptions();
@@ -45,14 +47,18 @@ public class Program
             throw;
         }
     }
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args)=> 
-        WebHost.CreateDefaultBuilder(args)
+
+    public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        WebHost
+            .CreateDefaultBuilder(args)
             .UseStartup<Startup>()
-            .ConfigureLogging((hostingContext, logging) =>
-            {
-                logging.Services.AddSingleton(log4NetProvider);
-                logging.SetMinimumLevel(LogLevel.Trace);
-                logging.AddConsole();
-                logging.AddDebug();
-            });
+            .ConfigureLogging(
+                (hostingContext, logging) =>
+                {
+                    logging.Services.AddSingleton(log4NetProvider);
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddConsole();
+                    logging.AddDebug();
+                }
+            );
 }

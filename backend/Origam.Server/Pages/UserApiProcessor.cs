@@ -24,57 +24,62 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Web;
 using System.Xml;
+using IdentityServer4.Extensions;
+using log4net;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Workbench.Services;
-using System.Linq;
-using System.Web;
-using Origam.Extensions;
 using Origam.Service.Core;
-using IdentityServer4.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Origam.Workbench.Services;
 using SixLabors.ImageSharp;
 
 namespace Origam.Server.Pages;
+
 public class UserApiProcessor
 {
     private readonly IHttpTools httpTools;
     private readonly IWebHostEnvironment environment;
 
-    private static readonly log4net.ILog log 
-        = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    private Lazy<UrlApiPageCache> urlApiPageCache =
-        new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
-             (ServiceManager.Services.GetService<SchemaService>())
-                .GetProvider<PagesSchemaItemProvider>()
-            ));
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
+    private Lazy<UrlApiPageCache> urlApiPageCache = new Lazy<UrlApiPageCache>(() =>
+        new UrlApiPageCache(
+            (
+                ServiceManager.Services.GetService<SchemaService>()
+            ).GetProvider<PagesSchemaItemProvider>()
+        )
+    );
+
     public UserApiProcessor(IHttpTools httpTools, IWebHostEnvironment environment)
     {
         this.httpTools = httpTools;
         this.environment = environment;
     }
+
     #region IHttpModule Members
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
+
     public void Process(IHttpContextWrapper context)
     {
-        if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith(
-            "~/assets/"))
+        if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/assets/"))
         {
             return;
         }
-        string mimeType = context.Request.ContentType?.Split(
-            ";".ToCharArray())[0];
+        string mimeType = context.Request.ContentType?.Split(";".ToCharArray())[0];
         if (mimeType == "application/x-amf")
         {
             return;
@@ -114,8 +119,7 @@ public class UserApiProcessor
                 {
                     context.Response.BufferOutput = false;
                 }
-                context.Response.ContentType 
-                    = page.MimeType;
+                context.Response.ContentType = page.MimeType;
                 // set result content type for exception handling
                 // so the exception is formatted as expected, e.g. in json
                 resultContentType = page.MimeType;
@@ -126,44 +130,42 @@ public class UserApiProcessor
             }
             else
             {
-                IParameterService parameterService 
-                    = ServiceManager.Services
-                        .GetService<IParameterService>();
+                IParameterService parameterService =
+                    ServiceManager.Services.GetService<IParameterService>();
                 double maxAge = Convert.ToDouble(
-                    parameterService.GetParameterValue(
-                        page.CacheMaxAgeDataConstantId));
-                context.Response.CacheSetMaxAge(
-                    TimeSpan.FromSeconds(maxAge));
+                    parameterService.GetParameterValue(page.CacheMaxAgeDataConstantId)
+                );
+                context.Response.CacheSetMaxAge(TimeSpan.FromSeconds(maxAge));
             }
             Dictionary<string, object> mappedParameters = MapParameters(
-                context, urlParameters, page, mimeType);
+                context,
+                urlParameters,
+                page,
+                mimeType
+            );
             IPageRequestHandler handler = HandlePage(page);
-            handler.Execute(
-                page, mappedParameters, context.Request, 
-                context.Response);
+            handler.Execute(page, mappedParameters, context.Request, context.Response);
             context.Response.End();
         }
-        catch (ThreadAbortException)
-        {
-        }
+        catch (ThreadAbortException) { }
         catch (Exception ex)
         {
-            if (log.IsErrorEnabled) 
+            if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
                     $@"Error occured ({ex.GetType()}) for request: 
-                    {context.Request?.AbsoluteUri}: {ex.Message}"
-                    , ex);
+                    {context.Request?.AbsoluteUri}: {ex.Message}",
+                    ex
+                );
             }
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Result Content Type: {0}",
-                    resultContentType);
+                log.DebugFormat("Result Content Type: {0}", resultContentType);
             }
 
             context.Response.Clear();
             context.Response.StatusCode = GetStatusCode(ex);
-            context.Response.ContentType = "application/json";   
+            context.Response.ContentType = "application/json";
             context.Response.TrySkipIisCustomErrors = true;
             string message = GetErrorObject(ex);
             context.Response.Write(message);
@@ -175,8 +177,7 @@ public class UserApiProcessor
     {
         if (ex is RuleException ruleEx)
         {
-            return
-                $@"{{""Message"" : 
+            return $@"{{""Message"" : 
                     {JsonConvert.SerializeObject(ruleEx.Message)}, 
                     ""RuleResult"" : 
                     {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
@@ -192,9 +193,7 @@ public class UserApiProcessor
     {
         if (ex is RuleException ruleException)
         {
-            var dataList = ruleException.RuleResult
-                .OfType<RuleExceptionData>()
-                .ToList();
+            var dataList = ruleException.RuleResult.OfType<RuleExceptionData>().ToList();
             if (dataList.Count == 1)
             {
                 return dataList[0].HttpStatusCode;
@@ -202,80 +201,90 @@ public class UserApiProcessor
         }
         return 500;
     }
+
     protected virtual void Handle404(IHttpContextWrapper context)
-    { 
+    {
         // nothing found, let others handle it
     }
-    private static void PageAnalytics(
-        AbstractPage page, Dictionary<string, string> urlParameters)
+
+    private static void PageAnalytics(AbstractPage page, Dictionary<string, string> urlParameters)
     {
         Analytics.Instance.SetProperty("OrigamPageId", page.Id);
         Analytics.Instance.SetProperty("OrigamPageName", page.Name);
         foreach (KeyValuePair<string, string> pair in urlParameters)
         {
-            Analytics.Instance.SetProperty(
-                "Parameter_" + pair.Key, pair.Value);
+            Analytics.Instance.SetProperty("Parameter_" + pair.Key, pair.Value);
         }
         Analytics.Instance.Log("PAGE_ACCESS");
     }
-    
-    private static void RequestAnalytics(
-        IHttpContextWrapper context, string mimeType)
+
+    private static void RequestAnalytics(IHttpContextWrapper context, string mimeType)
     {
-        Analytics.Instance.SetProperty(
-            "ContentType", mimeType);
-        Analytics.Instance.SetProperty(
-            "HttpMethod", context.Request.HttpMethod);
-        Analytics.Instance.SetProperty(
-            "RawUrl", context.Request.RawUrl);
-        Analytics.Instance.SetProperty(
-            "Url", context.Request.Url);
-        Analytics.Instance.SetProperty(
-            "UrlReferrer", context.Request.UrlReferrer);
-        Analytics.Instance.SetProperty(
-            "UserAgent", context.Request.UserAgent);
-        Analytics.Instance.SetProperty(
-            "BrowserName", context.Request.Browser);
-        Analytics.Instance.SetProperty(
-            "BrowserVersion", context.Request.BrowserVersion);
-        Analytics.Instance.SetProperty(
-            "UserHostAddress", context.Request.UserHostAddress);
-        Analytics.Instance.SetProperty(
-            "UserHostName", context.Request.UserHostName);
-        Analytics.Instance.SetProperty(
-            "UserLanguages", context.Request.UserLanguages);
+        Analytics.Instance.SetProperty("ContentType", mimeType);
+        Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
+        Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
+        Analytics.Instance.SetProperty("Url", context.Request.Url);
+        Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
+        Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
+        Analytics.Instance.SetProperty("BrowserName", context.Request.Browser);
+        Analytics.Instance.SetProperty("BrowserVersion", context.Request.BrowserVersion);
+        Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
+        Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
+        Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
         foreach (var key in context.Request.Params.Keys)
         {
-            Analytics.Instance.SetProperty(
-                "Parameter_" + key, context.Request.Params[key]);
+            Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
         }
     }
+
     private IPageRequestHandler HandlePage(AbstractPage page)
     {
         IPageRequestHandler handler;
         switch (page)
         {
             case XsltDataPage _:
+            {
                 handler = new XsltPageRequestHandler();
                 break;
+            }
+
             case WorkflowPage _:
+            {
                 handler = new WorkflowPageRequestHandler();
                 break;
+            }
+
             case FileDownloadPage _:
+            {
                 handler = new FileDownloadPageRequestHandler(httpTools);
                 break;
+            }
+
             case ReportPage _:
+            {
                 handler = new ReportPageRequestHandler();
                 break;
+            }
+
             default:
                 throw new ArgumentOutOfRangeException(
-                    nameof(page), page, Resources.ErrorUnknownPageType);
+                    nameof(page),
+                    page,
+                    Resources.ErrorUnknownPageType
+                );
         }
         return handler;
     }
-    private static Dictionary<string, object> MapParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters, AbstractPage page, string requestMimeType)
+
+    private static Dictionary<string, object> MapParameters(
+        IHttpContextWrapper context,
+        Dictionary<string, string> urlParameters,
+        AbstractPage page,
+        string requestMimeType
+    )
     {
-        IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        IParameterService parameterService =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         Dictionary<string, object> mappedParameters = new Dictionary<string, object>();
         // add url and content parts mapped to parameters
         // firstly process normal parameters and then after that process
@@ -283,7 +292,11 @@ public class UserApiProcessor
         // to datastructure could make a use of other parameters while applying
         // dynamic defaults to newly created dataset.
         List<PageParameterMapping> contentParameters = new List<PageParameterMapping>();
-        foreach (var ppm in page.ChildItemsByType<PageParameterMapping>(PageParameterMapping.CategoryConst))
+        foreach (
+            var ppm in page.ChildItemsByType<PageParameterMapping>(
+                PageParameterMapping.CategoryConst
+            )
+        )
         {
             PageParameterFileMapping fileMapping = ppm as PageParameterFileMapping;
             if (fileMapping != null)
@@ -297,7 +310,14 @@ public class UserApiProcessor
             }
             else
             {
-                MapOtherParameters(context, urlParameters, parameterService, mappedParameters, ppm, requestMimeType);
+                MapOtherParameters(
+                    context,
+                    urlParameters,
+                    parameterService,
+                    mappedParameters,
+                    ppm,
+                    requestMimeType
+                );
             }
         }
         // now process content parameters
@@ -317,9 +337,15 @@ public class UserApiProcessor
         }
         return mappedParameters;
     }
-    private static void MapOtherParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters,
-        IParameterService parameterService, Dictionary<string, object> mappedParameters, PageParameterMapping ppm,
-        string requestMimeType)
+
+    private static void MapOtherParameters(
+        IHttpContextWrapper context,
+        Dictionary<string, string> urlParameters,
+        IParameterService parameterService,
+        Dictionary<string, object> mappedParameters,
+        PageParameterMapping ppm,
+        string requestMimeType
+    )
     {
         string paramValue = null;
         // URL parameter
@@ -339,14 +365,19 @@ public class UserApiProcessor
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.DebugFormat("Mapping POST parameter {0}, value: {1}.", ppm.Name, paramValue);
+                    log.DebugFormat(
+                        "Mapping POST parameter {0}, value: {1}.",
+                        ppm.Name,
+                        paramValue
+                    );
                 }
             }
         }
         // if empty, set default value
         if (paramValue == null && ppm.DefaultValue != null)
         {
-            paramValue = (string)parameterService.GetParameterValue(ppm.DataConstantId, Origam.Schema.OrigamDataType.String);
+            paramValue = (string)
+                parameterService.GetParameterValue(ppm.DataConstantId, OrigamDataType.String);
         }
         if (paramValue != null && ppm.IsList)
         {
@@ -355,7 +386,11 @@ public class UserApiProcessor
             string separator = ",";
             if (ppm.ListSeparator != null)
             {
-                separator = (string)parameterService.GetParameterValue(ppm.SeparatorDataConstantId, Origam.Schema.OrigamDataType.String);
+                separator = (string)
+                    parameterService.GetParameterValue(
+                        ppm.SeparatorDataConstantId,
+                        OrigamDataType.String
+                    );
             }
             list.AddRange(paramValue.Split(separator.ToCharArray()));
             mappedParameters.Add(ppm.Name, list);
@@ -369,86 +404,155 @@ public class UserApiProcessor
         switch (ppm.MappedParameter)
         {
             case "Server_ContentType":
+            {
                 systemParameterValue = requestMimeType;
                 break;
+            }
+
             case "Server_HttpMethod":
+            {
                 systemParameterValue = context.Request.HttpMethod;
                 break;
+            }
+
             case "Server_RawUrl":
+            {
                 systemParameterValue = context.Request.RawUrl;
                 break;
+            }
+
             case "Server_Url":
+            {
                 systemParameterValue = context.Request.Url;
                 break;
+            }
+
             case "Server_UrlReferrer":
+            {
                 systemParameterValue = context.Request.UrlReferrer;
                 break;
+            }
+
             case "Server_UserAgent":
+            {
                 systemParameterValue = context.Request.UserAgent;
                 break;
+            }
+
             case "Server_BrowserName":
+            {
                 systemParameterValue = context.Request.Browser;
                 break;
+            }
+
             case "Server_BrowserVersion":
+            {
                 systemParameterValue = context.Request.BrowserVersion;
                 break;
+            }
+
             case "Server_UserHostAddress":
+            {
                 systemParameterValue = context.Request.UserHostAddress;
                 break;
+            }
+
             case "Server_UserHostName":
+            {
                 systemParameterValue = context.Request.UserHostName;
                 break;
+            }
+
             case "Server_UserLanguages":
+            {
                 systemParameterValue = string.Join(",", context.Request.UserLanguages);
                 break;
+            }
         }
         if (systemParameterValue != null)
         {
             mappedParameters.Add(ppm.Name, systemParameterValue);
         }
     }
-    private static void MapFileToParameter(IHttpContextWrapper context, Dictionary<string, object> mappedParameters, PageParameterMapping ppm, PageParameterFileMapping fileMapping)
+
+    private static void MapFileToParameter(
+        IHttpContextWrapper context,
+        Dictionary<string, object> mappedParameters,
+        PageParameterMapping ppm,
+        PageParameterFileMapping fileMapping
+    )
     {
         PostedFile file = context.Request.FilesGet(ppm.MappedParameter);
         if (file != null)
         {
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Mapping File Parameter {0}, FileInfo: {1}", fileMapping.Name, fileMapping.FileInfoType);
+                log.DebugFormat(
+                    "Mapping File Parameter {0}, FileInfo: {1}",
+                    fileMapping.Name,
+                    fileMapping.FileInfoType
+                );
             }
             switch (fileMapping.FileInfoType)
             {
                 case PageParameterFileInfo.ContentType:
+                {
                     mappedParameters.Add(ppm.Name, file.ContentType);
                     break;
+                }
+
                 case PageParameterFileInfo.FileContent:
+                {
                     byte[] fileBytes = GetFileBytes(fileMapping, file);
                     if (fileBytes != null)
                     {
                         mappedParameters.Add(ppm.Name, fileBytes);
                     }
                     break;
+                }
+
                 case PageParameterFileInfo.FileName:
+                {
                     mappedParameters.Add(ppm.Name, file.FileName);
                     break;
+                }
+
                 case PageParameterFileInfo.FileSize:
+                {
                     mappedParameters.Add(ppm.Name, file.ContentLength);
                     break;
+                }
+
                 default:
-                    throw new ArgumentOutOfRangeException("FileInfoType", fileMapping.FileInfoType, "Unknown Type");
+                    throw new ArgumentOutOfRangeException(
+                        "FileInfoType",
+                        fileMapping.FileInfoType,
+                        "Unknown Type"
+                    );
             }
         }
     }
-    private static void MapContentToParameter(IHttpContextWrapper context,
-            AbstractPage page, string requestMimeType,
-            Dictionary<string, object> mappedParameters,
-            PageParameterMapping ppm)
+
+    private static void MapContentToParameter(
+        IHttpContextWrapper context,
+        AbstractPage page,
+        string requestMimeType,
+        Dictionary<string, object> mappedParameters,
+        PageParameterMapping ppm
+    )
     {
         if (log.IsDebugEnabled)
         {
-            log.DebugFormat("Mapping parameter {0}, Request content type: {1}", ppm.Name, requestMimeType);
+            log.DebugFormat(
+                "Mapping parameter {0}, Request content type: {1}",
+                ppm.Name,
+                requestMimeType
+            );
         }
-        System.IO.StreamReader reader = new System.IO.StreamReader(context.Request.InputStream, context.Request.ContentEncoding);
+        StreamReader reader = new StreamReader(
+            context.Request.InputStream,
+            context.Request.ContentEncoding
+        );
         IXmlContainer doc = new XmlContainer();
         DataSet data = null;
         WorkflowPage wfPage = page as WorkflowPage;
@@ -458,9 +562,19 @@ public class UserApiProcessor
         {
             workflow = workflowMethod.LoadWorkflow;
         }
-        if (dataPage != null && dataPage.DataStructure != null && context.Request.HttpMethod == "PUT")
+        if (
+            dataPage != null
+            && dataPage.DataStructure != null
+            && context.Request.HttpMethod == "PUT"
+        )
         {
-            GetEmptyData(ref doc, ref data, dataPage.DataStructure, mappedParameters, dataPage.DefaultSet);
+            GetEmptyData(
+                ref doc,
+                ref data,
+                dataPage.DataStructure,
+                mappedParameters,
+                dataPage.DefaultSet
+            );
             if (dataPage.DisableConstraintForInputValidation)
             {
                 data.EnforceConstraints = false;
@@ -468,17 +582,28 @@ public class UserApiProcessor
         }
         else if (workflow != null)
         {
-            ContextStore ctx = workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
+            ContextStore ctx =
+                workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
             if (ctx == null)
             {
-                throw new ArgumentException(String.Format("Couldn't find a context store with " +
-                    "the name `{0}' in a workflow `{1}' ({2})'.", ppm.Name, workflow.Path, workflow.Id));
+                throw new ArgumentException(
+                    String.Format(
+                        "Couldn't find a context store with "
+                            + "the name `{0}' in a workflow `{1}' ({2})'.",
+                        ppm.Name,
+                        workflow.Path,
+                        workflow.Id
+                    )
+                );
             }
             DataStructure ds = ctx.Structure as DataStructure;
             if (ds != null)
             {
                 GetEmptyData(ref doc, ref data, ds, mappedParameters, ctx.DefaultSet);
-                if (ctx.DisableConstraints || (wfPage != null && wfPage.DisableConstraintForInputValidation))
+                if (
+                    ctx.DisableConstraints
+                    || (wfPage != null && wfPage.DisableConstraintForInputValidation)
+                )
                 {
                     data.EnforceConstraints = false;
                 }
@@ -492,9 +617,13 @@ public class UserApiProcessor
                 switch (requestMimeType)
                 {
                     case "text/xml":
+                    {
                         doc.Xml.Load(reader);
                         break;
+                    }
+
                     case "application/json":
+                    {
                         JsonSerializer js = new JsonSerializer();
                         string body = reader.ReadToEnd();
                         // DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
@@ -502,16 +631,14 @@ public class UserApiProcessor
                         // deserialize from JSON to XML
                         if (ppm.DatastructureEntityName.IsNullOrEmpty())
                         {
-                            xd = (XmlDocument)JsonConvert
-                                .DeserializeXmlNode(body, "ROOT");
+                            xd = JsonConvert.DeserializeXmlNode(body, "ROOT");
                         }
                         else
                         {
-                            xd = (XmlDocument)JsonConvert
-                                .DeserializeXmlNode(
-                                	"{\"" + ppm.DatastructureEntityName
-                                 	+ "\" :" + body + "}"
-                                , "ROOT");
+                            xd = JsonConvert.DeserializeXmlNode(
+                                "{\"" + ppm.DatastructureEntityName + "\" :" + body + "}",
+                                "ROOT"
+                            );
                         }
                         if (log.IsDebugEnabled)
                         {
@@ -548,8 +675,14 @@ public class UserApiProcessor
                             data.ReadXml(new XmlNodeReader(xd), XmlReadMode.IgnoreSchema);
                         }
                         break;
+                    }
+
                     default:
-                        throw new ArgumentOutOfRangeException("ContentType", requestMimeType, "Unknown content type. Use text/xml or application/json.");
+                        throw new ArgumentOutOfRangeException(
+                            "ContentType",
+                            requestMimeType,
+                            "Unknown content type. Use text/xml or application/json."
+                        );
                 }
             }
             catch (ConstraintException)
@@ -565,16 +698,24 @@ public class UserApiProcessor
             log.Debug(doc.Xml.OuterXml);
         }
     }
-    private static void GetEmptyData(ref IXmlContainer doc,
-            ref DataSet data, DataStructure ds,
-            Dictionary<string, object> mappedParameters)
+
+    private static void GetEmptyData(
+        ref IXmlContainer doc,
+        ref DataSet data,
+        DataStructure ds,
+        Dictionary<string, object> mappedParameters
+    )
     {
         GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
     }
-    private static void GetEmptyData(ref IXmlContainer doc,
-            ref DataSet data, DataStructure ds,
-            Dictionary<string, object> mappedParameters,
-            DataStructureDefaultSet defaultSet)
+
+    private static void GetEmptyData(
+        ref IXmlContainer doc,
+        ref DataSet data,
+        DataStructure ds,
+        Dictionary<string, object> mappedParameters,
+        DataStructureDefaultSet defaultSet
+    )
     {
         DatasetGenerator dsg = new DatasetGenerator(true);
         data = dsg.CreateDataSet(ds, defaultSet);
@@ -585,6 +726,7 @@ public class UserApiProcessor
             log.DebugFormat("Mapping content to data structure: {0}", ds.Path);
         }
     }
+
     public static void RemoveEmptyNodes(ref XmlDocument doc)
     {
         XmlNodeList nodes = doc.SelectNodes("//*");
@@ -592,18 +734,32 @@ public class UserApiProcessor
         {
             foreach (XmlNode node in nodes)
             {
-                log.DebugFormat("Node: {0} Value: {1} HasChildNodes: {2}", node.Name, node.Value == null ? "<null>" : node.Value, node.HasChildNodes);
+                log.DebugFormat(
+                    "Node: {0} Value: {1} HasChildNodes: {2}",
+                    node.Name,
+                    node.Value == null ? "<null>" : node.Value,
+                    node.HasChildNodes
+                );
             }
         }
         foreach (XmlNode node in nodes)
         {
             XmlElement xe = node as XmlElement;
-            if ((xe != null && xe.IsEmpty) ||
-                (
-                    (!node.HasChildNodes || (node.ChildNodes.Count == 1 && node.ChildNodes[0].Name == "#text" && node.ChildNodes[0].Value == ""))
-                    && (node.Value == null || node.InnerText == "") &&
-                    ((node.Attributes == null) || (node.Attributes.Count == 0)))
+            if (
+                (xe != null && xe.IsEmpty)
+                || (
+                    (
+                        !node.HasChildNodes
+                        || (
+                            node.ChildNodes.Count == 1
+                            && node.ChildNodes[0].Name == "#text"
+                            && node.ChildNodes[0].Value == ""
+                        )
+                    )
+                    && (node.Value == null || node.InnerText == "")
+                    && ((node.Attributes == null) || (node.Attributes.Count == 0))
                 )
+            )
             {
                 if (log.IsDebugEnabled)
                 {
@@ -613,6 +769,7 @@ public class UserApiProcessor
             }
         }
     }
+
     private static byte[] GetFileBytes(PageParameterFileMapping fileMapping, PostedFile file)
     {
         byte[] fileBytes = null;
@@ -630,7 +787,10 @@ public class UserApiProcessor
             {
                 using Image image = Image.Load(file.InputStream);
                 fileBytes = BlobUploadHandler.FixedSizeBytes(
-                    image, fileMapping.ThumbnailWidth, fileMapping.ThumbnailHeight);
+                    image,
+                    fileMapping.ThumbnailWidth,
+                    fileMapping.ThumbnailHeight
+                );
             }
             catch
             {
@@ -639,43 +799,38 @@ public class UserApiProcessor
         }
         return fileBytes;
     }
+
     private (int, AbstractPage) ResolvePage(
-        IHttpContextWrapper context, 
-        out Dictionary<string, string> outUrlParameters)
+        IHttpContextWrapper context,
+        out Dictionary<string, string> outUrlParameters
+    )
     {
         outUrlParameters = new Dictionary<string, string>();
         var currentUrlParams = new Dictionary<string, string>();
-        
+
         string path = context.Request.AppRelativeCurrentExecutionFilePath;
         if (log.IsDebugEnabled)
         {
             log.DebugFormat("Resolving page {0}.", path);
         }
-        IOrigamAuthorizationProvider auth 
-            = SecurityManager.GetAuthorizationProvider();
-        SchemaService schemaService 
-            = ServiceManager.Services.GetService<SchemaService>();
-        PagesSchemaItemProvider pages 
-            = schemaService.GetProvider<PagesSchemaItemProvider>();
-        string[] requestPath = path.Split(
-            new string[] { "/" }, StringSplitOptions.None);
-        List<AbstractPage> validPagesByVerbAndPath =
-            new List<AbstractPage>();
+        IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
+        SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
+        PagesSchemaItemProvider pages = schemaService.GetProvider<PagesSchemaItemProvider>();
+        string[] requestPath = path.Split(new[] { "/" }, StringSplitOptions.None);
+        List<AbstractPage> validPagesByVerbAndPath = new List<AbstractPage>();
         // try to find parameterless page first, remove the preceding ~/ from the path
-        AbstractPage parameterlessResultPage =
-            urlApiPageCache.Value.GetParameterlessPage(
-                String.Join("/", requestPath.Skip(1)));
+        AbstractPage parameterlessResultPage = urlApiPageCache.Value.GetParameterlessPage(
+            String.Join("/", requestPath.Skip(1))
+        );
         if (parameterlessResultPage != null)
         {
             if (IsPageValidByVerb(parameterlessResultPage, context))
             {
-                return ValidatePageSecurity(
-                    auth, parameterlessResultPage);
+                return ValidatePageSecurity(auth, parameterlessResultPage);
             }
         }
         // try other parameterized endpoints with the old approach
-        foreach (AbstractPage page in
-            urlApiPageCache.Value.GetParameterPages())
+        foreach (AbstractPage page in urlApiPageCache.Value.GetParameterPages())
         {
             currentUrlParams.Clear();
             if (!IsPageValidByVerb(page, context))
@@ -683,8 +838,7 @@ public class UserApiProcessor
                 continue;
             }
             bool invalidRequest = false;
-            string[] pagePath = page.Url.Split(
-                new string[] { "/" }, StringSplitOptions.None);
+            string[] pagePath = page.Url.Split(new[] { "/" }, StringSplitOptions.None);
             if ((requestPath.Length - 1) != pagePath.Length)
             {
                 continue;
@@ -699,25 +853,20 @@ public class UserApiProcessor
                     {
                         continue;
                     }
-                    string paramValue 
-                        = HttpUtility.UrlDecode(requestPath[i + 1]);
-                    if (paramValue.EndsWith(".aspx") 
-                        && (i == (requestPath.Length - 2)))
+                    string paramValue = HttpUtility.UrlDecode(requestPath[i + 1]);
+                    if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(
-                            0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
                     }
                     string paramName;
                     if (pathPart.EndsWith(".aspx"))
                     {
-                        paramName = pathPart.Substring(
-                            1, pathPart.Length - 7);
+                        paramName = pathPart.Substring(1, pathPart.Length - 7);
                     }
                     else
                     {
-                        paramName = pathPart.Substring(
-                            1, pathPart.Length - 2);
+                        paramName = pathPart.Substring(1, pathPart.Length - 2);
                     }
                     currentUrlParams.Add(paramName, paramValue);
                 }
@@ -725,12 +874,10 @@ public class UserApiProcessor
                 else
                 {
                     string paramValue = requestPath[i + 1];
-                    if (paramValue.EndsWith(".aspx") 
-                        && (i == (requestPath.Length - 2)))
+                    if (paramValue.EndsWith(".aspx") && (i == (requestPath.Length - 2)))
                     {
                         // remove .aspx from the end of the string
-                        paramValue = paramValue.Substring(
-                            0, paramValue.Length - 5);
+                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
                     }
                     if (pathPart != paramValue)
                     {
@@ -754,20 +901,23 @@ public class UserApiProcessor
             }
             case 1:
             {
-                return ValidatePageSecurity(
-                    auth, validPagesByVerbAndPath[0]);
+                return ValidatePageSecurity(auth, validPagesByVerbAndPath[0]);
             }
             default:
             {
-                log.ErrorFormat("Multiple routes detected '{0}' for request '{1}'",
-                    validPagesByVerbAndPath.Select(x => x.Id.ToString() + ":" + x.Url ).Aggregate((res, i) => res + "," + i),
-                    path);
+                log.ErrorFormat(
+                    "Multiple routes detected '{0}' for request '{1}'",
+                    validPagesByVerbAndPath
+                        .Select(x => x.Id + ":" + x.Url)
+                        .Aggregate((res, i) => res + "," + i),
+                    path
+                );
                 return (500, null);
             }
         }
     }
-    private static bool IsPageValidByVerb(
-        AbstractPage page, IHttpContextWrapper context)
+
+    private static bool IsPageValidByVerb(AbstractPage page, IHttpContextWrapper context)
     {
         switch (context.Request.HttpMethod)
         {
@@ -781,13 +931,17 @@ public class UserApiProcessor
                 return true;
         }
     }
+
     private static (int, AbstractPage) ValidatePageSecurity(
-        IOrigamAuthorizationProvider auth, AbstractPage page)
+        IOrigamAuthorizationProvider auth,
+        AbstractPage page
+    )
     {
         try
         {
-            return auth.Authorize(SecurityManager.CurrentPrincipal, 
-                page.Roles) ? (200, page) : (403, null);
+            return auth.Authorize(SecurityManager.CurrentPrincipal, page.Roles)
+                ? (200, page)
+                : (403, null);
         }
         catch (UserNotLoggedInException)
         {
@@ -796,6 +950,7 @@ public class UserApiProcessor
     }
     #endregion
 }
+
 public class PostedFile
 {
     public object ContentType { get; set; }
@@ -803,40 +958,43 @@ public class PostedFile
     public long ContentLength { get; set; }
     public Stream InputStream { get; set; }
 }
+
 public interface IHttpContextWrapper
 {
     IResponseWrapper Response { get; }
     IRequestWrapper Request { get; }
 }
+
 public interface IRequestWrapper
 {
     string AppRelativeCurrentExecutionFilePath { get; }
-    string ContentType { get;  }
-    string AbsoluteUri { get;  }
-    Stream InputStream { get;  }
-    string HttpMethod { get;  }
-    string RawUrl { get;  }
-    string Url { get;  }
+    string ContentType { get; }
+    string AbsoluteUri { get; }
+    Stream InputStream { get; }
+    string HttpMethod { get; }
+    string RawUrl { get; }
+    string Url { get; }
     string UrlReferrer { get; }
-    string UserAgent { get;  }
-    string Browser { get;  }
-    string BrowserVersion { get;  }
-    string UserHostAddress { get;  }
-    string UserHostName { get;}
+    string UserAgent { get; }
+    string Browser { get; }
+    string BrowserVersion { get; }
+    string UserHostAddress { get; }
+    string UserHostName { get; }
     IEnumerable<string> UserLanguages { get; }
-    Encoding ContentEncoding { get;  }
-    long ContentLength { get;  }
-    IDictionary BrowserCapabilities { get;  }
-    string UrlReferrerAbsoluteUri { get;  }
+    Encoding ContentEncoding { get; }
+    long ContentLength { get; }
+    IDictionary BrowserCapabilities { get; }
+    string UrlReferrerAbsoluteUri { get; }
     Parameters Params { get; }
     PostedFile FilesGet(string name);
 }
+
 public interface IResponseWrapper
 {
-    bool BufferOutput {  set; }
-    string ContentType {  set; }
-    bool TrySkipIisCustomErrors {  set; }
-    int StatusCode {  set; }
+    bool BufferOutput { set; }
+    string ContentType { set; }
+    bool TrySkipIisCustomErrors { set; }
+    int StatusCode { set; }
     string Charset { get; set; }
     void WriteToOutput(Action<TextWriter> writeAction);
     void CacheSetMaxAge(TimeSpan timeSpan);
@@ -849,13 +1007,16 @@ public interface IResponseWrapper
     void OutputStreamWrite(byte[] buffer, int offset, int count);
     void AppendHeader(string contentDisposition, string disposition);
 }
+
 public class Parameters
 {
     private readonly Dictionary<string, string> paramsDictionary;
+
     public Parameters(Dictionary<string, string> parameters)
     {
         paramsDictionary = parameters;
     }
+
     public string this[string key]
     {
         get

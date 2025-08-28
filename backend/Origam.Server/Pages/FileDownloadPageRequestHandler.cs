@@ -29,37 +29,56 @@ using Origam.Schema.GuiModel;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Pages;
+
 class FileDownloadPageRequestHandler : AbstractPageRequestHandler
 {
     private readonly IHttpTools httpTools;
+
     public FileDownloadPageRequestHandler(IHttpTools httpTools)
     {
         this.httpTools = httpTools;
     }
-    public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+
+    public override void Execute(
+        AbstractPage page,
+        Dictionary<string, object> parameters,
+        IRequestWrapper request,
+        IResponseWrapper response
+    )
     {
         FileDownloadPage fdPage = page as FileDownloadPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
-		Hashtable transformParams = new Hashtable();
-		Hashtable preprocessorParams = GetPreprocessorParameters(request);
-		// convert parameters to QueryParameterCollection for data service and hashtable for transformation service
-		foreach (KeyValuePair<string, object> p in parameters)
-		{
-			qparams.Add(new QueryParameter(p.Key, p.Value));
-			transformParams.Add(p.Key, p.Value);
-		}
-		// copy also the preprocessor parameters to the transformation parameters
-		foreach (DictionaryEntry rp in preprocessorParams)
-		{
-			transformParams.Add(rp.Key, rp.Value);
-		}
-		RuleEngine ruleEngine = RuleEngine.Create(null, null);
-		Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
-        DataSet data = CoreServices.DataService.Instance.LoadData(fdPage.DataStructureId, fdPage.DataStructureMethodId, Guid.Empty, fdPage.DataStructureSortSetId, null, qparams);
+        Hashtable transformParams = new Hashtable();
+        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
+        foreach (KeyValuePair<string, object> p in parameters)
+        {
+            qparams.Add(new QueryParameter(p.Key, p.Value));
+            transformParams.Add(p.Key, p.Value);
+        }
+        // copy also the preprocessor parameters to the transformation parameters
+        foreach (DictionaryEntry rp in preprocessorParams)
+        {
+            transformParams.Add(rp.Key, rp.Value);
+        }
+        RuleEngine ruleEngine = RuleEngine.Create(null, null);
+        Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
+        DataSet data = CoreServices.DataService.Instance.LoadData(
+            fdPage.DataStructureId,
+            fdPage.DataStructureMethodId,
+            Guid.Empty,
+            fdPage.DataStructureSortSetId,
+            null,
+            qparams
+        );
         DataTable table = data.Tables[0];
         bool notFound = false;
         byte[] bytes = null;
-        if (table.Rows.Count == 0) notFound = true;
+        if (table.Rows.Count == 0)
+        {
+            notFound = true;
+        }
+
         if (!notFound)
         {
             bytes = table.Rows[0][fdPage.ContentField] as byte[];
@@ -72,16 +91,21 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
                 notFound = true;
             }
         }
-        if (! notFound)
+        if (!notFound)
         {
             string contentType = null;
             if (fdPage.MimeType != "?")
             {
                 contentType = fdPage.MimeType;
             }
-            httpTools.WriteFile(request, response, bytes, 
-                (string)table.Rows[0][fdPage.FileNameField], 
-                true, contentType);
+            httpTools.WriteFile(
+                request,
+                response,
+                bytes,
+                (string)table.Rows[0][fdPage.FileNameField],
+                true,
+                contentType
+            );
         }
         else
         {

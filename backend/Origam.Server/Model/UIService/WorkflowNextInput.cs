@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
+
 public class WorkflowNextInput
 {
     public Guid SessionFormIdentifier { get; set; }
-} 
+}

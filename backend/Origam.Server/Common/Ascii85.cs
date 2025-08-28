@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
+using System.Text;
 
 /// <summary>
-/// C# implementation of ASCII85 encoding. 
+/// C# implementation of ASCII85 encoding.
 /// Based on C code from http://www.stillhq.com/cgi-bin/cvsweb/ascii85/
 /// </summary>
 /// <remarks>
@@ -37,15 +37,18 @@ class Ascii85
     /// Prefix mark that identifies an encoded ASCII85 string, traditionally '<~'
     /// </summary>
     public string PrefixMark = "<~";
+
     /// <summary>
     /// Suffix mark that identifies an encoded ASCII85 string, traditionally '~>'
     /// </summary>
     public string SuffixMark = "~>";
+
     /// <summary>
-    /// Maximum line length for encoded ASCII85 string; 
+    /// Maximum line length for encoded ASCII85 string;
     /// set to zero for one unbroken line.
     /// </summary>
     public int LineLength = 75;
+
     /// <summary>
     /// Add the Prefix and Suffix marks when encoding, and enforce their presence for decoding
     /// </summary>
@@ -54,8 +57,8 @@ class Ascii85
     private const int _asciiOffset = 33;
     private byte[] _encodedBlock = new byte[5];
     private byte[] _decodedBlock = new byte[4];
-    private uint _tuple = 0;
-    private int _linePos = 0;
+    private uint _tuple;
+    private int _linePos;
 
     private uint[] pow85 = { 85 * 85 * 85 * 85, 85 * 85 * 85, 85 * 85, 85, 1 };
 
@@ -70,8 +73,13 @@ class Ascii85
         {
             if (!s.StartsWith(PrefixMark) | !s.EndsWith(SuffixMark))
             {
-                throw new Exception("ASCII85 encoded data should begin with '" + PrefixMark +
-                    "' and end with '" + SuffixMark + "'");
+                throw new Exception(
+                    "ASCII85 encoded data should begin with '"
+                        + PrefixMark
+                        + "' and end with '"
+                        + SuffixMark
+                        + "'"
+                );
             }
         }
 
@@ -94,9 +102,12 @@ class Ascii85
             switch (c)
             {
                 case 'z':
+                {
                     if (count != 0)
                     {
-                        throw new Exception("The character 'z' is invalid inside an ASCII85 block.");
+                        throw new Exception(
+                            "The character 'z' is invalid inside an ASCII85 block."
+                        );
                     }
                     _decodedBlock[0] = 0;
                     _decodedBlock[1] = 0;
@@ -105,21 +116,32 @@ class Ascii85
                     ms.Write(_decodedBlock, 0, _decodedBlock.Length);
                     processChar = false;
                     break;
+                }
+
                 case '\n':
                 case '\r':
                 case '\t':
                 case '\0':
                 case '\f':
                 case '\b':
+                {
                     processChar = false;
                     break;
+                }
+
                 default:
+                {
                     if (c < '!' || c > 'u')
                     {
-                        throw new Exception("Bad character '" + c + "' found. ASCII85 only allows characters '!' to 'u'.");
+                        throw new Exception(
+                            "Bad character '"
+                                + c
+                                + "' found. ASCII85 only allows characters '!' to 'u'."
+                        );
                     }
                     processChar = true;
                     break;
+                }
             }
 
             if (processChar)
@@ -162,7 +184,9 @@ class Ascii85
     /// <returns>ASCII85 encoded string</returns>
     public string Encode(byte[] ba)
     {
-        StringBuilder sb = new StringBuilder((int)(ba.Length * (_encodedBlock.Length / _decodedBlock.Length)));
+        StringBuilder sb = new StringBuilder(
+            ba.Length * (_encodedBlock.Length / _decodedBlock.Length)
+        );
         _linePos = 0;
 
         if (EnforceMarks)
@@ -226,7 +250,6 @@ class Ascii85
             char c = (char)_encodedBlock[i];
             AppendChar(sb, c);
         }
-
     }
 
     private void DecodeBlock()
@@ -266,5 +289,4 @@ class Ascii85
             sb.Append('\n');
         }
     }
-
 }

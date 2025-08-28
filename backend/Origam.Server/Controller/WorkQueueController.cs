@@ -23,6 +23,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using log4net;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -34,14 +36,17 @@ namespace Origam.Server.Controller;
 [ApiController]
 public class WorkQueueController : ControllerBase
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     [HttpPost]
     [Route("workQueue/{workQueueCode}/{commandText}")]
-    public IActionResult CreateSessionAsync(string workQueueCode,
-        string commandText, [FromQuery] [Required] Guid workQueueEntryId)
+    public IActionResult CreateSessionAsync(
+        string workQueueCode,
+        string commandText,
+        [FromQuery] [Required] Guid workQueueEntryId
+    )
     {
         if (log.IsDebugEnabled)
         {
@@ -52,8 +57,7 @@ public class WorkQueueController : ControllerBase
         {
             IWorkQueueService workQueueService =
                 ServiceManager.Services.GetService<IWorkQueueService>();
-            workQueueService.HandleAction(workQueueCode, commandText,
-                workQueueEntryId);
+            workQueueService.HandleAction(workQueueCode, commandText, workQueueEntryId);
             return Ok();
         }
         catch (Exception ex)
@@ -68,7 +72,8 @@ public class WorkQueueController : ControllerBase
                 output = String.Format(
                     "{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
                     JsonConvert.SerializeObject(ruleException.Message),
-                    JsonConvert.SerializeObject(ruleException.RuleResult));
+                    JsonConvert.SerializeObject(ruleException.RuleResult)
+                );
             }
             else if (ex is ArgumentOutOfRangeException argumentException)
             {
@@ -76,7 +81,8 @@ public class WorkQueueController : ControllerBase
                     "{{\"Message\" : {0}, \"ParamName\" : {1}, \"ActualValue\" : {2}}}",
                     JsonConvert.SerializeObject(argumentException.Message),
                     JsonConvert.SerializeObject(argumentException.ParamName),
-                    JsonConvert.SerializeObject(argumentException.ActualValue));
+                    JsonConvert.SerializeObject(argumentException.ActualValue)
+                );
             }
             else
             {
