@@ -25,22 +25,27 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Origam.Extensions;
+
 public static class IEnumerableExtensions
 {
-    public static List<T> CastToList<T>(this IEnumerable iEnum) => 
-        iEnum.Cast<T>().ToList();
-        
-    public static T[] ToArray<T>(this IEnumerable iEnum) => 
-        iEnum.Cast<T>().ToArray();
-    
-    public static IEnumerable<T> Peek<T>(this IEnumerable<T> source,
-        Action<T>
-            action)
+    public static List<T> CastToList<T>(this IEnumerable iEnum) => iEnum.Cast<T>().ToList();
+
+    public static T[] ToArray<T>(this IEnumerable iEnum) => iEnum.Cast<T>().ToArray();
+
+    public static IEnumerable<T> Peek<T>(this IEnumerable<T> source, Action<T> action)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (action == null) throw new ArgumentNullException(nameof(action));
+        if (source == null)
+        {
+            throw new ArgumentNullException(nameof(source));
+        }
+
+        if (action == null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
+
         return Iterator();
-        IEnumerable<T> Iterator() 
+        IEnumerable<T> Iterator()
         {
             foreach (var item in source)
             {

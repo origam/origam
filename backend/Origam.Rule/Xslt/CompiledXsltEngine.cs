@@ -32,27 +32,25 @@ using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
 namespace Origam.Rule.Xslt;
+
 public class CompiledXsltEngine : MicrosoftXsltEngine
 {
     #region Constructors
-    public CompiledXsltEngine()
-    {
-    }
-    public CompiledXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) 
-        : base (functionsDefinitions)
-	{
-	}
+    public CompiledXsltEngine() { }
+
+    public CompiledXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions)
+        : base(functionsDefinitions) { }
+
     public CompiledXsltEngine(IPersistenceProvider persistence)
-        : base(persistence)
-	{
-	}
-	#endregion
+        : base(persistence) { }
+    #endregion
     internal override object GetTransform(IXmlContainer xslt)
     {
         XslCompiledTransform engine = new XslCompiledTransform();
         engine.Load(new XmlNodeReader(xslt.Xml), new XsltSettings(), new ModelXmlResolver());
         return engine;
     }
+
     internal override object GetTransform(string xsl)
     {
         XslCompiledTransform engine = new XslCompiledTransform();
@@ -61,7 +59,13 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
         engine.Load(xslDoc, new XsltSettings(), new ModelXmlResolver());
         return engine;
     }
-    public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc)
+
+    public override void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        XPathDocument sourceXpathDoc,
+        IXmlContainer resultDoc
+    )
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
         MemoryStream stream = new MemoryStream();
@@ -72,30 +76,45 @@ public class CompiledXsltEngine : MicrosoftXsltEngine
             resultDoc.Load(reader);
         }
     }
-    public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)
+
+    public override void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        XPathDocument sourceXpathDoc,
+        XmlTextWriter xwr
+    )
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
         xslt.Transform(sourceXpathDoc, xslArg, xwr);
     }
-    public override void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output)
+
+    public override void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        IXPathNavigable input,
+        Stream output
+    )
     {
         XslCompiledTransform xslt = engine as XslCompiledTransform;
         xslt.Transform(input, xslArg, output);
     }
-#region Transformation Cache
+
+    #region Transformation Cache
     private static Hashtable _transformationCache = new Hashtable();
+
     protected override bool IsTransformationCached(Guid transformationId)
     {
         return _transformationCache.ContainsKey(transformationId);
     }
+
     protected override object GetCachedTransformation(Guid tranformationId)
     {
         return _transformationCache[tranformationId];
     }
-    protected override void PutTransformationToCache(
-        Guid transformationId, object transformation)
+
+    protected override void PutTransformationToCache(Guid transformationId, object transformation)
     {
         _transformationCache[transformationId] = transformation;
     }
-#endregion
+    #endregion
 }

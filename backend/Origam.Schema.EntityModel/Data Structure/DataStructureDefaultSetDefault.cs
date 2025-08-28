@@ -19,17 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for DataStructureDefaultSetDefault.
 /// </summary>
@@ -39,156 +39,178 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class DataStructureDefaultSetDefault : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureDefaultSetDefault";
-	public DataStructureDefaultSetDefault() : base(){}
-	
-	public DataStructureDefaultSetDefault(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureDefaultSetDefault(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	public Guid DataConstantId;
-	[TypeConverter(typeof(DataConstantConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public const string CategoryConst = "DataStructureDefaultSetDefault";
+
+    public DataStructureDefaultSetDefault()
+        : base() { }
+
+    public DataStructureDefaultSetDefault(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureDefaultSetDefault(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    public Guid DataConstantId;
+
+    [TypeConverter(typeof(DataConstantConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("default", "DataConstantId")]
     public DataConstant Default
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.DataConstantId;
-			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(DataConstant), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.DataConstantId = Guid.Empty;
-			}
-			else
-			{
-				this.DataConstantId = (Guid)value.PrimaryKey["Id"];
-			}
-			UpdateName();
-		}
-	}
-    
-	public Guid DataStructureEntityId;
-	[TypeConverter(typeof(DataQueryEntityConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.DataConstantId;
+            return (DataConstant)
+                this.PersistenceProvider.RetrieveInstance(typeof(DataConstant), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.DataConstantId = Guid.Empty;
+            }
+            else
+            {
+                this.DataConstantId = (Guid)value.PrimaryKey["Id"];
+            }
+            UpdateName();
+        }
+    }
+
+    public Guid DataStructureEntityId;
+
+    [TypeConverter(typeof(DataQueryEntityConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("entity", "DataStructureEntityId")]
     public DataStructureEntity Entity
-	{
-		get
-		{
-			return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.DataStructureEntityId));
-		}
-		set
-		{
-			this.DataStructureEntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			this.Field = null;
-			UpdateName();
-		}
-	}
-	public Guid EntityFieldId;
-	[TypeConverter(typeof(DataStructureEntityFieldConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    {
+        get
+        {
+            return (DataStructureEntity)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(DataStructureEntity),
+                    new ModelElementKey(this.DataStructureEntityId)
+                );
+        }
+        set
+        {
+            this.DataStructureEntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            this.Field = null;
+            UpdateName();
+        }
+    }
+    public Guid EntityFieldId;
+
+    [TypeConverter(typeof(DataStructureEntityFieldConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("field", "EntityFieldId")]
     public IDataEntityColumn Field
-	{
-		get
-		{
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.EntityFieldId));
-		}
-		set
-		{
-			this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			UpdateName();
-		}
-	}
-    
-	public Guid ParameterId;
-	[TypeConverter(typeof(ParameterReferenceConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    {
+        get
+        {
+            return (IDataEntityColumn)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(DataStructureEntity),
+                    new ModelElementKey(this.EntityFieldId)
+                );
+        }
+        set
+        {
+            this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+            UpdateName();
+        }
+    }
+
+    public Guid ParameterId;
+
+    [TypeConverter(typeof(ParameterReferenceConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("parameter", "ParameterId")]
     public SchemaItemParameter Parameter
-	{
-		get
-		{
-			return (SchemaItemParameter)this.PersistenceProvider.RetrieveInstance(typeof(SchemaItemParameter), new ModelElementKey(this.ParameterId)) as SchemaItemParameter;
-		}
-		set
-		{
-			this.ParameterId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Entity);
-		dependencies.Add(this.Default);
-		dependencies.Add(this.Field);
-		if(this.Parameter != null)
-		{
-			dependencies.Add(this.Parameter);
-		}
-		base.GetExtraDependencies (dependencies);
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.Parameter != null)
-		{
-			if(!list.ContainsKey(this.Parameter.Name))
-			{
-				ParameterReference pr = new ParameterReference();
-				pr.PersistenceProvider = this.PersistenceProvider;
-				pr.Parameter = this.Parameter;
-				pr.Name = this.Parameter.Name;
-				list.Add(this.Parameter.Name, pr);
-			}
-		}
-	}
-	public override void UpdateReferences()
-	{
-		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-		{
-			if(item.OldPrimaryKey != null)
-			{
-				if(item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
-				{
-					this.Entity = item as DataStructureEntity;
-					break;
-				}
-			}
-		}
-		base.UpdateReferences ();
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-	{
-		ISchemaItem item = newNode as ISchemaItem;
-		return item != null && item.PrimaryKey.Equals(this.ParentItem.PrimaryKey);
-	}
-	#endregion
-	#region Private Methods
-	private void UpdateName()
-	{
-		string entity = this.Entity == null ? "" : this.Entity.Name;
-		string field = this.Field == null ? "" : this.Field.Name;
-		string def = this.Default == null ? "" : this.Default.Name;
-		this.Name = entity + "_" + field + "_" + def;
-	}
-	#endregion
+    {
+        get
+        {
+            return (SchemaItemParameter)
+                    this.PersistenceProvider.RetrieveInstance(
+                        typeof(SchemaItemParameter),
+                        new ModelElementKey(this.ParameterId)
+                    ) as SchemaItemParameter;
+        }
+        set { this.ParameterId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Entity);
+        dependencies.Add(this.Default);
+        dependencies.Add(this.Field);
+        if (this.Parameter != null)
+        {
+            dependencies.Add(this.Parameter);
+        }
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.Parameter != null)
+        {
+            if (!list.ContainsKey(this.Parameter.Name))
+            {
+                ParameterReference pr = new ParameterReference();
+                pr.PersistenceProvider = this.PersistenceProvider;
+                pr.Parameter = this.Parameter;
+                pr.Name = this.Parameter.Name;
+                list.Add(this.Parameter.Name, pr);
+            }
+        }
+    }
+
+    public override void UpdateReferences()
+    {
+        foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+        {
+            if (item.OldPrimaryKey != null)
+            {
+                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                {
+                    this.Entity = item as DataStructureEntity;
+                    break;
+                }
+            }
+        }
+        base.UpdateReferences();
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+
+    public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+    {
+        ISchemaItem item = newNode as ISchemaItem;
+        return item != null && item.PrimaryKey.Equals(this.ParentItem.PrimaryKey);
+    }
+    #endregion
+    #region Private Methods
+    private void UpdateName()
+    {
+        string entity = this.Entity == null ? "" : this.Entity.Name;
+        string field = this.Field == null ? "" : this.Field.Name;
+        string def = this.Default == null ? "" : this.Default.Name;
+        this.Name = entity + "_" + field + "_" + def;
+    }
+    #endregion
 }

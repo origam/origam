@@ -32,9 +32,14 @@ namespace Origam.Workflow.WorkQueue;
 public class RoundRobinLinearProcessor : LinearProcessor
 {
     private readonly int batchSize;
-    public RoundRobinLinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
-        WorkQueueUtils workQueueUtils, RetryManager retryManager,
-        WorkQueueThrottle workQueueThrottle, int batchSize) 
+
+    public RoundRobinLinearProcessor(
+        Action<WorkQueueRow, DataRow> itemProcessAction,
+        WorkQueueUtils workQueueUtils,
+        RetryManager retryManager,
+        WorkQueueThrottle workQueueThrottle,
+        int batchSize
+    )
         : base(itemProcessAction, workQueueUtils, retryManager, workQueueThrottle)
     {
         this.batchSize = batchSize;
@@ -50,9 +55,10 @@ public class RoundRobinLinearProcessor : LinearProcessor
             foreach (WorkQueueRow queue in queueList)
             {
                 int itemsProcessed = ProcessAutoQueueCommands(
-                    queue: queue, 
-                    cancellationToken: cancellationToken, 
-                    maxItemsToProcess: batchSize);
+                    queue: queue,
+                    cancellationToken: cancellationToken,
+                    maxItemsToProcess: batchSize
+                );
                 if (itemsProcessed == 0)
                 {
                     numberOfEmptyQueues++;

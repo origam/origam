@@ -35,27 +35,37 @@ using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
 namespace Origam.Rule.Xslt;
+
 public abstract class MicrosoftXsltEngine : AbstractXsltEngine
 {
     private readonly IEnumerable<XsltFunctionsDefinition> functionsDefinitions;
+
     #region Constructors
     protected MicrosoftXsltEngine()
     {
         functionsDefinitions = XsltFunctionContainerFactory.Create();
     }
-    public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) : base ()
+
+    public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions)
+        : base()
     {
         this.functionsDefinitions = functionsDefinitions ?? XsltFunctionContainerFactory.Create();
     }
+
     public MicrosoftXsltEngine(IPersistenceProvider persistence)
         : base(persistence)
-	{
+    {
         functionsDefinitions = XsltFunctionContainerFactory.Create();
-	}
-	#endregion
-    internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, 
-        Hashtable parameters, string transactionId, 
-        IDataStructure outputStructure, bool validateOnly)
+    }
+    #endregion
+    internal override IXmlContainer Transform(
+        IXmlContainer data,
+        object xsltEngine,
+        Hashtable parameters,
+        string transactionId,
+        IDataStructure outputStructure,
+        bool validateOnly
+    )
     {
         XsltArgumentList xslArg = BuildArgumentListWithFunctions(transactionId);
         // If source xml is completely empty (not even a root element), we add one
@@ -63,12 +73,11 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
         // data come from a dataset.
         // It does not do anything with a non-dataset xml source.
         IDataDocument dataDocument = data as IDataDocument;
-        if (data.Xml.DocumentElement == null && dataDocument !=null)
+        if (data.Xml.DocumentElement == null && dataDocument != null)
         {
-			bool oldEnforceConstraints = dataDocument.DataSet.EnforceConstraints;
+            bool oldEnforceConstraints = dataDocument.DataSet.EnforceConstraints;
             dataDocument.DataSet.EnforceConstraints = false;
-            dataDocument.AppendChild(XmlNodeType.Element,
-                dataDocument.DataSet.DataSetName, "");
+            dataDocument.AppendChild(XmlNodeType.Element, dataDocument.DataSet.DataSetName, "");
             dataDocument.DataSet.EnforceConstraints = oldEnforceConstraints;
         }
         IXmlContainer resultDoc;
@@ -85,7 +94,13 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
         {
             resultDoc = new XmlContainer();
         }
-        else throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransformationSupport"));
+        else
+        {
+            throw new InvalidOperationException(
+                ResourceUtils.GetString("ErrorTransformationSupport")
+            );
+        }
+
         try
         {
             StringBuilder traceParameters = new StringBuilder();
@@ -98,7 +113,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                     if (param.Value is IXmlContainer xmlContainer)
                     {
                         XPathDocument paramXpathDoc = new XPathDocument(
-                            new XmlNodeReader(xmlContainer.Xml));
+                            new XmlNodeReader(xmlContainer.Xml)
+                        );
                         XPathNavigator nav = paramXpathDoc.CreateNavigator();
                         XPathNodeIterator iterator = nav.Select("/");
                         val = iterator;
@@ -140,16 +156,25 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                         {
                             traceValue = XmlTools.ConvertToString(val);
                         }
-                        if (traceParameters.Length > 0) traceParameters.Append(Environment.NewLine);
+                        if (traceParameters.Length > 0)
+                        {
+                            traceParameters.Append(Environment.NewLine);
+                        }
+
                         if (traceValue == "")
                         {
-                            traceParameters.AppendFormat("<xsl:param name=\"{0}\" />",
-                                param.Key.ToString());
+                            traceParameters.AppendFormat(
+                                "<xsl:param name=\"{0}\" />",
+                                param.Key.ToString()
+                            );
                         }
                         else
                         {
-                            traceParameters.AppendFormat("<xsl:param name=\"{0}\" select=\"{1}\"/>",
-                                param.Key.ToString(), traceValue);
+                            traceParameters.AppendFormat(
+                                "<xsl:param name=\"{0}\" select=\"{1}\"/>",
+                                param.Key.ToString(),
+                                traceValue
+                            );
                         }
                     }
                 }
@@ -163,12 +188,22 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                 data.Xml.WriteTo(xwr);
                 xwr.Close();
                 swr.Close();
-                TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Input", null, b.ToString(), traceParameters.ToString(), null);
+                TracingService.TraceStep(
+                    this.TraceWorkflowId,
+                    this.TraceStepName,
+                    this.TraceStepId,
+                    "Transformation Service",
+                    "Input",
+                    null,
+                    b.ToString(),
+                    traceParameters.ToString(),
+                    null
+                );
             }
             XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data.Xml));
             try
             {
-                if (this.Trace && resultDoc is IDataDocument) 
+                if (this.Trace && resultDoc is IDataDocument)
                 {
                     IXmlContainer traceDocument = new XmlContainer();
                     // first transform to a temporary xml document so we see the clean transformation output
@@ -196,15 +231,34 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                 }
                 string terminateStringEnglish = "Transform terminated:";
                 string terminateString = ResourceUtils.GetString("XsltTransformTerminated");
-                if (ex.Message.Length >= terminateString.Length &&
-                    ex.Message.Substring(0, terminateString.Length) == terminateString)
+                if (
+                    ex.Message.Length >= terminateString.Length
+                    && ex.Message.Substring(0, terminateString.Length) == terminateString
+                )
                 {
-                    throw new OrigamRuleException(ex.Message.Substring(terminateString.Length + 1, ex.Message.Length - 2 - terminateString.Length), ex, null);
+                    throw new OrigamRuleException(
+                        ex.Message.Substring(
+                            terminateString.Length + 1,
+                            ex.Message.Length - 2 - terminateString.Length
+                        ),
+                        ex,
+                        null
+                    );
                 }
-                if (ex.Message.Length >= terminateStringEnglish.Length &&
-                    ex.Message.Substring(0, terminateStringEnglish.Length) == terminateStringEnglish)
+                if (
+                    ex.Message.Length >= terminateStringEnglish.Length
+                    && ex.Message.Substring(0, terminateStringEnglish.Length)
+                        == terminateStringEnglish
+                )
                 {
-                    throw new OrigamRuleException(ex.Message.Substring(terminateStringEnglish.Length + 1, ex.Message.Length - 2 - terminateStringEnglish.Length), ex, null);
+                    throw new OrigamRuleException(
+                        ex.Message.Substring(
+                            terminateStringEnglish.Length + 1,
+                            ex.Message.Length - 2 - terminateStringEnglish.Length
+                        ),
+                        ex,
+                        null
+                    );
                 }
                 throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
             }
@@ -221,24 +275,35 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
         {
             if (this.Trace)
             {
-                TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
+                TracingService.TraceStep(
+                    this.TraceWorkflowId,
+                    this.TraceStepName,
+                    this.TraceStepId,
+                    "Transformation Service",
+                    "Error",
+                    null,
+                    null,
+                    null,
+                    ex.Message
+                );
             }
             throw;
         }
-        catch(RuleException ex)
+        catch (RuleException ex)
         {
-            if(Trace)
+            if (Trace)
             {
                 TracingService.TraceStep(
                     workflowInstanceId: TraceWorkflowId,
-                    stepPath: TraceStepName, 
+                    stepPath: TraceStepName,
                     stepId: TraceStepId,
-                    category: "Transformation Service", 
-                    subCategory: "Error", 
-                    remark: null, 
-                    data1: null, 
+                    category: "Transformation Service",
+                    subCategory: "Error",
+                    remark: null,
+                    data1: null,
                     data2: null,
-                    message: ex.Message);
+                    message: ex.Message
+                );
             }
             throw;
         }
@@ -246,51 +311,82 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
         {
             if (this.Trace)
             {
-                TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
+                TracingService.TraceStep(
+                    this.TraceWorkflowId,
+                    this.TraceStepName,
+                    this.TraceStepId,
+                    "Transformation Service",
+                    "Error",
+                    null,
+                    null,
+                    null,
+                    ex.Message
+                );
             }
-            string innerMessage = (ex.InnerException == null ? ex.Message : (ex.InnerException.InnerException == null ? ex.InnerException.Message : (ex.InnerException.InnerException.InnerException == null ? ex.InnerException.InnerException.Message : ex.InnerException.InnerException.InnerException.Message)));
+            string innerMessage = (
+                ex.InnerException == null
+                    ? ex.Message
+                    : (
+                        ex.InnerException.InnerException == null
+                            ? ex.InnerException.Message
+                            : (
+                                ex.InnerException.InnerException.InnerException == null
+                                    ? ex.InnerException.InnerException.Message
+                                    : ex.InnerException.InnerException.InnerException.Message
+                            )
+                    )
+            );
             throw new Exception(innerMessage, ex);
         }
         return resultDoc;
     }
+
     internal override void Transform(
-        IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-        string transactionId, Stream output)
+        IXPathNavigable input,
+        object xsltEngine,
+        Hashtable parameters,
+        string transactionId,
+        Stream output
+    )
     {
         XsltArgumentList xslArg = BuildArgumentListWithFunctions(transactionId);
         try
         {
             StringBuilder traceParameters = new StringBuilder();
-            if(parameters != null)
+            if (parameters != null)
             {
-                foreach(DictionaryEntry param in parameters)
+                foreach (DictionaryEntry param in parameters)
                 {
                     object val = param.Value;
-                    if(param.Value is byte[])
+                    if (param.Value is byte[])
                     {
                         val = Convert.ToBase64String((byte[])param.Value);
                     }
-                    else if(param.Value is DateTime)
+                    else if (param.Value is DateTime)
                     {
-                        val = XmlConvert.ToString((DateTime)param.Value, XmlDateTimeSerializationMode.RoundtripKind);
+                        val = XmlConvert.ToString(
+                            (DateTime)param.Value,
+                            XmlDateTimeSerializationMode.RoundtripKind
+                        );
                     }
-                    else if(param.Value is XmlDocument)
+                    else if (param.Value is XmlDocument)
                     {
                         XPathDocument paramXpathDoc = new XPathDocument(
-                            new XmlNodeReader(param.Value as XmlDocument));
+                            new XmlNodeReader(param.Value as XmlDocument)
+                        );
                         XPathNavigator nav = paramXpathDoc.CreateNavigator();
                         XPathNodeIterator iterator = nav.Select("/");
                         val = iterator;
                     }
-                    if(val != null)
+                    if (val != null)
                     {
                         //throw new NullReferenceException("Transformation input parameter '" + param.Key.ToString() + "' cannot be null.");
                         xslArg.AddParam(param.Key.ToString(), "", val);
                     }
-                    if(this.Trace)
+                    if (this.Trace)
                     {
                         string traceValue;
-                        if(param.Value is XmlDocument)
+                        if (param.Value is XmlDocument)
                         {
                             XmlDocument xmlDoc = param.Value as XmlDocument;
                             StringBuilder sb = new StringBuilder();
@@ -300,12 +396,12 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                             xmlDoc.Save(xtw);
                             sb.Append("&apos;)");
                             traceValue = sb.ToString();
-                            if(traceValue == "AS:ToXml(&apos;&apos;)")
+                            if (traceValue == "AS:ToXml(&apos;&apos;)")
                             {
                                 traceValue = "";
                             }
                         }
-                        else if(val == null)
+                        else if (val == null)
                         {
                             traceValue = "";
                         }
@@ -313,19 +409,24 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                         {
                             traceValue = XmlTools.ConvertToString(val);
                         }
-                        if(traceParameters.Length > 0)
+                        if (traceParameters.Length > 0)
                         {
                             traceParameters.Append(Environment.NewLine);
                         }
-                        if(traceValue == "")
+                        if (traceValue == "")
                         {
-                            traceParameters.AppendFormat("<xsl:param name=\"{0}\" />",
-                                param.Key.ToString());
+                            traceParameters.AppendFormat(
+                                "<xsl:param name=\"{0}\" />",
+                                param.Key.ToString()
+                            );
                         }
                         else
                         {
-                            traceParameters.AppendFormat("<xsl:param name=\"{0}\" select=\"{1}\"/>",
-                                param.Key.ToString(), traceValue);
+                            traceParameters.AppendFormat(
+                                "<xsl:param name=\"{0}\" select=\"{1}\"/>",
+                                param.Key.ToString(),
+                                traceValue
+                            );
                         }
                     }
                 }
@@ -334,83 +435,142 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             {
                 Transform(xsltEngine, xslArg, input, output);
             }
-            catch(XsltException ex)
+            catch (XsltException ex)
             {
                 string terminateStringEnglish = "Transform terminated:";
                 string terminateString = ResourceUtils.GetString("XsltTransformTerminated");
-                if(ex.Message.Length >= terminateString.Length &&
-                    ex.Message.Substring(0, terminateString.Length) == terminateString)
+                if (
+                    ex.Message.Length >= terminateString.Length
+                    && ex.Message.Substring(0, terminateString.Length) == terminateString
+                )
                 {
-                    throw new OrigamRuleException(ex.Message.Substring(terminateString.Length + 1, ex.Message.Length - 2 - terminateString.Length), ex, null);
+                    throw new OrigamRuleException(
+                        ex.Message.Substring(
+                            terminateString.Length + 1,
+                            ex.Message.Length - 2 - terminateString.Length
+                        ),
+                        ex,
+                        null
+                    );
                 }
-                else if(ex.Message.Length >= terminateStringEnglish.Length &&
-                    ex.Message.Substring(0, terminateStringEnglish.Length) == terminateStringEnglish)
+                else if (
+                    ex.Message.Length >= terminateStringEnglish.Length
+                    && ex.Message.Substring(0, terminateStringEnglish.Length)
+                        == terminateStringEnglish
+                )
                 {
-                    throw new OrigamRuleException(ex.Message.Substring(terminateStringEnglish.Length + 1, ex.Message.Length - 2 - terminateStringEnglish.Length), ex, null);
+                    throw new OrigamRuleException(
+                        ex.Message.Substring(
+                            terminateStringEnglish.Length + 1,
+                            ex.Message.Length - 2 - terminateStringEnglish.Length
+                        ),
+                        ex,
+                        null
+                    );
                 }
                 else
                 {
                     throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
                 }
             }
-            catch(OrigamRuleException)
+            catch (OrigamRuleException)
             {
                 throw;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
             }
         }
-        catch(OrigamRuleException ex)
+        catch (OrigamRuleException ex)
         {
-            if(this.Trace)
+            if (this.Trace)
             {
-                TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
+                TracingService.TraceStep(
+                    this.TraceWorkflowId,
+                    this.TraceStepName,
+                    this.TraceStepId,
+                    "Transformation Service",
+                    "Error",
+                    null,
+                    null,
+                    null,
+                    ex.Message
+                );
             }
             throw;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            if(this.Trace)
+            if (this.Trace)
             {
-                TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
+                TracingService.TraceStep(
+                    this.TraceWorkflowId,
+                    this.TraceStepName,
+                    this.TraceStepId,
+                    "Transformation Service",
+                    "Error",
+                    null,
+                    null,
+                    null,
+                    ex.Message
+                );
             }
-            string innerMessage = (ex.InnerException == null ? ex.Message : (ex.InnerException.InnerException == null ? ex.InnerException.Message : (ex.InnerException.InnerException.InnerException == null ? ex.InnerException.InnerException.Message : ex.InnerException.InnerException.InnerException.Message)));
+            string innerMessage = (
+                ex.InnerException == null
+                    ? ex.Message
+                    : (
+                        ex.InnerException.InnerException == null
+                            ? ex.InnerException.Message
+                            : (
+                                ex.InnerException.InnerException.InnerException == null
+                                    ? ex.InnerException.InnerException.Message
+                                    : ex.InnerException.InnerException.InnerException.Message
+                            )
+                    )
+            );
             throw new Exception(innerMessage, ex);
         }
     }
+
     private XsltArgumentList BuildArgumentListWithFunctions(string transactionId)
     {
         XsltArgumentList xslArg = new XsltArgumentList();
         foreach (var functionsDefinition in functionsDefinitions)
         {
-            if (functionsDefinition.Container is
-                IOrigamDependentXsltFunctionContainer origamContainer)
+            if (
+                functionsDefinition.Container
+                is IOrigamDependentXsltFunctionContainer origamContainer
+            )
             {
                 origamContainer.TransactionId = transactionId;
             }
             xslArg.AddExtensionObject(
-                functionsDefinition.NameSpaceUri, functionsDefinition.Container);
+                functionsDefinition.NameSpaceUri,
+                functionsDefinition.Container
+            );
         }
-        xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes,
-            new ExsltDatesAndTimes());
+        xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
         xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
-        xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions,
-            new ExsltRegularExpressions());
+        xslArg.AddExtensionObject(
+            ExsltNamespaces.RegularExpressions,
+            new ExsltRegularExpressions()
+        );
         xslArg.AddExtensionObject(ExsltNamespaces.Math, new ExsltMath());
         xslArg.AddExtensionObject(ExsltNamespaces.Random, new ExsltRandom());
         xslArg.AddExtensionObject(ExsltNamespaces.Sets, new ExsltSets());
-        xslArg.AddExtensionObject(ExsltNamespaces.GdnDatesAndTimes,
-            new GdnDatesAndTimes());
+        xslArg.AddExtensionObject(ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
         xslArg.AddExtensionObject(ExsltNamespaces.GdnMath, new GdnMath());
-        xslArg.AddExtensionObject(ExsltNamespaces.GdnRegularExpressions,
-            new GdnRegularExpressions());
+        xslArg.AddExtensionObject(
+            ExsltNamespaces.GdnRegularExpressions,
+            new GdnRegularExpressions()
+        );
         xslArg.AddExtensionObject(ExsltNamespaces.GdnSets, new GdnSets());
         xslArg.AddExtensionObject(ExsltNamespaces.GdnStrings, new GdnStrings());
         xslArg.AddExtensionObject(ExsltNamespaces.GdnDynamic, new GdnDynamic());
         return xslArg;
     }
+
     private void TraceResult(IXmlContainer traceDocument)
     {
         StringBuilder b = new StringBuilder();
@@ -420,10 +580,35 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
         traceDocument.Xml.WriteTo(xwr);
         xwr.Close();
         swr.Close();
-        TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName,
-            this.TraceStepId, "Transformation Service", "Output", null, b.ToString(), null, null);
+        TracingService.TraceStep(
+            this.TraceWorkflowId,
+            this.TraceStepName,
+            this.TraceStepId,
+            "Transformation Service",
+            "Output",
+            null,
+            b.ToString(),
+            null,
+            null
+        );
     }
-    public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr);
-    public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc);
-    public abstract void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output);
+
+    public abstract void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        XPathDocument sourceXpathDoc,
+        XmlTextWriter xwr
+    );
+    public abstract void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        XPathDocument sourceXpathDoc,
+        IXmlContainer resultDoc
+    );
+    public abstract void Transform(
+        object engine,
+        XsltArgumentList xslArg,
+        IXPathNavigable input,
+        Stream output
+    );
 }

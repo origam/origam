@@ -24,31 +24,31 @@ using System.Collections;
 using System.Xml;
 
 namespace Origam.Workbench.Services.CoreServices;
+
 /// <summary>
 /// Summary description for ReportService.
 /// </summary>
 public class ReportService
 {
-	public static byte[] GetReport(
-		Guid reportId, 
-		XmlDocument data, 
-		string format, 
-		Hashtable parameters, 
-		string transactionId)
-	{
-		IServiceAgent reportServiceAgent = ServiceManager.Services
-			.GetService<IBusinessServicesService>().GetAgent(
-				serviceType: "ReportService", 
-				ruleEngine: null, 
-				workflowEngine: null);
-		reportServiceAgent.MethodName = "GetReport";
-		reportServiceAgent.Parameters.Clear();
-		reportServiceAgent.Parameters.Add("Report", reportId);
-		reportServiceAgent.Parameters.Add("Data", data);
-		reportServiceAgent.Parameters.Add("Format", format);
-		reportServiceAgent.Parameters.Add("Parameters", parameters);
-		reportServiceAgent.TransactionId = transactionId;
-		reportServiceAgent.Run();
-		return (byte[])reportServiceAgent.Result;
-	}
+    public static byte[] GetReport(
+        Guid reportId,
+        XmlDocument data,
+        string format,
+        Hashtable parameters,
+        string transactionId
+    )
+    {
+        IServiceAgent reportServiceAgent = ServiceManager
+            .Services.GetService<IBusinessServicesService>()
+            .GetAgent(serviceType: "ReportService", ruleEngine: null, workflowEngine: null);
+        reportServiceAgent.MethodName = "GetReport";
+        reportServiceAgent.Parameters.Clear();
+        reportServiceAgent.Parameters.Add("Report", reportId);
+        reportServiceAgent.Parameters.Add("Data", data);
+        reportServiceAgent.Parameters.Add("Format", format);
+        reportServiceAgent.Parameters.Add("Parameters", parameters);
+        reportServiceAgent.TransactionId = transactionId;
+        reportServiceAgent.Run();
+        return (byte[])reportServiceAgent.Result;
+    }
 }

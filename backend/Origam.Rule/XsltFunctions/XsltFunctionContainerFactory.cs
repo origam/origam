@@ -33,14 +33,14 @@ namespace Origam.Rule.XsltFunctions;
 
 public static class XsltFunctionContainerFactory
 {
-    public static IEnumerable<XsltFunctionsDefinition> Create(
-        string transactionId = null)
+    public static IEnumerable<XsltFunctionsDefinition> Create(string transactionId = null)
     {
-        var businessServicesService = ServiceManager.Services
-            .GetService<IBusinessServicesService>();
+        var businessServicesService =
+            ServiceManager.Services.GetService<IBusinessServicesService>();
         return Create(
             businessServicesService,
-            ServiceManager.Services.GetService<SchemaService>()
+            ServiceManager
+                .Services.GetService<SchemaService>()
                 .GetProvider<XsltFunctionSchemaItemProvider>(),
             ServiceManager.Services.GetService<IPersistenceService>(),
             ServiceManager.Services.GetService<IDataLookupService>(),
@@ -48,28 +48,34 @@ public static class XsltFunctionContainerFactory
             ServiceManager.Services.GetService<IStateMachineService>(),
             ServiceManager.Services.GetService<ITracingService>(),
             ServiceManager.Services.GetService<IDocumentationService>(),
-            DataService.Instance, 
+            DataService.Instance,
             SecurityManager.GetAuthorizationProvider(),
             SecurityManager.CurrentUserProfile,
             XpathEvaluator.Instance,
             HttpTools.Instance,
-            new ResourceTools(
-                businessServicesService, 
-                SecurityManager.CurrentUserProfile),
-            transactionId);
+            new ResourceTools(businessServicesService, SecurityManager.CurrentUserProfile),
+            transactionId
+        );
     }
 
     // the method is public because of tests
-    public static IEnumerable<XsltFunctionsDefinition> Create (
+    public static IEnumerable<XsltFunctionsDefinition> Create(
         IBusinessServicesService businessService,
         IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider,
-        IPersistenceService persistence, IDataLookupService lookupService,
-        IParameterService parameterService, IStateMachineService stateMachineService ,
-        ITracingService tracingService, IDocumentationService documentationService,
-        ICoreDataService dataService, IOrigamAuthorizationProvider authorizationProvider, 
-        Func<UserProfile> userProfileGetter, IXpathEvaluator xpathEvaluator,
-        IHttpTools httpTools, IResourceTools resourceTools,
-        string transactionId)
+        IPersistenceService persistence,
+        IDataLookupService lookupService,
+        IParameterService parameterService,
+        IStateMachineService stateMachineService,
+        ITracingService tracingService,
+        IDocumentationService documentationService,
+        ICoreDataService dataService,
+        IOrigamAuthorizationProvider authorizationProvider,
+        Func<UserProfile> userProfileGetter,
+        IXpathEvaluator xpathEvaluator,
+        IHttpTools httpTools,
+        IResourceTools resourceTools,
+        string transactionId
+    )
     {
         return xsltFunctionSchemaItemProvider
             .ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst)
@@ -77,9 +83,9 @@ public static class XsltFunctionContainerFactory
             {
                 object container = Reflector.InvokeObject(
                     collection.FullClassName,
-                    collection.AssemblyName);
-                if (container is IOrigamDependentXsltFunctionContainer
-                    origamContainer)
+                    collection.AssemblyName
+                );
+                if (container is IOrigamDependentXsltFunctionContainer origamContainer)
                 {
                     origamContainer.Persistence = persistence;
                     origamContainer.LookupService = lookupService;
@@ -99,9 +105,14 @@ public static class XsltFunctionContainerFactory
                 return new XsltFunctionsDefinition(
                     Container: container,
                     NameSpacePrefix: collection.XslNameSpacePrefix,
-                    NameSpaceUri: collection.XslNameSpaceUri);
+                    NameSpaceUri: collection.XslNameSpaceUri
+                );
             });
     }
 }
-public record XsltFunctionsDefinition(object Container, 
-    string NameSpacePrefix, string NameSpaceUri);
+
+public record XsltFunctionsDefinition(
+    object Container,
+    string NameSpacePrefix,
+    string NameSpaceUri
+);

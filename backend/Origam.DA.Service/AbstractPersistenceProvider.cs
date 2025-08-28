@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +28,7 @@ using Origam.Extensions;
 using Origam.Schema;
 
 namespace Origam.DA.ObjectPersistence;
+
 public abstract class AbstractPersistenceProvider : IPersistenceProvider
 {
     private readonly Queue<object> transactionEndEventQueue = new Queue<object>();
@@ -38,19 +38,21 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
         set => throw new NotImplementedException();
     }
     public event EventHandler<IPersistent> InstancePersisted;
+
     public void RunInTransaction(Action action)
     {
         BeginTransaction();
         action();
         EndTransaction();
     }
-    public virtual void BeginTransaction()
-    {
-    }
+
+    public virtual void BeginTransaction() { }
+
     public abstract object Clone();
     public abstract void DeletePackage(Guid packageId);
     public virtual bool IsInTransaction { get; }
     public abstract void Dispose();
+
     public virtual void EndTransaction()
     {
         while (transactionEndEventQueue.Count > 0)
@@ -59,21 +61,21 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             InstancePersisted?.Invoke(this, (IPersistent)sender);
         }
     }
-    public virtual void EndTransactionDontSave()
-    {
-        
-    }
+
+    public virtual void EndTransactionDontSave() { }
+
     public abstract object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
-    public virtual void RestrictToLoadedPackage(bool b)
-    {
-    }
-    public abstract ILocalizationCache LocalizationCache { get;}
+
+    public virtual void RestrictToLoadedPackage(bool b) { }
+
+    public abstract ILocalizationCache LocalizationCache { get; }
     public abstract void FlushCache();
     public abstract void RemoveFromCache(IPersistent instance);
-    public abstract List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
+    public abstract List<T> RetrieveList<T>(IDictionary<string, object> filter = null);
     public abstract List<T> RetrieveListByCategory<T>(string category);
     public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
     public abstract T[] FullTextSearch<T>(string text);
+
     public List<T> GetReference<T>(Key key)
     {
         try
@@ -81,12 +83,14 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             RestrictToLoadedPackage(false);
             if (!ReferenceIndexManager.Initialized)
             {
-               return null;
+                return null;
             }
             Guid id = Guid.Parse(key.ToString());
             return ReferenceIndexManager
                 .GetReferences(id)
-                .Select(refInfo => (T)RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id)))
+                .Select(refInfo =>
+                    (T)RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id))
+                )
                 .ToList();
         }
         finally
@@ -94,13 +98,12 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             RestrictToLoadedPackage(true);
         }
     }
+
     public bool IsOfType<T>(Guid id)
     {
-        return RetrieveInstance(
-            type: typeof(T), 
-            primaryKey: new Key(id), 
-            useCache: false) is T;
+        return RetrieveInstance(type: typeof(T), primaryKey: new Key(id), useCache: false) is T;
     }
+
     private IEnumerable<object> FindUsages(ISchemaItem item, bool ignoreErrors, Key key)
     {
         List<object> foundUsages = new List<object>();
@@ -120,16 +123,27 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
         }
         catch (Exception ex)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorWhenDependencies",
-                item.ItemType, item.Path,
-                Environment.NewLine + Environment.NewLine + ex.Message), ex);
+            throw new Exception(
+                ResourceUtils.GetString(
+                    "ErrorWhenDependencies",
+                    item.ItemType,
+                    item.Path,
+                    Environment.NewLine + Environment.NewLine + ex.Message
+                ),
+                ex
+            );
         }
         return foundUsages;
     }
-    public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
+
+    public abstract List<T> RetrieveListByParent<T>(
+        Key primaryKey,
         string parentTableName,
-        string childTableName, bool useCache);
+        string childTableName,
+        bool useCache
+    );
     public abstract List<T> RetrieveListByGroup<T>(Key primaryKey);
+
     public void OnTransactionEnded(object sender)
     {
         if (InTransaction)
@@ -137,34 +151,48 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             transactionEndEventQueue.Enqueue(sender);
         }
     }
+
     public virtual void Persist(IPersistent obj)
     {
         if (!InTransaction)
-        { 
+        {
             InstancePersisted?.Invoke(this, obj);
         }
     }
+
     public virtual List<string> Files(IPersistent persistentObject)
     {
         return new List<string>();
     }
+
     public abstract bool InTransaction { get; }
     public abstract void RefreshInstance(IPersistent persistentObject);
     public abstract object RetrieveInstance(Type type, Key primaryKey);
     public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
-    public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
+    public abstract object RetrieveInstance(
+        Type type,
+        Key primaryKey,
+        bool useCache,
+        bool throwNotFoundException
+    );
+
     public T RetrieveInstance<T>(Guid instanceId)
     {
         return (T)RetrieveInstance(typeof(T), new Key(instanceId));
     }
+
     public T RetrieveInstance<T>(Guid instanceId, bool useCache)
     {
         return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache);
     }
-    public T RetrieveInstance<T>(
-        Guid instanceId, bool useCache, bool throwNotFoundException)
+
+    public T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException)
     {
-        return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache, 
-            throwNotFoundException);
+        return (T)RetrieveInstance(
+            typeof(T),
+            new Key(instanceId),
+            useCache,
+            throwNotFoundException
+        );
     }
 }

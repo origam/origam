@@ -22,11 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA;
-public interface ILocalizationCache: IDisposable
+
+public interface ILocalizationCache : IDisposable
 {
-    string GetLocalizedString(Guid elementId, string memberName,
-        string defaultString, string locale);
-    string GetLocalizedString(Guid elementId, string memberName,
-        string defaultString);
+    string GetLocalizedString(
+        Guid elementId,
+        string memberName,
+        string defaultString,
+        string locale
+    );
+    string GetLocalizedString(Guid elementId, string memberName, string defaultString);
     void Reload();
-}    
+}

@@ -24,7 +24,6 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.UI;
@@ -431,8 +430,12 @@ public class PackageEditor : AbstractViewContent
 		txtCopyright.TextChanged -= txtCopyright_TextChanged;
 		txtDescription.TextChanged -= txtDescription_TextChanged;
 		
-		if(! (objectToLoad is Package)) throw new ArgumentOutOfRangeException("objectToLoad", objectToLoad, ResourceUtils.GetString("ErrorEditPackagesOnly"));
-		_package = objectToLoad as Package;
+		if(! (objectToLoad is Package))
+        {
+            throw new ArgumentOutOfRangeException("objectToLoad", objectToLoad, ResourceUtils.GetString("ErrorEditPackagesOnly"));
+        }
+
+        _package = objectToLoad as Package;
 		txtName.Text = _package.Name;
 		txtVersion.Text = _package.Version;
 		txtCopyright.Text = _package.Copyright;
@@ -601,8 +604,12 @@ public class PackageEditor : AbstractViewContent
 	}
 	private bool ShouldFilterGroup(SchemaItemGroup group)
 	{
-		if(group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey)) return false;
-		foreach(ISchemaItem child in group.ChildItems)
+		if(group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
+        {
+            return false;
+        }
+
+        foreach (ISchemaItem child in group.ChildItems)
 		{
 			if(child.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
 			{
@@ -672,8 +679,12 @@ public class PackageEditor : AbstractViewContent
 	}
 	private bool IsPackageReferenced(Package package)
 	{
-		if(package == null) return false;
-		List<ISchemaItem> allCurrent = 
+		if(package == null)
+        {
+            return false;
+        }
+
+        List<ISchemaItem> allCurrent = 
 			_package.PersistenceProvider
 				.RetrieveListByPackage<ISchemaItem>(_schema.ActiveExtension.Id);
 		List<ISchemaItem> allReferenced = 

@@ -181,11 +181,9 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 			{
 				return true;
 			}
-			else
-			{
-				return _isViewOnly;
-			}
-		}
+
+            return _isViewOnly;
+        }
 		set 
 		{
 			_isViewOnly = value;
@@ -202,7 +200,6 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 	public object LoadedObject { get; private set; }
 	protected virtual void ViewSpecificLoad(object objectToLoad)
 	{
-		
 	}
 	public void LoadObject(object objectToLoad)
 	{

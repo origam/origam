@@ -19,23 +19,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
-using Origam.Schema.EntityModel;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
+
 [SchemaItemDescription("Entity Rule", "entity-rule.png")]
 [HelpTopic("Entity+Rule")]
 [ClassMetaVersion("6.0.0")]
 public class EntityRule : XPathRule, IEntityRule
 {
-	public EntityRule() : base() {}
-	public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public EntityRule(Key primaryKey) : base(primaryKey) { }
+    public EntityRule()
+        : base() { }
+
+    public EntityRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntityRule(Key primaryKey)
+        : base(primaryKey) { }
+
     [XmlAttribute("isPathRelative")]
     [Browsable(false)]
-	public override bool IsPathRelative { get; set; } = false;
+    public override bool IsPathRelative { get; set; } = false;
 }

@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Xml;
 using Origam;
-
 using Origam.DA;
 using Origam.Rule;
 using Origam.Schema;
@@ -36,86 +35,113 @@ using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Origam.Workflow;
 
-
 namespace Origam.Gui;
+
 public abstract class EntityUIActionRunner
 {
     protected readonly IEntityUIActionRunnerClient actionRunnerClient;
-    protected readonly List<object> resultList = new ();
+    protected readonly List<object> resultList = new();
+
     public EntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
     {
         this.actionRunnerClient = actionRunnerClient;
     }
+
     public IList ExecuteAction(
-        string sessionFormIdentifier, string requestingGrid, string entity, 
-        string actionType, string actionId, Hashtable parameterMappings, 
-        List<string> selectedIds, Hashtable inputParameters)
+        string sessionFormIdentifier,
+        string requestingGrid,
+        string entity,
+        string actionType,
+        string actionId,
+        Hashtable parameterMappings,
+        List<string> selectedIds,
+        Hashtable inputParameters
+    )
     {
-        ExecuteActionProcessData processData 
-            = actionRunnerClient.CreateExecuteActionProcessData(
-            sessionFormIdentifier, requestingGrid, actionType, entity, 
-            selectedIds, actionId, parameterMappings, inputParameters);
+        ExecuteActionProcessData processData = actionRunnerClient.CreateExecuteActionProcessData(
+            sessionFormIdentifier,
+            requestingGrid,
+            actionType,
+            entity,
+            selectedIds,
+            actionId,
+            parameterMappings,
+            inputParameters
+        );
         actionRunnerClient.CheckActionConditions(processData);
         PerformAppropriateAction(processData);
-        actionRunnerClient.SetModalDialogSize(resultList,processData);
+        actionRunnerClient.SetModalDialogSize(resultList, processData);
         return resultList;
     }
+
     protected virtual void PerformAppropriateAction(ExecuteActionProcessData processData)
     {
         switch (processData.Type)
         {
             case PanelActionType.Workflow:
+            {
                 ExecuteWorkflowAction(processData);
                 break;
+            }
+
             case PanelActionType.Report:
+            {
                 ExecuteOpenFormAction(processData);
                 break;
+            }
+
             case PanelActionType.ChangeUI:
                 throw new NotImplementedException();
             case PanelActionType.OpenForm:
+            {
                 ExecuteOpenFormAction(processData);
                 break;
+            }
+
             case PanelActionType.SelectionDialogAction:
                 throw new NotImplementedException();
             default:
                 throw new NotImplementedException();
         }
     }
-    protected abstract void ExecuteOpenFormAction(
-        ExecuteActionProcessData processData);
-    protected void ExecuteWorkflowAction(
-        ExecuteActionProcessData processData)
+
+    protected abstract void ExecuteOpenFormAction(ExecuteActionProcessData processData);
+
+    protected void ExecuteWorkflowAction(ExecuteActionProcessData processData)
     {
-        if((processData.Action == null)
-        || (processData.Action.Mode != PanelActionMode.Always))
+        if ((processData.Action == null) || (processData.Action.Mode != PanelActionMode.Always))
         {
             CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
         }
-        ActionResult result 
-            = MakeActionResult(ActionResultType.UpdateData);
-        if(!(processData.Action is EntityWorkflowAction entityWorkflowAction))
+        ActionResult result = MakeActionResult(ActionResultType.UpdateData);
+        if (!(processData.Action is EntityWorkflowAction entityWorkflowAction))
         {
-            throw new ArgumentOutOfRangeException("action",
-                processData.Action, 
-                Properties.Resources.ErrorWorkflowActionNotSupported);
+            throw new ArgumentOutOfRangeException(
+                "action",
+                processData.Action,
+                Properties.Resources.ErrorWorkflowActionNotSupported
+            );
         }
-        if(entityWorkflowAction.Workflow == null)
+        if (entityWorkflowAction.Workflow == null)
         {
-            throw new NullReferenceException(
-                Properties.Resources.ErrorWorkflowNotSet);
+            throw new NullReferenceException(Properties.Resources.ErrorWorkflowNotSet);
         }
         Key resultContextKey = null;
-        foreach(var mapping
-            in entityWorkflowAction.ChildItemsByType<EntityUIActionParameterMapping>(
-            EntityUIActionParameterMapping.CategoryConst))
+        foreach (
+            var mapping in entityWorkflowAction.ChildItemsByType<EntityUIActionParameterMapping>(
+                EntityUIActionParameterMapping.CategoryConst
+            )
+        )
         {
-            if(DatasetTools.IsParameterViableAsResultContext(mapping))
+            if (DatasetTools.IsParameterViableAsResultContext(mapping))
             {
-                foreach(var store 
-                    in entityWorkflowAction.Workflow.ChildItemsByType<ContextStore>(
-                    ContextStore.CategoryConst))
+                foreach (
+                    var store in entityWorkflowAction.Workflow.ChildItemsByType<ContextStore>(
+                        ContextStore.CategoryConst
+                    )
+                )
                 {
-                    if(store.Name == mapping.Name)
+                    if (store.Name == mapping.Name)
                     {
                         resultContextKey = store.PrimaryKey;
                         break;
@@ -125,55 +151,65 @@ public abstract class EntityUIActionRunner
         }
         var changes = new List<ChangeInfo>();
         var transactionId = Guid.NewGuid().ToString();
-        SetTransactionId(processData,transactionId);
+        SetTransactionId(processData, transactionId);
         try
         {
             WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
                 entityWorkflowAction.Workflow,
-                new Hashtable(processData.Parameters), false, "");
-            engine.SetTransactionId(transactionId, entityWorkflowAction.Workflow.TransactionBehavior);
-            using(WorkflowHost host = new WorkflowHost())
+                new Hashtable(processData.Parameters),
+                false,
+                ""
+            );
+            engine.SetTransactionId(
+                transactionId,
+                entityWorkflowAction.Workflow.TransactionBehavior
+            );
+            using (WorkflowHost host = new WorkflowHost())
             {
                 host.SupportsUI = false;
-                WorkflowCallbackHandler handler = new WorkflowCallbackHandler(host, engine.WorkflowInstanceId);
+                WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
+                    host,
+                    engine.WorkflowInstanceId
+                );
                 handler.Subscribe();
                 host.ExecuteWorkflow(engine);
                 handler.Event.WaitOne();
-                if(handler.Result.Exception != null)
+                if (handler.Result.Exception != null)
                 {
                     throw handler.Result.Exception;
                 }
-                actionRunnerClient.ProcessModalDialogCloseType(
-                    processData,entityWorkflowAction);
-                if((resultContextKey != null) 
-                && (entityWorkflowAction.MergeType != ServiceOutputMethod.Ignore))
+                actionRunnerClient.ProcessModalDialogCloseType(processData, entityWorkflowAction);
+                if (
+                    (resultContextKey != null)
+                    && (entityWorkflowAction.MergeType != ServiceOutputMethod.Ignore)
+                )
                 {
-                    DataSet sourceData 
-                        = (engine.RuleEngine.GetContext(resultContextKey) 
-                        as IDataDocument).DataSet;
+                    DataSet sourceData = (
+                        engine.RuleEngine.GetContext(resultContextKey) as IDataDocument
+                    ).DataSet;
                     actionRunnerClient.ProcessWorkflowResults(
                         profile: processData.Profile,
                         processData: processData,
                         sourceData: sourceData,
                         targetData: processData.DataTable.DataSet,
                         entityWorkflowAction: entityWorkflowAction,
-                        changes: changes);
+                        changes: changes
+                    );
                 }
                 actionRunnerClient.PostProcessWorkflowAction(
                     data: processData.DataTable.DataSet,
                     entityWorkflowAction: entityWorkflowAction,
-                    changes: changes);
+                    changes: changes
+                );
             }
             ResourceMonitor.Commit(transactionId);
             result.Changes = changes;
             resultList.Add(result);
-            AppendScriptCalls(
-                entityWorkflowAction, processData);
+            AppendScriptCalls(entityWorkflowAction, processData);
             // add a special result to close the screen
-            if(entityWorkflowAction.CloseType != ModalDialogCloseType.None)
+            if (entityWorkflowAction.CloseType != ModalDialogCloseType.None)
             {
-                resultList.Add(
-                    MakeActionResult(ActionResultType.DestroyForm));
+                resultList.Add(MakeActionResult(ActionResultType.DestroyForm));
             }
         }
         catch
@@ -186,81 +222,85 @@ public abstract class EntityUIActionRunner
             SetTransactionId(processData, null);
         }
     }
+
     protected virtual ActionResult MakeActionResult(ActionResultType type)
     {
         return new ActionResult(type);
     }
+
     protected abstract void SetTransactionId(
         ExecuteActionProcessData processData,
-        string transactionId);
+        string transactionId
+    );
+
     protected void AppendScriptCalls(
         EntityWorkflowAction entityWorkflowAction,
-        ExecuteActionProcessData processData)
+        ExecuteActionProcessData processData
+    )
     {
         var scriptCalls = entityWorkflowAction.ChildItemsByType<EntityWorkflowActionScriptCall>(
-            EntityWorkflowActionScriptCall.CategoryConst);
-        if(scriptCalls.Count == 0)
+            EntityWorkflowActionScriptCall.CategoryConst
+        );
+        if (scriptCalls.Count == 0)
         {
             return;
         }
         scriptCalls.Sort(new EntityWorkflowActionScriptCallComparer());
-        foreach(EntityWorkflowActionScriptCall scriptCall in scriptCalls)
+        foreach (EntityWorkflowActionScriptCall scriptCall in scriptCalls)
         {
-            if(IsScriptAllowed(scriptCall, processData))
+            if (IsScriptAllowed(scriptCall, processData))
             {
-                ActionResult result = MakeActionResult(
-                    ActionResultType.Script);
+                ActionResult result = MakeActionResult(ActionResultType.Script);
                 result.Script = scriptCall.Script;
                 resultList.Add(result);
             }
         }
     }
+
     private static void CheckSelectedRowsCountPositive(int count)
     {
-        if(count == 0)
+        if (count == 0)
         {
-            throw new RuleException(
-                Properties.Resources.ErrorNoRecordsSelectedForAction);
+            throw new RuleException(Properties.Resources.ErrorNoRecordsSelectedForAction);
         }
     }
+
     private bool IsScriptAllowed(
-        EntityWorkflowActionScriptCall scriptCall, 
-        ExecuteActionProcessData processData)
+        EntityWorkflowActionScriptCall scriptCall,
+        ExecuteActionProcessData processData
+    )
     {
         // check features
-        IParameterService param = ServiceManager.Services.GetService(
-            typeof(IParameterService)) as IParameterService;
-        if(!param.IsFeatureOn(scriptCall.Features))
+        IParameterService param =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        if (!param.IsFeatureOn(scriptCall.Features))
         {
             return false;
         }
         // check roles
-        IOrigamAuthorizationProvider authorizationProvider 
-            = SecurityManager.GetAuthorizationProvider();
-        if(!authorizationProvider.Authorize(
-            SecurityManager.CurrentPrincipal, scriptCall.Roles))
+        IOrigamAuthorizationProvider authorizationProvider =
+            SecurityManager.GetAuthorizationProvider();
+        if (!authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, scriptCall.Roles))
         {
             return false;
         }
         // check business rule
-        if((scriptCall.Rule != null) 
-        && (processData.Action.Mode != PanelActionMode.Always))
+        if ((scriptCall.Rule != null) && (processData.Action.Mode != PanelActionMode.Always))
         {
             RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
             XmlContainer rowXml = DatasetTools.GetRowXml(
-                processData.SelectedRows[0], DataRowVersion.Current);
-            object result = ruleEngine.EvaluateRule(
-                scriptCall.Rule, rowXml, null);
-            if(result is bool)
+                processData.SelectedRows[0],
+                DataRowVersion.Current
+            );
+            object result = ruleEngine.EvaluateRule(scriptCall.Rule, rowXml, null);
+            if (result is bool)
             {
                 return (bool)result;
             }
-            else
-            {
-                throw new ArgumentException(
-                    Origam.Workflow.ResourceUtils.GetString(
-                    "ErrorResultNotBool", scriptCall.Path));
-            }
+
+            throw new ArgumentException(
+                Origam.Workflow.ResourceUtils.GetString("ErrorResultNotBool", scriptCall.Path)
+            );
         }
         return true;
     }

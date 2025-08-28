@@ -19,17 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
+
 public enum SystemFunction
 {
-	ActiveProfileId = 0,
-	ResourceIdByActiveProfile = 1
+    ActiveProfileId = 0,
+    ResourceIdByActiveProfile = 1,
 }
+
 /// <summary>
 /// Summary description for SystemFunctionCall.
 /// </summary>
@@ -39,34 +41,32 @@ public enum SystemFunction
 [ClassMetaVersion("6.0.0")]
 public class SystemFunctionCall : AbstractSchemaItem
 {
-	public const string CategoryConst = "SystemFunctionCall";
-	public SystemFunctionCall() : base() {}
-	public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
-	#region Properties
-	private SystemFunction _function;
-	
+    public const string CategoryConst = "SystemFunctionCall";
+
+    public SystemFunctionCall()
+        : base() { }
+
+    public SystemFunctionCall(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public SystemFunctionCall(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
+    #region Properties
+    private SystemFunction _function;
+
     [XmlAttribute("function")]
-	public SystemFunction Function
-	{
-		get
-		{
-			return _function;
-		}
-		set
-		{
-			_function = value;
-		}
-	}
-	#endregion
+    public SystemFunction Function
+    {
+        get { return _function; }
+        set { _function = value; }
+    }
+    #endregion
 }

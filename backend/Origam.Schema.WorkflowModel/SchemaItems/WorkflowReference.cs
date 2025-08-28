@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for RuleReference.
 /// </summary>
@@ -38,39 +39,56 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class WorkflowReference : AbstractSchemaItem
 {
-	public const string CategoryConst = "WorkflowReference";
-	public WorkflowReference() : base() {}
-	public WorkflowReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public WorkflowReference(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "WorkflowReference";
 
-	#region Overriden AbstractDataEntityColumn Members
+    public WorkflowReference()
+        : base() { }
 
-	public override string ItemType => CategoryConst;
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.Workflow != null)
-			base.GetParameterReferences(Workflow, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Workflow);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
-	#endregion
-	#region Properties
-	public Guid WorkflowId;
-	[Category("Reference")]
-	[TypeConverter(typeof(WorkflowConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("workflow", "WorkflowId")]
-	public Workflow Workflow
-	{
-		get => (ISchemaItem)this.PersistenceProvider
-			.RetrieveInstance(typeof(ISchemaItem)
-				, new ModelElementKey(this.WorkflowId)) as Workflow;
-		
-		set => this.WorkflowId = (Guid)value.PrimaryKey["Id"];
-	}
-	#endregion
+    public WorkflowReference(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public WorkflowReference(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType => CategoryConst;
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.Workflow != null)
+        {
+            base.GetParameterReferences(Workflow, list);
+        }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Workflow);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
+    #endregion
+    #region Properties
+    public Guid WorkflowId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(WorkflowConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("workflow", "WorkflowId")]
+    public Workflow Workflow
+    {
+        get =>
+            (ISchemaItem)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.WorkflowId)
+                ) as Workflow;
+        set => this.WorkflowId = (Guid)value.PrimaryKey["Id"];
+    }
+    #endregion
 }

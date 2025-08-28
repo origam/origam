@@ -192,32 +192,40 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	{
 		switch (objectToLoad)
 		{
-			case IWorkflowBlock workflowBlock:
-				internalEditor = new WorkFlowDiagramEditor(
-					graphParentId: workflowBlock.Id,
-					gViewer: gViewer,
-					nodeSelector: nodeSelector,
-					parentForm: this,
-					persistenceProvider: persistenceProvider,
-					factory: new WorkFlowDiagramFactory(
-						nodeSelector,gViewer, schemaService));
-				break;
-			case IContextStore contextStore:
-				internalEditor = new GeneralDiagramEditor<IContextStore>(
-					gViewer: gViewer,
-					schemaItem: contextStore,
-					factory: new ContextStoreDiagramFactory(
-						persistenceProvider, nodeSelector, gViewer, schemaService),
-					persistenceProvider: persistenceProvider);
-				break;
-			case ISchemaItem schemaItem:
-				internalEditor = new GeneralDiagramEditor<ISchemaItem>(
-					gViewer: gViewer, 
-					schemaItem: schemaItem, 
-					factory: new GeneralDiagramFactory(),
-				    persistenceProvider: persistenceProvider);
-				break;
-		}
+            case IWorkflowBlock workflowBlock:
+                {
+                    internalEditor = new WorkFlowDiagramEditor(
+                                    graphParentId: workflowBlock.Id,
+                                    gViewer: gViewer,
+                                    parentForm: this,
+                                    persistenceProvider: persistenceProvider,
+                                    factory: new WorkFlowDiagramFactory(
+                                        nodeSelector, gViewer, schemaService),
+                                    nodeSelector: nodeSelector);
+                    break;
+                }
+
+            case IContextStore contextStore:
+                {
+                    internalEditor = new GeneralDiagramEditor<IContextStore>(
+                                    gViewer: gViewer,
+                                    schemaItem: contextStore,
+                                    factory: new ContextStoreDiagramFactory(
+                                        persistenceProvider, nodeSelector, gViewer, schemaService),
+                                    persistenceProvider: persistenceProvider);
+                    break;
+                }
+
+            case ISchemaItem schemaItem:
+                {
+                    internalEditor = new GeneralDiagramEditor<ISchemaItem>(
+                                    gViewer: gViewer,
+                                    schemaItem: schemaItem,
+                                    factory: new GeneralDiagramFactory(),
+                                    persistenceProvider: persistenceProvider);
+                    break;
+                }
+        }
 	}
 	public List<ToolStrip> GetToolStrips(int maxWidth = -1)
 	{
@@ -275,10 +283,18 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	}
 	private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
     {
-        if (e.NewValue == e.OldValue) return;
+        if (e.NewValue == e.OldValue)
+        {
+            return;
+        }
+
         var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-        if (focusSubgraph == null) return;
-        double distanceFromCenter = focusSubgraph.Width / 100 * e.NewValue - focusSubgraph.Width / 2;
+        if (focusSubgraph == null)
+        {
+            return;
+        }
+
+        double distanceFromCenter = (focusSubgraph.Width / 100 * e.NewValue) - (focusSubgraph.Width / 2);
         gViewer.CenterToXCoordinate(focusSubgraph.Pos.X + distanceFromCenter);
     }
 //        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
@@ -118,7 +117,11 @@ public class AsRadioButton : RadioButton, IAsControl
         }
         set
         {
-            if (_settingValue) return;
+            if (_settingValue)
+            {
+                return;
+            }
+
             _settingValue = true;
             try
             {

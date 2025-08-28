@@ -40,35 +40,38 @@ namespace Origam.Schema.LookupModel;
 [XmlModelRoot(CategoryConst)]
 [DefaultProperty("MenuItem")]
 [ClassMetaVersion("6.0.0")]
-public class NewRecordScreenBinding 
-    : AbstractSchemaItem, IAuthorizationContextContainer
+public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextContainer
 {
     public const string CategoryConst = "NewRecordScreenBinding";
 
-    public NewRecordScreenBinding() {}
+    public NewRecordScreenBinding() { }
 
-    public NewRecordScreenBinding(Guid schemaExtensionId) 
-        : base(schemaExtensionId) {}
-    
-    public NewRecordScreenBinding(Key primaryKey) : base(primaryKey) {}
-    
+    public NewRecordScreenBinding(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public NewRecordScreenBinding(Key primaryKey)
+        : base(primaryKey) { }
+
     [Browsable(false)]
     public bool IsAvailable
     {
         get
         {
-            if (MenuItem is not FormReferenceMenuItem referenceMenuItem 
-                || referenceMenuItem.ReadOnlyAccess)
+            if (
+                MenuItem is not FormReferenceMenuItem referenceMenuItem
+                || referenceMenuItem.ReadOnlyAccess
+            )
             {
                 return false;
             }
-            IParameterService parameterService = ServiceManager.Services
-                .GetService<IParameterService>();
+            IParameterService parameterService =
+                ServiceManager.Services.GetService<IParameterService>();
             IOrigamAuthorizationProvider authorizationProvider =
                 SecurityManager.GetAuthorizationProvider();
             IPrincipal principal = SecurityManager.CurrentPrincipal;
-            string authContext = SecurityManager
-                .GetReadOnlyRoles(referenceMenuItem.AuthorizationContext);
+            string authContext = SecurityManager.GetReadOnlyRoles(
+                referenceMenuItem.AuthorizationContext
+            );
             bool hasReadOnlyRole = SecurityManager
                 .GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, authContext);
@@ -76,14 +79,11 @@ public class NewRecordScreenBinding
             {
                 return false;
             }
-            return
-                authorizationProvider.Authorize(principal, AuthorizationContext)
-                && authorizationProvider.Authorize(principal,
-                    MenuItem.AuthorizationContext)
+            return authorizationProvider.Authorize(principal, AuthorizationContext)
+                && authorizationProvider.Authorize(principal, MenuItem.AuthorizationContext)
                 && parameterService.IsFeatureOn(MenuItem.Features);
         }
     }
-
 
     #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
@@ -97,14 +97,14 @@ public class NewRecordScreenBinding
             menu = menu.ParentItem;
             dependencies.Add(menu);
         }
-        base.GetExtraDependencies (dependencies);
+        base.GetExtraDependencies(dependencies);
     }
 
     public override bool CanMove(UI.IBrowserNode2 newNode)
     {
         return newNode is AbstractDataLookup;
     }
-    
+
     public override bool UseFolders => false;
 
     #endregion
@@ -121,22 +121,20 @@ public class NewRecordScreenBinding
     public AbstractMenuItem MenuItem
     {
         get => PersistenceProvider.RetrieveInstance<AbstractMenuItem>(MenuItemId);
-        set => MenuItemId = value == null 
-            ? Guid.Empty 
-            : (Guid)value.PrimaryKey["Id"];
+        set => MenuItemId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
     }
 
     [Category("Security")]
     [NotNullModelElementRule]
     [XmlAttribute("roles")]
     public string Roles { get; set; }
-    
+
     [XmlAttribute("dialogWidth")]
     public int DialogWidth { get; set; }
-    
+
     [XmlAttribute("dialogHeight")]
     public int DialogHeight { get; set; }
-		
+
     #endregion
 
     #region IAuthorizationContextContainer Members
@@ -145,32 +143,28 @@ public class NewRecordScreenBinding
     public string AuthorizationContext => Roles;
 
     #endregion
-    
+
     #region ISchemaItemFactory Members
 
-    public override Type[] NewItemTypes => new[] 
-    { 
-        typeof(NewRecordScreenBindingParameterMapping)
-    };
+    public override Type[] NewItemTypes => new[] { typeof(NewRecordScreenBindingParameterMapping) };
     #endregion
 
     public NewRecordScreenBindingParameterMapping[] GetParameterMappings()
     {
-        return ChildItems
-            .OfType<NewRecordScreenBindingParameterMapping>()
-            .ToArray();
+        return ChildItems.OfType<NewRecordScreenBindingParameterMapping>().ToArray();
     }
 }
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute 
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
         if (!(instance is NewRecordScreenBinding newRecordScreenBinding))
         {
             return new Exception(
-                $"{nameof(NoRecursiveNewRecordScreenBindingsRule)} can be only applied to type {nameof(NewRecordScreenBinding)}");  
+                $"{nameof(NoRecursiveNewRecordScreenBindingsRule)} can be only applied to type {nameof(NewRecordScreenBinding)}"
+            );
         }
         if (newRecordScreenBinding.MenuItem == null)
         {
@@ -179,14 +173,17 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
         if (newRecordScreenBinding.MenuItem is not FormReferenceMenuItem menuItem)
         {
             return new Exception(
-                $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"); 
+                $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"
+            );
         }
-        IEnumerable<IDataLookup> allLookups = menuItem.Screen.ChildrenRecursive
-            .OfType<ControlSetItem>()
+        IEnumerable<IDataLookup> allLookups = menuItem
+            .Screen.ChildrenRecursive.OfType<ControlSetItem>()
             .SelectMany(controlSetItem =>
             {
                 IEnumerable<PanelControlSet> panelControlSets = FindScreenSections(controlSetItem);
-                IEnumerable<ControlSetItem> comboBoxes = panelControlSets.SelectMany(FindComboBoxes);
+                IEnumerable<ControlSetItem> comboBoxes = panelControlSets.SelectMany(
+                    FindComboBoxes
+                );
                 IEnumerable<IDataLookup> lookups = comboBoxes.SelectMany(GetLookups);
                 return lookups;
             })
@@ -198,9 +195,11 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
             .ToList();
         if (conflictingNewRecordBindingIds.Count != 0)
         {
-            return new Exception("The selected menu item references a screen with NewRecordScreenBindings. " +
-                                 "This would lead to nested NewRecordScreenBindings and is therefore not allowed. " +
-                                 $"The conflicting NewRecordScreenBinding ids are: [{string.Join(", ",conflictingNewRecordBindingIds)}]");
+            return new Exception(
+                "The selected menu item references a screen with NewRecordScreenBindings. "
+                    + "This would lead to nested NewRecordScreenBindings and is therefore not allowed. "
+                    + $"The conflicting NewRecordScreenBinding ids are: [{string.Join(", ", conflictingNewRecordBindingIds)}]"
+            );
         }
         return null;
     }
@@ -218,8 +217,8 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
         {
             return Enumerable.Empty<ControlSetItem>();
         }
-        return panelControlSet.ChildrenRecursive
-            .OfType<ControlSetItem>()
+        return panelControlSet
+            .ChildrenRecursive.OfType<ControlSetItem>()
             .Where(item => item.Name == "AsCombo");
     }
 

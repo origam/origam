@@ -23,7 +23,6 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Windows.Forms;
-
 using Origam.UI;
 
 namespace Origam.Gui.Win;
@@ -164,8 +163,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
 	}
 	public void SizeControls(DataGridTableStyle tableStyle, int offset)
 	{
-		if(tableStyle == null) return;
-		_lastTableStyle = tableStyle;
+		if(tableStyle == null)
+        {
+            return;
+        }
+
+        _lastTableStyle = tableStyle;
 		_lastOffset = offset;
 		this.SuspendLayout();
 		int left = tableStyle.RowHeaderWidth - offset;
@@ -283,8 +286,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
 		part.OperatorLabelControl.Width = width;
 		
 		int newHeight = part.OperatorLabelControl.Top + part.OperatorLabelControl.Height;
-		if(newHeight > height) height = newHeight;
-		int top = 30;
+		if(newHeight > height)
+        {
+            height = newHeight;
+        }
+
+        int top = 30;
 		foreach(Control c in part.FilterControls)
 		{
 			if((bool)c.Tag)
@@ -298,8 +305,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
 				c.BringToFront();
 				top += c.Height;
 				newHeight = c.Top + c.Height;
-				if(newHeight > height) height = newHeight;
-				startingTabIndex++;
+				if(newHeight > height)
+                {
+                    height = newHeight;
+                }
+
+                startingTabIndex++;
 			}
 			else
 			{
@@ -328,8 +339,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
 					// dynamicaly add temp sort column, e.g. if column is parametrized lookup
 					panel.GetSortColumn(part.GridColumnName);
 				}
-				if(result.Length > 0) result.Append(" AND ");
-				result.AppendFormat("({0})", part.Query);
+				if(result.Length > 0)
+                {
+                    result.Append(" AND ");
+                }
+
+                result.AppendFormat("({0})", part.Query);
 			}
 		}
 		return result.ToString();
@@ -338,8 +353,12 @@ public class FilterPanel : System.Windows.Forms.UserControl
 	#region Event Handlers
 	private void part_QueryChanged(object sender, string query)
 	{
-		if(_ignoreQueryChange) return;
-		keyboardTimer.Enabled = false;
+		if(_ignoreQueryChange)
+        {
+            return;
+        }
+
+        keyboardTimer.Enabled = false;
 		keyboardTimer.Enabled = true;
 	}
 	private void part_ControlsChanged(object sender, EventArgs e)

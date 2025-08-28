@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for PrintItReport.
 /// </summary>
@@ -31,7 +32,12 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.0.0")]
 public class PrintItReport : AbstractDataReport, IDataStructureReference
 {
-	public PrintItReport() : base() { }
-	public PrintItReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-	public PrintItReport(Key primaryKey) : base(primaryKey) { }
+    public PrintItReport()
+        : base() { }
+
+    public PrintItReport(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public PrintItReport(Key primaryKey)
+        : base(primaryKey) { }
 }

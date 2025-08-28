@@ -220,20 +220,28 @@ public class OrigamSettingsEditor :  AbstractViewContent
 		
 			switch(result)
 			{
-				case DialogResult.Yes:
-					SaveObject();
-					break;
-		
-				case DialogResult.Cancel:
-					e.Cancel = true;
-					break;
-			}
+                case DialogResult.Yes:
+                    {
+                        SaveObject();
+                        break;
+                    }
+
+                case DialogResult.Cancel:
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+            }
 		}
 	}
 	private void lvwConfigurations_SelectedIndexChanged(object sender, System.EventArgs e)
 	{
-		if(_closing) return;
-		if(lvwConfigurations.SelectedItems.Count > 0)
+		if(_closing)
+        {
+            return;
+        }
+
+        if (lvwConfigurations.SelectedItems.Count > 0)
 		{
 			OrigamSettings[] selectedSettings = new OrigamSettings[lvwConfigurations.SelectedItems.Count];
 			int i = 0;
@@ -277,8 +285,12 @@ public class OrigamSettingsEditor :  AbstractViewContent
 		}
 		if(e.Button == btnDelete)
 		{
-			if(lvwConfigurations.SelectedItems.Count <= 0) return;
-			ListViewItem[] items = new ListViewItem[lvwConfigurations.SelectedItems.Count];
+			if(lvwConfigurations.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            ListViewItem[] items = new ListViewItem[lvwConfigurations.SelectedItems.Count];
 			lvwConfigurations.SelectedItems.CopyTo(items, 0);
 			foreach(ListViewItem item in items)
 			{
@@ -289,8 +301,12 @@ public class OrigamSettingsEditor :  AbstractViewContent
 	
 		if(e.Button == btnClone)
 		{
-			if(lvwConfigurations.SelectedItems.Count <= 0) return;
-			foreach(ListViewItem item in lvwConfigurations.SelectedItems)
+			if(lvwConfigurations.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            foreach (ListViewItem item in lvwConfigurations.SelectedItems)
 			{
 				ListViewItem newItem = NewItem();
 				OrigamSettings settings = (item.Tag as OrigamSettings).Clone() as OrigamSettings;

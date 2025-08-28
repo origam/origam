@@ -25,7 +25,6 @@ using Origam.Workbench.Services;
 using Origam.Workflow;
 using Origam.Workflow.WorkQueue;
 
-
 namespace Origam.Utils;
 public class QueueProcessor
 {
@@ -51,7 +50,10 @@ public class QueueProcessor
         while (true)
         {
             Thread.Sleep(200);
-            if (taskRunner.AllTasksFinished()) break;
+            if (taskRunner.AllTasksFinished())
+            {
+                break;
+            }
         }
         taskRunner.CleanUp();
     }

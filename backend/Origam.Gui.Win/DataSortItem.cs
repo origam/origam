@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Gui.Win;
@@ -75,8 +74,12 @@ public class DataSortItem : IComparable
 	public int CompareTo(object obj)
 	{
 		DataSortItem compareItem = obj as DataSortItem;
-		if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
-		return this.SortOrder.CompareTo(compareItem.SortOrder);
+		if(compareItem == null)
+        {
+            throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
+        }
+
+        return this.SortOrder.CompareTo(compareItem.SortOrder);
 	}
 	#endregion
 }

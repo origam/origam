@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
@@ -235,11 +234,9 @@ public class ExtensionPad : AbstractPadContent
 			{
 				return lvwPackages.SelectedItems[0].Tag as Package;
 			}
-			else
-			{
-				return null;
-			}
-		}
+
+            return null;
+        }
 		set
 		{
 			lvwPackages.SelectedItems.Clear();
@@ -297,8 +294,11 @@ public class ExtensionPad : AbstractPadContent
 		try
 		{
 			Commands.LoadSelectedPackage cmd = new Origam.Workbench.Commands.LoadSelectedPackage();
-			if(cmd.IsEnabled) cmd.Run();
-		}
+			if(cmd.IsEnabled)
+            {
+                cmd.Run();
+            }
+        }
 		catch(Exception ex)
 		{
 			Origam.UI.AsMessageBox.ShowError(this.FindForm(), ex.Message, ResourceUtils.GetString("ErrorWhenLoadPackage", this.SelectedExtension.Name), ex);

@@ -41,24 +41,50 @@ public class LookupForm : AbstractWizardForm
         cboListFilter.Items.Clear();
         cboDisplayField.Items.Clear();
         IDataEntityColumn nameColumn = null;
-        if (this.Entity == null) return;
+        if (this.Entity == null)
+        {
+            return;
+        }
+
         txtName.Text = this.Entity.Name;
         EntityFilter idFilter = null;
         foreach (var filter in Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst))
         {
             cboListFilter.Items.Add(filter);
             cboIdFilter.Items.Add(filter);
-            if (filter.Name == "GetId") idFilter = filter;
+            if (filter.Name == "GetId")
+            {
+                idFilter = filter;
+            }
         }
-        if (idFilter != null) cboIdFilter.SelectedItem = idFilter;
+        if (idFilter != null)
+        {
+            cboIdFilter.SelectedItem = idFilter;
+        }
+
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
-            if (string.IsNullOrEmpty(column.ToString())) continue;
-            if (column.Name == "Name") nameColumn = column;
-            if (column.IsPrimaryKey && !column.ExcludeFromAllFields) IdColumn = column;
+            if (string.IsNullOrEmpty(column.ToString()))
+            {
+                continue;
+            }
+
+            if (column.Name == "Name")
+            {
+                nameColumn = column;
+            }
+
+            if (column.IsPrimaryKey && !column.ExcludeFromAllFields)
+            {
+                IdColumn = column;
+            }
+
             cboDisplayField.Items.Add(column);
         }
         cboDisplayField.SelectedItem = nameColumn;
-        if (IdColumn == null) throw new Exception("Entity has no primary key defined. Cannot create lookup.");
+        if (IdColumn == null)
+        {
+            throw new Exception("Entity has no primary key defined. Cannot create lookup.");
+        }
     }
 }

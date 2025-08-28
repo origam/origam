@@ -48,7 +48,6 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         return DataService(_databaseType).BuildConnectionString(
             project.DatabaseServerName, project.DatabasePort, creatingDatabase, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-        
     }
     public void ResetDataservice()
     {

@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for ForeachWorkflowBlock.
 /// </summary>
@@ -37,70 +37,74 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class LoopWorkflowBlock : AbstractWorkflowBlock
 {
-	public LoopWorkflowBlock() : base() {}
-	public LoopWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public LoopWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
-		dependencies.Add(this.LoopConditionContextStore);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override void UpdateReferences()
-	{
-		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-		{
-			if(item.OldPrimaryKey != null)
-			{
-				if(item.OldPrimaryKey.Equals(this.LoopConditionContextStore.PrimaryKey))
-				{
-					this.LoopConditionContextStore = item as IContextStore;
-					break;
-				}
-			}
-		}
-		base.UpdateReferences ();
-	}
-	#endregion
-	#region Properties
-	public Guid ContextStoreId;
-	[TypeConverter(typeof(ContextStoreConverter))]
-	[NotNullModelElementRule()]
+    public LoopWorkflowBlock()
+        : base() { }
+
+    public LoopWorkflowBlock(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public LoopWorkflowBlock(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
+        dependencies.Add(this.LoopConditionContextStore);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override void UpdateReferences()
+    {
+        foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+        {
+            if (item.OldPrimaryKey != null)
+            {
+                if (item.OldPrimaryKey.Equals(this.LoopConditionContextStore.PrimaryKey))
+                {
+                    this.LoopConditionContextStore = item as IContextStore;
+                    break;
+                }
+            }
+        }
+        base.UpdateReferences();
+    }
+    #endregion
+    #region Properties
+    public Guid ContextStoreId;
+
+    [TypeConverter(typeof(ContextStoreConverter))]
+    [NotNullModelElementRule()]
     [XmlReference("loopConditionContextStore", "ContextStoreId")]
-	public IContextStore LoopConditionContextStore
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.ContextStoreId = Guid.Empty;
-			}
-			else
-			{
-				this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-	}
-	string _xpath;
-	[StringNotEmptyModelElementRule()]
+    public IContextStore LoopConditionContextStore
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.ContextStoreId;
+            return (IContextStore)
+                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.ContextStoreId = Guid.Empty;
+            }
+            else
+            {
+                this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+            }
+        }
+    }
+    string _xpath;
+
+    [StringNotEmptyModelElementRule()]
     [XmlAttribute("loopConditionXPath")]
-	public string LoopConditionXPath
-	{
-		get
-		{
-			return _xpath;
-		}
-		set
-		{
-			_xpath = value;
-		}
-	}
-	#endregion
+    public string LoopConditionXPath
+    {
+        get { return _xpath; }
+        set { _xpath = value; }
+    }
+    #endregion
 }

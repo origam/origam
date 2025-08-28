@@ -19,31 +19,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Workbench.Services;
 using System;
+using Origam.Workbench.Services;
 
 namespace Origam.Workflow;
+
 public class ParameterServiceAgent : AbstractServiceAgent
 {
     object _result = null;
     public override object Result
     {
-        get
-        {
-            return _result;
-        }
+        get { return _result; }
     }
+
     public override void Run()
     {
         switch (this.MethodName)
         {
             case "SetCustomParameterValue":
+            {
                 // Check input parameters
                 if (!(this.Parameters["ParameterName"] is string))
+                {
                     throw new InvalidCastException("ParameterName has to be string");
+                }
+
                 object value = this.Parameters["Value"];
-                IParameterService paramSvc = ServiceManager.Services.GetService(
-                    typeof(IParameterService)) as IParameterService;
+                IParameterService paramSvc =
+                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    as IParameterService;
                 int intValue = 0;
                 string stringValue = "";
                 Guid guidValue = Guid.Empty;
@@ -76,7 +80,7 @@ public class ParameterServiceAgent : AbstractServiceAgent
                 }
                 object profileIdParam = Parameters["ProfileId"];
                 Guid? profileId;
-                if(profileIdParam is string)
+                if (profileIdParam is string)
                 {
                     profileId = new Guid((string)profileIdParam);
                 }
@@ -84,20 +88,39 @@ public class ParameterServiceAgent : AbstractServiceAgent
                 {
                     profileId = (Guid)profileIdParam;
                 }
-                else if(profileIdParam == null)
+                else if (profileIdParam == null)
                 {
                     profileId = null;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("ProfileId", profileIdParam, "ProfileId must be Guid, string or empty.");
+                    throw new ArgumentOutOfRangeException(
+                        "ProfileId",
+                        profileIdParam,
+                        "ProfileId must be Guid, string or empty."
+                    );
                 }
-                paramSvc.SetCustomParameterValue((string)Parameters["ParameterName"],
-                    value, guidValue, intValue, stringValue, boolValue, decimalValue, decimalValue,
-                    dateValue, profileId);
+                paramSvc.SetCustomParameterValue(
+                    (string)Parameters["ParameterName"],
+                    value,
+                    guidValue,
+                    intValue,
+                    stringValue,
+                    boolValue,
+                    decimalValue,
+                    decimalValue,
+                    dateValue,
+                    profileId
+                );
                 break;
+            }
+
             default:
-                throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
+                throw new ArgumentOutOfRangeException(
+                    "MethodName",
+                    this.MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
         }
     }
 }

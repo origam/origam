@@ -22,9 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
 using Origam.UI;
-
 using CrystalDecisions.Windows.Forms;
 
 namespace Origam.BI.CrystalReports;
@@ -495,8 +493,12 @@ public class ReportToolbar : System.Windows.Forms.UserControl
 	#endregion
 	private void toolbar_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
 	{
-		if(ReportViewer == null) return;
-		if(e.Button == btnClose)
+		if(ReportViewer == null)
+        {
+            return;
+        }
+
+        if (e.Button == btnClose)
 		{
 			ReportViewer.CloseView(null);
 		}
@@ -570,44 +572,74 @@ public class ReportToolbar : System.Windows.Forms.UserControl
 	#endregion
 	private void mnuZoom400_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(400);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(400);
+        }
+    }
 	private void mnuZoom300_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(300);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(300);
+        }
+    }
 	private void mnuZoom200_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(200);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(200);
+        }
+    }
 	private void mnuZoom150_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(150);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(150);
+        }
+    }
 	private void mnuZoom100_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(100);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(100);
+        }
+    }
 	private void mnuZoom75_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(75);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(75);
+        }
+    }
 	private void mnuZoom50_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(50);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(50);
+        }
+    }
 	private void mnuZoom25_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(25);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(25);
+        }
+    }
 	private void mnuZoomPageWidth_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(1);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(1);
+        }
+    }
 	private void mnuZoomWholePage_Click(object sender, System.EventArgs e)
 	{
-		if(ReportViewer != null) ReportViewer.Zoom(2);
-	}
+		if(ReportViewer != null)
+        {
+            ReportViewer.Zoom(2);
+        }
+    }
 	private void txtFindText_Enter(object sender, System.EventArgs e)
 	{
 		if(_searchEmpty)

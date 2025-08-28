@@ -33,7 +33,6 @@ namespace Origam.DA.ServiceTests;
 [TestFixture]
 class FilterCommandParserTests
 {
-    
     static object[] filterCases =
     {
         new object[] {
@@ -42,8 +41,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                new ParameterData
                (
-                   columnName: "name", 
-                   parameterName: "name_gt", 
+                   parameterName: "name_gt",
+                   columnName: "name",
                    value: "John Doe",
                    dataType: OrigamDataType.String
                )
@@ -55,8 +54,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_gt", 
+                    parameterName: "name_gt",
+                    columnName: "name",
                     value: "John, Doe",
                     dataType: OrigamDataType.String
                 )
@@ -68,8 +67,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_starts", 
+                    parameterName: "name_starts",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -81,8 +80,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_nstarts", 
+                    parameterName: "name_nstarts",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -94,8 +93,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_ends", 
+                    parameterName: "name_ends",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -107,8 +106,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_nends", 
+                    parameterName: "name_nends",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -120,8 +119,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_contains", 
+                    parameterName: "name_contains",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -133,8 +132,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_ncontains", 
+                    parameterName: "name_ncontains",
+                    columnName: "name",
                     value: "John Doe",
                     dataType: OrigamDataType.String
                 )
@@ -146,8 +145,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_gt", 
+                    parameterName: "name_gt",
+                    columnName: "name",
                     value: "John' Doe",
                     dataType: OrigamDataType.String
                 )
@@ -164,43 +163,43 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "city_name", 
-                    parameterName: "city_name_like", 
+                    parameterName: "city_name_like",
+                    columnName: "city_name",
                     value: "Wash",
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_like", 
+                    parameterName: "name_like",
+                    columnName: "name",
                     value: "Smith",
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "age", 
-                    parameterName: "age_gte", 
+                    parameterName: "age_gte",
+                    columnName: "age",
                     value: 18,
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "id", 
-                    parameterName: "id_in_0", 
+                    parameterName: "id_in_0",
+                    columnName: "id",
                     value: "f2",
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "id", 
-                    parameterName: "id_in_1", 
+                    parameterName: "id_in_1",
+                    columnName: "id",
                     value: "f3",
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "id", 
-                    parameterName: "id_in_2", 
+                    parameterName: "id_in_2",
+                    columnName: "id",
                     value: "f4",
                     dataType: OrigamDataType.String
                 ),
@@ -212,15 +211,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "age", 
-                    parameterName: "age_between_0", 
+                    parameterName: "age_between_0",
+                    columnName: "age",
                     value: 18,
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "age", 
-                    parameterName: "age_between_1", 
+                    parameterName: "age_between_1",
+                    columnName: "age",
                     value: 80,
                     dataType: OrigamDataType.String
                 )
@@ -232,15 +231,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "cash", 
-                    parameterName: "cash_between_0", 
+                    parameterName: "cash_between_0",
+                    columnName: "cash",
                     value: 18.4,
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "cash", 
-                    parameterName: "cash_between_1", 
+                    parameterName: "cash_between_1",
+                    columnName: "cash",
                     value: 80,
                     dataType: OrigamDataType.String
                 )
@@ -252,15 +251,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "age", 
-                    parameterName: "age_nbetween_0", 
+                    parameterName: "age_nbetween_0",
+                    columnName: "age",
                     value: 18,
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "age", 
-                    parameterName: "age_nbetween_1", 
+                    parameterName: "age_nbetween_1",
+                    columnName: "age",
                     value: 80,
                     dataType: OrigamDataType.String
                 )
@@ -272,29 +271,29 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_0", 
+                    parameterName: "Name_in_0",
+                    columnName: "Name",
                     value: "Tom",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_1", 
+                    parameterName: "Name_in_1",
+                    columnName: "Name",
                     value: "Jane",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_2", 
+                    parameterName: "Name_in_2",
+                    columnName: "Name",
                     value: "David",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_3", 
+                    parameterName: "Name_in_3",
+                    columnName: "Name",
                     value: "Ben",
                     dataType: OrigamDataType.String
                 )
@@ -306,22 +305,22 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_0", 
+                    parameterName: "Name_in_0",
+                    columnName: "Name",
                     value: "Tom",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_1", 
+                    parameterName: "Name_in_1",
+                    columnName: "Name",
                     value: "Jane",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_in_2", 
+                    parameterName: "Name_in_2",
+                    columnName: "Name",
                     value: "David",
                     dataType: OrigamDataType.String
                 ),
@@ -333,22 +332,22 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_nin_0", 
+                    parameterName: "Name_nin_0",
+                    columnName: "Name",
                     value: "Tom",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_nin_1", 
+                    parameterName: "Name_nin_1",
+                    columnName: "Name",
                     value: "Jane",
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Name", 
-                    parameterName: "Name_nin_2", 
+                    parameterName: "Name_nin_2",
+                    columnName: "Name",
                     value: "David",
                     dataType: OrigamDataType.String
                 ),
@@ -360,15 +359,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Timestamp", 
-                    parameterName: "Timestamp_between_0", 
+                    parameterName: "Timestamp_between_0",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-04-04 00:00:00"),
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Timestamp", 
-                    parameterName: "Timestamp_between_1", 
+                    parameterName: "Timestamp_between_1",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-05-01 23:59:59"),
                     dataType: OrigamDataType.String
                 )
@@ -380,15 +379,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Timestamp",
                     parameterName: "Timestamp_between_0",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-04-04 00:00:00"),
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "Timestamp",
                     parameterName: "Timestamp_between_1",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-05-01 23:59:59"),
                     dataType: OrigamDataType.String
                 )
@@ -400,15 +399,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Timestamp", 
-                    parameterName: "Timestamp_nbetween_0", 
+                    parameterName: "Timestamp_nbetween_0",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-08-04 00:00:00"),
                     dataType: OrigamDataType.String
                 ),                    
                 new ParameterData
                 (
-                    columnName: "Timestamp", 
-                    parameterName: "Timestamp_nbetween_1", 
+                    parameterName: "Timestamp_nbetween_1",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-05-01 23:59:59"),
                     dataType: OrigamDataType.String
                 )
@@ -420,15 +419,15 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "Timestamp",
                     parameterName: "Timestamp_nbetween_0",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-08-04 00:00:00"),
                     dataType: OrigamDataType.String
                 ),
                 new ParameterData
                 (
-                    columnName: "Timestamp",
                     parameterName: "Timestamp_nbetween_1",
+                    columnName: "Timestamp",
                     value: DateTime.Parse("2020-05-01 23:59:59"),
                     dataType: OrigamDataType.String
                 )
@@ -490,8 +489,8 @@ class FilterCommandParserTests
             new List<ParameterData> {
                 new ParameterData
                 (
-                    columnName: "name", 
-                    parameterName: "name_neq", 
+                    parameterName: "name_neq",
+                    columnName: "name",
                     value: "Tom",
                     dataType: OrigamDataType.String
                 )

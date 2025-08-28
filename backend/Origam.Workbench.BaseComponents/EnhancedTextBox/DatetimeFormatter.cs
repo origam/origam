@@ -40,7 +40,11 @@ internal class DatetimeFormatter : Formatter
     public override void OnLeave(object sender, EventArgs e)
     {
         Text = Text.Trim();
-        if(string.IsNullOrEmpty(Text)) return;
+        if(string.IsNullOrEmpty(Text))
+        {
+            return;
+        }
+
         var dateStr = IsAutoCompleteAble(Text) ? AutoComplete(Text) : Text;
         var result = ParseToDate(dateStr);
         var parseSuccess = result.Item1;
@@ -82,17 +86,31 @@ internal class DatetimeFormatter : Formatter
     private bool IsAutoCompleteAble(string dateStr)
     {
         var dateParts = dateStr.Split(DateTimeSeparator);
-        if(dateParts.Length > 2) return false;
+        if(dateParts.Length > 2)
+        {
+            return false;
+        }
+
         var datePart = dateParts[0];
         if(datePart.Contains(DateSeparator))
         {
-            if(datePart.Length > 10) return false;
+            if(datePart.Length > 10)
+            {
+                return false;
+            }
         }
         else
         {
-            if(datePart.Length > 8) return false;
+            if(datePart.Length > 8)
+            {
+                return false;
+            }
         }
-        if(dateParts.Length == 2 && dateParts[1].Length > 6) return false;
+        if(dateParts.Length == 2 && dateParts[1].Length > 6)
+        {
+            return false;
+        }
+
         return true;
     }
     public override object GetValue()

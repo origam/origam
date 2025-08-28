@@ -19,40 +19,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("OR Expression", 2)]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DataStructureFilterSetOrExpression : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureFilterSetFilter";
-	public DataStructureFilterSetOrExpression() {}
-	public DataStructureFilterSetOrExpression(Key primaryKey) 
-		: base(primaryKey) {}
+    public const string CategoryConst = "DataStructureFilterSetFilter";
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType => CategoryConst;
-	public override string Icon => "2";
-	public override bool UseFolders => false;
-	public override bool CanMove(UI.IBrowserNode2 newNode) 
-		=> ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureFilterSetFilter)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(DataStructureDefaultSetDefault) ?
-			"NewDataStructureDefaultSetDefault" : null);
-	}
-	#endregion
+    public DataStructureFilterSetOrExpression() { }
+
+    public DataStructureFilterSetOrExpression(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType => CategoryConst;
+    public override string Icon => "2";
+    public override bool UseFolders => false;
+
+    public override bool CanMove(UI.IBrowserNode2 newNode) =>
+        ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataStructureFilterSetFilter) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(DataStructureDefaultSetDefault)
+                ? "NewDataStructureDefaultSetDefault"
+                : null
+        );
+    }
+    #endregion
 }

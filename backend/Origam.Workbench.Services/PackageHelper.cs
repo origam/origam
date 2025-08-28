@@ -19,25 +19,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
-using System;
 
 namespace Origam.Workbench.Services;
+
 public class PackageHelper
 {
     public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
     {
-        IPersistenceService persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+        IPersistenceService persistenceService =
+            ServiceManager.Services.GetService<IPersistenceService>();
         RunWithInactiveFileEventQueue(
-            persistenceService: persistenceService, 
+            persistenceService: persistenceService,
             action: () =>
             {
                 CreatePackage(packageName, packageId, referencePackageId, persistenceService);
-            });
+            }
+        );
     }
-    private static void CreatePackage(string packageName, Guid packageId,
-        Guid referencePackageId, IPersistenceService persistenceService)
+
+    private static void CreatePackage(
+        string packageName,
+        Guid packageId,
+        Guid referencePackageId,
+        IPersistenceService persistenceService
+    )
     {
         string versionNumber = "1.0.0";
         Package newExtension = new Package(new ModelElementKey(packageId));
@@ -45,39 +53,39 @@ public class PackageHelper
         newExtension.Name = packageName;
         newExtension.VersionString = versionNumber;
         PackageReference origamRootReference = new PackageReference();
-        origamRootReference.PersistenceProvider =
-            persistenceService.SchemaListProvider;
+        origamRootReference.PersistenceProvider = persistenceService.SchemaListProvider;
         origamRootReference.Package = newExtension;
         origamRootReference.ReferencedPackageId = referencePackageId;
         newExtension.Persist();
         origamRootReference.Persist();
         SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as
-                SchemaService;
+            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
         schema.LoadSchema(packageId, isInteractive: true);
         foreach (ISchemaItemProvider provider in schema.Providers)
         {
             if (provider.AutoCreateFolder)
             {
-                SchemaItemGroup group =
-                    provider.NewGroup(schema.ActiveSchemaExtensionId);
+                SchemaItemGroup group = provider.NewGroup(schema.ActiveSchemaExtensionId);
                 @group.Name = packageName;
                 @group.Persist();
                 if (provider.GetType().Name == "DeploymentSchemaItemProvider")
                 {
                     IDeploymentService depl =
-                        ServiceManager.Services.GetService(
-                            typeof(IDeploymentService)) as IDeploymentService;
+                        ServiceManager.Services.GetService(typeof(IDeploymentService))
+                        as IDeploymentService;
                     depl.CreateNewModelVersion(@group, versionNumber, versionNumber);
                 }
             }
         }
         IDeploymentService deployment =
-            ServiceManager.Services.GetService(typeof(IDeploymentService)) as
-                IDeploymentService;
+            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
         deployment.Deploy();
     }
-    private static void RunWithInactiveFileEventQueue(IPersistenceService persistenceService, Action action)
+
+    private static void RunWithInactiveFileEventQueue(
+        IPersistenceService persistenceService,
+        Action action
+    )
     {
         if (persistenceService is FilePersistenceService service)
         {

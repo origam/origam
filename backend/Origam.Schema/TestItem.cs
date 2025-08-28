@@ -19,35 +19,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for TestItem.
 /// </summary>
 [ClassMetaVersion("6.0.0")]
 public class TestItem : AbstractSchemaItem
 {
-	public TestItem() : base() {}
-	public TestItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public TestItem(ModelElementKey primaryKey) : base(primaryKey)	{}
-	public string TestField = "";
-	#region Overriden ISchemaItem Methods
-	public override string ItemType
-	{
-		get
-		{
-			return "TEST";
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "0";
-		}
-	}
-	#endregion
+    public TestItem()
+        : base() { }
+
+    public TestItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public TestItem(ModelElementKey primaryKey)
+        : base(primaryKey) { }
+
+    public string TestField = "";
+    #region Overriden ISchemaItem Methods
+    public override string ItemType
+    {
+        get { return "TEST"; }
+    }
+    public override string Icon
+    {
+        get { return "0"; }
+    }
+    #endregion
 }

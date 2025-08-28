@@ -27,7 +27,6 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
-
 namespace Origam.UI;
 public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
 {

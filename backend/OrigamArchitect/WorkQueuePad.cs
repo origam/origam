@@ -23,9 +23,7 @@ using System;
 using System.Threading;
 using System.Data;
 using System.Windows.Forms;
-
 using WeifenLuo.WinFormsUI.Docking;
-
 using Origam;
 using Origam.UI;
 using Origam.Workbench;
@@ -228,8 +226,12 @@ public class WorkQueuePad : AbstractPadContent
 			this.errorLabel.Hide();
 			this.dataGrid1.Show();
 			OrigamSettings settings = (OrigamSettings)ConfigurationManager.GetActiveConfiguration();
-			if(settings == null) return;
-			if(settings.WorkQueueListRefreshPeriod == 0)
+			if(settings == null)
+            {
+                return;
+            }
+
+            if (settings.WorkQueueListRefreshPeriod == 0)
 			{
 				WQTimer.Enabled = false;
 			}
@@ -238,10 +240,18 @@ public class WorkQueuePad : AbstractPadContent
 				WQTimer.Interval = settings.WorkQueueListRefreshPeriod * 1000;
 			}
 			IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
-			if(wqs == null) return;
-			SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-			if(! schema.IsSchemaLoaded) return;
-			if(_data.Tables.Count == 0)
+			if(wqs == null)
+            {
+                return;
+            }
+
+            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+			if(! schema.IsSchemaLoaded)
+            {
+                return;
+            }
+
+            if (_data.Tables.Count == 0)
 			{
 				_data.Merge(wqs.UserQueueList());
 			}

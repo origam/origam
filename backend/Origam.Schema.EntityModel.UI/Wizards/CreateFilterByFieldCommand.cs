@@ -88,8 +88,12 @@ public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenu
 	public override void Run()
 	{
 	    IDataEntityColumn field = Owner as IDataEntityColumn;
-        if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
-		IDataEntity entity = field.ParentItem as IDataEntity;
+        if (field.Name == null)
+        {
+            throw new ArgumentException("Filed Name is not set.");
+        }
+
+        IDataEntity entity = field.ParentItem as IDataEntity;
         // first paramater
 		DatabaseParameter param1 = entity.NewItem<DatabaseParameter>( 
             _schema.ActiveSchemaExtensionId, null);
@@ -117,8 +121,12 @@ public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenu
 			_schema.ActiveSchemaExtensionId, null);
 		FunctionSchemaItemProvider functionProvider = _schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
 		Function equalFunction = (Function)functionProvider.GetChildByName("Between", Function.CategoryConst);
-		if(equalFunction == null) throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
-		call.Function = equalFunction;
+		if(equalFunction == null)
+        {
+            throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
+        }
+
+        call.Function = equalFunction;
 		call.Name = "Between";
 		call.Persist();
         // function parameters

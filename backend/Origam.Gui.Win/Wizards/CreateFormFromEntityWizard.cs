@@ -226,11 +226,19 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
 	private void SetUpForm()
 	{
 		lstFields.Items.Clear();
-		if(this.Entity == null) return;
-		foreach(IDataEntityColumn column in this.Entity.EntityColumns)
+		if(this.Entity == null)
+        {
+            return;
+        }
+
+        foreach (IDataEntityColumn column in this.Entity.EntityColumns)
 		{
-		    if (string.IsNullOrEmpty(column.ToString())) continue;
-			if (!this._textColumnsOnly 
+		    if (string.IsNullOrEmpty(column.ToString()))
+            {
+                continue;
+            }
+
+            if (!this._textColumnsOnly 
 			    || (column.DataType == Origam.Schema.OrigamDataType.String
 				|| column.DataType == Origam.Schema.OrigamDataType.Memo))
 			{

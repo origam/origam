@@ -22,12 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Net.Mail;
 
 namespace Origam.Mail;
-class NetFxMailService: NetStandardMailService
+
+class NetFxMailService : NetStandardMailService
 {
-    public NetFxMailService() 
-    {
-        
-    }
+    public NetFxMailService() { }
+
     protected override void SetConfigValues(SmtpClient smtpClient)
     {
         // this is handled automatically by the framework

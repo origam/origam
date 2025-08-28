@@ -61,13 +61,16 @@ class PgSqlRenderer : SqlRenderer
         return string.Format("DATE_PART('{0}',{1})", datetype, expresion);
     }
 
-    internal override string DateAdd(DateTypeSql datepart, string number,
-        string date)
+    internal override string DateAdd(DateTypeSql datepart, string number, string date)
     {
-        return string.Format("({0}::timestamp + ( {1} || '{2}')::interval)", date, number,
-            GetAddDateSql(datepart));
+        return string.Format(
+            "({0}::timestamp + ( {1} || '{2}')::interval)",
+            date,
+            number,
+            GetAddDateSql(datepart)
+        );
     }
-    
+
     private string GetAddDateSql(DateTypeSql datepart)
     {
         switch (datepart)
@@ -90,43 +93,45 @@ class PgSqlRenderer : SqlRenderer
         }
     }
 
-    internal override string DateDiff(DateTypeSql datepart, string startdate,
-        string enddate)
+    internal override string DateDiff(DateTypeSql datepart, string startdate, string enddate)
     {
         StringBuilder stringBuilder = new StringBuilder();
         switch (datepart)
         {
             case DateTypeSql.Day:
-                stringBuilder.Append(
-                    "DATE_PART('day', {0}::timestamp - {1}::timestamp) ");
+            {
+                stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) ");
                 break;
+            }
+
             case DateTypeSql.Hour:
-                stringBuilder.Append(
-                    "DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
-                stringBuilder.Append(
-                    "DATE_PART('hour', {0}::timestamp - {1}::timestamp) ");
+            {
+                stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
+                stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp) ");
                 break;
+            }
+
             case DateTypeSql.Minute:
-                stringBuilder.Append(
-                    "(DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
-                stringBuilder.Append(
-                    "DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
-                stringBuilder.Append(
-                    "DATE_PART('minute', {0}::timestamp - {1}::timestamp)");
+            {
+                stringBuilder.Append("(DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
+                stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
+                stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)");
                 break;
+            }
+
             case DateTypeSql.Second:
+            {
                 stringBuilder.Append(
-                    "(((DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
-                stringBuilder.Append(
-                    "DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
-                stringBuilder.Append(
-                    "DATE_PART('minute', {0}::timestamp - {1}::timestamp)) *60 ");
-                stringBuilder.Append(
-                    "DATE_PART('second', {0}::timestamp - {1}::timestamp)");
+                    "(((DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + "
+                );
+                stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
+                stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)) *60 ");
+                stringBuilder.Append("DATE_PART('second', {0}::timestamp - {1}::timestamp)");
                 break;
+            }
+
             default:
-                throw new NotSupportedException("Unsuported DateDiffSql " +
-                                                datepart.ToString());
+                throw new NotSupportedException("Unsuported DateDiffSql " + datepart.ToString());
         }
 
         return string.Format(stringBuilder.ToString(), enddate, startdate);
@@ -137,7 +142,8 @@ class PgSqlRenderer : SqlRenderer
         return string.Format(
             "ST_Distance(('SRID=4326;' || {0})::geography,('SRID=4326;' || {1})::geography)",
             ConvertGeoToTextClause(point1),
-            ConvertGeoToTextClause(point2));
+            ConvertGeoToTextClause(point2)
+        );
     }
 
     internal override string Now()
@@ -145,18 +151,27 @@ class PgSqlRenderer : SqlRenderer
         return "NOW()";
     }
 
-    internal override string FreeText(string columnsForSeach,
-        string freetext_string, string languageForFullText)
+    internal override string FreeText(
+        string columnsForSeach,
+        string freetext_string,
+        string languageForFullText
+    )
     {
-        return string.Format("{0} @@ to_tsquery({1},{2})", columnsForSeach,
-            languageForFullText, freetext_string);
+        return string.Format(
+            "{0} @@ to_tsquery({1},{2})",
+            columnsForSeach,
+            languageForFullText,
+            freetext_string
+        );
     }
 
-    internal override string Contains(string columnsForSeach,
-        string freetext_string, string languageForFullText)
+    internal override string Contains(
+        string columnsForSeach,
+        string freetext_string,
+        string languageForFullText
+    )
     {
-        return string.Format("levenshtein({0},{1})", columnsForSeach,
-            freetext_string);
+        return string.Format("levenshtein({0},{1})", columnsForSeach, freetext_string);
     }
 
     internal override string LatLon(geoLatLonSql latLon, string expresion)
@@ -169,8 +184,8 @@ class PgSqlRenderer : SqlRenderer
                 return string.Format("st_x({0})", expresion);
             default:
                 throw new NotSupportedException(
-                    "Unsuported in Latitude or Longtitude " +
-                    latLon.ToString());
+                    "Unsuported in Latitude or Longtitude " + latLon.ToString()
+                );
         }
     }
 
@@ -188,7 +203,7 @@ class PgSqlRenderer : SqlRenderer
     {
         return "BEGIN";
     }
-    
+
     internal override string SetParameter(string name)
     {
         return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
@@ -200,10 +215,8 @@ class PgSqlRenderer : SqlRenderer
         {
             return "SELECT" + finalQuery;
         }
-        else
-        {
-            return "SELECT" + finalQuery + " LIMIT " + top.ToString();
-        }
+
+        return "SELECT" + finalQuery + " LIMIT " + top.ToString();
     }
 
     public override string ConvertGeoFromTextClause(string argument)
@@ -225,21 +238,21 @@ class PgSqlRenderer : SqlRenderer
         actualsequence.Append("_seq");
         return "; SELECT currval(" + actualsequence + ")";
     }
-    
+
     public override string ParameterReferenceChar => GenerateConsoleUseSyntax ? "" : ":";
 
     public override string StringConcatenationChar => "||";
-    
+
     internal override string IsNull()
     {
         return "COALESCE";
     }
-    
+
     internal override string Format(string date, string culture)
     {
         return @$" CASE when TO_CHAR({date} ,'HH24:MI:SS AM') = '00:00:00 AM' then CAST({date}::TIMESTAMP::DATE as TEXT) else CAST({date}::TIMESTAMP as TEXT) END ";
     }
-    
+
     internal override string CountAggregate()
     {
         return "COUNT";

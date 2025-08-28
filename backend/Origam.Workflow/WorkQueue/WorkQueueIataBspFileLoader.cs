@@ -26,43 +26,49 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using Origam.Workbench.Services;
 using log4net;
 using Origam.Extensions;
+using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;
+
 public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
 {
     private class PeekableStreamReaderAdapter
     {
         private StreamReader streamReader;
         private Queue<string> buffer;
+
         public PeekableStreamReaderAdapter(StreamReader streamReader)
         {
             this.streamReader = streamReader;
             buffer = new Queue<string>();
         }
+
         public string PeekLine()
         {
             string line = streamReader.ReadLine();
-            if(line == null)
+            if (line == null)
             {
                 return null;
             }
             buffer.Enqueue(line);
             return line;
         }
+
         public string ReadLine()
         {
-            if(buffer.Count > 0)
+            if (buffer.Count > 0)
             {
                 return buffer.Dequeue();
             }
             return streamReader.ReadLine();
         }
     }
+
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
     private string transactionId;
     private bool isLocalTransaction = false;
     private string path = null;
@@ -78,13 +84,18 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     private int segmentsCounter = 0;
     private bool lastRowMarkerReached = false;
     private HashIndexFile hashIndexFile;
+
     public override void Connect(
-        IWorkQueueService service, Guid queueId, 
-        string workQueueClass, string connection, 
-        string userName, string password, 
-        string transactionId)
+        IWorkQueueService service,
+        Guid queueId,
+        string workQueueClass,
+        string connection,
+        string userName,
+        string password,
+        string transactionId
+    )
     {
-        if(log.IsInfoEnabled)
+        if (log.IsInfoEnabled)
         {
             log.Info("Connecting " + connection);
         }
@@ -92,23 +103,23 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
         ParseParameters(connection);
         InitializeStream(connection);
     }
+
     private void InitializeStream(string connection)
     {
         try
         {
             hashIndexFile = new HashIndexFile(indexFile);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            if(log.IsErrorEnabled)
+            if (log.IsErrorEnabled)
             {
                 log.LogOrigamError("Failed to open hash index file.", ex);
             }
             throw;
         }
-        string fileName = hashIndexFile
-            .GetFirstUnprocessedFile(path, searchPattern);
-        if(fileName != null)
+        string fileName = hashIndexFile.GetFirstUnprocessedFile(path, searchPattern);
+        if (fileName != null)
         {
             fileInfo = new FileInfo(fileName);
             streamReader = new StreamReader(OpenFileExclusively(fileName));
@@ -116,133 +127,153 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             MoveToFirstTransaction();
         }
     }
+
     private Stream OpenFileExclusively(string fileName)
     {
-        return File.Open(
-            fileName, FileMode.Open, FileAccess.Read, FileShare.None);
+        return File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
     }
+
     private void ParseParameters(string connection)
     {
         string[] cnParts = connection.Split(";".ToCharArray());
-        foreach(string part in cnParts)
+        foreach (string part in cnParts)
         {
             string[] pair = part.Split("=".ToCharArray());
-            if(pair.Length == 2)
+            if (pair.Length == 2)
             {
-                switch(pair[0])
+                switch (pair[0])
                 {
                     case "path":
+                    {
                         path = pair[1];
                         break;
+                    }
+
                     case "indexFile":
+                    {
                         indexFile = pair[1];
                         break;
+                    }
+
                     case "searchPattern":
+                    {
                         searchPattern = pair[1];
                         break;
+                    }
+
                     case "segmentMarker":
+                    {
                         segmentMarker = pair[1];
                         break;
+                    }
+
                     case "footerMarker":
+                    {
                         footerMarker = pair[1];
                         break;
+                    }
+
                     case "lastRowMarker":
+                    {
                         lastRowMarker = pair[1];
                         break;
+                    }
+
                     case "addLastRowToQueue":
+                    {
                         addLastRowToQueue = pair[1] == "true";
                         break;
+                    }
+
                     default:
                         throw new ArgumentOutOfRangeException(
-                            "connectionParameterName", pair[0], 
-                            ResourceUtils.GetString(
-                                "ErrorInvalidConnectionString"));
+                            "connectionParameterName",
+                            pair[0],
+                            ResourceUtils.GetString("ErrorInvalidConnectionString")
+                        );
                 }
             }
         }
-        if(path == null)
+        if (path == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoPath"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoPath"));
         }
-        if(indexFile == null)
+        if (indexFile == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoIndexFile"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoIndexFile"));
         }
-        if(searchPattern == null)
+        if (searchPattern == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoSearchPattern"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoSearchPattern"));
         }
-        if(segmentMarker == null)
+        if (segmentMarker == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoSegmentMarker"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoSegmentMarker"));
         }
-        if(footerMarker == null)
+        if (footerMarker == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoFooterMarker"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoFooterMarker"));
         }
-        if(lastRowMarker == null)
+        if (lastRowMarker == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoLastRowMarker"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoLastRowMarker"));
         }
     }
+
     private void SetupTransaction(string transactionId)
     {
         this.transactionId = transactionId;
-        if(this.transactionId == null)
+        if (this.transactionId == null)
         {
             this.transactionId = Guid.NewGuid().ToString();
             isLocalTransaction = true;
         }
     }
+
     public override void Disconnect()
     {
-        if(fileInfo != null)
+        if (fileInfo != null)
         {
             CheckLastRowMarker();
             hashIndexFile.AddEntryToIndexFile(
-                hashIndexFile.CreateIndexFileEntry(
-                    fileInfo.FullName) + $"|{segmentsCounter}");
+                hashIndexFile.CreateIndexFileEntry(fileInfo.FullName) + $"|{segmentsCounter}"
+            );
         }
-        if(isLocalTransaction)
+        if (isLocalTransaction)
         {
             ResourceMonitor.Commit(transactionId);
         }
         hashIndexFile.Dispose();
     }
+
     private void CheckLastRowMarker()
     {
-        if((segmentsCounter > 0) && !lastRowMarkerReached)
+        if ((segmentsCounter > 0) && !lastRowMarkerReached)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorLastRowMarkerNotReached"));
+            throw new Exception(ResourceUtils.GetString("ErrorLastRowMarkerNotReached"));
         }
     }
+
     public override WorkQueueAdapterResult GetItem(string lastState)
     {
-        if(streamReader == null)
+        if (streamReader == null)
         {
             return null;
         }
         string firstLine = adapter.ReadLine();
-        while((firstLine != null) && !firstLine.StartsWith(segmentMarker))
+        while ((firstLine != null) && !firstLine.StartsWith(segmentMarker))
         {
-            if(firstLine.StartsWith(lastRowMarker))
+            if (firstLine.StartsWith(lastRowMarker))
             {
                 lastRowMarkerReached = true;
-                if(addLastRowToQueue)
+                if (addLastRowToQueue)
                 {
                     return ReadSegmentAndReturnAsWQResult(firstLine);
                 }
             }
             firstLine = adapter.ReadLine();
         }
-        if(firstLine == null)
+        if (firstLine == null)
         {
             streamReader.Close();
             CheckLastRowMarker();
@@ -250,60 +281,57 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
         }
         return ReadSegmentAndReturnAsWQResult(firstLine);
     }
-    private WorkQueueAdapterResult ReadSegmentAndReturnAsWQResult(
-        string firstLine)
+
+    private WorkQueueAdapterResult ReadSegmentAndReturnAsWQResult(string firstLine)
     {
         string fileSegment = ReadFileSegment(firstLine);
         DataTable dataTable = CreateFileDataset();
         DataRow row = dataTable.NewRow();
         try
         {
-            // Add file metadata (times)			
+            // Add file metadata (times)
             row["CreationTime"] = fileInfo.CreationTime;
             row["LastWriteTime"] = fileInfo.LastWriteTime;
             row["LastAccessTime"] = fileInfo.LastAccessTime;
         }
-        catch
-        {
-        }
+        catch { }
         row["Name"] = fileInfo.Name;
         row["Data"] = fileSegment;
         row["SequenceNumber"] = segmentsCounter++;
         dataTable.Rows.Add(row);
-        return new WorkQueueAdapterResult(
-            DataDocumentFactory.New(dataTable.DataSet));
+        return new WorkQueueAdapterResult(DataDocumentFactory.New(dataTable.DataSet));
     }
+
     private string ReadFileSegment(string firstLine)
     {
         StringBuilder output = new StringBuilder();
         output.AppendLine(firstLine);
         string line = adapter.PeekLine();
-        while((line != null) 
-        && !line.StartsWith(segmentMarker)
-        && !line.StartsWith(footerMarker))
+        while ((line != null) && !line.StartsWith(segmentMarker) && !line.StartsWith(footerMarker))
         {
             output.AppendLine(adapter.ReadLine());
             line = adapter.PeekLine();
         }
         return output.ToString();
     }
+
     private void MoveToFirstTransaction()
     {
         string line = adapter.PeekLine();
-        while((line != null) 
-        && !(line.StartsWith(segmentMarker)))
+        while ((line != null) && !(line.StartsWith(segmentMarker)))
         {
             line = adapter.ReadLine();
             line = adapter.PeekLine();
         }
     }
+
     private DataTable CreateFileDataset()
     {
         DataSet dataSet = new DataSet("ROOT");
         DataTable dataTable = dataSet.Tables.Add("File");
         dataTable.Columns.Add("Name", typeof(string));
         dataTable.Columns.Add("Data", typeof(string));
-        // Add file metadata (times)			
+        // Add file metadata (times)
         dataTable.Columns.Add("CreationTime", typeof(DateTime));
         dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
         dataTable.Columns.Add("LastAccessTime", typeof(DateTime));

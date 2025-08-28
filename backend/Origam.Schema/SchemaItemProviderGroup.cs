@@ -23,141 +23,115 @@ using System;
 using Origam.UI;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for SchemaItemProviderGroup.
 /// </summary>
 public class SchemaItemProviderGroup : IBrowserNode2, IComparable
 {
-	private string _id;
-	private string _icon;
-	private string _text;	
-	private BrowserNodeCollection _children = new BrowserNodeCollection();
-	private int _order;
-	public SchemaItemProviderGroup(string id, string text, string icon, int order)
-	{
-		_id = id;
-		_text = text;
-		_icon = icon;
-		_order = order;
-	}
-	#region IBrowserNode2 Members
-	public bool CanMove(IBrowserNode2 newNode)
-	{
-		return false;
-	}
-	public IBrowserNode2 ParentNode
-	{
-		get
-		{
-			return null;
-		}
-		set
-		{
-			// TODO:  Add SchemaItemProviderGroup.ParentNode setter implementation
-		}
-	}
-	public string NodeId
-	{
-		get
-		{
-			return _id;
-		}
-	}
-	public byte[] NodeImage
-	{
-		get
-		{
-			return null;
-		}
-	}
-	public bool CanDelete
-	{
-		get
-		{
-			return false;
-		}
-	}
-	public void Delete()
-	{
-		throw new InvalidOperationException();
-	}
-	public bool Hide
-	{
-		get
-		{
-			// TODO:  Add SchemaItemProviderGroup.Hide getter implementation
-			return false;
-		}
-		set
-		{
-			// TODO:  Add SchemaItemProviderGroup.Hide setter implementation
-		}
-	}
-    public virtual string FontStyle
+    private string _id;
+    private string _icon;
+    private string _text;
+    private BrowserNodeCollection _children = new BrowserNodeCollection();
+    private int _order;
+
+    public SchemaItemProviderGroup(string id, string text, string icon, int order)
+    {
+        _id = id;
+        _text = text;
+        _icon = icon;
+        _order = order;
+    }
+
+    #region IBrowserNode2 Members
+    public bool CanMove(IBrowserNode2 newNode)
+    {
+        return false;
+    }
+
+    public IBrowserNode2 ParentNode
+    {
+        get { return null; }
+        set
+        {
+            // TODO:  Add SchemaItemProviderGroup.ParentNode setter implementation
+        }
+    }
+    public string NodeId
+    {
+        get { return _id; }
+    }
+    public byte[] NodeImage
+    {
+        get { return null; }
+    }
+    public bool CanDelete
+    {
+        get { return false; }
+    }
+
+    public void Delete()
+    {
+        throw new InvalidOperationException();
+    }
+
+    public bool Hide
     {
         get
         {
-            return "Regular";
+            // TODO:  Add SchemaItemProviderGroup.Hide getter implementation
+            return false;
+        }
+        set
+        {
+            // TODO:  Add SchemaItemProviderGroup.Hide setter implementation
         }
     }
+    public virtual string FontStyle
+    {
+        get { return "Regular"; }
+    }
     #endregion
-	#region IBrowserNode Members
-	public bool HasChildNodes
-	{
-		get
-		{
-			return true;
-		}
-	}
-	public bool CanRename
-	{
-		get
-		{
-			return false;
-		}
-	}
-	public BrowserNodeCollection ChildNodes()
-	{
-		return _children;
-	}
-	public string NodeText
-	{
-		get
-		{
-			return _text;
-		}
-		set
-		{
-			throw new InvalidOperationException();
-		}
-	}
-	public string Icon
-	{
-		get
-		{
-			return _icon;
-		}
-	}
-	#endregion
-	#region IComparable Members
-	public int Order
-	{
-		get
-		{
-			return _order;
-		}
-	}
-	public int CompareTo(object obj)
-	{
-		SchemaItemProviderGroup group = obj as SchemaItemProviderGroup;
-		if(group != null)
-		{
-			return _order.CompareTo(group.Order);
-		}
-		else
-		{
-			throw new InvalidCastException();
-		}
-	}
-	#endregion
+    #region IBrowserNode Members
+    public bool HasChildNodes
+    {
+        get { return true; }
+    }
+    public bool CanRename
+    {
+        get { return false; }
+    }
+
+    public BrowserNodeCollection ChildNodes()
+    {
+        return _children;
+    }
+
+    public string NodeText
+    {
+        get { return _text; }
+        set { throw new InvalidOperationException(); }
+    }
+    public string Icon
+    {
+        get { return _icon; }
+    }
+    #endregion
+    #region IComparable Members
+    public int Order
+    {
+        get { return _order; }
+    }
+
+    public int CompareTo(object obj)
+    {
+        SchemaItemProviderGroup group = obj as SchemaItemProviderGroup;
+        if (group != null)
+        {
+            return _order.CompareTo(group.Order);
+        }
+
+        throw new InvalidCastException();
+    }
+    #endregion
 }

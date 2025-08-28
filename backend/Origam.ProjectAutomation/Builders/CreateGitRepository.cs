@@ -32,6 +32,5 @@ class CreateGitRepository : AbstractBuilder
     }
     public override void Rollback()
     {
-      
     }
 }

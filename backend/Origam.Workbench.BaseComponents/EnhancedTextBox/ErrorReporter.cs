@@ -25,7 +25,6 @@ using System.Windows.Forms;
 namespace Origam.Gui.UI;
 public class ErrorReporter: IErrorReporter
 {
-    
     private const int ErrorToolTipDuration = 2000;
     private readonly Control control;
     public ErrorReporter(Control control)
@@ -40,6 +39,5 @@ public class ErrorReporter: IErrorReporter
         
         var toolTip = new ToolTip();
         toolTip.Show(message,control,ErrorToolTipDuration);             
-        
     }
 }

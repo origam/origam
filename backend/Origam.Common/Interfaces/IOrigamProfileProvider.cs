@@ -23,9 +23,11 @@ using System;
 using System.Security.Principal;
 
 namespace Origam;
-public interface IOrigamProfileProvider { 
+
+public interface IOrigamProfileProvider
+{
     object GetProfile(IIdentity identity);
     object GetProfile(Guid profileId);
-	object GetProfile(string userName);
+    object GetProfile(string userName);
     void AddUser(string name, string userName);
 }

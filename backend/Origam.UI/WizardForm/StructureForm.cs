@@ -21,5 +21,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 namespace Origam.UI.WizardForm;
 public class StructureForm : AbstractWizardForm
 {
-   
 }

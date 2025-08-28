@@ -50,6 +50,5 @@ public class DummyFilterPart : FilterPart
 	}
 	public override void LoadValues()
 	{
-		
 	}
 }

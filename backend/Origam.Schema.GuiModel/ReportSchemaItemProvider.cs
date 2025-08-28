@@ -20,64 +20,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for Class1.
 /// </summary>
 public class ReportSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public ReportSchemaItemProvider() 
-	{
-		this.ChildItemTypes.Add(typeof(CrystalReport));
-		this.ChildItemTypes.Add(typeof(WebReport));
-		this.ChildItemTypes.Add(typeof(PrintItReport));
+    public ReportSchemaItemProvider()
+    {
+        this.ChildItemTypes.Add(typeof(CrystalReport));
+        this.ChildItemTypes.Add(typeof(WebReport));
+        this.ChildItemTypes.Add(typeof(PrintItReport));
         this.ChildItemTypes.Add(typeof(ExcelReport));
         this.ChildItemTypes.Add(typeof(SSRSReport));
         this.ChildItemTypes.Add(typeof(FileSystemReport));
         this.ChildItemTypes.Add(typeof(FastReport));
     }
+
     #region ISchemaItemProvider Members
     public override string RootItemType
-	{
-		get
-		{
-			return CrystalReport.CategoryConst;
-		}
-	}
-	public override string Group
-	{
-		get
-		{
-			return "UI";
-		}
-	}
-	#endregion
-	#region IBrowserNode Members
-	public override string Icon
-	{
-		get
-		{
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			return "icon_20_reports.png";
-		}
-	}
-	public override string NodeText
-	{
-		get
-		{
-			return "Reports";
-		}
-		set
-		{
-			base.NodeText = value;
-		}
-	}
-	public override string NodeToolTipText
-	{
-		get
-		{
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			return "List of Report Definitions";
-		}
-	}
-	#endregion
+    {
+        get { return CrystalReport.CategoryConst; }
+    }
+    public override string Group
+    {
+        get { return "UI"; }
+    }
+    #endregion
+    #region IBrowserNode Members
+    public override string Icon
+    {
+        get
+        {
+            // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+            return "icon_20_reports.png";
+        }
+    }
+    public override string NodeText
+    {
+        get { return "Reports"; }
+        set { base.NodeText = value; }
+    }
+    public override string NodeToolTipText
+    {
+        get
+        {
+            // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+            return "List of Report Definitions";
+        }
+    }
+    #endregion
 }

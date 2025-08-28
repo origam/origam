@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel.UI.Wizards;
@@ -280,26 +279,52 @@ public class CreateLookupFromEntityWizard : System.Windows.Forms.Form
 		cboListFilter.Items.Clear();
 		cboDisplayField.Items.Clear();
 		IDataEntityColumn nameColumn = null;
-		if(this.Entity == null) return;
-		txtName.Text = this.Entity.Name;
+		if(this.Entity == null)
+        {
+            return;
+        }
+
+        txtName.Text = this.Entity.Name;
 		EntityFilter idFilter = null;
 		foreach(var filter in Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst))
 		{
 			cboListFilter.Items.Add(filter);
 			cboIdFilter.Items.Add(filter);
-			if(filter.Name == "GetId") idFilter = filter;
-		}
-		if(idFilter != null) cboIdFilter.SelectedItem = idFilter;
-		foreach(IDataEntityColumn column in this.Entity.EntityColumns)
+			if(filter.Name == "GetId")
+            {
+                idFilter = filter;
+            }
+        }
+		if(idFilter != null)
+        {
+            cboIdFilter.SelectedItem = idFilter;
+        }
+
+        foreach (IDataEntityColumn column in this.Entity.EntityColumns)
 		{
-		    if(string.IsNullOrEmpty(column.ToString())) continue;
-			if(column.Name == "Name") nameColumn = column;
-			if(column.IsPrimaryKey && !column.ExcludeFromAllFields) _idColumn = column;
-			cboDisplayField.Items.Add(column);
+		    if(string.IsNullOrEmpty(column.ToString()))
+            {
+                continue;
+            }
+
+            if (column.Name == "Name")
+            {
+                nameColumn = column;
+            }
+
+            if (column.IsPrimaryKey && !column.ExcludeFromAllFields)
+            {
+                _idColumn = column;
+            }
+
+            cboDisplayField.Items.Add(column);
 		}
 		cboDisplayField.SelectedItem = nameColumn;
-		if(_idColumn == null) throw new Exception("Entity has no primary key defined. Cannot create lookup.");
-	}
+		if(_idColumn == null)
+        {
+            throw new Exception("Entity has no primary key defined. Cannot create lookup.");
+        }
+    }
 	#endregion
 	private void cboDisplayField_SelectedIndexChanged(object sender, System.EventArgs e)
 	{

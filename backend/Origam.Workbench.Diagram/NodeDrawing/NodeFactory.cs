@@ -175,8 +175,6 @@ class NodeFactory
         node.LabelText = label;
         return node;
     }
-    
-  
 }
 class IdTranslator
 {

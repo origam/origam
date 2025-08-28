@@ -39,7 +39,9 @@ internal static class MenuItemTools
                 ISubmenuBuilder submenuBuilder = (ISubmenuBuilder)item;
                 ToolStripItem[] submenu = submenuBuilder.BuildSubmenu(caller);
                 if(submenu.Length > 0)
+                {
                     itemsToUpdate.AddRange(submenu);
+                }
             } 
             else 
             {

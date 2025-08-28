@@ -890,8 +890,8 @@ public class XsltTests
                 new XsltFunctionsDefinition(
                     Container: new LegacyXsltFunctionContainer(counterMock
                         .Object),
-                    NameSpaceUri: "http://schema.advantages.cz/AsapFunctions",
-                    NameSpacePrefix: "AS")
+                    NameSpacePrefix: "AS",
+                    NameSpaceUri: "http://schema.advantages.cz/AsapFunctions")
             };
 
         OrigamXsltContext sut = new OrigamXsltContext(
@@ -1307,7 +1307,6 @@ public class XsltTests
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
-
     [TestCase("AS:avg(/ROOT/N1/@count)", "2")]
     [TestCase("AS:sum(/ROOT/N1/@count)", "6")]
     [TestCase("AS:Sum(/ROOT/N1/@count)", "6")]
@@ -1381,9 +1380,21 @@ public class XsltTests
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (!(obj is XmlContainer)) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (!(obj is XmlContainer))
+            {
+                return false;
+            }
+
             return Equals((XmlContainer)obj);
         }
 
@@ -1453,7 +1464,6 @@ public class XsltTests
 
         var document = new XmlDocument();
         document.LoadXml("<ROOT></ROOT>");
-
 
         string xsltResult = RunInXslt("", document, xsltScript);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));

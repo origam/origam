@@ -25,18 +25,27 @@ using System.Linq;
 using System.Xml.Linq;
 
 namespace Origam.Extensions;
+
 public static class XExtensions
 {
-    public static void RenameAttribute(this XElement element,
-        string oldLocalName, string newLocalName)
+    public static void RenameAttribute(
+        this XElement element,
+        string oldLocalName,
+        string newLocalName
+    )
     {
-        var attribute = element.Attributes()
+        var attribute = element
+            .Attributes()
             .FirstOrDefault(attr => attr.Name.LocalName == oldLocalName);
-        if (attribute == null) return;
+        if (attribute == null)
+        {
+            return;
+        }
+
         XNamespace nameSpace = attribute.Name.Namespace;
         string value = attribute.Value;
         attribute.Remove();
-                
+
         element.SetAttributeValue(nameSpace.GetName(newLocalName), value);
     }
 }

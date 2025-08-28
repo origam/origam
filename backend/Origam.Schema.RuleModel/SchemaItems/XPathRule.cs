@@ -19,17 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.RuleModel;
+
 /// <summary>
 /// Summary description for XPathRule.
 /// </summary>
@@ -37,29 +38,35 @@ namespace Origam.Schema.RuleModel;
 [ClassMetaVersion("6.0.0")]
 public class XPathRule : AbstractRule
 {
-	public XPathRule() : base() {}
-	public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public XPathRule(Key primaryKey) : base(primaryKey)	{}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-		base.GetExtraDependencies (dependencies);
-	}
-	#region Properties
-	[XmlAttribute("xPath")]
+    public XPathRule()
+        : base() { }
+
+    public XPathRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public XPathRule(Key primaryKey)
+        : base(primaryKey) { }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    #region Properties
+    [XmlAttribute("xPath")]
 #if !NETSTANDARD
     [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
 #endif
     public string XPath { get; set; } = "";
-	[DefaultValue(false)] 
+
+    [DefaultValue(false)]
     [XmlAttribute("isPathRelative")]
-	public override bool IsPathRelative { get; set; } = false;
-	#endregion
+    public override bool IsPathRelative { get; set; } = false;
+    #endregion
 }

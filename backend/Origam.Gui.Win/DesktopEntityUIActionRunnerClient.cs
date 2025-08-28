@@ -189,31 +189,37 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                 switch(changeType)
                 {
                     case DataRowState.Added:
-                        ruleHandler.OnRowCopied(row, xmlData, 
-                            generator.RuleSet, 
-                            generator.FormRuleEngine);
-                        break;
-                    case DataRowState.Modified:
-                        row.BeginEdit();
-                        Hashtable changedColumns 
-                            = rowEntry.Value.Columns;
-                        if(changedColumns != null)
                         {
-                            foreach(DictionaryEntry changedColumnEntry 
-                                in changedColumns)
-                            {
-                                DataColumn changedColumn 
-                                    = (DataColumn)changedColumnEntry.Value;
-                                object newValue = row[changedColumn];
-                                ruleHandler.OnColumnChanged(
-                                    new DataColumnChangeEventArgs(
-                                        row, changedColumn, newValue), 
-                                    xmlData, generator.RuleSet, 
-                                    generator.FormRuleEngine);
-                            }
+                            ruleHandler.OnRowCopied(row, xmlData,
+                                                    generator.RuleSet,
+                                                    generator.FormRuleEngine);
+                            break;
                         }
-                        row.EndEdit();
-                        break;
+
+                    case DataRowState.Modified:
+                        {
+                            row.BeginEdit();
+                            Hashtable changedColumns
+                                = rowEntry.Value.Columns;
+                            if (changedColumns != null)
+                            {
+                                foreach (DictionaryEntry changedColumnEntry
+                                    in changedColumns)
+                                {
+                                    DataColumn changedColumn
+                                        = (DataColumn)changedColumnEntry.Value;
+                                    object newValue = row[changedColumn];
+                                    ruleHandler.OnColumnChanged(
+                                        new DataColumnChangeEventArgs(
+                                            row, changedColumn, newValue),
+                                        xmlData, generator.RuleSet,
+                                        generator.FormRuleEngine);
+                                }
+                            }
+                            row.EndEdit();
+                            break;
+                        }
+
                     case DataRowState.Deleted:
                         // deletions later
                         break;

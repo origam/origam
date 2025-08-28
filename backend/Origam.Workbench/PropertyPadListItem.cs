@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Windows.Forms;
-
 using Origam.Schema;
 
 namespace Origam.Workbench;
@@ -52,9 +51,7 @@ public class PropertyPadListItem
 		{
 			return base.ToString();
 		}
-		else
-		{
-			return si.Name + " [" + _control.GetType().FullName + "]";
-		}
-	}
+
+        return si.Name + " [" + _control.GetType().FullName + "]";
+    }
 }

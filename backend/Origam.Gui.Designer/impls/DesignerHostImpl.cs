@@ -47,7 +47,6 @@ namespace Origam.Gui.Designer;
 /// </summary>
 public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,IComponentChangeService,IExtenderProviderService,IDesignerEventService, IExtenderListService, IDesignerOptionService
 {
-
 	//		private Guid ControlSet = new    Guid("727d9807-9697-4732-b8d8-e6abd6c2a318");
 	//		private Guid CntrlSetItm = new   Guid ("42eb75c8-c939-459e-995e-2999729c8add");
 	//		private Guid FormControl = new   Guid("00000000-0001-48f1-9da4-a130c04972d1");
@@ -189,7 +188,6 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 				}
 			}
 			catch{} 
-			
 		}
         this.IsFieldControl = false;
 		this.PanelSet =null;
@@ -314,25 +312,33 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 	internal void OnTransactionOpened(EventArgs e) 
 	{
 		if (TransactionOpened != null)
-			TransactionOpened(this, e);
-	}
+        {
+            TransactionOpened(this, e);
+        }
+    }
     
 	internal void OnTransactionOpening(EventArgs e) 
 	{
 		if (TransactionOpening != null)
-			TransactionOpening(this, e);
-	}
+        {
+            TransactionOpening(this, e);
+        }
+    }
 	internal void OnTransactionClosed(DesignerTransactionCloseEventArgs e) 
 	{
 		if (TransactionClosed != null)
-			TransactionClosed(this, e);
-	}
+        {
+            TransactionClosed(this, e);
+        }
+    }
     
 	internal void OnTransactionClosing(DesignerTransactionCloseEventArgs e) 
 	{
 		if (TransactionClosing != null)
-			TransactionClosing(this, e);
-	}
+        {
+            TransactionClosing(this, e);
+        }
+    }
 	public void DestroyComponent(IComponent component)
 	{
 		string name;
@@ -674,7 +680,6 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 	/// Creates some of the more infrequently used services
 	private object OnCreateService(IServiceContainer container, Type serviceType) 
 	{
-        
 		// Create SelectionService
 		if (serviceType == typeof(ISelectionService)) 
 		{
@@ -751,38 +756,62 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 		if (menuEditorService != null) 
 		{
 			IDisposable d = menuEditorService as IDisposable;
-			if (d != null) d.Dispose();
-			menuEditorService = null ;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            menuEditorService = null ;
 		}
 		if (selectionService != null) 
 		{
 			IDisposable d = selectionService as IDisposable;
-			if (d != null) d.Dispose();
-			selectionService = null;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            selectionService = null;
 		}
 		if (menuCommandService != null) 
 		{
 			IDisposable d = menuCommandService as IDisposable;
-			if (d != null) d.Dispose();
-			menuCommandService = null;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            menuCommandService = null;
 		}
 		if (toolboxService != null) 
 		{
 			IDisposable d = toolboxService as IDisposable;
-			if (d != null) d.Dispose();
-			toolboxService = null;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            toolboxService = null;
 		}
 		if (helpService != null) 
 		{
 			IDisposable d = helpService as IDisposable;
-			if (d != null) d.Dispose();
-			helpService = null;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            helpService = null;
 		}
 		if (referenceService != null) 
 		{
 			IDisposable d = referenceService as IDisposable;
-			if (d != null) d.Dispose();
-			referenceService = null;
+			if (d != null)
+            {
+                d.Dispose();
+            }
+
+            referenceService = null;
 		}
 		this.Generator.Dispose();
 		this.Generator = null;

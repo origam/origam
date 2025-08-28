@@ -31,25 +31,45 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
     }
     public void Draw(TextView textView, System.Windows.Media.DrawingContext drawingContext)
     {
-        if (Lines == null) return;
+        if (Lines == null)
+        {
+            return;
+        }
+
         foreach (var v in textView.VisualLines)
         {
             var linenum = v.FirstDocumentLine.LineNumber - 1;
-            if (linenum >= Lines.Count) continue;
+            if (linenum >= Lines.Count)
+            {
+                continue;
+            }
+
             var diffLine = Lines[linenum];
-            if (diffLine.Style == DiffContext.Context) continue;
+            if (diffLine.Style == DiffContext.Context)
+            {
+                continue;
+            }
+
             var brush = default(Brush);
             switch (diffLine.Style)
             {
                 case DiffContext.Added:
-                    brush = AddedBackground;
-                    break;
+                    {
+                        brush = AddedBackground;
+                        break;
+                    }
+
                 case DiffContext.Deleted:
-                    brush = DeletedBackground;
-                    break;
+                    {
+                        brush = DeletedBackground;
+                        break;
+                    }
+
                 case DiffContext.Blank:
-                    brush = BlankBackground;
-                    break;
+                    {
+                        brush = BlankBackground;
+                        break;
+                    }
             }
             foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
             {

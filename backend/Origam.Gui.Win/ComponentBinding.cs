@@ -29,7 +29,6 @@ public class ComponentBinding
 {
 	public ComponentBinding()
 	{
-		
 	}
 	private string _parentComponent = "";
 	[XmlAttribute()]

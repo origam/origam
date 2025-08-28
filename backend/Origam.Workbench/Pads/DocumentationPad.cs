@@ -325,9 +325,7 @@ public class DocumentationPad : AbstractPadContent
 			Save();
 			return true;
 		}
-		else
-		{
-			return base.ProcessCmdKey (ref msg, keyData);
-		}
-	}
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
 }

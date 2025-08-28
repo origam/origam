@@ -22,29 +22,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench.Services;
+
 /// <summary>
 /// Summary description for WorkflowEngineTaskEventArgs.
 /// </summary>
 public class ServiceFinishedEventArgs : EventArgs
 {
-	public ServiceFinishedEventArgs() : base()
-	{
-	}
-	public ServiceFinishedEventArgs(Exception exception) : this()
-	{
-		this.Exception = exception;
-	}
-	private Exception _exception;
-	public Exception Exception
-	{
-		get
-		{
-			return _exception;
-		}
-		set
-		{
-			_exception = value;
-		}
-	}
+    public ServiceFinishedEventArgs()
+        : base() { }
+
+    public ServiceFinishedEventArgs(Exception exception)
+        : this()
+    {
+        this.Exception = exception;
+    }
+
+    private Exception _exception;
+    public Exception Exception
+    {
+        get { return _exception; }
+        set { _exception = value; }
+    }
 }
+
 public delegate void ServiceFinished(object sender, ServiceFinishedEventArgs e);

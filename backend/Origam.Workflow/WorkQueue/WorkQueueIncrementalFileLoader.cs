@@ -19,22 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using log4net;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Origam.Workbench.Services;
+using System.Data;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Data;
+using log4net;
+using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;
+
 public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
 {
     private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
     private string transactionId;
     private bool isLocalTransaction = false;
     private string path = null;
@@ -43,10 +45,16 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
     private bool compressedArchivesAsSubfolders = false;
     private readonly List<string> filesToProcess = new List<string>();
     private int position = 0;
+
     public override void Connect(
-        IWorkQueueService service, Guid queueId, string workQueueClass,
-        string connection, string userName, string password,
-        string transactionId)
+        IWorkQueueService service,
+        Guid queueId,
+        string workQueueClass,
+        string connection,
+        string userName,
+        string password,
+        string transactionId
+    )
     {
         if (log.IsInfoEnabled)
         {
@@ -56,16 +64,18 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         InitializeFileList();
         SetupTransaction(transactionId, connection);
     }
+
     public override void Disconnect()
     {
-        if(isLocalTransaction)
+        if (isLocalTransaction)
         {
             ResourceMonitor.Commit(transactionId);
         }
     }
+
     public override WorkQueueAdapterResult GetItem(string lastState)
     {
-        if(filesToProcess.Count == position)
+        if (filesToProcess.Count == position)
         {
             return null;
         }
@@ -76,34 +86,31 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         row["Data"] = GetFileContent(filename);
         dataTable.Rows.Add(row);
         position++;
-        return new WorkQueueAdapterResult(
-            DataDocumentFactory.New(dataTable.DataSet));
+        return new WorkQueueAdapterResult(DataDocumentFactory.New(dataTable.DataSet));
     }
+
     private string GetFileContent(string filename)
     {
         string[] filenameSegments = filename.Split('|');
-        if(filenameSegments.Length == 1)
+        if (filenameSegments.Length == 1)
         {
             return File.ReadAllText(filenameSegments[0]);
         }
-        else
-        {
-            return GetContentFromZipArchive(
-                filenameSegments[0], filenameSegments[1]);
-        }
+
+        return GetContentFromZipArchive(filenameSegments[0], filenameSegments[1]);
     }
-    private string GetContentFromZipArchive(
-        string archiveName, string filename)
+
+    private string GetContentFromZipArchive(string archiveName, string filename)
     {
-        using(FileStream fileStream = new FileStream(
-            archiveName, FileMode.Open))
-        using(ZipArchive archive = new ZipArchive(fileStream))
-        using(Stream stream = archive.GetEntry(filename).Open())
-        using(StreamReader streamReader = new StreamReader(stream))
+        using (FileStream fileStream = new FileStream(archiveName, FileMode.Open))
+        using (ZipArchive archive = new ZipArchive(fileStream))
+        using (Stream stream = archive.GetEntry(filename).Open())
+        using (StreamReader streamReader = new StreamReader(stream))
         {
             return streamReader.ReadToEnd();
         }
     }
+
     private void SetupTransaction(string transactionId, string connection)
     {
         this.transactionId = transactionId;
@@ -112,15 +119,18 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             this.transactionId = Guid.NewGuid().ToString();
             isLocalTransaction = true;
         }
-		HashIndexFileTransaction transaction 
-            = ResourceMonitor.GetTransaction(
-                transactionId, connection) as HashIndexFileTransaction;
-		if(transaction == null)
-		{
-		    ResourceMonitor.RegisterTransaction(transactionId, connection, 
-                new HashIndexFileTransaction(indexFile, filesToProcess));
-		}
+        HashIndexFileTransaction transaction =
+            ResourceMonitor.GetTransaction(transactionId, connection) as HashIndexFileTransaction;
+        if (transaction == null)
+        {
+            ResourceMonitor.RegisterTransaction(
+                transactionId,
+                connection,
+                new HashIndexFileTransaction(indexFile, filesToProcess)
+            );
+        }
     }
+
     private void ParseParameters(string connection)
     {
         string[] cnParts = connection.Split(";".ToCharArray());
@@ -132,45 +142,55 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "path":
+                    {
                         path = pair[1];
                         break;
+                    }
+
                     case "indexFile":
+                    {
                         indexFile = pair[1];
                         break;
+                    }
+
                     case "searchPattern":
+                    {
                         searchPattern = pair[1];
                         break;
+                    }
+
                     case "compressedArchivesAsSubfolders":
-                        compressedArchivesAsSubfolders
-                            = Convert.ToBoolean(pair[1]);
+                    {
+                        compressedArchivesAsSubfolders = Convert.ToBoolean(pair[1]);
                         break;
+                    }
+
                     default:
                         throw new ArgumentOutOfRangeException(
-                            "connectionParameterName", pair[0],
-                            ResourceUtils.GetString(
-                                "ErrorInvalidConnectionString"));
+                            "connectionParameterName",
+                            pair[0],
+                            ResourceUtils.GetString("ErrorInvalidConnectionString")
+                        );
                 }
             }
         }
         if (path == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoPath"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoPath"));
         }
         if (indexFile == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoIndexFile"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoIndexFile"));
         }
         if (searchPattern == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString("ErrorNoSearchPattern"));
+            throw new Exception(ResourceUtils.GetString("ErrorNoSearchPattern"));
         }
     }
+
     private void InitializeFileList()
     {
-        using (HashIndexFile hashIndexFile = new HashIndexFile(indexFile))    
+        using (HashIndexFile hashIndexFile = new HashIndexFile(indexFile))
         {
             if (compressedArchivesAsSubfolders)
             {
@@ -179,64 +199,69 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             AddUnprocessedFilesToFileList(hashIndexFile);
         }
     }
+
     private void AddUnprocessedFilesToFileList(HashIndexFile hashIndexFile)
     {
-		string[] filenames = Directory.GetFiles(path, searchPattern);
-        foreach(string filename in filenames)
+        string[] filenames = Directory.GetFiles(path, searchPattern);
+        foreach (string filename in filenames)
         {
-            if(!hashIndexFile.IsFileProcessed(filename))
+            if (!hashIndexFile.IsFileProcessed(filename))
             {
                 filesToProcess.Add(filename);
             }
         }
     }
-    private void AddUnprocessedZipArchivesToFileList( HashIndexFile hashIndexFile)
+
+    private void AddUnprocessedZipArchivesToFileList(HashIndexFile hashIndexFile)
     {
-		string[] filenames = Directory.GetFiles(path, "*.zip");
-        foreach(string filename in filenames)
+        string[] filenames = Directory.GetFiles(path, "*.zip");
+        foreach (string filename in filenames)
         {
-            using(FileStream fileStream = new FileStream(
-                filename, FileMode.Open))
-            using(ZipArchive archive = new ZipArchive(fileStream))
+            using (FileStream fileStream = new FileStream(filename, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(fileStream))
             {
-                string fullDestinationDirPath = Path.GetFullPath(path + Path.DirectorySeparatorChar);
-                foreach(ZipArchiveEntry archiveEntry in archive.Entries)
+                string fullDestinationDirPath = Path.GetFullPath(
+                    path + Path.DirectorySeparatorChar
+                );
+                foreach (ZipArchiveEntry archiveEntry in archive.Entries)
                 {
-                    string destinationFileName = Path.GetFullPath(Path.Combine(path, archiveEntry.FullName));
+                    string destinationFileName = Path.GetFullPath(
+                        Path.Combine(path, archiveEntry.FullName)
+                    );
                     if (!destinationFileName.StartsWith(fullDestinationDirPath))
                     {
-                        throw new InvalidOperationException("Entry is outside the target dir: " + destinationFileName);
+                        throw new InvalidOperationException(
+                            "Entry is outside the target dir: " + destinationFileName
+                        );
                     }
-                    if(FitsMask(archiveEntry.Name) 
-                    && !hashIndexFile.IsZipArchiveEntryProcessed(
-                        archiveEntry))
+                    if (
+                        FitsMask(archiveEntry.Name)
+                        && !hashIndexFile.IsZipArchiveEntryProcessed(archiveEntry)
+                    )
                     {
-                        filesToProcess.Add(filename + "|" + 
-                            archiveEntry.FullName);
+                        filesToProcess.Add(filename + "|" + archiveEntry.FullName);
                     }
                 }
             }
         }
     }
+
     private bool FitsMask(string filename)
     {
         Regex mask = new Regex(
-            '^' +
-            searchPattern
-                .Replace(".", "[.]")
-                .Replace("*", ".*")
-                .Replace("?", ".")
-            + '$',
-            RegexOptions.IgnoreCase);
+            '^' + searchPattern.Replace(".", "[.]").Replace("*", ".*").Replace("?", ".") + '$',
+            RegexOptions.IgnoreCase
+        );
         return mask.IsMatch(filename);
     }
+
     private DataTable CreateFileDataset()
     {
         DataSet dataSet = new DataSet("ROOT");
         DataTable dataTable = dataSet.Tables.Add("File");
         dataTable.Columns.Add("Name", typeof(string));
         dataTable.Columns.Add("Data", typeof(string));
-        // Add file metadata (times)			
+        // Add file metadata (times)
         dataTable.Columns.Add("CreationTime", typeof(DateTime));
         dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
         dataTable.Columns.Add("LastAccessTime", typeof(DateTime));

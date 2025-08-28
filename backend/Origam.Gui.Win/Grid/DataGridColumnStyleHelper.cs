@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 using System.Data;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Gui.Win;
@@ -38,8 +37,12 @@ public class DataGridColumnStyleHelper
 	{
 		try
 		{
-			if(columnStyle.DataGridTableStyle == null) return null;
-			AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
+			if(columnStyle.DataGridTableStyle == null)
+            {
+                return null;
+            }
+
+            AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
 			if(panel != null)
 			{
 				DataRow row = (source.List[rowNum] as DataRowView).Row;

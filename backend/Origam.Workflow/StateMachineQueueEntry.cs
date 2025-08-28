@@ -20,56 +20,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Origam.Workflow;
+
 /// <summary>
 /// Summary description for StateMachineQueueEntry.
 /// </summary>
 public class StateMachineQueueEntry
 {
-	private DataRow _row;
-	private List<DataColumn> _stateColumns;
-	private Guid _entityId;
-	public StateMachineQueueEntry(DataRow row, List<DataColumn> stateColumns, Guid entityId)
-	{
-		_row = row;
-		_stateColumns = stateColumns;
-		_entityId = entityId;
-	}
-	public Guid EntityId
-	{
-		get
-		{
-			return _entityId;
-		}
-		set
-		{
-			_entityId = value;
-		}
-	}
-	public DataRow Row
-	{
-		get
-		{
-			return _row;
-		}
-		set
-		{
-			_row = value;
-		}
-	}
-	public List<DataColumn> StateColumns
-	{
-		get
-		{
-			return _stateColumns;
-		}
-		set
-		{
-			_stateColumns = value;
-		}
-	}
+    private DataRow _row;
+    private List<DataColumn> _stateColumns;
+    private Guid _entityId;
+
+    public StateMachineQueueEntry(DataRow row, List<DataColumn> stateColumns, Guid entityId)
+    {
+        _row = row;
+        _stateColumns = stateColumns;
+        _entityId = entityId;
+    }
+
+    public Guid EntityId
+    {
+        get { return _entityId; }
+        set { _entityId = value; }
+    }
+    public DataRow Row
+    {
+        get { return _row; }
+        set { _row = value; }
+    }
+    public List<DataColumn> StateColumns
+    {
+        get { return _stateColumns; }
+        set { _stateColumns = value; }
+    }
 }

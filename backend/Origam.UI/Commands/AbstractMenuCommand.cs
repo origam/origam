@@ -117,7 +117,6 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand , IRun
                 i++;
             }
         });
-        
     }
     public static List<string> GetListDatastructure(string itemTypeConst)
     {

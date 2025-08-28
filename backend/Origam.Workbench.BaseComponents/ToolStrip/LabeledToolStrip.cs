@@ -84,7 +84,6 @@ internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer
             bottomColor: SystemColors.ControlDarkDark,
             bottomWidth: 2,
             bottomStyle: ButtonBorderStyle.Solid);
-       
     }
     protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
     {

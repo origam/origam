@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-
 using Origam.DA;
 using Origam.Rule;
 using Origam.Schema;
@@ -280,15 +279,13 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 		{
 			return new object[] {(decimal)0, (decimal)0, (decimal)0};
 		}
-		else
-		{
-			DataSet balance = core.DataService.Instance.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
-				new Guid("a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"), Guid.Empty, Guid.Empty,
-				null, "InventoryBalance_parId", balanceId);
-			DataRow row = balance.Tables[0].Rows[0];
-			return new object[] {row["QuantityBalance"], row["PriceLocalAverage"], row["PriceLocalTotal"]};
-		}
-	}
+        DataSet balance = core.DataService.Instance.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
+            new Guid("a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"), Guid.Empty, Guid.Empty,
+            null, "InventoryBalance_parId", balanceId);
+        DataRow row = balance.Tables[0].Rows[0];
+
+        return new object[] { row["QuantityBalance"], row["PriceLocalAverage"], row["PriceLocalTotal"] };
+    }
 	private static void UpdateBalances(PriceRecalculationData data, Guid inventoryId, 
 		DateTime date, decimal lastPrice, decimal totalPrice)
 	{
@@ -298,11 +295,17 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			"refInventoryId='" + inventoryId.ToString() + "' and Date = " + DatasetTools.DateExpression(date),
 			"Date DESC"
 			);
-		if(balances.Length == 0) 
-			throw new Exception(ResourceUtils.GetString("ErrorBalanceNotFound", inventoryId.ToString(), date.ToString()));
-		if(balances.Length > 1) 
-			throw new Exception(ResourceUtils.GetString("ErrorMultipleBalances", inventoryId.ToString(), date.ToString()));
-		PriceRecalculationData.InventoryBalanceRow balance = balances[0];
+		if(balances.Length == 0)
+        {
+            throw new Exception(ResourceUtils.GetString("ErrorBalanceNotFound", inventoryId.ToString(), date.ToString()));
+        }
+
+        if (balances.Length > 1)
+        {
+            throw new Exception(ResourceUtils.GetString("ErrorMultipleBalances", inventoryId.ToString(), date.ToString()));
+        }
+
+        PriceRecalculationData.InventoryBalanceRow balance = balances[0];
 		balance.PriceLocalAverage = lastPrice;
 		balance.PriceLocalTotal = totalPrice;
 	}
@@ -343,16 +346,20 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 	{
 		switch(this.MethodName)
 		{
-			case "RecalculatePrices":
-				// Check input parameters
-				if(! (this.Parameters["InventoryOperations"] is IDataDocument))
-					throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDataDocument"));
-				
-				PriceRecalculationData sourceData = new PriceRecalculationData();
-				sourceData.Merge((this.Parameters["InventoryOperations"] as IDataDocument).DataSet);
-				_result = this.RecalculateWeightedAverage(sourceData);
-				break;
-		}
+            case "RecalculatePrices":
+                {
+                    // Check input parameters
+                    if (!(this.Parameters["InventoryOperations"] is IDataDocument))
+                    {
+                        throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDataDocument"));
+                    }
+
+                    PriceRecalculationData sourceData = new PriceRecalculationData();
+                    sourceData.Merge((this.Parameters["InventoryOperations"] as IDataDocument).DataSet);
+                    _result = this.RecalculateWeightedAverage(sourceData);
+                    break;
+                }
+        }
 	}
 	#endregion
 }

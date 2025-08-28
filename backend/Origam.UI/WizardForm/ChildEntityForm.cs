@@ -37,7 +37,11 @@ public class ChildEntityForm : AbstractWizardForm
             txtchildEntityName.Text = "";
             cboEntity1.Items.Clear();
             cboEntity2.Items.Clear();
-            if (this.Entity1 == null) return;
+            if (this.Entity1 == null)
+            {
+                return;
+            }
+
             object selectedItem = null;
             foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
             {

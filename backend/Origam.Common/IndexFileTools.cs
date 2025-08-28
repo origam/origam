@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam;
+
 public interface IndexFileTools
 {
-    string GetFirstUnprocessedFile(
-        string path, string mask, string indexFile);
+    string GetFirstUnprocessedFile(string path, string mask, string indexFile);
 }

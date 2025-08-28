@@ -103,7 +103,6 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
                 Origam.UI.AsMessageBox.ShowError(null, ex.Message, "Error", ex);
             }
         }
-        
     }
     internal void SetSplitter()
     {
@@ -118,6 +117,8 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             .OrderByDescending(gridItem=>gridItem.Label.Width(Font))
             .First().Label.Width(Font)+50;
         if (methodInfo != null)
+        {
             methodInfo.Invoke(controll, new object[] { maxwidth });
+        }
     }
 }

@@ -191,8 +191,12 @@ public void OpenForm(object owner,Hashtable parameters)
 	private void OnAllToolStripsRemovedFromALoadedForm(object sender, EventArgs e)
 	{
 		var toolStripContainer = (IToolStripContainer) sender;
-		if (!loadedForms.ContainsKey(toolStripContainer)) return;
-		RemoveToolStrips(toolStripContainer);
+		if (!loadedForms.ContainsKey(toolStripContainer))
+        {
+            return;
+        }
+
+        RemoveToolStrips(toolStripContainer);
 		loadedForms.Remove(toolStripContainer);
 	}
 	private void OnToolStripsNeedUpdate(object sender, EventArgs args)
@@ -430,8 +434,12 @@ public void OpenForm(object owner,Hashtable parameters)
     
     public void UpdateToolbar()
 	{
-		if(this.Disposing) return;
-		foreach(object item in ducumentToolStrip.Items)
+		if(this.Disposing)
+        {
+            return;
+        }
+
+        foreach (object item in ducumentToolStrip.Items)
 		{
 			(item as IStatusUpdate)?.UpdateItemsToDisplay();
 		}
@@ -546,13 +554,19 @@ public void OpenForm(object owner,Hashtable parameters)
 		{
 			switch (item)
 			{
-				case AsMenuCommand command:
-					clonedItems.Add(new AsMenuCommand(command));
-					break;
-				case ToolStripSeparator _:
-					clonedItems.Add(new ToolStripSeparator());
-					break;
-				default:
+                case AsMenuCommand command:
+                    {
+                        clonedItems.Add(new AsMenuCommand(command));
+                        break;
+                    }
+
+                case ToolStripSeparator _:
+                    {
+                        clonedItems.Add(new ToolStripSeparator());
+                        break;
+                    }
+
+                default:
 					throw new Exception($"Need a copy constructor for {item.GetType()} here.");	
 		}
 		}
@@ -716,8 +730,12 @@ public void OpenForm(object owner,Hashtable parameters)
     }
     private void UpdateMenu()
 	{
-		if(this.Disposing) return;
-		foreach(object item in menuStrip.Items)
+		if(this.Disposing)
+        {
+            return;
+        }
+
+        foreach (object item in menuStrip.Items)
 		{
 			if(item is IStatusUpdate)
 			{
@@ -785,8 +803,10 @@ public void OpenForm(object owner,Hashtable parameters)
 		foreach(IPadContent pad in this.PadContentCollection)
 		{
 			if(persistString == pad.GetType().ToString())
-				return pad as DockContent;
-		}
+            {
+                return pad as DockContent;
+            }
+        }
 		
 		return null;
 	}
@@ -874,19 +894,30 @@ public void OpenForm(object owner,Hashtable parameters)
 		DockContent dock = content as DockContent;
 		switch(dock.DockState)
 		{
-			case DockState.DockBottomAutoHide:
-				dock.DockState = DockState.DockBottom;
-				break;
-			case DockState.DockLeftAutoHide:
-				dock.DockState = DockState.DockLeft;
-				break;
-			case DockState.DockRightAutoHide:
-				dock.DockState = DockState.DockRight;
-				break;
-			case DockState.DockTopAutoHide:
-				dock.DockState = DockState.DockTop;
-				break;
-		}
+            case DockState.DockBottomAutoHide:
+                {
+                    dock.DockState = DockState.DockBottom;
+                    break;
+                }
+
+            case DockState.DockLeftAutoHide:
+                {
+                    dock.DockState = DockState.DockLeft;
+                    break;
+                }
+
+            case DockState.DockRightAutoHide:
+                {
+                    dock.DockState = DockState.DockRight;
+                    break;
+                }
+
+            case DockState.DockTopAutoHide:
+                {
+                    dock.DockState = DockState.DockTop;
+                    break;
+                }
+        }
 		dock.Show(dockPanel);
 	}
 	public T GetPad<T>() where T: IPadContent
@@ -907,8 +938,11 @@ public void OpenForm(object owner,Hashtable parameters)
 				// try all interfaces
 				foreach(Type interfaceType in pad.GetType().GetInterfaces())
 				{
-					if(interfaceType == type) return pad;
-				}
+					if(interfaceType == type)
+                    {
+                        return pad;
+                    }
+                }
 			}
 		}
 		return null;
@@ -1176,8 +1210,12 @@ public void OpenForm(object owner,Hashtable parameters)
 	private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
 	{
 		Maybe<XmlLoadError> maybeError = filePersistService.Reload();
-		if (maybeError.HasNoValue) return null;
-		XmlLoadError error = maybeError.Value;
+		if (maybeError.HasNoValue)
+        {
+            return null;
+        }
+
+        XmlLoadError error = maybeError.Value;
 		this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
         return maybeError;
 	}
@@ -1187,8 +1225,12 @@ public void OpenForm(object owner,Hashtable parameters)
 		DialogResult updateVersionsResult = MessageBox.Show(this,
 			$"{message}{Environment.NewLine}Do you want to upgrade this file and all other files with old versions?",
 			"Old Meta Model Version Detected", MessageBoxButtons.YesNo);
-		if (updateVersionsResult != DialogResult.Yes) return false;
-		MessageBox.Show(this,
+		if (updateVersionsResult != DialogResult.Yes)
+        {
+            return false;
+        }
+
+        MessageBox.Show(this,
 			$"This functionality has not been implemented yet.{Environment.NewLine}No files will be reloaded!");
 		Maybe<XmlLoadError> reloadError = filePersistService.Reload();
 		if (reloadError.HasValue)
@@ -1220,9 +1262,17 @@ public void OpenForm(object owner,Hashtable parameters)
 	private static bool CanBeReOpened(
 		FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
 	{
-		if (viewContent is SchemaCompareEditor) return true;
-		if (viewContent.LoadedObject == null) return false;
-		IPersistent loadedObject = (IPersistent) viewContent.LoadedObject;
+		if (viewContent is SchemaCompareEditor)
+        {
+            return true;
+        }
+
+        if (viewContent.LoadedObject == null)
+        {
+            return false;
+        }
+
+        IPersistent loadedObject = (IPersistent) viewContent.LoadedObject;
 		return filePersistenceProvider.Has(loadedObject.Id);
 	}
 	private void ActivateViewByType(Type typeToActivate)
@@ -1236,8 +1286,12 @@ public void OpenForm(object owner,Hashtable parameters)
 	}
 	private void ActivateViewByContent(IViewContent refContent)
 	{
-		if(refContent == null) return;
-		IBrowserNode2 loadedObject = (IBrowserNode2)refContent.LoadedObject;
+		if(refContent == null)
+        {
+            return;
+        }
+
+        IBrowserNode2 loadedObject = (IBrowserNode2)refContent.LoadedObject;
 		
 		ViewContentCollection
 			.Cast<IViewContent>()
@@ -1278,16 +1332,32 @@ public void OpenForm(object owner,Hashtable parameters)
 		FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
 	{
 		var loadedObject = (IFilePersistent) viewContent.LoadedObject;
-		if (loadedObject == null) throw new Exception("loadedObject not set");
-		filePersistenceProvider.RefreshInstance(loadedObject);
+		if (loadedObject == null)
+        {
+            throw new Exception("loadedObject not set");
+        }
+
+        filePersistenceProvider.RefreshInstance(loadedObject);
 		return loadedObject;
 	}
 	private Maybe<AbstractCommand> GetCommandToReOpen(IViewContent viewContent)
 	{
-		if (viewContent is SchemaCompareEditor) return new ShowDbCompare();
-		if (viewContent is AbstractViewContent) return new EditSchemaItem();
-		if (viewContent is AsForm) return new ExecuteSchemaItem();
-		return null;
+		if (viewContent is SchemaCompareEditor)
+        {
+            return new ShowDbCompare();
+        }
+
+        if (viewContent is AbstractViewContent)
+        {
+            return new EditSchemaItem();
+        }
+
+        if (viewContent is AsForm)
+        {
+            return new ExecuteSchemaItem();
+        }
+
+        return null;
 	}
 	public void Connect(string configurationName)
 	{
@@ -1372,8 +1442,12 @@ public void OpenForm(object owner,Hashtable parameters)
     {
        var currentPersistenceService =
             ServiceManager.Services.GetService<IPersistenceService>();
-       if (!(currentPersistenceService is FilePersistenceService)) return;
-       var cancellationToken =
+       if (!(currentPersistenceService is FilePersistenceService))
+        {
+            return;
+        }
+
+        var cancellationToken =
            modelCheckCancellationTokenSource.Token;
        Task.Factory.StartNew(() =>
        {
@@ -1535,7 +1609,11 @@ public void OpenForm(object owner,Hashtable parameters)
 			{
 				SaveWorkspace();
 			}
-			if (!_schema.Disconnect()) return false;
+			if (!_schema.Disconnect())
+            {
+                return false;
+            }
+
             ClearReferenceIndex();
 			UnloadConnectedServices();
 			UnloadConnectedPads();
@@ -1826,8 +1904,10 @@ public void OpenForm(object owner,Hashtable parameters)
 	private void dockPanel_ActiveDocumentChanged(object sender, EventArgs e)
 	{
 		if(this.dockPanel.ActiveDocument != null)
-			OnActiveWindowChanged(sender, new EventArgs());
-	}
+        {
+            OnActiveWindowChanged(sender, new EventArgs());
+        }
+    }
 	private void dockPanel_ContentRemoved(object sender, DockContentEventArgs e)
 	{
 		UpdateToolbar();
@@ -2121,7 +2201,11 @@ public void OpenForm(object owner,Hashtable parameters)
 			if(_schema.IsSchemaLoaded)
             {
                 string text = (sender as ComboBox).Text;
-                if (text.Equals(String.Empty)) return;
+                if (text.Equals(String.Empty))
+                {
+                    return;
+                }
+
                 _findSchemaItemResultsPad.ResetResults();
                 IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
                 ISchemaItem[] results = persistence.SchemaProvider.FullTextSearch<ISchemaItem>(text);

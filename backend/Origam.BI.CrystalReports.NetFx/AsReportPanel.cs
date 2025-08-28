@@ -278,9 +278,11 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	private void FillParameterCache(ControlSetItem controlItem)
 	{
         if( controlItem ==null)
-			return;
-		
-		_fillingParameterCache = true;
+        {
+            return;
+        }
+
+        _fillingParameterCache = true;
 		ParameterMappings.Clear();
 		
 		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
@@ -316,7 +318,6 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		set
 		{
 			_dataMember=value;
-			
 		}
 	}
 	private Guid _reportId;
@@ -341,8 +342,11 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		get
 		{
 			if(this._origamMetadata == null)
-				return null;
-			return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
+            {
+                return null;
+            }
+
+            return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
 		}
 		set
 		{
@@ -350,7 +354,6 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 			{
 				this.ReportId = Guid.Empty;
 				ClearMappingItemsOnly();
-				
 			}
 			else
 			{
@@ -384,8 +387,11 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		try
 		{
 			if(!_itemsLoaded)
-				return;
-			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+            {
+                return;
+            }
+
+            var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
 				.ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
@@ -399,9 +405,12 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	}
 	private void CreateMappingItemsCollection()
 	{
-		if(this.CrystalReport == null) return;
-		// create any missing parameter mappings
-		foreach(var entry in this.CrystalReport.ParameterReferences)
+		if(this.CrystalReport == null)
+        {
+            return;
+        }
+        // create any missing parameter mappings
+        foreach (var entry in this.CrystalReport.ParameterReferences)
 		{
 			string parameterName = entry.Key;
 			if(this._origamMetadata.GetChildByName(parameterName) == null)
@@ -446,8 +455,11 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	{
 		if(	dataSource == null	|| dataMember == null || dataMember == "" 
 			|| this.DesignMode)
+        {
             return;
-		_dataSource = dataSource;
+        }
+
+        _dataSource = dataSource;
 		_dataMember = (null == dataMember)? "" : dataMember;
 		if(_bindMan != null)
 		{
@@ -468,8 +480,11 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	private BindingManagerBase GetBindingManager()
 	{
 		if(null != _dataSource && null != BindingContext)
-			return BindingContext[_dataSource, _dataMember];
-		return null;
+        {
+            return BindingContext[_dataSource, _dataMember];
+        }
+
+        return null;
 	}
 	private DataSet ConvertInputData(object data)
 	{
@@ -480,11 +495,9 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			return (DataSet)data;
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	#endregion
 	/// <summary>
 	/// When Report DataStructure is changer then reloaded
@@ -494,12 +507,24 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	
 	private Hashtable GetParameters (CurrencyManager cm)
 	{
-		if(cm == null) throw new NullReferenceException(Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorInvalidReportSource"));
-		Hashtable result = new Hashtable();
+		if(cm == null)
+        {
+            throw new NullReferenceException(Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorInvalidReportSource"));
+        }
+
+        Hashtable result = new Hashtable();
 		
-		if(ParameterMappings.Count == 0) return result;
-		if ( cm.Position < 0) return result;
-		DataRowView drv = cm.Current as DataRowView;
+		if(ParameterMappings.Count == 0)
+        {
+            return result;
+        }
+
+        if ( cm.Position < 0)
+        {
+            return result;
+        }
+
+        DataRowView drv = cm.Current as DataRowView;
 		foreach(ColumnParameterMapping colMap in ParameterMappings)
 		{
 			if(colMap.ColumnName != "" && colMap.ColumnName != null) // maybe the parameter was not bound, we let report service to try the default value
@@ -700,7 +725,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		int top = 0;
 		int left = 0;
 		top = parent.Height / 3;
-		left = parent.Width / 2 - (16);
+		left = (parent.Width / 2) - (16);
 		circ.Top = top;
 		circ.Left = left;
 		circ.Height = 32;
@@ -714,8 +739,12 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	private void HideProgress()
 	{
 		this.ProgressText = "";
-		if(! circ.Active) return;
-		circ.Active = false;
+		if(! circ.Active)
+        {
+            return;
+        }
+
+        circ.Active = false;
 		circ.ParentControl.Invalidate();
 		circ.ParentControl = null;
 	}
@@ -755,7 +784,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 			float stringWidth = g.MeasureString(text, font).Width;
 			float stringHeight = g.MeasureString(text, font).Height;
 			g.Clear(this.BackColor);
-			g.DrawString(text, font, new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor), this.Width / 2 - (stringWidth / 2), this.Height / 3 + 64);
+			g.DrawString(text, font, new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor), (this.Width / 2) - (stringWidth / 2), (this.Height / 3) + 64);
 		}
 		catch{}
 	}

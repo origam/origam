@@ -20,77 +20,91 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Workbench.Services;
 using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
+using Origam.Workbench.Services;
 
 namespace Origam.OrigamEngine;
+
 public class FilePersistenceBuilder : IPersistenceBuilder
 {
     private static FilePersistenceService persistenceService;
-    
+
     public IDocumentationService GetDocumentationService() =>
         new FileStorageDocumentationService(
-            (IFilePersistenceProvider) persistenceService.SchemaProvider,
-            persistenceService.FileEventQueue);
-    public IPersistenceService GetPersistenceService() => 
-        GetPersistenceService(watchFileChanges: true,
-            checkRules: true,useBinFile: true);
-    public IPersistenceService GetPersistenceService(bool watchFileChanges,
-        bool checkRules, bool useBinFile)
+            (IFilePersistenceProvider)persistenceService.SchemaProvider,
+            persistenceService.FileEventQueue
+        );
+
+    public IPersistenceService GetPersistenceService() =>
+        GetPersistenceService(watchFileChanges: true, checkRules: true, useBinFile: true);
+
+    public IPersistenceService GetPersistenceService(
+        bool watchFileChanges,
+        bool checkRules,
+        bool useBinFile
+    )
     {
-        persistenceService = CreateNewPersistenceService(watchFileChanges,
-            checkRules,useBinFile);
+        persistenceService = CreateNewPersistenceService(watchFileChanges, checkRules, useBinFile);
         return persistenceService;
     }
-    public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
-        bool checkRules,bool useBinFile)
+
+    public FilePersistenceService CreateNewPersistenceService(
+        bool watchFileChanges,
+        bool checkRules,
+        bool useBinFile
+    )
     {
         List<string> defaultFolders = new List<string>
         {
             CategoryFactory.Create(typeof(Package)),
-            CategoryFactory.Create(typeof(SchemaItemGroup))
+            CategoryFactory.Create(typeof(SchemaItemGroup)),
         };
-        var metaModelUpgradeService = ServiceManager.Services
-            .GetService<MetaModelUpgradeService>();
-        
-        
+        var metaModelUpgradeService = ServiceManager.Services.GetService<MetaModelUpgradeService>();
+
 #if !ORIGAM_CLIENT
         MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
 #else
         MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
 #endif
         string pathToRuntimeModelConfig = ConfigurationManager
-            .GetActiveConfiguration().PathToRuntimeModelConfig;
+            .GetActiveConfiguration()
+            .PathToRuntimeModelConfig;
         return new FilePersistenceService(
             metaModelUpgradeService: metaModelUpgradeService,
             defaultFolders: defaultFolders,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             watchFileChanges: watchFileChanges,
-            checkRules: checkRules,useBinFile: useBinFile,
-            mode: mode,
-            pathToRuntimeModelConfig: pathToRuntimeModelConfig);
+            useBinFile: useBinFile,
+            checkRules: checkRules,
+            mode: mode
+        );
     }
+
     public FilePersistenceService CreateNoBinFilePersistenceService()
     {
         List<string> defaultFolders = new List<string>
         {
             CategoryFactory.Create(typeof(Package)),
-            CategoryFactory.Create(typeof(SchemaItemGroup))
+            CategoryFactory.Create(typeof(SchemaItemGroup)),
         };
         string pathToRuntimeModelConfig = ConfigurationManager
-            .GetActiveConfiguration().PathToRuntimeModelConfig;
-        
+            .GetActiveConfiguration()
+            .PathToRuntimeModelConfig;
+
         return new FilePersistenceService(
-            new NullMetaModelUpgradeService(), 
+            new NullMetaModelUpgradeService(),
             defaultFolders: defaultFolders,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             watchFileChanges: false,
             useBinFile: false,
-            mode: MetaModelUpgradeMode.Ignore,
-            pathToRuntimeModelConfig: pathToRuntimeModelConfig);
+            mode: MetaModelUpgradeMode.Ignore
+        );
     }
+
     public static void Clear()
     {
         persistenceService = null;

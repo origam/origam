@@ -23,7 +23,6 @@ using System;
 using System.Drawing.Design;
 using Origam.Schema.GuiModel;
 
-
 namespace Origam.Gui.Designer;
 /// <summary>
 /// TreeNode is used for identifying Combra objects in ToolBox 

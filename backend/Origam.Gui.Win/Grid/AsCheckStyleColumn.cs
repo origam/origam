@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
-
 using Origam.Rule;
 
 namespace Origam.Gui.Win;

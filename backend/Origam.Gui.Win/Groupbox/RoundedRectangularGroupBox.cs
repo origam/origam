@@ -66,7 +66,7 @@ public class RoundedRectangularGroupBox : BaseContainer
 			oRcInterior = new Rectangle(this.BorderRectangle.X + this.BorderWidth + 1, 
 				this.BorderRectangle.Y + 12 + this.BorderWidth, 
 				this.BorderRectangle.Width - (this.BorderWidth * 2), 
-				this.BorderRectangle.Height - (12 + this.BorderWidth * 2));
+				this.BorderRectangle.Height - (12 + (this.BorderWidth * 2)));
 		}
 		else
 		{

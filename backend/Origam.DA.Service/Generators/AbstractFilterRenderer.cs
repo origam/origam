@@ -25,17 +25,21 @@ using System.Text;
 using CSharpFunctionalExtensions;
 
 namespace Origam.DA.Service;
+
 public abstract class AbstractFilterRenderer
 {
     public string In(string leftOperand, IEnumerable<string> options)
     {
-        return leftOperand+" IN (" + string.Join(", ",options) + ")";
+        return leftOperand + " IN (" + string.Join(", ", options) + ")";
     }
+
     public string LogicalAndOr(string functionName, IList<string> arguments)
     {
         if (arguments.Count < 2)
         {
-            throw new ArgumentOutOfRangeException("At least 2 arguments must be present fpr AND/OR.");
+            throw new ArgumentOutOfRangeException(
+                "At least 2 arguments must be present fpr AND/OR."
+            );
         }
         int i = 0;
         StringBuilder logicalBuilder = new StringBuilder();
@@ -55,50 +59,65 @@ public abstract class AbstractFilterRenderer
         logicalBuilder.Append(")");
         return logicalBuilder.ToString();
     }
-    
+
     public string BinaryOperator(
         string columnName,
         string leftValue,
-        string[] rightValues, string operatorName,
-        bool isColumnArray)
+        string[] rightValues,
+        string operatorName,
+        bool isColumnArray
+    )
     {
         switch (operatorName)
         {
             case "Between":
+            {
                 CheckArgumentLength("Between", rightValues, 2);
                 return $"{leftValue} BETWEEN {rightValues[0]} AND {rightValues[1]}";
+            }
+
             case "NotBetween":
+            {
                 CheckArgumentLength("NotBetween", rightValues, 2);
-                return $"{leftValue} NOT BETWEEN {rightValues[0]} AND {rightValues[1]}";                
+                return $"{leftValue} NOT BETWEEN {rightValues[0]} AND {rightValues[1]}";
+            }
+
             case "In":
+            {
                 if (isColumnArray)
                 {
-                    return ColumnArray(columnName, "IN", rightValues);     
+                    return ColumnArray(columnName, "IN", rightValues);
                 }
-                else
-                {
-                    return leftValue + " IN (" + string.Join(", ", rightValues) + ")";                
-                }
+
+                return leftValue + " IN (" + string.Join(", ", rightValues) + ")";
+            }
+
             case "NotIn":
+            {
                 if (isColumnArray)
                 {
                     return ColumnArray(columnName, "NOT IN", rightValues);
                 }
-                else
-                {
-                    return leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")";
-                }
+
+                return leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")";
+            }
+
             default:
+            {
                 if (rightValues.Length == 1)
                 {
                     return BinaryOperator(leftValue, rightValues[0], operatorName);
                 }
-                throw new ArgumentException($"Cannot process operator {operatorName} with {rightValues.Length} arguments");
+                throw new ArgumentException(
+                    $"Cannot process operator {operatorName} with {rightValues.Length} arguments"
+                );
+            }
         }
     }
+
     protected abstract string ColumnArray(string columnName, string operand, string[] rightValues);
-    public string BinaryOperator(string leftValue,
-        string rightValue, string operatorName)
+
+    public string BinaryOperator(string leftValue, string rightValue, string operatorName)
     {
         switch (operatorName)
         {
@@ -107,12 +126,19 @@ public abstract class AbstractFilterRenderer
             case "NotEqual":
                 return NotEqual(leftValue, rightValue);
             default:
+            {
                 CheckArgumentEmpty("leftValue", leftValue);
                 CheckArgumentEmpty("rightValue", rightValue);
-                return string.Format("({0} {1} {2})",
-                    leftValue, GetOperator(operatorName), rightValue);
+                return string.Format(
+                    "({0} {1} {2})",
+                    leftValue,
+                    GetOperator(operatorName),
+                    rightValue
+                );
+            }
         }
     }
+
     public string NotEqual(string leftValue, string rightValue)
     {
         CheckArgumentEmpty("leftValue", leftValue);
@@ -120,11 +146,10 @@ public abstract class AbstractFilterRenderer
         {
             return string.Format("{0} IS NOT NULL", leftValue);
         }
-        else
-        {
-            return string.Format("{0} <> {1}", leftValue, rightValue);
-        }
+
+        return string.Format("{0} <> {1}", leftValue, rightValue);
     }
+
     public string Equal(string leftValue, string rightValue)
     {
         CheckArgumentEmpty("leftValue", leftValue);
@@ -132,16 +157,16 @@ public abstract class AbstractFilterRenderer
         {
             return string.Format("{0} IS NULL", leftValue);
         }
-        else
-        {
-            return string.Format("{0} = {1}", leftValue, rightValue);
-        }
+
+        return string.Format("{0} = {1}", leftValue, rightValue);
     }
+
     public string Not(string argument)
     {
         CheckArgumentEmpty("argument", argument);
         return string.Format("NOT({0})", argument);
     }
+
     private string GetOperator(string functionName)
     {
         switch (functionName)
@@ -153,7 +178,7 @@ public abstract class AbstractFilterRenderer
             case "Like":
                 return LikeOperator();
             case "NotLike":
-                return "NOT "+ LikeOperator();
+                return "NOT " + LikeOperator();
             case "Add":
                 return "+";
             case "Deduct":
@@ -177,11 +202,17 @@ public abstract class AbstractFilterRenderer
             case "LogicalAnd":
                 return "AND";
             default:
-                throw new ArgumentOutOfRangeException("functionName", functionName, ResourceUtils.GetString("UnsupportedOperator"));
+                throw new ArgumentOutOfRangeException(
+                    "functionName",
+                    functionName,
+                    ResourceUtils.GetString("UnsupportedOperator")
+                );
         }
     }
+
     protected abstract string LikeOperator();
     public abstract string StringConcatenationChar { get; }
+
     private static void CheckArgumentEmpty(string name, string argument)
     {
         if (argument == null)
@@ -189,11 +220,16 @@ public abstract class AbstractFilterRenderer
             throw new ArgumentOutOfRangeException("name", name, "Argument cannot be empty.");
         }
     }
+
     private static void CheckArgumentLength(string operatorName, string[] arguments, int length)
     {
         if (arguments?.Length != length)
         {
-            throw new ArgumentOutOfRangeException("operator", operatorName, $"Operator needs exactly {length} number of right hand arguments.");
+            throw new ArgumentOutOfRangeException(
+                "operator",
+                operatorName,
+                $"Operator needs exactly {length} number of right hand arguments."
+            );
         }
     }
 }

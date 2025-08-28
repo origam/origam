@@ -25,7 +25,6 @@ using System.Data;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
 using Origam;
 using Origam.OrigamEngine;
 using Origam.DA.Service;
@@ -160,15 +159,13 @@ public class ExecuteSchemaItem : AbstractCommand
 						{
 							return;
 						}
-						else
-						{
-							foreach(var mapping in 
-                                formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
-							{
-								generator.SelectionParameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
-							}
-						}
-					}
+
+                        foreach (var mapping in
+                            formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
+                        {
+                            generator.SelectionParameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
+                        }
+                    }
 				}
 			}
             var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
@@ -192,8 +189,11 @@ public class ExecuteSchemaItem : AbstractCommand
 			catch(Exception ex)
 			{
 				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window, ex.Message, strings.FormLoadingError_Message, ex);
-				if(frm != null) frm.Close();
-			}
+				if(frm != null)
+                {
+                    frm.Close();
+                }
+            }
             finally
             {
                 System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
@@ -237,14 +237,12 @@ public class ExecuteSchemaItem : AbstractCommand
 				{
 					return;
 				}
-				else
-				{
-					foreach(var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
-					{
-						parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
-					}
-				}
-			}
+
+                foreach (var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
+                {
+                    parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
+                }
+            }
 			CrystalReport crReport = reportRef.Report as CrystalReport;
 			WebReport webReport = reportRef.Report as WebReport;
 			if(crReport != null)
@@ -400,8 +398,12 @@ public class ExecuteSchemaItem : AbstractCommand
 			sd.AutoAddNewEntity = dataDoc.DataSet.Tables[0].TableName;
 			sd.SaveOnClose = false;
 			DialogResult result = sd.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
-			if(result == DialogResult.Cancel) return null;
-			DataRow row;
+			if(result == DialogResult.Cancel)
+            {
+                return null;
+            }
+
+            DataRow row;
 			if(transformationAfterSelection == null)
 			{
 				row = FormTools.GetSelectionDialogResultRow(selectionDialogPanel.DataSourceId, Guid.Empty, dataDoc, profile.Id);
@@ -414,8 +416,12 @@ public class ExecuteSchemaItem : AbstractCommand
 		}
 		finally
 		{
-			if(sd != null) sd.Dispose();
-			sd = null;
+			if(sd != null)
+            {
+                sd.Dispose();
+            }
+
+            sd = null;
 			sdGenerator = null;
 		}
 	}
@@ -501,8 +507,11 @@ public class ViewProcessBrowserPad : AbstractMenuCommand
 	public override void Run()
 	{
 		WorkflowPlayerPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
-		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
-	}		
+		if(pad != null)
+        {
+            WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
+    }		
 }
 
 public class ViewWorkQueuePad : AbstractMenuCommand
@@ -521,8 +530,11 @@ public class ViewWorkQueuePad : AbstractMenuCommand
 	public override void Run()
 	{
 		WorkQueuePad pad = WorkbenchSingleton.Workbench.GetPad(typeof(WorkQueuePad)) as WorkQueuePad;
-		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
-	}		
+		if(pad != null)
+        {
+            WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
+    }		
 }
 /// <summary>
 /// Executes an active schema item.
@@ -822,9 +834,16 @@ public class GenerateLocalizationFile : AbstractMenuCommand
 			}
 			finally
 			{
-				if(fs != null)	fs.Close();
-				if (ms != null) ms.Close();
-			}
+				if(fs != null)
+                {
+                    fs.Close();
+                }
+
+                if (ms != null)
+                {
+                    ms.Close();
+                }
+            }
 		}
 	}		
 }
@@ -889,8 +908,11 @@ public class ViewWorkflowWatchPad : AbstractMenuCommand
 	public override void Run()
 	{
 		WorkflowWatchPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowWatchPad)) as WorkflowWatchPad;
-		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
-	}		
+		if(pad != null)
+        {
+            WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
+    }		
 }
 public class SetServerRestart : AbstractMenuCommand
 {
@@ -1066,25 +1088,30 @@ public class SchemaExtensionSorter : IDatasetFormatter
 			DataTable newTable = data.Tables[originalTable.TableName];
 			switch (originalTable.TableName)
 			{
-				case "SchemaItemGroup":
-				case "SchemaExtension":
-				case "PackageReference":
-					originalTable.Rows
-						.Cast<DataRow>()
-						.OrderBy(row => row["Id"])
-						.ForEach(row =>
-						{
-							newTable.ImportRow(row);
-							ImportChildRows(originalTable, newTable, row);
-						});
-					break;
-				default:
-					foreach (DataRow row in originalTable.Rows)
-					{
-						newTable.ImportRow(row);
-					}
-					break;
-			}
+                case "SchemaItemGroup":
+                case "SchemaExtension":
+                case "PackageReference":
+                    {
+                        originalTable.Rows
+                                            .Cast<DataRow>()
+                                            .OrderBy(row => row["Id"])
+                                            .ForEach(row =>
+                                            {
+                                                newTable.ImportRow(row);
+                                                ImportChildRows(originalTable, newTable, row);
+                                            });
+                        break;
+                    }
+
+                default:
+                    {
+                        foreach (DataRow row in originalTable.Rows)
+                        {
+                            newTable.ImportRow(row);
+                        }
+                        break;
+                    }
+            }
 		}
 		return data;
 	}

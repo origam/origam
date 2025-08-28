@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Windows.Forms;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Gui.Win;

@@ -55,10 +55,22 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
     {
         WorkbenchSchemaService sch = ServiceManager.Services.GetService(
             typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        if (!(sch.IsSchemaLoaded && sch.ActiveNode is ISchemaItemFactory)) return false;
+        if (!(sch.IsSchemaLoaded && sch.ActiveNode is ISchemaItemFactory))
+        {
+            return false;
+        }
+
         ISchemaItemFactory factory = sch.ActiveNode as ISchemaItemFactory;
-        if (factory.NewItemTypes == null) return false;
-        if (factory.NewItemTypes.Length == 0) return false;
+        if (factory.NewItemTypes == null)
+        {
+            return false;
+        }
+
+        if (factory.NewItemTypes.Length == 0)
+        {
+            return false;
+        }
+
         return true;
     }
     public AsMenuCommand[] BuildSubmenu(object owner)
@@ -66,7 +78,11 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         WorkbenchSchemaService sch = ServiceManager.Services.GetService(
             typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
         object activeNode = owner ?? sch.ActiveNode;
-        if (activeNode == null) return new AsMenuCommand[0];
+        if (activeNode == null)
+        {
+            return new AsMenuCommand[0];
+        }
+
         ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
         NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
         ISchemaItem activeItem = activeNode as ISchemaItem;
@@ -191,10 +207,22 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
     {
         WorkbenchSchemaService sch = ServiceManager.Services.GetService(
             typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        if (!sch.CanEditItem(sch.ActiveNode)) return false;
+        if (!sch.CanEditItem(sch.ActiveNode))
+        {
+            return false;
+        }
+
         ISchemaItemFactory factory = ParentFactory(sch.ActiveNode);
-        if (factory == null) return false;
-        if (factory.NewItemTypes == null) return false;
+        if (factory == null)
+        {
+            return false;
+        }
+
+        if (factory.NewItemTypes == null)
+        {
+            return false;
+        }
+
         return true;
     }
     public AsMenuCommand[] BuildSubmenu(object owner)
@@ -251,11 +279,9 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
 			{
 				return schemaItem.RootProvider;
 			}
-			else
-			{
-				return schemaItem.ParentItem;
-			}
-		}
+
+            return schemaItem.ParentItem;
+        }
 		return null;
 	}
 	private void ConvertItem(object sender, EventArgs e)
@@ -326,7 +352,6 @@ public class GitMenuBuilder : ISubmenuBuilder
         menu.Click += new EventHandler(ExeItem);
         items[0] = menu;
         return items;
-       
     }
     public bool HasItems()
     {

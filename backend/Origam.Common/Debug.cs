@@ -22,33 +22,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 
 namespace Origam;
+
 /// <summary>
 /// Summary description for Debug.
 /// </summary>
 public class Debug
 {
-	protected Debug()
-	{
-		//
-		// TODO: Add constructor logic here
-		//
-	}
-	private static Hashtable _counters = new Hashtable();
-	public static void UpdateCounter(string counterName, int offset)
-	{
-		if(! Debug._counters.ContainsKey(counterName))
-		{
-			Debug._counters.Add(counterName, 0);
-		}
-		Debug._counters[counterName] = (int)Debug._counters[counterName] + offset;
-	}
-	public static void PrintCounters()
-	{
-		System.Diagnostics.Debug.WriteLine("******************* COUNTERS *****************");
-		foreach(DictionaryEntry entry in Debug._counters)
-		{
-			System.Diagnostics.Debug.WriteLine(entry.Key.ToString() + ": " + entry.Value.ToString());
-		}
-		System.Diagnostics.Debug.WriteLine("***************** COUNTERS END ***************");
-	}
+    protected Debug()
+    {
+        //
+        // TODO: Add constructor logic here
+        //
+    }
+
+    private static Hashtable _counters = new Hashtable();
+
+    public static void UpdateCounter(string counterName, int offset)
+    {
+        if (!Debug._counters.ContainsKey(counterName))
+        {
+            Debug._counters.Add(counterName, 0);
+        }
+        Debug._counters[counterName] = (int)Debug._counters[counterName] + offset;
+    }
+
+    public static void PrintCounters()
+    {
+        System.Diagnostics.Debug.WriteLine("******************* COUNTERS *****************");
+        foreach (DictionaryEntry entry in Debug._counters)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                entry.Key.ToString() + ": " + entry.Value.ToString()
+            );
+        }
+        System.Diagnostics.Debug.WriteLine("***************** COUNTERS END ***************");
+    }
 }

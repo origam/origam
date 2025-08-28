@@ -44,7 +44,6 @@ internal static class ToolStripButtonTools
             right: 5,
             bottom: 20);
         actionButton.Size = BUTTON_SIZE;
-        
     }
     public static void InitActionButton(ToolStripItem actionButton
         ,EntityUIAction action)
@@ -56,8 +55,10 @@ internal static class ToolStripButtonTools
         PaintEventArgs e)
     {
         if (actionButton.Owner == null)
+        {
             return;
-        
+        }
+
         var renderer = actionButton.Owner.Renderer;
         
         bool sholudPaintText = 
@@ -81,8 +82,10 @@ internal static class ToolStripButtonTools
         PaintEventArgs e)
     {
         if (actionButton.Owner == null)
+        {
             return;
-        
+        }
+
         var renderer = actionButton.Owner.Renderer;
         actionButton.Image = GetImage(actionButton);
         
@@ -107,7 +110,7 @@ internal static class ToolStripButtonTools
     {
         Image image = GetImage(actionButton);
         var xCoord = (actionButton.Width - image.Size.Width) / 2;
-        var yCoord = actionButton.Margin.Top + (defaultImageHeight - image.Height) / 2; 
+        var yCoord = actionButton.Margin.Top + ((defaultImageHeight - image.Height) / 2); 
         return new Rectangle(
             new Point(xCoord, yCoord),
             image.Size);

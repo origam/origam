@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for EntityRelationColumnPairItem.
 /// </summary>
@@ -38,108 +39,116 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class EntityRelationColumnPairItem : AbstractSchemaItem
 {
-	public const string CategoryConst = "EntityRelationColumnPair";
-	public EntityRelationColumnPairItem() : base(){}
-	
-	public EntityRelationColumnPairItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public EntityRelationColumnPairItem(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	public Guid BaseEntityColumnId;
-	[TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
-	[NotNullModelElementRuleAttribute()]
+    public const string CategoryConst = "EntityRelationColumnPair";
+
+    public EntityRelationColumnPairItem()
+        : base() { }
+
+    public EntityRelationColumnPairItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntityRelationColumnPairItem(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    public Guid BaseEntityColumnId;
+
+    [TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
+    [NotNullModelElementRuleAttribute()]
     [XmlReference("baseEntityField", "BaseEntityColumnId")]
     public IDataEntityColumn BaseEntityField
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.BaseEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.BaseEntityColumnId = Guid.Empty;
-			}
-			else
-			{
-				this.BaseEntityColumnId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-	}
-	public Guid RelatedEntityColumnId;
-	[TypeConverter(typeof(RelationForeignKeyColumnConverter))]
-	[NotNullModelElementRuleAttribute()]
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.BaseEntityColumnId;
+            return (IDataEntityColumn)
+                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.BaseEntityColumnId = Guid.Empty;
+            }
+            else
+            {
+                this.BaseEntityColumnId = (Guid)value.PrimaryKey["Id"];
+            }
+        }
+    }
+    public Guid RelatedEntityColumnId;
+
+    [TypeConverter(typeof(RelationForeignKeyColumnConverter))]
+    [NotNullModelElementRuleAttribute()]
     [XmlReference("relatedEntityField", "RelatedEntityColumnId")]
     public IDataEntityColumn RelatedEntityField
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.RelatedEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.RelatedEntityColumnId = Guid.Empty;
-			}
-			else
-			{
-				this.RelatedEntityColumnId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	public override string Icon
-	{
-		get
-		{
-			return "3";
-		}
-	}
-	public override string ItemType
-	{
-		get
-		{
-			return EntityRelationColumnPairItem.CategoryConst;
-		}
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		BaseEntityField.GetParameterReferences(BaseEntityField, list);
-		RelatedEntityField.GetParameterReferences(RelatedEntityField, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.BaseEntityField);
-		dependencies.Add(this.RelatedEntityField);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override void UpdateReferences()
-	{
-		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-		{
-			if(item.OldPrimaryKey != null)
-			{
-				if(item.OldPrimaryKey.Equals(this.BaseEntityField.PrimaryKey))
-				{
-					this.BaseEntityField = item as IDataEntityColumn;
-					break;
-				}
-			}
-		}
-		base.UpdateReferences ();
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.RelatedEntityColumnId;
+            return (IDataEntityColumn)
+                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.RelatedEntityColumnId = Guid.Empty;
+            }
+            else
+            {
+                this.RelatedEntityColumnId = (Guid)value.PrimaryKey["Id"];
+            }
+        }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override string Icon
+    {
+        get { return "3"; }
+    }
+    public override string ItemType
+    {
+        get { return EntityRelationColumnPairItem.CategoryConst; }
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        BaseEntityField.GetParameterReferences(BaseEntityField, list);
+        RelatedEntityField.GetParameterReferences(RelatedEntityField, list);
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.BaseEntityField);
+        dependencies.Add(this.RelatedEntityField);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override void UpdateReferences()
+    {
+        foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+        {
+            if (item.OldPrimaryKey != null)
+            {
+                if (item.OldPrimaryKey.Equals(this.BaseEntityField.PrimaryKey))
+                {
+                    this.BaseEntityField = item as IDataEntityColumn;
+                    break;
+                }
+            }
+        }
+        base.UpdateReferences();
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
 }

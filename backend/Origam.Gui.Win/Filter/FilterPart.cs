@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
 using Origam.UI;
 
 namespace Origam.Gui.Win;
@@ -250,16 +249,36 @@ public abstract class FilterPart : IDisposable
 	}
 	private static string StoredFilterColumn(Type type, int position)
 	{
-		if(type == typeof(string)) return "StringValue" + position.ToString();
-		if(type == typeof(int)) return "IntValue" + position.ToString();
-		if(type == typeof(Guid)) return "GuidValue" + position.ToString();
-		if(type == typeof(DateTime)) return "DateValue" + position.ToString();
-		throw new ArgumentOutOfRangeException("type", type, "Unrecognized type. Cannot read stored filter.");
+		if(type == typeof(string))
+        {
+            return "StringValue" + position.ToString();
+        }
+
+        if (type == typeof(int))
+        {
+            return "IntValue" + position.ToString();
+        }
+
+        if (type == typeof(Guid))
+        {
+            return "GuidValue" + position.ToString();
+        }
+
+        if (type == typeof(DateTime))
+        {
+            return "DateValue" + position.ToString();
+        }
+
+        throw new ArgumentOutOfRangeException("type", type, "Unrecognized type. Cannot read stored filter.");
 	}
 	private void RefreshQuery()
 	{
-		if(this.Operator == FilterOperator.None) return;
-		string field = "[" + this.DataMember + "]";
+		if(this.Operator == FilterOperator.None)
+        {
+            return;
+        }
+
+        string field = "[" + this.DataMember + "]";
 		string v1 = QueryValue(this.Value1, this.Operator, this.DataType);
 		if(this.Operator == FilterOperator.IsNull | this.Operator == FilterOperator.NotIsNull)
 		{

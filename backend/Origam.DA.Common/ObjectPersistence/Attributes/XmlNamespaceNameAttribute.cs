@@ -24,11 +24,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA.Common.ObjectPersistence.Attributes;
-[AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
-public class XmlNamespaceNameAttribute:Attribute
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public class XmlNamespaceNameAttribute : Attribute
 {
     public string XmlNamespaceName { get; }
-    
+
     public XmlNamespaceNameAttribute(string xmlNamespaceName)
     {
         XmlNamespaceName = xmlNamespaceName;

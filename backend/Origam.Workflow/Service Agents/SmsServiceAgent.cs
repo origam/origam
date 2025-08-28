@@ -24,36 +24,45 @@ using Origam.Service.Core;
 using Origam.Sms;
 
 namespace Origam.Workflow;
+
 public class SmsServiceAdapter : AbstractServiceAgent
 {
     public override object Result { get; }
+
     public override void Run()
     {
         switch (MethodName)
         {
             case "SendSms":
-                CreateSmsService().SendSms(
-                    Parameters.Get<string>("from"),
-                    Parameters.Get<string>("to"),
-                    Parameters.Get<string>("body"));
+            {
+                CreateSmsService()
+                    .SendSms(
+                        Parameters.Get<string>("from"),
+                        Parameters.Get<string>("to"),
+                        Parameters.Get<string>("body")
+                    );
                 break;
+            }
+
             default:
                 throw new ArgumentOutOfRangeException(
-                    "MethodName", MethodName,
-                    ResourceUtils.GetString("InvalidMethodName"));
+                    "MethodName",
+                    MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
         }
     }
+
     private static ISmsService CreateSmsService()
     {
         var settings = ConfigurationManager.GetActiveConfiguration();
-        var assembly = settings.DataDataService
-            .Split(",".ToCharArray())[0].Trim();
-        var classname = settings.DataDataService
-            .Split(",".ToCharArray())[1].Trim();
-        if (!(Reflector.InvokeObject(classname, assembly) 
-            is ISmsService service)) {
-            throw new NullReferenceException
-                ($"Couldn't invoke object as {classname}, and {assembly}.");
+        var assembly = settings.DataDataService.Split(",".ToCharArray())[0].Trim();
+        var classname = settings.DataDataService.Split(",".ToCharArray())[1].Trim();
+        if (!(Reflector.InvokeObject(classname, assembly) is ISmsService service))
+        {
+            throw new NullReferenceException(
+                $"Couldn't invoke object as {classname}, and {assembly}."
+            );
         }
         return service;
     }

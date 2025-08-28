@@ -42,8 +42,12 @@ public class NativeTreeView : System.Windows.Forms.TreeView
 	public TreeNode RootNode {
 		get
 		{
-			if (TopNode == null) return null;
-			TreeNode node = TopNode;
+			if (TopNode == null)
+            {
+                return null;
+            }
+
+            TreeNode node = TopNode;
 			while (node.Parent != null)
 			{
 				node = node.Parent;

@@ -42,7 +42,7 @@ internal class ActionSubgraphPainter: INodeItemPainter
         var labelWidth = painter.GetLabelWidth(node);
         var width = clusterBoundary.MinWidth > labelWidth
             ? clusterBoundary.MinWidth 
-            : labelWidth + painter.LabelSideMargin * 2;
+            : labelWidth + (painter.LabelSideMargin * 2);
         return CurveFactory.CreateRectangle(width, height, new Point());
     }
     public bool Draw(Node node, object graphicsObj)
@@ -55,8 +55,8 @@ internal class ActionSubgraphPainter: INodeItemPainter
         double centerX = node.GeometryNode.Center.X;
         double centerY = node.GeometryNode.Center.Y;
         var labelPoint = new PointF(
-            (float)(centerX - borderSize.Width / 2 + labelLeftMargin),
-            (float)centerY - borderSize.Height / 2.0f + painter.LabelTopMargin);
+            (float)(centerX - (borderSize.Width / 2) + labelLeftMargin),
+            (float)centerY - (borderSize.Height / 2.0f) + painter.LabelTopMargin);
         
         editorGraphics.DrawUpSideDown(drawAction: graphics =>
             {

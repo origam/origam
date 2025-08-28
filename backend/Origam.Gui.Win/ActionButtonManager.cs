@@ -80,7 +80,11 @@ public class ActionButtonManager : IDisposable
     
     public void UpdateActionButtons()
     {
-        if (actionButtons == null) return;
+        if (actionButtons == null)
+        {
+            return;
+        }
+
         var disabledActionIds = GetDisabledActionIds();
         UpdateToolStripItemVisibility(disabledActionIds);
         var toolStrip = toolStripGetter.Invoke();
@@ -92,7 +96,11 @@ public class ActionButtonManager : IDisposable
     }
     public void BindActionButtons()
     {
-        if (actionButtons == null) return;
+        if (actionButtons == null)
+        {
+            return;
+        }
+
         foreach (var actionButton in actionButtons)
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
@@ -108,7 +116,11 @@ public class ActionButtonManager : IDisposable
     }
     public void Dispose()
     {
-        if (actionButtons == null) return;
+        if (actionButtons == null)
+        {
+            return;
+        }
+
         foreach (var actionButton in actionButtons)
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton
@@ -127,8 +139,16 @@ public class ActionButtonManager : IDisposable
         var currencyManager = bindingManagerGetter.Invoke();
         Guid entityId = parentIdGetter.Invoke();
         RuleEngine ruleEngine = formGeneratorGetter.Invoke().FormRuleEngine;
-        if (ruleEngine == null) return new List<string>();
-        if (entityId == Guid.Empty) return new List<string>();
+        if (ruleEngine == null)
+        {
+            return new List<string>();
+        }
+
+        if (entityId == Guid.Empty)
+        {
+            return new List<string>();
+        }
+
         bool noDataToDisplay = currencyManager.Position == -1;
         if (noDataToDisplay)
         {
@@ -137,7 +157,11 @@ public class ActionButtonManager : IDisposable
                 .ToList();
         }
         DataRow row = (currencyManager.Current as DataRowView).Row;
-        if (!DatasetTools.HasRowValidParent(row)) return new List<string>();
+        if (!DatasetTools.HasRowValidParent(row))
+        {
+            return new List<string>();
+        }
+
         XmlContainer originalData =
             DatasetTools.GetRowXml(row, DataRowVersion.Original);
         XmlContainer actualData = DatasetTools.GetRowXml(row,

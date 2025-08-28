@@ -27,7 +27,6 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.WorkflowTests;
 
-
 public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService)
 {
     public override List<Guid> InsertWorkQueueEntries()
@@ -38,7 +37,8 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override List<Guid> InsertFourEntriesToTestQueue3()
     {
-        string createThrottlingTestDataSql = @"
+        string createThrottlingTestDataSql =
+            @"
             DELETE FROM [dbo].[WorkQueueEntry]
             INSERT [dbo].[WorkQueueEntry] ([b5], [d8], [b1], [g6], [i5], [c2], [s9], [b8], [g5], [g14], [g15], [d2], [c3], [g20], [blob1], [d9], [g11], [g17], [g8], [g18], [s3], [refRel1Id], [b10], [d6], [d1], [c6], [refLockedByBusinessPartnerId], [refRel2Id], [refRel4Id], [f8], [f5], [d5], [f9], [refRel7Id], [refRel5Id], [i2], [refRel3Id], [ErrorText], [m4], [g10], [s2], [b3], [b2], [c5], [m3], [i4], [b6], [g3], [d10], [g7], [f3], [i6], [g2], [m5], [m2], [refId], [s5], [d3], [f7], [b4], [g12], [i8], [c7], [g9], [f10], [b9], [f6], [s4], [d7], [c4], [s8], [i7], [c1], [f2], [i3], [c10], [s7], [s1], [i9], [i1], [g4], [f4], [refWorkQueueId], [m1], [g19], [g13], [c9], [refRel6Id], [f1], [s6], [c8], [g1], [s10], [b7], [i10], [IsLocked], [g16], [d4], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [AttemptCount], [InRetry]) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CAST(N'2023-02-06T17:59:51.000' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, N'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, N'6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'E776D7F7-482D-4AFF-B32A-444A9A9959E5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, 0, NULL, NULL, N'51043176-e365-48a1-bb9c-3db724b918c6', NULL, N'0a4b2890-d0d6-4599-a92a-a5e79ba5dcc7', CAST(N'2023-02-06T17:59:51.397' AS DateTime), NULL, 0, 0)
             INSERT [dbo].[WorkQueueEntry] ([b5], [d8], [b1], [g6], [i5], [c2], [s9], [b8], [g5], [g14], [g15], [d2], [c3], [g20], [blob1], [d9], [g11], [g17], [g8], [g18], [s3], [refRel1Id], [b10], [d6], [d1], [c6], [refLockedByBusinessPartnerId], [refRel2Id], [refRel4Id], [f8], [f5], [d5], [f9], [refRel7Id], [refRel5Id], [i2], [refRel3Id], [ErrorText], [m4], [g10], [s2], [b3], [b2], [c5], [m3], [i4], [b6], [g3], [d10], [g7], [f3], [i6], [g2], [m5], [m2], [refId], [s5], [d3], [f7], [b4], [g12], [i8], [c7], [g9], [f10], [b9], [f6], [s4], [d7], [c4], [s8], [i7], [c1], [f2], [i3], [c10], [s7], [s1], [i9], [i1], [g4], [f4], [refWorkQueueId], [m1], [g19], [g13], [c9], [refRel6Id], [f1], [s6], [c8], [g1], [s10], [b7], [i10], [IsLocked], [g16], [d4], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [AttemptCount], [InRetry]) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CAST(N'2023-02-06T17:59:51.000' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'7a11eb69-b35f-4e89-af38-b92a83872008', NULL, NULL, NULL, NULL, N'1a8d06c0-bd5a-49f6-8ee0-1b15729c79e3', NULL, NULL, N'611d7ffd-3354-4d2f-b7a1-a41bc2508a49', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'E776D7F7-482D-4AFF-B32A-444A9A9959E5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, 0, NULL, NULL, N'51043176-e365-48a1-bb9c-3db724b918c6', NULL, N'97c0545f-4ed0-411a-9805-63a3bbcbe79f', CAST(N'2023-02-06T17:59:51.397' AS DateTime), NULL, 0, 0)
@@ -50,20 +50,27 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
         return GetWorkQueueEntryIds(createThrottlingTestDataSql);
     }
 
-    public override void EnableThrottlingOnTestQueue3(int throttlingIntervalSeconds, int throttlingItemsPerInterval)
+    public override void EnableThrottlingOnTestQueue3(
+        int throttlingIntervalSeconds,
+        int throttlingItemsPerInterval
+    )
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             UPDATE [WorkQueue]
             SET ThrottlingIntervalSeconds = {throttlingIntervalSeconds}, ThrottlingItemsPerInterval = {throttlingItemsPerInterval}, EnableThrottling = 1
-            Where Id = '{TestQueue3}'");
+            Where Id = '{TestQueue3}'"
+        );
     }
 
     public override void DisableThrottlingOnTestQueue3()
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             UPDATE [WorkQueue]
             SET  EnableThrottling = 0
-            Where Id = '{TestQueue3}'");
+            Where Id = '{TestQueue3}'"
+        );
     }
 
     public override void WaitTillWorkQueueEntryTableIsEmptyOrThrow()
@@ -81,13 +88,17 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
         throw new Exception("WorkQueueEntry table is not empty after timeout");
     }
 
-    public override void SetupQueue(Guid queueId, Guid retryType, int maxRetries,
-        int retryIntervalSeconds, Guid? errorQueueId)
+    public override void SetupQueue(
+        Guid queueId,
+        Guid retryType,
+        int maxRetries,
+        int retryIntervalSeconds,
+        Guid? errorQueueId
+    )
     {
-        string refErrorWorkQueueId = errorQueueId.HasValue
-            ? $"'{errorQueueId.Value}'"
-            : "NULL";
-        dataService.ExecuteSql($@"
+        string refErrorWorkQueueId = errorQueueId.HasValue ? $"'{errorQueueId.Value}'" : "NULL";
+        dataService.ExecuteSql(
+            $@"
             UPDATE [WorkQueue]
             SET [refWorkQueueRetryTypeId] = '{retryType}', [RetryIntervalSeconds] = {retryIntervalSeconds}, [MaxRetries] = {maxRetries}
             WHERE Id = '{queueId}';
@@ -98,7 +109,8 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override void CreateWorkQueueModificationTrigger()
     {
-        string batchSql = $@"
+        string batchSql =
+            $@"
             IF OBJECT_ID(N'dbo.TestWorkQueueEntryModifications', N'U') IS NOT NULL
             BEGIN
 	            DROP TABLE [TestWorkQueueEntryModifications];
@@ -152,31 +164,38 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override Dictionary<Guid, int> GetAttemptCountsInQueues(Guid entryId)
     {
-        string sqlResult = dataService.ExecuteSql($@"
+        string sqlResult = dataService.ExecuteSql(
+            $@"
             SELECT [refQueueId],[NumberOfExecutionsInWorkQueue]
             FROM [dbo].[TestWorkQueueEntryModifications]
             WHERE refEntryId = '{entryId}'
-        ");
+        "
+        );
 
-        var queueRegex =
-            new Regex("([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})\\s+(\\d+)");
+        var queueRegex = new Regex(
+            "([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})\\s+(\\d+)"
+        );
         var matches = queueRegex.Matches(sqlResult);
         return matches.ToDictionary(
             match => new Guid(match.Groups[1].Value),
-            match => int.Parse(match.Groups[2].Value));
+            match => int.Parse(match.Groups[2].Value)
+        );
     }
 
     public override void DeleteWorkQueueModificationTrigger()
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             DROP TABLE [TestWorkQueueEntryModifications];
             DROP TRIGGER [dbo].[TR_Test_WorkQueueEntry_Updated];
-        ");
+        "
+        );
     }
 
     public override void InsertOneEntryIntoFailingQueue()
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             DELETE FROM [dbo].[WorkQueueEntry]
             INSERT [dbo].[WorkQueueEntry] ([b5], [d8], [b1], [g6], [i5], [c2], [s9], [b8], [g5], [g14], [g15], [d2], [c3], [g20], [blob1], [d9], [g11], [g17], [g8], [g18], [s3], [refRel1Id], [b10], [d6], [d1], [c6], [refLockedByBusinessPartnerId], [refRel2Id], [refRel4Id], [f8], [f5], [d5], [f9], [refRel7Id], [refRel5Id], [i2], [refRel3Id], [ErrorText], [m4], [g10], [s2], [b3], [b2], [c5], [m3], [i4], [b6], [g3], [d10], [g7], [f3], [i6], [g2], [m5], [m2], [refId], [s5], [d3], [f7], [b4], [g12], [i8], [c7], [g9], [f10], [b9], [f6], [s4], [d7], [c4], [s8], [i7], [c1], [f2], [i3], [c10], [s7], [s1], [i9], [i1], [g4], [f4], [refWorkQueueId], [m1], [g19], [g13], [c9], [refRel6Id], [f1], [s6], [c8], [g1], [s10], [b7], [i10], [IsLocked], [g16], [d4], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [AttemptCount], [InRetry]) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CAST(N'2023-02-06T17:59:51.000' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, N'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, N'6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'0AB10C2F-386E-4DD1-992E-5E3765A28447', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, 0, NULL, NULL, N'51043176-e365-48a1-bb9c-3db724b918c6', NULL, N'{FailingEntryId}', CAST(N'2023-02-06T17:59:51.397' AS DateTime), NULL, 0, 0)"
         );
@@ -184,7 +203,8 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override int GetFailingQueueEntryAttempts()
     {
-        string countResult = dataService.ExecuteSql($@"
+        string countResult = dataService.ExecuteSql(
+            $@"
             SELECT [AttemptCount] FROM [dbo].[WorkQueueEntry]
             WHERE [refWorkQueueId] = '{FailingQueue}'"
         );
@@ -200,7 +220,8 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override int GetEntryCount(Guid workQueueId)
     {
-        string countResult = dataService.ExecuteSql($@"
+        string countResult = dataService.ExecuteSql(
+            $@"
             SELECT COUNT(Id) AS EntryCount FROM [WorkQueueEntry]
             WHERE [refWorkQueueId] = '{workQueueId.ToString()}'"
         );
@@ -221,15 +242,12 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override int GetWorkQueueEntryCount()
     {
-        string countResult =
-            dataService.ExecuteSql(
-                "SELECT COUNT(*) FROM [dbo].[WorkQueueEntry]");
+        string countResult = dataService.ExecuteSql("SELECT COUNT(*) FROM [dbo].[WorkQueueEntry]");
         var regex = new Regex("-\\s\r?\n(\\d+)");
         Match match = regex.Match(countResult);
         if (!match.Success)
         {
-            throw new Exception("Could  not find row count in:\n" +
-                                countResult);
+            throw new Exception("Could  not find row count in:\n" + countResult);
         }
 
         return int.Parse(match.Groups[1].Value);
@@ -244,12 +262,11 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
             throw new Exception("Could not parse work queue entry ids");
         }
 
-        return matches
-            .Select(x => Guid.Parse(x.Groups[1].Value))
-            .ToList();
+        return matches.Select(x => Guid.Parse(x.Groups[1].Value)).ToList();
     }
 
-    private string createTestDataSql = @"
+    private string createTestDataSql =
+        @"
         DELETE FROM [dbo].[WorkQueueEntry]
 
         -- TestQueue1

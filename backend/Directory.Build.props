@@ -1,0 +1,14 @@
+<Project>
+    <ItemGroup>
+        <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
+                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+        <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
+                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+    </ItemGroup>
+
+    <!-- Only add CSharpier to non-.NET Framework projects -->
+    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
+        <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
+                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+    </ItemGroup>
+</Project>

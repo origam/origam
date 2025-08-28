@@ -110,7 +110,6 @@ class TestDeadClassScriptContainer : UpgradeScriptContainer
                 newElement.SetAttributeValue(tpcNamespace.GetName("newProperty2"), "");
                 doc.FileElement.SetAttributeValue(XNamespace.Xmlns.GetName("tpc"), tpcNamespace);
                 doc.FileElement.Add(newElement);
-                
             }));
     }
 }        

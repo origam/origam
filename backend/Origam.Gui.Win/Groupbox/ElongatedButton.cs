@@ -35,7 +35,6 @@ namespace Origam.Gui.Win;
 public class ElongatedButton : System.Windows.Forms.ButtonBase,
 	IGradientButtonColor, System.Windows.Forms.IButtonControl  
 {
-	
 	#region Enums
 	private enum ControlState
 	{
@@ -67,11 +66,9 @@ public class ElongatedButton : System.Windows.Forms.ButtonBase,
 			{
 				return new Rectangle(1, 1, rc.Width - 3, rc.Height - 2);
 			}
-			else
-			{
-				return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
-			}
-		}
+
+            return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
+        }
 	}
 	#endregion
 	#endregion
@@ -477,31 +474,36 @@ public class ElongatedButton : System.Windows.Forms.ButtonBase,
 		e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 		switch(enmState)
 		{
-			case ControlState.Normal:
-				if(this.Enabled)
-				{
-					if(this.Focused || this.IsDefault)
-					{
-						//when the control has the focus this method is called
-						OnDrawDefault(e.Graphics);
-					}
-					else
-					{
-						//when the contrl does not have the focus this method is acalled
-						OnDrawNormal(e.Graphics);
-					}
-				}
-				else
-				{
-					//when the button is disabled this method is called
-					OnDrawDisabled(e.Graphics);
-				}
-				break;
-			case ControlState.Pressed:
-				//when the mouse is pressed over the button 
-				OnDrawPressed(e.Graphics);
-				break;
-		}
+            case ControlState.Normal:
+                {
+                    if (this.Enabled)
+                    {
+                        if (this.Focused || this.IsDefault)
+                        {
+                            //when the control has the focus this method is called
+                            OnDrawDefault(e.Graphics);
+                        }
+                        else
+                        {
+                            //when the contrl does not have the focus this method is acalled
+                            OnDrawNormal(e.Graphics);
+                        }
+                    }
+                    else
+                    {
+                        //when the button is disabled this method is called
+                        OnDrawDisabled(e.Graphics);
+                    }
+                    break;
+                }
+
+            case ControlState.Pressed:
+                {
+                    //when the mouse is pressed over the button 
+                    OnDrawPressed(e.Graphics);
+                    break;
+                }
+        }
 		OnDrawText(e.Graphics);
         
 		Rectangle rc = new Rectangle(this.BorderRectangle.X - 1, this.BorderRectangle.Y - 1, this.BorderRectangle.Width + 2, this.BorderRectangle.Height + 2);

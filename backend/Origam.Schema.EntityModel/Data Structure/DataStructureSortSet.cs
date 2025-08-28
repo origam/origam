@@ -19,43 +19,48 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Sort Set", "Sort Sets", "icon_sort-set.png")]
 [HelpTopic("Sort+Sets")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DataStructureSortSet : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureSortSet";
-	public DataStructureSortSet() {}
-	public DataStructureSortSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureSortSet(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "DataStructureSortSet";
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType => CategoryConst;
-	public override bool UseFolders => false;
-	public override bool CanMove(UI.IBrowserNode2 newNode)
-	{
-		return ((ISchemaItem)newNode).PrimaryKey.Equals(
-			ParentItem.PrimaryKey);
-	}
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureSortSetItem)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(DataStructureSortSetItem) ?
-			"NewSortSetItem" : null);
-	}
-	#endregion
+    public DataStructureSortSet() { }
+
+    public DataStructureSortSet(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureSortSet(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType => CategoryConst;
+    public override bool UseFolders => false;
+
+    public override bool CanMove(UI.IBrowserNode2 newNode)
+    {
+        return ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
+    }
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataStructureSortSetItem) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(DataStructureSortSetItem) ? "NewSortSetItem" : null
+        );
+    }
+    #endregion
 }

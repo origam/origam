@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Windows.Forms;
 using System.Data;
-
 using Origam.UI;
 using Origam.DA;
 using Origam.Workbench.Services;
@@ -337,23 +336,36 @@ public class AttachmentPad : AbstractPadContent
 		(sender as ToolBar).Focus();
 		switch( toolBar.Buttons.IndexOf(e.Button) )
 		{
-			case 0:
-				this.AttLoad();
-				break;
-			case 1:
-				this.AttSave();
-				break;
-			case 2:
-				this.AttShow();
-				break;
-				//case 3 - SEPARATOR
-			case 4:
-				this.AttUpdate();
-				break;
-			case 5:	// delete
-				this.AttDelete();
-				break;
-		}
+            case 0:
+                {
+                    this.AttLoad();
+                    break;
+                }
+
+            case 1:
+                {
+                    this.AttSave();
+                    break;
+                }
+
+            case 2:
+                {
+                    this.AttShow();
+                    break;
+                }
+            //case 3 - SEPARATOR
+            case 4:
+                {
+                    this.AttUpdate();
+                    break;
+                }
+
+            case 5: // delete
+                {
+                    this.AttDelete();
+                    break;
+                }
+        }
 	}
 	private void dataGrid1_Leave(object sender, EventArgs e)
 	{
@@ -513,8 +525,11 @@ public class AttachmentPad : AbstractPadContent
 	{
 		IServiceAgent dataServiceAgent = GetDataServiceAgent();
 		if(dataServiceAgent == null || _dataset == null)
-			return;
-		dataServiceAgent.MethodName = "StoreDataByQuery";
+        {
+            return;
+        }
+
+        dataServiceAgent.MethodName = "StoreDataByQuery";
 		dataServiceAgent.Parameters.Clear();
 		dataServiceAgent.Parameters.Add("Query", _query);
 		dataServiceAgent.Parameters.Add("Data", _dataset);
@@ -585,14 +600,20 @@ public class AttachmentPad : AbstractPadContent
 		this.ParentId = mainRecordId;
 		this.ParentEntityId = mainEntityId;
 		this.ChildReferences = childReferences;
-		if( GetDataServiceAgent() !=null ) GetAttachments();
-	}
+		if( GetDataServiceAgent() !=null )
+        {
+            GetAttachments();
+        }
+    }
 	public void GetAttachments()
 	{
-		if(!_supportAttachments) return;
-//			try
-//			{
-			RetrieveAttachments(this.ParentEntityId, this.ParentId, false);
+		if(!_supportAttachments)
+        {
+            return;
+        }
+        //			try
+        //			{
+        RetrieveAttachments(this.ParentEntityId, this.ParentId, false);
 			foreach(RecordReference reference in this.ChildReferences.Values)
 			{
 				RetrieveAttachments(reference.EntityId, reference.RecordId, true);

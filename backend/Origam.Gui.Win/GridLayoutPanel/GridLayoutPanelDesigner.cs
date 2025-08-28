@@ -83,9 +83,12 @@ namespace Origam.Gui.Win
 			get
 			{
 				if (m_SelectionService == null)
-					m_SelectionService =
+                {
+                    m_SelectionService =
 						(ISelectionService)(this.GetService(typeof(ISelectionService)));
-				return m_SelectionService;
+                }
+
+                return m_SelectionService;
 			}
 		}
 
@@ -112,9 +115,10 @@ namespace Origam.Gui.Win
 				System.Runtime.InteropServices.Marshal.FreeHGlobal (lparam);
 
 				if (m.Result.ToInt32() != -1)
-					return hti.flags != TabControlHitTest.TCHT_NOWHERE;
-
-			}
+                {
+                    return hti.flags != TabControlHitTest.TCHT_NOWHERE;
+                }
+            }
 
 			return false;
 		}

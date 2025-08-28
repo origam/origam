@@ -19,26 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-
+using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("CheckBox Widget", "icon_checkbox-widget.png")]
 [ClassMetaVersion("6.0.0")]
 public class CheckBoxDashboardWidget : AbstractSimpleDashboardWidget
 {
-	public CheckBoxDashboardWidget() : base() {Init();}
-	public CheckBoxDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public CheckBoxDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	public override OrigamDataType DataType
-	{
-		get
-		{
-			return OrigamDataType.Boolean;
-		}
-	}
+    public CheckBoxDashboardWidget()
+        : base()
+    {
+        Init();
+    }
+
+    public CheckBoxDashboardWidget(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public CheckBoxDashboardWidget(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    public override OrigamDataType DataType
+    {
+        get { return OrigamDataType.Boolean; }
+    }
 }

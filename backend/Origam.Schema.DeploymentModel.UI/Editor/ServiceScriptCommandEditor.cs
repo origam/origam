@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Editors;
@@ -318,8 +317,11 @@ public class ServiceScriptCommandEditor : AbstractEditor
 	}
 	private void cboService_SelectedIndexChanged(object sender, System.EventArgs e)
 	{
-		if(! _isLoading & ! this.IsViewOnly) this.IsDirty = true;
-	}
+		if(! _isLoading & ! this.IsViewOnly)
+        {
+            this.IsDirty = true;
+        }
+    }
 	private void txtName_TextChanged(object sender, System.EventArgs e)
 	{
 		if(! _isLoading & ! this.IsViewOnly)
@@ -331,14 +333,23 @@ public class ServiceScriptCommandEditor : AbstractEditor
 	}
 	private void txtOrder_TextChanged(object sender, System.EventArgs e)
 	{
-		if(! _isLoading & ! this.IsViewOnly) this.IsDirty = true;
-	}
+		if(! _isLoading & ! this.IsViewOnly)
+        {
+            this.IsDirty = true;
+        }
+    }
 	private void TextArea_KeyDown(object sender, EventArgs e)
 	{
-		if(! _isLoading & ! this.IsViewOnly) this.IsDirty = true;
-	}
+		if(! _isLoading & ! this.IsViewOnly)
+        {
+            this.IsDirty = true;
+        }
+    }
     private void CboPlatform_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (!_isLoading & !this.IsViewOnly) this.IsDirty = true;
+        if (!_isLoading & !this.IsViewOnly)
+        {
+            this.IsDirty = true;
+        }
     }
 }

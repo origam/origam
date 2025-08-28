@@ -19,37 +19,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
-
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
 [ClassMetaVersion("6.0.0")]
 public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
 {
-	public HorizontalContainerDashboardWidget() : base() {Init();}
-	public HorizontalContainerDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public HorizontalContainerDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	
-	public override System.Collections.ArrayList Properties
-	{
-		get
-		{
-			return null;
-		}
-	}
-	#region Properties
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion			
+    public HorizontalContainerDashboardWidget()
+        : base()
+    {
+        Init();
+    }
+
+    public HorizontalContainerDashboardWidget(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public HorizontalContainerDashboardWidget(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    public override System.Collections.ArrayList Properties
+    {
+        get { return null; }
+    }
+    #region Properties
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }

@@ -31,8 +31,9 @@ namespace Origam.Workflow.WorkQueue;
 
 public class WorkQueueUtils
 {
-    private static readonly log4net.ILog log = log4net.LogManager
-        .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
     private readonly IDataLookupService lookupService;
     private readonly SchemaService schemaService;
 
@@ -44,11 +45,19 @@ public class WorkQueueUtils
 
     public Guid GetQueueId(string referenceCode)
     {
-        object id = lookupService.GetDisplayText(new Guid("930ae1c9-0267-4c8d-b637-6988745fd44c"), referenceCode, false, false, null);
+        object id = lookupService.GetDisplayText(
+            new Guid("930ae1c9-0267-4c8d-b637-6988745fd44c"),
+            referenceCode,
+            false,
+            false,
+            null
+        );
 
         if (id == null)
         {
-            throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorWorkQueueNotFoundByReferenceCode", referenceCode));
+            throw new ArgumentOutOfRangeException(
+                ResourceUtils.GetString("ErrorWorkQueueNotFoundByReferenceCode", referenceCode)
+            );
         }
 
         return (Guid)id;
@@ -56,40 +65,73 @@ public class WorkQueueUtils
 
     public Guid GetQueueId(Guid commandId)
     {
-        object id = lookupService.GetDisplayText(new Guid("2a1596d1-96ee-402d-b935-93e5484cd48e"), commandId, false, false, null);
+        object id = lookupService.GetDisplayText(
+            new Guid("2a1596d1-96ee-402d-b935-93e5484cd48e"),
+            commandId,
+            false,
+            false,
+            null
+        );
         if (id == null)
         {
-            throw new ArgumentOutOfRangeException("commandId", commandId, ResourceUtils.GetString("ErrorWorkQueueCommandNotFound", commandId));
+            throw new ArgumentOutOfRangeException(
+                "commandId",
+                commandId,
+                ResourceUtils.GetString("ErrorWorkQueueCommandNotFound", commandId)
+            );
         }
         return (Guid)id;
     }
-    
+
     public WorkQueueClass WorkQueueClass(string name)
     {
-        foreach (WorkQueueClass queueClass in schemaService.GetProvider(typeof(WorkQueueClassSchemaItemProvider)).ChildItems)
+        foreach (
+            WorkQueueClass queueClass in schemaService
+                .GetProvider(typeof(WorkQueueClassSchemaItemProvider))
+                .ChildItems
+        )
         {
-            if (queueClass.Name == name) return queueClass;
+            if (queueClass.Name == name)
+            {
+                return queueClass;
+            }
         }
 
 #if ORIGAM_CLIENT
-        throw new ArgumentOutOfRangeException("name", name, "Work Queue Class not defined. Check Work Queue setup.");
+        throw new ArgumentOutOfRangeException(
+            "name",
+            name,
+            "Work Queue Class not defined. Check Work Queue setup."
+        );
 #else
-            return null;
+        return null;
 #endif
     }
-    
+
     public string WorkQueueClassName(Guid queueId)
     {
-        return (string)lookupService.GetDisplayText(
-            new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
+        return (string)
+            lookupService.GetDisplayText(
+                new Guid("46976056-f906-47ae-95e7-83d8c65412a3"),
+                queueId,
+                false,
+                false,
+                null
+            );
     }
 
     public string WorkQueueClassNameByMessageId(Guid queueMessageId)
     {
-        return (string)lookupService.GetDisplayText(
-            new Guid("0ec49729-0981-49d7-a8e6-2160d949234e"), queueMessageId, false, false, null);
+        return (string)
+            lookupService.GetDisplayText(
+                new Guid("0ec49729-0981-49d7-a8e6-2160d949234e"),
+                queueMessageId,
+                false,
+                false,
+                null
+            );
     }
-    
+
     public WorkQueueClass WorkQueueClass(Guid queueId)
     {
         return WorkQueueClass(WorkQueueClassName(queueId));
@@ -100,15 +142,22 @@ public class WorkQueueUtils
         return WorkQueueClass(WorkQueueClassNameByMessageId(queueMessageId));
     }
 
-    public DataSet LoadWorkQueueData(string workQueueClass, object queueId,
-        int pageSize, int pageNumber, string transactionId)
+    public DataSet LoadWorkQueueData(
+        string workQueueClass,
+        object queueId,
+        int pageSize,
+        int pageNumber,
+        string transactionId
+    )
     {
         WorkQueueClass queueClass = WorkQueueClass(workQueueClass);
         if (queueClass == null)
         {
-            throw new ArgumentOutOfRangeException("workQueueClass",
+            throw new ArgumentOutOfRangeException(
+                "workQueueClass",
                 workQueueClass,
-                "Work queue class not found in the current model.");
+                "Work queue class not found in the current model."
+            );
         }
         QueryParameterCollection parameters = new QueryParameterCollection();
         parameters.Add(new QueryParameter("WorkQueueEntry_parWorkQueueId", queueId));
@@ -118,32 +167,42 @@ public class WorkQueueUtils
             parameters.Add(new QueryParameter("_pageNumber", pageNumber));
         }
 
-        DataSet dataSet = core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
-            queueClass.WorkQueueStructureUserListMethodId, Guid.Empty,
-            queueClass.WorkQueueStructureSortSetId, transactionId, parameters);
-        
+        DataSet dataSet = core.DataService.Instance.LoadData(
+            queueClass.WorkQueueStructureId,
+            queueClass.WorkQueueStructureUserListMethodId,
+            Guid.Empty,
+            queueClass.WorkQueueStructureSortSetId,
+            transactionId,
+            parameters
+        );
+
         CheckContainsRequiredColumns(
-            new []{"AttemptCount", "LastAttemptTime", "NextAttemptTime"}, 
-            dataSet.Tables["WorkQueueEntry"], 
-            queueClass.WorkQueueStructureId);
+            new[] { "AttemptCount", "LastAttemptTime", "NextAttemptTime" },
+            dataSet.Tables["WorkQueueEntry"],
+            queueClass.WorkQueueStructureId
+        );
         return dataSet;
     }
 
-    private void CheckContainsRequiredColumns(string[] fieldNames,
-        DataTable table, Guid workQueueStructureId)
+    private void CheckContainsRequiredColumns(
+        string[] fieldNames,
+        DataTable table,
+        Guid workQueueStructureId
+    )
     {
         foreach (string fieldName in fieldNames)
         {
             DataColumnCollection entryColumns = table.Columns;
             if (!entryColumns.Contains(fieldName))
             {
-                throw new Exception($"Work queue data structure {workQueueStructureId} does not contain the required field {fieldName}");
+                throw new Exception(
+                    $"Work queue data structure {workQueueStructureId} does not contain the required field {fieldName}"
+                );
             }
         }
     }
 
-    public bool LockQueueItems(WorkQueueClass queueClass,
-        DataTable selectedRows)
+    public bool LockQueueItems(WorkQueueClass queueClass, DataTable selectedRows)
     {
         UserProfile profile = SecurityManager.CurrentUserProfile();
         foreach (DataRow row in selectedRows.Rows)
@@ -162,8 +221,12 @@ public class WorkQueueUtils
         }
         try
         {
-            core.DataService.Instance.StoreData(queueClass.WorkQueueStructureId,
-                selectedRows.DataSet, true, null);
+            core.DataService.Instance.StoreData(
+                queueClass.WorkQueueStructureId,
+                selectedRows.DataSet,
+                true,
+                null
+            );
         }
         catch
         {

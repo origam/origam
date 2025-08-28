@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA.ObjectPersistence;
+
 /// <summary>
 /// Summary description for ICompiledModel.
 /// </summary>
 public interface ICompiledModel
 {
-	object RetrieveItem(string id);
-	IPersistenceProvider PersistenceProvider{get; set;}
+    object RetrieveItem(string id);
+    IPersistenceProvider PersistenceProvider { get; set; }
 }

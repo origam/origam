@@ -24,7 +24,6 @@ using System.Xml;
 using System.Collections;
 using Origam.JSON;
 using Origam.Rule;
-
 using Origam.Schema.GuiModel;
 using System.IO;
 using Origam.Rule.Xslt;
@@ -36,7 +35,6 @@ public class PrintItService : IReportService
 {		
 	public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
 	{
-		
 		if (format != DataReportExportFormatType.PDF.ToString())
 		{
 			throw new ArgumentOutOfRangeException("format", format, ResourceUtils.GetString("FormatNotSupported"));
@@ -109,7 +107,6 @@ public class PrintItService : IReportService
 				file.Write(data);
 				file.Close();
 			}
-			
 		}
 		catch (Exception e)
 		{

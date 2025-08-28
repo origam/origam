@@ -444,7 +444,11 @@ public class FlexibleMessageBox
         /// <returns>The string rows as 1-dimensional array</returns>
         private static string[] GetStringRows(string message)
         {
-            if (string.IsNullOrEmpty(message)) return null;
+            if (string.IsNullOrEmpty(message))
+            {
+                return null;
+            }
+
             var messageRows = message.Split(new char[] { '\n' }, StringSplitOptions.None);
             return messageRows;
         }
@@ -477,8 +481,16 @@ public class FlexibleMessageBox
         {
             const double MIN_FACTOR = 0.2;
             const double MAX_FACTOR = 1.0;
-            if (workingAreaFactor < MIN_FACTOR) return MIN_FACTOR;
-            if (workingAreaFactor > MAX_FACTOR) return MAX_FACTOR;
+            if (workingAreaFactor < MIN_FACTOR)
+            {
+                return MIN_FACTOR;
+            }
+
+            if (workingAreaFactor > MAX_FACTOR)
+            {
+                return MAX_FACTOR;
+            }
+
             return workingAreaFactor;
         }
         /// <summary>
@@ -494,8 +506,8 @@ public class FlexibleMessageBox
             {
                 var screen = Screen.FromPoint(Cursor.Position);
                 flexibleMessageBoxForm.StartPosition = FormStartPosition.Manual;
-                flexibleMessageBoxForm.Left = screen.Bounds.Left + screen.Bounds.Width / 2 - flexibleMessageBoxForm.Width / 2;
-                flexibleMessageBoxForm.Top = screen.Bounds.Top + screen.Bounds.Height / 2 - flexibleMessageBoxForm.Height / 2;
+                flexibleMessageBoxForm.Left = screen.Bounds.Left + (screen.Bounds.Width / 2) - (flexibleMessageBoxForm.Width / 2);
+                flexibleMessageBoxForm.Top = screen.Bounds.Top + (screen.Bounds.Height / 2) - (flexibleMessageBoxForm.Height / 2);
             }
         }
         /// <summary>
@@ -512,7 +524,10 @@ public class FlexibleMessageBox
                                                           Convert.ToInt32(SystemInformation.WorkingArea.Height * FlexibleMessageBoxForm.GetCorrectedWorkingAreaFactor(MAX_HEIGHT_FACTOR)));
             //Get rows. Exit if there are no rows to render...
             var stringRows = GetStringRows(text);
-            if (stringRows == null) return;
+            if (stringRows == null)
+            {
+                return;
+            }
             //Calculate whole text height
             var textHeight = TextRenderer.MeasureText(text, FONT).Height;
             //Calculate width for longest text line
@@ -538,23 +553,37 @@ public class FlexibleMessageBox
             switch (icon)
             {
                 case MessageBoxIcon.Information:
-                    flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Information.ToBitmap();
-                    break;
+                    {
+                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Information.ToBitmap();
+                        break;
+                    }
+
                 case MessageBoxIcon.Warning:
-                    flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Warning.ToBitmap();
-                    break;
+                    {
+                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Warning.ToBitmap();
+                        break;
+                    }
+
                 case MessageBoxIcon.Error:
-                    flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Error.ToBitmap();
-                    break;
+                    {
+                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Error.ToBitmap();
+                        break;
+                    }
+
                 case MessageBoxIcon.Question:
-                    flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Question.ToBitmap();
-                    break;
+                    {
+                        flexibleMessageBoxForm.pictureBoxForIcon.Image = SystemIcons.Question.ToBitmap();
+                        break;
+                    }
+
                 default:
-                    //When no icon is used: Correct placement and width of rich text box.
-                    flexibleMessageBoxForm.pictureBoxForIcon.Visible = false;
-                    flexibleMessageBoxForm.richTextBoxMessage.Left -= flexibleMessageBoxForm.pictureBoxForIcon.Width;
-                    flexibleMessageBoxForm.richTextBoxMessage.Width += flexibleMessageBoxForm.pictureBoxForIcon.Width;
-                    break;
+                    {
+                        //When no icon is used: Correct placement and width of rich text box.
+                        flexibleMessageBoxForm.pictureBoxForIcon.Visible = false;
+                        flexibleMessageBoxForm.richTextBoxMessage.Left -= flexibleMessageBoxForm.pictureBoxForIcon.Width;
+                        flexibleMessageBoxForm.richTextBoxMessage.Width += flexibleMessageBoxForm.pictureBoxForIcon.Width;
+                        break;
+                    }
             }
         }
         /// <summary>
@@ -570,69 +599,86 @@ public class FlexibleMessageBox
             switch (buttons)
             {
                 case MessageBoxButtons.AbortRetryIgnore:
-                    flexibleMessageBoxForm.visibleButtonsCount = 3;
-                    flexibleMessageBoxForm.button1.Visible = true;
-                    flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.ABORT);
-                    flexibleMessageBoxForm.button1.DialogResult = DialogResult.Abort;
-                    flexibleMessageBoxForm.button2.Visible = true;
-                    flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.RETRY);
-                    flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.IGNORE);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.Ignore;
-                    flexibleMessageBoxForm.ControlBox = false;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 3;
+                        flexibleMessageBoxForm.button1.Visible = true;
+                        flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.ABORT);
+                        flexibleMessageBoxForm.button1.DialogResult = DialogResult.Abort;
+                        flexibleMessageBoxForm.button2.Visible = true;
+                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.RETRY);
+                        flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.IGNORE);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Ignore;
+                        flexibleMessageBoxForm.ControlBox = false;
+                        break;
+                    }
+
                 case MessageBoxButtons.OKCancel:
-                    flexibleMessageBoxForm.visibleButtonsCount = 2;
-                    flexibleMessageBoxForm.button2.Visible = true;
-                    flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.OK);
-                    flexibleMessageBoxForm.button2.DialogResult = DialogResult.OK;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
-                    flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 2;
+                        flexibleMessageBoxForm.button2.Visible = true;
+                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.OK);
+                        flexibleMessageBoxForm.button2.DialogResult = DialogResult.OK;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+                        flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
+                        break;
+                    }
+
                 case MessageBoxButtons.RetryCancel:
-                    flexibleMessageBoxForm.visibleButtonsCount = 2;
-                    flexibleMessageBoxForm.button2.Visible = true;
-                    flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.RETRY);
-                    flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
-                    flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 2;
+                        flexibleMessageBoxForm.button2.Visible = true;
+                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.RETRY);
+                        flexibleMessageBoxForm.button2.DialogResult = DialogResult.Retry;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+                        flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
+                        break;
+                    }
+
                 case MessageBoxButtons.YesNo:
-                    flexibleMessageBoxForm.visibleButtonsCount = 2;
-                    flexibleMessageBoxForm.button2.Visible = true;
-                    flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.YES);
-                    flexibleMessageBoxForm.button2.DialogResult = DialogResult.Yes;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.NO);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.No;
-                    flexibleMessageBoxForm.ControlBox = false;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 2;
+                        flexibleMessageBoxForm.button2.Visible = true;
+                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.YES);
+                        flexibleMessageBoxForm.button2.DialogResult = DialogResult.Yes;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.NO);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.No;
+                        flexibleMessageBoxForm.ControlBox = false;
+                        break;
+                    }
+
                 case MessageBoxButtons.YesNoCancel:
-                    flexibleMessageBoxForm.visibleButtonsCount = 3;
-                    flexibleMessageBoxForm.button1.Visible = true;
-                    flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.YES);
-                    flexibleMessageBoxForm.button1.DialogResult = DialogResult.Yes;
-                    flexibleMessageBoxForm.button2.Visible = true;
-                    flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.NO);
-                    flexibleMessageBoxForm.button2.DialogResult = DialogResult.No;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
-                    flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 3;
+                        flexibleMessageBoxForm.button1.Visible = true;
+                        flexibleMessageBoxForm.button1.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.YES);
+                        flexibleMessageBoxForm.button1.DialogResult = DialogResult.Yes;
+                        flexibleMessageBoxForm.button2.Visible = true;
+                        flexibleMessageBoxForm.button2.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.NO);
+                        flexibleMessageBoxForm.button2.DialogResult = DialogResult.No;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.CANCEL);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.Cancel;
+                        flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
+                        break;
+                    }
+
                 case MessageBoxButtons.OK:
                 default:
-                    flexibleMessageBoxForm.visibleButtonsCount = 1;
-                    flexibleMessageBoxForm.button3.Visible = true;
-                    flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.OK);
-                    flexibleMessageBoxForm.button3.DialogResult = DialogResult.OK;
-                    flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
-                    break;
+                    {
+                        flexibleMessageBoxForm.visibleButtonsCount = 1;
+                        flexibleMessageBoxForm.button3.Visible = true;
+                        flexibleMessageBoxForm.button3.Text = flexibleMessageBoxForm.GetButtonText(ButtonID.OK);
+                        flexibleMessageBoxForm.button3.DialogResult = DialogResult.OK;
+                        flexibleMessageBoxForm.CancelButton = flexibleMessageBoxForm.button3;
+                        break;
+                    }
             }
             //Set default button (used in FlexibleMessageBoxForm_Shown)
             flexibleMessageBoxForm.defaultButton = defaultButton;
@@ -653,16 +699,28 @@ public class FlexibleMessageBox
             {
                 case MessageBoxDefaultButton.Button1:
                 default:
-                    buttonIndexToFocus = 1;
-                    break;
+                    {
+                        buttonIndexToFocus = 1;
+                        break;
+                    }
+
                 case MessageBoxDefaultButton.Button2:
-                    buttonIndexToFocus = 2;
-                    break;
+                    {
+                        buttonIndexToFocus = 2;
+                        break;
+                    }
+
                 case MessageBoxDefaultButton.Button3:
-                    buttonIndexToFocus = 3;
-                    break;
+                    {
+                        buttonIndexToFocus = 3;
+                        break;
+                    }
             }
-            if (buttonIndexToFocus > this.visibleButtonsCount) buttonIndexToFocus = this.visibleButtonsCount;
+            if (buttonIndexToFocus > this.visibleButtonsCount)
+            {
+                buttonIndexToFocus = this.visibleButtonsCount;
+            }
+
             if (buttonIndexToFocus == 3)
             {
                 buttonToFocus = this.button3;

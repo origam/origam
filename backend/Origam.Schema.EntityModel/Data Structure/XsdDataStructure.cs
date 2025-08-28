@@ -25,6 +25,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for XsdDataStructure.
 /// </summary>
@@ -32,31 +33,27 @@ namespace Origam.Schema.EntityModel;
 [HelpTopic("Data+Structures")]
 public class XsdDataStructure : AbstractDataStructure
 {
-	public XsdDataStructure() : base(){}
-	
-	public XsdDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public XsdDataStructure(Key primaryKey) : base(primaryKey)	{}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#region Properties
-	private string _xsd = "";
-	
+    public XsdDataStructure()
+        : base() { }
+
+    public XsdDataStructure(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public XsdDataStructure(Key primaryKey)
+        : base(primaryKey) { }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #region Properties
+    private string _xsd = "";
+
     [XmlAttribute("xsd")]
-	public string Xsd
-	{
-		get
-		{
-			return _xsd;
-		}
-		set
-		{
-			_xsd = value;
-		}
-	}
-	#endregion
+    public string Xsd
+    {
+        get { return _xsd; }
+        set { _xsd = value; }
+    }
+    #endregion
 }

@@ -23,59 +23,48 @@ using System;
 using System.Drawing;
 
 namespace Origam.UI;
+
 /// <summary>
 /// Summary description for IBrowserNode.
 /// </summary>
 public interface IBrowserNode2 : IBrowserNode
 {
-	bool CanDelete
-	{
-		get;
-	}
-	void Delete();
-	bool CanMove(IBrowserNode2 newNode);
-	
-	IBrowserNode2 ParentNode {get; set;}
-	byte[] NodeImage {get;}
-	bool Hide{get; set;}
-	string NodeId{get;}
+    bool CanDelete { get; }
+    void Delete();
+    bool CanMove(IBrowserNode2 newNode);
+
+    IBrowserNode2 ParentNode { get; set; }
+    byte[] NodeImage { get; }
+    bool Hide { get; set; }
+    string NodeId { get; }
     string FontStyle { get; }
 }
+
 public interface IBrowserNode : IComparable
 {
-	/// <summary>
-	/// Gets all nodes supposed to be displayed under this node.
-	/// </summary>
-	/// <returns></returns>
-	BrowserNodeCollection ChildNodes();
-	
-	/// <summary>
-	/// Displayed text of the node in the user interface.
-	/// </summary>
-	string NodeText
-	{
-		get;
-		set;
-	}
-	/// <summary>
-	/// Path to an icon of the node.
-	/// </summary>
-	string Icon
-	{
-		get;
-	}
-	/// <summary>
-	/// True if node has children.
-	/// </summary>
-	bool HasChildNodes
-	{
-		get;
-	}
-	/// <summary>
-	/// True if node supports renaming through changing NodeText property.
-	/// </summary>
-	bool CanRename
-	{
-		get;
-	}
+    /// <summary>
+    /// Gets all nodes supposed to be displayed under this node.
+    /// </summary>
+    /// <returns></returns>
+    BrowserNodeCollection ChildNodes();
+
+    /// <summary>
+    /// Displayed text of the node in the user interface.
+    /// </summary>
+    string NodeText { get; set; }
+
+    /// <summary>
+    /// Path to an icon of the node.
+    /// </summary>
+    string Icon { get; }
+
+    /// <summary>
+    /// True if node has children.
+    /// </summary>
+    bool HasChildNodes { get; }
+
+    /// <summary>
+    /// True if node supports renaming through changing NodeText property.
+    /// </summary>
+    bool CanRename { get; }
 }

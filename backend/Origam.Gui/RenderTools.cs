@@ -26,53 +26,58 @@ using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui;
+
 public class RenderTools
 {
-    public static bool ShouldRenderAction(
-        EntityUIAction action, Guid formId, Guid panelId)
-	{
-		if(action is EntityDropdownAction)
-		{
-			foreach(var subAction in action.ChildItemsByType<EntityUIAction>(
-                EntityUIAction.CategoryConst))
-			{
-				if(ShouldRenderAction(subAction, formId, panelId))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		else
-		{
-			return (!action.ScreenIds.Any()|| action.ScreenIds.Contains(formId)) &&
-			       (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId)) && 
-			       ShouldRender(action.Features, action.Roles) ;
-		}
-	}
-	public static bool ShouldRender(ControlSetItem control)
-	{
-		return ShouldRender(control.Features, control.Roles);
-	}
-	public static bool ShouldRender(string features, string roles)
-	{
-		IParameterService parameterService 
-            = ServiceManager.Services.GetService(
-            typeof(IParameterService)) as IParameterService;
-		// check features
+    public static bool ShouldRenderAction(EntityUIAction action, Guid formId, Guid panelId)
+    {
+        if (action is EntityDropdownAction)
+        {
+            foreach (
+                var subAction in action.ChildItemsByType<EntityUIAction>(
+                    EntityUIAction.CategoryConst
+                )
+            )
+            {
+                if (ShouldRenderAction(subAction, formId, panelId))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
+            && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
+            && ShouldRender(action.Features, action.Roles);
+    }
+
+    public static bool ShouldRender(ControlSetItem control)
+    {
+        return ShouldRender(control.Features, control.Roles);
+    }
+
+    public static bool ShouldRender(string features, string roles)
+    {
+        IParameterService parameterService =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        // check features
         if (!parameterService.IsFeatureOn(features))
         {
             return false;
         }
-		// check roles
-		if(roles != null & roles != String.Empty)
-		{
-			if(!SecurityManager.GetAuthorizationProvider().Authorize(
-                SecurityManager.CurrentPrincipal, roles))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+        // check roles
+        if (roles != null & roles != String.Empty)
+        {
+            if (
+                !SecurityManager
+                    .GetAuthorizationProvider()
+                    .Authorize(SecurityManager.CurrentPrincipal, roles)
+            )
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

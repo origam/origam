@@ -63,10 +63,10 @@ public class XmlLoaderTest: AbstractFileTestClass
         InitFilePersistenceProvider(parentFolders, TestProjectDir);
         var origamXmlLoader =
             new OrigamXmlLoader(
-                metaModelUpgradeService: new NullMetaModelUpgradeService(), 
                 objectFileDataFactory: MakeObjectFileDataFactory(TestProjectDir),
                 topDirectory: TestProjectDir,
-                xmlFileDataFactory: new XmlFileDataFactory());
+                xmlFileDataFactory: new XmlFileDataFactory(),
+                metaModelUpgradeService: new NullMetaModelUpgradeService());
         var pathFactory = new OrigamPathFactory(TestProjectDir);
         ItemTracker itemTracker = new ItemTracker(pathFactory);
         origamXmlLoader.LoadInto(itemTracker, MetaModelUpgradeMode.Ignore);
@@ -130,7 +130,6 @@ public class XmlLoaderTest: AbstractFileTestClass
         objectFileData.ParentFolderIds[OrigamFile.PackageCategory] = 
             new Guid("e002a017-75b8-4f6e-8539-576ca05d6952");
         ITrackeableFile origamFile = objectFileData.Read();
-        
     }
     protected override string DirName => "FilePersistenceProviderTests";
     

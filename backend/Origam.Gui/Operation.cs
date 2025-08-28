@@ -20,14 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui;
+
 public enum Operation
 {
-   DeleteAllData =-2, 
-   Delete = -1, 
-   Update = 0, 
-   Create =1,
-   FormSaved = 2,
-   FormNeedsRefresh = 3,
-   CurrentRecordNeedsUpdate = 4,
-   RefreshPortal = 5
+    DeleteAllData = -2,
+    Delete = -1,
+    Update = 0,
+    Create = 1,
+    FormSaved = 2,
+    FormNeedsRefresh = 3,
+    CurrentRecordNeedsUpdate = 4,
+    RefreshPortal = 5,
 }

@@ -117,12 +117,12 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
         var sut = new FilePersistenceService(
             metaModelUpgradeService: new NullMetaModelUpgradeService(),
             defaultFolders: defaultFolders,
+            pathToRuntimeModelConfig: PathToRuntimeModelConfig,
             basePath: pathToTestDirectory,
             watchFileChanges: true,
-            checkRules: false,
             useBinFile: false,
-            mode: MetaModelUpgradeMode.Ignore,
-            pathToRuntimeModelConfig: PathToRuntimeModelConfig);
+            checkRules: false,
+            mode: MetaModelUpgradeMode.Ignore);
         return sut;
     }
 }

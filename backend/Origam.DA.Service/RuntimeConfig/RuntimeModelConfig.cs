@@ -33,39 +33,40 @@ using Origam.Schema;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Origam.DA.Service;
+
 public class RuntimeModelConfig : IRuntimeModelConfig
 {
     private readonly string pathToConfigFile;
     private readonly FileSystemWatcher watcher;
     private readonly object lockObj = new object();
-    
+
     public event EventHandler<List<Guid>> ConfigurationReloaded;
     private List<ConfigItem> configItems;
+
     public RuntimeModelConfig(string pathToConfigFile)
     {
         this.pathToConfigFile = pathToConfigFile;
-        
+
         watcher = new FileSystemWatcher
         {
             Path = Path.GetDirectoryName(pathToConfigFile),
             Filter = Path.GetFileName(pathToConfigFile),
-            NotifyFilter = NotifyFilters.LastWrite 
+            NotifyFilter = NotifyFilters.LastWrite,
         };
         watcher.Changed += OnConfigFileChanged;
         watcher.EnableRaisingEvents = true;
     }
+
     private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
     {
         var oldIds = configItems.Select(item => item.Id).ToList();
         Thread.Sleep(100); // trying to avoid IOException (The process cannot access the file XY because it is being used by another process.)
         configItems = ParseConfigFile();
         var newIds = configItems.Select(item => item.Id);
-        var invalidatedItemIds = oldIds
-            .Concat(newIds)
-            .Distinct()
-            .ToList();
+        var invalidatedItemIds = oldIds.Concat(newIds).Distinct().ToList();
         ConfigurationReloaded?.Invoke(this, invalidatedItemIds);
     }
+
     private List<ConfigItem> ParseConfigFile()
     {
         lock (lockObj)
@@ -77,6 +78,7 @@ public class RuntimeModelConfig : IRuntimeModelConfig
             return TryParseConfigFile();
         }
     }
+
     private List<ConfigItem> TryParseConfigFile()
     {
         for (int i = 0; i < 5; i++)
@@ -96,73 +98,88 @@ public class RuntimeModelConfig : IRuntimeModelConfig
                     continue;
                 }
                 throw new Exception(
-                    String.Format(Strings.ErrorParsingConfig,
-                        pathToConfigFile), ex);
+                    String.Format(Strings.ErrorParsingConfig, pathToConfigFile),
+                    ex
+                );
             }
         }
         throw new NotImplementedException(); // this code should be never reached
     }
+
     public void SetConfigurationValues(IFilePersistent instance)
     {
         if (configItems == null)
         {
             configItems = ParseConfigFile();
         }
-        var configItemsForTheInstance = configItems
-            .Where(item => item.Id == instance.Id)
-            .ToList();
-        
+        var configItemsForTheInstance = configItems.Where(item => item.Id == instance.Id).ToList();
+
         if (configItemsForTheInstance.Count == 0)
         {
             return;
         }
-        
+
         foreach (var configItem in configItemsForTheInstance)
         {
             SetConfigurationValues(instance, configItem);
         }
     }
-    private void SetConfigurationValues(IFilePersistent instance,
-        ConfigItem configItem)
+
+    private void SetConfigurationValues(IFilePersistent instance, ConfigItem configItem)
     {
         var xmlMemberAttributeInfo = Reflector
             .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
             .FirstOrDefault(memberInfo =>
-                (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName ==
-                configItem.PropertyName);
+                (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName
+                == configItem.PropertyName
+            );
         var configMemberAttributeInfo = Reflector
             .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
             .FirstOrDefault(memberInfo =>
-                (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name ==
-                configItem.PropertyName);
-        var memberAttributeInfo =
-            configMemberAttributeInfo ?? xmlMemberAttributeInfo;
+                (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name
+                == configItem.PropertyName
+            );
+        var memberAttributeInfo = configMemberAttributeInfo ?? xmlMemberAttributeInfo;
         if (memberAttributeInfo == null)
         {
-            throw new Exception(string.Format(Strings.ConfiguredPropertyNotFound,
-                instance.Id, configItem.PropertyName, pathToConfigFile));
+            throw new Exception(
+                string.Format(
+                    Strings.ConfiguredPropertyNotFound,
+                    instance.Id,
+                    configItem.PropertyName,
+                    pathToConfigFile
+                )
+            );
         }
 #if !ORIGAM_CLIENT
-            if (xmlMemberAttributeInfo != null)
-            {
-                return;
-            }
+        if (xmlMemberAttributeInfo != null)
+        {
+            return;
+        }
 #endif
         try
         {
             object value = InstanceTools.GetCorrectlyTypedValue(
-                memberAttributeInfo.MemberInfo, configItem.PropertyValue);
-            Reflector.SetValue(memberAttributeInfo.MemberInfo, instance,
-                value);
+                memberAttributeInfo.MemberInfo,
+                configItem.PropertyValue
+            );
+            Reflector.SetValue(memberAttributeInfo.MemberInfo, instance, value);
         }
         catch (Exception ex)
         {
-            throw new Exception(String.Format(
-                Strings.ErrorWhenSettingConfigProperty,
-                configItem.PropertyValue, configItem.PropertyName,
-                instance.Id, pathToConfigFile), ex);
+            throw new Exception(
+                String.Format(
+                    Strings.ErrorWhenSettingConfigProperty,
+                    configItem.PropertyValue,
+                    configItem.PropertyName,
+                    instance.Id,
+                    pathToConfigFile
+                ),
+                ex
+            );
         }
     }
+
     public void UpdateConfig(IPersistent instance)
     {
         lock (lockObj)
@@ -173,34 +190,38 @@ public class RuntimeModelConfig : IRuntimeModelConfig
             }
             catch (Exception ex)
             {
-                throw new Exception(String.Format(
-                    Origam.Strings.CantSaveConfig, instance.Id,
-                    pathToConfigFile), ex);
+                throw new Exception(
+                    String.Format(Origam.Strings.CantSaveConfig, instance.Id, pathToConfigFile),
+                    ex
+                );
             }
         }
     }
+
     private void UpdateConfigInternal(IPersistent instance)
     {
-        var memberAttrInfos = Reflector
-            .FindMembers(instance.GetType(),
-                typeof(RuntimeConfigurableAttribute));
+        var memberAttrInfos = Reflector.FindMembers(
+            instance.GetType(),
+            typeof(RuntimeConfigurableAttribute)
+        );
         if (memberAttrInfos.Count == 0)
         {
             return;
         }
         foreach (MemberAttributeInfo memberAttrInfo in memberAttrInfos)
         {
-            string name =
-                (memberAttrInfo.Attribute as RuntimeConfigurableAttribute).Name;
+            string name = (memberAttrInfo.Attribute as RuntimeConfigurableAttribute).Name;
             object value = Reflector.GetValue(memberAttrInfo.MemberInfo, instance);
             var defaultValueAttribute =
-                memberAttrInfo.MemberInfo.GetCustomAttributes()
-                        .FirstOrDefault(attribute => attribute is DefaultValueAttribute) 
-                    as DefaultValueAttribute;
-            
-            if (defaultValueAttribute != null &&
-                Equals(defaultValueAttribute.Value, value) || 
-                instance.IsDeleted)
+                memberAttrInfo
+                    .MemberInfo.GetCustomAttributes()
+                    .FirstOrDefault(attribute => attribute is DefaultValueAttribute)
+                as DefaultValueAttribute;
+
+            if (
+                (defaultValueAttribute != null && Equals(defaultValueAttribute.Value, value))
+                || instance.IsDeleted
+            )
             {
                 RemoveConfigItem(instance.Id);
             }
@@ -212,14 +233,15 @@ public class RuntimeModelConfig : IRuntimeModelConfig
         string json = JsonConvert.SerializeObject(configItems, Formatting.Indented);
         File.WriteAllText(pathToConfigFile, json);
     }
+
     private void RemoveConfigItem(Guid id)
-    { 
+    {
         configItems.RemoveAll(configItem => configItem.Id == id);
     }
+
     private void SetConfigItemValues(IPersistent instance, string name, object value)
     {
-        ConfigItem configItem = configItems
-            .FirstOrDefault(item => item.Id == instance.Id);
+        ConfigItem configItem = configItems.FirstOrDefault(item => item.Id == instance.Id);
         bool itemFound = true;
         if (configItem == null)
         {
@@ -237,6 +259,7 @@ public class RuntimeModelConfig : IRuntimeModelConfig
             configItems.Add(configItem);
         }
     }
+
     public void Dispose()
     {
         watcher.Changed -= OnConfigFileChanged;
@@ -248,19 +271,22 @@ class ConfigItem
 {
     [JsonProperty(Required = Required.Always)]
     public Guid Id { get; set; }
+
     [JsonProperty(Required = Required.Always)]
     public string PropertyName { get; set; }
+
     [JsonProperty(Required = Required.Always)]
     public string PropertyValue { get; set; }
     public string Description { get; set; } = "";
-    public ConfigItem()
-    {
-    }
+
+    public ConfigItem() { }
+
     public ConfigItem(Guid id, string propertyName)
     {
         Id = id;
         PropertyName = propertyName;
     }
+
     public ConfigItem(Guid id, string propertyName, string propertyValue)
     {
         Id = id;

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Workbench;
 using Origam.Schema.GuiModel;
@@ -49,7 +48,6 @@ public class ReportViewer : AbstractViewContent
 		this.TitleNameChanged += new EventHandler(ReportViewer_TitleNameChanged);
 		this.BackColor = OrigamColorScheme.FormBackgroundColor;
 		this.crViewer.BackColor = this.BackColor;
-		
 	}
 	public ReportViewer(CrystalReport reportElement, string titleName) : this()
 	{

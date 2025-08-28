@@ -87,7 +87,6 @@ public class DataGridImageColumn : DataGridColumnStyle
 	}
 	protected override void Abort(int rowNum)
 	{
-		
 	}
 	protected override bool Commit(CurrencyManager dataSource, int rowNum)
 	{
@@ -95,6 +94,5 @@ public class DataGridImageColumn : DataGridColumnStyle
 	}
 	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
 	{
-		
 	}
 }

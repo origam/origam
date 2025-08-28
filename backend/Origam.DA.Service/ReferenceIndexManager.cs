@@ -36,23 +36,21 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static ConcurrentQueue<ISchemaItem> updatesRequestedBeforeFullInitialization = new ();
+    private static ConcurrentQueue<ISchemaItem> updatesRequestedBeforeFullInitialization = new();
 
-    private static readonly Regex GuidRegEx =
-       new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
-    
+    private static readonly Regex GuidRegEx = new(
+        @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})"
+    );
+
     public static bool Initialized { get; private set; }
 
-    private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
-        referenceDictionary = new ();
+    private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>> referenceDictionary =
+        new();
 
     internal static HashSet<ReferenceInfo> GetReferences(Guid itemId)
     {
-        bool referencesExist = referenceDictionary.TryGetValue(
-            itemId, out var references);
-        return referencesExist
-            ? references 
-            : new HashSet<ReferenceInfo>();
+        bool referencesExist = referenceDictionary.TryGetValue(itemId, out var references);
+        return referencesExist ? references : new HashSet<ReferenceInfo>();
     }
 
     public static void Clear(bool fullClear)
@@ -64,11 +62,11 @@ public static class ReferenceIndexManager
         }
         referenceDictionary.Clear();
     }
-    
+
     internal static void UpdateNowOrDeffer(ISchemaItem item)
     {
         if (!Initialized)
-        { 
+        {
             updatesRequestedBeforeFullInitialization.Enqueue(item);
         }
         else
@@ -90,13 +88,12 @@ public static class ReferenceIndexManager
     {
         var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
         var referencesToRemove = referenceDictionary
-            .Where(refReference => refReference.Value
-            .Contains(referenceInfo))
+            .Where(refReference => refReference.Value.Contains(referenceInfo))
             .ToList();
         foreach (var referenceFound in referencesToRemove)
         {
             referenceFound.Value.Remove(referenceInfo);
-            if (referenceFound.Value.Count==0)
+            if (referenceFound.Value.Count == 0)
             {
                 referenceDictionary.TryRemove(referenceFound.Key, out _);
             }
@@ -136,7 +133,8 @@ public static class ReferenceIndexManager
             if (xPathRule.XPath == null)
             {
                 throw new NullReferenceException(
-                    string.Format(Origam.Strings.XPathIsNull, xPathRule.Id));
+                    string.Format(Origam.Strings.XPathIsNull, xPathRule.Id)
+                );
             }
 
             matchCollection = GuidRegEx.Matches(xPathRule.XPath);
@@ -150,6 +148,7 @@ public static class ReferenceIndexManager
             }
         }
     }
+
     private static void AddReference(ISchemaItem item)
     {
         GetReferencesFromDependencies(item);
@@ -158,6 +157,7 @@ public static class ReferenceIndexManager
             GetReferencesFromDependencies(childItem);
         }
     }
+
     private static void GetReferencesFromDependencies(ISchemaItem item)
     {
         List<ISchemaItem> dependencies = item.GetDependencies(false);
@@ -173,7 +173,8 @@ public static class ReferenceIndexManager
     private static void AddToIndex(Guid dependencyItemId, ISchemaItem reference)
     {
         var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
-        referenceDictionary.AddOrUpdate(dependencyItemId,
+        referenceDictionary.AddOrUpdate(
+            dependencyItemId,
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
             {
@@ -181,7 +182,8 @@ public static class ReferenceIndexManager
                 // need thread safety here based on how this method is called.
                 oldSet.Add(referenceInfo);
                 return oldSet;
-            });
+            }
+        );
     }
 
     public static void Initialize()
@@ -198,8 +200,16 @@ record ReferenceInfo(Guid Id, Type Type)
 {
     public virtual bool Equals(ReferenceInfo other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
         return Id.Equals(other.Id);
     }
 

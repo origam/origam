@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
-
 using Origam.DA;
 using Origam.UI;
 using Origam.Workbench.Services;
@@ -253,11 +252,9 @@ public class DbNavigator : System.Windows.Forms.Panel
 			{
 				return _addDeleteToolbar.Buttons[0].Visible; 
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 		set 
 		{ 
 			if(_addDeleteToolbar.Buttons.Count > 0)
@@ -284,11 +281,9 @@ public class DbNavigator : System.Windows.Forms.Panel
 			{
 				return _addDeleteToolbar.Buttons[1].Visible; 
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 		set 
 		{ 
 			if(_addDeleteToolbar.Buttons.Count > 1)
@@ -367,11 +362,9 @@ public class DbNavigator : System.Windows.Forms.Panel
             string propertyName = "parentManager";
             return Reflector.GetValue(currentManager.GetType(), currentManager, propertyName) as CurrencyManager;
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	private bool AddNewRow(Schema.EntityModel.DataStructureTemplate template, DataRow parentRow)
 	{
 		object[] templatePosition = null;
@@ -392,8 +385,10 @@ public class DbNavigator : System.Windows.Forms.Panel
 			AsMessageBox.ShowError(this.FindForm(), ex.Message, "Chyba pøi zpracování šablony", ex);
 			return false;
 		}
-		if(templatePosition == null) return false;
-		(this.Parent.Parent as AsPanel).SetPosition(templatePosition);
+		if(templatePosition == null)
+        {
+            return false;
+        } (this.Parent.Parent as AsPanel).SetPosition(templatePosition);
 		OnNewRecordAdded();
 		return true;
 	}
@@ -406,14 +401,21 @@ public class DbNavigator : System.Windows.Forms.Panel
 			if(_newButton.Enabled)
 			{
 				CurrencyManager bindMan = GetBindingManager();
-				if(bindMan == null) return;
-				// turn off sorting on new record
-				((AsPanel)this.Parent.Parent).CurrentSort.Clear();
+				if(bindMan == null)
+                {
+                    return;
+                }
+                // turn off sorting on new record
+                ((AsPanel)this.Parent.Parent).CurrentSort.Clear();
 				DataRowView parentRowView = this.ParentRowView;
 				DataRow parentRow = parentRowView == null ? null : parentRowView.Row;
 				// try to add a row by using a template
-				if(AddNewRow(null, parentRow)) return;
-				try
+				if(AddNewRow(null, parentRow))
+                {
+                    return;
+                }
+
+                try
 				{
 					(this.FindForm() as AsForm).AddingDataMember = _dataMember;
 					
@@ -452,7 +454,11 @@ public class DbNavigator : System.Windows.Forms.Panel
         if (this.ShowDeleteButton)
         {
             CurrencyManager bindMan = GetBindingManager();
-            if (bindMan.Count < 1) return;
+            if (bindMan.Count < 1)
+            {
+                return;
+            }
+
             if (MessageBox.Show(this.FindForm(), ResourceHelper.GetString("Data.DeleteQuestionText"), ResourceHelper.GetString("Data.DeleteQuestionTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 DataRowView row = bindMan.Current as DataRowView;
@@ -467,7 +473,10 @@ public class DbNavigator : System.Windows.Forms.Panel
                             if (col.ReadOnly == false & (col.DataType == typeof(int) | col.DataType == typeof(float) | col.DataType == typeof(decimal) | col.DataType == typeof(long)))
                             {
                                 object zero = Convert.ChangeType(0, col.DataType);
-                                if (!row.Row[col].Equals(zero)) row.Row[col] = 0;
+                                if (!row.Row[col].Equals(zero))
+                                {
+                                    row.Row[col] = 0;
+                                }
                             }
                         }
                         row.EndEdit();
@@ -512,8 +521,11 @@ public class DbNavigator : System.Windows.Forms.Panel
 	private CurrencyManager GetBindingManager()
 	{
 		if(null != _dataSource && null != BindingContext)
-			return BindingContext[_dataSource, _dataMember] as CurrencyManager;
-		return null;
+        {
+            return BindingContext[_dataSource, _dataMember] as CurrencyManager;
+        }
+
+        return null;
 	}
 	private void OnBindigContextPositionChanged(object sender, System.EventArgs e)
 	{
@@ -567,22 +579,27 @@ public class DbNavigator : System.Windows.Forms.Panel
 				else if(_movePreviousButton == e.Button)
 				{
 					if(bindMan.Count > 0 && bindMan.Position !=0)
-						bindMan.Position--;
-				}
+                    {
+                        bindMan.Position--;
+                    }
+                }
 				else if(_moveNextButton == e.Button)
 				{
 					if(bindMan.Count > 0 && bindMan.Position != bindMan.Count - 1)
-						bindMan.Position++;
-				}
+                    {
+                        bindMan.Position++;
+                    }
+                }
 				else if(_moveLastButton == e.Button)
 				{
 					if(bindMan.Count > 0)
-						bindMan.Position = bindMan.Count - 1;
-				}
+                    {
+                        bindMan.Position = bindMan.Count - 1;
+                    }
+                }
 			}
 			catch
 			{
-				
 			}
 		}
 		UpdateControls();
@@ -591,8 +608,12 @@ public class DbNavigator : System.Windows.Forms.Panel
 	}
 	private bool IsManagerBinding(CurrencyManager cm)
 	{
-		if(cm == null) return false;
-		return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
+		if(cm == null)
+        {
+            return false;
+        }
+
+        return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
 	}
 	public void UpdateControls()
 	{
@@ -658,17 +679,9 @@ public class DbNavigator : System.Windows.Forms.Panel
 				this.Parent.Focus();
 				return false;
 			}
-			else
-			{
-				bindMan.CancelCurrentEdit();
-//					if(_moveFirstButton == e.Button)
-//						bindMan.Position = 0;
-//					else if(_newButton == e.Button)
-//					{
-//						bindMan.AddNew();
-//					}
-			}
-		}
+
+            bindMan.CancelCurrentEdit();
+        }
 		return true;
 	}
 	private void timer1_Tick(object sender, System.EventArgs e)
@@ -685,8 +698,12 @@ public class DbNavigator : System.Windows.Forms.Panel
 			{
 				IDocumentationService documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 				string name = documentation.GetDocumentation(template.Id, DocumentationType.USER_SHORT_HELP);
-				if(name == "") name = template.Name;
-				TemplateMenuItem templateMenuItem = new TemplateMenuItem(name, template);
+				if(name == "")
+                {
+                    name = template.Name;
+                }
+
+                TemplateMenuItem templateMenuItem = new TemplateMenuItem(name, template);
 				templateMenuItem.Click += new EventHandler(templateMenuItem_Click);
 				templateMenu.MenuItems.Add(templateMenuItem);
 			}

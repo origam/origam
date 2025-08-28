@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Windows.Forms;
-
 using Origam.DA;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -130,10 +129,17 @@ public class DataGridFilterFactory : IDisposable
 		if(captionControl != null)
 		{
 			caption = captionControl.GridColumnCaption;
-			if(caption == "" | caption == null) caption = captionControl.Caption;
-		}
-		if(caption == "" | caption == null) caption = column.Caption;
-		AsDropDown dropDown = control as AsDropDown;
+			if(caption == "" | caption == null)
+            {
+                caption = captionControl.Caption;
+            }
+        }
+		if(caption == "" | caption == null)
+        {
+            caption = column.Caption;
+        }
+
+        AsDropDown dropDown = control as AsDropDown;
 		AsTextBox textBox = control as AsTextBox;
 		AsTextBox tb = new AsTextBox();
         if (dropDown != null)
@@ -246,11 +252,27 @@ public class DataGridFilterFactory : IDisposable
 		filter.PanelId = panelId;
 		filter.ProfileId = profile.Id;
 		
-		if(!filter.IsRecordCreatedNull()) filter.RecordUpdated = DateTime.Now;
-		if(!filter.IsRecordCreatedByNull()) filter.RecordUpdatedBy = profile.Id;
-		if(filter.IsRecordCreatedNull()) filter.RecordCreated = DateTime.Now;
-		if(filter.IsRecordCreatedByNull()) filter.RecordCreatedBy = profile.Id;
-		if(filter.RowState == DataRowState.Detached)
+		if(!filter.IsRecordCreatedNull())
+        {
+            filter.RecordUpdated = DateTime.Now;
+        }
+
+        if (!filter.IsRecordCreatedByNull())
+        {
+            filter.RecordUpdatedBy = profile.Id;
+        }
+
+        if (filter.IsRecordCreatedNull())
+        {
+            filter.RecordCreated = DateTime.Now;
+        }
+
+        if (filter.IsRecordCreatedByNull())
+        {
+            filter.RecordCreatedBy = profile.Id;
+        }
+
+        if (filter.RowState == DataRowState.Detached)
 		{
 			(filter.Table.DataSet as OrigamPanelFilter).PanelFilter.AddPanelFilterRow(filter);
 		}
@@ -280,16 +302,17 @@ public class DataGridFilterFactory : IDisposable
 		{
 			case "AsDateBox":
 				return ">=";
-			case "AsTextBox":
-				if( (item as AsTextBox).DataType == typeof(string) | (item as AsTextBox).DataType == typeof(object) )
-				{
-					return "LIKE";
-				}
-				else
-				{
-					return "=";
-				}
-			default:
+            case "AsTextBox":
+                {
+                    if ((item as AsTextBox).DataType == typeof(string) | (item as AsTextBox).DataType == typeof(object))
+                    {
+                        return "LIKE";
+                    }
+
+                    return "=";
+                }
+
+            default:
 				return "=";
 		}
 	}

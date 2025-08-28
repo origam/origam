@@ -190,9 +190,16 @@ public class DataGridBuilder : IGridBuilder
 		bool allHidden = true;
 		foreach(DataGridColumnStyleHolder style in _styles)
 		{
-			if(! style.Hidden) allHidden = false;
-			if(style.Style.Width == 0) style.Style.Width = 100;
-		}
+			if(! style.Hidden)
+            {
+                allHidden = false;
+            }
+
+            if (style.Style.Width == 0)
+            {
+                style.Style.Width = 100;
+            }
+        }
 		_styles.Sort();
 		if(allHidden & _styles.Count > 0)
 		{
@@ -298,17 +305,29 @@ public class DataGridBuilder : IGridBuilder
 		OrigamPanelColumnConfig userConfig, RuleEngine ruleEngine)
 	{
 		string defProperty = (control as IAsControl).DefaultBindableProperty;
-		if (defProperty == null) return null;
-		DataColumn column = GetDataColumn(control);
-		if (column == null) return null;
-		DataGridColumnStyle columnStyle 
+		if (defProperty == null)
+        {
+            return null;
+        }
+
+        DataColumn column = GetDataColumn(control);
+		if (column == null)
+        {
+            return null;
+        }
+
+        DataGridColumnStyle columnStyle 
 			= MakeDataGridColumnStyle(control, ruleEngine, column);
 	
 		columnStyle.HeaderText = SelectCaption(column, control);
 		columnStyle.MappingName = column.ColumnName;
 		
-		if(column.ReadOnly) columnStyle.ReadOnly = true;
-		SetColumnWidth(control, userConfig, columnStyle);
+		if(column.ReadOnly)
+        {
+            columnStyle.ReadOnly = true;
+        }
+
+        SetColumnWidth(control, userConfig, columnStyle);
 		columnStyle.NullText = "";
 		
 		FilterFactory.AddControlToPanel(control, column, columnStyle.Width);
@@ -429,8 +448,12 @@ public class DataGridBuilder : IGridBuilder
 	private static DataColumn GetDataColumn(Control control)
 	{
         Binding controlDataBinding = control.DataBindings[0];
-        if (controlDataBinding == null) return null;
-		var bindingField = controlDataBinding.BindingMemberInfo.BindingField;
+        if (controlDataBinding == null)
+        {
+            return null;
+        }
+
+        var bindingField = controlDataBinding.BindingMemberInfo.BindingField;
 		if (controlDataBinding.DataSource is DataView dataView)
 		{
 			return dataView.Table.Columns[bindingField];
@@ -460,10 +483,15 @@ public class DataGridBuilder : IGridBuilder
 		if( control is IAsCaptionControl iAsCaptionControl)
 		{
 			if( !string.IsNullOrEmpty(iAsCaptionControl.GridColumnCaption))
-				return ((IAsCaptionControl)control).GridColumnCaption;
-			if( !string.IsNullOrEmpty(iAsCaptionControl.Caption))
-				return ((IAsCaptionControl)control).Caption;
-		}
+            {
+                return ((IAsCaptionControl)control).GridColumnCaption;
+            }
+
+            if ( !string.IsNullOrEmpty(iAsCaptionControl.Caption))
+            {
+                return ((IAsCaptionControl)control).Caption;
+            }
+        }
 		return column.Caption;
 	}
 	#endregion
@@ -573,61 +601,63 @@ public class DataGridBuilder : IGridBuilder
 					RuleEngine ruleEngine = _form.FormGenerator.FormRuleEngine;
 					switch(e.Button)
 					{
-						case MouseButtons.Left:			// By left button we only change the clicked cell.
-							if(grid.DataSource != null)
-							{
-								// set the current cell to the checkbox column, otherwise datagrid will
-								// scroll to a wrong column after changing the value
-								grid.CurrentCell = new DataGridCell(hti.Row, hti.Column);
-								// then we end any edits made so far
-								grid.BindingContext[grid.DataSource, grid.DataMember].EndCurrentEdit();
-							}
-							
-							// Now we change the value.
-							if(grid.DataSource != null && hti.Row < grid.BindingContext[grid.DataSource, grid.DataMember].Count)
-							{
-								bool canEdit = ruleEngine.EvaluateRowLevelSecurityState((cm.Current as DataRowView).Row, grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName, Schema.EntityModel.CredentialType.Update);
-								if(canEdit)
-								{
-									// revert the value of the checkbox
-									grid[hti.Row, hti.Column] = !Convert.ToBoolean(grid[hti.Row, hti.Column]);
-                                    // force value to form component to prevent loss of data
-                                    DataBindingTools.UpdateBindedFormComponent(
-                                        grid.BindingContext[grid.DataSource, grid.DataMember].Bindings, 
-                                        grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName);
-									// End edit - so the checkbox immediately gets its value and the user 
-									// does not have to commit it. Useful for all kinds of selection dialogs etc. where
-									// checkboxes are mainly used.
-									grid.BindingContext[grid.DataSource, grid.DataMember].EndCurrentEdit();
-								}
-							}
-							
-							break;
-						
-						
-						case MouseButtons.Right:			// By right button we reverse all values in the current column.
-							var selectedRows = new List<DataRow>();
-							int count = cm.Count;
-							for(int i = 0; i < count; i++)
-							{
-								if(grid.IsSelected(i))
-								{
-									selectedRows.Add((cm.List[i] as DataRowView).Row);
-								}
-							}
-							string columnName = grid.TableStyles[0].GridColumnStyles[hti.Column].PropertyDescriptor.Name;
-							foreach(DataRow row in selectedRows)
-							{
-								bool canEdit = ruleEngine.EvaluateRowLevelSecurityState(row, columnName, Schema.EntityModel.CredentialType.Update);
-								if(canEdit)
-								{
-									row[columnName] = !Convert.ToBoolean(row[columnName]);
-								}
-							}
-							
-						
-							break;
-					}
+                        case MouseButtons.Left:         // By left button we only change the clicked cell.
+                            {
+                                if (grid.DataSource != null)
+                                {
+                                    // set the current cell to the checkbox column, otherwise datagrid will
+                                    // scroll to a wrong column after changing the value
+                                    grid.CurrentCell = new DataGridCell(hti.Row, hti.Column);
+                                    // then we end any edits made so far
+                                    grid.BindingContext[grid.DataSource, grid.DataMember].EndCurrentEdit();
+                                }
+
+                                // Now we change the value.
+                                if (grid.DataSource != null && hti.Row < grid.BindingContext[grid.DataSource, grid.DataMember].Count)
+                                {
+                                    bool canEdit = ruleEngine.EvaluateRowLevelSecurityState((cm.Current as DataRowView).Row, grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName, Schema.EntityModel.CredentialType.Update);
+                                    if (canEdit)
+                                    {
+                                        // revert the value of the checkbox
+                                        grid[hti.Row, hti.Column] = !Convert.ToBoolean(grid[hti.Row, hti.Column]);
+                                        // force value to form component to prevent loss of data
+                                        DataBindingTools.UpdateBindedFormComponent(
+                                            grid.BindingContext[grid.DataSource, grid.DataMember].Bindings,
+                                            grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName);
+                                        // End edit - so the checkbox immediately gets its value and the user 
+                                        // does not have to commit it. Useful for all kinds of selection dialogs etc. where
+                                        // checkboxes are mainly used.
+                                        grid.BindingContext[grid.DataSource, grid.DataMember].EndCurrentEdit();
+                                    }
+                                }
+
+                                break;
+                            }
+
+                        case MouseButtons.Right:            // By right button we reverse all values in the current column.
+                            {
+                                var selectedRows = new List<DataRow>();
+                                int count = cm.Count;
+                                for (int i = 0; i < count; i++)
+                                {
+                                    if (grid.IsSelected(i))
+                                    {
+                                        selectedRows.Add((cm.List[i] as DataRowView).Row);
+                                    }
+                                }
+                                string columnName = grid.TableStyles[0].GridColumnStyles[hti.Column].PropertyDescriptor.Name;
+                                foreach (DataRow row in selectedRows)
+                                {
+                                    bool canEdit = ruleEngine.EvaluateRowLevelSecurityState(row, columnName, Schema.EntityModel.CredentialType.Update);
+                                    if (canEdit)
+                                    {
+                                        row[columnName] = !Convert.ToBoolean(row[columnName]);
+                                    }
+                                }
+
+                                break;
+                            }
+                    }
 				}
 			}
 			catch {}
@@ -637,9 +667,12 @@ public class DataGridBuilder : IGridBuilder
 	{
 		AsDataGrid grid = sender as AsDataGrid;
 		DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
-		if (hti.Column < 0 || hti.Row < 0) return;
-		
-		if(grid.TableStyles[0].GridColumnStyles[hti.Column] is DataGridDropdownColumn && (Control.ModifierKeys & Keys.Control) == Keys.Control & e.Button == MouseButtons.Left)
+		if (hti.Column < 0 || hti.Row < 0)
+        {
+            return;
+        }
+
+        if (grid.TableStyles[0].GridColumnStyles[hti.Column] is DataGridDropdownColumn && ((Control.ModifierKeys & Keys.Control) == Keys.Control & e.Button == MouseButtons.Left))
 		{
 			DataGridDropdownColumn col = grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
 			IDataLookupService lookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
@@ -654,9 +687,12 @@ public class DataGridBuilder : IGridBuilder
 	{
 		DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
 		AsDataGrid grid = sender as AsDataGrid;
-		if (hti.Column < 0 || hti.Row < 0) return;
-		
-		DataGridDropdownColumn col = grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
+		if (hti.Column < 0 || hti.Row < 0)
+        {
+            return;
+        }
+
+        DataGridDropdownColumn col = grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
 		if(col != null && (Control.ModifierKeys & Keys.Control) == Keys.Control)
 		{
 			CurrencyManager cm = grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
@@ -677,37 +713,53 @@ public class DataGridBuilder : IGridBuilder
 	private void grid_KeyPress(object sender, KeyPressEventArgs e)
 	{
 		AsDataGrid grid = sender as AsDataGrid;
-		if(grid.DataSource == null) return;
-		if (!(grid.CurrentCell.ColumnNumber >= 0 &
-		      grid.CurrentCell.RowNumber >= 0)) return;
-		
-		if(grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber] is AsCheckStyleColumn && 
+		if(grid.DataSource == null)
+        {
+            return;
+        }
+
+        if (!(grid.CurrentCell.ColumnNumber >= 0 &
+		      grid.CurrentCell.RowNumber >= 0))
+        {
+            return;
+        }
+
+        if (grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber] is AsCheckStyleColumn && 
 		   grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber].ReadOnly == false)
 		{
 			switch(e.KeyChar)
 			{
-				case (char)32: // space
-					grid[grid.CurrentCell] = !Convert.ToBoolean(grid[grid.CurrentCell]);
-					e.Handled = true;
-					break;
-				case (char)42: // *
-					for(int i = 0; i < grid.BindingContext[grid.DataSource, grid.DataMember].Count; i++)
-					{
-						if(grid.IsSelected(i))
-						{
-							grid[i, grid.CurrentCell.ColumnNumber] = !Convert.ToBoolean(grid[i, grid.CurrentCell.ColumnNumber]);
-						}
-					}
-					break;
-			}
+                case (char)32: // space
+                    {
+                        grid[grid.CurrentCell] = !Convert.ToBoolean(grid[grid.CurrentCell]);
+                        e.Handled = true;
+                        break;
+                    }
+
+                case (char)42: // *
+                    {
+                        for (int i = 0; i < grid.BindingContext[grid.DataSource, grid.DataMember].Count; i++)
+                        {
+                            if (grid.IsSelected(i))
+                            {
+                                grid[i, grid.CurrentCell.ColumnNumber] = !Convert.ToBoolean(grid[i, grid.CurrentCell.ColumnNumber]);
+                            }
+                        }
+                        break;
+                    }
+            }
 		}
 	}
 	#endregion
 	#region IDisposable Members
 	public void Dispose()
 	{
-		if (grid == null) return;
-		parentControl = null;
+		if (grid == null)
+        {
+            return;
+        }
+
+        parentControl = null;
 		FilterFactory = null;
 		grid.MouseDown -= grid_MouseDown;
 		grid.MouseUp -= grid_MouseUp;
@@ -731,4 +783,3 @@ public class DataGridBuilder : IGridBuilder
 	}
 	#endregion
 }
-

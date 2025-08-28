@@ -19,45 +19,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
 [HelpTopic("Database+Data+Type")]
 [DefaultProperty("DataType")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
-public  class DatabaseDataType : AbstractSchemaItem
+public class DatabaseDataType : AbstractSchemaItem
 {
-	public const string CategoryConst = "DatabaseDataType";
-	public DatabaseDataType() : base() {}
-	public DatabaseDataType(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DatabaseDataType(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	OrigamDataType _dataType = OrigamDataType.String;
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[Category("Mapping")]
+    public const string CategoryConst = "DatabaseDataType";
+
+    public DatabaseDataType()
+        : base() { }
+
+    public DatabaseDataType(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DatabaseDataType(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    OrigamDataType _dataType = OrigamDataType.String;
+
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
+    [Category("Mapping")]
     [DisplayName("Data Type")]
     [Description("Base ORIGAM data type to which the mapping is assigned.")]
     [XmlAttribute("dataType")]
-	public OrigamDataType DataType
-	{
-		get
-		{
-			return _dataType;
-		}
-		set
-		{
-			_dataType = value;
-		}
-	}
+    public OrigamDataType DataType
+    {
+        get { return _dataType; }
+        set { _dataType = value; }
+    }
     string _mappedDatabaseTypeName = "";
+
     [Category("Mapping")]
     [Description("Name of the data type as used by the current database engine.")]
     [DisplayName("Database Specific Data Type")]
@@ -65,36 +69,27 @@ public  class DatabaseDataType : AbstractSchemaItem
     [NotNullModelElementRule()]
     [XmlAttribute("mappedDatabaseTypeName")]
     public string MappedDatabaseTypeName
-	{
-		get
-		{
-			return _mappedDatabaseTypeName;
-		}
-		set
-		{
+    {
+        get { return _mappedDatabaseTypeName; }
+        set
+        {
             _mappedDatabaseTypeName = value;
             if (value != null)
             {
                 this.Name = value;
             }
-		}
-	}
+        }
+    }
     #endregion
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
 }

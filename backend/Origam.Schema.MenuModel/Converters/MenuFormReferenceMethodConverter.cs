@@ -19,64 +19,79 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
+
 public class MenuFormReferenceMethodConverter : TypeConverter
 {
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-	{
-		//true means show a combobox
-		return true;
-	}
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-		//true will limit to list. false will show the list, 
-		//but allow free-form entry
-		return true;
-	}
-	public override StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
-		var currentItem = context.Instance as FormReferenceMenuItem;
-		List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
-		if (methods == null)
-		{
-			return new StandardValuesCollection(new List<DataStructureMethod>());
-		}
-		var output = new List<DataStructureMethod>(methods.Count);
-		foreach (DataStructureMethod method in methods)
-		{
-			output.Add(method);
-		}
-		output.Add(null);
-		output.Sort();
-		return new StandardValuesCollection(output);
-	}
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
-		if( sourceType == typeof(string) )
-			return true;
-		else 
-			return base.CanConvertFrom(context, sourceType);
-	}
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
-		if( value.GetType() == typeof(string) )
-		{
-			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<DataStructureMethod> methods = currentItem.Screen.DataStructure.Methods;
-			foreach(DataStructureMethod item in methods)
-			{
-				if(item.Name == value.ToString())
-					return item;
-			}
-			return null;
-		}
-		else
-			return base.ConvertFrom(context, culture, value);
-	}
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    {
+        //true means show a combobox
+        return true;
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        //true will limit to list. false will show the list,
+        //but allow free-form entry
+        return true;
+    }
+
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+    {
+        var currentItem = context.Instance as FormReferenceMenuItem;
+        List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
+        if (methods == null)
+        {
+            return new StandardValuesCollection(new List<DataStructureMethod>());
+        }
+        var output = new List<DataStructureMethod>(methods.Count);
+        foreach (DataStructureMethod method in methods)
+        {
+            output.Add(method);
+        }
+        output.Add(null);
+        output.Sort();
+        return new StandardValuesCollection(output);
+    }
+
+    public override bool CanConvertFrom(
+        System.ComponentModel.ITypeDescriptorContext context,
+        System.Type sourceType
+    )
+    {
+        if (sourceType == typeof(string))
+        {
+            return true;
+        }
+
+        return base.CanConvertFrom(context, sourceType);
+    }
+
+    public override object ConvertFrom(
+        System.ComponentModel.ITypeDescriptorContext context,
+        System.Globalization.CultureInfo culture,
+        object value
+    )
+    {
+        if (value.GetType() == typeof(string))
+        {
+            FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
+            List<DataStructureMethod> methods = currentItem.Screen.DataStructure.Methods;
+            foreach (DataStructureMethod item in methods)
+            {
+                if (item.Name == value.ToString())
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        return base.ConvertFrom(context, culture, value);
+    }
 }

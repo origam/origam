@@ -25,6 +25,7 @@ using System.Xml;
 using Origam.Service.Core;
 
 namespace Origam;
+
 public class DataDocumentFactory
 {
     public static IDataDocument New(XmlDocument xmlDoc)
@@ -35,6 +36,7 @@ public class DataDocumentFactory
         return new DataDocumentFx(xmlDoc);
 #endif
     }
+
     public static IDataDocument New(DataSet dataSet)
     {
 #if NETSTANDARD

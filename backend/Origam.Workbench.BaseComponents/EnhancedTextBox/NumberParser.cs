@@ -37,7 +37,11 @@ public class NumberParser
     }
     public object Parse(string text)
     {
-        if (string.IsNullOrEmpty(text)) return 0;
+        if (string.IsNullOrEmpty(text))
+        {
+            return 0;
+        }
+
         try
         {
             return textParseFunc.Invoke(text);

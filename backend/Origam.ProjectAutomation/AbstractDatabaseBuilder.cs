@@ -34,13 +34,11 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
     }
     internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
     {
-       
             if (_dataService == null)
             {
                 _dataService = CreateService(DatabaseType);
             }
             return _dataService;
-        
     }
     internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
     {

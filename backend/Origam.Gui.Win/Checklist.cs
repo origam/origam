@@ -193,8 +193,11 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 		try
 		{
 			if(!_itemsLoaded)
-				return;
-			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
+            {
+                return;
+            }
+
+            var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
 				mapping.IsDeleted = true;
@@ -208,8 +211,11 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 	public void CreateMappingItemsCollection()
 	{
 		if(!_itemsLoaded)
-			return;
-		if(this.DataLookup != null)
+        {
+            return;
+        }
+
+        if (this.DataLookup != null)
 		{
 			foreach(var entry in this.DataLookup.ParameterReferences)
 			{
@@ -226,9 +232,11 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 	private void FillParameterCache(ControlSetItem controlItem)
 	{
 		if( controlItem ==null)
-			return;
-		
-		ParameterMappings.Clear();
+        {
+            return;
+        }
+
+        ParameterMappings.Clear();
 		
 		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{

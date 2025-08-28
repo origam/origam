@@ -30,7 +30,11 @@ public class MemoryListBox : ListBox
     {
         get
         {
-            if (previouslySelectedItem == null) return null;
+            if (previouslySelectedItem == null)
+            {
+                return null;
+            }
+
             if (!Items.Contains(previouslySelectedItem))
             {
                 return null;

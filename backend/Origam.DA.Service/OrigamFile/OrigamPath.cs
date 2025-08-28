@@ -28,11 +28,12 @@ using Origam.Extensions;
 using ProtoBuf;
 
 namespace Origam.DA.Service;
+
 public class OrigamPath
 {
     public string Relative { get; private set; }
     private readonly string BasePath;
-    
+
     public string Absolute
     {
         get => Path.Combine(BasePath, Relative);
@@ -41,79 +42,100 @@ public class OrigamPath
             string basePath = BasePath;
             if (!value.StartsWith(basePath))
             {
-                throw new ArgumentException(
-                    $"OrigamFile is not on base path:{value}");
+                throw new ArgumentException($"OrigamFile is not on base path:{value}");
             }
             Relative = AbsoluteToRelative(value);
         }
     }
-    private OrigamPath()  
-    {
-    }
+
+    private OrigamPath() { }
+
     public bool RelativeEquals(string otherRelativePath)
     {
         return string.Equals(
-            Path.Combine(BasePath, otherRelativePath), 
+            Path.Combine(BasePath, otherRelativePath),
             Path.Combine(BasePath, Relative),
-            StringComparison.CurrentCultureIgnoreCase);
+            StringComparison.CurrentCultureIgnoreCase
+        );
     }
-    public DirectoryInfo Directory =>
-        new DirectoryInfo(Path.GetDirectoryName(Absolute));
+
+    public DirectoryInfo Directory => new DirectoryInfo(Path.GetDirectoryName(Absolute));
     public bool Exists => File.Exists(Absolute);
     public string FileName => Path.GetFileName(Absolute);
+
     protected OrigamPath(string basePath)
     {
         BasePath = basePath;
     }
+
     internal OrigamPath(string absolutePath, string basePath)
     {
         BasePath = basePath;
         Absolute = absolutePath;
     }
+
     public string AbsoluteToRelative(string absolutePath)
     {
         string basePath = BasePath;
-        if(basePath.EndsWith("\\"))
+        if (basePath.EndsWith("\\"))
         {
             return absolutePath.Substring(basePath.Length);
         }
-        else
-        {
-            return absolutePath.Substring(basePath.Length + 1);
-        }
+
+        return absolutePath.Substring(basePath.Length + 1);
     }
+
     public bool EqualsTo(FileInfo file)
     {
         return Absolute.ToLower() == file.FullName.ToLower();
     }
+
     protected bool Equals(OrigamPath other) => string.Equals(Relative, other.Relative);
+
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((OrigamPath) obj);
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != this.GetType())
+        {
+            return false;
+        }
+
+        return Equals((OrigamPath)obj);
     }
-    public override int GetHashCode() => 
-        Relative != null ? Relative.GetHashCode() : 0;
-    
+
+    public override int GetHashCode() => Relative != null ? Relative.GetHashCode() : 0;
+
     public OrigamPath UpdateToNew(DirectoryInfo dirToRename, string newDirPath)
     {
         string newAbsolutePath = Absolute.Replace(dirToRename.FullName, newDirPath);
         if (!newAbsolutePath.ToLower().Contains(BasePath.ToLower()))
         {
-            throw new Exception("cannot create an OrigamPath outside of basePath: "+ newAbsolutePath);
+            throw new Exception(
+                "cannot create an OrigamPath outside of basePath: " + newAbsolutePath
+            );
         }
         return new OrigamPath(
-            absolutePath:Absolute.Replace(dirToRename.FullName, newDirPath),
-            basePath: BasePath);
+            absolutePath: Absolute.Replace(dirToRename.FullName, newDirPath),
+            basePath: BasePath
+        );
     }
+
     public override string ToString()
     {
         return Absolute;
     }
 }
-public class ExternalFilePath: OrigamPath
+
+public class ExternalFilePath : OrigamPath
 {
     private const string ExternalFileLinkPrefix = "-***-ExternalFile:";
     private const string Delimiter = "___";
@@ -121,67 +143,93 @@ public class ExternalFilePath: OrigamPath
     private readonly string fieldName;
     public ExternalFileExtension Extension => extension;
     public string FieldName => fieldName;
-    public Guid OwnerOjectId{ get; }
+    public Guid OwnerOjectId { get; }
     public string LinkWithPrefix { get; }
+
     public static bool IsExternalFileLink(string mayBePath)
     {
-        if (string.IsNullOrEmpty(mayBePath)) return false;
-        if (!mayBePath.StartsWith(ExternalFileLinkPrefix)) return false;
-        if (!ParseOwnerId(mayBePath).HasValue ||
-            !ExternalFileExtensionTools.TryParse(mayBePath, out var _) ||
-            !TryParseFieldName(mayBePath, out var _))
+        if (string.IsNullOrEmpty(mayBePath))
         {
-            throw new Exception("Input starts with "+nameof(ExternalFileLinkPrefix)+" but owner id, filed name or file extension cannot be parsed from it.");
+            return false;
+        }
+
+        if (!mayBePath.StartsWith(ExternalFileLinkPrefix))
+        {
+            return false;
+        }
+
+        if (
+            !ParseOwnerId(mayBePath).HasValue
+            || !ExternalFileExtensionTools.TryParse(mayBePath, out var _)
+            || !TryParseFieldName(mayBePath, out var _)
+        )
+        {
+            throw new Exception(
+                "Input starts with "
+                    + nameof(ExternalFileLinkPrefix)
+                    + " but owner id, filed name or file extension cannot be parsed from it."
+            );
         }
         return true;
     }
+
     public static Guid? ParseOwnerId(string externalFilePath)
-    {           
+    {
         string[] splitPath = externalFilePath.Split(Delimiter);
         string guidWithFileExtension = splitPath[splitPath.Length - 1];
-        string guidStr =
-            Path.GetFileNameWithoutExtension(guidWithFileExtension);
+        string guidStr = Path.GetFileNameWithoutExtension(guidWithFileExtension);
         bool parseSuccess = Guid.TryParse(guidStr, out var guid);
         return !parseSuccess ? (Guid?)null : guid;
     }
-    public ExternalFilePath(OrigamPath ownerOrigamFilePath, string fieldName,
-        Guid ownerOjectId, ExternalFileExtension extension, string basePath)
-        :base(basePath)
+
+    public ExternalFilePath(
+        OrigamPath ownerOrigamFilePath,
+        string fieldName,
+        Guid ownerOjectId,
+        ExternalFileExtension extension,
+        string basePath
+    )
+        : base(basePath)
     {
         if (fieldName.Contains(Delimiter))
         {
             throw new ArgumentException($"fieldName cannot contain \"{Delimiter}\"");
         }
-        
+
         OwnerOjectId = ownerOjectId;
         this.fieldName = fieldName;
         this.extension = extension;
         string ext = extension.ToString().ToLower();
         Absolute =
-            ownerOrigamFilePath.Absolute + Delimiter +
-            fieldName + Delimiter +
-            ownerOjectId+"."+ext;
-        
+            ownerOrigamFilePath.Absolute
+            + Delimiter
+            + fieldName
+            + Delimiter
+            + ownerOjectId
+            + "."
+            + ext;
+
         LinkWithPrefix = MakeExternalLinkWithPrefix(FileName);
     }
-    public ExternalFilePath(OrigamPath ownerOrigamFilePath,
-        string externalLinkWithPrefix, string basePath):base(basePath)
+
+    public ExternalFilePath(
+        OrigamPath ownerOrigamFilePath,
+        string externalLinkWithPrefix,
+        string basePath
+    )
+        : base(basePath)
     {
         LinkWithPrefix = externalLinkWithPrefix;
-        string externalFileName =
-            LinkWithPrefix.Substring(ExternalFileLinkPrefix.Length);
+        string externalFileName = LinkWithPrefix.Substring(ExternalFileLinkPrefix.Length);
         if (!ExternalFileExtensionTools.TryParse(externalFileName, out extension))
         {
-            throw new Exception(
-                $"Could not parse file extension from {externalFileName}");
+            throw new Exception($"Could not parse file extension from {externalFileName}");
         }
         if (!TryParseFieldName(externalFileName, out fieldName))
         {
-            throw new Exception(
-                $"Could not parse filed name from {externalFileName}");            
+            throw new Exception($"Could not parse filed name from {externalFileName}");
         }
-        Absolute =
-            Path.Combine(ownerOrigamFilePath.Directory.FullName,externalFileName);
+        Absolute = Path.Combine(ownerOrigamFilePath.Directory.FullName, externalFileName);
         Guid? ownerOjectId = ParseOwnerId(externalFileName);
         if (!ownerOjectId.HasValue)
         {
@@ -189,6 +237,7 @@ public class ExternalFilePath: OrigamPath
         }
         OwnerOjectId = ownerOjectId.Value;
     }
+
     private static bool TryParseFieldName(string externalFileName, out string filedName)
     {
         string[] splitName = externalFileName.Split(Delimiter);
@@ -197,42 +246,57 @@ public class ExternalFilePath: OrigamPath
             filedName = null;
             return false;
         }
-        filedName=  splitName[splitName.Length - 2];
+        filedName = splitName[splitName.Length - 2];
         return true;
     }
-    private string MakeExternalLinkWithPrefix(string extFileName) => 
-            ExternalFileLinkPrefix + extFileName;
+
+    private string MakeExternalLinkWithPrefix(string extFileName) =>
+        ExternalFileLinkPrefix + extFileName;
+
     public override string ToString() => Absolute;
 }
+
 public class OrigamPathFactory
 {
     private readonly string BasePath;
+
     public OrigamPathFactory(DirectoryInfo toDirectory)
     {
         BasePath = toDirectory.FullName;
     }
-    
+
     public OrigamPath CreateFromRelative(string relativePath)
     {
         string newAbsPath = Path.Combine(BasePath, relativePath);
         return new OrigamPath(newAbsPath, BasePath);
     }
+
     public OrigamPath Create(string absolutePath)
     {
         return new OrigamPath(absolutePath, BasePath);
     }
-    internal ExternalFilePath Create(OrigamPath ownerOrigamFilePath, string fieldName,
-        Guid ownerOjectId, ExternalFileExtension extension)
+
+    internal ExternalFilePath Create(
+        OrigamPath ownerOrigamFilePath,
+        string fieldName,
+        Guid ownerOjectId,
+        ExternalFileExtension extension
+    )
     {
-        return new ExternalFilePath(ownerOrigamFilePath, fieldName,
-            ownerOjectId, extension, BasePath);
+        return new ExternalFilePath(
+            ownerOrigamFilePath,
+            fieldName,
+            ownerOjectId,
+            extension,
+            BasePath
+        );
     }
-    internal ExternalFilePath Create(OrigamPath ownerOrigamFilePath,
-        string externalLinkWithPrefix)
+
+    internal ExternalFilePath Create(OrigamPath ownerOrigamFilePath, string externalLinkWithPrefix)
     {
-        return new ExternalFilePath(ownerOrigamFilePath,
-         externalLinkWithPrefix,  BasePath);
+        return new ExternalFilePath(ownerOrigamFilePath, externalLinkWithPrefix, BasePath);
     }
+
     public OrigamPath Create(FileInfo file)
     {
         return new OrigamPath(file.FullName, BasePath);

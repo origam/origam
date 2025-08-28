@@ -470,9 +470,11 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     {
         object[] attributes = type.GetCustomAttributes(typeof(HelpTopicAttribute), true);
         if (attributes != null && attributes.Length > 0)
+        {
             return attributes[0] as HelpTopicAttribute;
-        else
-            return null;
+        }
+
+        return null;
     }
 	private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 	{
@@ -486,53 +488,64 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
 		
 			switch(result)
 			{
-				case DialogResult.Yes:
-					try
-					{
-						SaveObject();
-					}
-					catch(Exception ex)
-					{
-						Origam.UI.AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, "Error", ex);
-						e.Cancel = true;
-					}
-					break;
-				case DialogResult.No:
-					if(ModelContent.IsPersisted)
-					// existing item
-					{
-						// in case we edited some of the children we invalidate their cache
-						ModelContent.InvalidateChildrenPersistenceCache();
-						ModelContent.ClearCache();
-					}
-					else
-					// new item
-					{
-						// we have to remove ours object from the colection
-						ISchemaItemProvider provider = ModelContent.ParentItem == null ? ModelContent.RootProvider : ModelContent.ParentItem as ISchemaItemProvider;
-						if(provider == null)
-						{
-							System.Diagnostics.Debug.Fail("Both ParentItem and RootProvider not specified");
-						}
-						else
-						{
-							if(provider.ChildItems.Contains(ModelContent))
-							{
-								provider.ChildItems.Remove(ModelContent);
-							}
-						}								
-					}
-					break;
-		
-				case DialogResult.Cancel:
-					e.Cancel = true;
-					break;
-			}
+                case DialogResult.Yes:
+                    {
+                        try
+                        {
+                            SaveObject();
+                        }
+                        catch (Exception ex)
+                        {
+                            Origam.UI.AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, "Error", ex);
+                            e.Cancel = true;
+                        }
+                        break;
+                    }
+
+                case DialogResult.No:
+                    {
+                        if (ModelContent.IsPersisted)
+                        // existing item
+                        {
+                            // in case we edited some of the children we invalidate their cache
+                            ModelContent.InvalidateChildrenPersistenceCache();
+                            ModelContent.ClearCache();
+                        }
+                        else
+                        // new item
+                        {
+                            // we have to remove ours object from the colection
+                            ISchemaItemProvider provider = ModelContent.ParentItem == null ? ModelContent.RootProvider : ModelContent.ParentItem as ISchemaItemProvider;
+                            if (provider == null)
+                            {
+                                System.Diagnostics.Debug.Fail("Both ParentItem and RootProvider not specified");
+                            }
+                            else
+                            {
+                                if (provider.ChildItems.Contains(ModelContent))
+                                {
+                                    provider.ChildItems.Remove(ModelContent);
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                case DialogResult.Cancel:
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+            }
 		}
 	}
     public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
-	    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
-		var actions = ActionsBuilder.BuildSubmenu(Content);
+	    if (!showMenusInAppToolStrip)
+        {
+            return new List<ToolStrip>();
+        }
+
+        var actions = ActionsBuilder.BuildSubmenu(Content);
 		var actionToolStrip = MakeLabeledToolStrip(actions, "Actions",maxWidth/2);
         var newItems = NewElementsBuilder.BuildSubmenu(Content);
 		var newToolStrip = MakeLabeledToolStrip(newItems, "New", maxWidth/2);
@@ -565,11 +578,19 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         var dropDownButton = new BigArrowToolStripDropDownButton();
         for (int i = 0; i < 200; i++)
         {
-            if (itemsToHide.Count == items.Length - 1) break;
+            if (itemsToHide.Count == items.Length - 1)
+            {
+                break;
+            }
+
             int totalToolTipWidth = itemsToHide.Count == 0
                 ? toolStrip.PreferredSize.Width
                 : toolStrip.PreferredSize.Width + dropDownButton.Width;
-            if (totalToolTipWidth < maxWidth) break;
+            if (totalToolTipWidth < maxWidth)
+            {
+                break;
+            }
+
             int indexToMove = toolStrip.Items.Count - 1;
             if (indexToMove > -1)
             {

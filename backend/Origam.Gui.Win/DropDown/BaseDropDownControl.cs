@@ -23,10 +23,8 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Gui.UI;
-
 
 namespace Origam.Gui.Win;
 /// <summary>
@@ -45,9 +43,12 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         }
 		protected override bool ProcessKeyMessage(ref Message m)
 		{
-			if(! _noKeyUp) return base.ProcessKeyMessage (ref m);
-			// ignore cursor keys and tab key
-			if(m.Msg == WM_KEYDOWN)
+			if(! _noKeyUp)
+            {
+                return base.ProcessKeyMessage (ref m);
+            }
+            // ignore cursor keys and tab key
+            if (m.Msg == WM_KEYDOWN)
 			{
 				if(
 					(m.WParam.ToInt32() == 37 & this.DataType != typeof(DateTime))
@@ -72,9 +73,17 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
 					| m.WParam.ToInt32() == KEY_CURSOR_DOWN
 					)
 				{
-					if(m.WParam.ToInt32() == KEY_CURSOR_DOWN) this.OnCursorDownPressed(EventArgs.Empty);
-					if(m.WParam.ToInt32() == KEY_CURSOR_UP) this.OnCursorUpPressed(EventArgs.Empty);
-					return true;
+					if(m.WParam.ToInt32() == KEY_CURSOR_DOWN)
+                    {
+                        this.OnCursorDownPressed(EventArgs.Empty);
+                    }
+
+                    if (m.WParam.ToInt32() == KEY_CURSOR_UP)
+                    {
+                        this.OnCursorUpPressed(EventArgs.Empty);
+                    }
+
+                    return true;
 				}
 				else if(
 					(m.WParam.ToInt32() == 37 & this.DataType != typeof(DateTime))
@@ -431,15 +440,27 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
 	{
 		try
 		{
-			if(this.ReadOnly) return;
-			if(_popupHelper.Handle.ToInt32() == 0)
+			if(this.ReadOnly)
+            {
+                return;
+            }
+
+            if (_popupHelper.Handle.ToInt32() == 0)
 			{
 				Form form = this.FindForm();
-				if(form.Parent is WeifenLuo.WinFormsUI.Docking.DockPane) form = form.Parent.FindForm();
-				_popupHelper.AssignHandle(form.Handle);
+				if(form.Parent is WeifenLuo.WinFormsUI.Docking.DockPane)
+                {
+                    form = form.Parent.FindForm();
+                }
+
+                _popupHelper.AssignHandle(form.Handle);
 			}
-			if(_droppedDown) return;
-			txtEdit.Focus();
+			if(_droppedDown)
+            {
+                return;
+            }
+
+            txtEdit.Focus();
 			_popup = this.CreatePopup();
 			Rectangle screen = Screen.FromControl(this).WorkingArea;
 			Point location = new System.Drawing.Point (this.ScreenLocation.X, this.ScreenLocation.Y);

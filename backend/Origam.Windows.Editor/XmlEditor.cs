@@ -95,20 +95,31 @@ public partial class XmlEditor : UserControl
             switch (color.Name)
             {
                 case "XmlTag":
-                    color.Foreground = elementBrush;
-                    break;
+                    {
+                        color.Foreground = elementBrush;
+                        break;
+                    }
+
                 case "AttributeName":
-                    color.Foreground = attributeBrush;
-                    break;
+                    {
+                        color.Foreground = attributeBrush;
+                        break;
+                    }
+
                 case "AttributeValue":
-                    color.Foreground = valueBrush;
-                    break;
+                    {
+                        color.Foreground = valueBrush;
+                        break;
+                    }
+
                 case "CData":
                 case "DocType":
                 case "Entity":
                 case "XmlDeclaration":
-                    color.Foreground = declarationBrush;
-                    break;
+                    {
+                        color.Foreground = declarationBrush;
+                        break;
+                    }
             }
         }
         SearchPanel.Install(editor);
@@ -194,7 +205,10 @@ public partial class XmlEditor : UserControl
             // what was passed to TextArea.PerformTextInput. We'll normalize this to '\n'
             // so that formatting strategies don't have to handle both cases.
             if (c == '\r')
+            {
                 c = '\n';
+            }
+
             _formattingStrategy.FormatLine(this.editor, c);
             if (c == '\n')
             {

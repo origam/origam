@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Schema;
 
@@ -75,14 +74,17 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 	}
 	protected override void OnControlAdded(ControlEventArgs e)
 	{
-		if(_addingSplitter) return;
-//			if(this.Controls.Count > 2)
-//			{
-//				this.Controls.Remove(e.Control);
-//			}
-//			else
-//			{
-			base.OnControlAdded (e);
+		if(_addingSplitter)
+        {
+            return;
+        }
+        //			if(this.Controls.Count > 2)
+        //			{
+        //				this.Controls.Remove(e.Control);
+        //			}
+        //			else
+        //			{
+        base.OnControlAdded (e);
 //			}
 		e.Control.TabIndexChanged +=new EventHandler(Control_TabIndexChanged);
 		RefreshDocking();
@@ -105,8 +107,12 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 	}
 	private void _splitter_SplitterMoved(object sender, SplitterEventArgs e)
 	{
-		if(this.DesignMode | _settingSplitter | _saveSplitterPosition == false) return;
-		try
+		if(this.DesignMode | _settingSplitter | _saveSplitterPosition == false)
+        {
+            return;
+        }
+
+        try
 		{
             UserProfile profile = SecurityManager.CurrentUserProfile();
             OrigamPanelColumnConfig config = OrigamPanelColumnConfigDA.LoadUserConfig(this.OrigamMetadata.Id, profile.Id);
@@ -175,13 +181,18 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 	{
 		switch(this.Orientation)
 		{
-			case SplitPanelOrientation.Horizontal:
-				_splitter.Dock = DockStyle.Top;
-				break;
-			case SplitPanelOrientation.Vertical:
-				_splitter.Dock = DockStyle.Left;
-				break;
-		}
+            case SplitPanelOrientation.Horizontal:
+                {
+                    _splitter.Dock = DockStyle.Top;
+                    break;
+                }
+
+            case SplitPanelOrientation.Vertical:
+                {
+                    _splitter.Dock = DockStyle.Left;
+                    break;
+                }
+        }
 		if(FixedSize)
 		{
 			_splitter.BackColor = this.BackColor;
@@ -199,8 +210,12 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 	}
 	private void RefreshDocking()
 	{
-		if(DesignMode) this.DockPadding.All = 10;
-		Control control1 = null;
+		if(DesignMode)
+        {
+            this.DockPadding.All = 10;
+        }
+
+        Control control1 = null;
 		Control control2 = null;
 		foreach(Control control in this.Controls)
 		{
@@ -209,13 +224,18 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 				control.Dock = DockStyle.None;
 				switch(control.TabIndex)
 				{
-					case 0:
-						control1 = control;
-						break;
-					case 1:
-						control2 = control;
-						break;
-				}
+                    case 0:
+                        {
+                            control1 = control;
+                            break;
+                        }
+
+                    case 1:
+                        {
+                            control2 = control;
+                            break;
+                        }
+                }
 			}
 		}
 		
@@ -229,29 +249,38 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 			}
 			switch(this.Orientation)
 			{
-				case SplitPanelOrientation.Horizontal:
-					control1.Dock = DockStyle.Top;
-					control2.Dock = DockStyle.Fill;
-					control1.BringToFront();
-					_splitter.BringToFront();
-					control2.BringToFront();
-					break;
-				case SplitPanelOrientation.Vertical:
-					control1.Dock = DockStyle.Left;
-					control2.Dock = DockStyle.Fill;
-					
-					control1.BringToFront();
-					_splitter.BringToFront();
-					control2.BringToFront();
-					break;
-			}
+                case SplitPanelOrientation.Horizontal:
+                    {
+                        control1.Dock = DockStyle.Top;
+                        control2.Dock = DockStyle.Fill;
+                        control1.BringToFront();
+                        _splitter.BringToFront();
+                        control2.BringToFront();
+                        break;
+                    }
+
+                case SplitPanelOrientation.Vertical:
+                    {
+                        control1.Dock = DockStyle.Left;
+                        control2.Dock = DockStyle.Fill;
+
+                        control1.BringToFront();
+                        _splitter.BringToFront();
+                        control2.BringToFront();
+                        break;
+                    }
+            }
 			_splitter.ControlToHide = control1;
 		}
 	}
 	private void LoadUserConfig()
 	{
-		if(DesignMode | _splitterSizeChangedByUser | _saveSplitterPosition == false) return;
-		_settingSplitter = true;
+		if(DesignMode | _splitterSizeChangedByUser | _saveSplitterPosition == false)
+        {
+            return;
+        }
+
+        _settingSplitter = true;
 		try
 		{
             UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -277,11 +306,9 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 			var height = storedValue * Screen.FromControl(this).Bounds.Height / 1000_000;
 			return Convert.ToInt32(height);
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	#endregion
 	#region Component Designer generated code
 	/// <summary> 

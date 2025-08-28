@@ -68,7 +68,6 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 			Rectangle rc = this.ClientRectangle;	// We reduce the size of drawing to show everything properly.
 			return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
 		}
-														  
 	}
 	
 	// This property defines the color of shadow of the control
@@ -82,7 +81,6 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 		{
 			moShadowColor = value;
 			this.Invalidate();
-			
 		}
 	}
     
@@ -267,7 +265,7 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 	protected virtual void DrawInterior(Graphics aoGraphics)
 	{
 		// Create rectangle to draw interior
-		Rectangle oRcInterior = new Rectangle(this.BorderRectangle.X + miBorderWidth + 1, this.BorderRectangle.Y + 12 + miBorderWidth, this.BorderRectangle.Width - (miBorderWidth * 2), this.BorderRectangle.Height - (12 + miBorderWidth * 2));
+		Rectangle oRcInterior = new Rectangle(this.BorderRectangle.X + miBorderWidth + 1, this.BorderRectangle.Y + 12 + miBorderWidth, this.BorderRectangle.Width - (miBorderWidth * 2), this.BorderRectangle.Height - (12 + (miBorderWidth * 2)));
 		SolidBrush oSolidBrush;
 		for(int Index = 1;Index>=0; Index --)
 		{
@@ -372,7 +370,6 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
 		
 		// Using the graphics path property regionpath to define the non rectangular shape for the control
 		this.Region = new Region(this.ExteriorRegionPath);
-		
 	}
 	#endregion
 }

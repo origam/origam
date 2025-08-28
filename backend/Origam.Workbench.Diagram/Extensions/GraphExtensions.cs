@@ -42,8 +42,12 @@ public static class GraphExtensions
     }
     public static Subgraph FindParentSubGraph(this Graph graph, Node node)
     {
-	    if (node == null) return null;
-	    IEnumerable<Subgraph> blockInnerSubgraphs = graph
+	    if (node == null)
+        {
+            return null;
+        }
+
+        IEnumerable<Subgraph> blockInnerSubgraphs = graph
 		    .SubgraphMap
 		    .Select(x => x.Value)
 		    .OfType<BlockSubGraph>()
@@ -58,19 +62,39 @@ public static class GraphExtensions
     }
     public static Node FindNodeOrSubgraph(this Graph graph, string id)
     {
-	    if (string.IsNullOrWhiteSpace(id)) return null;
-	    if (graph.RootSubgraph.Id == id) return graph.RootSubgraph;
-	    Node node = graph.FindNode(id);
-	    if (node != null) return node;
-	    return graph.SubgraphMap.ContainsKey(id) 
+	    if (string.IsNullOrWhiteSpace(id))
+        {
+            return null;
+        }
+
+        if (graph.RootSubgraph.Id == id)
+        {
+            return graph.RootSubgraph;
+        }
+
+        Node node = graph.FindNode(id);
+	    if (node != null)
+        {
+            return node;
+        }
+
+        return graph.SubgraphMap.ContainsKey(id) 
 		    ? graph.SubgraphMap [id]
 		    : null;
     }
     public static bool AreRelatives(this Graph graph, Node node1, Node node2)
     {
-	    if (node1 == null || node2 == null) return false;
-	    if (Equals(node1, node2)) return true;
-	    if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(node2))
+	    if (node1 == null || node2 == null)
+        {
+            return false;
+        }
+
+        if (Equals(node1, node2))
+        {
+            return true;
+        }
+
+        if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(node2))
 	    {
 		    return true;
 	    }
@@ -79,10 +103,22 @@ public static class GraphExtensions
 		    return true;
 	    }
 	    Subgraph parent = graph.FindParentSubGraph(node1);
-	    if (parent == null) return false;
-	    if (Equals(parent, node2)) return true;
-	    if(parent.Nodes.Contains(node2)) return true;
-	    return false;
+	    if (parent == null)
+        {
+            return false;
+        }
+
+        if (Equals(parent, node2))
+        {
+            return true;
+        }
+
+        if (parent.Nodes.Contains(node2))
+        {
+            return true;
+        }
+
+        return false;
     }
     
     public static IEnumerable<Node> GetAllNodes(this Subgraph subGraph)

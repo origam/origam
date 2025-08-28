@@ -50,26 +50,26 @@ class NodeItemPainter : INodeItemPainter
             editorGraphics.MeasureString(node.LabelText, painter.Font);
         var borderSize = painter.CalculateMinHeaderBorder(node);
         var borderCorner = new System.Drawing.Point(
-            (int) node.GeometryNode.Center.X - borderSize.Width / 2,
-            (int) node.GeometryNode.Center.Y - borderSize.Height / 2);
+            (int) node.GeometryNode.Center.X - (borderSize.Width / 2),
+            (int) node.GeometryNode.Center.Y - (borderSize.Height / 2));
         Rectangle border = new Rectangle(borderCorner, borderSize);
         int labelOffsetDueToImageWidth = image == null 
             ? 0 
             : painter.NodeHeaderHeight;
         var labelPoint = new PointF(
-            (float) node.GeometryNode.Center.X - (float) border.Width / 2 +
+            (float) node.GeometryNode.Center.X - ((float) border.Width / 2) +
             labelOffsetDueToImageWidth +  nodeData.LeftMargin,
             (float) node.GeometryNode.Center.Y -
-            (int) stringSize.Height / 2);
+            ((int) stringSize.Height / 2));
         var imageHorizontalBorder =
             (painter.NodeHeaderHeight - image?.Width ?? 0) / 2;
         var imageVerticalBorder =
             (painter.NodeHeaderHeight - image?.Height?? 0) / 2;
         var imagePoint = new PointF(
-            (float) (node.GeometryNode.Center.X - (float) border.Width / 2 +
+            (float) (node.GeometryNode.Center.X - ((float) border.Width / 2) +
                      imageHorizontalBorder) +  nodeData.LeftMargin,
             (float) (node.GeometryNode.Center.Y -
-                     (float) border.Height / 2 + imageVerticalBorder));
+                     ((float) border.Height / 2) + imageVerticalBorder));
         editorGraphics.DrawUpSideDown(drawAction: graphics =>
             {
                 graphics.DrawString(node.LabelText, painter.Font,

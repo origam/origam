@@ -131,8 +131,11 @@ public class LoadingCircle : Control
 		get
 		{
 			if (m_OuterCircleRadius == 0)
-				m_OuterCircleRadius = DefaultOuterCircleRadius;
-			return m_OuterCircleRadius;
+            {
+                m_OuterCircleRadius = DefaultOuterCircleRadius;
+            }
+
+            return m_OuterCircleRadius;
 		}
 		set
 		{
@@ -151,8 +154,11 @@ public class LoadingCircle : Control
 		get
 		{
 			if (m_InnerCircleRadius == 0)
-				m_InnerCircleRadius = DefaultInnerCircleRadius;
-			return m_InnerCircleRadius;
+            {
+                m_InnerCircleRadius = DefaultInnerCircleRadius;
+            }
+
+            return m_InnerCircleRadius;
 		}
 		set
 		{
@@ -171,8 +177,11 @@ public class LoadingCircle : Control
 		get
 		{
 			if (m_NumberOfSpoke == 0)
-				m_NumberOfSpoke = DefaultNumberOfSpoke;
-			return m_NumberOfSpoke;
+            {
+                m_NumberOfSpoke = DefaultNumberOfSpoke;
+            }
+
+            return m_NumberOfSpoke;
 		}
 		set
 		{
@@ -214,8 +223,11 @@ public class LoadingCircle : Control
 		get
 		{
 			if (m_SpokeThickness <= 0)
-				m_SpokeThickness = DefaultSpokeThickness;
-			return m_SpokeThickness;
+            {
+                m_SpokeThickness = DefaultSpokeThickness;
+            }
+
+            return m_SpokeThickness;
 		}
 		set
 		{
@@ -239,8 +251,10 @@ public class LoadingCircle : Control
 		set
 		{
 			if (value > 0)
-				_timerInterval = value;
-		}
+            {
+                _timerInterval = value;
+            }
+        }
 	}
 	/// <summary>
 	/// Quickly sets the style to one of these presets, or a custom style if desired
@@ -257,28 +271,39 @@ public class LoadingCircle : Control
 			m_StylePreset = value;
 			switch (m_StylePreset)
 			{
-				case StylePresets.MacOSX:
-					SetCircleAppearance(MacOSXNumberOfSpoke, 
-						MacOSXSpokeThickness, MacOSXInnerCircleRadius, 
-						MacOSXOuterCircleRadius);
-					break;
-				case StylePresets.Firefox:
-					SetCircleAppearance(FireFoxNumberOfSpoke,
-						FireFoxSpokeThickness, FireFoxInnerCircleRadius,
-						FireFoxOuterCircleRadius);
-					break;
-				case StylePresets.IE7:
-					SetCircleAppearance(IE7NumberOfSpoke,
-						IE7SpokeThickness, IE7InnerCircleRadius,
-						IE7OuterCircleRadius);
-					break;
-				case StylePresets.Custom:
-					SetCircleAppearance(DefaultNumberOfSpoke, 
-						DefaultSpokeThickness, 
-						DefaultInnerCircleRadius, 
-						DefaultOuterCircleRadius); 
-					break;
-			}
+                case StylePresets.MacOSX:
+                    {
+                        SetCircleAppearance(MacOSXNumberOfSpoke,
+                                            MacOSXSpokeThickness, MacOSXInnerCircleRadius,
+                                            MacOSXOuterCircleRadius);
+                        break;
+                    }
+
+                case StylePresets.Firefox:
+                    {
+                        SetCircleAppearance(FireFoxNumberOfSpoke,
+                                            FireFoxSpokeThickness, FireFoxInnerCircleRadius,
+                                            FireFoxOuterCircleRadius);
+                        break;
+                    }
+
+                case StylePresets.IE7:
+                    {
+                        SetCircleAppearance(IE7NumberOfSpoke,
+                                            IE7SpokeThickness, IE7InnerCircleRadius,
+                                            IE7OuterCircleRadius);
+                        break;
+                    }
+
+                case StylePresets.Custom:
+                    {
+                        SetCircleAppearance(DefaultNumberOfSpoke,
+                                            DefaultSpokeThickness,
+                                            DefaultInnerCircleRadius,
+                                            DefaultOuterCircleRadius);
+                        break;
+                    }
+            }
 		}
 	}
 	// Construtor ========================================================
@@ -315,9 +340,17 @@ public class LoadingCircle : Control
 	/// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
 	void aTimer_Tick(object sender)
 	{
-		if(! m_IsTimerActive) return;
-		if(this.ParentControl.IsDisposed) return;
-		m_ProgressValue = ++m_ProgressValue % m_NumberOfSpoke;
+		if(! m_IsTimerActive)
+        {
+            return;
+        }
+
+        if (this.ParentControl.IsDisposed)
+        {
+            return;
+        }
+
+        m_ProgressValue = ++m_ProgressValue % m_NumberOfSpoke;
 		
 		using(Graphics g = this.ParentControl.CreateGraphics())
 		{
@@ -348,8 +381,12 @@ public class LoadingCircle : Control
 	private bool _inPaint = false;
 	private void MyPaint(Graphics g)
 	{
-		if(_inPaint) return;
-		_inPaint = true;
+		if(_inPaint)
+        {
+            return;
+        }
+
+        _inPaint = true;
 		try
 		{
 			if (m_NumberOfSpoke > 0)
@@ -427,22 +464,28 @@ public class LoadingCircle : Control
 			if (_blnShadeColor)
 			{
 				if (intCursor == 0 || intCursor < NumberSpoke - _intNbSpoke)
-					objColors[intCursor] = _objColor;
-				else
+                {
+                    objColors[intCursor] = _objColor;
+                }
+                else
 				{
 					// Increment alpha channel color
 					PERCENTAGE_OF_DARKEN += bytIncrement;
 					// Ensure that we don't exceed the maximum alpha
 					// channel value (255)
 					if (PERCENTAGE_OF_DARKEN > byte.MaxValue)
-						PERCENTAGE_OF_DARKEN = byte.MaxValue;
-					// Determine the spoke forecolor
-					objColors[intCursor] = Darken(_objColor, PERCENTAGE_OF_DARKEN);
+                    {
+                        PERCENTAGE_OF_DARKEN = byte.MaxValue;
+                    }
+                    // Determine the spoke forecolor
+                    objColors[intCursor] = Darken(_objColor, PERCENTAGE_OF_DARKEN);
 				}
 			}
 			else
-				objColors[intCursor] = _objColor;
-		}
+            {
+                objColors[intCursor] = _objColor;
+            }
+        }
 		return objColors;
 	}
 	/// <summary>
@@ -474,8 +517,12 @@ public class LoadingCircle : Control
 	{
 		try
 		{
-			if(this.ParentControl == null) return;
-			using(Pen objPen = new Pen(new SolidBrush(this.ParentControl.BackColor), _intLineThickness))
+			if(this.ParentControl == null)
+            {
+                return;
+            }
+
+            using (Pen objPen = new Pen(new SolidBrush(this.ParentControl.BackColor), _intLineThickness))
 			{
 				objPen.StartCap = LineCap.Round;
 				objPen.EndCap = LineCap.Round;
@@ -505,8 +552,8 @@ public class LoadingCircle : Control
 	private PointF GetCoordinate(PointF _objCircleCenter, int _intRadius, double _dblAngle)
 	{
 		double dblAngle = Math.PI * _dblAngle / NumberOfDegreesInHalfCircle;
-		return new PointF(_objCircleCenter.X + _intRadius * (float)Math.Cos(dblAngle),
-			_objCircleCenter.Y + _intRadius * (float)Math.Sin(dblAngle));
+		return new PointF(_objCircleCenter.X + (_intRadius * (float)Math.Cos(dblAngle)),
+			_objCircleCenter.Y + (_intRadius * (float)Math.Sin(dblAngle)));
 	}
 	/// <summary>
 	/// Gets the spokes angles.
@@ -525,8 +572,11 @@ public class LoadingCircle : Control
 		double[] Angles = new double[_intNumberSpoke];
 		double dblAngle = (double) NumberOfDegreesInCircle / _intNumberSpoke;
 		for (int shtCounter = 0; shtCounter < _intNumberSpoke; shtCounter++)
-			Angles[shtCounter] = (shtCounter == 0 ? dblAngle : Angles[shtCounter - 1] + dblAngle);
-		return Angles;
+        {
+            Angles[shtCounter] = (shtCounter == 0 ? dblAngle : Angles[shtCounter - 1] + dblAngle);
+        }
+
+        return Angles;
 	}
 	/// <summary>
 	/// Actives the timer.
@@ -535,8 +585,10 @@ public class LoadingCircle : Control
 	{
 		GetControlCenterPoint();
 		if (m_IsTimerActive)
-			m_Timer = new System.Threading.Timer(new System.Threading.TimerCallback(aTimer_Tick), null, 0, _timerInterval);
-		else
+        {
+            m_Timer = new System.Threading.Timer(new System.Threading.TimerCallback(aTimer_Tick), null, 0, _timerInterval);
+        }
+        else
 		{
 			if(m_Timer != null)
 			{

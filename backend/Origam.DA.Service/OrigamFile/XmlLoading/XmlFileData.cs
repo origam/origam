@@ -28,27 +28,29 @@ using Origam.Extensions;
 using Origam.Schema;
 
 namespace Origam.DA.Service;
+
 public class XmlFileData
 {
     public OrigamXmlDocument XmlDocument { get; }
-    public XmlNamespaceManager NamespaceManager{ get; }
-    public FileInfo FileInfo { get;}
+    public XmlNamespaceManager NamespaceManager { get; }
+    public FileInfo FileInfo { get; }
+
     public XmlFileData(OrigamXmlDocument xmlDocument, FileInfo fileInfo)
     {
         XmlDocument = xmlDocument;
         FileInfo = fileInfo;
-        NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);       
-        NamespaceManager.AddNamespace("x",OrigamFile.ModelPersistenceUri);
+        NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);
+        NamespaceManager.AddNamespace("x", OrigamFile.ModelPersistenceUri);
         NamespaceManager.AddNamespace(
-            XmlNamespaceTools.GetXmlNamespaceName(typeof(Package)),OrigamFile.PackageUri);
+            XmlNamespaceTools.GetXmlNamespaceName(typeof(Package)),
+            OrigamFile.PackageUri
+        );
         NamespaceManager.AddNamespace(
-            XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup)),OrigamFile.GroupUri);
+            XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup)),
+            OrigamFile.GroupUri
+        );
     }
+
     public XmlFileData(XFileData xFileData)
-        :this(
-            new OrigamXmlDocument(xFileData.Document.XDocument),
-            xFileData.File)
-    {
-       
-    }
+        : this(new OrigamXmlDocument(xFileData.Document.XDocument), xFileData.File) { }
 }

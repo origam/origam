@@ -19,65 +19,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
+
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class ColumnParameterMapping : AbstractSchemaItem
 {
-	public const string CategoryConst = "ColumnParameterMapping";
-	public ColumnParameterMapping() : base() {}
-	
-	public ColumnParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public ColumnParameterMapping(Key primaryKey) : base(primaryKey) {}
-	#region Properties
-	private string _columnName;
-	
+    public const string CategoryConst = "ColumnParameterMapping";
+
+    public ColumnParameterMapping()
+        : base() { }
+
+    public ColumnParameterMapping(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public ColumnParameterMapping(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    private string _columnName;
+
     [XmlAttribute("field")]
-	public string ColumnName
-	{
-		get
-		{
-			return _columnName;
-		}
-		set
-		{
-			_columnName = value;
-            				
-		}
-	}
-	//Schema item Name stores ParameterName
-	
-	#endregion
-       
-	#region Overriden ISchemaItem Members
-	public override string Icon
-	{
-		get
-		{
-			return "3";
-		}
-	}
-	public override string ItemType
-	{
-		get
-		{
-			return ColumnParameterMapping.CategoryConst;
-		}
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion			
+    public string ColumnName
+    {
+        get { return _columnName; }
+        set { _columnName = value; }
+    }
+    //Schema item Name stores ParameterName
 
+    #endregion
+
+    #region Overriden ISchemaItem Members
+    public override string Icon
+    {
+        get { return "3"; }
+    }
+    public override string ItemType
+    {
+        get { return ColumnParameterMapping.CategoryConst; }
+    }
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
 }
-

@@ -31,12 +31,14 @@ public abstract class SqlRenderer
     public abstract string StringConcatenationChar { get; }
     public bool GenerateConsoleUseSyntax { get; set; }
     public abstract string SelectClause(string finalQuery, int top);
+
     public string SelectClauseWithDistinct(string finalQuery) => $"SELECT DISTINCT{finalQuery}";
+
     public abstract string ConvertGeoFromTextClause(string argument);
     public abstract string ConvertGeoToTextClause(string argument);
     internal abstract string Sequence(string entityName, string primaryKeyName);
     internal abstract string IsNull();
-    
+
     // Will omit the time part if the time is 00:00:00.
     // The result should be the same as the the result of C# DateTime.ToString() / DateTime.ToShortDateString()
     // Because that is what is used in C# code in the UIService/GetLookupLabelsEx endpoint
@@ -50,8 +52,16 @@ public abstract class SqlRenderer
     internal abstract string DatePart(string datetype, string expresion);
     internal abstract string DateAdd(DateTypeSql addDateSql, string number, string date);
     internal abstract string LatLon(geoLatLonSql latLon, string expresion);
-    internal abstract string Contains(string columnsForSeach, string freetext_string, string languageForFullText);
-    internal abstract string FreeText(string columnsForSeach, string freetext_string, string languageForFullText);
+    internal abstract string Contains(
+        string columnsForSeach,
+        string freetext_string,
+        string languageForFullText
+    );
+    internal abstract string FreeText(
+        string columnsForSeach,
+        string freetext_string,
+        string languageForFullText
+    );
     internal abstract string Now();
     internal abstract string STDistance(string point1, string point2);
     internal abstract string DateDiff(DateTypeSql addDateSql, string startdate, string enddate);

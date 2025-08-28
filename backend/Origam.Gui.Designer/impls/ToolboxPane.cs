@@ -116,10 +116,18 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 	{
 		get
 		{
-            if (this.tabControl.SelectedTab.Controls.Count == 0) return null;
-			ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
-			if(list.Items.Count == 0) return null;
-			return list.Items[selectedIndex] as ToolboxItem;
+            if (this.tabControl.SelectedTab.Controls.Count == 0)
+            {
+                return null;
+            }
+
+            ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
+			if(list.Items.Count == 0)
+            {
+                return null;
+            }
+
+            return list.Items[selectedIndex] as ToolboxItem;
 		}
 	}
 
@@ -292,7 +300,6 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         this.tabCommon.ResumeLayout(false);
         this.tabControl.ResumeLayout(false);
         this.ResumeLayout(false);
-
 	}
 	#endregion
 
@@ -430,9 +437,16 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 		}
 		finally
 		{
-			if(backgroundBrush != null) backgroundBrush.Dispose();
-			if(foregroundBrush != null) foregroundBrush.Dispose();
-		}
+			if(backgroundBrush != null)
+            {
+                backgroundBrush.Dispose();
+            }
+
+            if (foregroundBrush != null)
+            {
+                foregroundBrush.Dispose();
+            }
+        }
 	}
 
 	/// We measure each item by taking the combined width of the string and bitmap,
@@ -557,30 +571,40 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 		Rectangle lastSelectedBounds = lbSender.GetItemRectangle(selectedIndex);
 		switch (e.KeyCode)
 		{
-			case Keys.Up: if (selectedIndex > 0)
-						  {
-							  selectedIndex--; // change selection
-							  lbSender.SelectedIndex = selectedIndex;
-							  lbSender.Invalidate(lastSelectedBounds); // clear old highlight
-							  lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
-						  }
-				break;
-			case Keys.Down: if (selectedIndex + 1 < lbSender.Items.Count)
-							{
-								selectedIndex++; // change selection
-								lbSender.SelectedIndex = selectedIndex;
-								lbSender.Invalidate(lastSelectedBounds); // clear old highlight
-								lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
-							}
-				break;
-			case Keys.Enter: IToolboxUser tbu = host.GetDesigner(host.RootComponent) as IToolboxUser;
-				if (tbu != null)
-				{
-					// Enter means place the tool with default location and default size.
-					tbu.ToolPicked((ToolboxItem)(lbSender.Items[selectedIndex]));
-				}
-				break;
-		}
+            case Keys.Up:
+                {
+                    if (selectedIndex > 0)
+                    {
+                        selectedIndex--; // change selection
+                        lbSender.SelectedIndex = selectedIndex;
+                        lbSender.Invalidate(lastSelectedBounds); // clear old highlight
+                        lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
+                    }
+                    break;
+                }
+
+            case Keys.Down:
+                {
+                    if (selectedIndex + 1 < lbSender.Items.Count)
+                    {
+                        selectedIndex++; // change selection
+                        lbSender.SelectedIndex = selectedIndex;
+                        lbSender.Invalidate(lastSelectedBounds); // clear old highlight
+                        lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
+                    }
+                    break;
+                }
+
+            case Keys.Enter:
+                {
+                    IToolboxUser tbu = host.GetDesigner(host.RootComponent) as IToolboxUser;
+                    if (tbu != null)
+                    {
+                        // Enter means place the tool with default location and default size.
+                        tbu.ToolPicked((ToolboxItem)(lbSender.Items[selectedIndex]));
+                    }
+                    break;
+                }
+        }
 	}
 }
-

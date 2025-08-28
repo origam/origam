@@ -33,7 +33,6 @@ using static Origam.DA.Common.Enums;
 using Origam;
 using System.Text.RegularExpressions;
 
-
 namespace OrigamArchitect;
 public partial class NewProjectWizard : Form
 {

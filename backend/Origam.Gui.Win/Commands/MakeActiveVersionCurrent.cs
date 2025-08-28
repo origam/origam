@@ -40,9 +40,9 @@ public class MakeActiveVersionCurrent : AbstractMenuCommand
         get
         {
             return Owner is DeploymentVersion 
-                   && (Owner as DeploymentVersion).IsCurrentVersion == false 
+                   && ((Owner as DeploymentVersion).IsCurrentVersion == false 
                    & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
-                       _schemaService.ActiveExtension.PrimaryKey);
+                       _schemaService.ActiveExtension.PrimaryKey));
         }
         set
         {

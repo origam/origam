@@ -47,11 +47,9 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 				.RetrieveInstance(typeof(ISchemaItem), 
 				new ModelElementKey(csi.MultiColumnAdapterFieldCondition));
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	public void SetMappingCondition(Control acontrol, DataConstant value)
 	{
 		ControlSetItem csi = acontrol.Tag as ControlSetItem;
@@ -69,9 +67,7 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
+
+        return false;
+    }
 }

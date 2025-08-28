@@ -269,7 +269,6 @@ public class Program
                 return 1;
             }
         }
-        
     }
     private static Type[] GetVerbs()
     {

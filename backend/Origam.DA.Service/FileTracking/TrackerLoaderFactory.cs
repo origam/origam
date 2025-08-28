@@ -23,6 +23,7 @@ using System.IO;
 using Origam.DA.Service.MetaModelUpgrade;
 
 namespace Origam.DA.Service;
+
 public class TrackerLoaderFactory
 {
     private readonly DirectoryInfo topDirectory;
@@ -35,41 +36,58 @@ public class TrackerLoaderFactory
     private readonly bool useBinFile;
     private FilePersistenceIndex filePersistenceIndex;
     private readonly IMetaModelUpgradeService metaModelUpgradeService;
-    public TrackerLoaderFactory(DirectoryInfo topDirectory,
+
+    public TrackerLoaderFactory(
+        DirectoryInfo topDirectory,
         ObjectFileDataFactory objectFileDataFactory,
         OrigamFileFactory origamFileFactory,
         XmlFileDataFactory xmlFileDataFactory,
-        FileInfo pathToIndexFile, bool useBinFile,
+        FileInfo pathToIndexFile,
+        bool useBinFile,
         FilePersistenceIndex filePersistence,
-        IMetaModelUpgradeService metaModelUpgradeService)
+        IMetaModelUpgradeService metaModelUpgradeService
+    )
     {
         this.topDirectory = topDirectory;
         this.objectFileDataFactory = objectFileDataFactory;
         this.origamFileFactory = origamFileFactory;
         this.pathToIndexFile = pathToIndexFile;
         this.xmlFileDataFactory = xmlFileDataFactory;
-        this.useBinFile= useBinFile;
+        this.useBinFile = useBinFile;
         this.filePersistenceIndex = filePersistence;
         this.metaModelUpgradeService = metaModelUpgradeService;
     }
-    
-    internal OrigamXmlLoader XmlLoader {
+
+    internal OrigamXmlLoader XmlLoader
+    {
         get
         {
-            return xmlLoader ?? (xmlLoader = new OrigamXmlLoader(
-                       objectFileDataFactory, topDirectory, xmlFileDataFactory, metaModelUpgradeService));
+            return xmlLoader
+                ?? (
+                    xmlLoader = new OrigamXmlLoader(
+                        objectFileDataFactory,
+                        topDirectory,
+                        xmlFileDataFactory,
+                        metaModelUpgradeService
+                    )
+                );
         }
     }
-    internal IBinFileLoader BinLoader {
-        get
-        {
-            return binLoader ?? (binLoader = MakeBinLoader());
-        }
+    internal IBinFileLoader BinLoader
+    {
+        get { return binLoader ?? (binLoader = MakeBinLoader()); }
     }
+
     private IBinFileLoader MakeBinLoader()
     {
         return useBinFile
-            ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile, filePersistenceIndex)
+            ? (IBinFileLoader)
+                new BinFileLoader(
+                    origamFileFactory,
+                    topDirectory,
+                    pathToIndexFile,
+                    filePersistenceIndex
+                )
             : new NullBinFileLoader();
     }
 }

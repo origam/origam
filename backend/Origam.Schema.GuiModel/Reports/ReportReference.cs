@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for RuleReference.
 /// </summary>
@@ -38,57 +39,67 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.0.0")]
 public class ReportReference : AbstractSchemaItem
 {
-	public const string CategoryConst = "ReportReference";
-	public ReportReference() : base() {}
-	public ReportReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public ReportReference(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "ReportReference";
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.Report != null)
-			base.GetParameterReferences(Report, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Report);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Properties
-	public Guid ReportId;
-	[Category("Reference")]
-	[TypeConverter(typeof(ReportConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public ReportReference()
+        : base() { }
+
+    public ReportReference(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public ReportReference(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.Report != null)
+        {
+            base.GetParameterReferences(Report, list);
+        }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Report);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Properties
+    public Guid ReportId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(ReportConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("report", "ReportId")]
-	public AbstractReport Report
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.ReportId;
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as AbstractReport;
-		}
-		set
-		{
-			this.ReportId = (Guid)value.PrimaryKey["Id"];
-			//this.Name = this.Report.Name;
-		}
-	}
-	#endregion
+    public AbstractReport Report
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.ReportId;
+            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
+                as AbstractReport;
+        }
+        set
+        {
+            this.ReportId = (Guid)value.PrimaryKey["Id"];
+            //this.Name = this.Report.Name;
+        }
+    }
+    #endregion
 }

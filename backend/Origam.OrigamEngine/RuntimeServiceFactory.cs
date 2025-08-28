@@ -29,6 +29,7 @@ using Origam.Workflow;
 using Origam.Workflow.WorkQueue;
 
 namespace Origam.OrigamEngine;
+
 public interface IRuntimeServiceFactory
 {
     void InitializeServices();
@@ -36,6 +37,7 @@ public interface IRuntimeServiceFactory
     IDocumentationService CreateDocumentationService();
     void UnloadServices();
 }
+
 public class RuntimeServiceFactory : IRuntimeServiceFactory
 {
     public void InitializeServices()
@@ -48,7 +50,9 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
         {
             ServiceManager.Services.AddService(new SchemaService());
         }
-        ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
+        ServiceManager.Services.AddService(
+            new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent))
+        );
         ServiceManager.Services.AddService(CreateDocumentationService());
         ServiceManager.Services.AddService(new TracingService());
         ServiceManager.Services.AddService(new DataLookupService());
@@ -58,22 +62,23 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
     }
+
     public void UnloadServices()
     {
-        List<IWorkbenchService> services = new []
-            {
-                typeof(IPersistenceService),
-                typeof(IStateMachineService),
-                typeof(IBusinessServicesService),
-                typeof(IDocumentationService),
-                typeof(TracingService),
-                typeof(IDataLookupService),
-                typeof(IParameterService),
-                typeof(IDeploymentService),
-                typeof(IWorkQueueService),
-                typeof(IAttachmentService),
-                typeof(IRuleEngineService),
-            }
+        List<IWorkbenchService> services = new[]
+        {
+            typeof(IPersistenceService),
+            typeof(IStateMachineService),
+            typeof(IBusinessServicesService),
+            typeof(IDocumentationService),
+            typeof(TracingService),
+            typeof(IDataLookupService),
+            typeof(IParameterService),
+            typeof(IDeploymentService),
+            typeof(IWorkQueueService),
+            typeof(IAttachmentService),
+            typeof(IRuleEngineService),
+        }
             .Select(ServiceManager.Services.GetService)
             .ToList();
         foreach (var service in services.OfType<IBackgroundService>())
@@ -84,38 +89,40 @@ public class RuntimeServiceFactory : IRuntimeServiceFactory
         {
             ServiceManager.Services.UnloadService(service);
         }
-        
     }
+
     protected virtual IParameterService CreateParameterService()
     {
         return new ParameterService();
-    }        
-    
+    }
+
     protected virtual IWorkQueueService CreateWorkQueueService()
     {
         return new WorkQueueService();
     }
+
     public IPersistenceService CreatePersistenceService()
     {
         return GetPersistenceBuilder().GetPersistenceService();
     }
-    
+
     public IDocumentationService CreateDocumentationService()
     {
         return GetPersistenceBuilder().GetDocumentationService();
     }
-    
+
     private static IPersistenceBuilder GetPersistenceBuilder()
     {
-        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
+        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string[] classpath = settings.ModelProvider.Split(',');
         return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
     }
 }
+
 public class TestRuntimeServiceFactory : RuntimeServiceFactory
 {
     protected override IParameterService CreateParameterService()
     {
-        return new  NullParameterService();
+        return new NullParameterService();
     }
 }

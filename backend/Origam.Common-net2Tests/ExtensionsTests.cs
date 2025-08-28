@@ -63,9 +63,21 @@ public class DictionaryExtensionsTests
         protected bool Equals(ReferenceTypeInt other) => val == other.val;
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
             return Equals((ReferenceTypeInt) obj);
         }
         public override int GetHashCode() => val;

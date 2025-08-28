@@ -27,7 +27,6 @@ using System.Collections.Generic;
 
 namespace Origam.Gui.Designer;
 
-
 using System;
 using System.Reflection;
 using System.Text;
@@ -95,7 +94,6 @@ public class ClassGenerator
             // Add remaining attributes
             foreach (var attr in filteredAttributes)
             {
-                
                 sb.Append("    [");
                 sb.Append(GetAttributeString(attr));
                 sb.AppendLine("]");

@@ -24,7 +24,6 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-
 namespace Origam.Gui.Win;
 /// <summary>
 /// Summary description for AsPanelTitle.
@@ -129,10 +128,13 @@ public class AsPanelTitle : Panel
 	}
 	protected override void OnPaint(PaintEventArgs e)
 	{
-		if(this.Width == 0) return;
-		//base.OnPaint (e);
-		// rounded rectangle
-		GraphicsPath path = null;
+		if(this.Width == 0)
+        {
+            return;
+        }
+        //base.OnPaint (e);
+        // rounded rectangle
+        GraphicsPath path = null;
 		Graphics graphics = null;
 		SolidBrush brush = null;
 		LinearGradientBrush GBrush = null;
@@ -168,14 +170,22 @@ public class AsPanelTitle : Panel
 			sf.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show;
 			// set rectangle bound text
 			float x = 5;
-			if(PanelIcon != null) x = 20;
-			RectangleF rectF = new RectangleF(x, 12-Font.Height/2, this.Width, this.Height);
+			if(PanelIcon != null)
+            {
+                x = 20;
+            }
+
+            RectangleF rectF = new RectangleF(x, 12- (Font.Height/2), this.Width, this.Height);
 			RectangleF rectIcon = new RectangleF(3, 4, 16, 16);
 			// output string
 			font = new Font(this.Font, FontStyle.Bold);
 			
-			if(PanelIcon != null) graphics.DrawImage(this.PanelIcon, rectIcon);
-			graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
+			if(PanelIcon != null)
+            {
+                graphics.DrawImage(this.PanelIcon, rectIcon);
+            }
+
+            graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
 			if(StatusIcon != null) 
 			{
 				RectangleF rectStatusIcon = new RectangleF(graphics.MeasureString(this.PanelTitle, font, new PointF(x, 0), sf).Width + 14, 4, 16, 16);
@@ -184,14 +194,36 @@ public class AsPanelTitle : Panel
 		}
 		finally
 		{
-			if(path != null) path.Dispose();
-			//			//graphics.Dispose();
-			if(brush != null) brush.Dispose();
-			if(GBrush != null) GBrush.Dispose();
-			if(drawBrush != null) drawBrush.Dispose();
-			if(sf != null) sf.Dispose();
-			if(font != null) font.Dispose();
-		}
+			if(path != null)
+            {
+                path.Dispose();
+            }
+            //			//graphics.Dispose();
+            if (brush != null)
+            {
+                brush.Dispose();
+            }
+
+            if (GBrush != null)
+            {
+                GBrush.Dispose();
+            }
+
+            if (drawBrush != null)
+            {
+                drawBrush.Dispose();
+            }
+
+            if (sf != null)
+            {
+                sf.Dispose();
+            }
+
+            if (font != null)
+            {
+                font.Dispose();
+            }
+        }
 	}
 	private int GetColorSplitPosition(int height)
 	{

@@ -20,97 +20,90 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.ComponentModel;
 using System.Collections;
+using System.ComponentModel;
 using System.Xml.Serialization;
-
 using Origam.DA.ObjectPersistence;
 
-
 namespace Origam.Schema.GuiModel;
+
 [XmlModelRoot(CategoryConst)]
 public abstract class AbstractDashboardWidget : AbstractSchemaItem
 {
-	public const string CategoryConst = "DashboardWidget";
-	public AbstractDashboardWidget() : base() {Init();}
-	public AbstractDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-		this.ChildItemTypes.Add(typeof(DashboardWidgetParameter));
-	}
-	[Browsable(false)]
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
-	
-	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-	{
-		return newNode is DashboardWidgetFolder || newNode is DashboardWidgetsSchemaItemProvider;
-	}
-	#region Properties
-	private string _caption = "";
-	[Category("User Interface")]
-	[StringNotEmptyModelElementRule()]
-	[Localizable(true)]
+    public const string CategoryConst = "DashboardWidget";
+
+    public AbstractDashboardWidget()
+        : base()
+    {
+        Init();
+    }
+
+    public AbstractDashboardWidget(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public AbstractDashboardWidget(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.Add(typeof(DashboardWidgetParameter));
+    }
+
+    [Browsable(false)]
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+
+    public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+    {
+        return newNode is DashboardWidgetFolder || newNode is DashboardWidgetsSchemaItemProvider;
+    }
+
+    #region Properties
+    private string _caption = "";
+
+    [Category("User Interface")]
+    [StringNotEmptyModelElementRule()]
+    [Localizable(true)]
     [XmlAttribute("label")]
-	public string Caption
-	{
-		get
-		{
-			return _caption;
-		}
-		set
-		{
-			_caption = value;
-		}
-	}
-	private string _roles;
-	[Category("Security")]
-	[XmlAttribute("roles")]
+    public string Caption
+    {
+        get { return _caption; }
+        set { _caption = value; }
+    }
+    private string _roles;
+
+    [Category("Security")]
+    [XmlAttribute("roles")]
     public string Roles
-	{
-		get
-		{
-			return _roles;
-		}
-		set
-		{
-			_roles = value;
-		}
-	}
-	private string _features;
-	[XmlAttribute("features")]
+    {
+        get { return _roles; }
+        set { _roles = value; }
+    }
+    private string _features;
+
+    [XmlAttribute("features")]
     public string Features
-	{
-		get
-		{
-			return _features;
-		}
-		set
-		{
-			_features = value;
-		}
-	}
-	public abstract ArrayList Properties {get;}
-	public override string Icon
-	{
-		get
-		{
-			return "29";
-		}
-	}
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion			
+    {
+        get { return _features; }
+        set { _features = value; }
+    }
+    public abstract ArrayList Properties { get; }
+    public override string Icon
+    {
+        get { return "29"; }
+    }
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }

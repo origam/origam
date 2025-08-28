@@ -23,17 +23,18 @@ using CSharpFunctionalExtensions;
 using Origam.Schema;
 
 namespace Origam.Workbench.Services;
+
 /// <summary>
 /// Summary description for IDeploymentService.
 /// </summary>
 public interface IDeploymentService : IWorkbenchService
 {
-	void Deploy();
-	void ForceDeployCurrentPackage();
-	void ExecuteActivity(Key key);
-	bool CanUpdate(Package extension);
+    void Deploy();
+    void ForceDeployCurrentPackage();
+    void ExecuteActivity(Key key);
+    bool CanUpdate(Package extension);
     bool IsEmptyDatabase();
-	PackageVersion CurrentDeployedVersion(Package extension);
-	void CreateNewModelVersion(SchemaItemGroup group, string name, string version);
-	Maybe<PackageVersion> GetPreviousVersion(PackageVersion version,Package extension);
+    PackageVersion CurrentDeployedVersion(Package extension);
+    void CreateNewModelVersion(SchemaItemGroup group, string name, string version);
+    Maybe<PackageVersion> GetPreviousVersion(PackageVersion version, Package extension);
 }

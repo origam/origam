@@ -306,7 +306,6 @@ internal class SelectionServiceImpl : ISelectionService
 			// component of the host.  Otherwise, it is OK to have an empty selection.
 			if (selectionsByComponent.Count == 0 && host != null) 
 			{
-            
 				// Now we have to run through all the components and pick
 				// the control with the highest z-order.
 				IComponent[] comps = new IComponent[host.Container.Components.Count];
@@ -412,9 +411,16 @@ internal class SelectionServiceImpl : ISelectionService
 	{
 		if (!batchMode) 
 		{
-			if (selectionChanged) OnSelectionChanged();
-			if (selectionContentsChanged) OnSelectionContentsChanged();
-		}
+			if (selectionChanged)
+            {
+                OnSelectionChanged();
+            }
+
+            if (selectionContentsChanged)
+            {
+                OnSelectionContentsChanged();
+            }
+        }
 	}
     
     

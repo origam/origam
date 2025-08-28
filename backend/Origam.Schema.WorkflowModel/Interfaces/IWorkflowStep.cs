@@ -26,36 +26,41 @@ using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.WorkflowModel;
+
 public enum WorkflowStepStartEvent
 {
-	Success,
-	Failure,
-	Finish
+    Success,
+    Failure,
+    Finish,
 }
+
 public enum WorkflowStepResult
 {
-	Ready,
-	Success,
-	Failure,
-	NotRun,
-	FailureNotRun,
-	Running
+    Ready,
+    Success,
+    Failure,
+    NotRun,
+    FailureNotRun,
+    Running,
 }
+
 /// <summary>
 /// Summary description for IWorkflowStep.
 /// </summary>
 public interface IWorkflowStep : ISchemaItem, ITraceable
 {
-	StartRule StartConditionRule{get; set;}
-	IContextStore StartConditionRuleContextStore{get; set;}
-	IEndRule ValidationRule{get; set;}
-	IContextStore ValidationRuleContextStore{get; set;}
-	string Roles{get;set;}
-	string Features{get;set;}
-	List<WorkflowTaskDependency> Dependencies{get;}
-	StepFailureMode OnFailure { set; get; }
+    StartRule StartConditionRule { get; set; }
+    IContextStore StartConditionRuleContextStore { get; set; }
+    IEndRule ValidationRule { get; set; }
+    IContextStore ValidationRuleContextStore { get; set; }
+    string Roles { get; set; }
+    string Features { get; set; }
+    List<WorkflowTaskDependency> Dependencies { get; }
+    StepFailureMode OnFailure { set; get; }
 }
+
 public enum StepFailureMode
 {
-	WorkflowFails, Suppress
+    WorkflowFails,
+    Suppress,
 }

@@ -393,7 +393,11 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
 	private void SetUpForm()
 	{
         tableRelation.Items.Clear();
-        if (this.Entity == null) return;
+        if (this.Entity == null)
+        {
+            return;
+        }
+
         txtName.Text = "Transaction " + this.Entity.Name;
         foreach (ISchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
         {
@@ -404,7 +408,11 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     {
         BaseEntityField.Items.Clear();
         RelatedEntityField.Items.Clear();
-        if (this.Entity == null) return;
+        if (this.Entity == null)
+        {
+            return;
+        }
+
         txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
         foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {

@@ -25,24 +25,28 @@ using Origam.DA.Service.NamespaceMapping;
 using Origam.Schema;
 
 namespace Origam.DA.Service;
+
 public class GroupFileData : ObjectFileData
 {
-    private static readonly string GroupXpath = $"//{XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup))}:group";
+    private static readonly string GroupXpath =
+        $"//{XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup))}:group";
     public Guid GroupId { get; }
     public override Folder FolderToDetermineParentGroup => Folder.Parent;
     public override Folder FolderToDetermineReferenceGroup => Folder.Parent;
-    public GroupFileData(IList<string> parentFolders,XmlFileData xmlFileData,
-        OrigamFileFactory origamFileFactory) :
-        base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
+
+    public GroupFileData(
+        IList<string> parentFolders,
+        XmlFileData xmlFileData,
+        OrigamFileFactory origamFileFactory
+    )
+        : base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
     {
-        string groupIdStr = 
+        string groupIdStr =
             xmlFileData
-                ?.XmlDocument
-                ?.SelectSingleNode(GroupXpath,xmlFileData.NamespaceManager)
-                ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
-                ?.Value 
+                ?.XmlDocument?.SelectSingleNode(GroupXpath, xmlFileData.NamespaceManager)
+                ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]?.Value
             ?? throw new Exception($"Could not read group id from: {FileInfo.FullName}");
-        
+
         GroupId = new Guid(groupIdStr);
     }
 }

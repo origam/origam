@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
 using Origam.UI;
 
 namespace Origam;
@@ -214,10 +213,8 @@ public class ConfigurationSelector : System.Windows.Forms.Form
 			{
 				return lvwConfigurations.SelectedItems[0].Tag as OrigamSettings;
 			}
-			else
-			{
-				return null;
-			}
-		}
+
+            return null;
+        }
 	}
 }

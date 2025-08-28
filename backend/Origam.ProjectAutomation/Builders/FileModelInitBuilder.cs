@@ -41,7 +41,6 @@ public class FileModelInitBuilder:AbstractBuilder
             schema.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
         } catch
         {
-            
             try
             {
                 // In case something went wrong AFTER the model was loaded

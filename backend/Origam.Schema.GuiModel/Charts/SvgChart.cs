@@ -19,99 +19,88 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
-
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("SVG Chart", "icon_svg-chart.png")]
 [HelpTopic("SVG+Chart")]
 [ClassMetaVersion("6.0.0")]
 public class SvgChart : AbstractChart
 {
-	public SvgChart() : base() {Init();}
-	public SvgChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public SvgChart(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	#region Properties
-	private string _svgFileName = "";
-	[Category("SVG Chart")]
-	[StringNotEmptyModelElementRule()]
+    public SvgChart()
+        : base()
+    {
+        Init();
+    }
+
+    public SvgChart(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public SvgChart(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    #region Properties
+    private string _svgFileName = "";
+
+    [Category("SVG Chart")]
+    [StringNotEmptyModelElementRule()]
     [XmlAttribute("svgFileName")]
-	public string SvgFileName
-	{
-		get
-		{
-			return _svgFileName;
-		}
-		set
-		{
-			_svgFileName = value;
-		}
-	}
-	private string _svgObjectField = "";
-	[Category("SVG Chart")]
-	[StringNotEmptyModelElementRule()]
+    public string SvgFileName
+    {
+        get { return _svgFileName; }
+        set { _svgFileName = value; }
+    }
+    private string _svgObjectField = "";
+
+    [Category("SVG Chart")]
+    [StringNotEmptyModelElementRule()]
     [XmlAttribute("svgObjectField")]
     public string SvgObjectField
-	{
-		get
-		{
-			return _svgObjectField;
-		}
-		set
-		{
-			_svgObjectField = value;
-		}
-	}
-	private string _valueField = "";
-	[Category("SVG Chart")]
-	[StringNotEmptyModelElementRule()]
+    {
+        get { return _svgObjectField; }
+        set { _svgObjectField = value; }
+    }
+    private string _valueField = "";
+
+    [Category("SVG Chart")]
+    [StringNotEmptyModelElementRule()]
     [XmlAttribute("valueField")]
     public string ValueField
-	{
-		get
-		{
-			return _valueField;
-		}
-		set
-		{
-			_valueField = value;
-		}
-	}
-	private string _titleField = "";
-	[Category("SVG Chart")]
-	[StringNotEmptyModelElementRule()]
+    {
+        get { return _valueField; }
+        set { _valueField = value; }
+    }
+    private string _titleField = "";
+
+    [Category("SVG Chart")]
+    [StringNotEmptyModelElementRule()]
     [XmlAttribute("titleField")]
     public string TitleField
-	{
-		get
-		{
-			return _titleField;
-		}
-		set
-		{
-			_titleField = value;
-		}
-	}
-	private SvgChartType _type = SvgChartType.HeatMap;
-	[Category("SVG Chart"), DefaultValue(SvgChartType.HeatMap)]
-	[XmlAttribute("type")]
+    {
+        get { return _titleField; }
+        set { _titleField = value; }
+    }
+    private SvgChartType _type = SvgChartType.HeatMap;
+
+    [Category("SVG Chart"), DefaultValue(SvgChartType.HeatMap)]
+    [XmlAttribute("type")]
     public SvgChartType Type
-	{
-		get
-		{
-			return _type;
-		}
-		set
-		{
-			_type = value;
-		}
-	}
-	#endregion			
+    {
+        get { return _type; }
+        set { _type = value; }
+    }
+    #endregion
 }

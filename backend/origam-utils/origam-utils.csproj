@@ -124,4 +124,12 @@
       <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
+  <!--
+  Stub targets to prevent MSBuild errors caused by missing CSharpier targets.
+  In this project, CSharpier is disabled for both net472 and net8.0.
+  Remove these stubs once net472 is dropped and CSharpier can run normally
+  on net8.0 only.
+-->
+  <Target Name="CSharpierFormat" />
+  <Target Name="CSharpierFormatInner" />
 </Project>

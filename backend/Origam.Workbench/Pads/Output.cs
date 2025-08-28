@@ -24,7 +24,6 @@ using System.Text;
 using System.Windows.Forms;
 using Origam.UI.Common;
 
-
 namespace Origam.Workbench.Pads;
 /// <summary>
 /// Summary description for Output.
@@ -131,7 +130,11 @@ public class OutputPad : AbstractPadContent, IOutputPad
 	}
     private void AddTextInternal(string sText)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+        {
+            return;
+        }
+
         int startPosition = 0;
         if (sText.StartsWith("Origam."))
         {

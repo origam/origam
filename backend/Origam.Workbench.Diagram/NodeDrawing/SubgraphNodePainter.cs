@@ -57,7 +57,7 @@ internal class SubgraphNodePainter : INodeItemPainter
         var labelWidth = GetLabelWidth(node);
         var width = clusterBoundary.MinWidth > labelWidth
             ? clusterBoundary.MinWidth
-            : labelWidth + painter.LabelSideMargin * 2;
+            : labelWidth + (painter.LabelSideMargin * 2);
         return CurveFactory.CreateRectangle(width, height, new Point());
     }
     public bool Draw(Node node, object graphicsObj)
@@ -71,8 +71,8 @@ internal class SubgraphNodePainter : INodeItemPainter
             (int) node.BoundingBox.Width,
             (int) node.BoundingBox.Height);
         var borderCorner = new System.Drawing.Point(
-            (int) node.GeometryNode.Center.X - borderSize.Width / 2,
-            (int) node.GeometryNode.Center.Y - borderSize.Height / 2);
+            (int) node.GeometryNode.Center.X - (borderSize.Width / 2),
+            (int) node.GeometryNode.Center.Y - (borderSize.Height / 2));
         Rectangle border = new Rectangle(borderCorner, borderSize);
         Rectangle headerBorder = new Rectangle(
             borderCorner.X, 

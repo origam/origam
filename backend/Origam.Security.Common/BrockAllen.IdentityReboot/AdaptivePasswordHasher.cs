@@ -19,21 +19,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using BrockAllen.IdentityReboot.Internal;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using BrockAllen.IdentityReboot.Internal;
 
 namespace BrockAllen.IdentityReboot;
+
 public class AdaptivePasswordHasher
 {
     public const char PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR = '.';
     public int IterationCount { get; set; }
-    public AdaptivePasswordHasher()
-    {
-    }
+
+    public AdaptivePasswordHasher() { }
+
     public AdaptivePasswordHasher(int iterations)
     {
         if (iterations <= 0)
@@ -42,18 +43,23 @@ public class AdaptivePasswordHasher
         }
         this.IterationCount = iterations;
     }
+
     private static string HashPasswordInternal(string password, int count)
     {
         var result = Crypto.HashPassword(password, count);
         return result;
     }
+
     private static bool VerifyHashedPasswordInternal(
-        string hashedPassword, string providedPassword, int count)
+        string hashedPassword,
+        string providedPassword,
+        int count
+    )
     {
-        var result = Crypto.VerifyHashedPassword(
-            hashedPassword, providedPassword, count);
+        var result = Crypto.VerifyHashedPassword(hashedPassword, providedPassword, count);
         return result;
     }
+
     int GetIterationCount()
     {
         var count = IterationCount;
@@ -63,50 +69,55 @@ public class AdaptivePasswordHasher
         }
         return count;
     }
+
     public string HashPassword(string password)
     {
         int count = GetIterationCount();
         var result = HashPasswordInternal(password, count);
-        return EncodeIterations(count) 
-            + PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR + result;
+        return EncodeIterations(count) + PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR + result;
     }
+
     public virtual VerificationResult VerifyHashedPassword(
-        string hashedPassword, string providedPassword)
+        string hashedPassword,
+        string providedPassword
+    )
     {
         if (!String.IsNullOrWhiteSpace(hashedPassword))
         {
-            if (hashedPassword.Contains(
-                PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR))
+            if (hashedPassword.Contains(PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR))
             {
-                var parts = hashedPassword.Split(
-                    PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR);
-                if (parts.Length != 2) return VerificationResult.Failed;
+                var parts = hashedPassword.Split(PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR);
+                if (parts.Length != 2)
+                {
+                    return VerificationResult.Failed;
+                }
+
                 int count = DecodeIterations(parts[0]);
                 if (count <= 0)
                 {
                     return VerificationResult.Failed;
                 }
                 hashedPassword = parts[1];
-                if (VerifyHashedPasswordInternal(
-                    hashedPassword, providedPassword, count))
+                if (VerifyHashedPasswordInternal(hashedPassword, providedPassword, count))
                 {
-                    return GetIterationCount() != count 
-                        ? VerificationResult.SuccessRehashNeeded 
+                    return GetIterationCount() != count
+                        ? VerificationResult.SuccessRehashNeeded
                         : VerificationResult.Success;
                 }
             }
-            else if (Crypto.VerifyHashedPassword(
-                hashedPassword, providedPassword))
+            else if (Crypto.VerifyHashedPassword(hashedPassword, providedPassword))
             {
                 return VerificationResult.SuccessRehashNeeded;
             }
         }
         return VerificationResult.Failed;
     }
+
     public string EncodeIterations(int count)
     {
         return count.ToString("X");
     }
+
     public int DecodeIterations(string prefix)
     {
         int val;
@@ -116,9 +127,11 @@ public class AdaptivePasswordHasher
         }
         return -1;
     }
+
     // from OWASP : https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     const int START_YEAR = 2000;
     const int START_COUNT = 1000;
+
     public int GetIterationsFromYear(int year)
     {
         if (year > START_YEAR)
@@ -126,13 +139,18 @@ public class AdaptivePasswordHasher
             var diff = (year - START_YEAR) / 2;
             var mul = (int)Math.Pow(2, diff);
             int count = START_COUNT * mul;
-            // if we go negative, then we wrapped (expected in year ~2044). 
+            // if we go negative, then we wrapped (expected in year ~2044).
             // Int32.Max is best we can do at this point
-            if (count < 0) count = Int32.MaxValue;
+            if (count < 0)
+            {
+                count = Int32.MaxValue;
+            }
+
             return count;
         }
         return START_COUNT;
     }
+
     [MethodImpl(MethodImplOptions.NoOptimization)]
     internal static bool SlowEqualsInternal(string a, string b)
     {
@@ -151,6 +169,7 @@ public class AdaptivePasswordHasher
         }
         return same;
     }
+
     public virtual int GetCurrentYear()
     {
         return DateTime.Now.Year;

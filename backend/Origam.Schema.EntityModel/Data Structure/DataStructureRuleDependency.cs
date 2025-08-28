@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for DataStructureRuleDependency.
 /// </summary>
@@ -39,90 +39,105 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class DataStructureRuleDependency : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureRuleDependency";
-	public DataStructureRuleDependency() : base(){}
-	
-	public DataStructureRuleDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureRuleDependency(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	public Guid DataStructureEntityId;
-	[TypeConverter(typeof(DataQueryEntityConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public const string CategoryConst = "DataStructureRuleDependency";
+
+    public DataStructureRuleDependency()
+        : base() { }
+
+    public DataStructureRuleDependency(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureRuleDependency(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    public Guid DataStructureEntityId;
+
+    [TypeConverter(typeof(DataQueryEntityConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("entity", "DataStructureEntityId")]
-	public DataStructureEntity Entity
-	{
-		get
-		{
-			return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.DataStructureEntityId));
-		}
-		set
-		{
-			this.DataStructureEntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			this.Field = null;
-		}
-	}
-	
-	public Guid FieldId;
-	[TypeConverter(typeof(DataStructureEntityFieldConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public DataStructureEntity Entity
+    {
+        get
+        {
+            return (DataStructureEntity)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(DataStructureEntity),
+                    new ModelElementKey(this.DataStructureEntityId)
+                );
+        }
+        set
+        {
+            this.DataStructureEntityId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
+            this.Field = null;
+        }
+    }
+
+    public Guid FieldId;
+
+    [TypeConverter(typeof(DataStructureEntityFieldConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("field", "FieldId")]
-	public IDataEntityColumn Field
-	{
-		get
-		{
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
-		}
-		set
-		{
-			this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			UpdateName();
-		}
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Entity);
-		dependencies.Add(this.Field);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override void UpdateReferences()
-	{
-		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-		{
-			if(item.OldPrimaryKey != null)
-			{
-				if(item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
-				{
-					this.Entity = item as DataStructureEntity;
-					break;
-				}
-			}
-		}
-		base.UpdateReferences ();
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Private Methods
-	private void UpdateName()
-	{
-		if(this.Entity != null && this.Field != null)
-		{
-			this.Name = this.Entity.Name + "_" + this.Field.Name;
-		}
-	}
-	#endregion
+    public IDataEntityColumn Field
+    {
+        get
+        {
+            return (IDataEntityColumn)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.FieldId)
+                );
+        }
+        set
+        {
+            this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            UpdateName();
+        }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Entity);
+        dependencies.Add(this.Field);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override void UpdateReferences()
+    {
+        foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+        {
+            if (item.OldPrimaryKey != null)
+            {
+                if (item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
+                {
+                    this.Entity = item as DataStructureEntity;
+                    break;
+                }
+            }
+        }
+        base.UpdateReferences();
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Private Methods
+    private void UpdateName()
+    {
+        if (this.Entity != null && this.Field != null)
+        {
+            this.Name = this.Entity.Name + "_" + this.Field.Name;
+        }
+    }
+    #endregion
 }

@@ -29,7 +29,6 @@ using System.Drawing.Design;
 
 namespace Origam.Gui.Win;
 
-
 /// <summary>
 ///     <para>
 ///       A collection that stores <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects.
@@ -39,7 +38,6 @@ namespace Origam.Gui.Win;
 [Serializable()]
 [Editor(typeof(ColumnParameterMappingCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
 public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescriptor {
-    
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.
@@ -214,7 +212,6 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
     }
     
     public class ColumnParameterMappingEnumerator : object, IEnumerator {
-        
         private IEnumerator baseEnumerator;
         
         private IEnumerable temp;
@@ -406,10 +403,9 @@ public class ColumnParameterMappingCollectionConverter : ExpandableObjectConvert
 			int count = col.Count;
 			if (count == 1) {
 				return "1 parameter";
-			} else {
-				return col.Count.ToString() + " parameters";
 			}
-		}
+            return col.Count.ToString() + " parameters";
+        }
 		return base.ConvertTo(context,culture,value,destinationType);
 	}
 }

@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.MenuModel;
+
 /// <summary>
 /// Summary description for Submenu.
 /// </summary>
@@ -34,32 +35,27 @@ namespace Origam.Schema.MenuModel;
 [ClassMetaVersion("6.0.0")]
 public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 {
-	public DynamicMenu() : base() {}
-	public DynamicMenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DynamicMenu(Key primaryKey) : base(primaryKey)	{}
-	[Browsable(false)]
-	public override string Roles
-	{
-		get
-		{
-            return "*";
-		}
-		set
-		{
-            throw new InvalidOperationException();
-		}
-	}
-	string _classPath;
+    public DynamicMenu()
+        : base() { }
+
+    public DynamicMenu(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DynamicMenu(Key primaryKey)
+        : base(primaryKey) { }
+
+    [Browsable(false)]
+    public override string Roles
+    {
+        get { return "*"; }
+        set { throw new InvalidOperationException(); }
+    }
+    string _classPath;
+
     [XmlAttribute("classPath")]
-	public string ClassPath
-	{
-		get
-		{
-			return _classPath;
-		}
-		set
-		{
-            _classPath = value;
-		}
-	}
+    public string ClassPath
+    {
+        get { return _classPath; }
+        set { _classPath = value; }
+    }
 }

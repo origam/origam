@@ -20,29 +20,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Data;
-using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Xml;
 using Origam.Service.Core;
 
 namespace Origam.DA;
+
 public enum StateMachineServiceStatelessEventType
 {
-	RecordCreated = 0,
-	RecordUpdated = 1,
-	RecordDeleted = 2,
-	BeforeRecordDeleted = 3
+    RecordCreated = 0,
+    RecordUpdated = 1,
+    RecordDeleted = 2,
+    BeforeRecordDeleted = 3,
 }
+
 /// <summary>
 /// Summary description for IStateMachineService.
 /// </summary>
 public interface IStateMachineService
 {
-	object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId);
-	object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IXmlContainer dataRow, string transactionId);
-	bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId);
-	void OnDataChanging(DataTable changedTable, string transactionId);
-	void OnDataChanged(DataSet data, List<string> changedTables, string transactionId);
-	bool IsInState(Guid entityId, Guid fieldId, object currentStateValue, Guid targetStateId);
+    object[] AllowedStateValues(
+        Guid entityId,
+        Guid fieldId,
+        object currentStateValue,
+        DataRow dataRow,
+        string transactionId
+    );
+    object[] AllowedStateValues(
+        Guid entityId,
+        Guid fieldId,
+        object currentStateValue,
+        IXmlContainer dataRow,
+        string transactionId
+    );
+    bool IsStateAllowed(
+        Guid entityId,
+        Guid fieldId,
+        object currentStateValue,
+        object newStateValue,
+        DataRow dataRow,
+        string transactionId
+    );
+    void OnDataChanging(DataTable changedTable, string transactionId);
+    void OnDataChanged(DataSet data, List<string> changedTables, string transactionId);
+    bool IsInState(Guid entityId, Guid fieldId, object currentStateValue, Guid targetStateId);
 }

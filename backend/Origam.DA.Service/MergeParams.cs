@@ -22,13 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA;
+
 public class MergeParams
 {
-    public bool TrueDelete { get; set; } 
+    public bool TrueDelete { get; set; }
     public bool PreserveChanges { get; set; }
     public bool SourceIsFragment { get; set; }
     public bool PreserveNewRowState { get; set; }
-    public object ProfileId {get; set; }
+    public object ProfileId { get; set; }
+
     public MergeParams()
     {
         TrueDelete = false;
@@ -37,7 +39,9 @@ public class MergeParams
         PreserveNewRowState = false;
         ProfileId = DBNull.Value;
     }
-    public MergeParams(object ProfileId) : this()
+
+    public MergeParams(object ProfileId)
+        : this()
     {
         this.ProfileId = ProfileId;
     }

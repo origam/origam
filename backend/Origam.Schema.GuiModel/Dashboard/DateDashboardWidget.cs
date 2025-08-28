@@ -19,26 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-
+using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("Date Widget", "icon_date-widget.png")]
 [ClassMetaVersion("6.0.0")]
 public class DateDashboardWidget : AbstractSimpleDashboardWidget
 {
-	public DateDashboardWidget() : base() {Init();}
-	public DateDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public DateDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	public override OrigamDataType DataType
-	{
-		get
-		{
-			return OrigamDataType.Date;
-		}
-	}
+    public DateDashboardWidget()
+        : base()
+    {
+        Init();
+    }
+
+    public DateDashboardWidget(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public DateDashboardWidget(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    public override OrigamDataType DataType
+    {
+        get { return OrigamDataType.Date; }
+    }
 }

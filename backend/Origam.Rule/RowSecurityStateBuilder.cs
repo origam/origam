@@ -19,19 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA;
-using Origam.Schema.EntityModel;
-using Origam.Service.Core;
 using System;
 using System.Data;
+using Origam.DA;
 using Origam.Extensions;
+using Origam.Schema.EntityModel;
+using Origam.Service.Core;
 
 namespace Origam.Rule;
+
 public class RowSecurityStateBuilder
 {
-    private static readonly log4net.ILog log =
-        log4net.LogManager.GetLogger(System.Reflection.MethodBase.
-            GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
     public RowSecurityState Result { get; private set; }
     private DataRow row;
     private RuleEngine ruleEngine;
@@ -41,48 +42,59 @@ public class RowSecurityStateBuilder
     private XmlContainer actualData;
     private bool isBuildable;
     private RuleEvaluationCache ruleEvaluationCache;
-    public static RowSecurityState BuildFull(RuleEngine ruleEngine,
-        DataRow row, object profileId, Guid formId)
+
+    public static RowSecurityState BuildFull(
+        RuleEngine ruleEngine,
+        DataRow row,
+        object profileId,
+        Guid formId
+    )
     {
         var builder = new RowSecurityStateBuilder(row, ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
         }
-        return builder.AddMainEntityRowStateAndFormatting()
+        return builder
+            .AddMainEntityRowStateAndFormatting()
             .AddMainEntityFieldStates()
             .AddRelations(profileId)
             .AddDisabledActions(formId)
             .Result;
     }
+
     public static RowSecurityState BuildWithoutRelationsAndActions(
-        RuleEngine ruleEngine, DataRow row)
+        RuleEngine ruleEngine,
+        DataRow row
+    )
     {
         var builder = new RowSecurityStateBuilder(row, ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
         }
-        return builder.AddMainEntityRowStateAndFormatting()
-            .AddMainEntityFieldStates()
-            .Result;
+        return builder.AddMainEntityRowStateAndFormatting().AddMainEntityFieldStates().Result;
     }
-    public static RowSecurityState
-        BuildJustMainEntityRowLevelEvenWithoutFields(RuleEngine ruleEngine,
-        DataRow row)
+
+    public static RowSecurityState BuildJustMainEntityRowLevelEvenWithoutFields(
+        RuleEngine ruleEngine,
+        DataRow row
+    )
     {
         var builder = new RowSecurityStateBuilder(row, ruleEngine);
         if (!builder.isBuildable)
         {
             return null;
         }
-        return builder.AddMainEntityRowStateAndFormatting()
-            .Result;
+        return builder.AddMainEntityRowStateAndFormatting().Result;
     }
+
     private RowSecurityStateBuilder(DataRow row, RuleEngine ruleEngine)
     {
-        if (!DatasetTools.HasRowValidParent(row)
-            || row.Table.ExtendedProperties.Contains("EntityId"))
+        if (
+            !DatasetTools.HasRowValidParent(row)
+            || row.Table.ExtendedProperties.Contains("EntityId")
+        )
         {
             isBuildable = false;
         }
@@ -90,38 +102,54 @@ public class RowSecurityStateBuilder
         this.row = row;
         // get extra info from row
         entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
-        isNew = row.RowState == DataRowState.Added
-            || row.RowState == DataRowState.Detached;
-        originalData = DatasetTools.GetRowXml(row,
-                DataRowVersion.Original);
-        actualData = DatasetTools.GetRowXml(row,
-                row.HasVersion(DataRowVersion.Proposed)
-                ? DataRowVersion.Proposed : DataRowVersion.Default);
+        isNew = row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached;
+        originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+        actualData = DatasetTools.GetRowXml(
+            row,
+            row.HasVersion(DataRowVersion.Proposed)
+                ? DataRowVersion.Proposed
+                : DataRowVersion.Default
+        );
         ruleEvaluationCache = new RuleEvaluationCache();
         isBuildable = true;
     }
+
     private RowSecurityStateBuilder AddMainEntityRowStateAndFormatting()
     {
         if (!isBuildable)
         {
             return this;
         }
-        EntityFormatting formatting = ruleEngine.Formatting(actualData,
-        entityId, Guid.Empty, null);
+        EntityFormatting formatting = ruleEngine.Formatting(actualData, entityId, Guid.Empty, null);
         Result = new RowSecurityState
         {
             Id = DatasetTools.PrimaryKey(row)[0],
             BackgroundColor = formatting.BackColor.ToArgb(),
             ForegroundColor = formatting.ForeColor.ToArgb(),
             AllowDelete = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData, actualData, null, CredentialType.Delete,
-                entityId, Guid.Empty, isNew, ruleEvaluationCache),
+                originalData,
+                actualData,
+                null,
+                CredentialType.Delete,
+                entityId,
+                Guid.Empty,
+                isNew,
+                ruleEvaluationCache
+            ),
             AllowCreate = ruleEngine.EvaluateRowLevelSecurityState(
-                originalData, actualData, null, CredentialType.Create,
-                entityId, Guid.Empty, isNew, ruleEvaluationCache)
-        };            
+                originalData,
+                actualData,
+                null,
+                CredentialType.Create,
+                entityId,
+                Guid.Empty,
+                isNew,
+                ruleEvaluationCache
+            ),
+        };
         return this;
     }
+
     private RowSecurityStateBuilder AddMainEntityFieldStates()
     {
         if (!isBuildable)
@@ -133,29 +161,48 @@ public class RowSecurityStateBuilder
             if (col.ExtendedProperties.Contains("Id"))
             {
                 Guid fieldId = (Guid)col.ExtendedProperties["Id"];
-                bool allowUpdate = ruleEngine.
-                    EvaluateRowLevelSecurityState(originalData,
-                        actualData, col.ColumnName,
-                        CredentialType.Update,
-                        entityId, fieldId, isNew, ruleEvaluationCache);
-                bool allowRead = ruleEngine.
-                    EvaluateRowLevelSecurityState(originalData,
-                        actualData, col.ColumnName,
-                        CredentialType.Read,
-                        entityId, fieldId, isNew, ruleEvaluationCache);
-                EntityFormatting fieldFormatting = ruleEngine.
-                    Formatting(actualData, entityId, fieldId, null);
-                string dynamicLabel = ruleEngine.DynamicLabel(
-                    actualData, entityId, fieldId, null);
-                Result.Columns.Add(new FieldSecurityState(
+                bool allowUpdate = ruleEngine.EvaluateRowLevelSecurityState(
+                    originalData,
+                    actualData,
                     col.ColumnName,
-                    allowUpdate, allowRead, dynamicLabel,
-                    fieldFormatting.BackColor.ToArgb(),
-                    fieldFormatting.ForeColor.ToArgb()));
+                    CredentialType.Update,
+                    entityId,
+                    fieldId,
+                    isNew,
+                    ruleEvaluationCache
+                );
+                bool allowRead = ruleEngine.EvaluateRowLevelSecurityState(
+                    originalData,
+                    actualData,
+                    col.ColumnName,
+                    CredentialType.Read,
+                    entityId,
+                    fieldId,
+                    isNew,
+                    ruleEvaluationCache
+                );
+                EntityFormatting fieldFormatting = ruleEngine.Formatting(
+                    actualData,
+                    entityId,
+                    fieldId,
+                    null
+                );
+                string dynamicLabel = ruleEngine.DynamicLabel(actualData, entityId, fieldId, null);
+                Result.Columns.Add(
+                    new FieldSecurityState(
+                        col.ColumnName,
+                        allowUpdate,
+                        allowRead,
+                        dynamicLabel,
+                        fieldFormatting.BackColor.ToArgb(),
+                        fieldFormatting.ForeColor.ToArgb()
+                    )
+                );
             }
         }
         return this;
-    }      
+    }
+
     private RowSecurityStateBuilder AddRelations(object profileId)
     {
         if (!isBuildable)
@@ -164,11 +211,10 @@ public class RowSecurityStateBuilder
         }
         foreach (DataRelation rel in row.Table.ChildRelations)
         {
-            Guid childEntityId = (Guid)rel.ChildTable.
-                ExtendedProperties["EntityId"];
+            Guid childEntityId = (Guid)rel.ChildTable.ExtendedProperties["EntityId"];
             bool isDummyRow = false;
             DataRow childRow = null;
-            DataRow[] childRows = row.GetChildRows(rel);                
+            DataRow[] childRows = row.GetChildRows(rel);
             try
             {
                 if (childRows.Length > 0)
@@ -178,60 +224,75 @@ public class RowSecurityStateBuilder
                 else
                 {
                     isDummyRow = true;
-                    childRow = DatasetTools.CreateRow(row,
-                        rel.ChildTable, rel, profileId);
+                    childRow = DatasetTools.CreateRow(row, rel.ChildTable, rel, profileId);
                     // go through each column and lookup any looked-up
                     // column values
-                    foreach (DataColumn childCol in
-                        childRow.Table.Columns)
+                    foreach (DataColumn childCol in childRow.Table.Columns)
                     {
 #if !ORIGAM_SERVER
-            if (childRow.RowState != DataRowState.Unchanged
-                && childRow.RowState != DataRowState.Detached)
-            {
+                        if (
+                            childRow.RowState != DataRowState.Unchanged
+                            && childRow.RowState != DataRowState.Detached
+                        )
+                        {
 #endif
-                        ruleEngine.ProcessRulesLookupFields(childRow,
-                            childCol.ColumnName);
+                            ruleEngine.ProcessRulesLookupFields(childRow, childCol.ColumnName);
 #if !ORIGAM_SERVER
-            }
+                        }
 #endif
                     }
                 }
                 XmlContainer originalChildData = DatasetTools.GetRowXml(
-                    childRow, DataRowVersion.Original);
+                    childRow,
+                    DataRowVersion.Original
+                );
                 XmlContainer actualChildData = DatasetTools.GetRowXml(
-                    childRow, childRow.HasVersion(DataRowVersion.Proposed)
-                    ? DataRowVersion.Proposed : DataRowVersion.Default);
-                bool allowRelationCreate = ruleEngine.
-                    EvaluateRowLevelSecurityState(originalChildData,
-                    actualChildData, null,
+                    childRow,
+                    childRow.HasVersion(DataRowVersion.Proposed)
+                        ? DataRowVersion.Proposed
+                        : DataRowVersion.Default
+                );
+                bool allowRelationCreate = ruleEngine.EvaluateRowLevelSecurityState(
+                    originalChildData,
+                    actualChildData,
+                    null,
                     CredentialType.Create,
-                    childEntityId, Guid.Empty,
-                    row.RowState == DataRowState.Added 
-                        || row.RowState == DataRowState.Detached,
+                    childEntityId,
+                    Guid.Empty,
+                    row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached,
                     ruleEvaluationCache
                 );
-                Result.Relations.Add(new RelationSecurityState(
-                    rel.ChildTable.TableName, allowRelationCreate));
+                Result.Relations.Add(
+                    new RelationSecurityState(rel.ChildTable.TableName, allowRelationCreate)
+                );
             }
             catch (Exception ex)
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.LogOrigamError(string.Format(
-                        "Failed evaluating security rule for "
-                        + "child relation {0} for entity {1}",
-                        rel?.RelationName, entityId), ex);
+                    log.LogOrigamError(
+                        string.Format(
+                            "Failed evaluating security rule for "
+                                + "child relation {0} for entity {1}",
+                            rel?.RelationName,
+                            entityId
+                        ),
+                        ex
+                    );
                 }
                 throw;
             }
             finally
             {
-                if (isDummyRow && childRow != null) childRow.Delete();
+                if (isDummyRow && childRow != null)
+                {
+                    childRow.Delete();
+                }
             }
-        }                
+        }
         return this;
     }
+
     private RowSecurityStateBuilder AddDisabledActions(Guid formId)
     {
         if (!isBuildable)
@@ -239,7 +300,11 @@ public class RowSecurityStateBuilder
             return this;
         }
         Result.DisabledActions = ruleEngine.GetDisabledActions(
-            originalData, actualData, entityId, formId);            
+            originalData,
+            actualData,
+            entityId,
+            formId
+        );
         return this;
     }
 }

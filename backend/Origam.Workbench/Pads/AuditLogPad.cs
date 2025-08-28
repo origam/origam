@@ -63,23 +63,23 @@ public class AuditLogPad : AbstractPadContent
 			{
 				return columnId;
 			}
-			if(item == null) return columnId;
-			if(item is ICaptionSchemaItem captionItem)
+			if(item == null)
+            {
+                return columnId;
+            }
+
+            if (item is ICaptionSchemaItem captionItem)
 			{
 				if(!string.IsNullOrEmpty(captionItem.Caption))
 				{
 					return captionItem.Caption;
 				}
-				else
-				{
-					return item.Name;
-				}
-			}
-			else
-			{
-				return item.Name;
-			}
-		}
+
+                return item.Name;
+            }
+
+            return item.Name;
+        }
 	}
 	private class ActionTypeColumn : DataGridTextBoxColumn
 	{
@@ -113,8 +113,12 @@ public class AuditLogPad : AbstractPadContent
 		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
 		{
 			object o = base.GetColumnValueAtRow(source, rowNum);
-			if(o == DBNull.Value) return null;
-			IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
+			if(o == DBNull.Value)
+            {
+                return null;
+            }
+
+            IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
 			try
 			{
 				UserProfile profile = (profileProvider as IOrigamProfileProvider).GetProfile((Guid)o) as UserProfile;
@@ -362,8 +366,12 @@ public class AuditLogPad : AbstractPadContent
 	}
 	public void GetLog()
 	{
-		if(!_supportLog) return;
-		try
+		if(!_supportLog)
+        {
+            return;
+        }
+
+        try
 		{
 			this.dataGrid1.DataSource = null;
 			RetrieveLog(this.ParentEntityId, this.ParentId);

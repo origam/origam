@@ -93,8 +93,12 @@ public class AsDataGrid : DataGrid
 	{
 		try
 	{
-			if(FilterKeyData(keyData)) return false;
-			return base.ProcessDialogKey (keyData);
+			if(FilterKeyData(keyData))
+            {
+                return false;
+            }
+
+            return base.ProcessDialogKey (keyData);
 		}
 		catch
 		{
@@ -103,16 +107,23 @@ public class AsDataGrid : DataGrid
 	}
 	protected override void OnKeyDown(KeyEventArgs e)
 	{
-		if(FilterKeyData(e.KeyData)) return;
-		base.OnKeyDown (e);
+		if(FilterKeyData(e.KeyData))
+        {
+            return;
+        }
+
+        base.OnKeyDown (e);
 	}
 	protected override bool ProcessKeyPreview(ref Message m)
 	{
 		if (m.Msg == 0x100)
 		{
 			KeyEventArgs ke = new KeyEventArgs(((Keys) ((int) m.WParam)) | ModifierKeys);
-			if(FilterKeyData(ke.KeyData)) return false;
-		}
+			if(FilterKeyData(ke.KeyData))
+            {
+                return false;
+            }
+        }
 		return base.ProcessKeyPreview (ref m);
 	}
 	private bool FilterKeyData(Keys keyData)
@@ -142,20 +153,31 @@ public class AsDataGrid : DataGrid
 					}
 					parentControl = parentControl.Parent;
 				}
-				if(! found) doEnter = false;
-			}
+				if(! found)
+                {
+                    doEnter = false;
+                }
+            }
 			if(doEnter)
 			{
-				if (this.ListManager == null) return;
-				if(this.CurrentCell.RowNumber >= this.ListManager.Count)
+				if (this.ListManager == null)
+                {
+                    return;
+                }
+
+                if (this.CurrentCell.RowNumber >= this.ListManager.Count)
 				{
 					if(this.ListManager.Count > 0)
 					{
 						this.CurrentRowIndex = this.ListManager.Count - 1;
 					}
 				}
-				if (!EnhancedFocusControl) return;
-				try
+				if (!EnhancedFocusControl)
+                {
+                    return;
+                }
+
+                try
 				{
 					base.OnEnter (e);
 				}
@@ -225,7 +247,6 @@ public class AsDataGrid : DataGrid
 	{
 		OnMouseWheel (e);
 	}
-	
 }
 
 internal class ClickTracker 

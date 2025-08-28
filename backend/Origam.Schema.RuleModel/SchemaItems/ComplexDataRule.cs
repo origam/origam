@@ -19,17 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.DA.Common;
 using Origam.Schema.EntityModel;
-using System;
 
 namespace Origam.Schema.RuleModel;
+
 [SchemaItemDescription("Complex Data Rule", "complex-data-rule.png")]
 [HelpTopic("Complex+Data+Rule")]
 [ClassMetaVersion("6.0.0")]
 public class ComplexDataRule : XslRule, IDataRule
 {
-	public ComplexDataRule() : base() {}
-	public ComplexDataRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public ComplexDataRule(Key primaryKey) : base(primaryKey) { }
+    public ComplexDataRule()
+        : base() { }
+
+    public ComplexDataRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public ComplexDataRule(Key primaryKey)
+        : base(primaryKey) { }
 }

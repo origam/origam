@@ -25,21 +25,22 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Origam;
+
 /// <summary>
 /// Summary description for OrigamUserContext.
 /// </summary>
 public class OrigamUserContext
 {
-	private static IDictionary<string, Hashtable> _contexts
-        = new Dictionary<string, Hashtable>();
+    private static IDictionary<string, Hashtable> _contexts = new Dictionary<string, Hashtable>();
     private static object _lock = new object();
-	public static Hashtable Context => GetContext(UserKey());
+    public static Hashtable Context => GetContext(UserKey());
+
     public static void Reset()
-    { 
+    {
         string currentUsername = UserKey();
         Reset(currentUsername);
     }
-    
+
     public static void Reset(string username)
     {
         lock (_lock)
@@ -48,6 +49,7 @@ public class OrigamUserContext
             _contexts.Remove(username);
         }
     }
+
     public static void ResetAll()
     {
         lock (_lock)
@@ -59,6 +61,7 @@ public class OrigamUserContext
             _contexts.Clear();
         }
     }
+
     private static Hashtable GetContext(string key)
     {
         lock (_lock)
@@ -70,6 +73,7 @@ public class OrigamUserContext
             return _contexts[key] as Hashtable;
         }
     }
+
     private static void DisposeCachedObjects(string username)
     {
         Hashtable context = GetContext(username);
@@ -82,14 +86,16 @@ public class OrigamUserContext
             }
         }
     }
+
     private static string UserKey()
-    {            
+    {
         if (!SecurityManager.CurrentPrincipal.Identity.IsAuthenticated)
         {
             return "guest";
-        }            
+        }
         return SecurityManager.CurrentPrincipal.Identity.Name;
     }
+
     public static Hashtable GetContextItem(string cacheName)
     {
         lock (_lock)
