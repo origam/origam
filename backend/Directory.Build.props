@@ -1,4 +1,16 @@
 <Project>
+    <!-- =========================
+     Global build defaults
+     ========================= -->
+    <PropertyGroup>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <AnalysisLevel>8.0</AnalysisLevel>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <!-- =========================
+     Solution-wide analyzers
+     ========================= -->
     <ItemGroup>
         <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
                           PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
@@ -6,7 +18,12 @@
                           PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
     </ItemGroup>
 
-    <!-- Only add CSharpier to non-.NET Framework projects -->
+    <!-- =========================
+         CSharpier (MSBuild integration)
+         - Enabled for SDK-style projects that are NOT .NET Framework
+         - Covers: netstandard2.0, net5+, net8.0, etc.
+         - Excludes: net471/net472 and any non-SDK projects
+         ========================= -->
     <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
         <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
                           PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
