@@ -148,7 +148,7 @@ public class ExcelService : IReportService
         {
             sheet.Workbook.SetSheetHidden(
                 sourceSheet.Index, 
-                sourceSheet.Hidden ? SheetState.Hidden : SheetState.Visible);
+                sourceSheet.Hidden ? SheetVisibility.Hidden : SheetVisibility.Visible);
         }
         if (!sourceSheet.IsFreezeRowIndexNull() 
             && !sourceSheet.IsFreezeColumnIndexNull())
