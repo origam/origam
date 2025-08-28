@@ -21,6 +21,14 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___2899f96e-2fb5-4353-9b55-0dcb57b3ab26.txt"
+      x:id="2899f96e-2fb5-4353-9b55-0dcb57b3ab26"
+      asi:name="00080_PG_Database_Entity_StateTransition"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___2cfd4705-82ff-4c1d-8289-443d48c76180.txt"
       x:id="2cfd4705-82ff-4c1d-8289-443d48c76180"
@@ -37,6 +45,22 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___446362fc-eb2a-4500-99f1-772a586d74fe.txt"
+      x:id="446362fc-eb2a-4500-99f1-772a586d74fe"
+      asi:name="00060_PG_Database_Entity_WorkflowStates"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___5d0c0f8c-ec35-4ab5-bdfd-46ffcce5f6df.txt"
+      x:id="5d0c0f8c-ec35-4ab5-bdfd-46ffcce5f6df"
+      asi:name="00070_PG_Database_Entity_StateTransition"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___5d924c19-bb05-4b6f-9c71-ab880bc16d19.txt"
       x:id="5d924c19-bb05-4b6f-9c71-ab880bc16d19"
@@ -45,11 +69,27 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___6a7b8212-32d8-4d5a-8820-bda592de771b.txt"
+      x:id="6a7b8212-32d8-4d5a-8820-bda592de771b"
+      asi:name="00100_PG_Insert_Value_StateTransation"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="30"
       scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___91cb9d73-3794-4f02-a19a-a5846202bc50.txt"
       x:id="91cb9d73-3794-4f02-a19a-a5846202bc50"
       asi:name="00030_Database_Entity_StateTransition"
       scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.5.7.origam___commandText___e5fb774e-845f-44e3-a33c-77c2a2e18a11.txt"
+      x:id="e5fb774e-845f-44e3-a33c-77c2a2e18a11"
+      asi:name="00090_PG_Insert_Values_WorkflowStates"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
