@@ -6,7 +6,6 @@
     <LangVersion>12</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
