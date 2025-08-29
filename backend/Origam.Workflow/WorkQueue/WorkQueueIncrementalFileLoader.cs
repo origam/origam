@@ -96,13 +96,56 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
     private string GetContentFromZipArchive(
         string archiveName, string filename)
     {
-        using(FileStream fileStream = new FileStream(
-            archiveName, FileMode.Open))
-        using(ZipArchive archive = new ZipArchive(fileStream))
-        using(Stream stream = archive.GetEntry(filename).Open())
-        using(StreamReader streamReader = new StreamReader(stream))
+        // Harden against zip-bomb and invalid entry issues
+        const long MaxUncompressedBytes = 50L * 1024 * 1024; // 50 MB safety cap
+
+        using (
+            FileStream fileStream = new FileStream(
+                archiveName,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            )
+        )
+        using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Read, false))
         {
-            return streamReader.ReadToEnd();
+            // Zip spec uses forward slashes for separators; normalize for lookup
+            string normalizedEntryName = filename.Replace('\\', '/');
+            ZipArchiveEntry entry = archive.GetEntry(normalizedEntryName);
+            if (entry == null)
+            {
+                throw new InvalidOperationException(
+                    $"Entry '{filename}' not found in archive '{archiveName}'."
+                );
+            }
+
+            // Guard against zip bombs: excessive uncompressed size or ratio
+            if (entry.Length > MaxUncompressedBytes)
+            {
+                throw new InvalidOperationException("Archive entry too large.");
+            }
+            if (
+                entry.CompressedLength > 0
+                && (entry.Length / (double)entry.CompressedLength) > 100.0
+            )
+            {
+                throw new InvalidOperationException(
+                    "Archive entry has suspicious compression ratio."
+                );
+            }
+
+            using (Stream stream = entry.Open())
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                string content = streamReader.ReadToEnd();
+                if (content.Length > MaxUncompressedBytes)
+                {
+                    throw new InvalidOperationException(
+                        "Archive entry exceeds allowed size."
+                    );
+                }
+                return content;
+            }
         }
     }
     private void SetupTransaction(string transactionId, string connection)
