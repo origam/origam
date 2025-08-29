@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+using System.Collections.Generic;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
@@ -27,55 +29,57 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.WorkflowModel.WorkQueue;
-using System.Collections.Generic;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.OrigamEngine;
-public class  OrigamProviderBuilder
+
+public class OrigamProviderBuilder
 {
     private List<AbstractSchemaItemProvider> providers = new List<AbstractSchemaItemProvider>();
+
     public OrigamProviderBuilder()
     {
-                providers.Add(new StringSchemaItemProvider());
-                providers.Add(new FeatureSchemaItemProvider());
-                providers.Add(new EntityModelSchemaItemProvider());
-                providers.Add(new DataConstantSchemaItemProvider());
-                providers.Add(new DatabaseDataTypeSchemaItemProvider());
-                providers.Add(new UserControlSchemaItemProvider());
-                providers.Add(new PanelSchemaItemProvider());
-                providers.Add(new FormSchemaItemProvider());
-                providers.Add(new DataStructureSchemaItemProvider());
-                providers.Add(new FunctionSchemaItemProvider());
-                providers.Add(new ServiceSchemaItemProvider());
-                providers.Add(new WorkflowSchemaItemProvider());
-                providers.Add(new TransformationSchemaItemProvider());
-                providers.Add(new ReportSchemaItemProvider());
-                providers.Add(new RuleSchemaItemProvider());
-                providers.Add(new MenuSchemaItemProvider());
-                //			AbstractSchemaItemProviders.Add(new TestScenarioSchemaItemProvider());
-                //			AbstractSchemaItemProviders.Add(new TestChecklistRuleSchemaItemProvider());
-                providers.Add(new WorkflowScheduleSchemaItemProvider());
-                providers.Add(new ScheduleTimeSchemaItemProvider());
-                providers.Add(new DataLookupSchemaItemProvider());
-                providers.Add(new DeploymentSchemaItemProvider());
-                providers.Add(new GraphicsSchemaItemProvider());
-                providers.Add(new StateMachineSchemaItemProvider());
-                providers.Add(new WorkQueueClassSchemaItemProvider());
-                providers.Add(new ChartSchemaItemProvider());
-                providers.Add(new PagesSchemaItemProvider());
-                providers.Add(new DashboardWidgetsSchemaItemProvider());
-                providers.Add(new StylesSchemaItemProvider());
-                providers.Add(new NotificationBoxSchemaItemProvider());
-                providers.Add(new TreeStructureSchemaItemProvider());
-                providers.Add(new KeyboardShortcutsSchemaItemProvider());
-                providers.Add(new SearchSchemaItemProvider());
-                providers.Add(new DeepLinkCategorySchemaItemProvider());
-                providers.Add(new XsltFunctionSchemaItemProvider());
+        providers.Add(new StringSchemaItemProvider());
+        providers.Add(new FeatureSchemaItemProvider());
+        providers.Add(new EntityModelSchemaItemProvider());
+        providers.Add(new DataConstantSchemaItemProvider());
+        providers.Add(new DatabaseDataTypeSchemaItemProvider());
+        providers.Add(new UserControlSchemaItemProvider());
+        providers.Add(new PanelSchemaItemProvider());
+        providers.Add(new FormSchemaItemProvider());
+        providers.Add(new DataStructureSchemaItemProvider());
+        providers.Add(new FunctionSchemaItemProvider());
+        providers.Add(new ServiceSchemaItemProvider());
+        providers.Add(new WorkflowSchemaItemProvider());
+        providers.Add(new TransformationSchemaItemProvider());
+        providers.Add(new ReportSchemaItemProvider());
+        providers.Add(new RuleSchemaItemProvider());
+        providers.Add(new MenuSchemaItemProvider());
+        //			AbstractSchemaItemProviders.Add(new TestScenarioSchemaItemProvider());
+        //			AbstractSchemaItemProviders.Add(new TestChecklistRuleSchemaItemProvider());
+        providers.Add(new WorkflowScheduleSchemaItemProvider());
+        providers.Add(new ScheduleTimeSchemaItemProvider());
+        providers.Add(new DataLookupSchemaItemProvider());
+        providers.Add(new DeploymentSchemaItemProvider());
+        providers.Add(new GraphicsSchemaItemProvider());
+        providers.Add(new StateMachineSchemaItemProvider());
+        providers.Add(new WorkQueueClassSchemaItemProvider());
+        providers.Add(new ChartSchemaItemProvider());
+        providers.Add(new PagesSchemaItemProvider());
+        providers.Add(new DashboardWidgetsSchemaItemProvider());
+        providers.Add(new StylesSchemaItemProvider());
+        providers.Add(new NotificationBoxSchemaItemProvider());
+        providers.Add(new TreeStructureSchemaItemProvider());
+        providers.Add(new KeyboardShortcutsSchemaItemProvider());
+        providers.Add(new SearchSchemaItemProvider());
+        providers.Add(new DeepLinkCategorySchemaItemProvider());
+        providers.Add(new XsltFunctionSchemaItemProvider());
     }
+
     public List<AbstractSchemaItemProvider> GetAll()
     {
         return providers;
     }
+
     public OrigamProviderBuilder SetSchemaProvider(IPersistenceProvider schemaProvider)
     {
         foreach (var provider in providers)

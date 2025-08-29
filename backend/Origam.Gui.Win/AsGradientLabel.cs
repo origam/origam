@@ -74,7 +74,7 @@ public class AsGradientLabel : System.Windows.Forms.Label
 		sf.Alignment = StringAlignment.Near;
 		// set rectangle bound text
 		RectangleF rectF = new 
-			RectangleF(0,this.Height/2-Font.Height/2,this.Width,this.Height);
+			RectangleF(0, (this.Height/2) - (Font.Height/2), this.Width,this.Height);
 		// output string
 		e.Graphics.DrawString(this.Text, this.Font, drawBrush, rectF, sf);
 	}

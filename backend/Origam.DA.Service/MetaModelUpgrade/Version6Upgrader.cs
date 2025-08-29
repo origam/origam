@@ -31,11 +31,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         private readonly ScriptContainerLocator scriptLocator;
         private readonly OrigamXDocument document;
-        private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
+        private static XNamespace oldPersistenceNamespace =
+            "http://schemas.origam.com/1.0.0/model-persistence";
         private static XNamespace newPersistenceNamespace = OrigamFile.ModelPersistenceUri;
 
-        public Version6Upgrader(ScriptContainerLocator scriptLocator,
-            OrigamXDocument document)
+        public Version6Upgrader(ScriptContainerLocator scriptLocator, OrigamXDocument document)
         {
             this.scriptLocator = scriptLocator;
             this.document = document;
@@ -65,13 +65,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
             switch (typeAttribute.Value)
             {
                 case "http://schemas.origam.com/1.0.0/packagepackage":
+                {
                     category = OrigamFile.PackageCategory;
                     break;
+                }
+
                 case "http://schemas.origam.com/5.0.0/model-elementgroup":
+                {
                     category = OrigamFile.GroupCategory;
                     break;
+                }
+
                 default:
-                    throw new Exception($"Cannot convert node {node} to meta model version 6.0.0 because {typeAttribute.Value} cannot be mapped to category");
+                    throw new Exception(
+                        $"Cannot convert node {node} to meta model version 6.0.0 because {typeAttribute.Value} cannot be mapped to category"
+                    );
             }
             typeAttribute.Remove();
             node.SetAttributeValue(newPersistenceNamespace.GetName("type"), category);
@@ -92,21 +100,26 @@ namespace Origam.DA.Service.MetaModelUpgrade
             node.Name = namespaceMapping.NodeNamespace.GetName(node.Name.LocalName);
             CopyAttributes(node, namespaceMapping);
         }
-        
-        private static void CopyAttributes(XElement node,
-            IPropertyToNamespaceMapping namespaceMapping)
+
+        private static void CopyAttributes(
+            XElement node,
+            IPropertyToNamespaceMapping namespaceMapping
+        )
         {
-            List<XAttribute> atList = node
-                .Attributes()
+            List<XAttribute> atList = node.Attributes()
                 .Where(attr => attr.Name.LocalName != "xmlns")
-                .ToList();  
-            
-            node.Attributes().Remove();  
-            foreach (XAttribute attribute in atList){
-                XNamespace nameSpace = attribute.Name.Namespace == oldPersistenceNamespace
-                    ? newPersistenceNamespace
-                    : namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name.LocalName);
-                node.Add(new XAttribute(nameSpace.GetName(attribute.Name.LocalName), attribute.Value));
+                .ToList();
+
+            node.Attributes().Remove();
+            foreach (XAttribute attribute in atList)
+            {
+                XNamespace nameSpace =
+                    attribute.Name.Namespace == oldPersistenceNamespace
+                        ? newPersistenceNamespace
+                        : namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name.LocalName);
+                node.Add(
+                    new XAttribute(nameSpace.GetName(attribute.Name.LocalName), attribute.Value)
+                );
             }
         }
 
@@ -116,31 +129,29 @@ namespace Origam.DA.Service.MetaModelUpgrade
             XAttribute typeAttribute = node?.Attribute(name);
             if (string.IsNullOrWhiteSpace(typeAttribute?.Value))
             {
-                throw new Exception(
-                    $"Cannot get type from node: {node?.Name} in \n{document}");
+                throw new Exception($"Cannot get type from node: {node?.Name} in \n{document}");
             }
-            
+
             Type type = Reflector.GetTypeByName(typeAttribute.Value);
             bool classIsDearOrRenamed = type == null;
             if (classIsDearOrRenamed)
             {
                 var scriptContainer = scriptLocator.FindByTypeName(typeAttribute.Value);
                 type = Reflector.GetTypeByName(scriptContainer.FullTypeName);
-                
+
                 bool classIsDead = type == null;
                 if (classIsDead)
                 {
                     return new DeadClassPropertyToNamespaceMapping(
                         scriptContainer.FullTypeName,
-                        new Version(6,0,0));
+                        new Version(6, 0, 0)
+                    );
                 }
             }
 
-            return Version6PropertyToNamespaceMapping
-                .CreateOrGet(type, scriptLocator)
-                .DeepCopy() ;
-        }  
-        
+            return Version6PropertyToNamespaceMapping.CreateOrGet(type, scriptLocator).DeepCopy();
+        }
+
         private void RemoveTypeAttribute(XElement node)
         {
             XName name = oldPersistenceNamespace.GetName("type");
@@ -150,15 +161,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void RemoveOldDocumentNamespaces()
         {
-            document.FileElement
-                .Attributes()
-                .Where(
-                    attr => attr.Value ==
-                            "http://schemas.origam.com/5.0.0/model-element" ||
-                            attr.Value == "http://schemas.origam.com/1.0.0/package")
+            document
+                .FileElement.Attributes()
+                .Where(attr =>
+                    attr.Value == "http://schemas.origam.com/5.0.0/model-element"
+                    || attr.Value == "http://schemas.origam.com/1.0.0/package"
+                )
                 .Remove();
-            document.FileElement.Name = newPersistenceNamespace.GetName(document.FileElement.Name.LocalName);
-            document.FileElement.Attribute(XNamespace.Xmlns + "x").Value = newPersistenceNamespace.ToString();
+            document.FileElement.Name = newPersistenceNamespace.GetName(
+                document.FileElement.Name.LocalName
+            );
+            document.FileElement.Attribute(XNamespace.Xmlns + "x").Value =
+                newPersistenceNamespace.ToString();
         }
     }
 }

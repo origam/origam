@@ -20,54 +20,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for DashboardWidgetProperty.
 /// </summary>
 public class DashboardWidgetProperty
 {
-	public DashboardWidgetProperty()
-	{
-	}
-	public DashboardWidgetProperty(string name, string caption, OrigamDataType dataType)
-	{
-		_name = name;
-		_caption = caption;
-		_dataType = dataType;
-	}
-	private string _name;
-	public string Name
-	{
-		get
-		{
-			return _name;
-		}
-		set
-		{
-			_name = value;
-		}
-	}
-	private string _caption;
-	public string Caption
-	{
-		get
-		{
-			return _caption;
-		}
-		set
-		{
-			_caption = value;
-		}
-	}
-	private OrigamDataType _dataType;
-	public OrigamDataType DataType
-	{
-		get
-		{
-			return _dataType;
-		}
-		set
-		{
-			_dataType = value;
-		}
-	}
+    public DashboardWidgetProperty() { }
+
+    public DashboardWidgetProperty(string name, string caption, OrigamDataType dataType)
+    {
+        _name = name;
+        _caption = caption;
+        _dataType = dataType;
+    }
+
+    private string _name;
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    private string _caption;
+    public string Caption
+    {
+        get { return _caption; }
+        set { _caption = value; }
+    }
+    private OrigamDataType _dataType;
+    public OrigamDataType DataType
+    {
+        get { return _dataType; }
+        set { _dataType = value; }
+    }
 }

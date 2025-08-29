@@ -19,14 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Reflection;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-
 namespace Origam.Gui.Designer;
-
 
 using System;
 using System.Reflection;
@@ -95,7 +88,6 @@ public class ClassGenerator
             // Add remaining attributes
             foreach (var attr in filteredAttributes)
             {
-                
                 sb.Append("    [");
                 sb.Append(GetAttributeString(attr));
                 sb.AppendLine("]");

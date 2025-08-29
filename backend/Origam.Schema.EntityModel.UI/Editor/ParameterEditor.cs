@@ -124,7 +124,6 @@ namespace Origam.Schema.EntityModel
             this.Name = "ParameterEditor";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.ParameterEditor_Closing);
             this.ResumeLayout(false);
-
 		}
 		#endregion
 
@@ -181,17 +180,21 @@ namespace Origam.Schema.EntityModel
 			
 				switch(result)
 				{
-					case DialogResult.Yes:
-						SaveObject();
+                    case DialogResult.Yes:
+                        {
+                            SaveObject();
+                            break;
+                        }
+
+                    case DialogResult.No:
 						break;
 
-					case DialogResult.No:
-						break;
-			
-					case DialogResult.Cancel:
-						e.Cancel = true;
-						break;
-				}
+                    case DialogResult.Cancel:
+                        {
+                            e.Cancel = true;
+                            break;
+                        }
+                }
 			}
 		}
 	}

@@ -23,7 +23,6 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-
 using Origam.UI;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
@@ -92,8 +91,12 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 	{
 		_isEditing = false;
 		_blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
-		if(_blobControl.IsDisposed) return;
-		base.Abort(rowNum);
+		if(_blobControl.IsDisposed)
+        {
+            return;
+        }
+
+        base.Abort(rowNum);
 	}
 	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
 	{
@@ -133,8 +136,12 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 	}
 	protected override bool Commit(CurrencyManager dataSource, int rowNum)
 	{
-		if(_blobControl.Bounds.X != 0 | _blobControl.Bounds.Y != 0 | _blobControl.Width != 0) _blobControl.Bounds = Rectangle.Empty;
-		_blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
+		if(_blobControl.Bounds.X != 0 | _blobControl.Bounds.Y != 0 | _blobControl.Width != 0)
+        {
+            _blobControl.Bounds = Rectangle.Empty;
+        }
+
+        _blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
 		if(_isEditing)
 		{
 			try 
@@ -174,8 +181,12 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 		//base.SetDataGridInColumn(value);
 		if (_blobControl.Parent != null) 
 		{
-			if(_blobControl.Parent.Equals(value)) return;
-			_blobControl.Parent.Controls.Remove(_blobControl);
+			if(_blobControl.Parent.Equals(value))
+            {
+                return;
+            }
+
+            _blobControl.Parent.Controls.Remove(_blobControl);
 		}
 		if (value != null) 
 		{
@@ -190,9 +201,16 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 		EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
 		if(formatting != null)
 		{
-			if(!formatting.UseDefaultBackColor) myBackBrush = new SolidBrush(formatting.BackColor);
-			if(!formatting.UseDefaultForeColor) myForeBrush = new SolidBrush(formatting.ForeColor);
-		}
+			if(!formatting.UseDefaultBackColor)
+            {
+                myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
+            if (!formatting.UseDefaultForeColor)
+            {
+                myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
+        }
 		string text = this.GetColumnValueAtRow(source, rowNum).ToString();
 		Font font = new Font(this.DataGridTableStyle.DataGrid.Font.FontFamily, this.DataGridTableStyle.DataGrid.Font.Size, FontStyle.Underline);
 		Rectangle rectangle1 = bounds;

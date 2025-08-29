@@ -37,10 +37,18 @@ public class ScreenWizardForm : AbstractWizardForm
         if (_lstFields == null)
         {
             _lstFields = lstField;
-            if (this.Entity == null) return;
+            if (this.Entity == null)
+            {
+                return;
+            }
+
             foreach (IDataEntityColumn column in this.Entity.EntityColumns)
             {
-                if (string.IsNullOrEmpty(column.ToString())) continue;
+                if (string.IsNullOrEmpty(column.ToString()))
+                {
+                    continue;
+                }
+
                 if (!this.textColumnsOnly
                     || (column.DataType == Origam.Schema.OrigamDataType.String
                     || column.DataType == Origam.Schema.OrigamDataType.Memo))

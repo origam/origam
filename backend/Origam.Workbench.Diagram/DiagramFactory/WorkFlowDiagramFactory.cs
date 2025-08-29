@@ -105,14 +105,21 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 	}
 	private void AddActionNodes(IWorkflowStep step, Subgraph subgraphNode)
 	{
-		if (!(step is UIFormTask formTask)) return;
-		
-		foreach (DataStructureEntity entity in formTask.Screen.DataStructure
+		if (!(step is UIFormTask formTask))
+        {
+            return;
+        }
+
+        foreach (DataStructureEntity entity in formTask.Screen.DataStructure
 			.Entities)
 		{
 			var actions = GetActions(entity, formTask.ScreenId);
-			if (actions.Length == 0) continue;
-			var actionSubgraph =
+			if (actions.Length == 0)
+            {
+                continue;
+            }
+
+            var actionSubgraph =
 				nodeFactory.AddActionSubgraph(subgraphNode, entity);
 			foreach (var action in actions)
 			{
@@ -200,15 +207,21 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 		{
 			Node destinationShape = nodes[step.PrimaryKey];
 			if (destinationShape == null)
-				throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
-			int i = 0;
+            {
+                throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
+            }
+
+            int i = 0;
 			foreach (WorkflowTaskDependency dependency in step.ChildItemsByType<WorkflowTaskDependency>(
 				WorkflowTaskDependency.CategoryConst))
 			{
 				Node sourceShape = nodes[dependency.Task.PrimaryKey];
 				if (sourceShape == null)
-					throw new NullReferenceException(Strings.WorkFlowDiagramFactory_SourceShape_not_found);
-				Edge edge = graph.AddEdge(sourceShape.Id, destinationShape.Id);
+                {
+                    throw new NullReferenceException(Strings.WorkFlowDiagramFactory_SourceShape_not_found);
+                }
+
+                Edge edge = graph.AddEdge(sourceShape.Id, destinationShape.Id);
 				edge.UserData = dependency;
 				i++;
 			}

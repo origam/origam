@@ -24,10 +24,12 @@ using System.Globalization;
 using System.Threading;
 
 namespace Origam;
+
 public class LanguageSwitcher : IDisposable
 {
     private readonly CultureInfo originalUICulture;
     private readonly CultureInfo originalCulture;
+
     public LanguageSwitcher(string langIetf = "")
     {
         originalCulture = null;
@@ -40,9 +42,10 @@ public class LanguageSwitcher : IDisposable
             Thread.CurrentThread.CurrentCulture = new CultureInfo(langIetf);
         }
     }
-    
+
     #region IDisposable Support
     private bool disposedValue = false; // To detect redundant calls
+
     protected virtual void Dispose(bool disposing)
     {
         if (disposedValue)
@@ -59,6 +62,7 @@ public class LanguageSwitcher : IDisposable
         }
         disposedValue = true;
     }
+
     public void Dispose()
     {
         Dispose(true);

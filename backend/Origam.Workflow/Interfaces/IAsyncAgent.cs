@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workflow;
+
 public interface IAsyncAgent
 {
     event EventHandler<AsyncReturnValues> AsyncCallFinished;

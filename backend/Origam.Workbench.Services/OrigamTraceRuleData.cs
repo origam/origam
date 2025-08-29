@@ -20,9 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Workbench.Services;
+
 public partial class OrigamTraceRuleData
 {
-    partial class OrigamTraceRuleDataTable
-    {
-    }
+    partial class OrigamTraceRuleDataTable { }
 }

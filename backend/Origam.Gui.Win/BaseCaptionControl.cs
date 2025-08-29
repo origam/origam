@@ -24,7 +24,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
-
 using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -207,40 +206,55 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 	#region private methods
 	private void PaintCaption()
 	{
-		if(_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing) return;
-		this._captionLabel.Width = this.CaptionLength;
+		if(_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing)
+        {
+            return;
+        }
+
+        this._captionLabel.Width = this.CaptionLength;
 		this._captionLabel.BackColor = Color.Transparent;
 		this._captionLabel.AutoSize = true;
 					
 		switch(this.CaptionPosition)
 		{
-			case CaptionPosition.Left:
-				this._captionLabel.Visible = true;
-				this._captionLabel.Top = this.Top + 2;
-				this._captionLabel.Left = this.Left - this.CaptionLength;
-				break;
-			case CaptionPosition.Right:
-				this._captionLabel.Visible = true;
-				this._captionLabel.Top = this.Top + 2;
-				this._captionLabel.Left = this.Right;
-				break;
-			
-			case CaptionPosition.Top:
-				this._captionLabel.Visible = true;
-				this._captionLabel.Top = this.Top - this._captionLabel.Height;
-				this._captionLabel.Left = this.Left;
-				break;
-			
-			case CaptionPosition.Bottom:
-				this._captionLabel.Visible = true;
-				this._captionLabel.Top = this.Top + this.Height;
-				this._captionLabel.Left = this.Left;
-				break;
-			
-			case CaptionPosition.None:
-				this._captionLabel.Visible = false;
-				break;
-		}
+            case CaptionPosition.Left:
+                {
+                    this._captionLabel.Visible = true;
+                    this._captionLabel.Top = this.Top + 2;
+                    this._captionLabel.Left = this.Left - this.CaptionLength;
+                    break;
+                }
+
+            case CaptionPosition.Right:
+                {
+                    this._captionLabel.Visible = true;
+                    this._captionLabel.Top = this.Top + 2;
+                    this._captionLabel.Left = this.Right;
+                    break;
+                }
+
+            case CaptionPosition.Top:
+                {
+                    this._captionLabel.Visible = true;
+                    this._captionLabel.Top = this.Top - this._captionLabel.Height;
+                    this._captionLabel.Left = this.Left;
+                    break;
+                }
+
+            case CaptionPosition.Bottom:
+                {
+                    this._captionLabel.Visible = true;
+                    this._captionLabel.Top = this.Top + this.Height;
+                    this._captionLabel.Left = this.Left;
+                    break;
+                }
+
+            case CaptionPosition.None:
+                {
+                    this._captionLabel.Visible = false;
+                    break;
+                }
+        }
 	}
 	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
 	{
@@ -279,7 +293,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			foreach(Binding binding in this.DataBindings)
 			{
 				if(binding.PropertyName == this.DefaultBindableProperty)
-					try
+                {
+                    try
 					{
 						this._captionLabel.Text = ColumnCaption(binding);
 					}
@@ -287,7 +302,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 					{
 						this._captionLabel.Text = "????";
 					}
-			}
+                }
+            }
 		}
 	}
 	private string TableName(DataSet ds, string dataMember)
@@ -309,8 +325,11 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			}
 		}
 		else
-			tableName = dataMember;
-		return tableName;
+        {
+            tableName = dataMember;
+        }
+
+        return tableName;
 	}
 	private string ColumnCaption(Binding binding)
 	{
@@ -323,8 +342,10 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			if(table != null)
 			{
 				if(table.Columns.Contains(binding.BindingMemberInfo.BindingField))
-					return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
-			}
+                {
+                    return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                }
+            }
 		}
 		return binding.BindingMemberInfo.BindingField;
 	}

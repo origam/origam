@@ -19,105 +19,117 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
 [HelpTopic("Rule+Sets")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DataStructureRuleSet : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureRuleSet";
+    public const string CategoryConst = "DataStructureRuleSet";
     private object _lock = new object();
-	public DataStructureRuleSet() {}
-	public DataStructureRuleSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureRuleSet(Key primaryKey) : base(primaryKey)	{}
 
-	#region Public Methods
-	public List<DataStructureRule> Rules()
-	{
+    public DataStructureRuleSet() { }
+
+    public DataStructureRuleSet(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureRuleSet(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Public Methods
+    public List<DataStructureRule> Rules()
+    {
         var result = ChildItemsByType<DataStructureRule>(DataStructureRule.CategoryConst);
         // add all child rule sets
-        foreach(var childRuleSet 
-                 in ChildItemsByType<DataStructureRuleSetReference>(
-                     DataStructureRuleSetReference.CategoryConst))
+        foreach (
+            var childRuleSet in ChildItemsByType<DataStructureRuleSetReference>(
+                DataStructureRuleSetReference.CategoryConst
+            )
+        )
         {
-            if(childRuleSet.RuleSet != null)
+            if (childRuleSet.RuleSet != null)
             {
                 result.AddRange(childRuleSet.RuleSet.Rules());
             }
         }
         return result;
     }
+
     public void AddUniqueRuleSetIds(
-        HashSet<Guid> ruleSetUniqIds, 
-        DataStructureRuleSetReference curRuleSetReference)
+        HashSet<Guid> ruleSetUniqIds,
+        DataStructureRuleSetReference curRuleSetReference
+    )
     {
-        if(!ruleSetUniqIds.Add(Id))
+        if (!ruleSetUniqIds.Add(Id))
         {
             throw new NullReferenceException(
-                $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found.");
+                $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found."
+            );
         }
         var addCurrent = true;
-        foreach(var ruleSetReference
-            in ChildItemsByType<DataStructureRuleSetReference>(DataStructureRuleSetReference.CategoryConst))
+        foreach (
+            var ruleSetReference in ChildItemsByType<DataStructureRuleSetReference>(
+                DataStructureRuleSetReference.CategoryConst
+            )
+        )
         {
-            if(curRuleSetReference != null 
-			&& curRuleSetReference.Id == ruleSetReference.Id)
+            if (curRuleSetReference != null && curRuleSetReference.Id == ruleSetReference.Id)
             {
                 // current already processed
                 addCurrent = false;
             }
-            ruleSetReference.RuleSet.AddUniqueRuleSetIds(
-                ruleSetUniqIds, curRuleSetReference);
+            ruleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
         }
         // add current ruleset virtually - if we are in proper parent ruleset
-        if(curRuleSetReference != null 
-		&& curRuleSetReference.ParentItemId == Id && addCurrent)
+        if (curRuleSetReference != null && curRuleSetReference.ParentItemId == Id && addCurrent)
         {
-            curRuleSetReference.RuleSet.AddUniqueRuleSetIds(
-                ruleSetUniqIds, curRuleSetReference);
+            curRuleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
         }
     }
-	public List<DataStructureRule> Rules(string entityName)
-	{
-		var result = new List<DataStructureRule>();
-		foreach(DataStructureRule rule in Rules())
-		{
-			if(rule.EntityName == entityName 
-			&& rule.RuleDependencies.Count == 0)
-			{
-				result.Add(rule);
-			}
-		}
-		return result;
-	}
-	public Hashtable RulesDepending(string entityName)
-	{
-		var result = new Hashtable();
-		foreach(DataStructureRule rule in Rules())
-		{
-			if(rule.Entity.Name == entityName 
-			&& rule.RuleDependencies.Count > 0)
-			{
-				result[rule.PrimaryKey] = rule;
-			}
-		}
-		return result;
-	}
+
+    public List<DataStructureRule> Rules(string entityName)
+    {
+        var result = new List<DataStructureRule>();
+        foreach (DataStructureRule rule in Rules())
+        {
+            if (rule.EntityName == entityName && rule.RuleDependencies.Count == 0)
+            {
+                result.Add(rule);
+            }
+        }
+        return result;
+    }
+
+    public Hashtable RulesDepending(string entityName)
+    {
+        var result = new Hashtable();
+        foreach (DataStructureRule rule in Rules())
+        {
+            if (rule.Entity.Name == entityName && rule.RuleDependencies.Count > 0)
+            {
+                result[rule.PrimaryKey] = rule;
+            }
+        }
+        return result;
+    }
+
 #if ORIGAM_CLIENT
-	private static Dictionary<string, List<DataStructureRule>> _ruleCache = new ();
+    private static Dictionary<string, List<DataStructureRule>> _ruleCache = new();
 #endif
-	public List<DataStructureRule> Rules(string entityName, Guid fieldId, bool includeOtherEntities)
-	{
-		List<DataStructureRule> result;
+
+    public List<DataStructureRule> Rules(string entityName, Guid fieldId, bool includeOtherEntities)
+    {
+        List<DataStructureRule> result;
 #if ORIGAM_CLIENT
-		string cacheId = Id + entityName + fieldId + includeOtherEntities;
+        string cacheId = Id + entityName + fieldId + includeOtherEntities;
         lock (_lock)
         {
             if (_ruleCache.TryGetValue(cacheId, out var rules))
@@ -126,16 +138,18 @@ public class DataStructureRuleSet : AbstractSchemaItem
             }
 #endif
             result = new List<DataStructureRule>();
-            foreach(DataStructureRule rule in Rules())
+            foreach (DataStructureRule rule in Rules())
             {
-                foreach(DataStructureRuleDependency dep 
-                        in rule.RuleDependencies)
+                foreach (DataStructureRuleDependency dep in rule.RuleDependencies)
                 {
-                    if(((includeOtherEntities == false 
-					&& rule.Entity.Name == entityName) 
-					|| includeOtherEntities) 
-					&& dep.Entity.Name == entityName 
-					&& dep.FieldId == fieldId)
+                    if (
+                        (
+                            (includeOtherEntities == false && rule.Entity.Name == entityName)
+                            || includeOtherEntities
+                        )
+                        && dep.Entity.Name == entityName
+                        && dep.FieldId == fieldId
+                    )
                     {
                         result.Add(rule);
                     }
@@ -146,43 +160,35 @@ public class DataStructureRuleSet : AbstractSchemaItem
         }
 #endif
         return result;
-	}
-	#endregion
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureRule), typeof(DataStructureRuleSetReference)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		string itemName = null;
-		if(typeof(T) == typeof(DataStructureRule))
-		{
-			itemName = "NewRule";
-		}
-		else if(typeof(T) == typeof(DataStructureRuleSetReference))
-		{
-			itemName = "NewRuleSetReference";
-		}
-		return base.NewItem<T>(schemaExtensionId, group, itemName);
-	}
-	#endregion
+    }
+    #endregion
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes =>
+        new[] { typeof(DataStructureRule), typeof(DataStructureRuleSetReference) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        string itemName = null;
+        if (typeof(T) == typeof(DataStructureRule))
+        {
+            itemName = "NewRule";
+        }
+        else if (typeof(T) == typeof(DataStructureRuleSetReference))
+        {
+            itemName = "NewRuleSetReference";
+        }
+        return base.NewItem<T>(schemaExtensionId, group, itemName);
+    }
+    #endregion
 }

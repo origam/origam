@@ -25,11 +25,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
-using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards;
 class CreateLanguageTranslationEntityCommand : AbstractMenuCommand

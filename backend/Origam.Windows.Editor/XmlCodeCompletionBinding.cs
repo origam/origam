@@ -47,13 +47,17 @@ public class XmlCodeCompletionBinding
         {
             items = schemas.GetNamespaceCompletion(textUpToCursor);
             if (items.Count == 0)
+            {
                 items = schemas.GetAttributeValueCompletion(textUpToCursor, editor.TextArea.Caret.Offset, defaultSchema);
+            }
         }
         else
         {
             items = schemas.GetAttributeCompletion(textUpToCursor, defaultSchema);
             if (items.Count == 0)
+            {
                 items = schemas.GetElementCompletion(textUpToCursor, defaultSchema);
+            }
         }
         return items;
     }
@@ -69,11 +73,20 @@ public class XmlCodeCompletionBinding
     {
         int elementStartIndex = XmlParser.GetActiveElementStartIndex(editor.Document.Text, editor.TextArea.Caret.Offset);
         if (elementStartIndex <= -1)
+        {
             return false;
+        }
+
         if (ElementStartsWith("<!", elementStartIndex, editor.Document))
+        {
             return false;
+        }
+
         if (ElementStartsWith("<?", elementStartIndex, editor.Document))
+        {
             return false;
+        }
+
         XmlSchemaCompletion defaultSchema = null;
         if (DefaultSchema != null)
         {
@@ -114,9 +127,15 @@ public class XmlCodeCompletionBinding
         //if (char.IsWhiteSpace(ch) || editor.SelectionLength > 0)
         //    return false;
         if (ignoredChars.Contains(ch))
+        {
             return false;
+        }
+
         if (XmlParser.GetXmlIdentifierBeforeIndex(editor.Document, editor.TextArea.Caret.Offset).Length > 1)
+        {
             return false;
+        }
+
         return CtrlSpace(editor, ch);
     }
 }

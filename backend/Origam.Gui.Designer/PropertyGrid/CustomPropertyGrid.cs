@@ -64,11 +64,15 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 	protected override void OnPropertyValueChanged(PropertyValueChangedEventArgs e)
 	{
 		base.OnPropertyValueChanged(e);
-		if(settings == null) return;
-		((Setting)settings[e.ChangedItem.Label]).Value=e.ChangedItem.Value;
+		if(settings == null)
+        {
+            return;
+        } ((Setting)settings[e.ChangedItem.Label]).Value=e.ChangedItem.Value;
 		if(instantUpdate)
-			((Setting)settings[e.ChangedItem.Label]).FireUpdate(e);
-	}
+        {
+            ((Setting)settings[e.ChangedItem.Label]).FireUpdate(e);
+        }
+    }
 	[Browsable(false)]
 	public Settings Settings
 	{
@@ -191,13 +195,20 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 		{
 			ilg.Emit(OpCodes.Unbox,objType);	
 			if(typeHash[objType]!=null)
-				ilg.Emit((OpCode)typeHash[objType]);	
-			else
-				ilg.Emit(OpCodes.Ldobj,objType);		
-		}
+            {
+                ilg.Emit((OpCode)typeHash[objType]);
+            }
+            else
+            {
+                ilg.Emit(OpCodes.Ldobj,objType);
+            }
+        }
 		else
-			ilg.Emit(OpCodes.Castclass,objType);		
-		ilg.Emit(OpCodes.Stloc_0);			
+        {
+            ilg.Emit(OpCodes.Castclass,objType);
+        }
+
+        ilg.Emit(OpCodes.Stloc_0);			
 		ilg.Emit(OpCodes.Br_S,(byte)0);		
 		ilg.Emit(OpCodes.Ldloc_0);
 		ilg.Emit(OpCodes.Ret);				
@@ -208,9 +219,12 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 		ilg.Emit(OpCodes.Ldfld,hash);	
 		ilg.Emit(OpCodes.Ldstr,name);	
 		ilg.Emit(OpCodes.Ldarg_1);		
-		if(objType.IsValueType) 
-			ilg.Emit(OpCodes.Box,objType);									
-		ilg.EmitCall(OpCodes.Callvirt,typeof(Hashtable).GetMethod("set_Item"),null);
+		if(objType.IsValueType)
+        {
+            ilg.Emit(OpCodes.Box,objType);
+        }
+
+        ilg.EmitCall(OpCodes.Callvirt,typeof(Hashtable).GetMethod("set_Item"),null);
 		ilg.Emit(OpCodes.Ret);	
 		//put the get/set methods in with the property
 		pb.SetGetMethod(getMethod);

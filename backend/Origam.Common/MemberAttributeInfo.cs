@@ -23,21 +23,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
  * Helper class for storing information on members and their attributes
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace Origam;
+
 public class MemberAttributeInfo
 {
-	public readonly MemberInfo MemberInfo;
-	public readonly Attribute Attribute;
-	public readonly List<Attribute> MemberAttributes;
+    public readonly MemberInfo MemberInfo;
+    public readonly Attribute Attribute;
+    public readonly List<Attribute> MemberAttributes;
 
-	public MemberAttributeInfo( MemberInfo memberInfo, Attribute attribute, List<Attribute> memberAttributes )
-	{
-		this.MemberInfo = memberInfo;
-		this.Attribute = attribute;
-		this.MemberAttributes = memberAttributes;
-	}
+    public MemberAttributeInfo(
+        MemberInfo memberInfo,
+        Attribute attribute,
+        List<Attribute> memberAttributes
+    )
+    {
+        this.MemberInfo = memberInfo;
+        this.Attribute = attribute;
+        this.MemberAttributes = memberAttributes;
+    }
 }

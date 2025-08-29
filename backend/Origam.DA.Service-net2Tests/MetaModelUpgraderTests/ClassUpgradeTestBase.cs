@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.IO;
-using System.Xml;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;

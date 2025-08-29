@@ -138,8 +138,15 @@ class ContextStoreDependencyPainter
     {
         if (item is WorkflowTask workflowTask)
         {
-           if (workflowTask.OutputMethod == ServiceOutputMethod.Ignore) return false;
-           if (workflowTask.OutputContextStore == contextStore) return true;
+           if (workflowTask.OutputMethod == ServiceOutputMethod.Ignore)
+            {
+                return false;
+            }
+
+            if (workflowTask.OutputContextStore == contextStore)
+            {
+                return true;
+            }
         }
         if (item is ContextStoreLink link)
         {

@@ -23,7 +23,6 @@ using System;
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -39,8 +38,12 @@ public class AsTreeView2 : TextBox
 	#region Handling base events
 	protected override void InitLayout()
 	{
-		if(this.Disposing) return;
-		this.BorderStyle = BorderStyle.Fixed3D;
+		if(this.Disposing)
+        {
+            return;
+        }
+
+        this.BorderStyle = BorderStyle.Fixed3D;
 		this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 		this.AcceptsTab = true;
 		this.Multiline = true;

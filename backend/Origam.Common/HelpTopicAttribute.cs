@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam;
+
 /// <summary>
 /// Use this attribute on all classes that require help for the users.
 /// </summary>
@@ -29,6 +30,7 @@ namespace Origam;
 public sealed class HelpTopicAttribute : Attribute
 {
     private string _topic;
+
     /// <summary>
     /// The constructor for the Topic attribute.
     /// </summary>
@@ -37,6 +39,7 @@ public sealed class HelpTopicAttribute : Attribute
     {
         _topic = topic;
     }
+
     /// <summary>
     /// The name of the data structure entity used to store instances of this class.
     /// </summary>

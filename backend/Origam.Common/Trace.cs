@@ -25,6 +25,6 @@ namespace Origam
     {
         InheritFromParent,
         Yes,
-        No
+        No,
     }
 }

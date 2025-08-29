@@ -20,11 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA;
+
 public class Aggregation
 {
     public string ColumnName { get; }
     public CustomAggregationType AggregationType { get; }
     public string SqlQueryColumnName => ColumnName + AggregationType;
+
     public Aggregation(string columnName, CustomAggregationType aggregationType)
     {
         ColumnName = columnName;
@@ -34,5 +36,9 @@ public class Aggregation
 
 public enum CustomAggregationType
 {
-    Sum, Avg, Min, Max, Count
+    Sum,
+    Avg,
+    Min,
+    Max,
+    Count,
 }

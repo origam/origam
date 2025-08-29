@@ -57,7 +57,6 @@ public class GitFileComparerTests: AbstractFileTestClass
     [Test]
     public void ShouldReturnEmptyDiffIfNoDifferenecesExist()
     {
-      
         FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
         FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
         var gitFileComparer = new GitFileComparer();

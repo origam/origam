@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
 using Origam.UI;
 
 namespace Origam.Gui.Win;
@@ -162,11 +161,9 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 			{
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 	}
 	public void MoveUp()
 	{
@@ -184,15 +181,20 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 	{
 		switch(e.KeyCode)
 		{
-			case Keys.Escape:
-				this.Canceled = true;
-				this.Close();
-				break;
-			case Keys.Return:
-				e.Handled = true;
-				SelectItem();
-				break;
-		}
+            case Keys.Escape:
+                {
+                    this.Canceled = true;
+                    this.Close();
+                    break;
+                }
+
+            case Keys.Return:
+                {
+                    e.Handled = true;
+                    SelectItem();
+                    break;
+                }
+        }
 	}
 	#endregion
 	private void monthCalendar1_DateSelected(object sender, System.Windows.Forms.DateRangeEventArgs e)

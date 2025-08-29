@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using MoreLinq;
 
@@ -42,8 +40,12 @@ public class NativeTreeView : System.Windows.Forms.TreeView
 	public TreeNode RootNode {
 		get
 		{
-			if (TopNode == null) return null;
-			TreeNode node = TopNode;
+			if (TopNode == null)
+            {
+                return null;
+            }
+
+            TreeNode node = TopNode;
 			while (node.Parent != null)
 			{
 				node = node.Parent;

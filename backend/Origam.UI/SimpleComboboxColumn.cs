@@ -124,14 +124,19 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 		while (i < rowCount)
 		{
 			if( s.Equals( dv[i][this.ColumnComboBox.ValueMember]))
-				break;
-			++i;
+            {
+                break;
+            }
+
+            ++i;
 		}
 		
 		if(i < rowCount)
-			return dv[i][this.ColumnComboBox.DisplayMember];
-		
-		return DBNull.Value;
+        {
+            return dv[i][this.ColumnComboBox.DisplayMember];
+        }
+
+        return DBNull.Value;
 	}
 	protected override void SetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum, object value)
 	{
@@ -146,14 +151,22 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			while (i < rowCount)
 			{
 				if( s.Equals( dv[i][this.ColumnComboBox.DisplayMember]))
-					break;
-				++i;
+                {
+                    break;
+                }
+
+                ++i;
 			}
 			if(i < rowCount)
-				s =  dv[i][this.ColumnComboBox.ValueMember];
-			else
-				s = DBNull.Value;
-			base.SetColumnValueAtRow(source, rowNum, s);
+            {
+                s =  dv[i][this.ColumnComboBox.ValueMember];
+            }
+            else
+            {
+                s = DBNull.Value;
+            }
+
+            base.SetColumnValueAtRow(source, rowNum, s);
 		}
 	}
 	protected override void Dispose(bool disposing)

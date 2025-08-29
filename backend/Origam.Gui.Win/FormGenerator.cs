@@ -26,22 +26,17 @@ using System.Drawing;
 using System.Data;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
-using Origam.Schema.MenuModel;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Rule;
-
-using Origam.Schema.RuleModel;
 using System.Collections.Generic;
 using System.Linq;
 using Origam.Extensions;
-using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
@@ -278,8 +273,11 @@ public class FormGenerator : IDisposable
 			tableName = table.TableName;
 		}
 		else
-			tableName = member;
-		return tableName;
+        {
+            tableName = member;
+        }
+
+        return tableName;
 	}
 	public static string GetColumnNameFromDisplayMember (string member)
 	{
@@ -326,8 +324,12 @@ public class FormGenerator : IDisposable
 	{
 		object valueToSet=null;
 		//property which are used only for binding (not for saving values from designer) we ignore
-		if(propertyValueItem.ControlPropertyItem.IsBindOnly) return;
-		try
+		if(propertyValueItem.ControlPropertyItem.IsBindOnly)
+        {
+            return;
+        }
+
+        try
 		{
 			if(action==ProcessPropertyValueOperation.Save)
 			{
@@ -335,50 +337,86 @@ public class FormGenerator : IDisposable
 			}
 			switch(propertyValueItem.ControlPropertyItem.PropertyType)
 			{
-				case ControlPropertyValueType.Boolean:
-					if(action==ProcessPropertyValueOperation.Load)
-						Reflector.SetValue(property, control, propertyValueItem.BoolValue);
-						//property.SetValue(control,propertyValueItem.BoolValue, new object[0]);
-					else if(valueToSet != null)
-						propertyValueItem.BoolValue=(bool)valueToSet;
-					break;
-				case ControlPropertyValueType.Integer:
-					if(action==ProcessPropertyValueOperation.Load)
-					{
-						if(!property.PropertyType.IsEnum)
-							Reflector.SetValue(property, control, propertyValueItem.IntValue);
-						else
-							property.SetValue(control,Enum.ToObject(property.PropertyType, Convert.ToInt32(propertyValueItem.IntValue)), new object[0]);
-					}
-					else
-						propertyValueItem.IntValue=(int)valueToSet;
-					break;
-				case ControlPropertyValueType.String:
-					if(action==ProcessPropertyValueOperation.Load)
-						Reflector.SetValue(property, control, propertyValueItem.Value);
-						//property.SetValue(control,propertyValueItem.Value, new object[0]);
-					else
-						propertyValueItem.Value=(string)valueToSet;
-					break;
-				case ControlPropertyValueType.UniqueIdentifier:
-					if(action==ProcessPropertyValueOperation.Load)
-						Reflector.SetValue(property, control, propertyValueItem.GuidValue);
-						//property.SetValue(control,propertyValueItem.GuidValue, new object[0]);
-					else
-						propertyValueItem.GuidValue=(Guid)valueToSet;
-					break;
-				case ControlPropertyValueType.Xml:
-					if(action==ProcessPropertyValueOperation.Load)
-					{
-						valueToSet = FormGenerator.DeserializeValue(propertyValueItem.Value, property.PropertyType);
-						Reflector.SetValue(property, control, valueToSet);
-					}
-					else
-					{
-						propertyValueItem.Value=FormGenerator.SerializeValue(valueToSet, property.PropertyType);
-					}
-					break;
-			}
+                case ControlPropertyValueType.Boolean:
+                    {
+                        if (action == ProcessPropertyValueOperation.Load)
+                        {
+                            Reflector.SetValue(property, control, propertyValueItem.BoolValue);
+                        }
+                        //property.SetValue(control,propertyValueItem.BoolValue, new object[0]);
+                        else if (valueToSet != null)
+                        {
+                            propertyValueItem.BoolValue = (bool)valueToSet;
+                        }
+
+                        break;
+                    }
+
+                case ControlPropertyValueType.Integer:
+                    {
+                        if (action == ProcessPropertyValueOperation.Load)
+                        {
+                            if (!property.PropertyType.IsEnum)
+                            {
+                                Reflector.SetValue(property, control, propertyValueItem.IntValue);
+                            }
+                            else
+                            {
+                                property.SetValue(control, Enum.ToObject(property.PropertyType, Convert.ToInt32(propertyValueItem.IntValue)), new object[0]);
+                            }
+                        }
+                        else
+                        {
+                            propertyValueItem.IntValue = (int)valueToSet;
+                        }
+
+                        break;
+                    }
+
+                case ControlPropertyValueType.String:
+                    {
+                        if (action == ProcessPropertyValueOperation.Load)
+                        {
+                            Reflector.SetValue(property, control, propertyValueItem.Value);
+                        }
+                        //property.SetValue(control,propertyValueItem.Value, new object[0]);
+                        else
+                        {
+                            propertyValueItem.Value = (string)valueToSet;
+                        }
+
+                        break;
+                    }
+
+                case ControlPropertyValueType.UniqueIdentifier:
+                    {
+                        if (action == ProcessPropertyValueOperation.Load)
+                        {
+                            Reflector.SetValue(property, control, propertyValueItem.GuidValue);
+                        }
+                        //property.SetValue(control,propertyValueItem.GuidValue, new object[0]);
+                        else
+                        {
+                            propertyValueItem.GuidValue = (Guid)valueToSet;
+                        }
+
+                        break;
+                    }
+
+                case ControlPropertyValueType.Xml:
+                    {
+                        if (action == ProcessPropertyValueOperation.Load)
+                        {
+                            valueToSet = FormGenerator.DeserializeValue(propertyValueItem.Value, property.PropertyType);
+                            Reflector.SetValue(property, control, valueToSet);
+                        }
+                        else
+                        {
+                            propertyValueItem.Value = FormGenerator.SerializeValue(valueToSet, property.PropertyType);
+                        }
+                        break;
+                    }
+            }
 		}
 		catch (Exception ex)
 		{
@@ -395,8 +433,11 @@ public class FormGenerator : IDisposable
 	private static object DeserializeValue(string value, Type type)
 	{
 		if (string.IsNullOrEmpty(value))
-			return null;
-		System.Xml.Serialization.XmlSerializer ser  = new System.Xml.Serialization.XmlSerializer(type);
+        {
+            return null;
+        }
+
+        System.Xml.Serialization.XmlSerializer ser  = new System.Xml.Serialization.XmlSerializer(type);
 		System.IO.StringReader reader = new System.IO.StringReader(value);
 		return ser.Deserialize(reader);
 	}
@@ -425,7 +466,11 @@ public class FormGenerator : IDisposable
         else
         {
             _tooltipControls.Add(component);
-            if (text == "") text = ResourceUtils.GetString("NoHelpAvailable");
+            if (text == "")
+            {
+                text = ResourceUtils.GetString("NoHelpAvailable");
+            }
+
             _toolTip.SetToolTip(component, text);
         }
         foreach (Control child in component.Controls)
@@ -809,20 +854,29 @@ public class FormGenerator : IDisposable
 	MRG.Controls.UI.LoadingCircle circ = new MRG.Controls.UI.LoadingCircle();
 	private void ShowProgress(string text, ProgressPosition position, Control parent)
 	{
-		if(parent == null) return;
-		int top = 0;
+		if(parent == null)
+        {
+            return;
+        }
+
+        int top = 0;
 		int left = 0;
 		switch(position)
 		{
-			case ProgressPosition.Center:
-				top = this.Form.Height / 3;
-				left = this.Form.Width / 2 - (16);
-				break;
-			case ProgressPosition.TopRight:
-				top = 2;
-				left = this.Form.Width - 42;
-				break;
-		}
+            case ProgressPosition.Center:
+                {
+                    top = this.Form.Height / 3;
+                    left = (this.Form.Width / 2) - (16);
+                    break;
+                }
+
+            case ProgressPosition.TopRight:
+                {
+                    top = 2;
+                    left = this.Form.Width - 42;
+                    break;
+                }
+        }
 		if(text != null)
 		{
 			this.Form.ProgressText = text;
@@ -840,8 +894,12 @@ public class FormGenerator : IDisposable
 	}
 	private void HideProgress()
 	{
-		if(! circ.Active) return;
-		if(this.Form.ProgressText != "")
+		if(! circ.Active)
+        {
+            return;
+        }
+
+        if (this.Form.ProgressText != "")
 		{
 			this.Form.ProgressText = "";
 		}
@@ -878,8 +936,12 @@ public class FormGenerator : IDisposable
 		{
 			ShowProgress(ResourceUtils.GetString("LoadingForm"), ProgressPosition.Center, this.Form);
 			bool isReadOnly = false;
-			if(this.Form != null) isReadOnly = this.Form.IsReadOnly;
-			control = this.LoadControl(cntrlSet, null, _bindings, _dataConsumers, null, true, isReadOnly);
+			if(this.Form != null)
+            {
+                isReadOnly = this.Form.IsReadOnly;
+            }
+
+            control = this.LoadControl(cntrlSet, null, _bindings, _dataConsumers, null, true, isReadOnly);
 			// finish initialization of controls
 			EndInitialization(control);
 			//Application.DoEvents();
@@ -922,13 +984,21 @@ public class FormGenerator : IDisposable
 	}
 	public DataSet NewRecord(IXmlContainer dataSource)
 	{
-		if(DefaultTemplate == null) return null;
-		return TemplateTools.NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
+		if(DefaultTemplate == null)
+        {
+            return null;
+        }
+
+        return TemplateTools.NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
 	}
 	public object[] AddTemplateRecord(DataRow parentRow, string dataMember, Guid dataStructureId, DataSet formData)
 	{
-		if(this.DefaultTemplate == null) return null;
-		return TemplateTools.AddTemplateRecord(parentRow, this.DefaultTemplate, dataMember, dataStructureId, formData);
+		if(this.DefaultTemplate == null)
+        {
+            return null;
+        }
+
+        return TemplateTools.AddTemplateRecord(parentRow, this.DefaultTemplate, dataMember, dataStructureId, formData);
 	}
 	#endregion
 	#region Private Methods
@@ -950,8 +1020,12 @@ public class FormGenerator : IDisposable
 		string result = "";
 		while(parentTable != null)
 		{
-			if(result != "") result = "." + result;
-			result = parentTable.TableName + result;
+			if(result != "")
+            {
+                result = "." + result;
+            }
+
+            result = parentTable.TableName + result;
 			if(parentTable.ParentRelations.Count > 0)
 			{
 				parentTable = parentTable.ParentRelations[0].ParentTable;
@@ -976,8 +1050,12 @@ public class FormGenerator : IDisposable
 	}
 	private void ClearControls(Control control)
 	{
-		if(control is BaseDropDownControl || control.GetType().FullName == "CrystalDecisions.Windows.Forms.CrystalReportViewer") return;
-		var controls = control.Controls.Cast<Control>().ToList();
+		if(control is BaseDropDownControl || control.GetType().FullName == "CrystalDecisions.Windows.Forms.CrystalReportViewer")
+        {
+            return;
+        }
+
+        var controls = control.Controls.Cast<Control>().ToList();
 		if(control == this.Form)
 		{
 			foreach(Control component in _tooltipControls)
@@ -1031,8 +1109,12 @@ public class FormGenerator : IDisposable
 	}
     public static void RemoveBinding(Control control, Binding binding)
     {
-		if (control.DataBindings.Count == 0) return;
-		control.DataBindings.Remove(binding); 
+		if (control.DataBindings.Count == 0)
+        {
+            return;
+        }
+
+        control.DataBindings.Remove(binding); 
     }
 	private void RemoveDataSourcesFromConsumers(Hashtable dataConsumers)
 	{
@@ -1182,8 +1264,10 @@ public class FormGenerator : IDisposable
 	private void Initialize(Guid version)
 	{
 		if(version == Guid.Empty)
-			throw new NullReferenceException(ResourceUtils.GetString("ErrorVersionEmpty"));
-	}
+        {
+            throw new NullReferenceException(ResourceUtils.GetString("ErrorVersionEmpty"));
+        }
+    }
 	public void BindControls()
 	{
 		this.BindControls(_bindings);
@@ -1227,8 +1311,12 @@ public class FormGenerator : IDisposable
 	private Control LoadControl(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
 		Hashtable dataConsumers, Control parentControl, bool ignoreTabPages, bool readOnly)
 	{
-		if (!FormTools.IsValid(cntrlSet.Features, cntrlSet.Roles)) return null;
-		readOnly = FormTools.GetReadOnlyStatus(cntrlSet, readOnly);
+		if (!FormTools.IsValid(cntrlSet.Features, cntrlSet.Roles))
+        {
+            return null;
+        }
+
+        readOnly = FormTools.GetReadOnlyStatus(cntrlSet, readOnly);
 		//create control
 		Control cntrl = CreateInstance(cntrlSet, dataMember, bindings, dataConsumers, readOnly);
 		ISupportInitialize supportInitialize = cntrl as ISupportInitialize;
@@ -1371,8 +1459,11 @@ public class FormGenerator : IDisposable
         foreach (EntityUIAction action in actions)
         {
 	        if (dropDownActions.Contains(action))
-		        continue; // we don't have to do anything with these!
-	        var actionButton 
+            {
+                continue; // we don't have to do anything with these!
+            }
+
+            var actionButton 
 		        = GetActionButtonInstance(action);
 	        actionButton.Enabled = false;
 	        actionButton.Visible = false;
@@ -1404,8 +1495,12 @@ public class FormGenerator : IDisposable
 	}
 	private void LoadControlDataBindings(Control cntrl, ControlSetItem cntrSetItem, string dataMember, object dataSource, Hashtable bindings, Hashtable dataConsumers)
 	{
-		if(dataMember == null || dataMember.Length < 1)	return;
-		DataTable table;
+		if(dataMember == null || dataMember.Length < 1)
+        {
+            return;
+        }
+
+        DataTable table;
 		
 		if(dataSource is DataSet)
 		{
@@ -1509,8 +1604,11 @@ public class FormGenerator : IDisposable
 		}
 		
 		if(result == null)
-			throw new NullReferenceException(ResourceUtils.GetString("ErrorUnsupportedType", cntrlSet.ControlItem.ControlType));
-		AsPanel panelResult = result as AsPanel;
+        {
+            throw new NullReferenceException(ResourceUtils.GetString("ErrorUnsupportedType", cntrlSet.ControlItem.ControlType));
+        }
+
+        AsPanel panelResult = result as AsPanel;
 		AsForm formResult = result as AsForm;
 		if(formResult != null)
 		{
@@ -1540,21 +1638,30 @@ public class FormGenerator : IDisposable
 		PropertyInfo result=null;
 		object[] key=new object[2] {controlType, propertyName};
 		if(_propertyCache.Contains(key))
-			result = _propertyCache[key] as PropertyInfo;
-		else
+        {
+            result = _propertyCache[key] as PropertyInfo;
+        }
+        else
 		{
 			result = controlType.GetProperty(propertyName);
-			if(result == null) throw new ArgumentOutOfRangeException("propertyName", propertyName, ResourceUtils.GetString("ErrorPropertyNotFound", propertyName, controlType.ToString()));
-			_propertyCache.Add(key, result);
+			if(result == null)
+            {
+                throw new ArgumentOutOfRangeException("propertyName", propertyName, ResourceUtils.GetString("ErrorPropertyNotFound", propertyName, controlType.ToString()));
+            }
+
+            _propertyCache.Add(key, result);
 		}
         
 		return result;
 	}
 	private void AttachmentHandle(AsPanel panel)
 	{
-		if (panel == null) return;
-		
-		panel.ShowAttachmentsChanged += new EventHandler(this.Form.PanelAttachementStateHandler);
+		if (panel == null)
+        {
+            return;
+        }
+
+        panel.ShowAttachmentsChanged += new EventHandler(this.Form.PanelAttachementStateHandler);
 	}
 	private void SetControlProperties(Control cntrl, bool readOnly)
 	{
@@ -1562,8 +1669,12 @@ public class FormGenerator : IDisposable
 //			{
 //				(cntrl as ISupportInitialize).BeginInit();
 //			}
-		if(! (cntrl.Tag is ControlSetItem)) return;
-		ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
+		if(! (cntrl.Tag is ControlSetItem))
+        {
+            return;
+        }
+
+        ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
 		PropertyInfo propToSet=null;
 		PropertyInfo heightProperty=null;
 		PropertyValueItem heightValueItem=null;
@@ -1775,11 +1886,19 @@ public class FormGenerator : IDisposable
 	/// <param name="e"></param>
 	private void FormGenerator_TabPageSelectedIndexChanged(object sender, EventArgs e)
 	{
-		if(_disposing | _unloadingForm) return;
-		TabPage page = (sender as TabControl).SelectedTab;
+		if(_disposing | _unloadingForm)
+        {
+            return;
+        }
+
+        TabPage page = (sender as TabControl).SelectedTab;
 		
-		if(page == null) return;
-		page.SelectNextControl(page, true, true, true, true);
+		if(page == null)
+        {
+            return;
+        }
+
+        page.SelectNextControl(page, true, true, true, true);
 	}
 	internal void table_rowCopied(DataRow row, IDataDocument document)
 	{
@@ -1817,8 +1936,12 @@ public class FormGenerator : IDisposable
     }
 	internal void table_RowDeleted(DataRow[] parentRows, DataRow deletedRow)
 	{
-		if(this.IgnoreDataChanges) return;
-		this.Form.IsDirty = true;	
+		if(this.IgnoreDataChanges)
+        {
+            return;
+        }
+
+        this.Form.IsDirty = true;	
 		try
 		{
 			_ruleHandler.OnRowDeleted(parentRows, deletedRow, XmlData, this.RuleSet, _formRuleEngine);
@@ -1915,13 +2038,18 @@ public class FormGenerator : IDisposable
 	{
 		switch(e.Button.Tag.ToString())
 		{
-			case "OK":
-				selectionDialogOKButton_Click(this, EventArgs.Empty);
-				break;
-			case "CANCEL":
-				selectionDialogCancelButton_Click(this, EventArgs.Empty);
-				break;
-		}
+            case "OK":
+                {
+                    selectionDialogOKButton_Click(this, EventArgs.Empty);
+                    break;
+                }
+
+            case "CANCEL":
+                {
+                    selectionDialogCancelButton_Click(this, EventArgs.Empty);
+                    break;
+                }
+        }
 	}
 	private void selectionDialogOKButton_Click(object sender, EventArgs e)
 	{
@@ -1959,8 +2087,12 @@ public class FormGenerator : IDisposable
 	{
 		if(dataMember == _listDataMember && id != null && !(id is Guid && (Guid)id == Guid.Empty))
 		{
-			if(_loadedPieces.Contains(id)) return false;
-			ShowProgress(null, ProgressPosition.TopRight, this.Form.NameLabel);
+			if(_loadedPieces.Contains(id))
+            {
+                return false;
+            }
+
+            ShowProgress(null, ProgressPosition.TopRight, this.Form.NameLabel);
 			this.IgnoreDataChanges = true;
 			try
 			{
@@ -1974,8 +2106,12 @@ public class FormGenerator : IDisposable
 				_dataServiceAgent.Parameters.Add("Query", query);
 				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 				DataStructureMethod fs = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructureMethod), new ModelElementKey(_mainDataStructureMethodId)) as DataStructureMethod;
-				if(fs == null) throw new ArgumentNullException("MainDataStructureMethod", ResourceUtils.GetString("ErrorDelayedData"));
-				foreach(string parameterName in fs.ParameterReferences.Keys)
+				if(fs == null)
+                {
+                    throw new ArgumentNullException("MainDataStructureMethod", ResourceUtils.GetString("ErrorDelayedData"));
+                }
+
+                foreach (string parameterName in fs.ParameterReferences.Keys)
 				{
 					query.Parameters.Add(new QueryParameter(parameterName, id));
 				}
@@ -2035,9 +2171,7 @@ public class FormGenerator : IDisposable
 			}
 			return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
+
+        return false;
+    }
 }

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using System.Drawing;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
@@ -93,8 +92,12 @@ public class SchemaCompareEditor : AbstractViewContent
 			// only version from the current extension
 			if(version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
 			{
-				if(version.IsCurrentVersion) currentVersion = version;
-				cboDeploymentVersion.Items.Add(version);
+				if(version.IsCurrentVersion)
+                {
+                    currentVersion = version;
+                }
+
+                cboDeploymentVersion.Items.Add(version);
 			}
 		}
 		// select active version

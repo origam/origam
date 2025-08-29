@@ -19,12 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service;
+
 public class SelectParameters
 {
     private CustomOrderings customOrderings = new CustomOrderings(null);

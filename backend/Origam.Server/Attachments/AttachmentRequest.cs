@@ -41,6 +41,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server;
+
 public class AttachmentRequest
 {
     public AttachmentRequest(object[] ids, bool isPreview)
@@ -48,6 +49,7 @@ public class AttachmentRequest
         _ids = ids;
         _isPreview = isPreview;
     }
+
     private object[] _ids;
     public object[] Ids
     {

@@ -20,35 +20,43 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Xml;
-using System.Collections;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for TreeControlBuilder.
 /// </summary>
 public class TreeControlBuilder
 {
-	public static void Build(XmlElement parentNode, UIElementRenderData  renderData, 
-		DataTable table, string controlId, Hashtable dataSources, bool isIndependent)
-	{
-		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-		parentNode.SetAttribute("Type", "TreePanel");
-		parentNode.SetAttribute("Entity", table.TableName);
-		parentNode.SetAttribute("IdProperty", renderData.IdColumn);
-		parentNode.SetAttribute("ParentIdProperty", renderData.ParentIdColumn);
-		parentNode.SetAttribute("NameProperty", renderData.NameColumn);
-		parentNode.SetAttribute("DataMember", renderData.DataMember);
-//			parentNode.SetAttribute("Width", XmlConvert.ToString(width));
-//			parentNode.SetAttribute("Height", XmlConvert.ToString(height));
-		FormXmlBuilder.AddDataSource(dataSources, table, controlId, isIndependent);
-	}
-	public static void Build2(XmlElement parentNode, string formParameterName, Guid treeId)
-	{
-		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-		parentNode.SetAttribute("Type", "TreePanelEx");
-		parentNode.SetAttribute("TreeId", treeId.ToString());
-		parentNode.SetAttribute("FormParameterName", formParameterName);
-	}
+    public static void Build(
+        XmlElement parentNode,
+        UIElementRenderData renderData,
+        DataTable table,
+        string controlId,
+        Hashtable dataSources,
+        bool isIndependent
+    )
+    {
+        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+        parentNode.SetAttribute("Type", "TreePanel");
+        parentNode.SetAttribute("Entity", table.TableName);
+        parentNode.SetAttribute("IdProperty", renderData.IdColumn);
+        parentNode.SetAttribute("ParentIdProperty", renderData.ParentIdColumn);
+        parentNode.SetAttribute("NameProperty", renderData.NameColumn);
+        parentNode.SetAttribute("DataMember", renderData.DataMember);
+        //			parentNode.SetAttribute("Width", XmlConvert.ToString(width));
+        //			parentNode.SetAttribute("Height", XmlConvert.ToString(height));
+        FormXmlBuilder.AddDataSource(dataSources, table, controlId, isIndependent);
+    }
+
+    public static void Build2(XmlElement parentNode, string formParameterName, Guid treeId)
+    {
+        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+        parentNode.SetAttribute("Type", "TreePanelEx");
+        parentNode.SetAttribute("TreeId", treeId.ToString());
+        parentNode.SetAttribute("FormParameterName", formParameterName);
+    }
 }

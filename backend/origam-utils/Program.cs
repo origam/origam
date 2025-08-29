@@ -26,9 +26,7 @@ using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -269,7 +267,6 @@ public class Program
                 return 1;
             }
         }
-        
     }
     private static Type[] GetVerbs()
     {

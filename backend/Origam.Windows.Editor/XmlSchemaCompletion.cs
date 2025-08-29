@@ -496,13 +496,11 @@ public class XmlSchemaCompletion
         {
             return GetChildElementCompletion(extension, prefix);
         }
-        else
+        XmlSchemaComplexContentRestriction restriction = complexContent.Content as XmlSchemaComplexContentRestriction;
+
+        if (restriction != null)
         {
-            XmlSchemaComplexContentRestriction restriction = complexContent.Content as XmlSchemaComplexContentRestriction;
-            if (restriction != null)
-            {
-                return GetChildElementCompletion(restriction, prefix);
-            }
+            return GetChildElementCompletion(restriction, prefix);
         }
         return new XmlCompletionItemCollection();
     }
@@ -735,14 +733,12 @@ public class XmlSchemaCompletion
         {
             return true;
         }
-        else
+
+        foreach (XmlSchemaAttribute prohibitedAttribute in prohibitedAttributes)
         {
-            foreach (XmlSchemaAttribute prohibitedAttribute in prohibitedAttributes)
+            if (prohibitedAttribute.QualifiedName == attribute.QualifiedName)
             {
-                if (prohibitedAttribute.QualifiedName == attribute.QualifiedName)
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

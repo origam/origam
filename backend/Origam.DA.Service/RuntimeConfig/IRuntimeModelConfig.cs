@@ -24,7 +24,8 @@ using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service;
-public interface IRuntimeModelConfig: IDisposable
+
+public interface IRuntimeModelConfig : IDisposable
 {
     void SetConfigurationValues(IFilePersistent instance);
     void UpdateConfig(IPersistent persistent);

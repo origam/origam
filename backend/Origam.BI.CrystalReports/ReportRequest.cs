@@ -19,14 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.BI.CrystalReports;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
+using Origam.BI.CrystalReports;
 
 namespace Origam.CrystalReportsService.Models;
+
 [DataContract(Namespace = "")]
 public class ReportRequest
 {
@@ -38,19 +39,22 @@ public class ReportRequest
             var stringBuilder = new StringBuilder();
             using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter,
-                new XmlWriterSettings { Encoding = UTF8Encoding.UTF8 }))
+                using (
+                    var xmlWriter = XmlWriter.Create(
+                        stringWriter,
+                        new XmlWriterSettings { Encoding = UTF8Encoding.UTF8 }
+                    )
+                )
                 {
                     Dataset.WriteXml(xmlWriter, XmlWriteMode.WriteSchema);
                 }
             }
             return stringBuilder.ToString();
         }
-        set
-        {
-        }
+        set { }
     }
     public DataSet Dataset { get; set; }
+
     [DataMember()]
     public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 }

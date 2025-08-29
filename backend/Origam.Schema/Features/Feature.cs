@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for Feature.
 /// </summary>
@@ -33,20 +34,24 @@ namespace Origam.Schema;
 [ClassMetaVersion("6.0.0")]
 public class Feature : AbstractSchemaItem
 {
-	public const string CategoryConst = "Feature";
-	public Feature() : base() {}
-	public Feature(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public Feature(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
-	#region Properties
-	#endregion
+    public const string CategoryConst = "Feature";
+
+    public Feature()
+        : base() { }
+
+    public Feature(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public Feature(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
+    #region Properties
+    #endregion
 }

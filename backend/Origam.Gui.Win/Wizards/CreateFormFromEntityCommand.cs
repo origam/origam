@@ -96,7 +96,11 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
     public override void Execute()
     {
         string groupName = null;
-        if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
+        if (screenwizardForm.Entity.Group != null)
+        {
+            groupName = screenwizardForm.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(screenwizardForm.Entity, screenwizardForm.NameOfEntity, true);
         GeneratedModelElements.Add(dataStructure);
         PanelControlSet panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames, screenwizardForm.NameOfEntity);
@@ -184,7 +188,11 @@ public class CreateCompleteUICommand : AbstractMenuCommand
     public override void Execute()
     {
         string groupName = null;
-        if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+        if (wizardForm.Entity.Group != null)
+        {
+            groupName = wizardForm.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
         PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, 
                                     wizardForm.NameOfEntity);
@@ -279,7 +287,11 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
     {
         PanelControlSet panel = ((PanelControlSet)panelWizard.Entity);
         string groupName = null;
-        if (panelWizard.Entity.Group != null) groupName = panelWizard.Entity.Group.Name;
+        if (panelWizard.Entity.Group != null)
+        {
+            groupName = panelWizard.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panelWizard.NameOfEntity, true);
         GeneratedModelElements.Add(dataStructure);
         FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);

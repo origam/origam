@@ -19,9 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Microsoft.AspNetCore.Identity;
+
 namespace Origam.Server.Authorization
 {
-    public class UpperInvariantLookupNormalizer : Microsoft.AspNetCore.Identity.ILookupNormalizer
+    public class UpperInvariantLookupNormalizer : ILookupNormalizer
     {
         public string NormalizeEmail(string email)
         {

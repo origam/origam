@@ -119,7 +119,7 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
         var imageRectangle =
             ToolStripButtonTools.GetImageRectangle(this);
         
-        var yCoord = imageRectangle.Y + imageRectangle.Height/ 2;
+        var yCoord = imageRectangle.Y + (imageRectangle.Height/ 2);
         var xCoord = imageRectangle.X + imageRectangle.Width + imageArrowGap;
         return  new Rectangle(
             new Point(xCoord, yCoord),

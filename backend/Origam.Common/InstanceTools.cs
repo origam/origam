@@ -24,39 +24,40 @@ using System.Reflection;
 using System.Xml;
 
 namespace Origam;
+
 public static class InstanceTools
 {
     public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
     {
         Type memberType;
         if (memberInfo is PropertyInfo)
+        {
             memberType = (memberInfo as PropertyInfo).PropertyType;
+        }
         else
+        {
             memberType = (memberInfo as FieldInfo).FieldType;
-        
+        }
+
         object correctlyTypedValue;
         // If member is enum, we have to convert
-        if (memberType.IsEnum )
+        if (memberType.IsEnum)
         {
-            correctlyTypedValue = value == null ? null :
-                Enum.Parse(memberType, (string)value);
+            correctlyTypedValue = value == null ? null : Enum.Parse(memberType, (string)value);
         }
         else if (memberType == typeof(int))
         {
-            correctlyTypedValue = value == null ? 0 :
-                XmlConvert.ToInt32((string)value);
+            correctlyTypedValue = value == null ? 0 : XmlConvert.ToInt32((string)value);
         }
         else if (memberType == typeof(bool))
         {
-            correctlyTypedValue = value != null &&
-                                  XmlConvert.ToBoolean((string)value);
+            correctlyTypedValue = value != null && XmlConvert.ToBoolean((string)value);
         }
         else if (memberType == typeof(Guid))
         {
             if (value != null)
             {
-                correctlyTypedValue 
-                    = value is Guid ? value : new Guid((string)value);
+                correctlyTypedValue = value is Guid ? value : new Guid((string)value);
             }
             else
             {
@@ -68,5 +69,5 @@ public static class InstanceTools
             correctlyTypedValue = value;
         }
         return correctlyTypedValue;
-    }  
+    }
 }

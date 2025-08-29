@@ -29,28 +29,39 @@ using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 
 namespace Origam.BI.FastReport;
+
 public class FastReportService : IReportService
 {
-    public object GetReport(Guid reportId, IXmlContainer data, 
-        string format, Hashtable parameters, string dbTransaction)
+    public object GetReport(
+        Guid reportId,
+        IXmlContainer data,
+        string format,
+        Hashtable parameters,
+        string dbTransaction
+    )
     {
         var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
         parameters ??= new Hashtable();
-        ReportHelper.PopulateDefaultValues(
-            report, parameters);
+        ReportHelper.PopulateDefaultValues(report, parameters);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report, data, parameters, dbTransaction);
+            report,
+            data,
+            parameters,
+            dbTransaction
+        );
         DataSet dataset = xmlDataDoc.DataSet;
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
+            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+        );
         using var reportDoc = new Report();
-        OrigamSettings settings 
-            = ConfigurationManager.GetActiveConfiguration();
+        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string path = Path.Combine(
-            settings.ReportsFolder(), 
+            settings.ReportsFolder(),
             ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(
                 report.ReportFileName,
-                parameters));
+                parameters
+            )
+        );
         if (!IOTools.IsSubPathOf(path, settings.ReportsFolder()))
         {
             throw new Exception(Strings.PathNotOnReportPath);
@@ -61,8 +72,7 @@ public class FastReportService : IReportService
         }
         else
         {
-            throw new Exception(
-                ResourceUtils.GetString("PathNotFound", path));
+            throw new Exception(ResourceUtils.GetString("PathNotFound", path));
         }
         foreach (DataTable table in dataset.Tables)
         {
@@ -71,34 +81,43 @@ public class FastReportService : IReportService
         reportDoc.Prepare();
         if (format != "PDF")
         {
-            throw new ArgumentOutOfRangeException(nameof(format), format, 
-                ResourceUtils.GetString("FormatNotSupported"));
+            throw new ArgumentOutOfRangeException(
+                nameof(format),
+                format,
+                ResourceUtils.GetString("FormatNotSupported")
+            );
         }
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()
-                ?.DeclaringType, 
-            $"Exporting report '{report.Name}' to {format}");
+            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            $"Exporting report '{report.Name}' to {format}"
+        );
         using var stream = new MemoryStream();
         var pdf = new PDFSimpleExport();
         reportDoc.Export(pdf, stream);
         return stream.ToArray();
     }
-    public string PrepareExternalReportViewer(Guid reportId,
-        IXmlContainer data, string format, Hashtable parameters,
-        string dbTransaction)
+
+    public string PrepareExternalReportViewer(
+        Guid reportId,
+        IXmlContainer data,
+        string format,
+        Hashtable parameters,
+        string dbTransaction
+    )
     {
         throw new NotImplementedException();
     }
+
     public void PrintReport(
-        Guid reportId, 
-        IXmlContainer data, 
-        string printerName, 
-        int copies, 
-        Hashtable parameters)
+        Guid reportId,
+        IXmlContainer data,
+        string printerName,
+        int copies,
+        Hashtable parameters
+    )
     {
         throw new NotImplementedException();
     }
-    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-    {
-    }
+
+    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo) { }
 }

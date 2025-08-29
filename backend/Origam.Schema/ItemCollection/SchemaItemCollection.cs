@@ -33,18 +33,19 @@ public static class SchemaItemCollection
         return new ServerSchemaItemCollection();
 #else
         return new ArchitectISchemaItemCollection();
-#endif 
+#endif
     }
-    
-    public static ISchemaItemCollection Create(IPersistenceProvider persistence,
-        ISchemaItemProvider provider, ISchemaItem parentItem)
+
+    public static ISchemaItemCollection Create(
+        IPersistenceProvider persistence,
+        ISchemaItemProvider provider,
+        ISchemaItem parentItem
+    )
     {
 #if ORIGAM_CLIENT
         return new ServerSchemaItemCollection(parentItem);
 #else
-        return
-            new ArchitectISchemaItemCollection(persistence, provider,
-                parentItem);
+        return new ArchitectISchemaItemCollection(persistence, provider, parentItem);
 #endif
     }
 }

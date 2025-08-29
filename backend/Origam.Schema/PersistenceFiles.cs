@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema;
+
 public class PersistenceFiles
 {
     public const string PackageFileName = ".origamPackage";

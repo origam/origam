@@ -38,12 +38,20 @@ public abstract class SqlManager(ICoreDataService dataService)
 
     public abstract List<Guid> InsertWorkQueueEntries();
     public abstract List<Guid> InsertFourEntriesToTestQueue3();
-    public abstract void EnableThrottlingOnTestQueue3(int throttlingIntervalSeconds, int throttlingItemsPerInterval);
+    public abstract void EnableThrottlingOnTestQueue3(
+        int throttlingIntervalSeconds,
+        int throttlingItemsPerInterval
+    );
     public abstract void DisableThrottlingOnTestQueue3();
     public abstract void WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
-    public abstract void SetupQueue(Guid queueId, Guid retryType, int maxRetries,
-        int retryIntervalSeconds, Guid? errorQueueId);
+    public abstract void SetupQueue(
+        Guid queueId,
+        Guid retryType,
+        int maxRetries,
+        int retryIntervalSeconds,
+        Guid? errorQueueId
+    );
 
     public abstract void CreateWorkQueueModificationTrigger();
     public abstract Dictionary<Guid, int> GetAttemptCountsInQueues(Guid entryId);

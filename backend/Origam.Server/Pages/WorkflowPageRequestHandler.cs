@@ -41,58 +41,70 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using Origam.Schema.GuiModel;
-using Origam.DA;
-using Origam.Schema.WorkflowModel;
-using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Collections;
+using System.Collections.Generic;
+using Origam.DA;
 using Origam.Rule;
+using Origam.Schema.GuiModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Pages;
+
 class WorkflowPageRequestHandler : AbstractPageRequestHandler
 {
-    public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+    public override void Execute(
+        AbstractPage page,
+        Dictionary<string, object> parameters,
+        IRequestWrapper request,
+        IResponseWrapper response
+    )
     {
         WorkflowPage workflowPage = page as WorkflowPage;
         QueryParameterCollection qparams = new QueryParameterCollection();
-		Hashtable transformParams = new Hashtable();
-		Hashtable preprocessorParams = GetPreprocessorParameters(request);
-		// convert parameters to QueryParameterCollection for data service and hashtable for transformation service
-		foreach (KeyValuePair<string, object> p in parameters)
-		{
-			qparams.Add(new QueryParameter(p.Key, p.Value));
-			transformParams.Add(p.Key, p.Value);
-		}
-		// copy also the preprocessor parameters to the transformation parameters
-		foreach (DictionaryEntry rp in preprocessorParams)
-		{
-			transformParams.Add(rp.Key, rp.Value);
-		}
-		RuleEngine ruleEngine = RuleEngine.Create(null, null);
-		Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
-		if (workflowPage.DisableConstraintForInputValidation)
-		{
-			// reenable constraints for context parameter
-			foreach (KeyValuePair<string, object> p in parameters)
-			{
-				if (p.Value as IDataDocument != null)
-				{
-					(p.Value as IDataDocument).DataSet.EnforceConstraints = true;
-				}
-			}
-		}
-		object workflowResult = CoreServices.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
+        Hashtable transformParams = new Hashtable();
+        Hashtable preprocessorParams = GetPreprocessorParameters(request);
+        // convert parameters to QueryParameterCollection for data service and hashtable for transformation service
+        foreach (KeyValuePair<string, object> p in parameters)
+        {
+            qparams.Add(new QueryParameter(p.Key, p.Value));
+            transformParams.Add(p.Key, p.Value);
+        }
+        // copy also the preprocessor parameters to the transformation parameters
+        foreach (DictionaryEntry rp in preprocessorParams)
+        {
+            transformParams.Add(rp.Key, rp.Value);
+        }
+        RuleEngine ruleEngine = RuleEngine.Create(null, null);
+        Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
+        if (workflowPage.DisableConstraintForInputValidation)
+        {
+            // reenable constraints for context parameter
+            foreach (KeyValuePair<string, object> p in parameters)
+            {
+                if (p.Value as IDataDocument != null)
+                {
+                    (p.Value as IDataDocument).DataSet.EnforceConstraints = true;
+                }
+            }
+        }
+        object workflowResult = CoreServices.WorkflowService.ExecuteWorkflow(
+            workflowPage.WorkflowId,
+            qparams,
+            null
+        );
         bool handled = false;
-        var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(AbstractWorkflowPageAction.CategoryConst);
+        var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(
+            AbstractWorkflowPageAction.CategoryConst
+        );
         actions.Sort();
         RuleEngine re = RuleEngine.Create(new Hashtable(), null);
         foreach (AbstractWorkflowPageAction action in actions)
         {
             bool conditionResult = true;
-            if(action.ConditionRule != null)
+            if (action.ConditionRule != null)
             {
                 conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
             }
@@ -106,10 +118,14 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("action", action, Resources.ErrorUnknownWorkflowPageAction);
+                    throw new ArgumentOutOfRangeException(
+                        "action",
+                        action,
+                        Resources.ErrorUnknownWorkflowPageAction
+                    );
                 }
                 handler.Execute(action, workflowResult, request, response);
-                
+
                 // execute the first valid action
                 break;
             }
@@ -122,16 +138,16 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
             }
         }
     }
+
     private bool IsFeatureOn(string featureCode)
     {
-        return ServiceManager.Services
-	        .GetService<IParameterService>()
-	        .IsFeatureOn(featureCode);
+        return ServiceManager.Services.GetService<IParameterService>().IsFeatureOn(featureCode);
     }
+
     private bool IsInRole(string roleName)
     {
         return SecurityManager
-	        .GetAuthorizationProvider()
-	        .Authorize(SecurityManager.CurrentPrincipal, roleName);
+            .GetAuthorizationProvider()
+            .Authorize(SecurityManager.CurrentPrincipal, roleName);
     }
 }

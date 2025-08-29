@@ -20,15 +20,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Data;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public class AttachmentUtils
 {
     public static DataRow LoadAttachmentInfo(object id)
     {
-        DataSet result = CoreServices.DataService.Instance.LoadData(new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), new Guid("08a7d05e-c3e8-414e-a9a3-11bee9a26025"), Guid.Empty, Guid.Empty, null, "Attachment_parId", id);
+        DataSet result = CoreServices.DataService.Instance.LoadData(
+            new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
+            new Guid("08a7d05e-c3e8-414e-a9a3-11bee9a26025"),
+            Guid.Empty,
+            Guid.Empty,
+            null,
+            "Attachment_parId",
+            id
+        );
         DataTable t = result.Tables["Attachment"];
         if (t.Rows.Count == 0)
         {
@@ -36,8 +45,14 @@ public class AttachmentUtils
         }
         return t.Rows[0];
     }
+
     public static void SaveAttachmentInfo(DataRow row)
     {
-        CoreServices.DataService.Instance.StoreData(new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), row.Table.DataSet, false, null);
+        CoreServices.DataService.Instance.StoreData(
+            new Guid("44a25061-750f-4b42-a6de-09f3363f8621"),
+            row.Table.DataSet,
+            false,
+            null
+        );
     }
 }

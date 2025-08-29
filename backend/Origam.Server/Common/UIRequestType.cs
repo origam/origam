@@ -41,6 +41,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server;
+
 public enum UIRequestType
 {
     FormReferenceMenuItem,
@@ -50,5 +51,5 @@ public enum UIRequestType
     ReportReferenceMenuItem_WithSelection,
     WorkQueue,
     DataConstantReferenceMenuItem,
-    Dashboard
+    Dashboard,
 }

@@ -19,14 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
 [HelpTopic("Relationships")]
 [XmlModelRoot(CategoryConst)]
@@ -34,115 +35,118 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class EntityRelationItem : AbstractSchemaItem, IAssociation
 {
-	public EntityRelationItem() {}
-	
-	public EntityRelationItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public EntityRelationItem(Key primaryKey) : base(primaryKey) {}
-	public const string CategoryConst = "EntityRelation";
-	#region Properties
-	public Guid RelatedEntityId;
-	[TypeConverter(typeof(EntityConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
+    public EntityRelationItem() { }
+
+    public EntityRelationItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntityRelationItem(Key primaryKey)
+        : base(primaryKey) { }
+
+    public const string CategoryConst = "EntityRelation";
+    #region Properties
+    public Guid RelatedEntityId;
+
+    [TypeConverter(typeof(EntityConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
     [XmlReference("relatedEntity", "RelatedEntityId")]
     public IDataEntity RelatedEntity
-	{
-		get
-		{
-			var key = new ModelElementKey
-			{
-				Id = RelatedEntityId
-			};
-			return (IDataEntity)PersistenceProvider.RetrieveInstance(
-				typeof(ISchemaItem), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				RelatedEntityId = Guid.Empty;
-				Name = "";
-			}
-			else
-			{
-				RelatedEntityId = (Guid)value.PrimaryKey["Id"];
-				Name = RelatedEntity.Name;
-			}
-			// We have to delete all child items
-			ChildItems.Clear();
-		}
-	}
-	private bool _isParentChild = false;
-	
+    {
+        get
+        {
+            var key = new ModelElementKey { Id = RelatedEntityId };
+            return (IDataEntity)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                RelatedEntityId = Guid.Empty;
+                Name = "";
+            }
+            else
+            {
+                RelatedEntityId = (Guid)value.PrimaryKey["Id"];
+                Name = RelatedEntity.Name;
+            }
+            // We have to delete all child items
+            ChildItems.Clear();
+        }
+    }
+    private bool _isParentChild = false;
+
     [XmlAttribute("parentChild")]
     public bool IsParentChild
-	{
-		get => _isParentChild;
-		set => _isParentChild = value;
-	}
+    {
+        get => _isParentChild;
+        set => _isParentChild = value;
+    }
+
     [SelfJoinSameBaseRule]
     [XmlAttribute("selfJoin")]
     public bool IsSelfJoin { get; set; }
     private bool _isOR = false;
+
     [XmlAttribute("or")]
     public bool IsOR
-	{
-		get => _isOR;
-		set => _isOR = value;
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	
-	public override bool UseFolders => false;
-	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		try
-		{
-			dependencies.Add(RelatedEntity);
-		}
-		catch
-		{
-			throw new ArgumentOutOfRangeException(
-				"RelatedEntityId", RelatedEntityId, 
-				ResourceUtils.GetString("ErrorRelatedEntity", Name, 
-					BaseEntity.Name));
-		}
-		base.GetExtraDependencies (dependencies);
-	}
-	public override bool CanMove(UI.IBrowserNode2 newNode)
-	{
-		var item = newNode as ISchemaItem;
-		return (item != null) 
-		       && item.PrimaryKey.Equals(ParentItem.PrimaryKey);
-	}
-	#endregion
-	#region IAssociation Members
-	[Browsable(false)]
-	public IDataEntity BaseEntity => ParentItem as IDataEntity;
-	[Browsable(false)]
-	public IDataEntity AssociatedEntity => RelatedEntity;
-	#endregion
-	#region ISchemaItemFactory Members
-	[Browsable(false)]
-	public override Type[] NewItemTypes => new[] {
-		typeof(EntityRelationColumnPairItem), 
-		typeof(EntityRelationFilter)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{ 
-		string itemName = null;
-		if(typeof(T) == typeof(EntityRelationColumnPairItem))
-		{
-			itemName = Name + "Key" + (ChildItems.Count + 1);
-		}
-		else if(typeof(T) == typeof(EntityRelationFilter))
-		{
-			itemName = "NewEntityRelationFilter";
-		}
-		return base.NewItem<T>(schemaExtensionId, group, itemName);
-	}
-	#endregion
+    {
+        get => _isOR;
+        set => _isOR = value;
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+
+    public override bool UseFolders => false;
+    public override string ItemType => CategoryConst;
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        try
+        {
+            dependencies.Add(RelatedEntity);
+        }
+        catch
+        {
+            throw new ArgumentOutOfRangeException(
+                "RelatedEntityId",
+                RelatedEntityId,
+                ResourceUtils.GetString("ErrorRelatedEntity", Name, BaseEntity.Name)
+            );
+        }
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override bool CanMove(UI.IBrowserNode2 newNode)
+    {
+        var item = newNode as ISchemaItem;
+        return (item != null) && item.PrimaryKey.Equals(ParentItem.PrimaryKey);
+    }
+    #endregion
+    #region IAssociation Members
+    [Browsable(false)]
+    public IDataEntity BaseEntity => ParentItem as IDataEntity;
+
+    [Browsable(false)]
+    public IDataEntity AssociatedEntity => RelatedEntity;
+    #endregion
+    #region ISchemaItemFactory Members
+    [Browsable(false)]
+    public override Type[] NewItemTypes =>
+        new[] { typeof(EntityRelationColumnPairItem), typeof(EntityRelationFilter) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        string itemName = null;
+        if (typeof(T) == typeof(EntityRelationColumnPairItem))
+        {
+            itemName = Name + "Key" + (ChildItems.Count + 1);
+        }
+        else if (typeof(T) == typeof(EntityRelationFilter))
+        {
+            itemName = "NewEntityRelationFilter";
+        }
+        return base.NewItem<T>(schemaExtensionId, group, itemName);
+    }
+    #endregion
 }
-	

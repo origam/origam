@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Origam.Service.Core;
 
 namespace Origam;
@@ -29,6 +28,7 @@ namespace Origam;
 public class ClientAuthenticationProviderContainer
 {
     private readonly List<IClientAuthenticationProvider> providers = new();
+
     public void Register(IClientAuthenticationProvider provider)
     {
         providers.Add(provider);

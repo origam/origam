@@ -139,11 +139,20 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
     public CompletionItemListKeyResult ProcessInput(char key)
     {
         if (key == '!' || key == '?')
+        {
             return CompletionItemListKeyResult.Cancel;
+        }
+
         if (char.IsLetterOrDigit(key))
+        {
             return CompletionItemListKeyResult.NormalKey;
+        }
+
         if (normalKeys.Contains(key))
+        {
             return CompletionItemListKeyResult.NormalKey;
+        }
+
         return CompletionItemListKeyResult.InsertionKey;
     }
     IEnumerable<ICompletionData> ICompletionItemList.Items

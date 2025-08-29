@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 
 namespace Origam.Server.Extensions;
+
 public static class IdentityErrorExtensions
 {
     public static string ToErrorMessage(this IEnumerable<IdentityError> errors)

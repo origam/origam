@@ -32,7 +32,6 @@ namespace Origam.UI;
 [Serializable()]
 public class PadContentCollection : CollectionBase 
 {
-	
 	/// <summary>
 	///     <para>
 	///       Initializes a new instance of <see cref='.PadContentCollection'/>.
@@ -247,7 +246,6 @@ public class PadContentCollection : CollectionBase
 	
 	public class IPadContentEnumerator : object, IEnumerator 
 	{
-		
 		private IEnumerator baseEnumerator;
 		
 		private IEnumerable temp;

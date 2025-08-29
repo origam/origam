@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.DA.ObjectPersistence;
+
 using Origam.Schema;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
@@ -31,7 +31,6 @@ using Origam.OrigamEngine;
 namespace Origam.Utils;
 class RulesProcessor
 {
-            
     public RulesProcessor()
     {
     }
@@ -64,9 +63,7 @@ class RulesProcessor
             System.Console.Write(sb.ToString());
             return 1;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }

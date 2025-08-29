@@ -43,11 +43,12 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using Origam.Gui;
 
 namespace Origam.Server;
-public class PanelActionResult: ActionResult
+
+public class PanelActionResult : ActionResult
 {
-    public PanelActionResult(ActionResultType type): base(type)
-    {
-    }
+    public PanelActionResult(ActionResultType type)
+        : base(type) { }
+
     public UIResult UIResult { get; set; }
     public UIRequest Request { get; set; }
 }

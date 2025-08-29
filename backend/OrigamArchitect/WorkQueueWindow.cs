@@ -22,14 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Windows.Forms;
-
 using Origam;
 using Origam.Gui;
 using Origam.UI;
 using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
-
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
@@ -233,79 +231,86 @@ public class WorkQueueWindow : AsForm
 				lastPos += 20;
 				switch(col.Field.DataType)
 				{
-					case OrigamDataType.Float:
-					case OrigamDataType.Integer:
-					case OrigamDataType.Currency:
-					case OrigamDataType.Memo:
-					case OrigamDataType.String:
-						
-                        AsTextBox tb= new AsTextBox();
-						tb.ReadOnly = true;
-						tb.Caption = col.Caption == "" ? col.Field.Caption : col.Caption; 
-						tb.CaptionPosition = CaptionPosition.Left;
-						tb.CaptionLength = 100;
-						tb.DataType = table.Columns[col.Name].DataType;
-						tb.Size = new System.Drawing.Size(100, 16);
-						tb.Location = new System.Drawing.Point(110, lastPos);
-						if(col.Field.DataType == OrigamDataType.Float)
-						{
-							//tb.FormatType = C1.Win.C1Input.FormatTypeEnum.CustomFormat;
-							tb.CustomFormat = "###,###,###,###,##0.##################";
-						}
-						else if(col.Field.DataType == OrigamDataType.Currency)
-						{
-							//tb.FormatType = C1.Win.C1Input.FormatTypeEnum.StandardNumber;
-							tb.CustomFormat = "###,###,###,###,##0.##################";
-						}
-						else if(col.Field.DataType == OrigamDataType.Integer)
-						{
-							tb.CustomFormat = "###,###,###,###,###";
-							//tb.FormatType = C1.Win.C1Input.FormatTypeEnum.Integer;
-						}
-						else if(col.Field.DataType == OrigamDataType.Memo)
-						{
-							tb.Multiline = true;
-						}
-						panel.Controls.Add(tb);
-						Binding binding = new Binding(tb.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
-						//this.FormGenerator.SetTooltip(tb, "", tb.Caption);
-						this.FormGenerator.ControlBindings.Add(tb, binding);
-						tb.BindingContext = FormGenerator.BindingContext;
-						break;
-					case OrigamDataType.UniqueIdentifier:
-						if(col.FinalLookup != null)
-						{
-							AsDropDown dd = new AsDropDown();
-							dd.ReadOnly = true;
-							dd.Caption = col.Caption == "" ? col.Field.Caption : col.Caption; 
-							dd.CaptionPosition = CaptionPosition.Left;
-							dd.CaptionLength = 100;
-							dd.Size = new System.Drawing.Size(100, 16);
-							dd.Location = new System.Drawing.Point(110, lastPos);
-							dd.LookupId = (Guid)col.FinalLookup.PrimaryKey["Id"];
-							panel.Controls.Add(dd);
-							binding = new Binding(dd.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
-							//this.FormGenerator.SetTooltip(dd, "", dd.Caption);
-							this.FormGenerator.ControlBindings.Add(dd, binding);
-						    ServiceManager.Services.GetService<IControlsLookUpService>()
-						        .AddLookupControl(dd, this, true);
-						}
-						break;
-					case OrigamDataType.Date:
-						AsDateBox db = new AsDateBox();
-						db.ReadOnly = true;
-						db.Caption = col.Caption == "" ? col.Field.Caption : col.Caption; 
-						db.CaptionPosition = CaptionPosition.Left;
-						db.CaptionLength = 100;
-						db.Size = new System.Drawing.Size(100, 16);
-						db.Location = new System.Drawing.Point(110, lastPos);
-						
-						panel.Controls.Add(db);
-						binding = new Binding(db.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
-						//this.FormGenerator.SetTooltip(db, "", db.Caption);
-						this.FormGenerator.ControlBindings.Add(db, binding);
-						break;
-				}
+                    case OrigamDataType.Float:
+                    case OrigamDataType.Integer:
+                    case OrigamDataType.Currency:
+                    case OrigamDataType.Memo:
+                    case OrigamDataType.String:
+                        {
+                            AsTextBox tb = new AsTextBox();
+                            tb.ReadOnly = true;
+                            tb.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
+                            tb.CaptionPosition = CaptionPosition.Left;
+                            tb.CaptionLength = 100;
+                            tb.DataType = table.Columns[col.Name].DataType;
+                            tb.Size = new System.Drawing.Size(100, 16);
+                            tb.Location = new System.Drawing.Point(110, lastPos);
+                            if (col.Field.DataType == OrigamDataType.Float)
+                            {
+                                //tb.FormatType = C1.Win.C1Input.FormatTypeEnum.CustomFormat;
+                                tb.CustomFormat = "###,###,###,###,##0.##################";
+                            }
+                            else if (col.Field.DataType == OrigamDataType.Currency)
+                            {
+                                //tb.FormatType = C1.Win.C1Input.FormatTypeEnum.StandardNumber;
+                                tb.CustomFormat = "###,###,###,###,##0.##################";
+                            }
+                            else if (col.Field.DataType == OrigamDataType.Integer)
+                            {
+                                tb.CustomFormat = "###,###,###,###,###";
+                                //tb.FormatType = C1.Win.C1Input.FormatTypeEnum.Integer;
+                            }
+                            else if (col.Field.DataType == OrigamDataType.Memo)
+                            {
+                                tb.Multiline = true;
+                            }
+                            panel.Controls.Add(tb);
+                            Binding binding = new Binding(tb.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
+                            //this.FormGenerator.SetTooltip(tb, "", tb.Caption);
+                            this.FormGenerator.ControlBindings.Add(tb, binding);
+                            tb.BindingContext = FormGenerator.BindingContext;
+                            break;
+                        }
+
+                    case OrigamDataType.UniqueIdentifier:
+                        {
+                            if (col.FinalLookup != null)
+                            {
+                                AsDropDown dd = new AsDropDown();
+                                dd.ReadOnly = true;
+                                dd.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
+                                dd.CaptionPosition = CaptionPosition.Left;
+                                dd.CaptionLength = 100;
+                                dd.Size = new System.Drawing.Size(100, 16);
+                                dd.Location = new System.Drawing.Point(110, lastPos);
+                                dd.LookupId = (Guid)col.FinalLookup.PrimaryKey["Id"];
+                                panel.Controls.Add(dd);
+                                Binding binding = new Binding(dd.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
+                                //this.FormGenerator.SetTooltip(dd, "", dd.Caption);
+                                this.FormGenerator.ControlBindings.Add(dd, binding);
+                                ServiceManager.Services.GetService<IControlsLookUpService>()
+                                    .AddLookupControl(dd, this, true);
+                            }
+                            break;
+                        }
+
+                    case OrigamDataType.Date:
+                        {
+                            AsDateBox db = new AsDateBox();
+                            db.ReadOnly = true;
+                            db.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
+                            db.CaptionPosition = CaptionPosition.Left;
+                            db.CaptionLength = 100;
+                            db.Size = new System.Drawing.Size(100, 16);
+                            db.Location = new System.Drawing.Point(110, lastPos);
+
+                            panel.Controls.Add(db);
+                            Binding binding = new Binding(db.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
+                            //this.FormGenerator.SetTooltip(db, "", db.Caption);
+                            this.FormGenerator.ControlBindings.Add(db, binding);
+                            break;
+                        }
+                }
 			}
 		}
 		this.Controls.Add(panel);

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Server.Model.UIService;
+
 public class LookupLabelsInput : AbstractLookupInput
 {
     [Required]

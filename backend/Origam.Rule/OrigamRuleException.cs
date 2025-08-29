@@ -23,21 +23,22 @@ using System;
 using System.Data;
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for OrigamRuleException.
 /// </summary>
 public class OrigamRuleException : OrigamException
 {
-	DataRow _row;
-	public OrigamRuleException(string message, Exception innerException, DataRow row) : base(message, innerException)
-	{
-		_row = row;
-	}
-	public DataRow Row
-	{
-		get
-		{
-			return _row;
-		}
-	}
+    DataRow _row;
+
+    public OrigamRuleException(string message, Exception innerException, DataRow row)
+        : base(message, innerException)
+    {
+        _row = row;
+    }
+
+    public DataRow Row
+    {
+        get { return _row; }
+    }
 }

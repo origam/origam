@@ -20,6 +20,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.EntityModel;
-public interface IDataRule : IRule
-{
-}
+
+public interface IDataRule : IRule { }

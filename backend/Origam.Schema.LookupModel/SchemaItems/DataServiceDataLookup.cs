@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 
 namespace Origam.Schema.LookupModel;
+
 /// <summary>
 /// Summary description for DataServiceDataLookup.
 /// </summary>
@@ -31,7 +32,12 @@ namespace Origam.Schema.LookupModel;
 [ClassMetaVersion("6.0.0")]
 public class DataServiceDataLookup : AbstractDataLookup
 {
-	public DataServiceDataLookup() : base() {}
-	public DataServiceDataLookup(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataServiceDataLookup(Key primaryKey) : base(primaryKey)	{}
+    public DataServiceDataLookup()
+        : base() { }
+
+    public DataServiceDataLookup(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataServiceDataLookup(Key primaryKey)
+        : base(primaryKey) { }
 }

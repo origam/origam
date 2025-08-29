@@ -20,66 +20,92 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-
 using Origam.DA;
 
 namespace Origam.Workbench.Services;
+
 /// <summary>
 /// Summary description for LoggingService.
 /// </summary>
 public class LoggingService : ILoggingService
 {
-	private SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-	IServiceAgent _dataServiceAgent;
-	public LoggingService()
-	{
-		_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-	}
-	
-	#region ILoggingService Members
-	public void LogProcess(Guid id, Guid workflowId, Guid formId, string processName, DateTime start, DateTime finish, string remark, string errorInfo)
-	{
+    private SchemaService _schema =
+        ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+    IServiceAgent _dataServiceAgent;
+
+    public LoggingService()
+    {
+        _dataServiceAgent = (
+            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+            as IBusinessServicesService
+        ).GetAgent("DataService", null, null);
+    }
+
+    #region ILoggingService Members
+    public void LogProcess(
+        Guid id,
+        Guid workflowId,
+        Guid formId,
+        string processName,
+        DateTime start,
+        DateTime finish,
+        string remark,
+        string errorInfo
+    )
+    {
         UserProfile profile = SecurityManager.CurrentUserProfile();
-		OrigamProcessLogData log = new OrigamProcessLogData();
-		OrigamProcessLogData.OrigamProcessLogRow row = log.OrigamProcessLog.NewOrigamProcessLogRow();
-		row.Id = id;
-		row.WorkflowId = workflowId;
-		row.FormId = formId;
-		row.ProcessName = processName;
-		row.Start = start;
-		row.Finish = finish;
-		row.Remark = remark;
-		row.ErrorInfo = errorInfo;
-		row.FinishError = (errorInfo != null);
-		row.RecordCreated = DateTime.Now;
-		row.RecordCreatedBy = profile.Id;
-		log.OrigamProcessLog.AddOrigamProcessLogRow(row);
-		SaveLog(log);
-	}
-	public void LogProcessStart(Guid id, Guid workflowId, Guid formId, string processName, DateTime start, string remark)
-	{
-		LogProcess(id, workflowId, formId, processName, start, DateTime.MinValue, remark, null);
-	}
-	public void LogProcessEnd(Guid logId, DateTime finish, string remark, string errorInfo)
-	{
+        OrigamProcessLogData log = new OrigamProcessLogData();
+        OrigamProcessLogData.OrigamProcessLogRow row =
+            log.OrigamProcessLog.NewOrigamProcessLogRow();
+        row.Id = id;
+        row.WorkflowId = workflowId;
+        row.FormId = formId;
+        row.ProcessName = processName;
+        row.Start = start;
+        row.Finish = finish;
+        row.Remark = remark;
+        row.ErrorInfo = errorInfo;
+        row.FinishError = (errorInfo != null);
+        row.RecordCreated = DateTime.Now;
+        row.RecordCreatedBy = profile.Id;
+        log.OrigamProcessLog.AddOrigamProcessLogRow(row);
+        SaveLog(log);
+    }
+
+    public void LogProcessStart(
+        Guid id,
+        Guid workflowId,
+        Guid formId,
+        string processName,
+        DateTime start,
+        string remark
+    )
+    {
+        LogProcess(id, workflowId, formId, processName, start, DateTime.MinValue, remark, null);
+    }
+
+    public void LogProcessEnd(Guid logId, DateTime finish, string remark, string errorInfo)
+    {
         UserProfile profile = SecurityManager.CurrentUserProfile();
     }
-	#endregion
-	#region Private Methods
-	private void SaveLog(OrigamProcessLogData log)
-	{
-		// store to the database
-		DataStructureQuery query = new DataStructureQuery(
-			new Guid("9b8e3021-e9ac-447e-8107-703382c740b1"));
-		_dataServiceAgent.MethodName = "StoreDataByQuery";
-		_dataServiceAgent.Parameters.Clear();
-		_dataServiceAgent.Parameters.Add("Query", query);
-		_dataServiceAgent.Parameters.Add("Data", log);
-		_dataServiceAgent.Run();
-	}
-	private OrigamProcessLogData LoadLog(Guid id)
-	{
-		return null;
-	}
-	#endregion
+    #endregion
+    #region Private Methods
+    private void SaveLog(OrigamProcessLogData log)
+    {
+        // store to the database
+        DataStructureQuery query = new DataStructureQuery(
+            new Guid("9b8e3021-e9ac-447e-8107-703382c740b1")
+        );
+        _dataServiceAgent.MethodName = "StoreDataByQuery";
+        _dataServiceAgent.Parameters.Clear();
+        _dataServiceAgent.Parameters.Add("Query", query);
+        _dataServiceAgent.Parameters.Add("Data", log);
+        _dataServiceAgent.Run();
+    }
+
+    private OrigamProcessLogData LoadLog(Guid id)
+    {
+        return null;
+    }
+    #endregion
 }

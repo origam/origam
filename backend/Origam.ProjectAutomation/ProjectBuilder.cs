@@ -32,7 +32,6 @@ public class ProjectBuilder
     private readonly DockerBuilder dockerBuilder = new();
     public ProjectBuilder()
     {           
-        
     }
     public void Create(Project project)
     {

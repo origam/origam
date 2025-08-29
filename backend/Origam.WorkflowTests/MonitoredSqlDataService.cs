@@ -28,31 +28,37 @@ namespace Origam.WorkflowTests;
 
 public class MonitoredMsSqlDataService : MsSqlDataService, ITraceService
 {
-    private readonly SqlDataServiceMonitor monitor = new ();
+    private readonly SqlDataServiceMonitor monitor = new();
     public List<Operation> Operations => monitor.Operations;
 
     public override int UpdateData(
-        DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
-        string transactionId, bool forceBulkInsert)
+        DataStructureQuery query,
+        IPrincipal userProfile,
+        DataSet dataset,
+        string transactionId,
+        bool forceBulkInsert
+    )
     {
         monitor.TraceUpdateData(dataset);
-        return base.UpdateData(query, userProfile, dataset,
-            transactionId, forceBulkInsert);
+        return base.UpdateData(query, userProfile, dataset, transactionId, forceBulkInsert);
     }
 }
 
 public class MonitoredPgSqlDataService : PgSqlDataService, ITraceService
 {
-    private readonly SqlDataServiceMonitor monitor = new ();
+    private readonly SqlDataServiceMonitor monitor = new();
     public List<Operation> Operations => monitor.Operations;
 
     public override int UpdateData(
-        DataStructureQuery query, IPrincipal userProfile, DataSet dataset,
-        string transactionId, bool forceBulkInsert)
+        DataStructureQuery query,
+        IPrincipal userProfile,
+        DataSet dataset,
+        string transactionId,
+        bool forceBulkInsert
+    )
     {
         monitor.TraceUpdateData(dataset);
-        return base.UpdateData(query, userProfile, dataset,
-            transactionId, forceBulkInsert);
+        return base.UpdateData(query, userProfile, dataset, transactionId, forceBulkInsert);
     }
 }
 
@@ -72,9 +78,13 @@ public class SqlDataServiceMonitor
 
     public void TraceUpdateData(DataSet dataset)
     {
-        var deletesWorkQueueEntry = dataset 
-            is { Tables: [{ TableName: "WorkQueueEntry", 
-                Rows: [{ RowState: DataRowState.Deleted }] }] };
+        var deletesWorkQueueEntry =
+            dataset
+                is {
+                    Tables: [
+                        { TableName: "WorkQueueEntry", Rows: [{ RowState: DataRowState.Deleted }] },
+                    ]
+                };
         if (deletesWorkQueueEntry)
         {
             dataset.Tables[0].Rows[0].RejectChanges();
@@ -82,13 +92,16 @@ public class SqlDataServiceMonitor
             var refWorkQueueId = (Guid)dataset.Tables[0].Rows[0]["refWorkQueueId"];
             dataset.Tables[0].Rows[0].Delete();
             AddOperation(
-                new DeleteWorkQueueEntryOperation("UpdateData",
+                new DeleteWorkQueueEntryOperation(
+                    "UpdateData",
                     new Dictionary<string, object>
                     {
                         { "refWorkQueueId", refWorkQueueId },
                         { "deletedRowId", deletedRowId },
-                        { "executedAt", DateTime.Now }
-                    }));
+                        { "executedAt", DateTime.Now },
+                    }
+                )
+            );
         }
     }
 }
@@ -97,14 +110,12 @@ public record Operation(string Name, Dictionary<string, object> Parameters)
 {
     public override string ToString()
     {
-        string parameters = string.Join(", ",
-            Parameters.Select(x => $"[{x.Key}, {x.Value}]"));
+        string parameters = string.Join(", ", Parameters.Select(x => $"[{x.Key}, {x.Value}]"));
         return $"Operation: {Name}, Parameters: {parameters}";
     }
 }
 
-public record DeleteWorkQueueEntryOperation(string Name,
-        Dictionary<string, object> Parameters)
+public record DeleteWorkQueueEntryOperation(string Name, Dictionary<string, object> Parameters)
     : Operation(Name, Parameters)
 {
     public Guid RowId => (Guid)Parameters["deletedRowId"];

@@ -36,7 +36,11 @@ internal static class EqualityExtensions
     public static Dictionary<string, object> GetAllProperies(
         this object atype)
     {
-        if (atype == null) return new Dictionary<string, object>();
+        if (atype == null)
+        {
+            return new Dictionary<string, object>();
+        }
+
         Type t = atype.GetType();
         PropertyInfo[] props = t.GetProperties();
         Dictionary<string, object> dict = new Dictionary<string, object>();
@@ -57,7 +61,11 @@ internal static class EqualityExtensions
     private static bool IsEqualTo(this ICollection collection,
         object testObject)
     {
-        if (!(testObject is ICollection testCollection)) return false;
+        if (!(testObject is ICollection testCollection))
+        {
+            return false;
+        }
+
         return collection
             .Cast<object>()
             .All(itemFromDb =>
@@ -66,13 +74,21 @@ internal static class EqualityExtensions
     private static bool IsEqualTo(this ISchemaItem item,
         object testObject)
     {
-        if (!(testObject is ISchemaItem testItem)) return false;
+        if (!(testObject is ISchemaItem testItem))
+        {
+            return false;
+        }
+
         return item.Id == testItem.Id;
     }
     private static bool IsEqualTo(this DataEntityConstraint dataConstraint,
         object testObject)
     {
-        if (!(testObject is DataEntityConstraint)) return false;
+        if (!(testObject is DataEntityConstraint))
+        {
+            return false;
+        }
+
         var testEntityConstraint = (DataEntityConstraint) testObject;
         return testEntityConstraint.Fields
             .Any(field =>
@@ -83,8 +99,16 @@ internal static class EqualityExtensions
     private static bool IsEqualTo(this Bitmap b1, object obj)
     {
         Bitmap b2 = obj as Bitmap;
-        if ((b1 == null) != (b2 == null)) return false;
-        if (b1.Size != b2.Size) return false;
+        if ((b1 == null) != (b2 == null))
+        {
+            return false;
+        }
+
+        if (b1.Size != b2.Size)
+        {
+            return false;
+        }
+
         BitmapData bd1 = b1.LockBits(
             new Rectangle(new Point(0, 0), b1.Size),
             ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -107,14 +131,22 @@ internal static class EqualityExtensions
     private static bool IsEqualTo(this SchemaItemAncestor ancestor,
         object testObject)
     {
-        if (!(testObject is SchemaItemAncestor testAncestor)) return false;
+        if (!(testObject is SchemaItemAncestor testAncestor))
+        {
+            return false;
+        }
+
         return ancestor.SchemaItem.Id ==
                testAncestor.SchemaItem.Id;
     }
     private static bool IsEqualTo(this DictionaryEntry entry,
         object testObject)
     {
-        if (!(testObject is DictionaryEntry testEntry)) return false;
+        if (!(testObject is DictionaryEntry testEntry))
+        {
+            return false;
+        }
+
         return IsEqualTo(entry.Key, testEntry.Key) &&
                IsEqualTo(entry.Value, testEntry.Value);
     }

@@ -24,12 +24,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
-
 
 namespace Origam.Workbench.Pads;
 
@@ -225,9 +223,17 @@ public class FindRulesPad : AbstractResultPad
 		}
 		string name = item.ModelDescription();
 		string rootName = item.RootItem.ModelDescription();
-		if(name == null) name = item.ItemType;
-		if(rootName == null) rootName = item.RootItem.ItemType;
-		string message = string.IsNullOrEmpty(text) ? "" : text;
+		if(name == null)
+        {
+            name = item.ItemType;
+        }
+
+        if (rootName == null)
+        {
+            rootName = item.RootItem.ItemType;
+        }
+
+        string message = string.IsNullOrEmpty(text) ? "" : text;
 		ListViewItem newItem = new ListViewItem(new string[] {
 			item.Path, rootName, name, 
 			item.RootItem.Group == null ? "" : item.RootItem.Group.Path,

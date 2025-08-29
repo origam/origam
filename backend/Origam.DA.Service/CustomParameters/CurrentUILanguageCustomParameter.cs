@@ -22,20 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Threading;
 using Origam.Workbench.Services;
 
-
 namespace Origam.DA.Service.CustomParameters;
+
 class CurrentUILanguageCustomParameter : ICustomParameter
 {
-	public string Name
-	{
-		get
-		{
-			return "parCurrentUILanguageId";
-		}
-	}
-	public object Evaluate(UserProfile profile)
-	{
-		IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-		return parameterService.ResolveLanguageId(Thread.CurrentThread.CurrentUICulture.ToString());			
-	}
+    public string Name
+    {
+        get { return "parCurrentUILanguageId"; }
+    }
+
+    public object Evaluate(UserProfile profile)
+    {
+        IParameterService parameterService =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        return parameterService.ResolveLanguageId(Thread.CurrentThread.CurrentUICulture.ToString());
+    }
 }

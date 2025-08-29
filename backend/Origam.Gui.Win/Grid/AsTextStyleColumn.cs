@@ -23,7 +23,6 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Data;
-
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 
@@ -64,9 +63,16 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 		EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
 		if(formatting != null)
 		{
-			if(!formatting.UseDefaultBackColor) myBackBrush = new SolidBrush(formatting.BackColor);
-			if(!formatting.UseDefaultForeColor) myForeBrush = new SolidBrush(formatting.ForeColor);
-		}
+			if(!formatting.UseDefaultBackColor)
+            {
+                myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
+            if (!formatting.UseDefaultForeColor)
+            {
+                myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
+        }
 		try
 		{
 			string text = this.GetText(this.GetColumnValueAtRow(source, rowNum));
@@ -136,12 +142,15 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 		_isEditing = false;
 //			AsTextBox.ModifiedChanged -= new EventHandler(AsTextBox_ModifiedChanged);
 		Invalidate();
-		if(this.AsTextBox.IsDisposed) return;
-		base.Abort(rowNum);
+		if(this.AsTextBox.IsDisposed)
+        {
+            return;
+        }
+
+        base.Abort(rowNum);
 	}
 	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
 	{
-		
 		if(cellIsVisible)
 		{
 			if(! AlwaysReadOnly)
@@ -189,8 +198,11 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			this.AsTextBox.Visible = false;
 //				this.AsTextBox.Enabled = false;
 		}
-		if (AsTextBox.Visible) DataGridTableStyle.DataGrid.Invalidate(bounds);
-	}
+		if (AsTextBox.Visible)
+        {
+            DataGridTableStyle.DataGrid.Invalidate(bounds);
+        }
+    }
     private RuleEngine GetRuleEngine()
     {
         RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
@@ -251,8 +263,12 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 	}
 	private void AsTextBox_ModifiedChanged(object sender, EventArgs e)
 	{
-		if(this.AsTextBox.ReadOnly) return;
-		_isEditing = true;
+		if(this.AsTextBox.ReadOnly)
+        {
+            return;
+        }
+
+        _isEditing = true;
 		try
 		{
 			ColumnStartedEditing((Control) sender);
@@ -269,7 +285,11 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 	}
 	private void AsTextBox_KeyPress(object sender, KeyPressEventArgs e)
 	{
-		if(e.KeyChar == (char)Keys.Escape) return;
+		if(e.KeyChar == (char)Keys.Escape)
+        {
+            return;
+        }
+
         bool canEdit = false;
 		if((Control.ModifierKeys & Keys.Control) == Keys.Control & (e.KeyChar == 'V' | e.KeyChar == 'v' | e.KeyChar == 'X' | e.KeyChar == 'x' | e.KeyChar == 22 | e.KeyChar == 24))
 		{
@@ -281,8 +301,12 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 		}
 		if (canEdit)
 		{
-			if(this.AsTextBox.ReadOnly) return;
-			_isEditing = true;
+			if(this.AsTextBox.ReadOnly)
+            {
+                return;
+            }
+
+            _isEditing = true;
 			try
 			{
 				ColumnStartedEditing((Control) sender);
@@ -298,8 +322,12 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 	{
 		if(e.KeyCode == Keys.Delete | e.KeyCode == Keys.Back)
 		{
-			if(this.AsTextBox.ReadOnly) return;
-			_isEditing = true;
+			if(this.AsTextBox.ReadOnly)
+            {
+                return;
+            }
+
+            _isEditing = true;
 			try
 			{
 				ColumnStartedEditing((Control) sender);

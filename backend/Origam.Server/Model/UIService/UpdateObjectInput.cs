@@ -20,16 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Origam.Server;
 
 namespace Origam.Server.Model.UIService;
+
 public class UpdateObjectInput
 {
     public Guid SessionFormIdentifier { get; set; }
     public string Entity { get; set; }
+
     [Required]
     public UpdateData[] UpdateData { get; set; }
 }

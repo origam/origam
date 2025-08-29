@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Origam.Schema.EntityModel.Wizards;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;

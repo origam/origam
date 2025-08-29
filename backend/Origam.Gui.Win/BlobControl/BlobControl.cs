@@ -26,7 +26,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.DA;
 using Origam.UI;
@@ -82,7 +81,6 @@ namespace Origam.Gui.Win
 			// Color Scheme
 			txtEdit.ForeColor = OrigamColorScheme.LinkColor;
 			btnDropDown.BackColor = OrigamColorScheme.ButtonBackColor;
-
 		}
 
 		/// <summary> 
@@ -197,7 +195,6 @@ namespace Origam.Gui.Win
             this.Resize += new System.EventHandler(this.BlobControl_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
-
 		}
 		#endregion
 
@@ -265,10 +262,17 @@ namespace Origam.Gui.Win
 			}
 			set
 			{
-				if(_fileName == value) return;
-                if (value == "") value = null;
+				if(_fileName == value)
+                {
+                    return;
+                }
 
-				_fileName = value;
+                if (value == "")
+                {
+                    value = null;
+                }
+
+                _fileName = value;
 
 				this.txtEdit.Value = value;
 
@@ -627,11 +631,9 @@ namespace Origam.Gui.Win
 
 					return compress;
 				}
-				else
-				{
-					return false;
-				}
-			}
+
+                return false;
+            }
 		}
 
 		private bool CanPreview()
@@ -649,19 +651,20 @@ namespace Origam.Gui.Win
 				{
 					throw new NullReferenceException(member + " not set.");
 				}
-				else
-				{
-					return false;
-				}
-			}
+
+                return false;
+            }
 
 			return true;
 		}
 
 		private void CheckCurrentRow()
 		{
-			if(CurrentRow == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorHandleBlob"));
-		}
+			if(CurrentRow == null)
+            {
+                throw new NullReferenceException(ResourceUtils.GetString("ErrorHandleBlob"));
+            }
+        }
 
 		private void Upload()
 		{
@@ -744,14 +747,20 @@ namespace Origam.Gui.Win
 									}
 									finally
 									{
-										if(ms != null) ms.Close();
-									}
+										if(ms != null)
+                                        {
+                                            ms.Close();
+                                        }
+                                    }
 								}
 							}
 							finally
 							{
-								if(img != null) img.Dispose();
-							}
+								if(img != null)
+                                {
+                                    img.Dispose();
+                                }
+                            }
 						}
 					}
 
@@ -838,11 +847,9 @@ namespace Origam.Gui.Win
 					{
 						throw new Exception(ResourceUtils.GetString("ErrorRecordEmpty"));
 					}
-					else
-					{
-						ByteArrayConverter.SaveFromDataSet(path, row, BlobMember, IsCompressed);
-					}
-				}
+
+                    ByteArrayConverter.SaveFromDataSet(path, row, BlobMember, IsCompressed);
+                }
 
 				return true;
 			}

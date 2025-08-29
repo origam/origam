@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -39,8 +37,10 @@ public class OrigamGeoContainer
         {
             return "";
         }
-        var emptyRegex = new Regex(@"POLYGON\s+EMPTY",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        var emptyRegex = new Regex(
+            @"POLYGON\s+EMPTY",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase
+        );
         if (emptyRegex.Match(jstkPolygon).Success)
         {
             return jstkPolygon;
@@ -56,8 +56,20 @@ public class OrigamGeoContainer
         {
             var xString = matches[i].Value;
             var yString = matches[i + 1].Value;
-            if (!double.TryParse(xString, NumberStyles.Float, CultureInfo.InvariantCulture, out double x) ||
-                !double.TryParse(yString, NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
+            if (
+                !double.TryParse(
+                    xString,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double x
+                )
+                || !double.TryParse(
+                    yString,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double y
+                )
+            )
             {
                 return "";
             }

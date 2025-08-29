@@ -25,12 +25,9 @@ using System.Collections;
 using System.Data;
 using System.Windows.Forms;
 using System.ComponentModel;
-
-using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.DA.Service;
-
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
@@ -39,8 +36,6 @@ using Origam.Rule;
 using System.Collections.Generic;
 using System.Linq;
 using Origam.Workflow;
-using Origam;
-using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Gui.Win;
@@ -73,9 +68,12 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     #region Private Methods
     private void CreateMappingItemsCollection()
     {
-        if(this.Workflow == null) return;
+        if(this.Workflow == null)
+        {
+            return;
+        }
         // create any missing parameter mappings
-        foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+        foreach (var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
         {
             string parameterName = store.Name;
             if(this._origamMetadata.GetChildByName(parameterName) == null)
@@ -93,7 +91,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             bool found = false;
             foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
             {
-                if(store.Name == mapping.Name) found = true;
+                if(store.Name == mapping.Name)
+                {
+                    found = true;
+                }
             }
             if(!found)
             {
@@ -111,7 +112,11 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     {
         try
         {
-            if(_origamMetadata == null) return;
+            if(_origamMetadata == null)
+            {
+                return;
+            }
+
             var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
             foreach(ColumnParameterMapping mapping in col)
             {
@@ -128,7 +133,11 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     }
     private void FillParameterCache(ControlSetItem controlItem)
     {
-        if(controlItem == null) return;
+        if(controlItem == null)
+        {
+            return;
+        }
+
         _fillingParameterCache = true;
         ParameterMappings.Clear();
         foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
@@ -218,7 +227,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         get
         {
             if(this._origamMetadata == null)
+            {
                 return null;
+            }
+
             return (IWorkflow)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(_workflowId));
         }
         set
@@ -306,10 +318,22 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     protected override void OnClick(EventArgs e)
     {
         WorkflowHost host = WorkflowHost.DefaultHost;
-        if(this.BindingContext == null) return;
-        if(this.BindingContext[this.DataSource, this.DataMember] == null) return;
-        if(this.BindingContext[this.DataSource, this.DataMember].Position < 0) return;
-        if((this.DataSource as DataSet).HasErrors)
+        if(this.BindingContext == null)
+        {
+            return;
+        }
+
+        if (this.BindingContext[this.DataSource, this.DataMember] == null)
+        {
+            return;
+        }
+
+        if (this.BindingContext[this.DataSource, this.DataMember].Position < 0)
+        {
+            return;
+        }
+
+        if ((this.DataSource as DataSet).HasErrors)
         {
             Origam.UI.AsMessageBox.ShowError(this.FindForm(), Origam.Workflow.ResourceUtils.GetString("ErrorsInForm"), Origam.Workflow.ResourceUtils.GetString("ExecuteActionTitle"), null);
             return;

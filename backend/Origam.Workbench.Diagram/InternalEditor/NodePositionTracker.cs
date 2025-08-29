@@ -41,16 +41,20 @@ class NodePositionTracker
     {
         get
         {
-            if (originalTransformation == null) return null;
+            if (originalTransformation == null)
+            {
+                return null;
+            }
+
             return new PlaneTransformation(
                 originalTransformation[0, 0],
                 originalTransformation[0, 1],
-                pointOnScreen.X - CurrentSourcePoint.X *
-                originalTransformation[0, 0],
+                pointOnScreen.X - (CurrentSourcePoint.X *
+                originalTransformation[0, 0]),
                 originalTransformation[1, 0],
                 originalTransformation[1, 1],
-                pointOnScreen.Y + CurrentSourcePoint.Y *
-                originalTransformation[0, 0]);
+                pointOnScreen.Y + (CurrentSourcePoint.Y *
+                originalTransformation[0, 0]));
         }
     }
     public NodePositionTracker( GViewer gViewer, string nodeId)
@@ -58,9 +62,17 @@ class NodePositionTracker
         this.gViewer = gViewer;
         this.nodeId = nodeId;
         originalNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
-        if (originalNode == null) return;
+        if (originalNode == null)
+        {
+            return;
+        }
+
         originalTransformation = gViewer.Transform;
-        if (string.IsNullOrWhiteSpace(this.nodeId)) return;
+        if (string.IsNullOrWhiteSpace(this.nodeId))
+        {
+            return;
+        }
+
         pointOnScreen = gViewer.Transform * originalNode.GeometryNode.Center;
     }
 		

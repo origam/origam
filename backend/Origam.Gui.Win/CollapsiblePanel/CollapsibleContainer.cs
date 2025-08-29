@@ -31,5 +31,4 @@ public class CollapsibleContainer : AsTabControl
 	public CollapsibleContainer() : base()
 	{
 	}
-	
 }

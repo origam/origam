@@ -22,62 +22,71 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Xml;
-
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for ModelXmlResolver.
 /// </summary>
 public class ModelXmlResolver : XmlResolver
 {
-	public ModelXmlResolver() : base()
-	{
-	}
-	public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
-	{ 
-//			if(absoluteUri.IsFile)
-//			{
-//				System.Xml.XmlUrlResolver x = new XmlUrlResolver();
-//				return x.GetEntity(absoluteUri, role, ofObjectToReturn);
-//			}
-//			else
-//			{
-		Guid g = new Guid(absoluteUri.Authority.ToString());
-		IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		ISchemaItem item = persistence.SchemaProvider.RetrieveInstance(typeof(XslTransformation), new ModelElementKey(g)) as ISchemaItem;
-		string xsl;
-		if(item is XslTransformation)
-		{
-			xsl = (item as XslTransformation).TextStore;
-		}
-		else if(item is XslRule)
-		{
-			xsl = (item as XslRule).Xsl;
-		}
-		else
-		{
-			throw new ArgumentOutOfRangeException("absoluteUri", absoluteUri, ResourceUtils.GetString("ErrorNoXslReference"));
-		}
-		MemoryStream ms = new MemoryStream();
-		StreamWriter sw = new StreamWriter(ms);
-		sw.Write(xsl);
-		sw.Flush();
-		ms.Position = 0;
-		return ms;
-//			}
-	}
-	public override Uri ResolveUri(Uri baseUri, string relativeUri)
-	{
-		return base.ResolveUri (baseUri, relativeUri);
-	}
-	public override System.Net.ICredentials Credentials
-	{
-		set
-		{
-		}
-	}
+    public ModelXmlResolver()
+        : base() { }
+
+    public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
+    {
+        //			if(absoluteUri.IsFile)
+        //			{
+        //				System.Xml.XmlUrlResolver x = new XmlUrlResolver();
+        //				return x.GetEntity(absoluteUri, role, ofObjectToReturn);
+        //			}
+        //			else
+        //			{
+        Guid g = new Guid(absoluteUri.Authority.ToString());
+        IPersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ISchemaItem item =
+            persistence.SchemaProvider.RetrieveInstance(
+                typeof(XslTransformation),
+                new ModelElementKey(g)
+            ) as ISchemaItem;
+        string xsl;
+        if (item is XslTransformation)
+        {
+            xsl = (item as XslTransformation).TextStore;
+        }
+        else if (item is XslRule)
+        {
+            xsl = (item as XslRule).Xsl;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(
+                "absoluteUri",
+                absoluteUri,
+                ResourceUtils.GetString("ErrorNoXslReference")
+            );
+        }
+        MemoryStream ms = new MemoryStream();
+        StreamWriter sw = new StreamWriter(ms);
+        sw.Write(xsl);
+        sw.Flush();
+        ms.Position = 0;
+        return ms;
+        //			}
+    }
+
+    public override Uri ResolveUri(Uri baseUri, string relativeUri)
+    {
+        return base.ResolveUri(baseUri, relativeUri);
+    }
+
+    public override System.Net.ICredentials Credentials
+    {
+        set { }
+    }
 }

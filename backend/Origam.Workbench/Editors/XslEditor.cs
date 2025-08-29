@@ -764,7 +764,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			cboTraceLevel.Items.Add(Trace.Yes);
 			cboTraceLevel.Items.Add(Trace.No);
 			cboTraceLevel.SelectedItem = _xslRule.TraceLevel;
-            if (txtText.Text == "") txtText.Text = 
+            if (txtText.Text == "")
+            {
+                txtText.Text = 
 			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 			"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
 			"\txmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"" + Environment.NewLine +
@@ -786,7 +788,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 								   "\t\t</xsl:if>" + Environment.NewLine +
 								   "\t</xsl:template>" + Environment.NewLine + Environment.NewLine +
 			"</xsl:stylesheet>";
-			_isEditing = false;
+            }
+
+            _isEditing = false;
 		}
 		else if(ModelContent is XslTransformation)
 		{
@@ -799,7 +803,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			txtText.Text = _XslTransformation.TextStore == null ? "" : _XslTransformation.TextStore;
 			txtId.Text = _XslTransformation.Id.ToString();
             txtPackage.Text = _XslTransformation.PackageName;
-			if(txtText.Text == "") txtText.Text = 
+			if(txtText.Text == "")
+            {
+                txtText.Text = 
 									   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 									   "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
 									   "\txmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"" + Environment.NewLine +
@@ -817,7 +823,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 									   "\t\t</xsl:copy>" + Environment.NewLine +
 									   "\t</xsl:template>" + Environment.NewLine +
 									   "</xsl:stylesheet>";
-			_isEditing = false;
+            }
+
+            _isEditing = false;
 		}
 		else
 		{
@@ -836,8 +844,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			}
 			finally
 			{
-				if(reader != null) reader.Close();
-			}
+				if(reader != null)
+                {
+                    reader.Close();
+                }
+            }
 			tabControl.SelectedTab = tabSource;
 		}
 	}
@@ -849,8 +860,12 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 		txtResult.Text = resultText;
 				
 		grdResult.DataSource = null;
-		if(result == null) return;
-		try
+		if(result == null)
+        {
+            return;
+        }
+
+        try
 		{
 			if(result is IDataDocument)
 			{
@@ -897,9 +912,12 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			transformer.Parameters.Add("Parameters", parameterValues);
 			transformer.Run();
 		    IXmlContainer result = transformer.Result as IXmlContainer;
-		    if (result == null) return new XmlContainer();
-			// rule handling
-			DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
+		    if (result == null)
+            {
+                return new XmlContainer();
+            }
+            // rule handling
+            DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
 		    IDataDocument dataDoc = result as IDataDocument;
 		    if (dataDoc != null)
 		    {
@@ -958,11 +976,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			ProcessXpath(txtXpath.Text, txtSource.Text);
 			return true;
 		}
-		else
-		{
-			return base.ProcessDialogKey (keyData);
-		}
-	}
+
+        return base.ProcessDialogKey(keyData);
+    }
 	private void ProcessXpath(string xpath, string xml)
 	{
 		try
@@ -1001,8 +1017,12 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 	}
 	private string GetFormattedXml(XmlNode node)
 	{
-		if(node == null) return "";
-		string resultText = "";
+		if(node == null)
+        {
+            return "";
+        }
+
+        string resultText = "";
 		System.IO.StringWriter swriter = new System.IO.StringWriter();
 		XmlTextWriter xwriter = new XmlTextWriter(swriter);
 		try
@@ -1044,8 +1064,11 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 	}
 	private void btnValidate_Click(object sender, EventArgs e)
 	{
-		if(ValidateXslt()) MessageBox.Show(this, "The stylesheet is valid.", "XSLT Validation", MessageBoxButtons.OK, MessageBoxIcon.Information);
-	}
+		if(ValidateXslt())
+        {
+            MessageBox.Show(this, "The stylesheet is valid.", "XSLT Validation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
     private void cboSourceStructure_SelectedValueChanged(object sender, EventArgs e)
     {
         txtSource.ResultSchema = GetSchema(cboSourceStructure.SelectedItem);
@@ -1059,13 +1082,21 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     }
     private void UpdateParameterData(ParameterData parData)
     {
-	    if (parData == null) return;
+	    if (parData == null)
+        {
+            return;
+        }
+
         parData.Type = (OrigamDataType)parameterTypeComboBox.SelectedItem;
         parData.Text = paremeterEditor.Text;
     }
     private void DisplayParameterData(ParameterData parData)
     {
-	    if (parData == null) return;
+	    if (parData == null)
+        {
+            return;
+        }
+
         parameterTypeComboBox.SelectedItem = parData.Type;
         paremeterEditor.Text = parData.Text;
     }
@@ -1190,8 +1221,12 @@ internal class ParameterData
     }
     private OrigamDataType StringTypeToParameterDataType(string type)
     {
-	    if(type == null) return OrigamDataType.String;
-	    return Enum.GetValues(typeof(OrigamDataType))
+	    if(type == null)
+        {
+            return OrigamDataType.String;
+        }
+
+        return Enum.GetValues(typeof(OrigamDataType))
 		    .Cast<OrigamDataType?>()
 		    .FirstOrDefault(origamType => origamType.ToString() == type)
 		    ?? throw new ArgumentException($"parameter type {type} is not OrigamDataType.");
@@ -1202,12 +1237,11 @@ internal class ParameterData
 			if (Type == OrigamDataType.Xml)
 			{
 				return new XmlContainer(Text);
-			} else
-			{
-				Type systemType = DatasetGenerator.ConvertDataType(Type);
-				return DatasetTools.ConvertValue(Text, systemType);
 			}
-		}
+            Type systemType = DatasetGenerator.ConvertDataType(Type);
+
+            return DatasetTools.ConvertValue(Text, systemType);
+        }
 	}
     public override string ToString() => Name;
 }

@@ -19,75 +19,83 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Parameter", 15)]
 [HelpTopic("Function+Call+Field")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class FunctionCallParameter : AbstractSchemaItem
 {
-	public const string CategoryConst = "FunctionCallParameter";
-	public FunctionCallParameter() {}
-	public FunctionCallParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public FunctionCallParameter(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType => CategoryConst;
-	public override string Icon => "15";
-	[Browsable(false)]
-	public override bool UseFolders => false;
-	public override void GetExtraDependencies(
-		List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(FunctionParameter);
-		base.GetExtraDependencies (dependencies);
-	}
-	#endregion
-	#region Properties
-	public Guid FunctionParameterId;
-	[NotNullModelElementRule()]
+    public const string CategoryConst = "FunctionCallParameter";
+
+    public FunctionCallParameter() { }
+
+    public FunctionCallParameter(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public FunctionCallParameter(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType => CategoryConst;
+    public override string Icon => "15";
+
+    [Browsable(false)]
+    public override bool UseFolders => false;
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(FunctionParameter);
+        base.GetExtraDependencies(dependencies);
+    }
+    #endregion
+    #region Properties
+    public Guid FunctionParameterId;
+
+    [NotNullModelElementRule()]
     [XmlReference("parameter", "FunctionParameterId")]
     public FunctionParameter FunctionParameter
-	{
-		get
-		{
-			var key = new ModelElementKey
-			{
-				Id = FunctionParameterId
-			};
-			return (FunctionParameter)PersistenceProvider.RetrieveInstance(
-				typeof(FunctionParameter), key);
-		}
-		set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
-	}
-	#endregion
-	#region ISchemaItemFactory Members
-	[Browsable(false)]
-	public override Type[] NewItemTypes =>
-		new[] {
-			typeof(EntityColumnReference),
-			typeof(FunctionCall),
-			typeof(ParameterReference),
-			typeof(DataConstantReference),
-			typeof(EntityFilterReference),
-			typeof(EntityFilterLookupReference)
-		};
-	#endregion
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
-		if(obj is FunctionCallParameter functionCallParameter)
-		{
-			return FunctionParameter.OrdinalPosition.CompareTo(
-				functionCallParameter.FunctionParameter.OrdinalPosition);
-		}
-		return base.CompareTo(obj);
-	}
-	#endregion
+    {
+        get
+        {
+            var key = new ModelElementKey { Id = FunctionParameterId };
+            return (FunctionParameter)
+                PersistenceProvider.RetrieveInstance(typeof(FunctionParameter), key);
+        }
+        set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
+    }
+    #endregion
+    #region ISchemaItemFactory Members
+    [Browsable(false)]
+    public override Type[] NewItemTypes =>
+        new[]
+        {
+            typeof(EntityColumnReference),
+            typeof(FunctionCall),
+            typeof(ParameterReference),
+            typeof(DataConstantReference),
+            typeof(EntityFilterReference),
+            typeof(EntityFilterLookupReference),
+        };
+    #endregion
+    #region IComparable Members
+    public override int CompareTo(object obj)
+    {
+        if (obj is FunctionCallParameter functionCallParameter)
+        {
+            return FunctionParameter.OrdinalPosition.CompareTo(
+                functionCallParameter.FunctionParameter.OrdinalPosition
+            );
+        }
+        return base.CompareTo(obj);
+    }
+    #endregion
 }

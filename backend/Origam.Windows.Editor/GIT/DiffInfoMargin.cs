@@ -44,7 +44,11 @@ public class DiffInfoMargin : AbstractMargin
     }
     protected override Size MeasureOverride(Size availableSize)
     {
-        if (Lines == null || Lines.Count == 0) return new Size(0.0, 0.0);
+        if (Lines == null || Lines.Count == 0)
+        {
+            return new Size(0.0, 0.0);
+        }
+
         var textToUse = Lines.Last().LineNumber.ToString();
         var tf = CreateTypeface();
         _lineFt = new FormattedText(
@@ -71,8 +75,12 @@ public class DiffInfoMargin : AbstractMargin
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
-        if (Lines == null || Lines.Count == 0) return;
-        var lineNumberWidth = Math.Round(_lineFt.Width + TextHorizontalMargin * 2.0);
+        if (Lines == null || Lines.Count == 0)
+        {
+            return;
+        }
+
+        var lineNumberWidth = Math.Round(_lineFt.Width + (TextHorizontalMargin * 2.0));
         var tf = CreateTypeface();
         var fontSize = (double)GetValue(TextBlock.FontSizeProperty);
         var visualLines = TextView.VisualLinesValid ? TextView.VisualLines : Enumerable.Empty<VisualLine>();
@@ -80,7 +88,11 @@ public class DiffInfoMargin : AbstractMargin
         {
             var rcs = BackgroundGeometryBuilder.GetRectsFromVisualSegment(TextView, v, 0, 1000).ToArray();
             var linenum = v.FirstDocumentLine.LineNumber - 1;
-            if (linenum >= Lines.Count) continue;
+            if (linenum >= Lines.Count)
+            {
+                continue;
+            }
+
             var diffLine = Lines[linenum];
             FormattedText ft;
             if (diffLine.Style != DiffContext.Context)
@@ -89,14 +101,22 @@ public class DiffInfoMargin : AbstractMargin
                 switch (diffLine.Style)
                 {
                     case DiffContext.Added:
-                        brush = AddedBackground;
-                        break;
+                        {
+                            brush = AddedBackground;
+                            break;
+                        }
+
                     case DiffContext.Deleted:
-                        brush = DeletedBackground;
-                        break;
+                        {
+                            brush = DeletedBackground;
+                            break;
+                        }
+
                     case DiffContext.Blank:
-                        brush = BlankBackground;
-                        break;
+                        {
+                            brush = BlankBackground;
+                            break;
+                        }
                 }
                 foreach (var rc in rcs)
                 {

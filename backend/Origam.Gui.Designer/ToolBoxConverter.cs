@@ -44,23 +44,40 @@ public struct ToolBoxConverter
             switch (field.DataType)
             {
                 case OrigamDataType.Array:
-                    result = WIDGET_TAGINPUT;
-                    break;
+                    {
+                        result = WIDGET_TAGINPUT;
+                        break;
+                    }
+
                 case OrigamDataType.Blob:
-                    result = WIDGET_IMAGEBOX;
-                    break;
+                    {
+                        result = WIDGET_IMAGEBOX;
+                        break;
+                    }
+
                 case OrigamDataType.Boolean:
-                    result = WIDGET_CHECKBOX;
-                    break;
+                    {
+                        result = WIDGET_CHECKBOX;
+                        break;
+                    }
+
                 case OrigamDataType.Date:
-                    result = WIDGET_DATEBOX;
-                    break;
+                    {
+                        result = WIDGET_DATEBOX;
+                        break;
+                    }
+
                 case OrigamDataType.Object:
-                    result = WIDGET_MULTICOLUMNWRAPPER;
-                    break;
+                    {
+                        result = WIDGET_MULTICOLUMNWRAPPER;
+                        break;
+                    }
+
                 default:
-                    result = WIDGET_TEXTBOX;
-                    break;
+                    {
+                        result = WIDGET_TEXTBOX;
+                        break;
+                    }
             }
         }
         return result;

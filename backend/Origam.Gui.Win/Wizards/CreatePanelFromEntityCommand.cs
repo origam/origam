@@ -26,9 +26,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
-using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
@@ -103,7 +101,11 @@ public class CreatePanelFromEntityCommand : AbstractMenuCommand
     public override void Execute()
     {
         string groupName = null;
-        if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
+        if (screenwizardForm.Entity.Group != null)
+        {
+            groupName = screenwizardForm.Entity.Group.Name;
+        }
+
         panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames,screenwizardForm.NameOfEntity);
         GeneratedModelElements.Add(panel);
     }

@@ -54,6 +54,7 @@ public partial class ModelCheckResultWindow : Form
     private void errorListBox_DrawItem(object sender, DrawItemEventArgs e)
     {
         if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+        {
             e = new DrawItemEventArgs(e.Graphics,
                 e.Font,
                 e.Bounds,
@@ -61,13 +62,14 @@ public partial class ModelCheckResultWindow : Form
                 DrawItemState.Default,
                 e.ForeColor,
                 Color.Transparent);
-        
+        }
+
         ListBox listBox = sender as ListBox;
         var currentItem = listBox.Items[e.Index];
         string text = currentItem.ToString();
         
-        if (currentItem is ModelErrorSection section || 
-            currentItem is ErrorMessage message && message.Link == null )
+        if (currentItem is ModelErrorSection section ||
+            (currentItem is ErrorMessage message && message.Link == null))
         {
             e.DrawBackground();
             e.Graphics.DrawString(text, e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);

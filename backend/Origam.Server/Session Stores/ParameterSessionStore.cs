@@ -41,36 +41,44 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Xml;
-
-using Origam.Schema.EntityModel;
-using Origam.Workbench.Services;
-using Origam.Schema;
-using Origam.Schema.GuiModel;
 using Origam.DA.Service;
-using System.Collections;
-using System.Collections.Generic;
 using Origam.Gui;
-using Origam.Server;
+using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
+using Origam.Workbench.Services;
 
 namespace Origam.Server;
+
 class ParameterSessionStore : SessionStore
 {
     private Guid _dataStructureId;
     private string _titleName;
     private IDataLookup _lookup;
     private DataConstant _constant;
-    public ParameterSessionStore(IBasicUIService service, UIRequest request,
-        DataConstant constant, IDataLookup lookup, string titleName, string name,
-        bool refreshPortalAfterSave, Analytics analytics)
+
+    public ParameterSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        DataConstant constant,
+        IDataLookup lookup,
+        string titleName,
+        string name,
+        bool refreshPortalAfterSave,
+        Analytics analytics
+    )
         : base(service, request, name, analytics)
     {
-        this.Constant = constant;
-        this.Lookup = lookup;
-        this.TitleName = titleName;
-        this.RefreshPortalAfterSave = refreshPortalAfterSave;
+        Constant = constant;
+        Lookup = lookup;
+        TitleName = titleName;
+        RefreshPortalAfterSave = refreshPortalAfterSave;
     }
+
     #region Properties
     public Guid DataStructureId
     {
@@ -99,36 +107,55 @@ class ParameterSessionStore : SessionStore
         // resolve the formId for the parameter
         if (Lookup == null)
         {
-            switch (this.Constant.DataType)
+            switch (Constant.DataType)
             {
                 case OrigamDataType.Boolean:
-                    this.FormId = new Guid("1dd31104-afa7-4309-95b4-f58707c867d3");
+                {
+                    FormId = new Guid("1dd31104-afa7-4309-95b4-f58707c867d3");
                     break;
+                }
+
                 case OrigamDataType.Float:
                 case OrigamDataType.Currency:
-                    this.FormId = new Guid("11c112bc-9d2b-4ae3-8e0b-7c328700844d");
+                {
+                    FormId = new Guid("11c112bc-9d2b-4ae3-8e0b-7c328700844d");
                     break;
+                }
+
                 case OrigamDataType.Date:
-                    this.FormId = new Guid("fca89d9b-12b3-42fa-98d5-dae57f96eddf");
+                {
+                    FormId = new Guid("fca89d9b-12b3-42fa-98d5-dae57f96eddf");
                     break;
+                }
+
                 case OrigamDataType.Integer:
                 case OrigamDataType.Long:
-                    this.FormId = new Guid("97347fac-9c02-492b-826a-6afaaa2ef7ae");
+                {
+                    FormId = new Guid("97347fac-9c02-492b-826a-6afaaa2ef7ae");
                     break;
+                }
+
                 case OrigamDataType.Memo:
                 case OrigamDataType.String:
                 case OrigamDataType.UniqueIdentifier:
-                    this.FormId = new Guid("d9e147bf-0b27-47c5-a281-284f9369009d");
+                {
+                    FormId = new Guid("d9e147bf-0b27-47c5-a281-284f9369009d");
                     break;
+                }
+
                 default:
-                    throw new ArgumentOutOfRangeException("DataType", this.Constant.DataType, "Unsupported data type for DataConstantReferenceMenuItem.");
+                    throw new ArgumentOutOfRangeException(
+                        "DataType",
+                        Constant.DataType,
+                        "Unsupported data type for DataConstantReferenceMenuItem."
+                    );
             }
         }
         else
         {
-            if (this.Constant.DataType == OrigamDataType.UniqueIdentifier)
+            if (Constant.DataType == OrigamDataType.UniqueIdentifier)
             {
-                this.FormId = new Guid("c5866e5c-1c8d-45ad-9694-c7bebccf2cd9");
+                FormId = new Guid("c5866e5c-1c8d-45ad-9694-c7bebccf2cd9");
             }
             else
             {
@@ -136,20 +163,24 @@ class ParameterSessionStore : SessionStore
             }
         }
         // load the form definition
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        FormControlSet form = ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(this.FormId)) as FormControlSet;
-        this.DataStructureId = form.DataSourceId;
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        FormControlSet form =
+            ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(FormId))
+            as FormControlSet;
+        DataStructureId = form.DataSourceId;
         // prepare the data source
         DataSet data = new DatasetGenerator(true).CreateDataSet(form.DataStructure);
         DataTable t = data.Tables["SD"];
         DataRow r = t.NewRow();
-        LoadParameterData(r, this.Constant.Id);
+        LoadParameterData(r, Constant.Id);
         t.Rows.Add(r);
-        this.SetDataSource(data);
-        // add SD as dirty-enabled otherwise - since it is virtual - the form's dirty flag 
+        SetDataSource(data);
+        // add SD as dirty-enabled otherwise - since it is virtual - the form's dirty flag
         // would be reset when editing
-        this.DirtyEnabledEntities.Add("SD");
+        DirtyEnabledEntities.Add("SD");
     }
+
     public override object ExecuteActionInternal(string actionId)
     {
         switch (actionId)
@@ -159,20 +190,33 @@ class ParameterSessionStore : SessionStore
             case ACTION_REFRESH:
                 return Refresh();
             default:
-                throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                throw new ArgumentOutOfRangeException(
+                    "actionId",
+                    actionId,
+                    Resources.ErrorContextUnknownAction
+                );
         }
     }
+
     public override XmlDocument GetFormXml()
     {
         XmlDocument formXml;
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        FormControlSet fcs = ps.SchemaProvider.RetrieveInstance(typeof(FormControlSet), new ModelElementKey(this.FormId), false) as FormControlSet;
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        FormControlSet fcs =
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(FormControlSet),
+                new ModelElementKey(FormId),
+                false
+            ) as FormControlSet;
         foreach (ISchemaItem item in fcs.ChildItemsRecursive)
         {
             ControlSetItem panel = item as ControlSetItem;
             if (panel != null && panel.ControlItem.IsComplexType)
             {
-                foreach (ISchemaItem panelChild in panel.ControlItem.PanelControlSet.ChildItemsRecursive)
+                foreach (
+                    ISchemaItem panelChild in panel.ControlItem.PanelControlSet.ChildItemsRecursive
+                )
                 {
                     PropertyValueItem pvi = panelChild as PropertyValueItem;
                     if (pvi != null && pvi.ControlPropertyItem.Name == "LookupId")
@@ -186,13 +230,15 @@ class ParameterSessionStore : SessionStore
                 }
             }
         }
-        formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(fcs, this.Data, this.TitleName, true, new Guid(this.Request.ObjectId), false, "").Document;
+        formXml = FormXmlBuilder
+            .GetXml(fcs, Data, TitleName, true, new Guid(Request.ObjectId), false, "")
+            .Document;
         XmlNode node = formXml.SelectSingleNode("//*[@*='$caption']");
         foreach (XmlAttribute att in node.Attributes)
         {
             if (att.Value == "$caption")
             {
-                att.Value = this.TitleName;
+                att.Value = TitleName;
             }
         }
         return formXml;
@@ -201,7 +247,8 @@ class ParameterSessionStore : SessionStore
     #region Private Methods
     private static void LoadParameterData(DataRow r, Guid parameterId)
     {
-        IParameterService paramSvc = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        IParameterService paramSvc =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         object value = paramSvc.GetParameterValue(parameterId);
         r["Id"] = Guid.NewGuid();
         if (value is int intValue)
@@ -229,25 +276,70 @@ class ParameterSessionStore : SessionStore
             r["d1"] = dateTimeValue;
         }
     }
+
     private object SaveParameterData()
     {
         var listOfChanges = new List<ChangeInfo>();
-        DataRow r = this.Data.Tables["SD"].Rows[0];
-        IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        DataRow r = Data.Tables["SD"].Rows[0];
+        IParameterService ps =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         int intValue = 0;
         string stringValue = "";
         Guid guidValue = Guid.Empty;
         bool boolValue = false;
         decimal decimalValue = 0;
         object dateValue = null;
-        if (!r.IsNull("g1")) guidValue = (Guid)r["g1"];
-        if (!r.IsNull("i1")) intValue = (int)r["i1"];
-        if (!r.IsNull("s1")) stringValue = (string)r["s1"];
-        if (!r.IsNull("b1")) boolValue = (bool)r["b1"];
-        if (!r.IsNull("c1")) decimalValue = (decimal)r["c1"];
-        if (!r.IsNull("d1")) dateValue = (DateTime)r["d1"];
-        object value = DataConstant.ConvertValue(this.Constant.DataType, stringValue, intValue, guidValue, decimalValue, decimalValue, boolValue, dateValue);
-        ps.SetCustomParameterValue(this.Constant.Id, value, guidValue, intValue, stringValue, boolValue, decimalValue, decimalValue, dateValue);
+        if (!r.IsNull("g1"))
+        {
+            guidValue = (Guid)r["g1"];
+        }
+
+        if (!r.IsNull("i1"))
+        {
+            intValue = (int)r["i1"];
+        }
+
+        if (!r.IsNull("s1"))
+        {
+            stringValue = (string)r["s1"];
+        }
+
+        if (!r.IsNull("b1"))
+        {
+            boolValue = (bool)r["b1"];
+        }
+
+        if (!r.IsNull("c1"))
+        {
+            decimalValue = (decimal)r["c1"];
+        }
+
+        if (!r.IsNull("d1"))
+        {
+            dateValue = (DateTime)r["d1"];
+        }
+
+        object value = DataConstant.ConvertValue(
+            Constant.DataType,
+            stringValue,
+            intValue,
+            guidValue,
+            decimalValue,
+            decimalValue,
+            boolValue,
+            dateValue
+        );
+        ps.SetCustomParameterValue(
+            Constant.Id,
+            value,
+            guidValue,
+            intValue,
+            stringValue,
+            boolValue,
+            decimalValue,
+            decimalValue,
+            dateValue
+        );
         listOfChanges.Add(ChangeInfo.SavedChangeInfo());
         if (RefreshPortalAfterSave)
         {
@@ -255,10 +347,11 @@ class ParameterSessionStore : SessionStore
         }
         return listOfChanges;
     }
+
     private object Refresh()
     {
-        LoadParameterData(this.Data.Tables["SD"].Rows[0], this.Constant.Id);
-        return this.Data;
+        LoadParameterData(Data.Tables["SD"].Rows[0], Constant.Id);
+        return Data;
     }
     #endregion
 }

@@ -23,26 +23,21 @@ using System;
 using System.Xml.Serialization;
 
 namespace Origam.Workflow;
+
 /// <summary>
 /// Summary description for TextReaderAgentSettings.
 /// </summary>
 [Serializable()]
 public class MultiRecordTextReaderOptions
 {
-	public MultiRecordTextReaderOptions()
-	{
-	}
-	private MultiRecordTextReaderRecordType[] _recordTypes;
-	[XmlArrayItem("Type", typeof(MultiRecordTextReaderRecordType))]
-	public MultiRecordTextReaderRecordType[] RecordTypes
-	{
-		get
-		{
-			return _recordTypes;
-		}
-		set
-		{
-            _recordTypes = value;
-		}
-	}
+    public MultiRecordTextReaderOptions() { }
+
+    private MultiRecordTextReaderRecordType[] _recordTypes;
+
+    [XmlArrayItem("Type", typeof(MultiRecordTextReaderRecordType))]
+    public MultiRecordTextReaderRecordType[] RecordTypes
+    {
+        get { return _recordTypes; }
+        set { _recordTypes = value; }
+    }
 }

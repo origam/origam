@@ -34,7 +34,6 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-
 using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -95,8 +94,11 @@ public class AsTreeView : TreeView, IAsDataConsumer
 		if( disposing )
 		{
 			if( components != null )
-				components.Dispose();
-			if(listManager != null)
+            {
+                components.Dispose();
+            }
+
+            if (listManager != null)
 			{
 				if(this.listManager.List is IBindingList)
 				{
@@ -489,91 +491,107 @@ public class AsTreeView : TreeView, IAsDataConsumer
 	}
 	private void DataTreeView_ListChanged(object sender, ListChangedEventArgs e)
 	{	
-		if(this.items_Positions.Count == 0 & e.ListChangedType != ListChangedType.Reset) return;
-		try
+		if(this.items_Positions.Count == 0 & e.ListChangedType != ListChangedType.Reset)
+        {
+            return;
+        }
+
+        try
 		{
 			switch(e.ListChangedType)
 			{
-				case ListChangedType.ItemAdded:
-					if (!TryAddNode(this.CreateNode(this.listManager, e.NewIndex)))
-					{
-						throw new ApplicationException(ResourceUtils.GetString("ErrorAddItemToTree", e.NewIndex.ToString()));
-					}
-					break;
-				case ListChangedType.ItemChanged:
-					DataTreeViewNode chnagedNode = this.items_Positions[e.NewIndex] as DataTreeViewNode;
-					if (chnagedNode != null)
-					{
-						
-						this.ChangeParent(chnagedNode);
-						this.RefreshData(chnagedNode);
-					}
-					else
-					{
-						throw new ApplicationException(ResourceUtils.GetString("ErrorItemNotFound"));
-					}
-					break;
-				case ListChangedType.ItemMoved:
-					if(e.NewIndex >= 0)
-					{
-						DataTreeViewNode movedNode = this.items_Positions[e.OldIndex] as DataTreeViewNode;
-						if (movedNode != null)
-						{						
-							this.items_Positions.Remove(e.OldIndex);
-							this.items_Positions.Add(e.NewIndex, movedNode);
-						}
-						else
-						{
-							throw new ApplicationException(ResourceUtils.GetString("ErrorItemNotFound"));
-						}
-					}
-					break;
-				case ListChangedType.ItemDeleted:
-					try
-					{
-						if(items_Positions.Contains(e.NewIndex))
-						{
-							DataTreeViewNode parent = (items_Positions[e.NewIndex] as TreeNode).Parent as DataTreeViewNode;
-						
-							if(parent == null)
-							{
-								_lastSelectedId = null;
-							}
-							else
-							{
-								_lastSelectedId = parent.Position;
-							}
-							this.ResetData();
-						}
-//							foreach(DataTreeViewNode node in items_Positions.Values)
-//							{
-//								if(parent.ID == node.ID)
-//								{
-//									node.EnsureVisible();
-//									node.Expand();
-//									this.SelectedNode = node;
-//									break;
-//								}
-//							}
-					}
-					catch{}
-					//						DataTreeViewNode deletedNode = this.items_Positions[e.OldIndex] as DataTreeViewNode;
-					//						if (deletedNode != null)
-					//						{								
-					//							this.items_Positions.Remove(e.OldIndex);
-					//							this.items_Identifiers.Remove(deletedNode.ID);
-					//							deletedNode.Remove();
-					//						}
-					//						else
-					//						{
-					//							throw new ApplicationException("Item not found or wrong type.");
-					//						}
-					break;					
-				case ListChangedType.Reset:
-					this.ResetData();
-					break;
-			
-			}
+                case ListChangedType.ItemAdded:
+                    {
+                        if (!TryAddNode(this.CreateNode(this.listManager, e.NewIndex)))
+                        {
+                            throw new ApplicationException(ResourceUtils.GetString("ErrorAddItemToTree", e.NewIndex.ToString()));
+                        }
+                        break;
+                    }
+
+                case ListChangedType.ItemChanged:
+                    {
+                        DataTreeViewNode chnagedNode = this.items_Positions[e.NewIndex] as DataTreeViewNode;
+                        if (chnagedNode != null)
+                        {
+                            this.ChangeParent(chnagedNode);
+                            this.RefreshData(chnagedNode);
+                        }
+                        else
+                        {
+                            throw new ApplicationException(ResourceUtils.GetString("ErrorItemNotFound"));
+                        }
+                        break;
+                    }
+
+                case ListChangedType.ItemMoved:
+                    {
+                        if (e.NewIndex >= 0)
+                        {
+                            DataTreeViewNode movedNode = this.items_Positions[e.OldIndex] as DataTreeViewNode;
+                            if (movedNode != null)
+                            {
+                                this.items_Positions.Remove(e.OldIndex);
+                                this.items_Positions.Add(e.NewIndex, movedNode);
+                            }
+                            else
+                            {
+                                throw new ApplicationException(ResourceUtils.GetString("ErrorItemNotFound"));
+                            }
+                        }
+                        break;
+                    }
+
+                case ListChangedType.ItemDeleted:
+                    {
+                        try
+                        {
+                            if (items_Positions.Contains(e.NewIndex))
+                            {
+                                DataTreeViewNode parent = (items_Positions[e.NewIndex] as TreeNode).Parent as DataTreeViewNode;
+
+                                if (parent == null)
+                                {
+                                    _lastSelectedId = null;
+                                }
+                                else
+                                {
+                                    _lastSelectedId = parent.Position;
+                                }
+                                this.ResetData();
+                            }
+                            //							foreach(DataTreeViewNode node in items_Positions.Values)
+                            //							{
+                            //								if(parent.ID == node.ID)
+                            //								{
+                            //									node.EnsureVisible();
+                            //									node.Expand();
+                            //									this.SelectedNode = node;
+                            //									break;
+                            //								}
+                            //							}
+                        }
+                        catch { }
+                        //						DataTreeViewNode deletedNode = this.items_Positions[e.OldIndex] as DataTreeViewNode;
+                        //						if (deletedNode != null)
+                        //						{								
+                        //							this.items_Positions.Remove(e.OldIndex);
+                        //							this.items_Identifiers.Remove(deletedNode.ID);
+                        //							deletedNode.Remove();
+                        //						}
+                        //						else
+                        //						{
+                        //							throw new ApplicationException("Item not found or wrong type.");
+                        //						}
+                        break;
+                    }
+
+                case ListChangedType.Reset:
+                    {
+                        this.ResetData();
+                        break;
+                    }
+            }
 		}
 		catch (Exception ex)
 		{
@@ -610,12 +628,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
 				this.listManager = this.BindingContext[this.dataSource, this.dataMember] as CurrencyManager;
 				return true;
 			}
-			else
-			{
-				this.listManager = null;
-				this.Clear();
-			}
-		}
+            this.listManager = null;
+
+            this.Clear();
+        }
 		return false;
 	}		
 	private bool PrepareDescriptors()
@@ -720,25 +736,27 @@ public class AsTreeView : TreeView, IAsDataConsumer
 			this.AddNode(this.Nodes, node);				
 			return true;
 		}
-		else
-		{
-			if (this.items_Identifiers.ContainsKey(node.ParentID))
-			{
-				DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
-				if (parentNode != null)
-				{
-					CheckRecursion(node, parentNode);
-					this.AddNode(parentNode.Nodes, node);				
-					return true;
-				}
-			}
-		}
-		return false;
+
+        if (this.items_Identifiers.ContainsKey(node.ParentID))
+        {
+            DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
+            if (parentNode != null)
+            {
+                CheckRecursion(node, parentNode);
+                this.AddNode(parentNode.Nodes, node);
+                return true;
+            }
+        }
+        return false;
 	}
 	private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
 	{
-		if(node.ID == null | node.ID == DBNull.Value) return;
-		if(!this.items_Positions.ContainsKey(node.Position))
+		if(node.ID == null | node.ID == DBNull.Value)
+        {
+            return;
+        }
+
+        if (!this.items_Positions.ContainsKey(node.Position))
 		{
 			this.items_Positions.Add(node.Position, node);
 			this.items_Identifiers.Add(node.ID, node);
@@ -766,8 +784,12 @@ public class AsTreeView : TreeView, IAsDataConsumer
 	}
 	private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
 	{
-		if(node == null | parentNode == null) return;
-		if(node.ID.Equals(parentNode.ID))
+		if(node == null | parentNode == null)
+        {
+            return;
+        }
+
+        if (node.ID.Equals(parentNode.ID))
 		{
 			this.parentIdProperty.SetValue(this.listManager.List[node.Position], DBNull.Value);
 			throw new NotSupportedException("Stromové zobrazení: Není možné pøidat položku pod sebe sama.");
@@ -783,8 +805,12 @@ public class AsTreeView : TreeView, IAsDataConsumer
 	
 	private void SynchronizeSelection()
 	{
-		if(this.listManager == null | this.selectionChanging) return;
-		DataTreeViewNode node = this.items_Positions[this.listManager.Position] as DataTreeViewNode;
+		if(this.listManager == null | this.selectionChanging)
+        {
+            return;
+        }
+
+        DataTreeViewNode node = this.items_Positions[this.listManager.Position] as DataTreeViewNode;
 		if (node != null)
 		{
 			this.SelectedNode = node;
@@ -792,8 +818,12 @@ public class AsTreeView : TreeView, IAsDataConsumer
 	}
 	private void RefreshData(DataTreeViewNode node)
 	{
-		if(this.listManager == null) return;
-		int position = node.Position;
+		if(this.listManager == null)
+        {
+            return;
+        }
+
+        int position = node.Position;
 		node.ID = this.GetID(position);
 		object name = this.GetName(position);
 		node.Text = name == null ? "" : name.ToString();
@@ -831,18 +861,16 @@ public class AsTreeView : TreeView, IAsDataConsumer
 		{
 			return true;
 		}
-		else
-		{
-			if (id.GetType() == typeof(string))
-			{
-				return (((string)id).Length == 0);
-			}
-			else if (id.GetType() == typeof(Guid))
-			{
-				return ((Guid)id == Guid.Empty);
-			}				
-		}
-		return false;
+
+        if (id.GetType() == typeof(string))
+        {
+            return (((string)id).Length == 0);
+        }
+        else if (id.GetType() == typeof(Guid))
+        {
+            return ((Guid)id == Guid.Empty);
+        }
+        return false;
 	}
 	protected override void InitLayout()
 	{ 

@@ -39,34 +39,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq;
-using Origam.DA.Common;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
 namespace Origam.DA.Service;
+
 public class OrigamXmlLoader
 {
     private readonly ObjectFileDataFactory objectFileDataFactory;
     private readonly DirectoryInfo topDirectory;
     private readonly XmlFileDataFactory xmlFileDataFactory;
     private readonly IMetaModelUpgradeService metaModelUpgradeService;
-    public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory,
-        DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory,
-        IMetaModelUpgradeService metaModelUpgradeService)
+
+    public OrigamXmlLoader(
+        ObjectFileDataFactory objectFileDataFactory,
+        DirectoryInfo topDirectory,
+        XmlFileDataFactory xmlFileDataFactory,
+        IMetaModelUpgradeService metaModelUpgradeService
+    )
     {
         this.objectFileDataFactory = objectFileDataFactory;
         this.topDirectory = topDirectory;
         this.xmlFileDataFactory = xmlFileDataFactory;
         this.metaModelUpgradeService = metaModelUpgradeService;
     }
+
     public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, MetaModelUpgradeMode mode)
     {
         PropertyToNamespaceMapping.Init();
@@ -75,27 +78,25 @@ public class OrigamXmlLoader
         {
             return result.Error;
         }
-        List<XmlFileData> dataToAdd =
-            metaModelUpgradeService.Upgrade(result.Value, mode);
+        List<XmlFileData> dataToAdd = metaModelUpgradeService.Upgrade(result.Value, mode);
         AddOrigamFiles(itemTracker, dataToAdd);
         RemoveOrigamFilesThatNoLongerExist(itemTracker);
         return Maybe<XmlLoadError>.None;
     }
-    private void AddOrigamFiles(ItemTracker itemTracker,
-        List<XmlFileData> filesToLoad)
+
+    private void AddOrigamFiles(ItemTracker itemTracker, List<XmlFileData> filesToLoad)
     {
         GetNamespaceFinder(filesToLoad)
-            .FileDataWithNamespacesAssigned
-            .AsParallel()
+            .FileDataWithNamespacesAssigned.AsParallel()
             .Select(objFileData => objFileData.Read())
-            .ForEach( x=>
+            .ForEach(x =>
             {
                 itemTracker.AddOrReplace(x);
                 itemTracker.AddOrReplaceHash(x);
             });
     }
-    private Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(
-        ItemTracker itemTracker)
+
+    private Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(ItemTracker itemTracker)
     {
         List<Result<XmlFileData, XmlLoadError>> results = topDirectory
             .GetAllFilesInSubDirectories()
@@ -107,28 +108,25 @@ public class OrigamXmlLoader
         List<Result<XmlFileData, XmlLoadError>> errors = results
             .Where(result => result.IsFailure)
             .ToList();
-        IEnumerable<XmlFileData> data = results
-            .Select(res => res.Value);
-            
+        IEnumerable<XmlFileData> data = results.Select(res => res.Value);
+
         return errors.Count == 0
             ? Result.Success<List<XmlFileData>, XmlLoadError>(data.ToList())
             : Result.Failure<List<XmlFileData>, XmlLoadError>(errors[0].Error);
     }
-    
+
     private void RemoveOrigamFilesThatNoLongerExist(ItemTracker itemTracker)
     {
-        IEnumerable<FileInfo> allFilesInSubDirectories
-            = topDirectory.GetAllFilesInSubDirectories();
+        IEnumerable<FileInfo> allFilesInSubDirectories = topDirectory.GetAllFilesInSubDirectories();
         itemTracker.KeepOnly(allFilesInSubDirectories);
     }
+
     private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad)
     {
         if (filesToLoad.Count == 0)
         {
             return new NullNamespaceFinder();
         }
-        return new PreLoadedNamespaceFinder(
-            filesToLoad,
-            objectFileDataFactory);
+        return new PreLoadedNamespaceFinder(filesToLoad, objectFileDataFactory);
     }
 }

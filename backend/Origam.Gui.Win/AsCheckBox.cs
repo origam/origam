@@ -24,7 +24,6 @@ using System.Data;
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -57,11 +56,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 			{
 				return DBNull.Value;
 			}
-			else
-			{
-				return this.Checked;
-			}
-		}
+
+            return this.Checked;
+        }
 		set
 		{
 			if(value==DBNull.Value | value == null)
@@ -94,7 +91,6 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 				}
 			}
 	}
-        
 	}
 	public string DefaultBindableProperty
 	{
@@ -144,8 +140,11 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 		set
 		{
 			_readOnly = value;
-			if(! this.DesignMode) this.Enabled = !value;
-		}
+			if(! this.DesignMode)
+            {
+                this.Enabled = !value;
+            }
+        }
 	}
 	private bool _hideOnForm = false;
 	public bool HideOnForm
@@ -172,11 +171,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 			{
 				return false;
 			}
-			else
-			{
-				return _enabled;
-			}
-		}
+
+            return _enabled;
+        }
 		set
 		{
 			_enabled = value;
@@ -249,8 +246,11 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 	}
 	private void AsCheckBox_EnabledChanged(object sender, EventArgs e)
 	{
-		if(this.ReadOnly & base.Enabled) this.Enabled = false;
-	}
+		if(this.ReadOnly & base.Enabled)
+        {
+            this.Enabled = false;
+        }
+    }
 	
 	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
 	{
@@ -343,8 +343,10 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 			if(table != null)
 			{
 				if(table.Columns.Contains(binding.BindingMemberInfo.BindingField))
-					return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
-			}
+                {
+                    return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                }
+            }
 		}
 		return binding.BindingMemberInfo.BindingField;
 	}
@@ -367,8 +369,11 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 			}
 		}
 		else
-			tableName = dataMember;
-		return tableName;
+        {
+            tableName = dataMember;
+        }
+
+        return tableName;
 	}
 	private void ResetCaption()
 	{
@@ -377,7 +382,8 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 			foreach(Binding binding in this.DataBindings)
 			{
 				if(binding.PropertyName == "Text")
-					try
+                {
+                    try
 					{
 						base.Text = ColumnCaption(binding);
 					}
@@ -385,7 +391,8 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 					{
 						base.Text = "????";
 					}
-			}
+                }
+            }
 		}
 	}
 	#endregion

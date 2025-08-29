@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for String.
 /// </summary>
@@ -35,34 +36,33 @@ namespace Origam.Schema;
 [ClassMetaVersion("6.0.0")]
 public class StringItem : AbstractSchemaItem
 {
-	public const string CategoryConst = "String";
-	public StringItem() : base(){}
-	public StringItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public StringItem(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
-	#region Properties
-	private string _string;
-	[Localizable(true)]
+    public const string CategoryConst = "String";
+
+    public StringItem()
+        : base() { }
+
+    public StringItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public StringItem(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
+    #region Properties
+    private string _string;
+
+    [Localizable(true)]
     [XmlAttribute("string")]
     public string String
-	{
-		get
-		{
-			return _string;
-		}
-		set
-		{
-			_string = value;
-		}
-	}
-	#endregion
+    {
+        get { return _string; }
+        set { _string = value; }
+    }
+    #endregion
 }

@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for ColumnSeriesType.
 /// </summary>
 public enum ColumnSeriesType
 {
-	Clustered,
-	Overlaid,
-	Stacked,
-	Pct100
+    Clustered,
+    Overlaid,
+    Stacked,
+    Pct100,
 }

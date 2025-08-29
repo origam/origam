@@ -19,103 +19,106 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("Parameter", "Parameters", 29)]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DashboardWidgetParameter : AbstractSchemaItem
 {
-	public const string CategoryConst = "DashboardWidgetParameter";
-	public DashboardWidgetParameter() : base() {Init();}
-	public DashboardWidgetParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public DashboardWidgetParameter(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	#region Properties
-	private string _caption = "";
-	[Category("User Interface")]
-	[StringNotEmptyModelElementRule()]
-	[Localizable(true)]
+    public const string CategoryConst = "DashboardWidgetParameter";
+
+    public DashboardWidgetParameter()
+        : base()
+    {
+        Init();
+    }
+
+    public DashboardWidgetParameter(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public DashboardWidgetParameter(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    #region Properties
+    private string _caption = "";
+
+    [Category("User Interface")]
+    [StringNotEmptyModelElementRule()]
+    [Localizable(true)]
     [XmlAttribute("label")]
-	public string Caption
-	{
-		get
-		{
-			return _caption;
-		}
-		set
-		{
-			_caption = value;
-		}
-	}
-	private OrigamDataType _dataType = OrigamDataType.String;
-	[Category("Mapping")]
+    public string Caption
+    {
+        get { return _caption; }
+        set { _caption = value; }
+    }
+    private OrigamDataType _dataType = OrigamDataType.String;
+
+    [Category("Mapping")]
     [XmlAttribute("dataType")]
-	public OrigamDataType DataType
-	{
-		get
-		{
-			return _dataType;
-		}
-		set
-		{
-			_dataType = value;
-		}
-	}
-	public Guid DataConstantId;
-	[Category("Mapping")]
-	[TypeConverter(typeof(DataConstantConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public OrigamDataType DataType
+    {
+        get { return _dataType; }
+        set { _dataType = value; }
+    }
+    public Guid DataConstantId;
+
+    [Category("Mapping")]
+    [TypeConverter(typeof(DataConstantConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("defaultValue", "DataConstantId")]
-	public DataConstant DefaultValue
-	{
-		get
-		{
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
-		}
-		set
-		{
-			this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	public Guid LookupId;
-	[Category("Mapping")]
-	[TypeConverter(typeof(DataLookupConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public DataConstant DefaultValue
+    {
+        get
+        {
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        typeof(ISchemaItem),
+                        new ModelElementKey(this.DataConstantId)
+                    ) as DataConstant;
+        }
+        set { this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+    public Guid LookupId;
+
+    [Category("Mapping")]
+    [TypeConverter(typeof(DataLookupConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("lookup", "LookupId")]
-	public IDataLookup Lookup
-	{
-		get
-		{
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
-		}
-		set
-		{
-			this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "29";
-		}
-	}
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion			
+    public IDataLookup Lookup
+    {
+        get
+        {
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        typeof(ISchemaItem),
+                        new ModelElementKey(this.LookupId)
+                    ) as IDataLookup;
+        }
+        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+    public override string Icon
+    {
+        get { return "29"; }
+    }
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }

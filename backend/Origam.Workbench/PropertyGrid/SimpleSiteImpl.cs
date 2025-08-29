@@ -34,12 +34,19 @@ public sealed class SimpleSiteImpl : ISite, IServiceProvider
     private Dictionary<Type, object> services;
     public void AddService<T>(T service) where T : class
     {
-        if (services == null) services = new Dictionary<Type, object>();
+        if (services == null)
+        {
+            services = new Dictionary<Type, object>();
+        }
+
         services[typeof(T)] = service;
     }
     public void RemoveService<T>() where T : class
     {
-        if (services != null) services.Remove(typeof(T));
+        if (services != null)
+        {
+            services.Remove(typeof(T));
+        }
     }
     object IServiceProvider.GetService(Type serviceType)
     {

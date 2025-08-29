@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for FunctionParameter.
 /// </summary>
@@ -35,46 +36,38 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class FunctionParameter : AbstractSchemaItem
 {
-	public const string CategoryConst = "FunctionParameter";
-	public FunctionParameter() : base() {}
-	public FunctionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "FunctionParameter";
 
-	#region Overriden AbstractDataEntityColumn Members
+    public FunctionParameter()
+        : base() { }
 
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "15";
-		}
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	private int _ordinalPosition;
-	[XmlAttribute("ordinalPosition")]
+    public FunctionParameter(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public FunctionParameter(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override string Icon
+    {
+        get { return "15"; }
+    }
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    private int _ordinalPosition;
+
+    [XmlAttribute("ordinalPosition")]
     public int OrdinalPosition
-	{
-		get
-		{
-			return _ordinalPosition;
-		}
-		set
-		{
-			_ordinalPosition = value;
-		}
-	}
+    {
+        get { return _ordinalPosition; }
+        set { _ordinalPosition = value; }
+    }
 }

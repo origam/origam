@@ -22,20 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for RadioButtonBuilder.
 /// </summary>
 public class RadioButtonBuilder
 {
-	public static void Build(XmlElement propertyElement, string text, string value)
-	{
-		propertyElement.SetAttribute("Entity", "String");
-		propertyElement.SetAttribute("Column", "RadioButton");
-		if(text != "" && text != null)
-		{
-			propertyElement.SetAttribute("Name", text);
-		}
-		propertyElement.SetAttribute("CaptionPosition", "Right");
-		propertyElement.SetAttribute("Value", value);
-	}
+    public static void Build(XmlElement propertyElement, string text, string value)
+    {
+        propertyElement.SetAttribute("Entity", "String");
+        propertyElement.SetAttribute("Column", "RadioButton");
+        if (text != "" && text != null)
+        {
+            propertyElement.SetAttribute("Name", text);
+        }
+        propertyElement.SetAttribute("CaptionPosition", "Right");
+        propertyElement.SetAttribute("Value", value);
+    }
 }

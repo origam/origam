@@ -68,8 +68,11 @@ public class FileSelectionUITypeEditor : UITypeEditor
 				zipStream.Write(buffer, 0, buffer.Length);
 				zipStream.Finish();
 				if(stream.Length > 50000000)
-					throw new Exception (ResourceUtils.GetString("ErrorFileBig"));
-				stream.Position = 0;
+                {
+                    throw new Exception (ResourceUtils.GetString("ErrorFileBig"));
+                }
+
+                stream.Position = 0;
 				byteArray = br.ReadBytes((int)stream.Length);
 			}
 			finally

@@ -23,18 +23,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Origam.DA;
+
 public class ColumnsInfo
 {
     public static readonly ColumnsInfo Empty = new ColumnsInfo();
     public bool RenderSqlForDetachedFields { get; }
-    private ColumnsInfo()
-    {
-    }
-    
-    public ColumnsInfo(string columnName): this(columnName, false)
-    {
-    }
-    
+
+    private ColumnsInfo() { }
+
+    public ColumnsInfo(string columnName)
+        : this(columnName, false) { }
+
     public ColumnsInfo(string columnName, bool renderSqlForDetachedFields)
     {
         RenderSqlForDetachedFields = renderSqlForDetachedFields;
@@ -49,16 +48,18 @@ public class ColumnsInfo
             .Select(x => new ColumnData(x))
             .ToList();
     }
+
     public ColumnsInfo(List<ColumnData> columns, bool renderSqlForDetachedFields)
     {
         Columns = columns.ToList();
         RenderSqlForDetachedFields = renderSqlForDetachedFields;
     }
-    
+
     public List<ColumnData> Columns { get; } = new List<ColumnData>();
     public int Count => Columns.Count;
     public bool IsEmpty => Count == 0;
     public List<string> ColumnNames => Columns.Select(x => x.Name).ToList();
+
     public override string ToString()
     {
         return string.Join(";", ColumnNames);
@@ -67,15 +68,13 @@ public class ColumnsInfo
 
 public class ColumnData
 {
-    public string Name { get;}
-    public bool IsVirtual { get;  }
+    public string Name { get; }
+    public bool IsVirtual { get; }
     public object DefaultValue { get; }
-    public bool HasRelation { get;}
-    public static readonly ColumnData
-        GroupByCountColumn = new ColumnData("groupCount");        
-    public static readonly ColumnData
-        GroupByCaptionColumn = new ColumnData("groupCaption");
-    
+    public bool HasRelation { get; }
+    public static readonly ColumnData GroupByCountColumn = new ColumnData("groupCount");
+    public static readonly ColumnData GroupByCaptionColumn = new ColumnData("groupCaption");
+
     public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
     {
         Name = name;
@@ -83,10 +82,12 @@ public class ColumnData
         DefaultValue = defaultValue;
         HasRelation = hasRelation;
     }
+
     public ColumnData(string name)
     {
         Name = name;
     }
+
     public override string ToString()
     {
         return Name;

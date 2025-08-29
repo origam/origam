@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml.Linq;
 
 namespace Origam.DA.Service.NamespaceMapping;
+
 internal interface IPropertyToNamespaceMapping
 {
     XNamespace NodeNamespace { get; }
