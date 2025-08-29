@@ -677,32 +677,54 @@ public class DatasetTools
 		DataTable table = row.Table;
 		if(isNew)
 		{
-			if(table.Columns.Contains("RecordCreated") && row["RecordCreated"] == DBNull.Value)
+			if(table.Columns.Contains("RecordCreated"))
 			{
 				DataColumn col = table.Columns["RecordCreated"];
 				row[col] = DateTime.Now;
-				if(changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
+				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
+				{
+					changedColumns.Add(col.ExtendedProperties["Id"], col);
+				}
 			}
-			if(table.Columns.Contains("RecordCreatedBy") && row["RecordCreatedBy"] == DBNull.Value & profileId != null)
+			if(table.Columns.Contains("RecordCreatedBy") && profileId != null)
 			{
 				DataColumn col = table.Columns["RecordCreatedBy"];
 				row[col] = profileId;
-				if(changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
+				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
+				{
+					changedColumns.Add(col.ExtendedProperties["Id"], col);
+				}
+			}
+			if (table.Columns.Contains("RecordUpdated"))
+			{
+				DataColumn col = table.Columns["RecordUpdated"];
+				row[col] = DBNull.Value;
+			}
+			if (table.Columns.Contains("RecordUpdatedBy"))
+			{
+				DataColumn col = table.Columns["RecordUpdatedBy"];
+				row[col] = DBNull.Value;
 			}
 		}
 		else
 		{
-			if(table.Columns.Contains("RecordUpdated") & row.RowState != DataRowState.Added)
+			if(table.Columns.Contains("RecordUpdated") && row.RowState != DataRowState.Added)
 			{
 				DataColumn col = table.Columns["RecordUpdated"];
 				row[col] = DateTime.Now;
-				if(changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]) ) changedColumns.Add(col.ExtendedProperties["Id"], col);
+				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
+				{
+					changedColumns.Add(col.ExtendedProperties["Id"], col);
+				}
 			}
-			if(table.Columns.Contains("RecordUpdatedBy") & row.RowState != DataRowState.Added & profileId != null)
+			if(table.Columns.Contains("RecordUpdatedBy") && row.RowState != DataRowState.Added && profileId != null)
 			{
 				DataColumn col = table.Columns["RecordUpdatedBy"];
 				row[col] = profileId;
-				if(changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
+				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
+				{
+					changedColumns.Add(col.ExtendedProperties["Id"], col);
+				}
 			}
 		}
 	}
