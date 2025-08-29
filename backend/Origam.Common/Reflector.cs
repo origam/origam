@@ -20,13 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-#pragma warning disable IDE0005 // Using directive is unnecessary
 using Origam.Extensions;
 #pragma warning restore IDE0005
 
