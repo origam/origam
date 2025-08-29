@@ -29,6 +29,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Data;
+using System.Runtime.InteropServices;
 
 namespace Origam.Workflow.WorkQueue;
 public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
@@ -202,8 +203,13 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 string fullDestinationDirPath = Path.GetFullPath(path + Path.DirectorySeparatorChar);
                 foreach(ZipArchiveEntry archiveEntry in archive.Entries)
                 {
-                    string destinationFileName = Path.GetFullPath(Path.Combine(path, archiveEntry.FullName));
-                    if (!destinationFileName.StartsWith(fullDestinationDirPath))
+                    string destinationFileName = Path.GetFullPath(
+                        Path.Combine(path, archiveEntry.FullName)
+                    );
+                    var comparison = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                        ? StringComparison.OrdinalIgnoreCase
+                        : StringComparison.Ordinal;
+                    if (!destinationFileName.StartsWith(fullDestinationDirPath, comparison))
                     {
                         throw new InvalidOperationException("Entry is outside the target dir: " + destinationFileName);
                     }
