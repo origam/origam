@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="34c91165-8a97-4d9c-a03c-cceb0bd7f7bf"
+    ds1:localized="false"
+    asi:name="LookupWorkflowStates">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/WorkflowStates.origam#WorkflowStates/5ab12862-8b65-49c4-ac8d-25b5bc4b80f4"
+      x:id="fda74620-b4a4-498f-9f3f-7e62c22bdc32"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkflowStates"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/WorkflowStates.origam#WorkflowStates/Name/b6519105-3dd3-426d-a182-155aec0df647"
+        dsc:hideInOutput="false"
+        x:id="16d061d1-e81d-4818-977c-08bc868d552d"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Widgets/WorkflowStates.origam#WorkflowStates/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="9dd03f73-b582-40b5-a9f7-d09ed6a62352"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="5090f7bc-6b48-4655-86a4-48acd95bfc3d"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupWorkflowStates.origam#LookupWorkflowStates/WorkflowStates/fda74620-b4a4-498f-9f3f-7e62c22bdc32"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="e19fa0a2-02e2-427d-9192-ea003788e7e8"
+        asi:name="WorkflowStates_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

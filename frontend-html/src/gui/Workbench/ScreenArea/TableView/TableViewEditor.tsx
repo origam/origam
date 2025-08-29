@@ -210,6 +210,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={property.xmlNode.$iid}
+            id={"editor_" + property.modelInstanceId}
             xmlNode={property.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
@@ -260,6 +261,7 @@ export class TableViewEditor extends React.Component<{
           <div style={{height: rowHeight * 5 + "px", backgroundColor: "white"}}>
             <XmlBuildDropdownEditor
               key={property.xmlNode.$iid}
+              id={"editor_" + property.modelInstanceId}
               xmlNode={property.xmlNode}
               isReadOnly={readOnly}
               autoSort={property.autoSort}

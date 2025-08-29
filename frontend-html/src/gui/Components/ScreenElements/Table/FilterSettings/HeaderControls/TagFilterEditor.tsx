@@ -15,7 +15,8 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
+*/
+
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { CancellablePromise } from "mobx/lib/api/flow";
@@ -130,6 +131,7 @@ export function TagFilterEditor(props: {
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
+        id={props.id}
         editor={
           <TagInputEditor
             id={props.id}
