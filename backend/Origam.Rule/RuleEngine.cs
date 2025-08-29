@@ -39,11 +39,8 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
-using Origam.UI.Common;
-using Origam.Workbench;
 using Origam.Workbench.Services;
 using StackExchange.Profiling;
-using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule;
 
@@ -1191,7 +1188,6 @@ public class RuleEngine
 
         bool result = false;
         bool resultRules = false;
-        var outputPad = GetOutputPad();
         if (ruleSet != null)
         {
             List<DataStructureRule> rules;
@@ -1241,36 +1237,7 @@ public class RuleEngine
                 _ruleColumnChanges[ColumnKey(columnChanged)] = columnChanged;
             }
             rules.Sort(new ProcessRuleComparer());
-            if (rules.Count > 0)
-            {
-                if (outputPad != null)
-                {
-                    string pk = "";
-                    foreach (DataColumn column in rowChanged.Table.PrimaryKey)
-                    {
-                        if (pk != "")
-                        {
-                            pk += ", ";
-                        }
-
-                        pk += column.ColumnName + ": " + rowChanged[column].ToString();
-                    }
-                    if (log.IsDebugEnabled)
-                    {
-                        log.Debug(
-                            ResourceUtils.GetString(
-                                "PadProcessingRules",
-                                DateTime.Now.ToString(),
-                                ruleSet.Name,
-                                rowChanged.Table.TableName,
-                                pk,
-                                (columnChanged == null ? "<none>" : columnChanged?.ColumnName)
-                            )
-                        );
-                    }
-                }
-            }
-            resultRules = ProcessRulesInternalFinish(rules, data, rowChanged, outputPad, ruleSet);
+            resultRules = ProcessRulesInternalFinish(rules, data, rowChanged, ruleSet);
         }
         // check for lookup fields changes
         if (columnChanged == null)
@@ -1289,18 +1256,6 @@ public class RuleEngine
             result = ProcessRulesLookupFields(rowChanged, columnChanged.ColumnName);
         }
         return result || resultRules;
-    }
-
-    private static IOutputPad GetOutputPad()
-    {
-        IOutputPad outputPad = null;
-#if !NETSTANDARD
-        if (WorkbenchSingleton.Workbench != null)
-        {
-            outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-        }
-#endif
-        return outputPad;
     }
 
     public bool ProcessRulesLookupFields(DataRow row, string columnName)
@@ -1363,7 +1318,6 @@ public class RuleEngine
         List<DataStructureRule> rules,
         IDataDocument data,
         DataRow rowChanged,
-        IOutputPad outputPad,
         DataStructureRuleSet ruleSet
     )
     {
@@ -1499,11 +1453,6 @@ public class RuleEngine
                 }
             }
 
-            //				if(outputPad != null)
-            //				{
-            //					outputPad.AddText("Rule source data:");
-            //					outputPad.AddText(dataSlice.GetXml());
-            //				}
             object result;
             try
             {
