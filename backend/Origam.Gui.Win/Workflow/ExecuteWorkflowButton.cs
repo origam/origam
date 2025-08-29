@@ -25,7 +25,6 @@ using System.Collections;
 using System.Data;
 using System.Windows.Forms;
 using System.ComponentModel;
-using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.DA.Service;
@@ -37,8 +36,6 @@ using Origam.Rule;
 using System.Collections.Generic;
 using System.Linq;
 using Origam.Workflow;
-using Origam;
-using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Gui.Win;

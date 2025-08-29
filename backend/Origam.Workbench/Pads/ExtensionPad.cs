@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Workbench.Pads;
 /// <summary>

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema.MenuModel;
 using Origam.Workbench;
-using Origam.Gui;
 
 namespace Origam.Gui.Win;
 public class DesktopEntityUIActionRunner: EntityUIActionRunner

@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using MoreLinq;
 

@@ -30,7 +30,6 @@ using Origam.DA.Service;
 using Origam.Workbench;
 using Origam.UI.WizardForm;
 using System.Collections;
-using System.Drawing;
 
 namespace Origam.Schema.LookupModel.UI.Wizards;
 /// <summary>

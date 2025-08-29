@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using MoreLinq;
-using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 
 namespace Origam.Workbench.Services;

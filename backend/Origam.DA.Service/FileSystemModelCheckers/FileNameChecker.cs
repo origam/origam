@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Schema;

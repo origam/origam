@@ -28,13 +28,11 @@ using System.Linq;
 using System.Windows.Forms;
 using Origam.DA;
 using Origam.Schema;
-using Origam.DA.Service;
 using Origam.UI;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win
 {

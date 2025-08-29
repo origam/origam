@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 

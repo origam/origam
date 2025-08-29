@@ -21,14 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Drawing;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Origam.Gui.UI;
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.Workbench.Editors;
 using Origam.Git;
 
 namespace Origam.Workbench.Commands;

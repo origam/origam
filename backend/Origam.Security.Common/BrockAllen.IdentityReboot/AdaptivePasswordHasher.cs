@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;

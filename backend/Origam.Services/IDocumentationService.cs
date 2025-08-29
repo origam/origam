@@ -20,10 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
 using Origam.Schema;
 
 namespace Origam.Workbench.Services;

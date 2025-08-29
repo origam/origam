@@ -580,9 +580,5 @@ public abstract class AbstractMailService : IMailService
         {
             throw new Exception(ResourceUtils.GetString("ErrorInvalidUsername"), ex);
         }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
     }
 }

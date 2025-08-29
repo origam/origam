@@ -18,9 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
- 
-using System.Net;
-using System.Reflection;
+
 using NUnit.Framework;
 
 namespace Origam.Common_net2Tests;

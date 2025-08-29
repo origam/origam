@@ -20,10 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Collections;
 using Origam.JSON;
-using Origam.Rule;
 using Origam.Schema.GuiModel;
 using System.IO;
 using Origam.Rule.Xslt;

@@ -19,8 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections.Generic;
-
 namespace Origam.Workbench.Services;
 
 /// <summary>

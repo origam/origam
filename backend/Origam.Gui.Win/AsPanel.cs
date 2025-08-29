@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Text;
 using System.Collections;
 using System.ComponentModel;
@@ -29,7 +28,6 @@ using System.Drawing.Drawing2D;
 using System.Data;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Origam.Services;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
@@ -41,12 +39,7 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Rule;
 using System.Collections.Generic;
-using System.Linq;
 using Origam.Extensions;
-using Origam.Schema.GuiModel.Designer;
-using Origam.Gui;
-using Origam.Schema.MenuModel;
-using Origam.Gui.UI;
 using Origam.Service.Core;
 
 namespace Origam.Gui.Win;

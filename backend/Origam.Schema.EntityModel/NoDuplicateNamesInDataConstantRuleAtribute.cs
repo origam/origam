@@ -23,8 +23,6 @@ using System;
 using System.Data;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
-using Origam.Services;
-using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel;
 

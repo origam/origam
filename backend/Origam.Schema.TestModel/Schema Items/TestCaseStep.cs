@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.TestModel;

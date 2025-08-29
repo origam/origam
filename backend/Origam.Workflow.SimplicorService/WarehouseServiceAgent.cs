@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Data;
 using Origam.DA;
-using Origam.Rule;
 using Origam.Schema;
 using Origam.Service.Core;
 using Origam.Workbench.Services;

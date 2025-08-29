@@ -24,7 +24,6 @@ using System.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Origam.Service.Core;
-using newton = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
 

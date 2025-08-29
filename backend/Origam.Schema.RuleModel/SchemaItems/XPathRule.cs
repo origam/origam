@@ -22,10 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Drawing.Design;
+#pragma warning restore IDE0005
 using System.Xml.Serialization;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.ItemCollection;
 

@@ -198,7 +198,7 @@ public class AccountMailSender
                         ex
                     );
                 }
-                throw ex;
+                throw;
             }
         }
         try

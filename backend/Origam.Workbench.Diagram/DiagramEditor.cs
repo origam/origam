@@ -34,7 +34,6 @@ using Origam.Workbench.Diagram;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
-using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Editors;
 public class DiagramEditor : AbstractViewContent, IToolStripContainer

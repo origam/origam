@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
+
 #region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.

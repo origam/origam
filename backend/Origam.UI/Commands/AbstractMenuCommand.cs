@@ -26,7 +26,6 @@ using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.UI.Commands;
-using Origam.UI.WizardForm;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using System;
@@ -35,7 +34,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.UI;
 /// <summary>

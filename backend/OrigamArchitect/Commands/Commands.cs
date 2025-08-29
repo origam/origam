@@ -43,7 +43,6 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Workflow.Gui.Win;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema.RuleModel;
 using core = Origam.Workbench.Services.CoreServices;
 using System.IO;
 using System.Linq;

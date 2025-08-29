@@ -21,12 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using Origam.DA.Common;
-using Origam.DA.ServiceTests;
-using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade;
 class TestPersistedClassScriptContainer : UpgradeScriptContainer

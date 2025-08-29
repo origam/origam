@@ -26,7 +26,6 @@ using System.Linq;
 using System.Xml;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
-using Origam.Schema;
 
 namespace Origam.DA.Service;
 

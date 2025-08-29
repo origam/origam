@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Threading;
-using Origam.OrigamEngine;
 using Origam.Workbench.Services;
 using Origam.Workflow;
 using Origam.Workflow.WorkQueue;

@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using Origam.Extensions;
 using Origam.Schema;
-using MoreLinq;
 using NUnit.Framework;
 
 namespace Origam.Common_net2Tests;

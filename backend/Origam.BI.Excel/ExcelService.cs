@@ -25,7 +25,6 @@ using System.IO;
 using System.Xml;
 using NPOI.SS.UserModel;
 using Origam.Excel;
-using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;

@@ -28,7 +28,6 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Origam.DA.ObjectPersistence;
 using Origam.Rule.XsltFunctions;
-using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
 namespace Origam.Rule.Xslt;

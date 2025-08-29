@@ -23,8 +23,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;

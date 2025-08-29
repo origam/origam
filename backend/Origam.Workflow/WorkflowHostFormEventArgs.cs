@@ -21,11 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Xml;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 
 namespace Origam.Workflow;

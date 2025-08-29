@@ -23,7 +23,6 @@ using System;
 using System.Linq;
 using System.Xml;
 using Origam.DA.Common;
-using Origam.Schema;
 
 namespace Origam.DA.Service;
 

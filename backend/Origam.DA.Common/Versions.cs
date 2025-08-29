@@ -3,9 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
-using MoreLinq;
-using MoreLinq.Extensions;
 using Origam.Extensions;
 #region license
 /*

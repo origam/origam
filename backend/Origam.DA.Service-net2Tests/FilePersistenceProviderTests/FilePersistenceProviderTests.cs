@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using MoreLinq;
 using NUnit.Framework;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;

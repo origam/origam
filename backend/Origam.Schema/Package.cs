@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Origam.DA;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;

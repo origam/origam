@@ -26,7 +26,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,10 +33,6 @@ using System.Windows.Forms;
 using CSharpFunctionalExtensions;
 using JR.Utils.GUI.Forms;
 using MoreLinq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NPOI.HSSF.UserModel;
-using NPOI.SS.UserModel;
 using Origam;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
@@ -62,7 +57,9 @@ using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using Origam.Workflow;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using Origam.Workflow.Gui.Win;
+#pragma warning restore IDE0005
 using OrigamArchitect.Commands;
 using WeifenLuo.WinFormsUI.Docking;
 

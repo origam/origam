@@ -25,7 +25,6 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
 using log4net;
 using Origam.Extensions;
 using Origam.Workbench.Services;

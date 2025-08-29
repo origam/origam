@@ -31,7 +31,6 @@ using System.Drawing.Design;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using System.Windows.Forms.VisualStyles;
 using Origam.Schema.GuiModel;
 using Origam.Gui.Win;
 using Origam.DA;

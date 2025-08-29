@@ -13,6 +13,20 @@
           See: https://github.com/dotnet/roslyn/issues/41640
         -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- These warnings are disabled across the whole solution because they are related to commets.
+         The comments where these are triggered are mostly not very helpful. 
+         The comment cleanup is a task for another PR. -->
+        <!-- Suppress CS1573 (missing XML comments for parameters)  -->
+        <!-- Suppress CS1570 (XML comment has badly formed XML)  -->
+        <!-- Suppress CS1572 (XML comment has a param tag for 'encode', but there is no parameter by that name)  -->
+        <!-- Suppress CS1587 (XML comment is not placed on a valid language element)  -->
+        <!-- Suppress CS1734 (XML comment on 'OrigamSettingsCollection.CopyTo(OrigamSettings[], int)' has a paramref tag for 'arrayIndex', but there is no parameter by that name)  -->
+        <!-- Suppress CS0419 (Ambiguous reference in cref attribute)  -->
+        <!-- Suppress CS1574 (XML comment has cref attribute 'GsmDevice' that could not be resolved)  -->
+        <!-- Suppress CS1658 (XML comment has syntactically incorrect cref attribute '.ViewContentCollection')  -->
+        <!-- Suppress CS1584 (Identifier expected. See also error CS1001.)  -->
+        <NoWarn>$(NoWarn);CS1573;CS1570;CS1572;CS1587;CS1734;CS0419;CS1574;CS1658;CS1584;</NoWarn>
     </PropertyGroup>
 
     <!-- =========================

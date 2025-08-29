@@ -27,7 +27,6 @@ using System.Windows.Forms;
 using Origam.Schema;
 using System.Windows.Forms.Design;
 using System.Globalization;
-using System.Linq;
 
 namespace Origam.Workbench;
 public partial class PropertyGridModelDropdown : UserControl

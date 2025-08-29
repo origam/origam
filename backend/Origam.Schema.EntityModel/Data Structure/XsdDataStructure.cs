@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml.Serialization;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;

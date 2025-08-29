@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
 using System.Linq;
 using Origam.Schema;

@@ -26,7 +26,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Xml;
 using log4net;
 using Origam.Workbench.Services;
 

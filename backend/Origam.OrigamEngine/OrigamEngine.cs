@@ -20,22 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
-using Origam.Rule;
 using Origam.Schema;
-using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
-using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 

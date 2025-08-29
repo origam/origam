@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using MoreLinq;
-using Origam.OrigamEngine;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
