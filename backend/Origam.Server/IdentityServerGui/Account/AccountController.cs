@@ -400,7 +400,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                 if (context.IsNativeClient())
                 {
-                    // The client is native, so this change in how to
+                    // The client is native, so this changes in how to
                     // return the response is for better UX for the end user.
                     return this.LoadingPage("Redirect", model.ReturnUrl);
                 }

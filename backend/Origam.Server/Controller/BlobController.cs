@@ -36,6 +36,7 @@ using Origam.Schema;
 using Origam.Workbench.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Origam.Server.Common;
 using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;

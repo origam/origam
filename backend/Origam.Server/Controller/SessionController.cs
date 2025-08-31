@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Gui;
 using Origam.Server.Attributes;
+using Origam.Server.Common;
 using Origam.Server.Model.Session;
 
 namespace Origam.Server.Controller;

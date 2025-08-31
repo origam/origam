@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
+using Origam.Server.Common;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;

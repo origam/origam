@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="86a07f59-cd7f-44ba-9c3a-fe75212bdb2d"
+    ade:label="Origam Event Type Localization"
+    tmi:mappedObjectName="OrigamEventType_l10n"
+    asi:name="OrigamEventType_l10n"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="0621d35c-6473-4ec5-8fa3-adf4bdc7c01c"
+      asi:name="ix_unq_OrigamEventType"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
+        x:id="76000da2-80f8-4525-990b-d09fd35b1d4d"
+        asi:name="1_refLanguageId"
+        deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamEventType_l10n.origam#OrigamEventType_l10n/refOrigamEventTypeId/0fc68be6-3c3c-4ff9-82eb-2ab489176b3e"
+        x:id="7b7ad817-a277-432d-816f-d921bafa42cc"
+        asi:name="0_refOrigamEventTypeId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamEventType.origam#OrigamEventType/546e2da9-6183-4d51-b16f-0764a2f8bd50"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="0fc68be6-3c3c-4ff9-82eb-2ab489176b3e"
+      adec:isPrimaryKey="false"
+      adec:label="Origam Event Type"
+      fmi:mappedColumnName="refOrigamEventTypeId"
+      asi:name="refOrigamEventTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="7b350685-5e7d-4cd0-8fa0-06daff95f1a3"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
+      x:id="0ead3359-1079-47aa-8883-0dff4664c20d" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="69751a0d-19f6-4552-9a22-63e730c7c071" />
+  </tmi:DataEntity>
+</x:file>

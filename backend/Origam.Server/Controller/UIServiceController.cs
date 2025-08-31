@@ -47,6 +47,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.Server.Common;
 using Origam.Server.Configuration;
 using Origam.Server.Model.Search;
 using Origam.Server.Model.UIService;

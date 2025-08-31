@@ -45,6 +45,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.Schema.MenuModel;
 using Origam.Gui;
+using Origam.Server.Common;
 
 namespace Origam.Server;
 public class SessionHelper
