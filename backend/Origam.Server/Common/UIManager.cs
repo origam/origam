@@ -37,6 +37,7 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
+using Origam.Server.Common;
 using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;

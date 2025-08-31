@@ -35,6 +35,7 @@ using Origam.DA;
 using Origam.Extensions;
 using Origam.Gui;
 using Origam.Schema.EntityModel.Interfaces;
+using Origam.Server.Common;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Service.Core;
 

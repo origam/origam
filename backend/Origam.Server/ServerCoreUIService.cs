@@ -25,10 +25,8 @@ using Microsoft.Extensions.Localization;
 using Origam.DA;
 using Origam.Gui;
 using Origam.OrigamEngine.ModelXmlBuilders;
-using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 using System;
 using System.Collections;
@@ -47,6 +45,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Server.Common;
 using Origam.Server.Controller;
 using Origam.Server.Model.UIService;
 using Origam.Service.Core;
@@ -1304,8 +1303,8 @@ public class ServerCoreUIService : IBasicUIService
         DataServiceDataTooltip tooltip = null;
         foreach (DataServiceDataTooltip tt in tooltips)
         {
-            if (IsFeatureOn(tt.Features) 
-                && IsInRole(tt.Roles))
+            if (FeatureTools.IsFeatureOn(tt.Features) 
+                && SecurityTools.IsInRole(tt.Roles))
             {
                 tooltip = tt;
             }
@@ -1335,18 +1334,6 @@ public class ServerCoreUIService : IBasicUIService
         return result;
     }
     
-    private static bool IsFeatureOn(string featureCode)
-    {
-        return ServiceManager.Services
-            .GetService<IParameterService>()
-            .IsFeatureOn(featureCode);
-    }
-    private static bool IsInRole(string roleName)
-    {
-        return SecurityManager
-            .GetAuthorizationProvider()
-            .Authorize(SecurityManager.CurrentPrincipal, roleName);
-    }
     private static XmlDocument DefaultNotificationBoxContent()
     {
         XmlDocument doc = new XmlDocument();
