@@ -1,11 +1,11 @@
 ﻿DROP PROCEDURE IF EXISTS "OrigamIdentityGrantCleanup";
 
-create procedure "OrigamIdentityGrantCleanup"()
-  language plpgsql
-as
-$$
+CREATE PROCEDURE "OrigamIdentityGrantCleanup"()
+LANGUAGE plpgsql
+AS $$
 DECLARE
     current_datetime TIMESTAMP := (now() AT TIME ZONE 'UTC');
+    rows_deleted INTEGER;
 BEGIN
     LOOP
         WITH rows AS (
@@ -14,12 +14,12 @@ BEGIN
             LIMIT 1000
         )
         DELETE FROM "OrigamIdentityGrant"
-        WHERE ctid IN (SELECT ctid FROM rows);
+        WHERE ctid IN (SELECT ctid FROM rows)
+        RETURNING 1 INTO rows_deleted;
 
-        -- Exit if no rows were affected
-        EXIT WHEN NOT FOUND;
+        IF NOT FOUND THEN
+            EXIT;
+        END IF;
     END LOOP;
 END;
 $$;
-
-alter procedure "OrigamIdentityGrantCleanup"() owner to origam;
