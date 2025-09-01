@@ -48,7 +48,7 @@ export function TagLookupFilterEditor(props: {
   onChange(selectedItems: Array<any>): void;
   values: Array<any>;
   autoFocus: boolean;
-  id?: string;
+  id: string;
 }) {
   const mobxContext = useContext(MobXProviderContext);
 
@@ -133,6 +133,7 @@ export function TagLookupFilterEditor(props: {
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
+        id={props.id}
         editor={
           <TagInputEditor
             id={props.id}

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="170011ca-7bd6-435d-b538-0f93e1f0d906"
+    asi:name="StateTransition"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="29f86671-0083-43b6-8ef6-5ed86d831cb3"
+      cs:isReturnValue="false"
+      asi:name="StateTransition"
+      cs:structure="Widgets/DataStructure/Widgets/StateTransition.origam#StateTransition/b6328d57-115a-422d-a3fc-0e71c757d8b1" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="0c7f42e4-7691-4f09-8151-4537d329794e"
+      asi:name="03_StoreData_StateTransition"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/StateTransition/29f86671-0083-43b6-8ef6-5ed86d831cb3"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="0615728b-c7ca-4062-91d9-7bd1c8a7ea8c"
+        asi:name="ForceBulkInsert"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="508f4a68-3551-4296-9849-fd0dc8c415e7"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/StateTransition/29f86671-0083-43b6-8ef6-5ed86d831cb3"
+          x:id="6caa8697-0a4d-4fec-8d76-13bf77469b4c"
+          asi:name="StateTransition"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="e306c2c7-e7c2-4a15-a624-28cb08d402aa"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/StateTransition.origam#StateTransition/b6328d57-115a-422d-a3fc-0e71c757d8b1"
+          x:id="932e9f20-d229-4f58-89a2-d9524e020589"
+          asi:name="StateTransition" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="efea4e0c-5183-437e-9dcf-3d7312234d51"
+        asi:name="After_02_Transform_StateTransition"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/02_Transform_StateTransition/a57e4310-dfba-4afa-8c70-049725a308b7" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="1c0658d9-01db-4b09-829c-f019004a64e9"
+      asi:name="01_LoadData_StateTransition"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/StateTransition/29f86671-0083-43b6-8ef6-5ed86d831cb3"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="5ea98ac1-27f5-4f9d-b6df-2b76bcf1a204"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/StateTransition.origam#StateTransition/b6328d57-115a-422d-a3fc-0e71c757d8b1"
+          x:id="46182fed-d1d2-4361-be7d-dd7a5433748d"
+          asi:name="StateTransition" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8e41a537-17dd-433b-bd31-405eaa2ac9c6"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="a57e4310-dfba-4afa-8c70-049725a308b7"
+      asi:name="02_Transform_StateTransition"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/StateTransition/29f86671-0083-43b6-8ef6-5ed86d831cb3"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="4948e1be-5488-46d6-b736-2b31df444190"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="879ff286-761f-4fe1-a6ca-4f710661b968"
+          asi:name="WF_StateTransition"
+          tr:transformation="Widgets/Transformation/Widgets/WF_StateTransition.origam#WF_StateTransition/387a36a2-d376-4bea-928a-25c07f789b66" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="5438993b-e836-452e-bc9d-0c604834894d"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/StateTransition/29f86671-0083-43b6-8ef6-5ed86d831cb3"
+          x:id="305b9f3a-d49b-47d1-9c63-2579158a2ace"
+          asi:name="StateTransition"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="b30efa96-20f9-4e60-a9c9-0c84d06145cd"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="af065320-323f-4b5f-b263-033b5c55b6a8"
+        asi:name="After_01_LoadData_StateTransition"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/01_LoadData_StateTransition/1c0658d9-01db-4b09-829c-f019004a64e9" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>
