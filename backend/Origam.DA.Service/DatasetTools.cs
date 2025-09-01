@@ -751,110 +751,140 @@ public class DatasetTools
         DataRow sourceRow,
         DataRowVersion sourceVersion,
         DataRow destinationRow,
-        bool enforceNullValues)
-	{
-		var changed = false;
-		var changes = new Hashtable();
-		for(var i = 0; destinationRow.Table.Columns.Count > i; ++i)
-		{
-			if(destinationRow.Table.Columns[i].Expression != "")
-			{
-				continue;
-			}
-			var column = destinationRow.Table.Columns[i];
-			var columnName = column.ColumnName;
-			if(!sourceRow.Table.Columns.Contains(columnName))
-			{
-				continue;
-			}
-			// Unless we're enforcing null values
-			// Skip all columns that have AllowNulls=false and are null in the source.
-			// This may be the case when the destination has a default value for such a column.
-			// Therefore we skip assigning null, because we would fail anyway.
-			// Since this is a new row, the default value will be used.
-			if(((destinationRow.RowState == DataRowState.Added)
-			|| (destinationRow.RowState == DataRowState.Detached))
-		    && (sourceRow[columnName, sourceVersion] == DBNull.Value)
-		    && (sourceRow.Table.Columns[columnName].AllowDBNull == false)
-		    && (enforceNullValues == false))
-			{
-				continue;
-			}
-			if(destinationRow[columnName]
-			   .Equals(sourceRow[columnName, sourceVersion]))
-			{
-				continue;
-			}
-			changes[columnName] = ConvertValue(
-				sourceRow[columnName, sourceVersion], column.DataType);
-			changed = true;
-		}
-		foreach(DictionaryEntry entry in changes)
-		{
-			destinationRow[(string)entry.Key] = entry.Value;
-		}
-		return changed;
-	}
-	public static void UpdateOrigamSystemColumns(DataRow row, bool isNew, object profileId)
-	{
-		UpdateOrigamSystemColumns(row, isNew, profileId, null);
-	}
-	public static void UpdateOrigamSystemColumns(DataRow row, bool isNew, object profileId, Hashtable changedColumns)
-	{
-		DataTable table = row.Table;
-		if(isNew)
-		{
-			if(table.Columns.Contains("RecordCreated"))
-			{
-				DataColumn col = table.Columns["RecordCreated"];
-				row[col] = DateTime.Now;
-				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
-				{
-					changedColumns.Add(col.ExtendedProperties["Id"], col);
-				}
-			}
-			if(table.Columns.Contains("RecordCreatedBy") && profileId != null)
-			{
-				DataColumn col = table.Columns["RecordCreatedBy"];
-				row[col] = profileId;
-				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
-				{
-					changedColumns.Add(col.ExtendedProperties["Id"], col);
-				}
-			}
-			if (table.Columns.Contains("RecordUpdated"))
-			{
-				DataColumn col = table.Columns["RecordUpdated"];
-				row[col] = DBNull.Value;
-			}
-			if (table.Columns.Contains("RecordUpdatedBy"))
-			{
-				DataColumn col = table.Columns["RecordUpdatedBy"];
-				row[col] = DBNull.Value;
-			}
-		}
-		else
-		{
-			if(table.Columns.Contains("RecordUpdated") && row.RowState != DataRowState.Added)
-			{
-				DataColumn col = table.Columns["RecordUpdated"];
-				row[col] = DateTime.Now;
-				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
-				{
-					changedColumns.Add(col.ExtendedProperties["Id"], col);
-				}
-			}
-			if(table.Columns.Contains("RecordUpdatedBy") && row.RowState != DataRowState.Added && profileId != null)
-			{
-				DataColumn col = table.Columns["RecordUpdatedBy"];
-				row[col] = profileId;
-				if (changedColumns != null && !changedColumns.Contains(col.ExtendedProperties["Id"]))
-				{
-					changedColumns.Add(col.ExtendedProperties["Id"], col);
-				}
-			}
-		}
-	}
+        bool enforceNullValues
+    )
+    {
+        var changed = false;
+        var changes = new Hashtable();
+        for (var i = 0; destinationRow.Table.Columns.Count > i; ++i)
+        {
+            if (destinationRow.Table.Columns[i].Expression != "")
+            {
+                continue;
+            }
+            var column = destinationRow.Table.Columns[i];
+            var columnName = column.ColumnName;
+            if (!sourceRow.Table.Columns.Contains(columnName))
+            {
+                continue;
+            }
+            // Unless we're enforcing null values
+            // Skip all columns that have AllowNulls=false and are null in the source.
+            // This may be the case when the destination has a default value for such a column.
+            // Therefore we skip assigning null, because we would fail anyway.
+            // Since this is a new row, the default value will be used.
+            if (
+                (
+                    (destinationRow.RowState == DataRowState.Added)
+                    || (destinationRow.RowState == DataRowState.Detached)
+                )
+                && (sourceRow[columnName, sourceVersion] == DBNull.Value)
+                && (sourceRow.Table.Columns[columnName].AllowDBNull == false)
+                && (enforceNullValues == false)
+            )
+            {
+                continue;
+            }
+            if (destinationRow[columnName].Equals(sourceRow[columnName, sourceVersion]))
+            {
+                continue;
+            }
+            changes[columnName] = ConvertValue(
+                sourceRow[columnName, sourceVersion],
+                column.DataType
+            );
+            changed = true;
+        }
+        foreach (DictionaryEntry entry in changes)
+        {
+            destinationRow[(string)entry.Key] = entry.Value;
+        }
+        return changed;
+    }
+
+    public static void UpdateOrigamSystemColumns(DataRow row, bool isNew, object profileId)
+    {
+        UpdateOrigamSystemColumns(row, isNew, profileId, null);
+    }
+
+    public static void UpdateOrigamSystemColumns(
+        DataRow row,
+        bool isNew,
+        object profileId,
+        Hashtable changedColumns
+    )
+    {
+        DataTable table = row.Table;
+        if (isNew)
+        {
+            if (table.Columns.Contains("RecordCreated"))
+            {
+                DataColumn col = table.Columns["RecordCreated"];
+                row[col] = DateTime.Now;
+                if (
+                    changedColumns != null
+                    && !changedColumns.Contains(col.ExtendedProperties["Id"])
+                )
+                {
+                    changedColumns.Add(col.ExtendedProperties["Id"], col);
+                }
+            }
+            if (table.Columns.Contains("RecordCreatedBy") && profileId != null)
+            {
+                DataColumn col = table.Columns["RecordCreatedBy"];
+                row[col] = profileId;
+                if (
+                    changedColumns != null
+                    && !changedColumns.Contains(col.ExtendedProperties["Id"])
+                )
+                {
+                    changedColumns.Add(col.ExtendedProperties["Id"], col);
+                }
+            }
+            if (table.Columns.Contains("RecordUpdated"))
+            {
+                DataColumn col = table.Columns["RecordUpdated"];
+                row[col] = DBNull.Value;
+            }
+            if (table.Columns.Contains("RecordUpdatedBy"))
+            {
+                DataColumn col = table.Columns["RecordUpdatedBy"];
+                row[col] = DBNull.Value;
+            }
+        }
+        else
+        {
+            if (table.Columns.Contains("RecordUpdated") && row.RowState != DataRowState.Added)
+            {
+                DataColumn col = table.Columns["RecordUpdated"];
+                row[col] = DateTime.Now;
+                if (
+                    changedColumns != null
+                    && !changedColumns.Contains(col.ExtendedProperties["Id"])
+                )
+                {
+                    changedColumns.Add(col.ExtendedProperties["Id"], col);
+                }
+            }
+            if (
+                table.Columns.Contains("RecordUpdatedBy")
+                && row.RowState != DataRowState.Added
+                && profileId != null
+            )
+            {
+                DataColumn col = table.Columns["RecordUpdatedBy"];
+                row[col] = profileId;
+                if (
+                    changedColumns != null
+                    && !changedColumns.Contains(col.ExtendedProperties["Id"])
+                )
+                {
+                    changedColumns.Add(col.ExtendedProperties["Id"], col);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Assigns a new GUID to a primary key of a row in case the data type
     /// is GUID. Otherwise does nothing.
