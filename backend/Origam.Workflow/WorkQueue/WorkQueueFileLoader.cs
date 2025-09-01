@@ -91,7 +91,13 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         return maxZipSizeMb * 1024L * 1024L;
     }
 
-    private const double MaxCompressionRatio = 100.0; // similar to incremental loader
+    private static double GetMaxCompressionRatio()
+    {
+        const double defaultRatio = 100.0;
+        IConfig config = ConfigFactory.GetConfig();
+        double? configured = config.GetValue(new [] { "WorkQueue", "MaxCompressionRatio" });
+        return configured ?? defaultRatio;
+    }
 
     private class LimitedReadStream : Stream
     {
@@ -371,7 +377,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 if (zipEntry.CompressedSize > 0 && zipEntry.Size >= 0)
                 {
                     double ratio = zipEntry.Size / (double)zipEntry.CompressedSize;
-                    if (ratio > MaxCompressionRatio)
+                    if (ratio > GetMaxCompressionRatio())
                     {
                         throw new InvalidOperationException("Archive entry has suspicious compression ratio.");
                     }

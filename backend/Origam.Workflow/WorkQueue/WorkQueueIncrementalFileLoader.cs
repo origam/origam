@@ -140,7 +140,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             }
             if (
                 entry.CompressedLength > 0
-                && (entry.Length / (double)entry.CompressedLength) > 100.0
+                && (entry.Length / (double)entry.CompressedLength) > GetMaxCompressionRatio()
             )
             {
                 throw new InvalidOperationException(
@@ -312,5 +312,13 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         IConfig config = ConfigFactory.GetConfig();
         long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
         return maxZipSizeMb * 1024L * 1024L;
+    }
+
+    private static double GetMaxCompressionRatio()
+    {
+        const double defaultRatio = 100.0;
+        IConfig config = ConfigFactory.GetConfig();
+        double? configured = config.GetValue(new [] { "WorkQueue", "MaxCompressionRatio" });
+        return configured ?? defaultRatio;
     }
 }
