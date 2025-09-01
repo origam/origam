@@ -1,0 +1,8 @@
+﻿INSERT INTO "WorkflowStates" ("Name", "RecordCreated", "RecordUpdatedBy", "Id", "RecordCreatedBy", "RecordUpdated") 
+VALUES ('start', NULL, NULL, 'd8f7f09e-a18f-4345-89a3-9dafc3afefd1', NULL, NULL);
+
+INSERT INTO "WorkflowStates" ("Name", "RecordCreated", "RecordUpdatedBy", "Id", "RecordCreatedBy", "RecordUpdated") 
+VALUES ('end', NULL, NULL, 'bcd46e3a-638d-4d96-ae1b-49005cf9754a', NULL, NULL);
+
+INSERT INTO "WorkflowStates" ("Name", "RecordCreated", "RecordUpdatedBy", "Id", "RecordCreatedBy", "RecordUpdated") 
+VALUES ('error', NULL, NULL, '82792f50-5232-4096-a953-4ccd66711352', NULL, NULL);
