@@ -86,7 +86,20 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         string[] filenameSegments = filename.Split('|');
         if(filenameSegments.Length == 1)
         {
-            return File.ReadAllText(filenameSegments[0]);
+            // Non-zip file: enforce maximum size before reading
+            long maxUncompressedBytes = GetMaxUncompressedBytes();
+            string path = filenameSegments[0];
+            FileInfo fi = new FileInfo(path);
+            if (fi.Exists && fi.Length > maxUncompressedBytes)
+            {
+                throw new InvalidOperationException("File exceeds allowed size.");
+            }
+            string content = File.ReadAllText(path);
+            if (content.Length > maxUncompressedBytes)
+            {
+                throw new InvalidOperationException("File exceeds allowed size.");
+            }
+            return content;
         }
         else
         {
