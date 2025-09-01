@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using log4net;
 
 namespace Origam.Utils.Sql;
