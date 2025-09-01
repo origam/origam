@@ -29,9 +29,11 @@ public interface IConfig
 public static class ConfigFactory {
     public static IConfig GetConfig()
     {
+#pragma warning disableCS0162
 #if NETSTANDARD
         return new Config();
 #endif
         return new NullConfig();
+#pragma warning restore CS0162
     }
 }
