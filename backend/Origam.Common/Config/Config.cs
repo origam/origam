@@ -141,7 +141,7 @@ public class Config : IConfig
             try
             {
                 var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var secretsPath = Path.Combine(userProfile, "Microsoft", "UserSecrets", secretsId!, "secrets.json");
+                var secretsPath = Path.Combine(userProfile, "Microsoft", "UserSecrets", secretsId, "secrets.json");
                 if (TryGetJsonValue(secretsPath, appSettingsPath, out value) && !string.IsNullOrWhiteSpace(value))
                 {
                     if (long.TryParse(value, out long parsed) && parsed > 0) return parsed;

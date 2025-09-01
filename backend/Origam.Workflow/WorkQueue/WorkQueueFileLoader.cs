@@ -26,6 +26,7 @@ using System.Data;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using Origam.Workbench.Services;
+using Origam.Config;
 
 namespace Origam.Workflow.WorkQueue;
 public class WorkQueueFileLoader : WorkQueueLoaderAdapter
@@ -80,6 +81,51 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
     
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    // Security limits for unzipping / reading
+    private static long GetMaxUncompressedBytes()
+    {
+        const int defaultMb = 50;
+        IConfig config = ConfigFactory.GetConfig();
+        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
+        return maxZipSizeMb * 1024L * 1024L;
+    }
+
+    private const double MaxCompressionRatio = 100.0; // similar to incremental loader
+
+    private class LimitedReadStream : Stream
+    {
+        private readonly Stream _inner;
+        private readonly long _limit;
+        private long _readTotal;
+        public LimitedReadStream(Stream inner, long limit)
+        {
+            _inner = inner;
+            _limit = limit;
+        }
+        public override bool CanRead => _inner.CanRead;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int toRead = count;
+            long remaining = _limit - _readTotal;
+            if (remaining <= 0)
+            {
+                throw new InvalidOperationException("Stream exceeds allowed size.");
+            }
+            if (toRead > remaining) toRead = (int)remaining;
+            int read = _inner.Read(buffer, offset, toRead);
+            _readTotal += read;
+            return read;
+        }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+    }
 	public enum FileType
     {
 		TEXT = 0,
@@ -315,6 +361,22 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 _currentZipStream = zipStream;
             }
             var zipEntry = zipStream.GetNextEntry();
+            if (zipEntry != null)
+            {
+                long maxBytes = GetMaxUncompressedBytes();
+                if (zipEntry.Size >= 0 && zipEntry.Size > maxBytes)
+                {
+                    throw new InvalidOperationException("Archive entry too large.");
+                }
+                if (zipEntry.CompressedSize > 0 && zipEntry.Size >= 0)
+                {
+                    double ratio = zipEntry.Size / (double)zipEntry.CompressedSize;
+                    if (ratio > MaxCompressionRatio)
+                    {
+                        throw new InvalidOperationException("Archive entry has suspicious compression ratio.");
+                    }
+                }
+            }
             if(zipEntry == null)
             {
                 _currentZipStream = null;
@@ -492,9 +554,14 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
     }
     private static void ReadBinaryStream(Stream stream, DataRow dataRow)
     {
+        long maxBytes = GetMaxUncompressedBytes();
         byte[] data;
         if(stream.CanSeek)
         {
+            if (stream.Length > maxBytes)
+            {
+                throw new InvalidOperationException("Stream exceeds allowed size.");
+            }
             data = new byte[stream.Length];
             stream.Read(data, 0, Convert.ToInt32(stream.Length));
         }
@@ -503,11 +570,20 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
             using(var memoryStream = new MemoryStream())
             {
                 int count;
+                long total = 0;
                 do
                 {
                     var buffer = new byte[1024];
                     count = stream.Read(buffer, 0, 1024);
-                    memoryStream.Write(buffer, 0, count);
+                    if (count > 0)
+                    {
+                        total += count;
+                        if (total > maxBytes)
+                        {
+                            throw new InvalidOperationException("Stream exceeds allowed size.");
+                        }
+                        memoryStream.Write(buffer, 0, count);
+                    }
                 } 
                 while(stream.CanRead && count > 0);
                 data = memoryStream.ToArray();
@@ -518,13 +594,28 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
     private static void ReadTextStream(
         Stream stream, string encoding, DataRow dataRow)
     {
-        var streamReader = (encoding == null) 
-	        ? new StreamReader(stream) 
-	        : new StreamReader(stream, Encoding.GetEncoding(encoding));
-        if(stream.CanSeek)
+        long maxBytes = GetMaxUncompressedBytes();
+        Stream effective = stream;
+        if (stream.CanSeek)
         {
+            if (stream.Length > maxBytes)
+            {
+                throw new InvalidOperationException("Stream exceeds allowed size.");
+            }
             stream.Position = 0;
         }
-        dataRow["Data"] = streamReader.ReadToEnd();
+        else
+        {
+            effective = new LimitedReadStream(stream, maxBytes);
+        }
+        var streamReader = (encoding == null) 
+	        ? new StreamReader(effective) 
+	        : new StreamReader(effective, Encoding.GetEncoding(encoding));
+        string content = streamReader.ReadToEnd();
+        if (content.Length > maxBytes)
+        {
+            throw new InvalidOperationException("Stream exceeds allowed size.");
+        }
+        dataRow["Data"] = content;
     }
 }
