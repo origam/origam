@@ -10,19 +10,21 @@
     <AssemblyName>origam-utils</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>net472;net8.0</TargetFrameworks>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
+    >
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
