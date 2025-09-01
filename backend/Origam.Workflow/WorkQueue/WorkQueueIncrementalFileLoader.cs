@@ -30,6 +30,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Data;
 using System.Runtime.InteropServices;
+using Origam.Config;
 
 namespace Origam.Workflow.WorkQueue;
 public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
@@ -97,7 +98,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         string archiveName, string filename)
     {
         // Harden against zip-bomb and invalid entry issues
-        const long MaxUncompressedBytes = 50L * 1024 * 1024; // 50 MB safety cap
+        long maxUncompressedBytes = GetMaxUncompressedBytes();
 
         using (
             FileStream fileStream = new FileStream(
@@ -120,7 +121,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             }
 
             // Guard against zip bombs: excessive uncompressed size or ratio
-            if (entry.Length > MaxUncompressedBytes)
+            if (entry.Length > maxUncompressedBytes)
             {
                 throw new InvalidOperationException("Archive entry too large.");
             }
@@ -138,7 +139,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             using (StreamReader streamReader = new StreamReader(stream))
             {
                 string content = streamReader.ReadToEnd();
-                if (content.Length > MaxUncompressedBytes)
+                if (content.Length > maxUncompressedBytes)
                 {
                     throw new InvalidOperationException(
                         "Archive entry exceeds allowed size."
@@ -290,5 +291,13 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
         dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
         return dataTable;
+    }
+
+    private static long GetMaxUncompressedBytes()
+    {
+        const int defaultMb = 50; // default for Architect and fallback
+        IConfig config = ConfigFactory.GetConfig();
+        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
+        return maxZipSizeMb * 1024L * 1024L;
     }
 }
