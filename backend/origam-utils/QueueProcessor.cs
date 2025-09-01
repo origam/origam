@@ -25,24 +25,27 @@ using Origam.Workflow;
 using Origam.Workflow.WorkQueue;
 
 namespace Origam.Utils;
+
 public class QueueProcessor
 {
-    private static readonly log4net.ILog log 
-        = log4net.LogManager
-            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     private readonly TaskRunner taskRunner;
+
     public QueueProcessor(string queueRefCode, int parallelism, int forceWait_ms)
     {
         OrigamEngine.OrigamEngine.ConnectRuntime();
-        var workQueueService = ServiceManager.Services
-            .GetService(typeof(WorkQueueService)) as WorkQueueService;
+        var workQueueService =
+            ServiceManager.Services.GetService(typeof(WorkQueueService)) as WorkQueueService;
         taskRunner = workQueueService.GetAutoProcessorForQueue(
             queueRefCode,
             parallelism,
             forceWait_ms
         );
     }
+
     public void Cancel()
     {
         taskRunner.Cancel();
@@ -56,6 +59,7 @@ public class QueueProcessor
         }
         taskRunner.CleanUp();
     }
+
     public void Run()
     {
         taskRunner.Run();
