@@ -55,6 +55,9 @@
     <PackageReference Include="Mvp.Xml.NetStandard">
       <Version>1.1.1</Version>
     </PackageReference>
+    <PackageReference Include="System.Security.Permissions">
+      <Version>6.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <!--
     Stub targets to prevent MSBuild errors caused by missing CSharpier targets.
