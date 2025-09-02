@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using log4net;
 
 namespace Origam.Utils.Sql;
@@ -116,7 +116,7 @@ class MsSqlRunner : SqlRunner
             // Log sanitized connection info (no password)
             try
             {
-                var builder = new System.Data.SqlClient.SqlConnectionStringBuilder(
+                var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(
                     connectionString
                 );
                 if (builder.ContainsKey("Password"))

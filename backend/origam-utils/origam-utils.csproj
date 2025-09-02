@@ -125,6 +125,7 @@
     <PackageReference Include="Mvp.Xml.NetStandard">
       <Version>1.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
   </ItemGroup>
   <!--
   Stub targets to prevent MSBuild errors caused by missing CSharpier targets.
