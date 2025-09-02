@@ -189,18 +189,17 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 									Convert.ToBoolean(pair[1]);
 								break;
 							default:
-								throw new ArgumentOutOfRangeException(
-									"connectionParameterName",
-									pair[0],
-									ResourceUtils.GetString(
-										"ErrorInvalidConnectionString"));
+											throw new ArgumentOutOfRangeException(
+												"connectionParameterName",
+												pair[0],
+												Strings.ErrorInvalidConnectionString);
 						}
 					}
 					catch (Exception ex)
 					{
 						throw new Exception(
-							ResourceUtils.GetString("ErrorParsingConnectionString")
-							+ ": " + ex.Message);
+										Strings.ErrorParsingConnectionString
+										+ ": " + ex.Message);
 					}
 				}
 			}
@@ -208,31 +207,31 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 		if(path == null)
 		{
 			throw new Exception(
-				ResourceUtils.GetString("ErrorNoPath"));
+				Strings.ErrorNoPath);
 		}
 		if(searchPattern == null)
 		{
 			throw new Exception(
-				ResourceUtils.GetString("ErrorNoSearchPattern"));
+				Strings.ErrorNoSearchPattern);
 		}
         if (_readType == ReadType.SplitByRows)
         {
 			if (_splitFileByRows <= 0)
 			{
 				throw new Exception(
-					ResourceUtils.GetString("ErrorSplitFileByRows"));
+					Strings.ErrorSplitFileByRows);
 			}
 			if (_mode == FileType.BINARY)
 			{
 				throw new Exception(
-					ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
+					Strings.SplitBinaryFilesNotSupported);
 			}
 		}
 		if (_readType == ReadType.AggregateCompressedFiles
 			&& _compression == CompressionType.None)
         {
 			throw new Exception(
-				ResourceUtils.GetString("AggregateCompressedFilesButNoCompression"));
+				Strings.AggregateCompressedFilesButNoCompression);
 		}
 		// lock the files
 		_filenames = Directory.GetFiles(path, searchPattern);
@@ -293,7 +292,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 				break;
         				default:
 					throw new ArgumentOutOfRangeException(
-						"readType", _readType, ResourceUtils.GetString("UnknownReadType"));
+						"readType", _readType, Strings.UnknownReadType);
 			}
 		return result
 			? new WorkQueueAdapterResult(
@@ -355,14 +354,14 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 long maxBytes = WorkQueueConfig.GetMaxUncompressedBytes();
                 if (zipEntry.Size >= 0 && zipEntry.Size > maxBytes)
                 {
-                    throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntryTooLarge"));
+              						throw new InvalidOperationException(Strings.ArchiveEntryTooLarge);
                 }
                 if (zipEntry.CompressedSize > 0 && zipEntry.Size >= 0)
                 {
                     double ratio = zipEntry.Size / (double)zipEntry.CompressedSize;
                     if (ratio > WorkQueueConfig.GetMaxCompressionRatio())
                     {
-                        throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntrySuspiciousCompressionRatio"));
+                 							throw new InvalidOperationException(Strings.ArchiveEntrySuspiciousCompressionRatio);
                     }
                 }
             }
@@ -549,7 +548,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         {
             if (stream.Length > maxBytes)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
             }
             data = new byte[stream.Length];
             stream.Read(data, 0, Convert.ToInt32(stream.Length));
@@ -569,7 +568,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                         total += count;
                         if (total > maxBytes)
                         {
-                            throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+                            throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
                         }
                         memoryStream.Write(buffer, 0, count);
                     }
@@ -589,7 +588,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         {
             if (stream.Length > maxBytes)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
             }
             stream.Position = 0;
         }
@@ -603,7 +602,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         string content = streamReader.ReadToEnd();
         if (content.Length > maxBytes)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+            throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
         }
         dataRow["Data"] = content;
     }

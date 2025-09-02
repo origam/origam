@@ -92,12 +92,12 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             FileInfo fi = new FileInfo(path);
             if (fi.Exists && fi.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
             }
             string content = File.ReadAllText(path);
             if (content.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
             }
             return content;
         }
@@ -129,14 +129,14 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             if (entry == null)
             {
                 throw new InvalidOperationException(
-                    string.Format(ResourceUtils.GetString("EntryNotFoundInArchive"), filename, archiveName)
+                    string.Format(Strings.EntryNotFoundInArchive, filename, archiveName)
                 );
             }
 
             // Guard against zip bombs: excessive uncompressed size or ratio
             if (entry.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntryTooLarge"));
+                throw new InvalidOperationException(Strings.ArchiveEntryTooLarge);
             }
             if (
                 entry.CompressedLength > 0
@@ -144,7 +144,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             )
             {
                 throw new InvalidOperationException(
-                    ResourceUtils.GetString("ArchiveEntrySuspiciousCompressionRatio")
+                    Strings.ArchiveEntrySuspiciousCompressionRatio
                 );
             }
 
@@ -205,25 +205,24 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                     default:
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName", pair[0],
-                            ResourceUtils.GetString(
-                                "ErrorInvalidConnectionString"));
+                            Strings.ErrorInvalidConnectionString);
                 }
             }
         }
         if (path == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoPath"));
+                Strings.ErrorNoPath);
         }
         if (indexFile == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoIndexFile"));
+                Strings.ErrorNoIndexFile);
         }
         if (searchPattern == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoSearchPattern"));
+                Strings.ErrorNoSearchPattern);
         }
     }
     private void InitializeFileList()
