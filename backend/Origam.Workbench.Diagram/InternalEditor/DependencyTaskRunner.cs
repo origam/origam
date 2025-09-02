@@ -55,7 +55,6 @@ class DependencyTaskRunner
     }
 }
 
-
 interface IDefferedPersistenceTask
 {
     bool TryRun(ISchemaItem persistedItem);
@@ -99,8 +98,12 @@ internal class AddDependencyTask: IDefferedPersistenceTask
 	}
 	public bool TryRun(ISchemaItem persistedItem)
 	{
-		if (triggerItemId != persistedItem.Id) return false;			
-		var workflowTaskDependency = new WorkflowTaskDependency
+		if (triggerItemId != persistedItem.Id)
+        {
+            return false;
+        }
+
+        var workflowTaskDependency = new WorkflowTaskDependency
 		{
 			SchemaExtensionId = persistedItem.SchemaExtensionId,
 			PersistenceProvider = persistenceProvider,
@@ -111,4 +114,3 @@ internal class AddDependencyTask: IDefferedPersistenceTask
 		return true;
 	}
 }
-

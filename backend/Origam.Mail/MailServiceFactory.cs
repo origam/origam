@@ -19,11 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
+#pragma warning restore IDE0005 // Re-enable the warning
 
 namespace Origam.Mail;
+
 public class MailServiceFactory
 {
 #if NETSTANDARD
@@ -33,10 +36,9 @@ public class MailServiceFactory
         .AddEnvironmentVariables()
         .Build();
 #endif
-    private MailServiceFactory()
-    {
-    }
-    
+
+    private MailServiceFactory() { }
+
     public static IMailService GetMailService()
     {
 #if NETSTANDARD
@@ -48,15 +50,15 @@ public class MailServiceFactory
         int port = mailConfig.GetIntOrThrow("Port");
         string pickupDirectoryLocation = mailConfig["PickupDirectoryLocation"];
         return new NetStandardMailService(
-            server: server, 
-            port: port, 
-            username: username, 
+            server: server,
+            port: port,
             pickupDirectoryLocation: pickupDirectoryLocation,
-            password: password, 
+            username: username,
+            password: password,
             useSsl: useSsl
-        );            
+        );
 #else
-        return new NetFxMailService();            
+        return new NetFxMailService();
 #endif
     }
 }

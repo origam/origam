@@ -79,41 +79,46 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
 				{
 					switch(this.SourceType)
 					{
-						case ImageBoxSourceType.Blob:
-							if(!(value is byte[]))
-							{
-								throw new Exception(ResourceUtils.GetString("ErrorImageData"));
-							}
-							_imageData = (byte[])value;
-							stream = new MemoryStream(_imageData);
-							break;
-						case ImageBoxSourceType.Url:
-							if(!(value is string))
-							{
-								throw new Exception(ResourceUtils.GetString("ErrorImageData"));
-							}
-							
-                            string svalue = (string) value;
-							string path = svalue;
-							if (svalue.StartsWith("http"))
-							{
-								stream = HttpTools.Instance.SendRequest(
-									new Request(url: path, method: "GET")
-									).Content as Stream;
-							}
-							{
-								path = Path.Combine(Application.StartupPath, @"images\");
-								path = Path.Combine(path, svalue);
-								try
-								{
-									stream = new FileStream(path, FileMode.Open);
-								}
-								catch
-								{
-								}
-								break;
-							}
-					}
+                        case ImageBoxSourceType.Blob:
+                            {
+                                if (!(value is byte[]))
+                                {
+                                    throw new Exception(ResourceUtils.GetString("ErrorImageData"));
+                                }
+                                _imageData = (byte[])value;
+                                stream = new MemoryStream(_imageData);
+                                break;
+                            }
+
+                        case ImageBoxSourceType.Url:
+                            {
+                                if (!(value is string))
+                                {
+                                    throw new Exception(ResourceUtils.GetString("ErrorImageData"));
+                                }
+
+                                string svalue = (string)value;
+                                string path = svalue;
+                                if (svalue.StartsWith("http"))
+                                {
+                                    stream = HttpTools.Instance.SendRequest(
+                                        new Request(url: path, method: "GET")
+                                        ).Content as Stream;
+                                }
+                                {
+                                    path = Path.Combine(Application.StartupPath, @"images\");
+                                    path = Path.Combine(path, svalue);
+                                    try
+                                    {
+                                        stream = new FileStream(path, FileMode.Open);
+                                    }
+                                    catch
+                                    {
+                                    }
+                                    break;
+                                }
+                            }
+                    }
 					if(stream == null)
 					{
 						_imageData = null;
@@ -128,8 +133,11 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
 				}
 				finally
 				{
-					if(stream != null) stream.Close();
-				}
+					if(stream != null)
+                    {
+                        stream.Close();
+                    }
+                }
 			}
 			OnImageDataChanged(EventArgs.Empty);
 		}

@@ -29,15 +29,21 @@ using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
 
 namespace Origam.Server;
+
 public class ProfileService : IProfileService
 {
     private readonly IUserClaimsPrincipalFactory<IOrigamUser> _claimsFactory;
     private readonly UserManager<IOrigamUser> _userManager;
-    public ProfileService(UserManager<IOrigamUser> userManager, IUserClaimsPrincipalFactory<IOrigamUser> claimsFactory)
+
+    public ProfileService(
+        UserManager<IOrigamUser> userManager,
+        IUserClaimsPrincipalFactory<IOrigamUser> claimsFactory
+    )
     {
         _userManager = userManager;
         _claimsFactory = claimsFactory;
     }
+
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
     {
         var sub = context.Subject.GetSubjectId();
@@ -49,6 +55,7 @@ public class ProfileService : IProfileService
         claims.Add(new Claim("name", user.UserName ?? string.Empty));
         context.IssuedClaims = claims;
     }
+
     public async Task IsActiveAsync(IsActiveContext context)
     {
         var sub = context.Subject.GetSubjectId();

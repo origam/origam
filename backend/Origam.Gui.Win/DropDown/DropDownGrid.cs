@@ -24,7 +24,6 @@ using System.Data;
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Origam.UI;
 
 namespace Origam.Gui.Win;
@@ -137,11 +136,9 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			{
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 	}
 	private bool _canceled = false;
 	public bool Canceled
@@ -172,9 +169,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 	#region Private Methods
 	private void UpdateListSize()
 	{
-		if(this.IsDisposed) return;
-	
-		this.Height = 200;
+		if(this.IsDisposed)
+        {
+            return;
+        }
+
+        this.Height = 200;
 		int w = 5;
 		if(grid.VisibleRowCount == this.Context.Count)
 		{
@@ -216,8 +216,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 		{
 			location.X -= location.X + this.Width - screenTotalWidth;
 		}
-		if(location.X < screen.X) location.X = screen.X;
-		if(location.Y + this.Height > screenTotalHeight)
+		if(location.X < screen.X)
+        {
+            location.X = screen.X;
+        }
+
+        if (location.Y + this.Height > screenTotalHeight)
 		{
 			location.Y -= (this.DropDownControl.Height + this.Height);
 		}
@@ -241,8 +245,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				for (int i = 0; i < count; i++)
 				{
 					string columnValueAtRow = (listManager.List as DataView)[i][style.MappingName].ToString();
-					if(! columnValueAtRow.Equals("")) emptyColumn = false;
-					int width = ((int) graphics.MeasureString(columnValueAtRow, grid.Font).Width) + 2;
+					if(! columnValueAtRow.Equals(""))
+                    {
+                        emptyColumn = false;
+                    }
+
+                    int width = ((int) graphics.MeasureString(columnValueAtRow, grid.Font).Width) + 2;
 					if (width > num)
 					{
 						num = width;
@@ -329,8 +337,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				}
 			}
 			grid.SetDataBinding(value, "");
-			if(value == null) return;
-			UpdateListSize();
+			if(value == null)
+            {
+                return;
+            }
+
+            UpdateListSize();
 			value.ListChanged += new ListChangedEventHandler(DropDownGrid_ListChanged);
 		}
 	}
@@ -380,12 +392,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			{
 				return (this.Context.Current as DataRowView)[this.ColumnList[0]].ToString();
 			}
-			else
-			{
-				return null;
-			}
-			//				return this.list.GetItemText(this.list.SelectedItem);
-		}
+
+            return null;
+            //				return this.list.GetItemText(this.list.SelectedItem);
+        }
 		set
 		{
 			throw new NotImplementedException();
@@ -395,8 +405,12 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 	{
 		get
 		{
-			if(this.Context.Position < 0) return DBNull.Value;
-			return (this.Context.Current as DataRowView)[this.ValueMember];
+			if(this.Context.Position < 0)
+            {
+                return DBNull.Value;
+            }
+
+            return (this.Context.Current as DataRowView)[this.ValueMember];
 //				return this.list.SelectedValue;
 		}
 		set

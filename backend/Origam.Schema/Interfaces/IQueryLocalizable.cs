@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for IQueryLocalizable.
 /// </summary>
 public interface IQueryLocalizable
 {
-	bool IsLocalizable(string member);
+    bool IsLocalizable(string member);
 }

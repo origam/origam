@@ -28,10 +28,14 @@ using System.Linq;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.Service.MetaModelUpgrade;
+
 public enum MetaModelUpgradeMode
 {
-    Upgrade, ThrowIfOutdated, Ignore
+    Upgrade,
+    ThrowIfOutdated,
+    Ignore,
 }
+
 public interface IMetaModelUpgradeService : IWorkbenchService
 {
     event EventHandler<UpgradeProgressInfo> UpgradeProgress;
@@ -40,28 +44,27 @@ public interface IMetaModelUpgradeService : IWorkbenchService
     List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode);
     void Cancel();
 }
+
 public class NullMetaModelUpgradeService : IMetaModelUpgradeService
 {
-#pragma warning disable CS0067 
+#pragma warning disable CS0067
     public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
     public event EventHandler UpgradeStarted;
     public event EventHandler UpgradeFinished;
 #pragma warning restore CS0067
-    public void InitializeService()
-    {
-    }
-    public void UnloadService()
-    {
-    }
+    public void InitializeService() { }
+
+    public void UnloadService() { }
+
     public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode)
     {
         return xmlFileData;
     }
-    public void Cancel()
-    {
-    }
+
+    public void Cancel() { }
 }
-public class MetaModelUpgradeService: IMetaModelUpgradeService
+
+public class MetaModelUpgradeService : IMetaModelUpgradeService
 {
     private MetaModelAnalyzer metaModelAnalyzer;
     public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
@@ -69,6 +72,7 @@ public class MetaModelUpgradeService: IMetaModelUpgradeService
     public event EventHandler UpgradeFinished;
     private bool canceled;
     private int filesProcessed;
+
     public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode)
     {
         IMetaModelUpgrader metaModelUpgrader;
@@ -77,11 +81,17 @@ public class MetaModelUpgradeService: IMetaModelUpgradeService
             case MetaModelUpgradeMode.Ignore:
                 return xmlFileData;
             case MetaModelUpgradeMode.Upgrade:
+            {
                 metaModelUpgrader = new MetaModelUpgrader();
                 break;
+            }
+
             case MetaModelUpgradeMode.ThrowIfOutdated:
+            {
                 metaModelUpgrader = new DisabledMetaModelUpgrader();
                 break;
+            }
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, "Not implemented");
         }
@@ -95,26 +105,22 @@ public class MetaModelUpgradeService: IMetaModelUpgradeService
             .Where(fileData => fileData.XmlDocument.FileElement.HasChildNodes)
             .ToList();
         UpgradeFinished?.Invoke(null, EventArgs.Empty);
-        
-        return canceled 
-            ? new List<XmlFileData>()
-            : upgradedData;
+
+        return canceled ? new List<XmlFileData>() : upgradedData;
     }
+
     public void Cancel()
     {
         canceled = true;
     }
-    public void InitializeService()
-    {
-    }
-    public void UnloadService()
-    {
-    }
-    
+
+    public void InitializeService() { }
+
+    public void UnloadService() { }
+
     private DateTime lastProgressCalled = DateTime.Now;
-    private readonly TimeSpan minProgressCallInterval =
-        new TimeSpan(0,0,0,0,25);
-    
+    private readonly TimeSpan minProgressCallInterval = new TimeSpan(0, 0, 0, 0, 25);
+
     private XmlFileData Upgrade(XmlFileData fileData, int totalFileCount)
     {
         var xFileData = new XFileData(fileData);
@@ -126,35 +132,35 @@ public class MetaModelUpgradeService: IMetaModelUpgradeService
         catch (Exception ex)
         {
             UpgradeFinished?.Invoke(null, EventArgs.Empty);
-            throw new Exception($"An error has occured when processing file: {fileData.FileInfo.FullName}", ex) ;
+            throw new Exception(
+                $"An error has occured when processing file: {fileData.FileInfo.FullName}",
+                ex
+            );
         }
         filesProcessed += 1;
         if (DateTime.Now - lastProgressCalled > minProgressCallInterval)
         {
-            UpgradeProgress?.Invoke(
-                null,
-                new UpgradeProgressInfo(totalFileCount,
-                filesProcessed));
+            UpgradeProgress?.Invoke(null, new UpgradeProgressInfo(totalFileCount, filesProcessed));
             lastProgressCalled = DateTime.Now;
         }
-        return wasUpgraded
-            ? new XmlFileData(xFileData) 
-            : fileData;
+        return wasUpgraded ? new XmlFileData(xFileData) : fileData;
     }
 }
+
 public class XFileData
 {
     public OrigamXDocument Document { get; }
     public FileInfo File { get; }
+
     public XFileData(XmlFileData xmlFileData)
-        : this(xmlFileData.XmlDocument, xmlFileData.FileInfo)
-    {
-    }
+        : this(xmlFileData.XmlDocument, xmlFileData.FileInfo) { }
+
     public XFileData(OrigamXmlDocument xmlDocument, FileInfo file)
     {
         Document = new OrigamXDocument(xmlDocument);
         File = file;
     }
+
     public XFileData(OrigamXDocument document, FileInfo file)
     {
         Document = document;

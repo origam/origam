@@ -19,18 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Origam.DA.Service;
+
 public static class RuleTools
 {
     public static IEnumerable<Exception> GetExceptions(object instance)
     {
-        List<MemberAttributeInfo> members = Reflector.FindMembers(instance.GetType(), typeof(IModelElementRule), new Type[0]);
+        List<MemberAttributeInfo> members = Reflector.FindMembers(
+            instance.GetType(),
+            typeof(IModelElementRule),
+            new Type[0]
+        );
         foreach (MemberAttributeInfo mi in members)
         {
             IModelElementRule rule = mi.Attribute as IModelElementRule;
@@ -41,6 +44,7 @@ public static class RuleTools
             }
         }
     }
+
     public static void DoOnFirstViolation(object objectToCheck, Action<Exception> action)
     {
         Exception firstException = GetExceptions(objectToCheck).FirstOrDefault();

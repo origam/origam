@@ -21,17 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Origam.Schema.GuiModel;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+
 class WebReportScriptContainer : UpgradeScriptContainer
 {
     public override string FullTypeName { get; } = typeof(WebReport).FullName;
     public override List<string> OldFullTypeNames { get; }
     public override string[] OldPropertyXmlNames { get; }
+
     public WebReportScriptContainer()
     {
         AddEmptyUpgrade("6.0.0", "6.0.1");

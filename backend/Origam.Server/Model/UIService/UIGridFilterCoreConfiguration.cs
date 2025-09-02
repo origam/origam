@@ -21,14 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using Origam.Server;
 
 namespace Origam.Server.Model.UIService;
+
 public class UIGridFilterCoreConfiguration
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
     public bool IsGlobal { get; set; }
     public IList<UIGridFilterFieldConfiguration> Details { get; set; }
-
 }

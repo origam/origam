@@ -29,5 +29,4 @@ public abstract class AbstractLookupRowDataInput : AbstractLookupInput
     public Guid DataStructureEntityId { get; set; }
     public Guid Id { get; set; } = Guid.Empty;
     public string Entity { get; set; }
-    
 }

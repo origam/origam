@@ -19,17 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.DA.Common;
 using Origam.Schema.EntityModel;
-using System;
 
 namespace Origam.Schema.RuleModel;
+
 [SchemaItemDescription("Simple Data Rule", "simple-data-rule.png")]
 [HelpTopic("Simple+Data+Rule")]
 [ClassMetaVersion("6.0.0")]
 public class SimpleDataRule : XPathRule, IDataRule
 {
-    public SimpleDataRule() : base() {}
-	public SimpleDataRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public SimpleDataRule(Key primaryKey) : base(primaryKey) { }
+    public SimpleDataRule()
+        : base() { }
+
+    public SimpleDataRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public SimpleDataRule(Key primaryKey)
+        : base(primaryKey) { }
 }

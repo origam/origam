@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for AbstractDataStructure.
 /// </summary>
@@ -32,19 +31,22 @@ namespace Origam.Schema.EntityModel;
 // [ClassMetaVersion("6.0.0")]
 public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 {
-	public const string CategoryConst = "DataStructure";
-	public AbstractDataStructure() : base(){}
-	
-	public AbstractDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public AbstractDataStructure(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return DataStructure.CategoryConst;
-		}
-	}
-	#endregion
+    public const string CategoryConst = "DataStructure";
+
+    public AbstractDataStructure()
+        : base() { }
+
+    public AbstractDataStructure(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public AbstractDataStructure(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return DataStructure.CategoryConst; }
+    }
+    #endregion
 }

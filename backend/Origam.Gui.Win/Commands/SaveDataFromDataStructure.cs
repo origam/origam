@@ -83,7 +83,10 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
         }
         finally
         {
-            if(dialog != null) dialog.Dispose();
+            if(dialog != null)
+            {
+                dialog.Dispose();
+            }
         }
     }
     private DataSet LoadData(DataStructureQuery query)

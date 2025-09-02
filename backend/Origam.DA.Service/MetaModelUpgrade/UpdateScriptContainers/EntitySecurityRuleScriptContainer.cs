@@ -28,6 +28,7 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 public class EntitySecurityRuleScriptContainer : UpgradeScriptContainer
 {
     public override string FullTypeName => "Origam.Schema.EntityModel.EntitySecurityRule";
+
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     public override List<string> OldFullTypeNames { get; }
 
@@ -42,9 +43,11 @@ public class EntitySecurityRuleScriptContainer : UpgradeScriptContainer
                 toVersion: new Version("6.1.0"),
                 transformation: (node, doc) =>
                 {
-                    XNamespace newNameSpace= "http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0";
-                    node.Add(new XAttribute(
-                            newNameSpace + "exportCredential", false));
-                }));
+                    XNamespace newNameSpace =
+                        "http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0";
+                    node.Add(new XAttribute(newNameSpace + "exportCredential", false));
+                }
+            )
+        );
     }
 }

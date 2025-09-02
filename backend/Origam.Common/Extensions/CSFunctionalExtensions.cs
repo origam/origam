@@ -23,12 +23,14 @@ using System;
 using CSharpFunctionalExtensions;
 
 namespace Origam.Extensions;
+
 public static class CsFunctionalExtensions
 {
     public static Result<T, E> BindSuccessFailure<T, K, E>(
-        this Result<K, E> result, 
-        Func<K, Result<T, E>> onSuccess, 
-        Func<Result<T, E>> onFailure)
+        this Result<K, E> result,
+        Func<K, Result<T, E>> onSuccess,
+        Func<Result<T, E>> onFailure
+    )
     {
         if (result.IsSuccess)
         {

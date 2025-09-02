@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema.MenuModel;
 using Origam.Workbench;
-using Origam.Gui;
 
 namespace Origam.Gui.Win;
 public class DesktopEntityUIActionRunner: EntityUIActionRunner
@@ -37,14 +36,23 @@ public class DesktopEntityUIActionRunner: EntityUIActionRunner
         switch (processData.Action)
         {
             case EntityMenuAction action:
-                menuItem = action.Menu;
-                break;
+                {
+                    menuItem = action.Menu;
+                    break;
+                }
+
             case EntityWorkflowAction action:
-                menuItem = action.Workflow;
-                break;
+                {
+                    menuItem = action.Workflow;
+                    break;
+                }
+
             case EntityReportAction action:
-                menuItem = action.Report;
-                break;
+                {
+                    menuItem = action.Report;
+                    break;
+                }
+
             default:
                 throw new NotImplementedException(
                     $"Cannot execule action type {processData.Action.GetType()}");
@@ -54,6 +62,5 @@ public class DesktopEntityUIActionRunner: EntityUIActionRunner
     protected override void SetTransactionId(ExecuteActionProcessData processData,
         string transactionId)
     {
-       
     }
 }

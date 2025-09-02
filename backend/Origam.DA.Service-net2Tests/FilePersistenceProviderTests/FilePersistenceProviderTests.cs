@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using MoreLinq;
 using NUnit.Framework;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -34,7 +33,6 @@ using Origam.DA.Service.NamespaceMapping;
 using Origam.DA.Service_net2Tests;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
-
 
 namespace Origam.DA.ServiceTests;
 public class FilePersistenceProviderTests: AbstractFileTestClass
@@ -381,7 +379,6 @@ internal class TestItem : IFilePersistent
     
     public void Dispose()
     {
-        
     }
     public event EventHandler Changed
     {
@@ -435,16 +432,32 @@ internal class TestItem : IFilePersistent
         ByteArraysEqual(TestImage, other.TestImage);
     private bool ByteArraysEqual(byte[] first, byte[] second)
     {
-        if (first.Length != second.Length) return false;
+        if (first.Length != second.Length)
+        {
+            return false;
+        }
+
         return !first
             .Where((byte1, i) => byte1 != second[i])
             .Any();
     }
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != this.GetType())
+        {
+            return false;
+        }
+
         return Equals((TestItem) obj);
     }
     public override int GetHashCode()

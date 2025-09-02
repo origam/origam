@@ -41,114 +41,61 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server;
+
 public class HelpTooltip
 {
     private string _id;
     public string Id
     {
-        get
-        {
-            return _id;
-        }
-        set
-        {
-            _id = value;
-        }
+        get { return _id; }
+        set { _id = value; }
     }
     private string _context;
     public string Context
     {
-        get
-        {
-            return _context;
-        }
-        set
-        {
-            _context = value;
-        }
+        get { return _context; }
+        set { _context = value; }
     }
     private string _subContext;
     public string SubContext
     {
-        get
-        {
-            return _subContext;
-        }
-        set
-        {
-            _subContext = value;
-        }
+        get { return _subContext; }
+        set { _subContext = value; }
     }
     private string _relatedComponent;
     public string RelatedComponent
     {
-        get
-        {
-            return _relatedComponent;
-        }
-        set
-        {
-            _relatedComponent = value;
-        }
+        get { return _relatedComponent; }
+        set { _relatedComponent = value; }
     }
     private string _objectId;
     public string ObjectId
     {
-        get
-        {
-            return _objectId;
-        }
-        set
-        {
-            _objectId = value;
-        }
+        get { return _objectId; }
+        set { _objectId = value; }
     }
     private string _text;
     public string Text
     {
-        get
-        {
-            return _text;
-        }
-        set
-        {
-            _text = value;
-        }
+        get { return _text; }
+        set { _text = value; }
     }
     private int _position;
     public int Position
     {
-        get
-        {
-            return _position;
-        }
-        set
-        {
-            _position = value;
-        }
+        get { return _position; }
+        set { _position = value; }
     }
     private int _destroyCondition;
     public int DestroyCondition
     {
-        get
-        {
-            return _destroyCondition;
-        }
-        set
-        {
-            _destroyCondition = value;
-        }
+        get { return _destroyCondition; }
+        set { _destroyCondition = value; }
     }
     private string _destroyParameter;
     public string DestroyParameter
     {
-        get
-        {
-            return _destroyParameter;
-        }
-        set
-        {
-            _destroyParameter = value;
-        }
+        get { return _destroyParameter; }
+        set { _destroyParameter = value; }
     }
 }

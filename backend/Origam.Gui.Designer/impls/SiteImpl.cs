@@ -116,7 +116,6 @@ public class SiteImpl:ISite,IDictionaryService
 					hostImpl.OnComponentChanged(component, md, oldName, name);
 				}
 			}
-			
 		}
 	}
 	#endregion

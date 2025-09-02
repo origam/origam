@@ -20,12 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-
 using Origam.UI;
 using Origam.Schema;
 
@@ -113,8 +111,12 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 	}
 	private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
 	{
-		if(! _selectComponent) return;
-		PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
+		if(! _selectComponent)
+        {
+            return;
+        }
+
+        PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
 		if(item != null)
 		{
 			ISelectionService svc = item.Control.Site.GetService(typeof(ISelectionService)) as ISelectionService;

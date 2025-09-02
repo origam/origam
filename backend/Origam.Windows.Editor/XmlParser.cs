@@ -126,7 +126,6 @@ namespace Origam.Windows.Editor
             int currentIndex = index;
             for (int i = 0; i < index; ++i)
             {
-
                 char currentChar = xml[currentIndex];
 
                 if (Char.IsWhiteSpace(currentChar))
@@ -281,10 +280,14 @@ namespace Origam.Windows.Editor
                             int oldIndex = index;
                             // move back to first non-whitespace
                             while (index > -1 && char.IsWhiteSpace(xml[index]))
+                            {
                                 index--;
+                            }
                             // if no equals sign is found reset index
                             if (index > -1 && xml[index] != '=')
+                            {
                                 index = oldIndex;
+                            }
                         }
                         else
                         {
@@ -533,7 +536,6 @@ namespace Origam.Windows.Editor
 
             for (int i = index; i < xml.Length; ++i)
             {
-
                 char currentChar = xml[i];
                 if (currentChar == '>')
                 {
@@ -687,7 +689,6 @@ namespace Origam.Windows.Editor
 
             for (int i = 0; i <= index; ++i)
             {
-
                 char currentChar = xml[currentIndex];
 
                 if (IsXmlNameChar(currentChar))
@@ -794,15 +795,20 @@ namespace Origam.Windows.Editor
                             switch (xmlReader.NodeType)
                             {
                                 case XmlNodeType.Element:
-                                    if (!xmlReader.IsEmptyElement)
                                     {
-                                        QualifiedName category = new QualifiedName(xmlReader.LocalName, xmlReader.NamespaceURI, xmlReader.Prefix);
-                                        path.AddElement(category);
+                                        if (!xmlReader.IsEmptyElement)
+                                        {
+                                            QualifiedName category = new QualifiedName(xmlReader.LocalName, xmlReader.NamespaceURI, xmlReader.Prefix);
+                                            path.AddElement(category);
+                                        }
+                                        break;
                                     }
-                                    break;
+
                                 case XmlNodeType.EndElement:
-                                    path.Elements.RemoveLast();
-                                    break;
+                                    {
+                                        path.Elements.RemoveLast();
+                                        break;
+                                    }
                             }
                         }
                     }
@@ -833,12 +839,21 @@ namespace Origam.Windows.Editor
         public static string GetXmlIdentifierBeforeIndex(ITextSource document, int index)
         {
             if (document == null)
+            {
                 throw new ArgumentNullException("document");
+            }
+
             if (index < 0 || index > document.TextLength)
+            {
                 throw new ArgumentOutOfRangeException("index", index, "Value must be between 0 and " + document.TextLength);
+            }
+
             int i = index - 1;
             while (i >= 0 && IsXmlNameChar(document.GetCharAt(i)) && document.GetCharAt(i) != '/')
+            {
                 i--;
+            }
+
             return document.GetText(i + 1, index - i - 1);
         }
     }

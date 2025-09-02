@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for IContextReference.
 /// </summary>
 public interface IContextReference : ISchemaItem
 {
-	IContextStore ContextStore{get; set;}
-	string XPath{get; set;}
-	OrigamDataType CastToDataType{get; set;}
+    IContextStore ContextStore { get; set; }
+    string XPath { get; set; }
+    OrigamDataType CastToDataType { get; set; }
 }

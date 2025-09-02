@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation;
@@ -48,7 +47,6 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         return DataService(_databaseType).BuildConnectionString(
             project.DatabaseServerName, project.DatabasePort, creatingDatabase, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-        
     }
     public void ResetDataservice()
     {

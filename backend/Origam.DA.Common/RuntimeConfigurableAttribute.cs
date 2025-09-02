@@ -22,10 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA;
+
 [AttributeUsage(AttributeTargets.Property)]
-public class RuntimeConfigurableAttribute: Attribute
+public class RuntimeConfigurableAttribute : Attribute
 {
     public string Name { get; }
+
     public RuntimeConfigurableAttribute(string name)
     {
         Name = name;

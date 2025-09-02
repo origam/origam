@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server.Configuration;
+
 public class ChatConfig
 {
     public string PathToChatApp { get; set; }

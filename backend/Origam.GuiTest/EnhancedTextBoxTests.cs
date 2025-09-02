@@ -26,7 +26,6 @@ using System.Threading;
 using NUnit.Framework;
 using Origam.Gui.UI;
 
-
 namespace Origam.GuiTest;
 [TestFixture]
 public class EnhancedTextBoxTests

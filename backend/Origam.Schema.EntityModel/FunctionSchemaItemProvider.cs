@@ -22,34 +22,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema.EntityModel;
+
 public class FunctionSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public FunctionSchemaItemProvider() {}
-	#region ISchemaItemProvider Members
-	public override string RootItemType => Function.CategoryConst;
-	public override string Group => "DATA";
-	#endregion
-	#region IBrowserNode Members
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_10_functions.png";
-	public override string NodeText
-	{
-		get => "Functions";
-		set => base.NodeText = value;
-	}
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[] {typeof(Function)};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(Function) ?
-			"NewFunction" : null);
-	}
-	#endregion
+    public FunctionSchemaItemProvider() { }
+
+    #region ISchemaItemProvider Members
+    public override string RootItemType => Function.CategoryConst;
+    public override string Group => "DATA";
+    #endregion
+    #region IBrowserNode Members
+    public override string Icon =>
+        // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+        "icon_10_functions.png";
+    public override string NodeText
+    {
+        get => "Functions";
+        set => base.NodeText = value;
+    }
+    public override string NodeToolTipText =>
+        // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+        null;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(Function) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(Function) ? "NewFunction" : null
+        );
+    }
+    #endregion
 }

@@ -73,20 +73,31 @@ public partial class SqlEditor : UserControl
             {
                 case "DataType":
                 case "Keyword":
-                    color.Foreground = keywordBrush;
-                    break;
+                    {
+                        color.Foreground = keywordBrush;
+                        break;
+                    }
+
                 case "Comment":
-                    color.Foreground = docBrush;
-                    break;
+                    {
+                        color.Foreground = docBrush;
+                        break;
+                    }
+
                 case "Variable":
-                    color.Foreground = variableBrush;
-                    break;
+                    {
+                        color.Foreground = variableBrush;
+                        break;
+                    }
+
                 case "ObjectReference":
                 case "ObjectReference1":
                 case "ObjectReferenceInBrackets":
                 case "ObjectReferenceInBrackets1":
-                    color.Foreground = referenceBrush;
-                    break;
+                    {
+                        color.Foreground = referenceBrush;
+                        break;
+                    }
             }
         }
     }

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Service.Core;
 
 namespace Origam.Mail;
+
 public interface IMailService
 {
     int SendMail(IXmlContainer mailDocument, string server, int port);

@@ -22,10 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Security;
+
 /// <summary>
 /// Summary description for IAuthorizationContextContainer.
 /// </summary>
 public interface IAuthorizationContextContainer
 {
-	string AuthorizationContext {get;}
+    string AuthorizationContext { get; }
 }

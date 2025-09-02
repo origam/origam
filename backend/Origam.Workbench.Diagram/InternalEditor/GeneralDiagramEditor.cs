@@ -48,7 +48,11 @@ public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
         if (viewer.SelectedObject is DrawingNode node)
         {
             Guid schemaId = IdTranslator.ToSchemaId(node);
-            if (schemaId == Guid.Empty) return;
+            if (schemaId == Guid.Empty)
+            {
+                return;
+            }
+
             ISchemaItem clickedItem = 
                 (ISchemaItem)persistenceProvider
                     .RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
@@ -69,6 +73,5 @@ public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
     }
     public void ReDrawAndKeepFocus()
     {
-        
     }
 }

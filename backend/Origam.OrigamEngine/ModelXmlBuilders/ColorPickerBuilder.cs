@@ -22,17 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for ColorPickerBuilder.
 /// </summary>
 public class ColorPickerBuilder
 {
-	public ColorPickerBuilder()
-	{
-	}
-	public static void Build(XmlElement propertyElement)
-	{
-		propertyElement.SetAttribute("Entity", "Integer");
-		propertyElement.SetAttribute("Column", "Color");
-	}
+    public ColorPickerBuilder() { }
+
+    public static void Build(XmlElement propertyElement)
+    {
+        propertyElement.SetAttribute("Entity", "Integer");
+        propertyElement.SetAttribute("Column", "Color");
+    }
 }

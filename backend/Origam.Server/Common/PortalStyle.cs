@@ -21,11 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-
-using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Data;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public class PortalStyle
 {
     public IDictionary<string, int> Colors
@@ -33,7 +33,13 @@ public class PortalStyle
         get
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
-            DataSet ds = CoreServices.DataService.Instance.LoadData(new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"), Guid.Empty, Guid.Empty, Guid.Empty, null);
+            DataSet ds = CoreServices.DataService.Instance.LoadData(
+                new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"),
+                Guid.Empty,
+                Guid.Empty,
+                Guid.Empty,
+                null
+            );
             foreach (DataRow row in ds.Tables[0].Rows)
             {
                 result.Add((string)row["Name"], (int)row["Color"]);

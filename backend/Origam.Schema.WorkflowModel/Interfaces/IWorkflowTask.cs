@@ -22,12 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for IWorkflowTask.
 /// </summary>
 public interface IWorkflowTask : IWorkflowStep
 {
-//		IContextStore InputContextStore{get; set;}
-	IContextStore OutputContextStore{get; set;}
-	ServiceOutputMethod OutputMethod{get; set;}
+    //		IContextStore InputContextStore{get; set;}
+    IContextStore OutputContextStore { get; set; }
+    ServiceOutputMethod OutputMethod { get; set; }
 }

@@ -30,22 +30,24 @@ using Origam.DA.Common;
 using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade;
+
 public class MetaModelAnalyzer
 {
     private readonly IMetaModelUpgrader metaModelUpgrader;
     private readonly IFileWriter fileWriter;
-    
+
     public MetaModelAnalyzer(IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
     {
         this.fileWriter = fileWriter;
         this.metaModelUpgrader = metaModelUpgrader;
     }
+
     public MetaModelAnalyzer(IMetaModelUpgrader metaModelUpgrader)
     {
         this.metaModelUpgrader = metaModelUpgrader;
         fileWriter = new FileWriter();
     }
-    
+
     public bool TryUpgrade(XFileData xFileData)
     {
         bool isVersion5 = IsVersion5(xFileData);
@@ -54,13 +56,12 @@ public class MetaModelAnalyzer
             metaModelUpgrader.UpgradeToVersion6(xFileData.Document);
         }
         var documentContainer = new DocumentContainer(xFileData);
-        List<bool> upgradeFlags = xFileData.Document
-            .ClassNodes
-            .ToArray()
+        List<bool> upgradeFlags = xFileData
+            .Document.ClassNodes.ToArray()
             .Select(classNode => TryUpgrade(classNode, documentContainer))
             .ToList();
         documentContainer.ExecuteNamespaceUpgrade();
-        
+
         if (isVersion5 || upgradeFlags.Any(x => x))
         {
             xFileData.Document.FixNamespaces();
@@ -69,17 +70,19 @@ public class MetaModelAnalyzer
         }
         return false;
     }
+
     private bool IsVersion5(XFileData xFileData)
     {
-       return xFileData.Document
-           .FileElement
-           .Attributes()
-           .Select(attr => attr.Value.Trim().ToLower())
-           .Any(value => 
-               value == "http://schemas.origam.com/5.0.0/model-element" ||
-               value == "http://schemas.origam.com/1.0.0/model-persistence" ||
-               value == "http://schemas.origam.com/1.0.0/packagepackage");
+        return xFileData
+            .Document.FileElement.Attributes()
+            .Select(attr => attr.Value.Trim().ToLower())
+            .Any(value =>
+                value == "http://schemas.origam.com/5.0.0/model-element"
+                || value == "http://schemas.origam.com/1.0.0/model-persistence"
+                || value == "http://schemas.origam.com/1.0.0/packagepackage"
+            );
     }
+
     private void WriteFile(XFileData xFileData)
     {
         if (xFileData.Document.IsEmpty)
@@ -95,24 +98,37 @@ public class MetaModelAnalyzer
             fileWriter.Write(xFileData.File, upgradedXmlString);
         }
     }
+
     private bool TryUpgrade(XElement classNode, DocumentContainer documentContainer)
     {
         IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
-        
-        string fullTypeName = OrigamNameSpace.CreateOrGet(classNode?.Name.NamespaceName).FullTypeName;
+
+        string fullTypeName = OrigamNameSpace
+            .CreateOrGet(classNode?.Name.NamespaceName)
+            .FullTypeName;
         Versions persistedClassVersions = new Versions(origamNameSpaces);
-        Versions currentClassVersions = GetCurrentClassVersions(fullTypeName, persistedClassVersions);
+        Versions currentClassVersions = GetCurrentClassVersions(
+            fullTypeName,
+            persistedClassVersions
+        );
         bool scriptsRun = false;
         foreach (string className in currentClassVersions.TypeNames)
         {
             Version currentVersion = currentClassVersions[className];
             if (!persistedClassVersions.Contains(className))
             {
-                if (currentVersion != ClassMetaVersionAttribute.FirstVersion &&
-                    currentVersion != ClassMetaVersionAttribute.FormerFirstVersion)
+                if (
+                    currentVersion != ClassMetaVersionAttribute.FirstVersion
+                    && currentVersion != ClassMetaVersionAttribute.FormerFirstVersion
+                )
                 {
-                    scriptsRun = metaModelUpgrader.RunUpgradeScripts(classNode, documentContainer, className,
-                        ClassMetaVersionAttribute.FirstVersion, currentVersion);
+                    scriptsRun = metaModelUpgrader.RunUpgradeScripts(
+                        classNode,
+                        documentContainer,
+                        className,
+                        ClassMetaVersionAttribute.FirstVersion,
+                        currentVersion
+                    );
                 }
                 continue;
             }
@@ -123,60 +139,74 @@ public class MetaModelAnalyzer
             if (persistedClassVersions[className] > currentVersion)
             {
                 throw new Exception(
-                    $"Error when processing file \"{documentContainer.File.FullName}\". " +
-                    $"The persisted object \"{classNode.Name.LocalName}\" has a newer version of the" +
-                    $" class \"{documentContainer.File.FullName}\" (version: {persistedClassVersions[className]}) " +
-                    $"than is the current version of the class: {currentVersion}. Are you trying to open a model with an older Architect/Server?");
+                    $"Error when processing file \"{documentContainer.File.FullName}\". "
+                        + $"The persisted object \"{classNode.Name.LocalName}\" has a newer version of the"
+                        + $" class \"{documentContainer.File.FullName}\" (version: {persistedClassVersions[className]}) "
+                        + $"than is the current version of the class: {currentVersion}. Are you trying to open a model with an older Architect/Server?"
+                );
             }
             if (persistedClassVersions[className] < currentVersion)
             {
-                scriptsRun = metaModelUpgrader.RunUpgradeScripts(classNode, documentContainer, className,
-                    persistedClassVersions[className], currentVersion);
+                scriptsRun = metaModelUpgrader.RunUpgradeScripts(
+                    classNode,
+                    documentContainer,
+                    className,
+                    persistedClassVersions[className],
+                    currentVersion
+                );
             }
         }
         return scriptsRun;
     }
-    private static Versions GetCurrentClassVersions(string fullTypeName,
-        Versions persistedClassVersions)
+
+    private static Versions GetCurrentClassVersions(
+        string fullTypeName,
+        Versions persistedClassVersions
+    )
     {
-        Versions currentClassVersions =
-            Versions.GetCurrentClassVersions(fullTypeName);
+        Versions currentClassVersions = Versions.GetCurrentClassVersions(fullTypeName);
         if (!currentClassVersions.IsDead)
         {
-            var deadClasses = persistedClassVersions
-                .TypeNames
-                .Where(typeName => !currentClassVersions.Contains(typeName));
+            var deadClasses = persistedClassVersions.TypeNames.Where(typeName =>
+                !currentClassVersions.Contains(typeName)
+            );
             currentClassVersions = new Versions(currentClassVersions, deadClasses);
         }
         return currentClassVersions;
     }
+
     private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
     {
-        return classNode.Attributes()
+        return classNode
+            .Attributes()
             .Select(attr => attr.Name.NamespaceName)
-            .Concat(new[]{classNode.Name.NamespaceName})
-            .Where(name => 
-                OrigamNameSpace.IsOrigamNamespace(name) && 
-                name != OrigamFile.ModelPersistenceUri)
+            .Concat(new[] { classNode.Name.NamespaceName })
+            .Where(name =>
+                OrigamNameSpace.IsOrigamNamespace(name) && name != OrigamFile.ModelPersistenceUri
+            )
             .Distinct()
             .Select(OrigamNameSpace.CreateOrGet);
     }
 }
+
 public class DocumentContainer
 {
     private readonly XFileData fileData;
     public OrigamXDocument Document => fileData.Document;
     public FileInfo File => fileData.File;
-    private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs 
-        = new Dictionary<UpgradeScriptContainer, Version>();
+    private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs =
+        new Dictionary<UpgradeScriptContainer, Version>();
+
     public DocumentContainer(XFileData fileData)
     {
         this.fileData = fileData;
     }
+
     public void ScheduleNamespaceUpgrade(UpgradeScriptContainer scriptContainer, Version toVersion)
     {
         scriptVersionPairs[scriptContainer] = toVersion;
     }
+
     public void ExecuteNamespaceUpgrade()
     {
         foreach (var scriptVersionPair in scriptVersionPairs)

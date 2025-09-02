@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA.Service;
+
 /// <summary>
 /// Summary description for CustomParameter.
 /// </summary>
 public interface ICustomParameter
 {
-	string Name {get;}
-	object Evaluate(UserProfile profile);
+    string Name { get; }
+    object Evaluate(UserProfile profile);
 }

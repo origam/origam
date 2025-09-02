@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Maps physical table to an entity.
 /// </summary>
@@ -31,48 +32,53 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class DetachedEntity : AbstractDataEntity
 {
-	public DetachedEntity() : base() {}
-	public DetachedEntity(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DetachedEntity(Key primaryKey) : base(primaryKey)	{}
-//		public override bool CanConvertTo(Type type)
-//		{
-//			return (type == typeof(TableMappingItem));
-//		}
-//
-//		public override ISchemaItem ConvertTo(Type type)
-//		{
-//			if(type == typeof(TableMappingItem))
-//			{
-//				ArrayList ancestors = new ArrayList(this.Ancestors);
-//
-//				TableMappingItem converted = this.RootProvider.NewItem(type, this.SchemaExtensionId, this.Group) as TableMappingItem;
-//
-//				converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
-//
-//				converted.Name = this.Name;
-//				converted.MappedObjectName = this.Name;
-//				converted.IsAbstract = this.IsAbstract;
-//
-//				// we have to delete first (also from the cache)
-//				this.DeleteChildItems = false;
-//				this.PersistChildItems = false;
-//				this.IsDeleted = true;
-//				this.Persist();
-//
-//				converted.Persist();
-//
-//				foreach(SchemaItemAncestor ancestor in ancestors)
-//				{
-//					converted.Ancestors.Add(ancestor.Clone() as SchemaItemAncestor);
-//				}
-//
-//				converted.Persist();
-//
-//				return converted;
-//			}
-//			else
-//			{
-//				return base.ConvertTo(type);
-//			}
-//		}
+    public DetachedEntity()
+        : base() { }
+
+    public DetachedEntity(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DetachedEntity(Key primaryKey)
+        : base(primaryKey) { }
+    //		public override bool CanConvertTo(Type type)
+    //		{
+    //			return (type == typeof(TableMappingItem));
+    //		}
+    //
+    //		public override ISchemaItem ConvertTo(Type type)
+    //		{
+    //			if(type == typeof(TableMappingItem))
+    //			{
+    //				ArrayList ancestors = new ArrayList(this.Ancestors);
+    //
+    //				TableMappingItem converted = this.RootProvider.NewItem(type, this.SchemaExtensionId, this.Group) as TableMappingItem;
+    //
+    //				converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
+    //
+    //				converted.Name = this.Name;
+    //				converted.MappedObjectName = this.Name;
+    //				converted.IsAbstract = this.IsAbstract;
+    //
+    //				// we have to delete first (also from the cache)
+    //				this.DeleteChildItems = false;
+    //				this.PersistChildItems = false;
+    //				this.IsDeleted = true;
+    //				this.Persist();
+    //
+    //				converted.Persist();
+    //
+    //				foreach(SchemaItemAncestor ancestor in ancestors)
+    //				{
+    //					converted.Ancestors.Add(ancestor.Clone() as SchemaItemAncestor);
+    //				}
+    //
+    //				converted.Persist();
+    //
+    //				return converted;
+    //			}
+    //			else
+    //			{
+    //				return base.ConvertTo(type);
+    //			}
+    //		}
 }

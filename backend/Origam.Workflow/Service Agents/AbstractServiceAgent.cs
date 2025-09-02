@@ -21,26 +21,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-
-using Origam.Workbench.Services;
+using System.Collections.Generic;
+using System.Data;
+using Origam.DA.Service;
+using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Rule;
-using Origam.DA.Service;
-using System.Data;
-using System.Collections.Generic;
+using Origam.Workbench.Services;
 
 namespace Origam.Workflow;
+
 public abstract class AbstractServiceAgent : IServiceAgent
 {
-	public event EventHandler PersistenceProviderChanged;
-	public event ServiceFinished Finished;
-	public AbstractServiceAgent()
-	{
-	}
-    public virtual void SetDataService(DA.IDataService dataService)
-    {
-    }
+    public event EventHandler PersistenceProviderChanged;
+    public event ServiceFinished Finished;
+
+    public AbstractServiceAgent() { }
+
+    public virtual void SetDataService(DA.IDataService dataService) { }
+
     protected TraceTaskInfo TraceTaskInfo
     {
         get
@@ -53,6 +52,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
             return traceTaskInfo;
         }
     }
+
     public DataSet CreateEmptyOutputData()
     {
         DatasetGenerator dg = new DatasetGenerator(true);
@@ -60,101 +60,93 @@ public abstract class AbstractServiceAgent : IServiceAgent
         data.EnforceConstraints = !DisableOutputStructureConstraints;
         return data;
     }
+
     #region IServiceAgent Members
     public virtual string Info => this.ToString();
     Origam.DA.ObjectPersistence.IPersistenceProvider _persistence;
-	public Origam.DA.ObjectPersistence.IPersistenceProvider PersistenceProvider
-	{
-		get => _persistence;
-		set
-		{
-			_persistence = value;
-			OnPersistenceProviderChanged(EventArgs.Empty);
-		}
-	}
-	RuleEngine _ruleEngine;
-	public object RuleEngine
-	{
-		get
-		{
-			return _ruleEngine;
-		}
-		set
-		{
-			_ruleEngine = value as RuleEngine;
-		}
-	}
-	WorkflowEngine _workflowEngine;
-	public object WorkflowEngine
-	{
-		get
-		{
-			return _workflowEngine;
-		}
-		set
-		{
-			_workflowEngine = value as WorkflowEngine;
-		}
-	}
-	public virtual Hashtable Parameters { get; } = new Hashtable();
-	public virtual string MethodName { get; set; }
-	public virtual string TransactionId { get; set; } = null;
-	private AbstractDataStructure _outputStructure;
-	public ISchemaItem OutputStructure
-	{
-		get
-		{
-			return _outputStructure;
-		}
-		set
-		{
-			_outputStructure = value as AbstractDataStructure;
-		}
-	}
-	public bool DisableOutputStructureConstraints { get; set; }
-	public ServiceOutputMethod OutputMethod { get; set; }
-	public string TraceStepName { get; set; }
-	public Guid TraceStepId { get; set; }
-	public Guid TraceWorkflowId { get; set; }
-	public bool Trace { get; set; }
-	public virtual string ExecuteUpdate(string command, string transactionId)
-	{
-		throw new Exception("ExecuteUpdate not implemented by the service.");
-	}
-	public abstract object Result	{get;}
-	public abstract void Run();
-	public void RunAsync()
-	{
-		Exception exception = null;
-		try
-		{
-			this.Run();
-		}
-		catch(Exception ex)
-		{
-			exception = ex;
-		}
-		OnFinished(new ServiceFinishedEventArgs(exception));
-	}
-	public virtual IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
-	{
-		return new List<string>();
-	}
-	#endregion
-	#region Event
-	void OnPersistenceProviderChanged(EventArgs e)
-	{
-		if (PersistenceProviderChanged != null) 
-		{
-			PersistenceProviderChanged(this, e);
-		}
-	}
-	void OnFinished(ServiceFinishedEventArgs e)
-	{
-		if (Finished != null) 
-		{
-			Finished(this, e);
-		}
-	}
-	#endregion
+    public Origam.DA.ObjectPersistence.IPersistenceProvider PersistenceProvider
+    {
+        get => _persistence;
+        set
+        {
+            _persistence = value;
+            OnPersistenceProviderChanged(EventArgs.Empty);
+        }
+    }
+    RuleEngine _ruleEngine;
+    public object RuleEngine
+    {
+        get { return _ruleEngine; }
+        set { _ruleEngine = value as RuleEngine; }
+    }
+    WorkflowEngine _workflowEngine;
+    public object WorkflowEngine
+    {
+        get { return _workflowEngine; }
+        set { _workflowEngine = value as WorkflowEngine; }
+    }
+    public virtual Hashtable Parameters { get; } = new Hashtable();
+    public virtual string MethodName { get; set; }
+    public virtual string TransactionId { get; set; } = null;
+    private AbstractDataStructure _outputStructure;
+    public ISchemaItem OutputStructure
+    {
+        get { return _outputStructure; }
+        set { _outputStructure = value as AbstractDataStructure; }
+    }
+    public bool DisableOutputStructureConstraints { get; set; }
+    public ServiceOutputMethod OutputMethod { get; set; }
+    public string TraceStepName { get; set; }
+    public Guid TraceStepId { get; set; }
+    public Guid TraceWorkflowId { get; set; }
+    public bool Trace { get; set; }
+
+    public virtual string ExecuteUpdate(string command, string transactionId)
+    {
+        throw new Exception("ExecuteUpdate not implemented by the service.");
+    }
+
+    public abstract object Result { get; }
+    public abstract void Run();
+
+    public void RunAsync()
+    {
+        Exception exception = null;
+        try
+        {
+            this.Run();
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+        OnFinished(new ServiceFinishedEventArgs(exception));
+    }
+
+    public virtual IList<string> ExpectedParameterNames(
+        ISchemaItem item,
+        string method,
+        string parameter
+    )
+    {
+        return new List<string>();
+    }
+    #endregion
+    #region Event
+    void OnPersistenceProviderChanged(EventArgs e)
+    {
+        if (PersistenceProviderChanged != null)
+        {
+            PersistenceProviderChanged(this, e);
+        }
+    }
+
+    void OnFinished(ServiceFinishedEventArgs e)
+    {
+        if (Finished != null)
+        {
+            Finished(this, e);
+        }
+    }
+    #endregion
 }

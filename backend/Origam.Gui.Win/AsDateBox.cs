@@ -74,11 +74,9 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			{
 				return false;
 			}
-			else
-			{
-				return _enabled;
-			}
-		}
+
+            return _enabled;
+        }
 		set
 		{
 			_enabled = value;
@@ -108,11 +106,9 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			{
 				return DBNull.Value;
 			}
-			else
-			{
-				return _selectedValue;
-			}
-		}
+
+            return _selectedValue;
+        }
 		set
 		{
 			if(value == null)
@@ -143,8 +139,12 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 		get => this.SelectedValue;
 		set 
 		{
-			if(_settingValue) return;
-			if(_selectedValue != value)
+			if(_settingValue)
+            {
+                return;
+            }
+
+            if (_selectedValue != value)
 			{
 				string converted = null;
 				if(value is DateTime)
@@ -189,8 +189,12 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 		get => format;
 		set
 		{
-			if(value == 0) value = DateTimePickerFormat.Long;
-			format = value;
+			if(value == 0)
+            {
+                value = DateTimePickerFormat.Long;
+            }
+
+            format = value;
 			SetFormat();
 		}
 	}
@@ -221,19 +225,30 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 		DateTimeFormatInfo dtf = ci.DateTimeFormat;
 		switch (format)
 		{
-			case DateTimePickerFormat.Long:
-				this.EditControl.CustomFormat = dtf.LongDatePattern;
-				break;  
-			case DateTimePickerFormat.Short:
-				this.EditControl.CustomFormat = dtf.ShortDatePattern;
-				break;
-			case DateTimePickerFormat.Time:
-				this.EditControl.CustomFormat = dtf.ShortTimePattern;
-				break;
-			case DateTimePickerFormat.Custom:
-				this.EditControl.CustomFormat = this.CustomFormat;
-				break;
-		}
+            case DateTimePickerFormat.Long:
+                {
+                    this.EditControl.CustomFormat = dtf.LongDatePattern;
+                    break;
+                }
+
+            case DateTimePickerFormat.Short:
+                {
+                    this.EditControl.CustomFormat = dtf.ShortDatePattern;
+                    break;
+                }
+
+            case DateTimePickerFormat.Time:
+                {
+                    this.EditControl.CustomFormat = dtf.ShortTimePattern;
+                    break;
+                }
+
+            case DateTimePickerFormat.Custom:
+                {
+                    this.EditControl.CustomFormat = this.CustomFormat;
+                    break;
+                }
+        }
 	}
 	protected override void Dispose(bool disposing)
 	{
@@ -281,13 +296,15 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 		}
 		switch (e.KeyCode)
 		{
-			case Keys.Return:
-				if(this.DroppedDown)
-				{
-					Popup.SelectItem();
-				}
-				return;
-		}
+            case Keys.Return:
+                {
+                    if (this.DroppedDown)
+                    {
+                        Popup.SelectItem();
+                    }
+                    return;
+                }
+        }
 		if(DroppedDown)
 		{
 			this.Popup.Canceled = true;
@@ -297,8 +314,12 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 	bool valueChangedByUser = false;
 	private void EditControl_ValueChanged(object sender, EventArgs e)
 	{
-        if (!this.Enabled) return;
-		if (! this.DateValue.Equals(this.EditControl.Value))
+        if (!this.Enabled)
+        {
+            return;
+        }
+
+        if (! this.DateValue.Equals(this.EditControl.Value))
 	    {
 	        valueChangedByUser = true;
 	        if (EditControl.Value != null && EditControl.Value != DBNull.Value)

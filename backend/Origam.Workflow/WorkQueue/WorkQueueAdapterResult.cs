@@ -19,43 +19,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Xml;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;
+
 /// <summary>
 /// Summary description for WorkQueueAdapterResult.
 /// </summary>
 public class WorkQueueAdapterResult
 {
     public WorkQueueAdapterResult(IXmlContainer document)
-	{
-		this.Document = document;
-	}
-	public IXmlContainer Document { get; set; }
+    {
+        this.Document = document;
+    }
+
+    public IXmlContainer Document { get; set; }
     private WorkQueueAttachment[] _attachments;
-	public WorkQueueAttachment[] Attachments
-	{
-		get
-		{
-			return _attachments;
-		}
-		set
-		{
-			_attachments = value;
-		}
-	}
-	private string _state;
-	public string State
-	{
-		get
-		{
-			return _state;
-		}
-		set
-		{
-			_state = value;
-		}
-	}
+    public WorkQueueAttachment[] Attachments
+    {
+        get { return _attachments; }
+        set { _attachments = value; }
+    }
+    private string _state;
+    public string State
+    {
+        get { return _state; }
+        set { _state = value; }
+    }
 }

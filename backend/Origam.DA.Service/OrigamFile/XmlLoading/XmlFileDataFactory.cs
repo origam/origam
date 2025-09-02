@@ -20,13 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
 
 namespace Origam.DA.Service;
+
 public class XmlFileDataFactory
 {
     public Result<XmlFileData, XmlLoadError> Create(FileInfo fileInfo)
@@ -35,20 +34,26 @@ public class XmlFileDataFactory
         if (documentResult.IsFailure)
         {
             return Result.Failure<XmlFileData, XmlLoadError>(
-                new XmlLoadError(documentResult.Error));
+                new XmlLoadError(documentResult.Error)
+            );
         }
-        return Result.Success<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
+        return Result.Success<XmlFileData, XmlLoadError>(
+            new XmlFileData(documentResult.Value, fileInfo)
+        );
     }
+
     private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
     {
         OrigamXmlDocument xmlDocument = new OrigamXmlDocument();
         try
         {
             xmlDocument.Load(fileInfo.FullName);
-        } catch (XmlException ex)
+        }
+        catch (XmlException ex)
         {
             return Result.Failure<OrigamXmlDocument>(
-                $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}");
+                $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}"
+            );
         }
         return Result.Success(xmlDocument);
     }

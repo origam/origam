@@ -20,44 +20,63 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Xml;
-
-using Origam.Schema.EntityModel;
-using Origam.Workbench.Services;
-using Origam.Schema.MenuModel;
 using Origam.DA;
 using Origam.DA.Service;
-using CoreServices = Origam.Workbench.Services.CoreServices;
-using Origam.Schema;
-using System.Collections.Generic;
 using Origam.Gui;
+using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
+using Origam.Workbench.Services;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public class FormSessionStore : SaveableSessionStore
 {
     private string _delayedLoadingParameterName;
     private FormReferenceMenuItem _menuItem;
     private object _getRowDataLock = new object();
-    private XmlDocument _preparedFormXml = null;
+    private XmlDocument _preparedFormXml;
     public FormReferenceMenuItem MenuItem => _menuItem;
-    public FormSessionStore(IBasicUIService service, UIRequest request, string name, 
-        FormReferenceMenuItem menuItem, Analytics analytics)
+
+    public FormSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        string name,
+        FormReferenceMenuItem menuItem,
+        Analytics analytics
+    )
         : base(service, request, name, analytics)
     {
         _menuItem = menuItem;
         SetMenuProperties();
     }
-    public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+
+    public FormSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        string name,
+        Analytics analytics
+    )
         : base(service, request, name, analytics)
     {
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        FormReferenceMenuItem fr = (FormReferenceMenuItem)ps.SchemaProvider.RetrieveInstance(typeof(FormReferenceMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)));
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        FormReferenceMenuItem fr = (FormReferenceMenuItem)
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(FormReferenceMenuItem),
+                new ModelElementKey(new Guid(Request.ObjectId))
+            );
         _menuItem = fr;
         FormId = _menuItem.ScreenId;
         DataStructureId = _menuItem.Screen.DataSourceId;
         SetMenuProperties();
     }
+
     private void SetMenuProperties()
     {
         RuleSet = _menuItem.RuleSet;
@@ -67,15 +86,18 @@ public class FormSessionStore : SaveableSessionStore
         ConfirmationRule = _menuItem.ConfirmationRule;
         RefreshPortalAfterSave = _menuItem.RefreshPortalAfterSave;
     }
+
     #region Overriden SessionStore Methods
     public override bool SupportsFormXmlAsync => true;
+
     public override void Init()
     {
         LoadData();
     }
+
     private void LoadData()
     {
-        if(dataRequested)
+        if (dataRequested)
         {
             LoadDataFxServer();
         }
@@ -84,24 +106,30 @@ public class FormSessionStore : SaveableSessionStore
             PrepareDataCore();
         }
     }
+
     private void PrepareDataCore()
     {
         var data = InitializeFullStructure(_menuItem.DefaultSet);
         SetDataSource(data);
         SetDelayedLoadingParameter(_menuItem.Method);
-        this.IsDelayedLoading = true;
-        this.DataListEntity = _menuItem.ListEntity.Name;
+        IsDelayedLoading = true;
+        DataListEntity = _menuItem.ListEntity.Name;
     }
+
     private void LoadDataFxServer()
     {
         DataSet data = null;
-        if (this.Request.IsSingleRecordEdit && _menuItem.RecordEditMethod != null)
+        if (Request.IsSingleRecordEdit && _menuItem.RecordEditMethod != null)
         {
             data = LoadSingleRecord();
             if (_menuItem.ListEntity != null)
             {
-                SetDataList(null, _menuItem.ListEntity.Name, 
-                    _menuItem.ListDataStructure, _menuItem.ListMethod);
+                SetDataList(
+                    null,
+                    _menuItem.ListEntity.Name,
+                    _menuItem.ListDataStructure,
+                    _menuItem.ListMethod
+                );
             }
             SetDelayedLoadingParameter(_menuItem.RecordEditMethod);
         }
@@ -112,26 +140,30 @@ public class FormSessionStore : SaveableSessionStore
         }
         else
         {
-            throw new Exception("A screen is lazy loaded but the client requested session data on InitUI " +
-                "call by setting DataRequested=true. Instead the client should set DataRequested=false " +
-                "and call GetRows in order to get the list data and then MasterRecord to load " +
-                "one of the records and GetData to request entity data.");
+            throw new Exception(
+                "A screen is lazy loaded but the client requested session data on InitUI "
+                    + "call by setting DataRequested=true. Instead the client should set DataRequested=false "
+                    + "and call GetRows in order to get the list data and then MasterRecord to load "
+                    + "one of the records and GetData to request entity data."
+            );
         }
         if (data != null)
         {
             SetDataSource(data);
         }
     }
+
     private void SetDelayedLoadingParameter(DataStructureMethod method)
     {
         // set the parameter for delayed data loading - there should be just 1
         DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
     }
-   
+
     private string ListPrimaryKeyColumns(DataSet data, string listEntity)
     {
         return GetDataSetBuilder().ListPrimaryKeyColumns(data, listEntity);
     }
+
     private DataSet LoadCompleteData()
     {
         if (_menuItem.Method != null)
@@ -140,10 +172,17 @@ public class FormSessionStore : SaveableSessionStore
         }
         DataSet data;
         QueryParameterCollection qparams = Request.QueryParameters;
-        data = CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
-            _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
+        data = CoreServices.DataService.Instance.LoadData(
+            DataStructureId,
+            _menuItem.MethodId,
+            _menuItem.DefaultSetId,
+            _menuItem.SortSetId,
+            null,
+            qparams
+        );
         return data;
     }
+
     public override void LoadColumns(IList<string> columns)
     {
         QueryParameterCollection qparams = Request.QueryParameters;
@@ -164,10 +203,15 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
         LoadStandardColumns(qparams, finalColumns);
-        LoadArrayColumns(this.DataList, this.DataListEntity, qparams, arrayColumns);
+        LoadArrayColumns(DataList, DataListEntity, qparams, arrayColumns);
     }
-    private void LoadArrayColumns(DataSet dataset, string entity,
-        QueryParameterCollection qparams, List<string> arrayColumns)
+
+    private void LoadArrayColumns(
+        DataSet dataset,
+        string entity,
+        QueryParameterCollection qparams,
+        List<string> arrayColumns
+    )
     {
         lock (_lock)
         {
@@ -177,14 +221,23 @@ public class FormSessionStore : SaveableSessionStore
                 {
                     DataColumn col = dataset.Tables[entity].Columns[column];
                     string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                    CoreServices.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                        Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
-                        null);
+                    CoreServices.DataService.Instance.LoadData(
+                        _menuItem.ListDataStructureId,
+                        _menuItem.ListMethodId,
+                        Guid.Empty,
+                        _menuItem.ListSortSetId,
+                        null,
+                        qparams,
+                        dataset,
+                        relationName,
+                        null
+                    );
                     DataListLoadedColumns.Add(column);
                 }
             }
         }
     }
+
     private void LoadStandardColumns(QueryParameterCollection qparams, List<string> finalColumns)
     {
         lock (_lock)
@@ -193,13 +246,20 @@ public class FormSessionStore : SaveableSessionStore
             {
                 return;
             }
-            finalColumns.Add(ListPrimaryKeyColumns(this.DataList, this.DataListEntity));
+            finalColumns.Add(ListPrimaryKeyColumns(DataList, DataListEntity));
             DataSet columnData = DatasetTools.CloneDataSet(DataList);
             DataTable listTable = DataList.Tables[DataListEntity];
-            CoreServices.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
-                this.DataListEntity,
-                string.Join(";", finalColumns));
+            CoreServices.DataService.Instance.LoadData(
+                _menuItem.ListDataStructureId,
+                _menuItem.ListMethodId,
+                Guid.Empty,
+                _menuItem.ListSortSetId,
+                null,
+                qparams,
+                columnData,
+                DataListEntity,
+                string.Join(";", finalColumns)
+            );
             listTable.BeginLoadData();
             try
             {
@@ -225,35 +285,43 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
     }
-    
+
     private DataSet LoadSingleRecord()
     {
         DataSet data;
         // We use the RecordEdit filter set for single record editing.
         ResolveFormMethodParameters(_menuItem.RecordEditMethod);
         QueryParameterCollection qparams = Request.QueryParameters;
-        data = CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
-            _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
+        data = CoreServices.DataService.Instance.LoadData(
+            DataStructureId,
+            _menuItem.RecordEditMethodId,
+            _menuItem.DefaultSetId,
+            _menuItem.SortSetId,
+            null,
+            qparams
+        );
         return data;
     }
+
     private void ResolveFormMethodParameters(DataStructureMethod method)
     {
         // And we have to get the real parameter names from the filters/defaults instead of the "id"
         // set by the client.
-        if (this.Request.Parameters.Contains("id"))
+        if (Request.Parameters.Contains("id"))
         {
-            object value = this.Request.Parameters["id"];
-            this.Request.Parameters.Clear();
+            object value = Request.Parameters["id"];
+            Request.Parameters.Clear();
             foreach (var entry in method.ParameterReferences)
             {
-                this.Request.Parameters[entry.Key] = value;
+                Request.Parameters[entry.Key] = value;
             }
             foreach (var entry in DataStructure().ParameterReferences)
             {
-                this.Request.Parameters[entry.Key] = value;
+                Request.Parameters[entry.Key] = value;
             }
         }
     }
+
     internal override List<ChangeInfo> Save()
     {
         if (MenuItem.ReadOnlyAccess)
@@ -262,23 +330,32 @@ public class FormSessionStore : SaveableSessionStore
         }
         return base.Save();
     }
+
     public override object ExecuteActionInternal(string actionId)
     {
         switch (actionId)
         {
             case ACTION_SAVE:
+            {
                 object result = Save();
                 //if (this.IsDelayedLoading)
                 //{
                 //    this.CurrentRecordId = null;
                 //}
                 return result;
+            }
+
             case ACTION_REFRESH:
                 return Refresh();
             default:
-                throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                throw new ArgumentOutOfRangeException(
+                    "actionId",
+                    actionId,
+                    Resources.ErrorContextUnknownAction
+                );
         }
     }
+
     /// <summary>
     /// Called when moving to a new row to load the actual data from the data source
     /// (delayed loading).
@@ -301,14 +378,14 @@ public class FormSessionStore : SaveableSessionStore
             // for new rows we don't even try to load the data from the database
             if (row == null || row.RowState != DataRowState.Added)
             {
-                if (!ignoreDirtyState && this.Data.HasChanges())
+                if (!ignoreDirtyState && Data.HasChanges())
                 {
                     throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
                 }
-                this.CurrentRecordId = null;
+                CurrentRecordId = null;
                 SetDataSource(LoadDataPiece(id));
             }
-            this.CurrentRecordId = id;
+            CurrentRecordId = id;
             DataRow actualDataRow = GetSessionRow(entity, id);
             UpdateListRow(actualDataRow);
             ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
@@ -319,8 +396,8 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
         return result;
-    } 
-    
+    }
+
     public override ChangeInfo GetRow(string entity, object id)
     {
         lock (_getRowDataLock)
@@ -334,7 +411,7 @@ public class FormSessionStore : SaveableSessionStore
             return GetChangeInfo(null, row, Operation.Update);
         }
     }
-    
+
     public override void RevertChanges()
     {
         lock (_getRowDataLock)
@@ -342,10 +419,15 @@ public class FormSessionStore : SaveableSessionStore
             Data.RejectChanges();
         }
     }
-    public override List<List<object>> GetData(string childEntity, object parentRecordId, object rootRecordId)
+
+    public override List<List<object>> GetData(
+        string childEntity,
+        object parentRecordId,
+        object rootRecordId
+    )
     {
         // check validity of the request
-        if (!rootRecordId.Equals(this.CurrentRecordId))
+        if (!rootRecordId.Equals(CurrentRecordId))
         {
             // we do not hold the data anymore, we throw-out the request
             return new List<List<object>>();
@@ -354,7 +436,11 @@ public class FormSessionStore : SaveableSessionStore
         var result = new List<List<object>>();
         if (childTable.ParentRelations.Count == 0)
         {
-            throw new Exception("Requested entity " + childEntity + " has no parent relations. Cannot load child records.");
+            throw new Exception(
+                "Requested entity "
+                    + childEntity
+                    + " has no parent relations. Cannot load child records."
+            );
         }
         DataRelation parentRelation = childTable.ParentRelations[0];
         // get parent row again (the one before was most probably loaded from the list
@@ -362,10 +448,12 @@ public class FormSessionStore : SaveableSessionStore
         DataRow parentRow = GetSessionRow(parentRelation.ParentTable.TableName, parentRecordId);
         if (parentRow == null)
         {
-            throw new ArgumentOutOfRangeException($"Parent record id " +
-                $"{parentRecordId} not found in " +
-                $"{parentRelation.ParentTable.TableName} - " +
-                $"parent of {childEntity}.");
+            throw new ArgumentOutOfRangeException(
+                $"Parent record id "
+                    + $"{parentRecordId} not found in "
+                    + $"{parentRelation.ParentTable.TableName} - "
+                    + $"parent of {childEntity}."
+            );
         }
         // get the requested entity data
         string[] columns = GetColumnNames(childTable);
@@ -375,61 +463,72 @@ public class FormSessionStore : SaveableSessionStore
         }
         return result;
     }
+
     internal override void OnNewRecord(string entity, object id)
     {
         if (IsLazyLoadedEntity(entity))
         {
-            this.CurrentRecordId = null;
-            
+            CurrentRecordId = null;
+
             // convert guid to string, because if we get data from Fluorine,
             // it would come as a string, so we would not be able to compare later
             if (id is Guid)
             {
                 id = id.ToString();
             }
-            this.CurrentRecordId = id;
+            CurrentRecordId = id;
         }
     }
+
     public override bool HasChanges()
     {
         return !MenuItem.ReadOnlyAccess && Data != null && Data.HasChanges();
     }
+
     public override List<ChangeInfo> RestoreData(object recordId)
     {
         var result = new List<ChangeInfo>();
-        // get the original row and return it to the client, so it updates to 
+        // get the original row and return it to the client, so it updates to
         // the original state
-        DataRow originalRow = this.GetSessionRow(this.DataListEntity, recordId);
+        DataRow originalRow = GetSessionRow(DataListEntity, recordId);
         if (originalRow.RowState == DataRowState.Added)
         {
-            result.AddRange(this.DeleteObject(originalRow.Table.TableName, recordId));
+            result.AddRange(DeleteObject(originalRow.Table.TableName, recordId));
         }
         else
         {
-            this.CurrentRecordId = null;
-            
+            CurrentRecordId = null;
+
             // update the values from database
-            this.GetRowData(this.DataListEntity, recordId, true);
-            
+            GetRowData(DataListEntity, recordId, true);
+
             // get the loaded data
-            originalRow = this.GetSessionRow(this.DataListEntity, recordId);
+            originalRow = GetSessionRow(DataListEntity, recordId);
             // return the loaded data
             result.Add(GetChangeInfo(null, originalRow, 0));
         }
-        if(recordId.Equals(this.CurrentRecordId))
+        if (recordId.Equals(CurrentRecordId))
         {
-            this.CurrentRecordId = null;
+            CurrentRecordId = null;
         }
         // add SAVED operation in the end, since we ignored the data and start with a fresh copy
         result.Add(ChangeInfo.SavedChangeInfo());
         return result;
     }
+
     private DataSet LoadDataPiece(object parentId)
     {
-        return CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
-            _menuItem.DefaultSetId, Guid.Empty, null, 
-            DelayedLoadingParameterName, parentId);
+        return CoreServices.DataService.Instance.LoadData(
+            DataStructureId,
+            _menuItem.MethodId,
+            _menuItem.DefaultSetId,
+            Guid.Empty,
+            null,
+            DelayedLoadingParameterName,
+            parentId
+        );
     }
+
     public override XmlDocument GetFormXml()
     {
         // asynchronously prepared xml
@@ -439,23 +538,26 @@ public class FormSessionStore : SaveableSessionStore
             _preparedFormXml = null;
             return result;
         }
-        XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(new Guid(this.Request.ObjectId)).Document;
+        XmlDocument formXml = FormXmlBuilder.GetXml(new Guid(Request.ObjectId)).Document;
         XmlNodeList list = formXml.SelectNodes("/Window");
         XmlElement windowElement = list[0] as XmlElement;
         // The SuppressSave attribute causes the Save button to disappear.
         // It should not be set to true if there is at least one editable field on the screen. The final result can be
         // determined only after the whole screen xml has been created.
-        if (windowElement.GetAttribute("SuppressSave") == "true" && 
-            formXml.SelectNodes("//Property[@ReadOnly='false']")?.Count > 0)
+        if (
+            windowElement.GetAttribute("SuppressSave") == "true"
+            && formXml.SelectNodes("//Property[@ReadOnly='false']")?.Count > 0
+        )
         {
             windowElement.SetAttribute("SuppressSave", "false");
         }
         if (windowElement.GetAttribute("SuppressSave") == "true")
         {
-            this.SuppressSave = true;
+            SuppressSave = true;
         }
         return formXml;
     }
+
     public override void PrepareFormXml()
     {
         if (log.IsDebugEnabled)
@@ -468,20 +570,21 @@ public class FormSessionStore : SaveableSessionStore
             log.Debug("XML prepared...");
         }
     }
+
     private object Refresh()
     {
-        object currentRecordId = this.CurrentRecordId;
-        this.CurrentRecordId = null;
-        this.Clear();
+        object currentRecordId = CurrentRecordId;
+        CurrentRecordId = null;
+        Clear();
         LoadData();
         // load current record again so CurrentRecordId remains set
         // this is important e.g. for paged data loading so we know
         // for which record initialPage should be returned
-        if (currentRecordId != null && this.DataListEntity != null)
+        if (currentRecordId != null && DataListEntity != null)
         {
             try
             {
-                GetRowData(this.DataListEntity, currentRecordId, false);
+                GetRowData(DataListEntity, currentRecordId, false);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -490,14 +593,12 @@ public class FormSessionStore : SaveableSessionStore
                 // record id
             }
         }
-        if (this.DataList != null)
+        if (DataList != null)
         {
-            return this.DataList;
+            return DataList;
         }
-        else
-        {
-            return this.Data;
-        }
+
+        return Data;
     }
     #endregion
     #region Properties
@@ -510,6 +611,6 @@ public class FormSessionStore : SaveableSessionStore
     public override void OnDispose()
     {
         base.OnDispose();
-        this.CurrentRecordId = null;
+        CurrentRecordId = null;
     }
 }

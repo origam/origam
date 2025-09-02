@@ -20,30 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Workbench.Services;
+
 public class WorkQueueAttachment
 {
-	private string _name;
-	public string Name
-	{
-		get
-		{
-			return _name;
-		}
-		set
-		{
-			_name = value;
-		}
-	}
-	private byte[] _data;
-	public byte[] Data
-	{
-		get
-		{
-			return _data;
-		}
-		set
-		{
-			_data = value;
-		}
-	}
+    private string _name;
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    private byte[] _data;
+    public byte[] Data
+    {
+        get { return _data; }
+        set { _data = value; }
+    }
 }

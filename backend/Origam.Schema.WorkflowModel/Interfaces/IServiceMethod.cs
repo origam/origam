@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for IServiceMethod.
 /// </summary>
 public interface IServiceMethod : ISchemaItem
 {
-	OrigamDataType ReturnValueDataType{get; set;}
+    OrigamDataType ReturnValueDataType { get; set; }
 }

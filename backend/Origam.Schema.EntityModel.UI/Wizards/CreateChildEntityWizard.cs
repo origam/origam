@@ -249,8 +249,12 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 		this.txtName.Text = "";
 		cboEntity1.Items.Clear();
 		cboEntity2.Items.Clear();
-		if(this.Entity1 == null) return;
-		object selectedItem = null;
+		if(this.Entity1 == null)
+        {
+            return;
+        }
+
+        object selectedItem = null;
 		foreach(IDataEntity entity in this.Entity1.RootProvider.ChildItems)
 		{
 			cboEntity1.Items.Add(entity);

@@ -23,6 +23,6 @@ namespace Origam;
 
 public interface ITraceable
 {
-    Trace TraceLevel{get; set;}
-    Trace Trace { get;}
+    Trace TraceLevel { get; set; }
+    Trace Trace { get; }
 }

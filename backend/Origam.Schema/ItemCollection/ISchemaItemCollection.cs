@@ -31,7 +31,7 @@ public interface ISchemaItemCollection : IList<ISchemaItem>, IDisposable
     public bool DeleteItemsOnClear { get; set; }
     public bool RemoveDeletedItems { get; set; }
     public bool UpdateParentItem { get; set; }
-    public ISchemaItem ParentSchemaItem { get; set;}
+    public ISchemaItem ParentSchemaItem { get; set; }
 
     public void AddRange(IEnumerable<ISchemaItem> value);
 }

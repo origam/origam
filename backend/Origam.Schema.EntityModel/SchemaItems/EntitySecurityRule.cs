@@ -19,124 +19,134 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Text;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
 
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
-[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 
-	"icon_row-level-security-rule.png")]
+[SchemaItemDescription(
+    "Row Level Security Rule",
+    "Row Level Security",
+    "icon_row-level-security-rule.png"
+)]
 [HelpTopic("Row+Level+Security+Rules")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.1.0")]
 public class EntitySecurityRule : AbstractEntitySecurityRule
 {
-	public EntitySecurityRule() : base() {}
+    public EntitySecurityRule()
+        : base() { }
 
-	public EntitySecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+    public EntitySecurityRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
 
-	public EntitySecurityRule(Key primaryKey) : base(primaryKey) {}
-	
-	#region Properties
+    public EntitySecurityRule(Key primaryKey)
+        : base(primaryKey) { }
 
-	[TypeConverter(typeof(EntityRuleConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NoRuleForExportRowLevelSecurityRule]
-	[Category("Security")]
-	[XmlReference("rule", "RuleId")]
-	public override IEntityRule Rule
-	{
-		get => base.Rule;
-		set => base.Rule = value;
-	}
-	
-	private bool create = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to create operation.")]
-	[XmlAttribute("createCredential")]
-	public bool CreateCredential
-	{
-		get => create;
-		set
-		{
-			create = value;
-			CredentialsChanged();
-		}
-	}
+    #region Properties
 
-	private bool update = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to update operation.")]
-	[XmlAttribute("updateCredential")]
-	public bool UpdateCredential
-	{
-		get => update;
-		set
-		{
-			update = value;
-			CredentialsChanged();
-		}
-	}
+    [TypeConverter(typeof(EntityRuleConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NoRuleForExportRowLevelSecurityRule]
+    [Category("Security")]
+    [XmlReference("rule", "RuleId")]
+    public override IEntityRule Rule
+    {
+        get => base.Rule;
+        set => base.Rule = value;
+    }
 
-	private bool delete = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to delete operation.")]
-	[XmlAttribute("deleteCredential")]
-	public bool DeleteCredential
-	{
-		get => delete;
-		set
-		{
-			delete = value;
-			CredentialsChanged();
-		}
-	}
-	
-	private bool export = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to export operation.")]
-	[XmlAttribute("exportCredential")]
-	public bool ExportCredential
-	{
-		get => export;
-		set
-		{
-			export = value;
-			CredentialsChanged();
-		}
-	}
+    private bool create = true;
 
-	internal override string CredentialsShortcut
-	{
-		get
-		{
-			var stringBuilder = new StringBuilder();
-			if (CreateCredential)
-			{
-				stringBuilder.Append("Create");
-			}
-			if (UpdateCredential)
-			{
-				stringBuilder.Append("Update");
-			}
-			if (DeleteCredential)
-			{
-				stringBuilder.Append("Delete");
-			}
-			if (ExportCredential)
-			{
-				stringBuilder.Append("Export");
-			}
-			return stringBuilder.ToString();
-		}
-	}
+    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+    [Description("If set to true, the rule is applied to create operation.")]
+    [XmlAttribute("createCredential")]
+    public bool CreateCredential
+    {
+        get => create;
+        set
+        {
+            create = value;
+            CredentialsChanged();
+        }
+    }
 
-	#endregion
+    private bool update = true;
+
+    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+    [Description("If set to true, the rule is applied to update operation.")]
+    [XmlAttribute("updateCredential")]
+    public bool UpdateCredential
+    {
+        get => update;
+        set
+        {
+            update = value;
+            CredentialsChanged();
+        }
+    }
+
+    private bool delete = true;
+
+    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+    [Description("If set to true, the rule is applied to delete operation.")]
+    [XmlAttribute("deleteCredential")]
+    public bool DeleteCredential
+    {
+        get => delete;
+        set
+        {
+            delete = value;
+            CredentialsChanged();
+        }
+    }
+
+    private bool export = true;
+
+    [Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+    [Description("If set to true, the rule is applied to export operation.")]
+    [XmlAttribute("exportCredential")]
+    public bool ExportCredential
+    {
+        get => export;
+        set
+        {
+            export = value;
+            CredentialsChanged();
+        }
+    }
+
+    internal override string CredentialsShortcut
+    {
+        get
+        {
+            var stringBuilder = new StringBuilder();
+            if (CreateCredential)
+            {
+                stringBuilder.Append("Create");
+            }
+            if (UpdateCredential)
+            {
+                stringBuilder.Append("Update");
+            }
+            if (DeleteCredential)
+            {
+                stringBuilder.Append("Delete");
+            }
+            if (ExportCredential)
+            {
+                stringBuilder.Append("Export");
+            }
+            return stringBuilder.ToString();
+        }
+    }
+
+    #endregion
 }

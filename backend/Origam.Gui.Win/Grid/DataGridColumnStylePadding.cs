@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 namespace Origam.Gui.Win;
 public class DataGridColumnStylePadding 
 {
-	
 	int m_left;
 	int m_right;
 	int m_top;
@@ -49,7 +48,6 @@ public class DataGridColumnStylePadding
 	}
 	public void SetPadding( int padValue ) 
 	{
-		
 		m_left = padValue;
 		m_right = padValue;
 		m_top = padValue;
@@ -73,6 +71,5 @@ public class DataGridColumnStylePadding
 		m_right = right;
 		m_bottom = bottom;
 		m_left = left;
-	
 	}
 }

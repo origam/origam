@@ -24,7 +24,6 @@ using System.Collections;
 
 namespace Origam.Gui.Win;
 
-
 /// <summary>
 ///     <para>
 ///       A collection that stores <see cref='Origam.Gui.Win.ComponentBinding'/> objects.
@@ -34,7 +33,6 @@ namespace Origam.Gui.Win;
 [Serializable()]
 public class ComponentBindingCollection : CollectionBase 
 {
-    
 	/// <summary>
 	///     <para>
 	///       Initializes a new instance of <see cref='Origam.Gui.Win.ComponentBindingCollection'/>.
@@ -227,7 +225,6 @@ public class ComponentBindingCollection : CollectionBase
     
 	public class ComponentBindingEnumerator : object, IEnumerator 
 	{
-        
 		private IEnumerator baseEnumerator;
         
 		private IEnumerable temp;

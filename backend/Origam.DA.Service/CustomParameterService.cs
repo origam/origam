@@ -24,57 +24,60 @@ using System.Linq;
 using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service;
+
 /// <summary>
 /// Summary description for CustomParameterService.
 /// </summary>
 public static class CustomParameterService
 {
-	private static ArrayList _customParameters = new ();
-	private static bool _isInitialized = false;
-	private static ArrayList CustomParameters
-	{
-		get
-		{
-			if(! _isInitialized)
-			{
-				Initialize();
-			}
-			return _customParameters;
-		}
-	}
-	public static ICustomParameter MatchParameter(string parameterName)
-	{
-		foreach(ICustomParameter customParameter in CustomParameterService.CustomParameters)
-		{
-			if(parameterName.EndsWith(customParameter.Name))
-			{
-				return customParameter;
-			}
-		}
-		return null;
-	}
+    private static ArrayList _customParameters = new();
+    private static bool _isInitialized = false;
+    private static ArrayList CustomParameters
+    {
+        get
+        {
+            if (!_isInitialized)
+            {
+                Initialize();
+            }
+            return _customParameters;
+        }
+    }
+
+    public static ICustomParameter MatchParameter(string parameterName)
+    {
+        foreach (ICustomParameter customParameter in CustomParameterService.CustomParameters)
+        {
+            if (parameterName.EndsWith(customParameter.Name))
+            {
+                return customParameter;
+            }
+        }
+        return null;
+    }
+
     public static string GetFirstNonCustomParameter(DataStructureMethod method)
     {
         if (method == null)
         {
             return null;
         }
-        else
-        {
-            return method.ParameterReferences.Keys
-                .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
-        }
+
+        return method.ParameterReferences.Keys.FirstOrDefault(parameterName =>
+            MatchParameter(parameterName) == null
+        );
     }
+
     private static void Initialize()
-	{
-		_customParameters.Add(new CustomParameters.CurrentDateCustomParameter());
-		_customParameters.Add(new CustomParameters.CurrentDateLastMinuteCustomParameter());
-		_customParameters.Add(new CustomParameters.CurrentDateTimeCustomParameter());
-		_customParameters.Add(new CustomParameters.CurrentUserBusinessUnitIdParameter());
-		_customParameters.Add(new CustomParameters.CurrentUserIdParameter());
-		_customParameters.Add(new CustomParameters.CurrentUserOrganizationIdParameter());
-		_customParameters.Add(new CustomParameters.CurrentUILanguageCustomParameter());
-		_customParameters.Add(new CustomParameters.CurrentUserResourceIdCustomParameter());
-		_isInitialized = true;
-	}
+    {
+        _customParameters.Add(new CustomParameters.CurrentDateCustomParameter());
+        _customParameters.Add(new CustomParameters.CurrentDateLastMinuteCustomParameter());
+        _customParameters.Add(new CustomParameters.CurrentDateTimeCustomParameter());
+        _customParameters.Add(new CustomParameters.CurrentUserBusinessUnitIdParameter());
+        _customParameters.Add(new CustomParameters.CurrentUserIdParameter());
+        _customParameters.Add(new CustomParameters.CurrentUserOrganizationIdParameter());
+        _customParameters.Add(new CustomParameters.CurrentUILanguageCustomParameter());
+        _customParameters.Add(new CustomParameters.CurrentUserResourceIdCustomParameter());
+        _isInitialized = true;
+    }
 }

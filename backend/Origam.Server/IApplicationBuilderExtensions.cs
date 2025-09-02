@@ -33,59 +33,68 @@ using Origam.Service.Core;
 using SoapCore;
 
 namespace Origam.Server;
+
 public static class IApplicationBuilderExtensions
 {
     public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
     {
-        app.Use((context, next) =>
-        {
-            if (context.GetEndpoint() != null)
+        app.Use(
+            (context, next) =>
             {
+                if (context.GetEndpoint() != null)
+                {
+                    return next();
+                }
+                if (context.Request.Path == "/")
+                {
+                    context.Request.Path = "/index.html";
+                }
                 return next();
             }
-            if (context.Request.Path == "/")
-            {
-                context.Request.Path = "/index.html";
-            }
-            return next();
-        });
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(pathToClientApp)
-        });
-    }  
-    
-    public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
-         IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        );
+        app.UseStaticFiles(
+            new StaticFileOptions { FileProvider = new PhysicalFileProvider(pathToClientApp) }
+        );
+    }
+
+    public static void UseCustomWebAppExtenders(
+        this IApplicationBuilder app,
+        IConfiguration configuration,
+        StartUpConfiguration startUpConfiguration
+    )
     {
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
-            var customControllerAssembly = Assembly.LoadFrom(
-                controllerDllName);
+            var customControllerAssembly = Assembly.LoadFrom(controllerDllName);
             customControllerAssembly
                 .GetTypes()
                 .Where(type => typeof(IWebApplicationExtender).IsAssignableFrom(type))
                 .Select(type => (IWebApplicationExtender)Activator.CreateInstance(type))
                 .ForEach(extender => extender.Extend(app, configuration));
         }
-    }  
-    
-    public static void UseUserApi(this IApplicationBuilder app,
+    }
+
+    public static void UseUserApi(
+        this IApplicationBuilder app,
         StartUpConfiguration startUpConfiguration,
-        IdentityServerConfig identityServerConfig)
+        IdentityServerConfig identityServerConfig
+    )
     {
         app.MapWhen(
             context => IsPublicUserApiRoute(startUpConfiguration, context),
-            publicBranch => {
+            publicBranch =>
+            {
                 publicBranch.UseUserApiAuthentication(identityServerConfig);
                 publicBranch.UseMiddleware<UserApiMiddleware>();
-            });
+            }
+        );
         app.MapWhen(
-            context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
+            context => IsRestrictedUserApiRoute(startUpConfiguration, context),
             privateBranch =>
             {
                 privateBranch.UseUserApiAuthentication(identityServerConfig);
-                privateBranch.Use(async (context, next) =>
+                privateBranch.Use(
+                    async (context, next) =>
                     {
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.
@@ -95,15 +104,19 @@ public static class IApplicationBuilderExtensions
                             return;
                         }
                         await next.Invoke();
-                    }); 
+                    }
+                );
                 privateBranch.UseMiddleware<UserApiMiddleware>();
-            });
+            }
+        );
     }
-    private static void UseUserApiAuthentication(this IApplicationBuilder app,
-        IdentityServerConfig identityServerConfig)
+
+    private static void UseUserApiAuthentication(
+        this IApplicationBuilder app,
+        IdentityServerConfig identityServerConfig
+    )
     {
-        if (identityServerConfig.PrivateApiAuthentication ==
-            AuthenticationMethod.Token)
+        if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
         {
             app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
         }
@@ -112,6 +125,7 @@ public static class IApplicationBuilderExtensions
             app.UseAuthentication();
         }
     }
+
     public static void UseWorkQueueApi(this IApplicationBuilder app)
     {
         app.MapWhen(
@@ -125,50 +139,69 @@ public static class IApplicationBuilderExtensions
                 });
             }
         );
-    } 
-    
+    }
+
     private static bool IsRestrictedUserApiRoute(
-        StartUpConfiguration startUpConfiguration, HttpContext context)
+        StartUpConfiguration startUpConfiguration,
+        HttpContext context
+    )
     {
-        return startUpConfiguration
-            .UserApiRestrictedRoutes
-            .Any(route => context.Request.Path.ToString().StartsWith(route));
+        return startUpConfiguration.UserApiRestrictedRoutes.Any(route =>
+            context.Request.Path.ToString().StartsWith(route)
+        );
     }
-    
+
     private static bool IsPublicUserApiRoute(
-        StartUpConfiguration startUpConfiguration, HttpContext context)
+        StartUpConfiguration startUpConfiguration,
+        HttpContext context
+    )
     {
-        return startUpConfiguration
-            .UserApiPublicRoutes
-            .Any(route => context.Request.Path.ToString().StartsWith(route));
+        return startUpConfiguration.UserApiPublicRoutes.Any(route =>
+            context.Request.Path.ToString().StartsWith(route)
+        );
     }
-    
-    public static void UseSoapApi(this IApplicationBuilder app,
+
+    public static void UseSoapApi(
+        this IApplicationBuilder app,
         bool authenticationRequired,
-        bool expectAndReturnOldDotNetAssemblyReferences)
+        bool expectAndReturnOldDotNetAssemblyReferences
+    )
     {
-        app.MapWhen(IsSoapApiRoute, apiBranch =>
-        {
-            apiBranch.Use(async (context, next) =>
+        app.MapWhen(
+            IsSoapApiRoute,
+            apiBranch =>
             {
-                // Authentication middleware doesn't short-circuit the request itself
-                // we must do that here.
-                if (authenticationRequired && !context.User.Identity.IsAuthenticated)
+                apiBranch.Use(
+                    async (context, next) =>
+                    {
+                        // Authentication middleware doesn't short-circuit the request itself
+                        // we must do that here.
+                        if (authenticationRequired && !context.User.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
+                        await next.Invoke();
+                    }
+                );
+                if (expectAndReturnOldDotNetAssemblyReferences)
                 {
-                    context.Response.StatusCode = 401;
-                    return;
+                    apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
                 }
-                await next.Invoke();
-            });
-            if (expectAndReturnOldDotNetAssemblyReferences)
-            {
-                apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
+                apiBranch.UseSoapEndpoint<DataServiceSoap>(
+                    "/soap/DataService",
+                    new SoapEncoderOptions(),
+                    SoapSerializer.XmlSerializer
+                );
+                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>(
+                    "/soap/WorkflowService",
+                    new SoapEncoderOptions(),
+                    SoapSerializer.XmlSerializer
+                );
             }
-            apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new SoapEncoderOptions(), SoapSerializer.XmlSerializer);
-            apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new SoapEncoderOptions(), SoapSerializer.XmlSerializer);
-        });
+        );
     }
-    
+
     private static bool IsSoapApiRoute(HttpContext context)
     {
         return context.Request.Path.ToString().StartsWith("/soap");

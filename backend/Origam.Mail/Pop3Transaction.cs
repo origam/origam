@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using MailKit.Net.Pop3;
 
-
 namespace Origam.Mail;
+
 /// <summary>
 /// Summary description for Pop3Transaction.
 /// </summary>
@@ -33,12 +33,14 @@ public class Pop3Transaction : OrigamTransaction
     {
         PopClient = client;
     }
+
     public override void Commit()
     {
         CheckStatus();
         PopClient.Disconnect(true);
         PopClient.Dispose();
     }
+
     public override void Rollback()
     {
         CheckStatus();
@@ -46,12 +48,16 @@ public class Pop3Transaction : OrigamTransaction
         PopClient.Disconnect(true);
         PopClient.Dispose();
     }
+
     public Pop3Client PopClient { get; } = null;
+
     private void CheckStatus()
     {
         if (PopClient == null)
         {
-            throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
+            throw new InvalidOperationException(
+                ResourceUtils.GetString("ErrorTransactionNotStarted")
+            );
         }
         if (!PopClient.IsConnected)
         {

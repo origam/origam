@@ -28,7 +28,12 @@ public interface IXpathEvaluator
 {
     string Evaluate(object nodeset, string xpath);
 
-    object Evaluate(string xpath, bool isPathRelative,
-        OrigamDataType returnDataType, XPathNavigator nav,
-        XPathNodeIterator contextPosition, string transactionId);
+    object Evaluate(
+        string xpath,
+        bool isPathRelative,
+        OrigamDataType returnDataType,
+        XPathNavigator nav,
+        XPathNodeIterator contextPosition,
+        string transactionId
+    );
 }

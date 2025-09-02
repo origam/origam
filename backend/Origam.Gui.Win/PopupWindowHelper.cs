@@ -249,7 +249,6 @@ public class PopupWindowHelper : NativeWindow
 //			keybd_event((byte) Keys.ShiftKey, 0, KEYEVENTF_KEYUP, 0);
 		// Start filtering for mouse clicks outside the popup
 		filter.Popup = popup;
-				
 	}
 	/// <summary>
 	/// Responds to the <see cref="System.Windows.Forms.Form.Closed"/>
@@ -341,7 +340,6 @@ public class PopupWindowHelper : NativeWindow
 			// Null out references for GC
 			this.popup = null;
 			this.owner = null;
-							
 		}
 	}
 	/// <summary>
@@ -456,16 +454,18 @@ public class PopupWindowHelperMessageFilter : IMessageFilter
 		if (this.popup != null)
 		{
 			switch (m.Msg)
-			{				
-				case WM_LBUTTONDOWN:
-				case WM_RBUTTONDOWN:
-				case WM_MBUTTONDOWN:
-				case WM_NCLBUTTONDOWN:
-				case WM_NCRBUTTONDOWN:
-				case WM_NCMBUTTONDOWN:
-					OnMouseDown();
-					break;
-			}
+			{
+                case WM_LBUTTONDOWN:
+                case WM_RBUTTONDOWN:
+                case WM_MBUTTONDOWN:
+                case WM_NCLBUTTONDOWN:
+                case WM_NCRBUTTONDOWN:
+                case WM_NCMBUTTONDOWN:
+                    {
+                        OnMouseDown();
+                        break;
+                    }
+            }
 		}
 		return false;
 	}

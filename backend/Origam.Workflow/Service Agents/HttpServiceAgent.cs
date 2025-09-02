@@ -28,9 +28,7 @@ namespace Origam.Workflow;
 
 public class HttpServiceAgent : AbstractServiceAgent
 {
-    public HttpServiceAgent()
-    {
-    }
+    public HttpServiceAgent() { }
 
     #region IServiceAgent Members
 
@@ -52,31 +50,32 @@ public class HttpServiceAgent : AbstractServiceAgent
         {
             case "SendRequest":
             case "TrySendRequest":
+            {
+                HttpResult httpResponse = HttpTools.Instance.SendRequest(
+                    new Request(
+                        url: Parameters.Get<string>("Url"),
+                        method: Parameters.Get<string>("Method"),
+                        content: GetContent(Parameters["Content"]),
+                        contentType: Parameters.TryGet<string>("ContentType"),
+                        headers: Parameters["Headers"] as Hashtable,
+                        timeout: Parameters.TryGet<int?>("Timeout"),
+                        throwExceptionOnError: MethodName == "SendRequest"
+                    )
+                );
+                XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>("ResponseMetadata");
+                if (responseMetadata != null)
                 {
-                    HttpResult httpResponse =
-                        HttpTools.Instance.SendRequest(
-                            new Request(
-                                url: Parameters.Get<string>("Url"),
-                                method: Parameters.Get<string>("Method"),
-                                content: GetContent(Parameters["Content"]),
-                                contentType: Parameters.TryGet<string>("ContentType"),
-                                headers: Parameters["Headers"] as Hashtable,
-                                timeout: Parameters.TryGet<int?>("Timeout"),
-                                throwExceptionOnError: MethodName == "SendRequest"
-                            )
-                        );
-                    XmlContainer responseMetadata = Parameters
-                            .TryGet<XmlContainer>("ResponseMetadata");
-                    if (responseMetadata != null)
-                    {
-                        AddMetaData(responseMetadata, httpResponse);
-                    }
-                    _result = httpResponse.Content;
-                    break;
+                    AddMetaData(responseMetadata, httpResponse);
                 }
+                _result = httpResponse.Content;
+                break;
+            }
             default:
                 throw new ArgumentOutOfRangeException(
-                "MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
+                    "MethodName",
+                    MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
         }
     }
 
@@ -134,4 +133,3 @@ public class HttpServiceAgent : AbstractServiceAgent
     }
     #endregion
 }
-

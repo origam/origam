@@ -28,11 +28,9 @@ internal class StringFormatter : Formatter
     public StringFormatter(TextBox textBox)
         : base(textBox,"")
     {
-         
     }
     public override void OnLeave(object sender, EventArgs e)
     {
-        
     }
     public override object GetValue()
     {

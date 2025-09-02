@@ -33,10 +33,22 @@ public class DataBindingTools
 		if(control.Parent is AsDataGrid)
 		{
 			AsDataGrid grid = control.Parent as AsDataGrid;
-			if(grid.DataSource == null) return null;
-			if(grid.BindingContext[grid.DataSource, grid.DataMember] == null) return null;
-			if(grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0) return null;
-			return (grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView).Row;
+			if(grid.DataSource == null)
+            {
+                return null;
+            }
+
+            if (grid.BindingContext[grid.DataSource, grid.DataMember] == null)
+            {
+                return null;
+            }
+
+            if (grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0)
+            {
+                return null;
+            }
+
+            return (grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView).Row;
 		}
 		else if(control.Parent is FilterPanel)
 		{
@@ -46,10 +58,22 @@ public class DataBindingTools
 		}
 		else
 		{
-			if(control.DataBindings[property] == null) return null;
-			if(control.DataBindings[property].BindingManagerBase == null) return null;
-			if(control.DataBindings[property].BindingManagerBase.Position < 0) return null;
-			return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
+			if(control.DataBindings[property] == null)
+            {
+                return null;
+            }
+
+            if (control.DataBindings[property].BindingManagerBase == null)
+            {
+                return null;
+            }
+
+            if (control.DataBindings[property].BindingManagerBase.Position < 0)
+            {
+                return null;
+            }
+
+            return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
 		}
 	}
     public static void UpdateBindedFormComponent(

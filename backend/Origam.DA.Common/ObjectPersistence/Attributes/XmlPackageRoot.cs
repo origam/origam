@@ -20,12 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Xml.Serialization;
-using Origam.OrigamEngine;
 
 namespace Origam.DA.ObjectPersistence;
-public class XmlPackageRoot: XmlRootAttribute
+
+public class XmlPackageRoot : XmlRootAttribute
 {
-    public XmlPackageRoot(string category) : base(category)
-    {
-    }
+    public XmlPackageRoot(string category)
+        : base(category) { }
 }

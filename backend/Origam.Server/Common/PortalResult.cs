@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Origam.Server;
+
 public class PortalResult
 {
     private string _menu;
@@ -56,10 +57,12 @@ public class PortalResult
     private string _helpUrl;
     private PortalStyle _style = new PortalStyle();
     private int _maxRequestLength;
+
     public PortalResult(string menu)
     {
         _menu = menu;
     }
+
     public string Menu
     {
         get { return _menu; }
@@ -110,10 +113,7 @@ public class PortalResult
     }
     public PortalStyle Style
     {
-        get
-        {
-            return _style;
-        }
+        get { return _style; }
     }
     public int MaxRequestLength
     {

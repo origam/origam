@@ -24,28 +24,31 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CSharpFunctionalExtensions;
-using Origam.Extensions;
-using Origam.Workbench.Services;
 using System.Threading;
 using System.Timers;
+using CSharpFunctionalExtensions;
 using log4net;
+using Origam.Extensions;
 using Origam.Services;
+using Origam.Workbench.Services;
 
 namespace Origam.DA.Service;
-public sealed class FileEventQueue: IDisposable
+
+public sealed class FileEventQueue : IDisposable
 {
-    private static readonly ILog log
-        = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
     private readonly FilePersistenceIndex index;
     private IFileChangesWatchDog watchDog;
-    private readonly Queue<FileSystemChangeEventArgs> fileChangeQueue 
-        = new Queue<FileSystemChangeEventArgs>();
+    private readonly Queue<FileSystemChangeEventArgs> fileChangeQueue =
+        new Queue<FileSystemChangeEventArgs>();
     private FileSystemChangeEventArgs lastChange = null;
     private bool processEvents = true;
     private readonly object lockObj = new object();
     private System.Timers.Timer timer = new System.Timers.Timer();
     public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
+
     public FileEventQueue(FilePersistenceIndex index, IFileChangesWatchDog watchDog)
     {
         this.index = index;
@@ -61,15 +64,18 @@ public sealed class FileEventQueue: IDisposable
         timer.Interval = 1000;
         timer.Elapsed += OnTimerOnElapsed;
     }
+
     private void OnTimerOnElapsed(object sender, ElapsedEventArgs e)
     {
         TimerElapsedHandler();
     }
+
     public void Start()
     {
         watchDog.Start();
         timer.Start();
     }
+
     public void IgnoreChanges(Action action)
     {
         try
@@ -82,11 +88,13 @@ public sealed class FileEventQueue: IDisposable
             Start();
         }
     }
+
     public void Stop()
     {
         watchDog.Stop();
         timer.Stop();
     }
+
     /// Underlying timer will not process elapsed events.
     public void Pause()
     {
@@ -95,6 +103,7 @@ public sealed class FileEventQueue: IDisposable
             processEvents = false;
         }
     }
+
     /// Underlying timer will process elapsed events.
     public void Continue()
     {
@@ -104,6 +113,7 @@ public sealed class FileEventQueue: IDisposable
             processEvents = true;
         }
     }
+
     private void TimerElapsedHandler()
     {
         try
@@ -111,9 +121,11 @@ public sealed class FileEventQueue: IDisposable
             lock (lockObj)
             {
                 DateTime now = DateTime.Now;
-                if (!processEvents 
-                || (lastChange == null) 
-                || ((now - lastChange.Timestamp).TotalSeconds < 1))
+                if (
+                    !processEvents
+                    || (lastChange == null)
+                    || ((now - lastChange.Timestamp).TotalSeconds < 1)
+                )
                 {
                     return;
                 }
@@ -122,10 +134,13 @@ public sealed class FileEventQueue: IDisposable
         }
         catch (Exception ex)
         {
-            ThreadPool.QueueUserWorkItem(_ => {
-                throw new Exception("Exception on timer", ex); });
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                throw new Exception("Exception on timer", ex);
+            });
         }
     }
+
     private void ProcessAccumulatedEvents()
     {
         while (fileChangeQueue.Count > 0)
@@ -139,49 +154,71 @@ public sealed class FileEventQueue: IDisposable
         }
         lastChange = null;
     }
+
     private bool IsDirectoryChangeAndNeedsUpdate(FileSystemChangeEventArgs eventArgs)
     {
-        if(!eventArgs.IsDirectoryChange) return false;
-        if (FilesInIndexNeedUpdate(eventArgs)) return true;
-        if (ExistingFilesNeedUpdate(eventArgs)) return true;
+        if (!eventArgs.IsDirectoryChange)
+        {
+            return false;
+        }
+
+        if (FilesInIndexNeedUpdate(eventArgs))
+        {
+            return true;
+        }
+
+        if (ExistingFilesNeedUpdate(eventArgs))
+        {
+            return true;
+        }
+
         return false;
     }
+
     private bool ExistingFilesNeedUpdate(FileSystemChangeEventArgs eventArgs)
     {
-        return eventArgs.Folder
-            .GetAllFilesInSubDirectories()
-            .Any(ShouldBeUpdated);
+        return eventArgs.Folder.GetAllFilesInSubDirectories().Any(ShouldBeUpdated);
     }
+
     private bool FilesInIndexNeedUpdate(FileSystemChangeEventArgs eventArgs)
     {
-       return index
-            .GetByDirectory(eventArgs.Folder)
-            .Any(ShouldBeUpdated);
+        return index.GetByDirectory(eventArgs.Folder).Any(ShouldBeUpdated);
     }
+
     private bool ShouldBeUpdated(FileInfo file)
     {
         bool needsUpdate = NeedsUpdate(file);
         if (needsUpdate && log.IsInfoEnabled)
         {
-            log.Info("Reload caused by: " + file.FullName );
+            log.Info("Reload caused by: " + file.FullName);
         }
         return needsUpdate;
     }
+
     private bool NeedsUpdate(FileInfo file)
     {
         Maybe<string> maybeHash = FindPersistenceFileHash(file);
         file.Refresh();
         if (file.Exists)
         {
-            if (maybeHash.HasNoValue) return true;
+            if (maybeHash.HasNoValue)
+            {
+                return true;
+            }
+
             if (maybeHash.Value != file.GetFileBase64Hash())
             {
                 return true;
             }
         }
-        if (!file.Exists && maybeHash.HasValue) return true;
+        if (!file.Exists && maybeHash.HasValue)
+        {
+            return true;
+        }
+
         return false;
     }
+
     private Maybe<string> FindPersistenceFileHash(FileInfo file)
     {
         if (OrigamFile.IsPersistenceFile(file))
@@ -189,12 +226,16 @@ public sealed class FileEventQueue: IDisposable
             return index.GetFileHash(file);
         }
         Maybe<ExternalFile> mayBeExtFile = index.GetExternalFile(file);
-        if (mayBeExtFile.HasValue) return mayBeExtFile.Value?.FileHash;
-        IFileStorageDocumentationService documentationService =
-            (IFileStorageDocumentationService)ServiceManager.Services
-                .GetService<IDocumentationService>();
+        if (mayBeExtFile.HasValue)
+        {
+            return mayBeExtFile.Value?.FileHash;
+        }
+
+        IFileStorageDocumentationService documentationService = (IFileStorageDocumentationService)
+            ServiceManager.Services.GetService<IDocumentationService>();
         return documentationService.GetDocumentationFileHash(file);
     }
+
     public void Dispose()
     {
         timer.Elapsed -= OnTimerOnElapsed;

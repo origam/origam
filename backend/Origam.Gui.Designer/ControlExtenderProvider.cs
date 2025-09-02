@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 using System.ComponentModel;
-
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
@@ -47,11 +46,9 @@ public class ControlExtenderProvider : IExtenderProvider
 		{
 			return si.PrimaryKey["Id"].ToString();
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	[ExtenderProvidedProperty()]
 	[Category("(ORIGAM)")]
 	public string GetSchemaItemName(Control acontrol)
@@ -61,11 +58,9 @@ public class ControlExtenderProvider : IExtenderProvider
 		{
 			return si.Name;
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	public void SetSchemaItemName(Control acontrol, string value)
 	{
 		ISchemaItem si = acontrol.Tag as ISchemaItem;
@@ -82,11 +77,9 @@ public class ControlExtenderProvider : IExtenderProvider
 		{
 			return csi.Roles;
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	public void SetRoles(Control acontrol, string value)
 	{
 		ControlSetItem csi = acontrol.Tag as ControlSetItem;
@@ -103,11 +96,9 @@ public class ControlExtenderProvider : IExtenderProvider
 		{
 			return csi.Features;
 		}
-		else
-		{
-			return null;
-		}
-	}
+
+        return null;
+    }
 	public void SetFeatures(Control acontrol, string value)
 	{
 		ControlSetItem csi = acontrol.Tag as ControlSetItem;
@@ -120,9 +111,11 @@ public class ControlExtenderProvider : IExtenderProvider
 	public bool CanExtend(object extendee) 
 	{
 		if (extendee is Control && (extendee as Control).Tag is ISchemaItem)
-			return true;
-		else
-			return false;
-	}
+        {
+            return true;
+        }
+
+        return false;
+    }
 	#endregion
 }

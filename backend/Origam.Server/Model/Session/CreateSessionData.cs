@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.Session;
+
 public class CreateSessionData
 {
     [RequiredNonDefault]

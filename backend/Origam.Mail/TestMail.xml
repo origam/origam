@@ -1,39 +1,38 @@
 ﻿<Mails xmlns="http://tempuri.org/AsMail.xsd">
-	<Mail>
-		<Subject>Test mail 1</Subject>
-		<From>
-			<Address>tomas.vavrda@advantages.cz</Address>
-			<Name>Advantages - Tomas Vavrda</Name>
-		</From>
-		<To>
-			<EmailAddress>
-				<Address>tomas.vavrda@advantages.cz</Address>
-				<Name>Tomas Vavrda</Name>
-			</EmailAddress>
-		</To>
-		<Body>
-			<HTML>
+  <Mail>
+    <Subject>Test mail 1</Subject>
+    <From>
+      <Address>tomas.vavrda@advantages.cz</Address>
+      <Name>Advantages - Tomas Vavrda</Name>
+    </From>
+    <To>
+      <EmailAddress>
+        <Address>tomas.vavrda@advantages.cz</Address>
+        <Name>Tomas Vavrda</Name>
+      </EmailAddress>
+    </To>
+    <Body>
+      <HTML>
 				ahoj bobe
 			</HTML>
-		</Body>
-	</Mail>
-
-	<Mail>
-		<Subject>Test mail 2</Subject>
-		<From>
-			<Address>tomas.vavrda@advantages.cz</Address>
-			<Name>Advantages - Tomas Vavrda</Name>
-		</From>
-		<To>
-			<EmailAddress>
-				<Address>tomas.vavrda@advantages.cz</Address>
-				<Name>Tomas Vavrda</Name>
-			</EmailAddress>
-		</To>
-		<Body>
-			<HTML>
+    </Body>
+  </Mail>
+  <Mail>
+    <Subject>Test mail 2</Subject>
+    <From>
+      <Address>tomas.vavrda@advantages.cz</Address>
+      <Name>Advantages - Tomas Vavrda</Name>
+    </From>
+    <To>
+      <EmailAddress>
+        <Address>tomas.vavrda@advantages.cz</Address>
+        <Name>Tomas Vavrda</Name>
+      </EmailAddress>
+    </To>
+    <Body>
+      <HTML>
 				ahoj tome
 			</HTML>
-		</Body>
-	</Mail>
+    </Body>
+  </Mail>
 </Mails>

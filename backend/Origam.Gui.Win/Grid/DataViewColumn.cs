@@ -49,15 +49,18 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 	private void OnAsDateBoxTextValueChanged(object sender, EventArgs args)
 	{
 		// dataSource is null if this method gets called vefore Commit method
-		if (dataSource == null) return;
-		
-		// Workaround to write chages made in textBox to dataSource 
-		// and redraw when Tab is pressed. 
-		// It looks like without this handler the Commit method gets 
-		// called before AsDateBox has a chance to update it's state.
-		// This handler is called after the update is complete so that
-		// the Commit method can update the dataSource with the new data.  
-		if (GetColumnValueAtRow(dataSource, rowNum) != AsDateBox.DateValue)
+		if (dataSource == null)
+        {
+            return;
+        }
+
+        // Workaround to write chages made in textBox to dataSource 
+        // and redraw when Tab is pressed. 
+        // It looks like without this handler the Commit method gets 
+        // called before AsDateBox has a chance to update it's state.
+        // This handler is called after the update is complete so that
+        // the Commit method can update the dataSource with the new data.  
+        if (GetColumnValueAtRow(dataSource, rowNum) != AsDateBox.DateValue)
 		{
 			_isEditing = true;
 			Commit(dataSource, rowNum);
@@ -91,8 +94,12 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 	}
 	protected override void Abort(int rowNum)
 	{
-		if(_isDisposed) return;
-		_isEditing = false;
+		if(_isDisposed)
+        {
+            return;
+        }
+
+        _isEditing = false;
 		AsDateBox.dateValueChanged -= new EventHandler(AsDateBox_dateValueChanged);
 		Invalidate();
 		base.Abort(rowNum);
@@ -206,9 +213,16 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 		EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
 		if(formatting != null)
 		{
-			if(!formatting.UseDefaultBackColor) myBackBrush = new SolidBrush(formatting.BackColor);
-			if(!formatting.UseDefaultForeColor) myForeBrush = new SolidBrush(formatting.ForeColor);
-		}
+			if(!formatting.UseDefaultBackColor)
+            {
+                myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
+            if (!formatting.UseDefaultForeColor)
+            {
+                myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
+        }
 		base.Paint (g, bounds, source, rowNum, myBackBrush, myForeBrush, alignToRight);
 	}
 	private void AsDateBox_dateValueChanged(object sender, EventArgs e)

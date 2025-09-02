@@ -27,7 +27,6 @@ using Origam.DA.ObjectPersistence;
 using Origam.Gui.Win.Wizards;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel.UI.Wizards;
-using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.LookupModel.UI.Wizards;
 using Origam.Schema.Wizards;
 using Origam.Schema.WorkflowModel.UI;

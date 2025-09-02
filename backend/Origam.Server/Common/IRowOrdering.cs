@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Server;
+
 public interface IRowOrdering
 {
     string ColumnId { get; set; }

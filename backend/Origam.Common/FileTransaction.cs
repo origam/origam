@@ -23,37 +23,41 @@ using System.Collections;
 using System.IO;
 
 namespace Origam;
+
 /// <summary>
 /// Summary description for FileTransaction.
 /// </summary>
 public class FileDeleteTransaction : OrigamTransaction
 {
-	Hashtable _files = new Hashtable();
-	public FileDeleteTransaction(Hashtable files)
-	{
-		_files = files;
-	}
-	public override void Commit()
-	{
-		foreach(DictionaryEntry entry in _files)
-		{
-			FileInfo fi = new FileInfo((string)entry.Key);
-			FileStream fs = (FileStream)entry.Value;
-			fs.Close();
-			fi.Delete();
-		}
-	}
-	public override void Rollback()
-	{
-		foreach(DictionaryEntry entry in _files)
-		{
-			try
-			{
-				FileStream fs = (FileStream)entry.Value;
-				fs.Close();
-			}
-			catch{}
-		}
-		_files.Clear();
-	}
+    Hashtable _files = new Hashtable();
+
+    public FileDeleteTransaction(Hashtable files)
+    {
+        _files = files;
+    }
+
+    public override void Commit()
+    {
+        foreach (DictionaryEntry entry in _files)
+        {
+            FileInfo fi = new FileInfo((string)entry.Key);
+            FileStream fs = (FileStream)entry.Value;
+            fs.Close();
+            fi.Delete();
+        }
+    }
+
+    public override void Rollback()
+    {
+        foreach (DictionaryEntry entry in _files)
+        {
+            try
+            {
+                FileStream fs = (FileStream)entry.Value;
+                fs.Close();
+            }
+            catch { }
+        }
+        _files.Clear();
+    }
 }

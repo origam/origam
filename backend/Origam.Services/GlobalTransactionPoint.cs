@@ -22,45 +22,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench;
+
 public enum GlobalTransactionPointType
 {
-	Form = 0,
-	Workflow = 1,
-	Attachment = 2
+    Form = 0,
+    Workflow = 1,
+    Attachment = 2,
 }
+
 public class GlobalTransactionPointEventArgs : EventArgs
 {
-	private GlobalTransactionPoint _point;
-	public GlobalTransactionPointEventArgs(GlobalTransactionPoint point)
-	{
-		this.Point = point;
-	}
-	public GlobalTransactionPoint Point
-	{
-		get
-		{
-			return _point;
-		}
-		set
-		{
-			_point = value;
-		}
-	}
+    private GlobalTransactionPoint _point;
+
+    public GlobalTransactionPointEventArgs(GlobalTransactionPoint point)
+    {
+        this.Point = point;
+    }
+
+    public GlobalTransactionPoint Point
+    {
+        get { return _point; }
+        set { _point = value; }
+    }
 }
+
 /// <summary>
 /// Summary description for GlobalTransactionPoint.
 /// </summary>
 public class GlobalTransactionPoint
 {
-	public GlobalTransactionPoint(GlobalTransactionPointType type, DateTime time, string description, string savePointName)
-	{
-		this.Type = type;
-		this.Time = time;
-		this.Description = description;
-		this.SavePointName = savePointName;
-	}
-	public string SavePointName;
-	public DateTime Time;
-	public string Description;
-	public GlobalTransactionPointType Type;
+    public GlobalTransactionPoint(
+        GlobalTransactionPointType type,
+        DateTime time,
+        string description,
+        string savePointName
+    )
+    {
+        this.Type = type;
+        this.Time = time;
+        this.Description = description;
+        this.SavePointName = savePointName;
+    }
+
+    public string SavePointName;
+    public DateTime Time;
+    public string Description;
+    public GlobalTransactionPointType Type;
 }

@@ -55,8 +55,12 @@ public class SplashScreen : System.Windows.Forms.Form
 #if ORIGAM_CLIENT
 		string fileName = "splash.png";
 		
-		if (!File.Exists(fileName)) return;
-		using(Stream file = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+		if (!File.Exists(fileName))
+        {
+            return;
+        }
+
+        using (Stream file = new FileStream(fileName, FileMode.Open, FileAccess.Read))
 		{
 			Bitmap bitmap = (Bitmap)Bitmap.FromStream(file);
 			pictureBox1.Image = bitmap;

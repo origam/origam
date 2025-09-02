@@ -25,7 +25,6 @@ using System.Windows.Forms;
 using Origam.Workbench;
 using Origam.UI;
 using Origam.Workbench.Services;
-
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;

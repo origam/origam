@@ -19,24 +19,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-
+using Origam.DA.Common;
 
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("Cartesian Chart", "icon_cartesian-chart.png")]
 [HelpTopic("Cartesian+Charts")]
 [ClassMetaVersion("6.0.0")]
 public class CartesianChart : AbstractChart
 {
-	public CartesianChart() : base() {Init();}
-	public CartesianChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public CartesianChart(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-		this.ChildItemTypes.Add(typeof(CartesianChartVerticalAxis));
-		this.ChildItemTypes.Add(typeof(CartesianChartHorizontalAxis));
-		this.ChildItemTypes.Add(typeof(ColumnSeries));
-		this.ChildItemTypes.Add(typeof(LineSeries));
-	}
+    public CartesianChart()
+        : base()
+    {
+        Init();
+    }
+
+    public CartesianChart(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public CartesianChart(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.Add(typeof(CartesianChartVerticalAxis));
+        this.ChildItemTypes.Add(typeof(CartesianChartHorizontalAxis));
+        this.ChildItemTypes.Add(typeof(ColumnSeries));
+        this.ChildItemTypes.Add(typeof(LineSeries));
+    }
 }

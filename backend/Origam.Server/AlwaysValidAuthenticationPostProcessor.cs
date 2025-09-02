@@ -24,11 +24,16 @@ using System.Security.Claims;
 using Origam.Service.Core;
 
 namespace Origam.Server;
-public class AlwaysValidAuthenticationPostProcessor 
-    : IAuthenticationPostProcessor
+
+public class AlwaysValidAuthenticationPostProcessor : IAuthenticationPostProcessor
 {
-    public bool Validate(string userId, string username, 
-        string externalProvider, string providerUserId, List<Claim> claims)
+    public bool Validate(
+        string userId,
+        string username,
+        string externalProvider,
+        string providerUserId,
+        List<Claim> claims
+    )
     {
         return true;
     }

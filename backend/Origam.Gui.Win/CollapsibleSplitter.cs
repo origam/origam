@@ -127,10 +127,12 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 		get
 		{ 
 			if(this.controlToHide!= null)
-				return !this.controlToHide.Visible; 
-			else
-				return true;
-		}
+            {
+                return !this.controlToHide.Visible;
+            }
+
+            return true;
+        }
 	}
 	/// <summary>
 	/// The System.Windows.Forms.Control that the splitter will collapse
@@ -297,8 +299,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 			if(controlToHide!= null)
 			{
 				if(!controlToHide.Visible)
-					this.Cursor = Cursors.Default;
-				else // Changed in v1.2 to support Horizontal Splitters
+                {
+                    this.Cursor = Cursors.Default;
+                }
+                else // Changed in v1.2 to support Horizontal Splitters
 				{
 					if(this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
 					{
@@ -331,8 +335,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 	{
 		// if an animation is currently in progress for this control, drop out
 		if(currentState == SplitterState.Collapsing || currentState == SplitterState.Expanding)
-			return;
-		controlWidth = controlToHide.Width;
+        {
+            return;
+        }
+
+        controlWidth = controlToHide.Width;
 		controlHeight = controlToHide.Height;
 		if(controlToHide.Visible)
 		{
@@ -383,7 +390,6 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 						parentFormWidth = parentForm.Width + controlWidth;
 					}
 					controlToHide.Width = 0;
-					
 				}
 				else
 				{
@@ -414,7 +420,6 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 				}
 			}
 		}
-		
 	}
 	#endregion
 	#region Implementation
@@ -423,115 +428,120 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 	{
 		switch(currentState)
 		{
-			case SplitterState.Collapsing:
-				if(this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
-				{
-					// vertical splitter
-					if(controlToHide.Width > animationStep)
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Width -= animationStep;
-						}
-						controlToHide.Width -= animationStep;
-					}
-					else
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Width = parentFormWidth;
-						}
-						controlToHide.Visible = false;
-						animationTimer.Enabled = false;
-						controlToHide.Width = controlWidth;
-						currentState = SplitterState.Collapsed;
-						this.Invalidate();
-					}
-				}
-				else 
-				{
-					// horizontal splitter
-					if(controlToHide.Height > animationStep)
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Height -= animationStep;
-						}
-						controlToHide.Height -= animationStep;
-					}
-					else
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Height = parentFormHeight;
-						}
-						controlToHide.Visible = false;
-						animationTimer.Enabled = false;
-						controlToHide.Height = controlHeight;
-						currentState = SplitterState.Collapsed;
-						this.Invalidate();
-					}
-				}
-				break;
-			case SplitterState.Expanding:
-				if(this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
-				{
-					// vertical splitter
-					if(controlToHide.Width < (controlWidth - animationStep))
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Width += animationStep;
-						}
-						controlToHide.Width += animationStep;
-					}
-					else
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Width = parentFormWidth;
-						}
-						controlToHide.Width = controlWidth;
-						controlToHide.Visible = true;
-						animationTimer.Enabled = false;
-						currentState = SplitterState.Expanded;
-						this.Invalidate();
-					}
-				}
-				else 
-				{
-					// horizontal splitter
-					if(controlToHide.Height < (controlHeight - animationStep))
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Height += animationStep;
-						}
-						controlToHide.Height += animationStep;
-					}
-					else
-					{
-						if(expandParentForm && parentForm.WindowState != FormWindowState.Maximized
-							&& parentForm != null)
-						{
-							parentForm.Height = parentFormHeight;
-						}
-						controlToHide.Height = controlHeight;
-						controlToHide.Visible = true;
-						animationTimer.Enabled = false;
-						currentState = SplitterState.Expanded;
-						this.Invalidate();
-					}
-				}
-				break;
-		}
+            case SplitterState.Collapsing:
+                {
+                    if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+                    {
+                        // vertical splitter
+                        if (controlToHide.Width > animationStep)
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Width -= animationStep;
+                            }
+                            controlToHide.Width -= animationStep;
+                        }
+                        else
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Width = parentFormWidth;
+                            }
+                            controlToHide.Visible = false;
+                            animationTimer.Enabled = false;
+                            controlToHide.Width = controlWidth;
+                            currentState = SplitterState.Collapsed;
+                            this.Invalidate();
+                        }
+                    }
+                    else
+                    {
+                        // horizontal splitter
+                        if (controlToHide.Height > animationStep)
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Height -= animationStep;
+                            }
+                            controlToHide.Height -= animationStep;
+                        }
+                        else
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Height = parentFormHeight;
+                            }
+                            controlToHide.Visible = false;
+                            animationTimer.Enabled = false;
+                            controlToHide.Height = controlHeight;
+                            currentState = SplitterState.Collapsed;
+                            this.Invalidate();
+                        }
+                    }
+                    break;
+                }
+
+            case SplitterState.Expanding:
+                {
+                    if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+                    {
+                        // vertical splitter
+                        if (controlToHide.Width < (controlWidth - animationStep))
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Width += animationStep;
+                            }
+                            controlToHide.Width += animationStep;
+                        }
+                        else
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Width = parentFormWidth;
+                            }
+                            controlToHide.Width = controlWidth;
+                            controlToHide.Visible = true;
+                            animationTimer.Enabled = false;
+                            currentState = SplitterState.Expanded;
+                            this.Invalidate();
+                        }
+                    }
+                    else
+                    {
+                        // horizontal splitter
+                        if (controlToHide.Height < (controlHeight - animationStep))
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Height += animationStep;
+                            }
+                            controlToHide.Height += animationStep;
+                        }
+                        else
+                        {
+                            if (expandParentForm && parentForm.WindowState != FormWindowState.Maximized
+                                && parentForm != null)
+                            {
+                                parentForm.Height = parentFormHeight;
+                            }
+                            controlToHide.Height = controlHeight;
+                            controlToHide.Visible = true;
+                            animationTimer.Enabled = false;
+                            currentState = SplitterState.Expanded;
+                            this.Invalidate();
+                        }
+                    }
+                    break;
+                }
+        }
 	}
 	#endregion
 	#region Paint the control
@@ -578,65 +588,79 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 				// Visual Styles added in version 1.1
 				switch(visualStyle)
 				{
-					case VisualStyles.Mozilla:
-						for(int i=0; i < 30; i++)
-						{
-							// light dot
-							g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y + (i*3), x+1, y + 1 + (i*3));
-							// dark dot
-							g.DrawLine(new Pen(SystemColors.ControlDarkDark), x+1, y + 1 + (i*3), x+2, y + 2 + (i*3));
-							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-							if(hot)
-							{
-								g.DrawLine(new Pen(hotColor), x+2, y + 1 + (i*3), x+2, y + 2 + (i*3));
-							}
-							else
-							{
-								g.DrawLine(new Pen(this.BackColor), x+2, y + 1 + (i*3), x+2, y + 2 + (i*3));
-							}
-						}
-						break;
-					case VisualStyles.DoubleDots:
-						for(int i=0; i < 30; i++)
-						{
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x, y + 1 + (i*3), 1, 1 );
-							// dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDark), x - 1, y +(i*3), 1, 1 );
-							i++;
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 2, y + 1 + (i*3), 1, 1 );
-							// dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDark), x + 1, y  + (i*3), 1, 1 );
-						}
-						break;
-					case VisualStyles.Win9x:
-						g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
-						g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x,y + 90);
-						g.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + 90);
-						g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 90, x + 2, y + 90);
-						break;
-					case VisualStyles.XP:
-						for(int i=0; i < 18; i++)
-						{
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLight), x, y + (i*5), 2, 2 );
-							// light light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1, y + 1 + (i*5), 1, 1 );
-							// dark dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x, y +(i*5), 1, 1 );
-							// dark fill
-							g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x, y + (i*5) + 1);
-							g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*5), x + 1, y + (i*5));
-						}
-						break;
-					case VisualStyles.Lines:
-						for(int i=0; i < 44; i++)
-						{
-							g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i*2), x + 2, y + (i*2));
-						}
-						break;
-				}
+                    case VisualStyles.Mozilla:
+                        {
+                            for (int i = 0; i < 30; i++)
+                            {
+                                // light dot
+                                g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y + (i * 3), x + 1, y + 1 + (i * 3));
+                                // dark dot
+                                g.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1, y + 1 + (i * 3), x + 2, y + 2 + (i * 3));
+                                // overdraw the background color as we actually drew 2px diagonal lines, not just dots
+                                if (hot)
+                                {
+                                    g.DrawLine(new Pen(hotColor), x + 2, y + 1 + (i * 3), x + 2, y + 2 + (i * 3));
+                                }
+                                else
+                                {
+                                    g.DrawLine(new Pen(this.BackColor), x + 2, y + 1 + (i * 3), x + 2, y + 2 + (i * 3));
+                                }
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.DoubleDots:
+                        {
+                            for (int i = 0; i < 30; i++)
+                            {
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x, y + 1 + (i * 3), 1, 1);
+                                // dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDark), x - 1, y + (i * 3), 1, 1);
+                                i++;
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 2, y + 1 + (i * 3), 1, 1);
+                                // dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDark), x + 1, y + (i * 3), 1, 1);
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.Win9x:
+                        {
+                            g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
+                            g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 90);
+                            g.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + 90);
+                            g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 90, x + 2, y + 90);
+                            break;
+                        }
+
+                    case VisualStyles.XP:
+                        {
+                            for (int i = 0; i < 18; i++)
+                            {
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLight), x, y + (i * 5), 2, 2);
+                                // light light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1, y + 1 + (i * 5), 1, 1);
+                                // dark dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x, y + (i * 5), 1, 1);
+                                // dark fill
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i * 5), x, y + (i * 5) + 1);
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i * 5), x + 1, y + (i * 5));
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.Lines:
+                        {
+                            for (int i = 0; i < 44; i++)
+                            {
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x, y + (i * 2), x + 2, y + (i * 2));
+                            }
+                            break;
+                        }
+                }
 			}
 			// Added in version 1.3
 			if(this.borderStyle != System.Windows.Forms.Border3DStyle.Flat)
@@ -679,65 +703,79 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 				// Visual Styles added in version 1.1
 				switch(visualStyle)
 				{
-					case VisualStyles.Mozilla:
-						for(int i=0; i < 30; i++)
-						{
-							// light dot
-							g.DrawLine(new Pen(SystemColors.ControlLightLight), x + (i*3), y, x + 1 + (i*3), y + 1);
-							// dark dot
-							g.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1 + (i*3), y + 1, x + 2 + (i*3), y + 2);
-							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-							if(hot)
-							{
-								g.DrawLine(new Pen(hotColor), x + 1 + (i*3), y + 2, x + 2 + (i*3), y + 2);
-							}
-							else
-							{
-								g.DrawLine(new Pen(this.BackColor),  x + 1 + (i*3), y + 2, x + 2 + (i*3), y + 2);
-							}
-						}
-						break;
-					case VisualStyles.DoubleDots:
-						for(int i=0; i < 30; i++)
-						{
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i*3), y, 1, 1 );
-							// dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i*3), y - 1, 1, 1 );
-							i++;
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i*3), y + 2, 1, 1 );
-							// dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i*3), y + 1, 1, 1 );
-						}
-						break;
-					case VisualStyles.Win9x:
-						g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
-						g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 88, y);
-						g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + 88, y + 2);
-						g.DrawLine(new Pen(SystemColors.ControlDark), x + 88, y, x + 88, y + 2);
-						break;
-					case VisualStyles.XP:
-						for(int i=0; i < 18; i++)
-						{
-							// light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLight), x + (i*5), y, 2, 2 );
-							// light light dot
-							g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i*5), y + 1, 1, 1 );
-							// dark dark dot
-							g.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x +(i*5), y, 1, 1 );
-							// dark fill
-							g.DrawLine(new Pen(SystemColors.ControlDark), x + (i*5), y, x + (i*5) + 1, y);
-							g.DrawLine(new Pen(SystemColors.ControlDark), x + (i*5), y, x + (i*5), y + 1);
-						}
-						break;
-					case VisualStyles.Lines:
-						for(int i=0; i < 44; i++)
-						{
-							g.DrawLine(new Pen(SystemColors.ControlDark), x + (i*2), y, x + (i*2), y + 2);
-						}
-						break;
-				}
+                    case VisualStyles.Mozilla:
+                        {
+                            for (int i = 0; i < 30; i++)
+                            {
+                                // light dot
+                                g.DrawLine(new Pen(SystemColors.ControlLightLight), x + (i * 3), y, x + 1 + (i * 3), y + 1);
+                                // dark dot
+                                g.DrawLine(new Pen(SystemColors.ControlDarkDark), x + 1 + (i * 3), y + 1, x + 2 + (i * 3), y + 2);
+                                // overdraw the background color as we actually drew 2px diagonal lines, not just dots
+                                if (hot)
+                                {
+                                    g.DrawLine(new Pen(hotColor), x + 1 + (i * 3), y + 2, x + 2 + (i * 3), y + 2);
+                                }
+                                else
+                                {
+                                    g.DrawLine(new Pen(this.BackColor), x + 1 + (i * 3), y + 2, x + 2 + (i * 3), y + 2);
+                                }
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.DoubleDots:
+                        {
+                            for (int i = 0; i < 30; i++)
+                            {
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y, 1, 1);
+                                // dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y - 1, 1, 1);
+                                i++;
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 3), y + 2, 1, 1);
+                                // dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDark), x + (i * 3), y + 1, 1, 1);
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.Win9x:
+                        {
+                            g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
+                            g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 88, y);
+                            g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + 88, y + 2);
+                            g.DrawLine(new Pen(SystemColors.ControlDark), x + 88, y, x + 88, y + 2);
+                            break;
+                        }
+
+                    case VisualStyles.XP:
+                        {
+                            for (int i = 0; i < 18; i++)
+                            {
+                                // light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLight), x + (i * 5), y, 2, 2);
+                                // light light dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlLightLight), x + 1 + (i * 5), y + 1, 1, 1);
+                                // dark dark dot
+                                g.DrawRectangle(new Pen(SystemColors.ControlDarkDark), x + (i * 5), y, 1, 1);
+                                // dark fill
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5) + 1, y);
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 5), y, x + (i * 5), y + 1);
+                            }
+                            break;
+                        }
+
+                    case VisualStyles.Lines:
+                        {
+                            for (int i = 0; i < 44; i++)
+                            {
+                                g.DrawLine(new Pen(SystemColors.ControlDark), x + (i * 2), y, x + (i * 2), y + 2);
+                            }
+                            break;
+                        }
+                }
 			}
 			// Added in version 1.3
 			if(this.borderStyle != System.Windows.Forms.Border3DStyle.Flat)
@@ -826,11 +864,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
 		float backGreen = backColor.G;
 		float backBlue = backColor.B;
 			
-		float fRed = frontRed*alpha/255 + backRed*((float)(255-alpha)/255);
+		float fRed = (frontRed *alpha/255) + (backRed *((float)(255-alpha)/255));
 		byte newRed = (byte)fRed;
-		float fGreen = frontGreen*alpha/255 + backGreen*((float)(255-alpha)/255);
+		float fGreen = (frontGreen *alpha/255) + (backGreen *((float)(255-alpha)/255));
 		byte newGreen = (byte)fGreen;
-		float fBlue = frontBlue*alpha/255 + backBlue*((float)(255-alpha)/255);
+		float fBlue = (frontBlue *alpha/255) + (backBlue *((float)(255-alpha)/255));
 		byte newBlue = (byte)fBlue;
 		return  Color.FromArgb(255, newRed, newGreen, newBlue);
 	}

@@ -19,49 +19,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.Common.Extensiosn;
 
 namespace Origam.Server;
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[XmlType(TypeName = "parameter",Namespace = "http://asapenginewebapi.advantages.cz/")]
-public partial class Parameter
-{
 
+/// <remarks/>
+[GeneratedCode("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[DebuggerStepThrough]
+[XmlType(TypeName = "parameter", Namespace = "http://asapenginewebapi.advantages.cz/")]
+public class Parameter
+{
     private object valueField;
 
     private string nameField;
 
     /// <remarks/>
-    [XmlElement(Order=0)]
+    [XmlElement(Order = 0)]
     public object value
     {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
+        get { return valueField; }
+        set { valueField = value; }
     }
 
     /// <remarks/>
-    [XmlAttribute()]
+    [XmlAttribute]
     public string name
     {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
+        get { return nameField; }
+        set { nameField = value; }
     }
 }
 

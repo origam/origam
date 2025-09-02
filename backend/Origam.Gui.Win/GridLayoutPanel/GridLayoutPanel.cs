@@ -31,5 +31,4 @@ public class GridLayoutPanel : AsTabControl
 	public GridLayoutPanel() : base()
 	{
 	}
-	
 }

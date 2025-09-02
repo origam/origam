@@ -27,15 +27,17 @@ using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service;
+
 class LocalizedObjectCache
 {
-    private readonly Dictionary<string, Dictionary<Guid, IFilePersistent>> objectDict
-        = new Dictionary<string, Dictionary<Guid, IFilePersistent>>();
+    private readonly Dictionary<string, Dictionary<Guid, IFilePersistent>> objectDict =
+        new Dictionary<string, Dictionary<Guid, IFilePersistent>>();
     private string locale => Thread.CurrentThread.CurrentUICulture.Name;
-    public IEnumerable<KeyValuePair<Guid, IFilePersistent>> LocalizedPairs => 
+    public IEnumerable<KeyValuePair<Guid, IFilePersistent>> LocalizedPairs =>
         objectDict.ContainsKey(locale)
             ? objectDict[locale].Cast<KeyValuePair<Guid, IFilePersistent>>()
             : Enumerable.Empty<KeyValuePair<Guid, IFilePersistent>>();
+
     public LocalizedObjectCache(LocalizedObjectCache other)
     {
         foreach (var pair in other.objectDict)
@@ -44,20 +46,19 @@ class LocalizedObjectCache
             objectDict.Add(pair.Key, innerDict);
         }
     }
-    public LocalizedObjectCache()
-    {
-    }
+
+    public LocalizedObjectCache() { }
+
     public bool Contains(Guid id)
     {
-        return objectDict.ContainsKey(locale) &&
-               objectDict[locale].ContainsKey(id);
+        return objectDict.ContainsKey(locale) && objectDict[locale].ContainsKey(id);
     }
+
     public Maybe<IFilePersistent> Get(Guid id)
     {
-        return Contains(id)
-            ? Maybe<IFilePersistent>.From(objectDict[locale][id])
-            : null;
+        return Contains(id) ? Maybe<IFilePersistent>.From(objectDict[locale][id]) : null;
     }
+
     public void Add(Guid id, IFilePersistent instance)
     {
         if (!objectDict.ContainsKey(locale))
@@ -66,8 +67,11 @@ class LocalizedObjectCache
         }
         objectDict[locale].Add(id, instance);
     }
-    public IFilePersistent this[Guid id] {
-        set {
+
+    public IFilePersistent this[Guid id]
+    {
+        set
+        {
             if (!objectDict.ContainsKey(locale))
             {
                 objectDict.Add(locale, new Dictionary<Guid, IFilePersistent>());
@@ -75,6 +79,7 @@ class LocalizedObjectCache
             objectDict[locale][id] = value;
         }
     }
+
     public void Remove(Guid id)
     {
         foreach (var dictionary in objectDict.Values)
@@ -82,6 +87,7 @@ class LocalizedObjectCache
             dictionary.Remove(id);
         }
     }
+
     public void AddRange(IEnumerable<IFilePersistent> newInstances)
     {
         foreach (IFilePersistent instance in newInstances)

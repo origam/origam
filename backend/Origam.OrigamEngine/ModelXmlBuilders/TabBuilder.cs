@@ -22,15 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for TabControlBuilder.
 /// </summary>
 public class TabBuilder
 {
-	public static void Build(XmlElement parentNode, string text)
-	{
-		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-		parentNode.SetAttribute("Type", "Box");
-		parentNode.SetAttribute("Name", text);
-	}
+    public static void Build(XmlElement parentNode, string text)
+    {
+        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+        parentNode.SetAttribute("Type", "Box");
+        parentNode.SetAttribute("Name", text);
+    }
 }

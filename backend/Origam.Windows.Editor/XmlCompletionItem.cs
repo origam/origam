@@ -78,10 +78,12 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
         switch (dataType)
         {
             case XmlCompletionItemType.XmlAttribute:
-                area.Document.Insert(endOffset, "=\"\"");
-                area.Caret.Offset--;
-                //					XmlCodeCompletionBinding.Instance.CtrlSpace(context.Editor);
-                break;
+                {
+                    area.Document.Insert(endOffset, "=\"\"");
+                    area.Caret.Offset--;
+                    //					XmlCodeCompletionBinding.Instance.CtrlSpace(context.Editor);
+                    break;
+                }
         }
     }
     public override string ToString()

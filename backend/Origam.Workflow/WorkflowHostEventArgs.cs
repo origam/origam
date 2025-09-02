@@ -22,39 +22,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workflow;
+
 public delegate void WorkflowHostEvent(object sender, WorkflowHostEventArgs e);
+
 /// <summary>
 /// Summary description for WorkflowHostEventArgs.
 /// </summary>
 public class WorkflowHostEventArgs : EventArgs
 {
-	private WorkflowEngine _workflowEngine;
-	private Exception _exception;
-	public WorkflowHostEventArgs(WorkflowEngine workflowEngine, Exception exception) : base()
-	{
-		_workflowEngine = workflowEngine;
-		_exception = exception;
-	}
-	public WorkflowEngine Engine
-	{
-		get
-		{
-			return _workflowEngine;
-		}
-		set
-		{
-			_workflowEngine = value;
-		}
-	}
-	public Exception Exception
-	{
-		get
-		{
-			return _exception;
-		}
-		set
-		{
-			_exception = value;
-		}
-	}
+    private WorkflowEngine _workflowEngine;
+    private Exception _exception;
+
+    public WorkflowHostEventArgs(WorkflowEngine workflowEngine, Exception exception)
+        : base()
+    {
+        _workflowEngine = workflowEngine;
+        _exception = exception;
+    }
+
+    public WorkflowEngine Engine
+    {
+        get { return _workflowEngine; }
+        set { _workflowEngine = value; }
+    }
+    public Exception Exception
+    {
+        get { return _exception; }
+        set { _exception = value; }
+    }
 }

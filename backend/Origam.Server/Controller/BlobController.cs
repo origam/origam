@@ -27,99 +27,98 @@ using System.Security.Principal;
 using System.Threading;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.DA;
 using Origam.Schema;
-using Origam.Workbench.Services;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
+using Origam.Workbench.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace Origam.Server.Controller;
+
 [Controller]
 [Route("internalApi/[controller]")]
 public class BlobController : AbstractController
 {
     private readonly IStringLocalizer<SharedResources> localizer;
     private readonly CoreHttpTools httpTools = new();
+
     public BlobController(
-        SessionObjects sessionObjects, 
+        SessionObjects sessionObjects,
         IStringLocalizer<SharedResources> localizer,
-        ILogger<BlobController> log, IWebHostEnvironment environment) 
+        ILogger<BlobController> log,
+        IWebHostEnvironment environment
+    )
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
     }
+
     [HttpPost("[action]")]
-    public IActionResult DownloadToken(
-        [FromBody][Required]BlobDownloadTokenInput input)
+    public IActionResult DownloadToken([FromBody] [Required] BlobDownloadTokenInput input)
     {
         return AmbiguousInputToRowData(input, dataService)
             .Map(rowData => CreateDownloadToken(input, rowData))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult UploadToken(
-        [FromBody][Required]BlobUploadTokenInput input)
+    public IActionResult UploadToken([FromBody] [Required] BlobUploadTokenInput input)
     {
         return AmbiguousInputToRowData(input, dataService)
             .Map(rowData => CreateUploadToken(input, rowData))
             .Finally(UnwrapReturnValue);
     }
+
     [AllowAnonymous]
     [HttpGet("{token:guid}")]
     public IActionResult Get(Guid token)
     {
         try
         {
-            var blobDownloadRequest = sessionObjects.SessionManager
-                .GetBlobDownloadRequest(token);
-            if(blobDownloadRequest == null)
+            var blobDownloadRequest = sessionObjects.SessionManager.GetBlobDownloadRequest(token);
+            if (blobDownloadRequest == null)
             {
-                return NotFound(localizer["ErrorBlobNotAvailable"]
-                    .ToString());
+                return NotFound(localizer["ErrorBlobNotAvailable"].ToString());
             }
-            if(string.IsNullOrEmpty(blobDownloadRequest.BlobMember)
-            && blobDownloadRequest.BlobLookupId == Guid.Empty)
+            if (
+                string.IsNullOrEmpty(blobDownloadRequest.BlobMember)
+                && blobDownloadRequest.BlobLookupId == Guid.Empty
+            )
             {
-                return BadRequest(
-                    localizer["ErrorBlobMemberBlobLookupNotSpecified"]
-                        .ToString());
+                return BadRequest(localizer["ErrorBlobMemberBlobLookupNotSpecified"].ToString());
             }
             Stream resultStream;
             MemoryStream memoryStream;
-            var blobMemberAvailable 
-                = !string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
-                  && (blobDownloadRequest.Row[
-                          blobDownloadRequest.BlobMember] != DBNull.Value);
-            if((blobDownloadRequest.BlobLookupId != Guid.Empty) 
-            && !blobMemberAvailable)
+            var blobMemberAvailable =
+                !string.IsNullOrEmpty(blobDownloadRequest.BlobMember)
+                && (blobDownloadRequest.Row[blobDownloadRequest.BlobMember] != DBNull.Value);
+            if ((blobDownloadRequest.BlobLookupId != Guid.Empty) && !blobMemberAvailable)
             {
-                var lookupService = ServiceManager.Services
-                    .GetService<IDataLookupService>();
+                var lookupService = ServiceManager.Services.GetService<IDataLookupService>();
                 var result = lookupService.GetDisplayText(
-                    lookupId: blobDownloadRequest.BlobLookupId, 
-                    lookupValue: DatasetTools.PrimaryKey(
-                        blobDownloadRequest.Row)[0], 
-                    useCache: false, 
-                    returnMessageIfNull: false, 
-                    transactionId: null);
+                    lookupId: blobDownloadRequest.BlobLookupId,
+                    lookupValue: DatasetTools.PrimaryKey(blobDownloadRequest.Row)[0],
+                    useCache: false,
+                    returnMessageIfNull: false,
+                    transactionId: null
+                );
                 byte[] bytes;
-                switch(result)
+                switch (result)
                 {
                     case null:
                     {
-                        return BadRequest(localizer["ErrorBlobNoData"]
-                            .ToString());
+                        return BadRequest(localizer["ErrorBlobNoData"].ToString());
                     }
                     case byte[] arrayOfBytes:
                     {
@@ -128,45 +127,39 @@ public class BlobController : AbstractController
                     }
                     default:
                     {
-                        return BadRequest(localizer["ErrorBlobNotBlob"]
-                            .ToString());
+                        return BadRequest(localizer["ErrorBlobNotBlob"].ToString());
                     }
                 }
                 memoryStream = new MemoryStream(bytes);
             }
             else
             {
-                if(blobDownloadRequest.Row[blobDownloadRequest.BlobMember!] 
-                == DBNull.Value)
+                if (blobDownloadRequest.Row[blobDownloadRequest.BlobMember!] == DBNull.Value)
                 {
-                    return BadRequest(localizer["ErrorBlobRecordEmpty"]
-                        .ToString());
+                    return BadRequest(localizer["ErrorBlobRecordEmpty"].ToString());
                 }
-                memoryStream = new MemoryStream((byte[])blobDownloadRequest
-                    .Row[blobDownloadRequest.BlobMember]);
+                memoryStream = new MemoryStream(
+                    (byte[])blobDownloadRequest.Row[blobDownloadRequest.BlobMember]
+                );
             }
-            if(blobDownloadRequest.IsCompressed)
+            if (blobDownloadRequest.IsCompressed)
             {
-                resultStream = new GZipStream(memoryStream,
-                    CompressionMode.Decompress);
+                resultStream = new GZipStream(memoryStream, CompressionMode.Decompress);
             }
             else
             {
                 resultStream = memoryStream;
             }
-            var filename = (string)blobDownloadRequest
-                .Row[blobDownloadRequest.Property];
-            var disposition = httpTools.GetFileDisposition(
-                Request.GetUserAgent(), filename);
-            if(!blobDownloadRequest.IsPreview)
+            var filename = (string)blobDownloadRequest.Row[blobDownloadRequest.Property];
+            var disposition = httpTools.GetFileDisposition(Request.GetUserAgent(), filename);
+            if (!blobDownloadRequest.IsPreview)
             {
                 disposition = "attachment; " + disposition;
             }
-            Response.Headers.Append(
-                HeaderNames.ContentDisposition, disposition);
+            Response.Headers.Append(HeaderNames.ContentDisposition, disposition);
             return File(resultStream, HttpTools.Instance.GetMimeType(filename));
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return StatusCode(500, ex);
         }
@@ -175,84 +168,79 @@ public class BlobController : AbstractController
             sessionObjects.SessionManager.RemoveBlobDownloadRequest(token);
         }
     }
+
     [AllowAnonymous]
     [HttpPost("{token:guid}/{filename}")]
     public IActionResult Post(Guid token, string filename)
     {
         try
         {
-            var blobUploadRequest = sessionObjects.SessionManager
-                .GetBlobUploadRequest(token);
-            if(blobUploadRequest == null)
+            var blobUploadRequest = sessionObjects.SessionManager.GetBlobUploadRequest(token);
+            if (blobUploadRequest == null)
             {
-                return NotFound(localizer["ErrorBlobFileNotAvailable"]
-                    .ToString());
+                return NotFound(localizer["ErrorBlobFileNotAvailable"].ToString());
             }
             //todo: review user management
-            Thread.CurrentPrincipal =
-                new GenericPrincipal(
-                    new GenericIdentity(blobUploadRequest.UserName),
-                    new string[] { });
+            Thread.CurrentPrincipal = new GenericPrincipal(
+                new GenericIdentity(blobUploadRequest.UserName),
+                new string[] { }
+            );
             var profile = SecurityTools.CurrentUserProfile();
-            if(CheckMember(blobUploadRequest.OriginalPathMember, false))
+            if (CheckMember(blobUploadRequest.OriginalPathMember, false))
             {
-                blobUploadRequest.Row[blobUploadRequest.OriginalPathMember] 
-                    = filename;
+                blobUploadRequest.Row[blobUploadRequest.OriginalPathMember] = filename;
             }
-            if(CheckMember(blobUploadRequest.DateCreatedMember, false))
+            if (CheckMember(blobUploadRequest.DateCreatedMember, false))
             {
-                blobUploadRequest.Row[blobUploadRequest.DateCreatedMember] 
-                    = blobUploadRequest.DateCreated;
+                blobUploadRequest.Row[blobUploadRequest.DateCreatedMember] =
+                    blobUploadRequest.DateCreated;
             }
-            if(CheckMember(blobUploadRequest.DateLastModifiedMember, false))
+            if (CheckMember(blobUploadRequest.DateLastModifiedMember, false))
             {
-                blobUploadRequest.Row[
-                    blobUploadRequest.DateLastModifiedMember] 
-                    = blobUploadRequest.DateLastModified;
+                blobUploadRequest.Row[blobUploadRequest.DateLastModifiedMember] =
+                    blobUploadRequest.DateLastModified;
             }
-            if(CheckMember(blobUploadRequest.CompressionStateMember, false))
+            if (CheckMember(blobUploadRequest.CompressionStateMember, false))
             {
-                blobUploadRequest.Row[
-                    blobUploadRequest.CompressionStateMember] 
-                    = blobUploadRequest.ShouldCompress;
+                blobUploadRequest.Row[blobUploadRequest.CompressionStateMember] =
+                    blobUploadRequest.ShouldCompress;
             }
             var input = StreamTools.ReadToEnd(Request.Body);
-            if(blobUploadRequest.ShouldCompress)
+            if (blobUploadRequest.ShouldCompress)
             {
-                var gZipStream = new GZipStream(
-                    new MemoryStream(input), CompressionMode.Compress);
-                blobUploadRequest.Row[blobUploadRequest.BlobMember] 
-                    = StreamTools.ReadToEnd(gZipStream);
+                var gZipStream = new GZipStream(new MemoryStream(input), CompressionMode.Compress);
+                blobUploadRequest.Row[blobUploadRequest.BlobMember] = StreamTools.ReadToEnd(
+                    gZipStream
+                );
             }
             else
             {
                 blobUploadRequest.Row[blobUploadRequest.BlobMember] = input;
             }
-            if(CheckMember(blobUploadRequest.FileSizeMember, false))
+            if (CheckMember(blobUploadRequest.FileSizeMember, false))
             {
-                blobUploadRequest.Row[blobUploadRequest.FileSizeMember] 
-                    = input.LongLength;
+                blobUploadRequest.Row[blobUploadRequest.FileSizeMember] = input.LongLength;
             }
-            if(CheckMember(blobUploadRequest.ThumbnailMember, false))
+            if (CheckMember(blobUploadRequest.ThumbnailMember, false))
             {
                 try
                 {
                     // The image is loaded to check that the input actually
                     // represents an image
                     using var image = Image.Load(input);
-                    var parameterService = ServiceManager.Services
-                        .GetService<IParameterService>();
-                    var width = (int) parameterService
-                        .GetParameterValue(
+                    var parameterService = ServiceManager.Services.GetService<IParameterService>();
+                    var width = (int)
+                        parameterService.GetParameterValue(
                             blobUploadRequest.ThumbnailWidthConstantId,
-                            OrigamDataType.Integer);
-                    var height = (int) parameterService
-                        .GetParameterValue(
+                            OrigamDataType.Integer
+                        );
+                    var height = (int)
+                        parameterService.GetParameterValue(
                             blobUploadRequest.ThumbnailHeightConstantId,
-                            OrigamDataType.Integer);
+                            OrigamDataType.Integer
+                        );
                     var row = blobUploadRequest.Row;
-                    var thumbnailMember 
-                        = blobUploadRequest.ThumbnailMember;
+                    var thumbnailMember = blobUploadRequest.ThumbnailMember;
                     row[thumbnailMember] = ResizeImage(input, width, height);
                 }
                 catch
@@ -264,7 +252,7 @@ public class BlobController : AbstractController
             blobUploadRequest.Row[blobUploadRequest.Property] = filename;
             return Ok();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return StatusCode(500, ex);
         }
@@ -273,21 +261,18 @@ public class BlobController : AbstractController
             sessionObjects.SessionManager.RemoveBlobUploadRequest(token);
         }
     }
-    private IActionResult CreateDownloadToken(
-        BlobDownloadTokenInput input, RowData rowData)
+
+    private IActionResult CreateDownloadToken(BlobDownloadTokenInput input, RowData rowData)
     {
         var token = Guid.NewGuid();
         sessionObjects.SessionManager.AddBlobDownloadRequest(
             token,
-            new BlobDownloadRequest(
-                rowData.Row, 
-                input.Parameters, 
-                input.Property, 
-                input.IsPreview));
+            new BlobDownloadRequest(rowData.Row, input.Parameters, input.Property, input.IsPreview)
+        );
         return Ok(token);
     }
-    private IActionResult CreateUploadToken(
-        BlobUploadTokenInput input, RowData rowData)
+
+    private IActionResult CreateUploadToken(BlobUploadTokenInput input, RowData rowData)
     {
         var token = Guid.NewGuid();
         sessionObjects.SessionManager.AddBlobUploadRequest(
@@ -299,13 +284,15 @@ public class BlobController : AbstractController
                 input.DateCreated,
                 input.DateLastModified,
                 input.Property,
-                rowData.Entity));
+                rowData.Entity
+            )
+        );
         return Ok(token);
     }
+
     private static bool CheckMember(object val, bool throwExceptions)
     {
-        if((val != null) && !val.Equals(string.Empty) 
-        && !val.Equals(Guid.Empty))
+        if ((val != null) && !val.Equals(string.Empty) && !val.Equals(Guid.Empty))
         {
             return true;
         }
@@ -315,6 +302,7 @@ public class BlobController : AbstractController
         }
         return false;
     }
+
     private static byte[] ResizeImage(byte[] byteArrayImage, int width, int height)
     {
         IImageFormat format = Image.DetectFormat(byteArrayImage);
@@ -338,15 +326,13 @@ public class BlobController : AbstractController
         else
         {
             percent = percentWidth;
-            destY = Convert.ToInt16(
-                (height - (sourceHeight * percent)) / 2);
+            destY = Convert.ToInt16((height - (sourceHeight * percent)) / 2);
         }
         var destWidth = (int)(sourceWidth * percent);
         var destHeight = (int)(sourceHeight * percent);
         using var backgroundImage = new Image<Rgba32>(width, height, Color.Black);
         image.Mutate(x => x.Resize(destWidth, destHeight));
-        backgroundImage.Mutate(x => 
-            x.DrawImage(image, new Point(destX, destY), 1f));
+        backgroundImage.Mutate(x => x.DrawImage(image, new Point(destX, destY), 1f));
         using var memoryStream = new MemoryStream();
         backgroundImage.Save(memoryStream, format);
         return memoryStream.ToArray();

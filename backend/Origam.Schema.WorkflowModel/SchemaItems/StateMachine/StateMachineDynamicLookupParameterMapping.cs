@@ -19,16 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for ContextStoreLink.
 /// </summary>
@@ -38,67 +39,61 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 {
-	public const string CategoryConst = "StateMachineDynamicLookupParameterMapping";
-	public StateMachineDynamicLookupParameterMapping() : base() {}
-	public StateMachineDynamicLookupParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public StateMachineDynamicLookupParameterMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "17";
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Field);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Properties
-	WorkflowEntityParameterMappingType _type = WorkflowEntityParameterMappingType.Current;
-	[XmlAttribute("type")]
-	public WorkflowEntityParameterMappingType Type
-	{
-		get
-		{
-			return _type;
-		}
-		set
-		{
-			_type = value;
-		}
-	}
-	public Guid FieldId;
-	[TypeConverter(typeof(StateMachineAllFieldConverter))]
+    public const string CategoryConst = "StateMachineDynamicLookupParameterMapping";
+
+    public StateMachineDynamicLookupParameterMapping()
+        : base() { }
+
+    public StateMachineDynamicLookupParameterMapping(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public StateMachineDynamicLookupParameterMapping(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override string Icon
+    {
+        get { return "17"; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Field);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Properties
+    WorkflowEntityParameterMappingType _type = WorkflowEntityParameterMappingType.Current;
+
+    [XmlAttribute("type")]
+    public WorkflowEntityParameterMappingType Type
+    {
+        get { return _type; }
+        set { _type = value; }
+    }
+    public Guid FieldId;
+
+    [TypeConverter(typeof(StateMachineAllFieldConverter))]
     [XmlReference("field", "FieldId")]
-	public IDataEntityColumn Field
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey(this.FieldId);
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
-		}
-		set
-		{
-			this.FieldId = (Guid)value.PrimaryKey["Id"];
-		}
-	}
-	#endregion
+    public IDataEntityColumn Field
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey(this.FieldId);
+            return (IDataEntityColumn)
+                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set { this.FieldId = (Guid)value.PrimaryKey["Id"]; }
+    }
+    #endregion
 }

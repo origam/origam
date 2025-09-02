@@ -20,36 +20,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Services;
-using System.Linq;
 
 namespace Origam.OrigamEngine;
+
 /// <summary>
 /// Summary description for TranslationBuilder.
 /// </summary>
 public static class TranslationBuilder
 {
-    public static void Build(Stream stream, LocalizationCache currentTranslations, string locale, Guid packageId)
+    public static void Build(
+        Stream stream,
+        LocalizationCache currentTranslations,
+        string locale,
+        Guid packageId
+    )
     {
         XmlTextWriter xtw = new XmlTextWriter(stream, System.Text.Encoding.UTF8);
         xtw.Formatting = Formatting.Indented;
         xtw.WriteStartDocument(true);
         xtw.WriteStartElement("OrigamLocalization");
-        IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IDocumentationService docSvc = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-        List<ISchemaItem> list = persistence
-            .SchemaProvider
-            .RetrieveListByPackage<ISchemaItem>(packageId);
+        IPersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        IDocumentationService docSvc =
+            ServiceManager.Services.GetService(typeof(IDocumentationService))
+            as IDocumentationService;
+        List<ISchemaItem> list = persistence.SchemaProvider.RetrieveListByPackage<ISchemaItem>(
+            packageId
+        );
         foreach (ISchemaItem item in list)
         {
-            List<MemberAttributeInfo> memberList = Reflector.FindMembers(item.GetType(), typeof(LocalizableAttribute), new Type[] { });
+            List<MemberAttributeInfo> memberList = Reflector.FindMembers(
+                item.GetType(),
+                typeof(LocalizableAttribute),
+                new Type[] { }
+            );
             Hashtable values = new Hashtable();
             IQueryLocalizable ql = item as IQueryLocalizable;
             foreach (MemberAttributeInfo mai in memberList)
@@ -81,7 +94,12 @@ public static class TranslationBuilder
                     string translation;
                     if (currentTranslations != null)
                     {
-                        translation = currentTranslations.GetLocalizedString(item.Id, (string)entry.Key, entry.Value.ToString(), locale);
+                        translation = currentTranslations.GetLocalizedString(
+                            item.Id,
+                            (string)entry.Key,
+                            entry.Value.ToString(),
+                            locale
+                        );
                     }
                     else
                     {
@@ -93,7 +111,8 @@ public static class TranslationBuilder
                 string[] categoriesToInclude = GetDocumentationCategoriesToInclude();
                 foreach (DocumentationComplete.DocumentationRow docRow in docData.Documentation)
                 {
-                    if (!categoriesToInclude.Contains(docRow.Category)) {
+                    if (!categoriesToInclude.Contains(docRow.Category))
+                    {
                         continue;
                     }
                     xtw.WriteStartElement("Documentation");
@@ -102,7 +121,12 @@ public static class TranslationBuilder
                     string translation;
                     if (currentTranslations != null)
                     {
-                        translation = currentTranslations.GetLocalizedString(item.Id, "Documentation " + docRow.Category, docRow.Data.ToString(), locale);
+                        translation = currentTranslations.GetLocalizedString(
+                            item.Id,
+                            "Documentation " + docRow.Category,
+                            docRow.Data.ToString(),
+                            locale
+                        );
                     }
                     else
                     {
@@ -118,14 +142,16 @@ public static class TranslationBuilder
         xtw.WriteEndDocument();
         xtw.Flush();
     }
+
     private static string[] GetDocumentationCategoriesToInclude()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        if (settings.LocalizationIncludedDocumentationElements == null) { 
+        if (settings.LocalizationIncludedDocumentationElements == null)
+        {
             return new string[0];
         }
-        return settings.LocalizationIncludedDocumentationElements
-            .Split(',')
+        return settings
+            .LocalizationIncludedDocumentationElements.Split(',')
             .Select(x => x.Trim())
             .Where(x => x != "")
             .ToArray();

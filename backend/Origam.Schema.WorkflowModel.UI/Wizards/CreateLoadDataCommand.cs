@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI;
 
-
 namespace Origam.Schema.WorkflowModel.UI;
 /// <summary>
 /// Summary description for CreateDataStructureFromEntityCommand.

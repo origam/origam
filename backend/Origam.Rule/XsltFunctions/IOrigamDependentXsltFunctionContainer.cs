@@ -32,7 +32,7 @@ public interface IOrigamDependentXsltFunctionContainer
 {
     IPersistenceService Persistence { get; set; }
     IDataLookupService LookupService { get; set; }
-    ICoreDataService DataService  { get; set; }
+    ICoreDataService DataService { get; set; }
     IParameterService ParameterService { get; set; }
     IBusinessServicesService BusinessService { get; set; }
     IStateMachineService StateMachineService { get; set; }

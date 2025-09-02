@@ -32,15 +32,15 @@ namespace Origam.Schema.ItemCollection;
 public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 {
     private List<T> list;
-    
+
     protected bool disposing;
     protected bool clearing;
-    
+
     public bool DeleteItemsOnClear { get; set; } = true;
     public bool RemoveDeletedItems { get; set; } = true;
     public bool UpdateParentItem { get; set; } = true;
-    
-    public ISchemaItem ParentSchemaItem { get; set;}
+
+    public ISchemaItem ParentSchemaItem { get; set; }
 
     public SchemaItemCollectionBase()
     {
@@ -51,14 +51,13 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     {
         list = new List<T>(capacity);
     }
-        
+
     protected void SetDerivedFrom(ISchemaItem item)
     {
         if (item.ParentItem != null)
         {
             // If we assign derived items, we mark them
-            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem
-                    .PrimaryKey))
+            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem.PrimaryKey))
             {
                 item.DerivedFrom = item.ParentItem;
                 item.ParentItem = ParentSchemaItem;
@@ -83,48 +82,46 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         return GetEnumerator();
     }
 
-    protected virtual void OnClear()
-    {
-    }
+    protected virtual void OnClear() { }
 
     protected virtual void OnClearComplete() // Redundant
-    {
-    }
+    { }
 
-    protected virtual void OnInsert(int index, T value)
-    {
-    }
+    protected virtual void OnInsert(int index, T value) { }
 
-    protected virtual void OnInsertComplete(int index, T value) // Redundant
-    {
-    }
+    protected virtual void OnInsertComplete(
+        int index,
+        T value
+    ) // Redundant
+    { }
 
-    protected virtual void OnRemove(int index, T value)
-    {
-    }
+    protected virtual void OnRemove(int index, T value) { }
 
-    protected virtual void OnRemoveComplete(int index, T value) // Redundant
-    {
-    }
+    protected virtual void OnRemoveComplete(
+        int index,
+        T value
+    ) // Redundant
+    { }
 
-    protected virtual void OnSet(int index, T oldValue, T newValue)
-    {
-    }
+    protected virtual void OnSet(int index, T oldValue, T newValue) { }
 
-    protected virtual void OnSetComplete(int index, T oldValue, T newValue) // Redundant
-    {
-    }
+    protected virtual void OnSetComplete(
+        int index,
+        T oldValue,
+        T newValue
+    ) // Redundant
+    { }
 
-    protected virtual void OnValidate(T value) // Redundant
-    {
-    }
+    protected virtual void OnValidate(
+        T value
+    ) // Redundant
+    { }
 
     public void RemoveAt(int index)
     {
         if ((index < 0) || (index >= InnerList.Count))
         {
-            throw new ArgumentOutOfRangeException(nameof(index),
-                "ArgumentOutOfRange_Index");
+            throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
         }
 
         T value = InnerList[index];
@@ -160,7 +157,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     }
 
     public abstract void AddRange(IEnumerable<ISchemaItem> value);
-    
+
     public bool Contains(T value)
     {
         return InnerList.Contains(value);
@@ -175,8 +172,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     {
         if ((index < 0) || (index > InnerList.Count))
         {
-            throw new ArgumentOutOfRangeException(nameof(index),
-                "ArgumentOutOfRange_Index");
+            throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
         }
 
         OnValidate(value);
@@ -238,8 +234,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         {
             if ((index < 0) || (index >= InnerList.Count))
             {
-                throw new ArgumentOutOfRangeException(nameof(index),
-                    "ArgumentOutOfRange_Index");
+                throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
             }
 
             return InnerList[index];
@@ -248,8 +243,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         {
             if ((index < 0) || (index >= InnerList.Count))
             {
-                throw new ArgumentOutOfRangeException(nameof(index),
-                    "ArgumentOutOfRange_Index");
+                throw new ArgumentOutOfRangeException(nameof(index), "ArgumentOutOfRange_Index");
             }
 
             OnValidate(value);
@@ -272,7 +266,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     {
         InnerList.CopyTo(array, arrayIndex);
     }
-    
+
     public void Dispose()
     {
         disposing = true;

@@ -22,12 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench;
+
 /// <summary>
 /// Summary description for ILoggingService.
 /// </summary>
 public interface ILoggingService
 {
-	void LogProcess(Guid id, Guid workflowId, Guid formId, string processName, DateTime start, DateTime finish, string remark, string errorInfo);
-	void LogProcessStart(Guid id, Guid workflowId, Guid formId, string processName, DateTime start, string remark);
-	void LogProcessEnd(Guid logId, DateTime finish, string remark, string errorInfo);
+    void LogProcess(
+        Guid id,
+        Guid workflowId,
+        Guid formId,
+        string processName,
+        DateTime start,
+        DateTime finish,
+        string remark,
+        string errorInfo
+    );
+    void LogProcessStart(
+        Guid id,
+        Guid workflowId,
+        Guid formId,
+        string processName,
+        DateTime start,
+        string remark
+    );
+    void LogProcessEnd(Guid logId, DateTime finish, string remark, string errorInfo);
 }

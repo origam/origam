@@ -20,20 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Data;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
+
 public class JsonUtils
 {
-	public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
-	{
+    public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
+    {
         SerializeToJson(textWriter, value, omitRootElement, false);
     }
-    public static void SerializeToJson(TextWriter textWriter, object value,
-       bool omitRootElement, bool omitMainElement)
+
+    public static void SerializeToJson(
+        TextWriter textWriter,
+        object value,
+        bool omitRootElement,
+        bool omitMainElement
+    )
     {
         JsonSerializer serializer = new JsonSerializer();
         // remove standard DataSet and XML converters
@@ -43,8 +49,9 @@ public class JsonUtils
         if (value is DataSet)
         {
             DataSetConverter datasetConverter = new DataSetConverter(
-                omitRootElement: omitRootElement, 
-                omitMainElement: omitMainElement);
+                omitRootElement: omitRootElement,
+                omitMainElement: omitMainElement
+            );
             serializer.Converters.Add(datasetConverter);
             serializer.Converters.Add(new DataRowConverter());
         }
@@ -59,25 +66,27 @@ public class JsonUtils
         serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
         serializer.Serialize(writer, value);
     }
+
     public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
-	{
-		JsonConverter converter = GetJsonConverter(serializer, type);
-		if (converter != null)
-		{
-			serializer.Converters.Remove(converter);
-		}
-	}
-	public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
-	{
-		JsonConverter result = null;
-		foreach (JsonConverter converter in serializer.Converters)
-		{
-			if (type.Equals(converter.GetType()))
-			{
-				result = converter;
-				break;
-			}
-		}
-		return result;
-	}
+    {
+        JsonConverter converter = GetJsonConverter(serializer, type);
+        if (converter != null)
+        {
+            serializer.Converters.Remove(converter);
+        }
+    }
+
+    public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
+    {
+        JsonConverter result = null;
+        foreach (JsonConverter converter in serializer.Converters)
+        {
+            if (type.Equals(converter.GetType()))
+            {
+                result = converter;
+                break;
+            }
+        }
+        return result;
+    }
 }

@@ -27,13 +27,13 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Rule;
 
-public class IndexedRuleQueue: IEnumerable<object[]>
+public class IndexedRuleQueue : IEnumerable<object[]>
 {
-    private readonly HashSet<int> hashSet = new ();
-    private readonly Queue<object[]> queue = new ();
+    private readonly HashSet<int> hashSet = new();
+    private readonly Queue<object[]> queue = new();
 
     public int Count => queue.Count;
-    
+
     public void Enqueue(object[] entry)
     {
         hashSet.Add(GetHash(entry));
@@ -45,7 +45,6 @@ public class IndexedRuleQueue: IEnumerable<object[]>
         int hash = GetHash(row, ruleSet);
         return hashSet.Contains(hash);
     }
-
 
     public object[] Peek()
     {
@@ -65,7 +64,7 @@ public class IndexedRuleQueue: IEnumerable<object[]>
         queue.Clear();
         hashSet.Clear();
     }
-    
+
     public IEnumerator<object[]> GetEnumerator()
     {
         return queue.GetEnumerator();

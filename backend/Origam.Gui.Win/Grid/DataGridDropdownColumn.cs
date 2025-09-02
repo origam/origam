@@ -88,10 +88,22 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 	private void Table_ColumnChanging(object sender, DataColumnChangeEventArgs e)
 	{
         OrigamDataRow row = e.Row as OrigamDataRow;
-        if (!row.IsColumnWithValidChange(e.Column)) return;
-		if(! row.Equals(this.DropDown.CurrentRow)) return;
-		if(this.DataGridTableStyle == null) return;
-		DataGrid grid = this.DataGridTableStyle.DataGrid;
+        if (!row.IsColumnWithValidChange(e.Column))
+        {
+            return;
+        }
+
+        if (! row.Equals(this.DropDown.CurrentRow))
+        {
+            return;
+        }
+
+        if (this.DataGridTableStyle == null)
+        {
+            return;
+        }
+
+        DataGrid grid = this.DataGridTableStyle.DataGrid;
 		foreach(ColumnParameterMapping mapping in _dropDown.ParameterMappings)
 		{
 			if(mapping.ColumnName == e.Column.ColumnName)
@@ -117,8 +129,12 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 	{
 		_isEditing = false;
 		_dropDown.LookupValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
-		if(_dropDown.IsDisposed) return;
-		base.Abort(rowNum);
+		if(_dropDown.IsDisposed)
+        {
+            return;
+        }
+
+        base.Abort(rowNum);
 	}
 	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
 	{
@@ -164,8 +180,12 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 	}
 	protected override bool Commit(CurrencyManager dataSource, int rowNum)
 	{
-		if(_dropDown.Bounds.X != 0 | _dropDown.Bounds.Y != 0 | _dropDown.Width != 0) _dropDown.Bounds = Rectangle.Empty;
-		_dropDown.LookupValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
+		if(_dropDown.Bounds.X != 0 | _dropDown.Bounds.Y != 0 | _dropDown.Width != 0)
+        {
+            _dropDown.Bounds = Rectangle.Empty;
+        }
+
+        _dropDown.LookupValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
 		if(_isEditing)
 		{
 			try 
@@ -205,8 +225,12 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 		//base.SetDataGridInColumn(value);
 		if (_dropDown.Parent != null) 
 		{
-			if(_dropDown.Parent.Equals(value)) return;
-			_dropDown.Parent.Controls.Remove(_dropDown);
+			if(_dropDown.Parent.Equals(value))
+            {
+                return;
+            }
+
+            _dropDown.Parent.Controls.Remove(_dropDown);
 		}
 		if (value != null) 
 		{
@@ -235,10 +259,18 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 	}
 	private void CatchGridContext()
 	{
-		if(this.DataGridTableStyle == null) return;
-		DataGrid grid = this.DataGridTableStyle.DataGrid;
-		if(grid.DataSource == null | grid.DataMember == "" | grid.BindingContext == null) return;
-		CurrencyManager cm = grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
+		if(this.DataGridTableStyle == null)
+        {
+            return;
+        }
+
+        DataGrid grid = this.DataGridTableStyle.DataGrid;
+		if(grid.DataSource == null | grid.DataMember == "" | grid.BindingContext == null)
+        {
+            return;
+        }
+
+        CurrencyManager cm = grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
 		if(_handledTable != null)
 		{
 			_handledTable.ColumnChanging -= new DataColumnChangeEventHandler(Table_ColumnChanging); 
@@ -254,9 +286,16 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 		EntityFormatting formatting = DataGridColumnStyleHelper.Formatting(this, source, rowNum);
 		if(formatting != null)
 		{
-			if(!formatting.UseDefaultBackColor) myBackBrush = new SolidBrush(formatting.BackColor);
-			if(!formatting.UseDefaultForeColor) myForeBrush = new SolidBrush(formatting.ForeColor);
-		}
+			if(!formatting.UseDefaultBackColor)
+            {
+                myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
+            if (!formatting.UseDefaultForeColor)
+            {
+                myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
+        }
 		if(DropDown.LookupCanEditSourceRecord)
 		{
 			string text = this.GetColumnValueAtRow(source, rowNum).ToString();

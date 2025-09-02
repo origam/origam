@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for IOrigamMetadataConsumer.
 /// </summary>
 public interface IOrigamMetadataConsumer
 {
-	ISchemaItem OrigamMetadata {get; set;}
+    ISchemaItem OrigamMetadata { get; set; }
 }

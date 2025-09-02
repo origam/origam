@@ -58,7 +58,6 @@ public sealed class DebugClass
 			_form.Text = "DebugForm";
 			((System.ComponentModel.ISupportInitialize)(dataGrid1)).EndInit();
 			_form.ResumeLayout(false);				
-		
 		}
 	}
 	public static string DataDebug(DataSet dataSet)

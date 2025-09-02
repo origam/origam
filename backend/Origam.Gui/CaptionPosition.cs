@@ -20,4 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui;
-public enum CaptionPosition {Left, Right, Top, Bottom, None}
+
+public enum CaptionPosition
+{
+    Left,
+    Right,
+    Top,
+    Bottom,
+    None,
+}

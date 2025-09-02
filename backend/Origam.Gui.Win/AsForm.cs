@@ -26,7 +26,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-
 using Origam.DA;
 using Origam.UI;
 using Origam.Schema.GuiModel;
@@ -88,8 +87,12 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	}
 	public void panel_RecordIdChanged (object sender, EventArgs e)
 	{
-		if(this.PanelBindingSuspendedTemporarily) return;
-		AsPanel panel = sender as AsPanel;
+		if(this.PanelBindingSuspendedTemporarily)
+        {
+            return;
+        }
+
+        AsPanel panel = sender as AsPanel;
         
 		if(panel.ShowAttachments)
 		{
@@ -123,8 +126,11 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	public void PanelAttachementStateHandler (object sender, EventArgs e)
 	{
 		if( !(sender is AsPanel) )
-			return;
-		AsPanel panel = sender as AsPanel;
+        {
+            return;
+        }
+
+        AsPanel panel = sender as AsPanel;
 		// panel is setting ShowAttachments to False
 		if(_currentHandledPanel != null && panel.Name == _currentHandledPanel.Name && panel.ShowAttachments == false)
 		{
@@ -229,11 +235,9 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 			{
 				return false;
 			}
-			else
-			{
-				return _canRefresh;
-			}
-		}
+
+            return _canRefresh;
+        }
 		set => _canRefresh = value;
 	}
 	private string _autoAddNewEntity;
@@ -243,8 +247,11 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 		set
 		{
 			_autoAddNewEntity = value;
-			if(value != null) timer.Start();
-		}
+			if(value != null)
+            {
+                timer.Start();
+            }
+        }
 	}
 	public object EnteringGrid { get; set; }
 	public void RefreshContent()
@@ -264,11 +271,9 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 			{
 				return true;
 			}
-			else
-			{
-				return _isReadOnly;
-			}
-		}
+
+            return _isReadOnly;
+        }
 		set => _isReadOnly = value;
 	}
 	public bool SaveOnClose { get; set; } = true;
@@ -313,21 +318,27 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	public void SaveObject()
 	{
 		this.EndCurrentEdit();
-		if(HasErrors(true)) return;
-		FormGenerator.SaveData();
+		if(HasErrors(true))
+        {
+            return;
+        }
+
+        FormGenerator.SaveData();
 	}
 	private bool HasErrors(bool throwException)
 	{
 		if(FormGenerator.DataSet.HasErrors)
 		{
-			if(throwException) throw new Exception(ResourceUtils.GetString("ErrorsInForm", Environment.NewLine + Environment.NewLine + DatasetTools.GetDatasetErrors(FormGenerator.DataSet)));
-			return true;
+			if(throwException)
+            {
+                throw new Exception(ResourceUtils.GetString("ErrorsInForm", Environment.NewLine + Environment.NewLine + DatasetTools.GetDatasetErrors(FormGenerator.DataSet)));
+            }
+
+            return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
+
+        return false;
+    }
 	public Guid DisplayedItemId { get; set; } 
 	public bool IsUntitled => false;
 	/// <summary>
@@ -436,11 +447,9 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 			{
 				return false;
 			}
-			else
-			{
-				return _isDirty;
-			}
-		}
+
+            return _isDirty;
+        }
 		set
 		{
 			if(!this.IsViewOnly)
@@ -536,13 +545,15 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	{	
 		Control focused = FindFocused(this);
 		if(focused == null)
-			return "No focused control found";
-		else
-			return "Type: " + focused.GetType() + Environment.NewLine
-				+ "Name: " + focused.Name + Environment.NewLine
-				+ "TabStop: " + focused.TabStop + Environment.NewLine
-				+ "TabIndex: " + focused.TabIndex;
-	}
+        {
+            return "No focused control found";
+        }
+
+        return "Type: " + focused.GetType() + Environment.NewLine
+            + "Name: " + focused.Name + Environment.NewLine
+            + "TabStop: " + focused.TabStop + Environment.NewLine
+            + "TabIndex: " + focused.TabIndex;
+    }
 	public void EndCurrentEdit()
 	{
         try
@@ -583,21 +594,29 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	{
 		foreach(AsPanel panel in this.Panels)
 		{
-			if(panel.DataMember == dataMember) return panel;
-		}
+			if(panel.DataMember == dataMember)
+            {
+                return panel;
+            }
+        }
 		return null;
 	}
 	private Control FindFocused(Control parent)
 	{
 		if(parent.Focused)
-			return parent;
-		foreach(Control control in parent.Controls)
+        {
+            return parent;
+        }
+
+        foreach (Control control in parent.Controls)
 		{
 			Control focusedControl = FindFocused(control);
 			
 			if(focusedControl != null)
-				return FindFocused(control);
-		}
+            {
+                return FindFocused(control);
+            }
+        }
 		return null;
 	}
 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -633,8 +652,12 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	}
 	private bool SaveData()
 	{
-		if(FormGenerator == null) return false;
-		try
+		if(FormGenerator == null)
+        {
+            return false;
+        }
+
+        try
 		{
 			this.EndCurrentEdit();
 		}
@@ -667,18 +690,21 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 		
 			switch(result)
 			{
-				case DialogResult.Yes:
-					try
-					{
-						SaveObject();
-					}
-					catch(Exception ex)
-					{
-						AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenSaving", this.TitleName), ex);
-						return false;
-					}
-					return true;
-				case DialogResult.No:
+                case DialogResult.Yes:
+                    {
+                        try
+                        {
+                            SaveObject();
+                        }
+                        catch (Exception ex)
+                        {
+                            AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenSaving", this.TitleName), ex);
+                            return false;
+                        }
+                        return true;
+                    }
+
+                case DialogResult.No:
 					return true;
 		
 				case DialogResult.Cancel:
@@ -714,8 +740,12 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	}
 	private bool IsManagerBinding(CurrencyManager cm)
 	{
-		if(cm == null) return false;
-		return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
+		if(cm == null)
+        {
+            return false;
+        }
+
+        return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
 	}
 	private void timer_Tick(object sender, EventArgs e)
 	{
@@ -753,8 +783,12 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	}
 	public void EndDisable()
 	{
-		if(_disabledControls == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorEndDisable"));
-		foreach(Control control in _disabledControls)
+		if(_disabledControls == null)
+        {
+            throw new InvalidOperationException(ResourceUtils.GetString("ErrorEndDisable"));
+        }
+
+        foreach (Control control in _disabledControls)
 		{
 			control.Enabled = true;
 		}
@@ -788,7 +822,7 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 			float stringWidth = g.MeasureString(text, font).Width;
 			float stringHeight = g.MeasureString(text, font).Height;
 			g.Clear(this.BackColor);
-			g.DrawString(text, font, new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor), this.Width / 2 - (stringWidth / 2), this.Height / 3 + 64);
+			g.DrawString(text, font, new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor), (this.Width / 2) - (stringWidth / 2), (this.Height / 3) + 64);
 		}
 		catch{}
 	}

@@ -21,27 +21,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for AbstractTransformation.
 /// </summary>
 [XmlModelRoot(CategoryConst)]
 public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
 {
-	public const string CategoryConst = "Transformation";
-	public AbstractTransformation() : base() {}
-	public AbstractTransformation(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public AbstractTransformation(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
+    public const string CategoryConst = "Transformation";
+
+    public AbstractTransformation()
+        : base() { }
+
+    public AbstractTransformation(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public AbstractTransformation(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }

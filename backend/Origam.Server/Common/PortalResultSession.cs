@@ -43,6 +43,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Server;
+
 public class PortalResultSession
 {
     private Guid _formSessionId;
@@ -52,7 +53,16 @@ public class PortalResultSession
     private string _type;
     private string _caption;
     private string _icon;
-    public PortalResultSession(Guid formSessionId, string objectId, bool isDirty, UIRequestType type, string caption, string icon, bool askWorkflowClose)
+
+    public PortalResultSession(
+        Guid formSessionId,
+        string objectId,
+        bool isDirty,
+        UIRequestType type,
+        string caption,
+        string icon,
+        bool askWorkflowClose
+    )
     {
         _formSessionId = formSessionId;
         _objectId = objectId;
@@ -62,6 +72,7 @@ public class PortalResultSession
         _icon = icon;
         _askWorkflowClose = askWorkflowClose;
     }
+
     public Guid FormSessionId
     {
         get { return _formSessionId; }

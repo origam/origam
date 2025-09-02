@@ -24,7 +24,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 //
 // This code is in the public domain, and has no warranty.
 
-
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -166,18 +165,14 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 			{
 				return null;
 			}
-			else
-			{
-				if(m_currencyManager.Position >= 0)
-				{
-					return m_properties[this.ValueMember].GetValue(m_currencyManager.Current);
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
+
+            if (m_currencyManager.Position >= 0)
+            {
+                return m_properties[this.ValueMember].GetValue(m_currencyManager.Current);
+            }
+
+            return null;
+        }
 		set
 		{
 			if (value == null)
@@ -266,8 +261,10 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 	protected virtual void OnDataSourceChanged(EventArgs e)
 	{
 		if (DataSourceChanged != null)
-			DataSourceChanged(this, e);
-	}
+        {
+            DataSourceChanged(this, e);
+        }
+    }
 	/// <summary>
 	/// Identifies the item or relation within the data source whose
 	/// contents should be shown.
@@ -315,8 +312,10 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 	protected virtual void OnDataMemberChanged(EventArgs e)
 	{
 		if (DataMemberChanged != null)
-			DataMemberChanged(this, e);
-	}
+        {
+            DataMemberChanged(this, e);
+        }
+    }
 	/// <summary>
 	/// Handles binding context changes
 	/// </summary>
@@ -617,8 +616,12 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 			{
 				object columnValue = pd.GetValue(row);
 				DateTime dateValue = DateTime.MinValue;
-				if(columnValue is DateTime) dateValue = (DateTime)columnValue;
-				if(columnValue is DateTime &&
+				if(columnValue is DateTime)
+                {
+                    dateValue = (DateTime)columnValue;
+                }
+
+                if (columnValue is DateTime &&
 					(
 					dateValue.Hour == 0
 					& dateValue.Minute == 0
@@ -643,68 +646,80 @@ public class AsListView : System.Windows.Forms.ListView, IAsDataConsumer
 	{
 		switch (e.ListChangedType)
 		{
-				// Well, usually fine-grained... The whole list has changed
-				// utterly, so reload it.
-			case ListChangedType.Reset:
-				LoadItemsFromSource();
-				break;
-				// A single item has changed, so just rebuild that.
-			case ListChangedType.ItemChanged:
-				object changedRow = m_currencyManager.List[e.NewIndex];
-				BeginUpdate();
-				Items[e.NewIndex] = BuildItemForRow(changedRow);
-				EndUpdate();
-				break;
-				// A new item has appeared, so add that.
-			case ListChangedType.ItemAdded:
-				object newRow = m_currencyManager.List[e.NewIndex];
-				// We get this event twice if certain grid controls
-				// are used to add a new row to a datatable: once when
-				// the editing of a new row begins, and once again when
-				// that editing commits. (If the user cancels the creation
-				// of the new row, we never see the second creation.)
-				// We detect this by seeing if this is a view on a
-				// row in a DataTable, and if it is, testing to see if
-				// it's a new row under creation.
-				DataRowView drv = newRow as DataRowView;
-				if (drv == null || !drv.IsNew)
-				{
-					// Either we're not dealing with a view on a data
-					// table, or this is the commit notification. Either
-					// way, this is the final notification, so we want
-					// to add the new row now!
-					BeginUpdate();
-					Items.Insert(e.NewIndex, BuildItemForRow(newRow));
-					EndUpdate();
-				}
-				break;
-				// An item has gone away.
-			case ListChangedType.ItemDeleted:
-				if (e.NewIndex < Items.Count)
-				{
-					Items.RemoveAt(e.NewIndex);
-				}
-				break;
-				// An item has changed its index.
-			case ListChangedType.ItemMoved:
-				BeginUpdate();
-				ListViewItem moving = Items[e.OldIndex];
-				Items.Insert(e.NewIndex, moving.Clone() as ListViewItem);
-				Items.Remove(moving);
-				EndUpdate();
-				break;
-				// Something has changed in the metadata. (This control is
-				// too lazy to deal with this in a fine-grained fashion,
-				// mostly because the author has never seen this event
-				// occur... So we deal with it the simple way: reload
-				// everything.)
-			case ListChangedType.PropertyDescriptorAdded:
-			case ListChangedType.PropertyDescriptorChanged:
-			case ListChangedType.PropertyDescriptorDeleted:
-				LoadColumnsFromSource(true);
-				LoadItemsFromSource();
-				break;
-		}
+            // Well, usually fine-grained... The whole list has changed
+            // utterly, so reload it.
+            case ListChangedType.Reset:
+                {
+                    LoadItemsFromSource();
+                    break;
+                }
+            // A single item has changed, so just rebuild that.
+            case ListChangedType.ItemChanged:
+                {
+                    object changedRow = m_currencyManager.List[e.NewIndex];
+                    BeginUpdate();
+                    Items[e.NewIndex] = BuildItemForRow(changedRow);
+                    EndUpdate();
+                    break;
+                }
+            // A new item has appeared, so add that.
+            case ListChangedType.ItemAdded:
+                {
+                    object newRow = m_currencyManager.List[e.NewIndex];
+                    // We get this event twice if certain grid controls
+                    // are used to add a new row to a datatable: once when
+                    // the editing of a new row begins, and once again when
+                    // that editing commits. (If the user cancels the creation
+                    // of the new row, we never see the second creation.)
+                    // We detect this by seeing if this is a view on a
+                    // row in a DataTable, and if it is, testing to see if
+                    // it's a new row under creation.
+                    DataRowView drv = newRow as DataRowView;
+                    if (drv == null || !drv.IsNew)
+                    {
+                        // Either we're not dealing with a view on a data
+                        // table, or this is the commit notification. Either
+                        // way, this is the final notification, so we want
+                        // to add the new row now!
+                        BeginUpdate();
+                        Items.Insert(e.NewIndex, BuildItemForRow(newRow));
+                        EndUpdate();
+                    }
+                    break;
+                }
+            // An item has gone away.
+            case ListChangedType.ItemDeleted:
+                {
+                    if (e.NewIndex < Items.Count)
+                    {
+                        Items.RemoveAt(e.NewIndex);
+                    }
+                    break;
+                }
+            // An item has changed its index.
+            case ListChangedType.ItemMoved:
+                {
+                    BeginUpdate();
+                    ListViewItem moving = Items[e.OldIndex];
+                    Items.Insert(e.NewIndex, moving.Clone() as ListViewItem);
+                    Items.Remove(moving);
+                    EndUpdate();
+                    break;
+                }
+            // Something has changed in the metadata. (This control is
+            // too lazy to deal with this in a fine-grained fashion,
+            // mostly because the author has never seen this event
+            // occur... So we deal with it the simple way: reload
+            // everything.)
+            case ListChangedType.PropertyDescriptorAdded:
+            case ListChangedType.PropertyDescriptorChanged:
+            case ListChangedType.PropertyDescriptorDeleted:
+                {
+                    LoadColumnsFromSource(true);
+                    LoadItemsFromSource();
+                    break;
+                }
+        }
 	}
 	// The CurrencyManager calls this if the data source looks
 	// different. We just reload everything.

@@ -20,17 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
-using Origam.DA.Common;
-using Origam.Extensions;
-using Origam.OrigamEngine;
-using ProtoBuf;
 
 namespace Origam.DA;
+
 public static class CategoryFactory
 {
     public static string Create(Type type)
@@ -38,13 +31,16 @@ public static class CategoryFactory
         XmlRootAttribute rootAttribute = FindRootAttribute(type);
         return rootAttribute?.ElementName;
     }
+
     private static XmlRootAttribute FindRootAttribute(Type type)
     {
         object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
-    
+
         if (attributes != null && attributes.Length > 0)
-            return (XmlRootAttribute) attributes[0];
-        else
-            return null;
+        {
+            return (XmlRootAttribute)attributes[0];
+        }
+
+        return null;
     }
 }

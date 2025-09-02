@@ -78,13 +78,11 @@ public class QualifiedName
         {
             return xmlQualifiedName.Equals(qualifiedName.xmlQualifiedName);
         }
-        else
+        XmlQualifiedName name = obj as XmlQualifiedName;
+
+        if (name != null)
         {
-            XmlQualifiedName name = obj as XmlQualifiedName;
-            if (name != null)
-            {
-                return xmlQualifiedName.Equals(name);
-            }
+            return xmlQualifiedName.Equals(name);
         }
         return false;
     }

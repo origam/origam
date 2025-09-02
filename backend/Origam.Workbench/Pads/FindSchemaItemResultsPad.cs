@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
@@ -223,9 +222,17 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 		string name = item.ModelDescription();
 		item.PersistenceProvider.RestrictToLoadedPackage(false);
 		string rootName = item.RootItem.ModelDescription();
-		if(name == null) name = item.ItemType;
-		if(rootName == null) rootName = item.RootItem.ItemType;
-		ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name,
+		if(name == null)
+        {
+            name = item.ItemType;
+        }
+
+        if (rootName == null)
+        {
+            rootName = item.RootItem.ItemType;
+        }
+
+        ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name,
         item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.PackageName,
             referencePackages.Contains(item.SchemaExtensionId)?"Yes":"No"});
 		newItem.Tag = item;

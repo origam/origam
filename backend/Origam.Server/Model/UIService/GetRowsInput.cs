@@ -23,29 +23,30 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Origam.Extensions;
-using Origam.Server;
 using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
-public class GetRowsInput: IEntityIdentification, ILazyRowLoadInput
+
+public class GetRowsInput : IEntityIdentification, ILazyRowLoadInput
 {
     [RequiredNonDefault]
     public Guid MenuId { get; set; }
+
     [RequiredNonDefault]
     public Guid DataStructureEntityId { get; set; }
     public string Filter { get; set; }
     public Dictionary<string, string> Parameters { get; set; }
     public Dictionary<string, Guid> FilterLookups { get; set; }
     public List<InputRowOrdering> Ordering { get; set; }
-    public List<IRowOrdering> OrderingList =>
-        Ordering.ToList<IRowOrdering>();
+    public List<IRowOrdering> OrderingList => Ordering.ToList<IRowOrdering>();
+
     [Required]
-    public int RowLimit { get; set; }        
+    public int RowLimit { get; set; }
     public int RowOffset { get; set; }
+
     [Required]
     public string[] ColumnNames { get; set; }
     public Guid MasterRowId { get; set; }
-    
+
     public Guid SessionFormIdentifier { get; set; }
 }

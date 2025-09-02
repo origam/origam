@@ -39,9 +39,21 @@ public class WorkFlowGraph: Graph
     
     public bool IsWorkFlowItemSubGraph(Node node)
     {
-        if (node == null) return false;
-        if (!(node is Subgraph)) return false;
-        if (node is IWorkflowSubgraph) return false;
+        if (node == null)
+        {
+            return false;
+        }
+
+        if (!(node is Subgraph))
+        {
+            return false;
+        }
+
+        if (node is IWorkflowSubgraph)
+        {
+            return false;
+        }
+
         return true;
     }
 }

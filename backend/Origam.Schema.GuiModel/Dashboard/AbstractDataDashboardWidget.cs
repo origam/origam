@@ -19,98 +19,143 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-
 namespace Origam.Schema.GuiModel;
+
 [ClassMetaVersion("6.0.0")]
 public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructureReference
 {
-	public AbstractDataDashboardWidget() : base() {Init();}
-	public AbstractDataDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractDataDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.DataStructure);
-		if(this.Method != null) dependencies.Add(this.Method);
-		if(this.SortSet != null) dependencies.Add(this.SortSet);
-		base.GetExtraDependencies (dependencies);
-	}
-	#region Properties
-	public override string Icon
-	{
-		get
-		{
-			return "79";
-		}
-	}
-	
-	public Guid DataStructureId;
-	[TypeConverter(typeof(DataStructureConverter))]
-	[Category("Data"), RefreshProperties(RefreshProperties.Repaint)]
+    public AbstractDataDashboardWidget()
+        : base()
+    {
+        Init();
+    }
+
+    public AbstractDataDashboardWidget(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public AbstractDataDashboardWidget(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.DataStructure);
+        if (this.Method != null)
+        {
+            dependencies.Add(this.Method);
+        }
+
+        if (this.SortSet != null)
+        {
+            dependencies.Add(this.SortSet);
+        }
+
+        base.GetExtraDependencies(dependencies);
+    }
+
+    #region Properties
+    public override string Icon
+    {
+        get { return "79"; }
+    }
+
+    public Guid DataStructureId;
+
+    [TypeConverter(typeof(DataStructureConverter))]
+    [Category("Data"), RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("dataStructure", "DataStructureId")]
-	public DataStructure DataStructure
-	{
-		get
-		{
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
-		}
-		set
-		{
-			this.Method = null;
-			this.SortSet = null;
-			this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	public Guid DataStructureMethodId;
-	[Category("Data"), TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+    public DataStructure DataStructure
+    {
+        get
+        {
+            return (DataStructure)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.DataStructureId)
+                );
+        }
+        set
+        {
+            this.Method = null;
+            this.SortSet = null;
+            this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+        }
+    }
+    public Guid DataStructureMethodId;
+
+    [Category("Data"), TypeConverter(typeof(DataStructureReferenceMethodConverter))]
     [XmlReference("method", "DataStructureMethodId")]
-	public DataStructureMethod Method
-	{
-		get
-		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
-		}
-		set
-		{
-			this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	public Guid DataStructureSortSetId;
-	[Category("Data"), TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+    public DataStructureMethod Method
+    {
+        get
+        {
+            return (DataStructureMethod)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.DataStructureMethodId)
+                );
+        }
+        set
+        {
+            this.DataStructureMethodId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
+        }
+    }
+    public Guid DataStructureSortSetId;
+
+    [Category("Data"), TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
     [XmlReference("sortSet", "DataStructureSortSetId")]
-	public DataStructureSortSet SortSet
-	{
-		get
-		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
-		}
-		set
-		{
-			this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	public override ArrayList Properties
-	{
-		get
-		{
-			var result = new ArrayList();
-			DataStructureEntity entity = this.DataStructure.Entities[0] as DataStructureEntity;
-			foreach(DataStructureColumn column in entity.Columns)
-			{
-				result.Add(new DashboardWidgetProperty(column.Name, (column.Caption == null ? column.Field.Caption : column.Caption), column.Field.DataType));
-			}
-			return result;
-		}
-	}
-	#endregion			
+    public DataStructureSortSet SortSet
+    {
+        get
+        {
+            return (DataStructureSortSet)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.DataStructureSortSetId)
+                );
+        }
+        set
+        {
+            this.DataStructureSortSetId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
+        }
+    }
+    public override ArrayList Properties
+    {
+        get
+        {
+            var result = new ArrayList();
+            DataStructureEntity entity = this.DataStructure.Entities[0] as DataStructureEntity;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                result.Add(
+                    new DashboardWidgetProperty(
+                        column.Name,
+                        (column.Caption == null ? column.Field.Caption : column.Caption),
+                        column.Field.DataType
+                    )
+                );
+            }
+            return result;
+        }
+    }
+    #endregion
 }

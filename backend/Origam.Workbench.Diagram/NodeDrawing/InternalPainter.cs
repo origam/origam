@@ -60,9 +60,9 @@ internal class InternalPainter
     {
         bool markAsSelected =
             Equals(NodeSelector.Selected, node) ||
-            node is IWorkflowSubgraph subgraph && 
+            (node is IWorkflowSubgraph subgraph && 
             NodeSelector.Selected is IWorkflowSubgraph selectedSubgraph &&
-            Equals(subgraph.WorkflowItemId, selectedSubgraph.WorkflowItemId);
+            Equals(subgraph.WorkflowItemId, selectedSubgraph.WorkflowItemId));
         return markAsSelected
             ? BoldBlackPen
             : BlackPen;
@@ -74,7 +74,11 @@ internal class InternalPainter
             measurementGraphics.MeasureString(node.LabelText, Font);
         int totalWidth = (int) (Margin + NodeHeaderHeight + TextSideMargin +
                                 stringSize.Width + TextSideMargin);
-        if(nodeData.SecondaryImage != null) totalWidth += NodeHeaderHeight;
+        if(nodeData.SecondaryImage != null)
+        {
+            totalWidth += NodeHeaderHeight;
+        }
+
         return new Size(totalWidth, NodeHeaderHeight);
     }
     internal SizeF MeasureString(string nodeLabelText)

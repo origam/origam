@@ -24,10 +24,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.UI.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Origam.UI.WizardForm;
@@ -39,7 +36,11 @@ public partial class Wizard : Form
         InitializeComponent();
         iwizard = objectForm;
         StartPage.Text = "What will happen...";
-        if(iwizard.Title!=null) aerowizard1.Title =  iwizard.Title;
+        if(iwizard.Title!=null)
+        {
+            aerowizard1.Title =  iwizard.Title;
+        }
+
         InitData();
     }
     private void InitData()
@@ -152,7 +153,6 @@ public partial class Wizard : Form
     }
     private void FieldLookupEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        
         CreateFieldWithLookupEntityWizardForm form = (CreateFieldWithLookupEntityWizardForm)iwizard;
         form.LookupName = lookupname.Text;
         form.LookupCaption = txtCaption.Text;
@@ -448,8 +448,10 @@ public partial class Wizard : Form
             case PagesList.MenuPage:
                 return menuFromPage;
             default:
-                MessageBox.Show("Not Set WizardPage","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                break;
+                {
+                    MessageBox.Show("Not Set WizardPage", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                }
         }
         return null;
     }
@@ -532,7 +534,9 @@ public partial class Wizard : Form
     private void SetPageTitle(object sender)
     {
         if(iwizard.PageTitle!=null)
+        {
             ((WizardPage)sender).Text = iwizard.PageTitle;
+        }
     }
     private void tbDataStructureName_TextChanged(object sender, EventArgs e)
     {

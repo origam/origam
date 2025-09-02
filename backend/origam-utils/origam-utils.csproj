@@ -10,19 +10,21 @@
     <AssemblyName>origam-utils</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>net472;net8.0</TargetFrameworks>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
+    >
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -123,5 +125,14 @@
     <PackageReference Include="Mvp.Xml.NetStandard">
       <Version>1.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
   </ItemGroup>
+  <!--
+  Stub targets to prevent MSBuild errors caused by missing CSharpier targets.
+  In this project, CSharpier is disabled for both net472 and net8.0.
+  Remove these stubs once net472 is dropped and CSharpier can run normally
+  on net8.0 only.
+-->
+  <Target Name="CSharpierFormat" />
+  <Target Name="CSharpierFormatInner" />
 </Project>

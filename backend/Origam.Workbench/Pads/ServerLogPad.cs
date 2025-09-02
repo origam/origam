@@ -165,7 +165,7 @@ public class ServerLogPad : OutputPad
         catch (Exception ex)
         {
             timer.Interval *= 10;
-            string message = "Could not load server log. Will retry in " + timer.Interval / 1000 + " seconds.";
+            string message = "Could not load server log. Will retry in " + (timer.Interval / 1000) + " seconds.";
             SetOutputText(message);
             if(log.IsErrorEnabled)
             {
@@ -201,10 +201,8 @@ public class ServerLogPad : OutputPad
         {
             return size;
         }
-        else
-        {
-            return initSize;
-        }
+
+        return initSize;
     }
     private static int GetFileSize(string url)
     {

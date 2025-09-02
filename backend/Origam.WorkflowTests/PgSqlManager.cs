@@ -26,9 +26,8 @@ namespace Origam.WorkflowTests;
 
 public class PgSqlManager : SqlManager
 {
-    public PgSqlManager(ICoreDataService dataService) : base(dataService)
-    {
-    }
+    public PgSqlManager(ICoreDataService dataService)
+        : base(dataService) { }
 
     public override List<Guid> InsertWorkQueueEntries()
     {
@@ -38,7 +37,8 @@ public class PgSqlManager : SqlManager
 
     public override List<Guid> InsertFourEntriesToTestQueue3()
     {
-        string createThrottlingTestDataSql = @"
+        string createThrottlingTestDataSql =
+            @"
             DELETE FROM ""WorkQueueEntry"";
             INSERT INTO ""WorkQueueEntry"" (""b5"", ""d8"", ""b1"", ""g6"", ""i5"", ""c2"", ""s9"", ""b8"", ""g5"", ""g14"", ""g15"", ""d2"", ""c3"", ""g20"", ""blob1"", ""d9"", ""g11"", ""g17"", ""g8"", ""g18"", ""s3"", ""refRel1Id"", ""b10"", ""d6"", ""d1"", ""c6"", ""refLockedByBusinessPartnerId"", ""refRel2Id"", ""refRel4Id"", ""f8"", ""f5"", ""d5"", ""f9"", ""refRel7Id"", ""refRel5Id"", ""i2"", ""refRel3Id"", ""ErrorText"", ""m4"", ""g10"", ""s2"", ""b3"", ""b2"", ""c5"", ""m3"", ""i4"", ""b6"", ""g3"", ""d10"", ""g7"", ""f3"", ""i6"", ""g2"", ""m5"", ""m2"", ""refId"", ""s5"", ""d3"", ""f7"", ""b4"", ""g12"", ""i8"", ""c7"", ""g9"", ""f10"", ""b9"", ""f6"", ""s4"", ""d7"", ""c4"", ""s8"", ""i7"", ""c1"", ""f2"", ""i3"", ""c10"", ""s7"", ""s1"", ""i9"", ""i1"", ""g4"", ""f4"", ""refWorkQueueId"", ""m1"", ""g19"", ""g13"", ""c9"", ""refRel6Id"", ""f1"", ""s6"", ""c8"", ""g1"", ""s10"", ""b7"", ""i10"", ""IsLocked"", ""g16"", ""d4"", ""RecordCreatedBy"", ""RecordUpdatedBy"", ""Id"", ""RecordCreated"", ""RecordUpdated"", ""AttemptCount"", ""InRetry"") VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-06T17:59:51.000'::timestamp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, 'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, '6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'E776D7F7-482D-4AFF-B32A-444A9A9959E5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, false, NULL, NULL, '51043176-e365-48a1-bb9c-3db724b918c6', NULL, '0a4b2890-d0d6-4599-a92a-a5e79ba5dcc7', '2023-02-06T17:59:51.397'::timestamp, NULL, 0, false);
             INSERT INTO ""WorkQueueEntry"" (""b5"", ""d8"", ""b1"", ""g6"", ""i5"", ""c2"", ""s9"", ""b8"", ""g5"", ""g14"", ""g15"", ""d2"", ""c3"", ""g20"", ""blob1"", ""d9"", ""g11"", ""g17"", ""g8"", ""g18"", ""s3"", ""refRel1Id"", ""b10"", ""d6"", ""d1"", ""c6"", ""refLockedByBusinessPartnerId"", ""refRel2Id"", ""refRel4Id"", ""f8"", ""f5"", ""d5"", ""f9"", ""refRel7Id"", ""refRel5Id"", ""i2"", ""refRel3Id"", ""ErrorText"", ""m4"", ""g10"", ""s2"", ""b3"", ""b2"", ""c5"", ""m3"", ""i4"", ""b6"", ""g3"", ""d10"", ""g7"", ""f3"", ""i6"", ""g2"", ""m5"", ""m2"", ""refId"", ""s5"", ""d3"", ""f7"", ""b4"", ""g12"", ""i8"", ""c7"", ""g9"", ""f10"", ""b9"", ""f6"", ""s4"", ""d7"", ""c4"", ""s8"", ""i7"", ""c1"", ""f2"", ""i3"", ""c10"", ""s7"", ""s1"", ""i9"", ""i1"", ""g4"", ""f4"", ""refWorkQueueId"", ""m1"", ""g19"", ""g13"", ""c9"", ""refRel6Id"", ""f1"", ""s6"", ""c8"", ""g1"", ""s10"", ""b7"", ""i10"", ""IsLocked"", ""g16"", ""d4"", ""RecordCreatedBy"", ""RecordUpdatedBy"", ""Id"", ""RecordCreated"", ""RecordUpdated"", ""AttemptCount"", ""InRetry"") VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-06T17:59:51.000'::timestamp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '7a11eb69-b35f-4e89-af38-b92a83872008', NULL, NULL, NULL, NULL, '1a8d06c0-bd5a-49f6-8ee0-1b15729c79e3', NULL, NULL, '611d7ffd-3354-4d2f-b7a1-a41bc2508a49', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'E776D7F7-482D-4AFF-B32A-444A9A9959E5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, false, NULL, NULL, '51043176-e365-48a1-bb9c-3db724b918c6', NULL, '97c0545f-4ed0-411a-9805-63a3bbcbe79f', '2023-02-06T17:59:51.397'::timestamp, NULL, 0, false);
@@ -50,24 +50,31 @@ public class PgSqlManager : SqlManager
         return GetWorkQueueEntryIds(createThrottlingTestDataSql);
     }
 
-    public override void EnableThrottlingOnTestQueue3(int throttlingIntervalSeconds, int throttlingItemsPerInterval)
+    public override void EnableThrottlingOnTestQueue3(
+        int throttlingIntervalSeconds,
+        int throttlingItemsPerInterval
+    )
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             UPDATE ""WorkQueue""
             SET ""ThrottlingIntervalSeconds"" = {throttlingIntervalSeconds},
                 ""ThrottlingItemsPerInterval"" = {throttlingItemsPerInterval},
                 ""EnableThrottling"" = TRUE
             WHERE ""Id"" = '{TestQueue3}';
-            ");
+            "
+        );
     }
 
     public override void DisableThrottlingOnTestQueue3()
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             UPDATE ""WorkQueue""
             SET ""EnableThrottling"" = FALSE
             WHERE ""Id"" = '{TestQueue3}';
-            ");
+            "
+        );
     }
 
     public override void WaitTillWorkQueueEntryTableIsEmptyOrThrow()
@@ -84,14 +91,18 @@ public class PgSqlManager : SqlManager
         throw new Exception("WorkQueueEntry table is not empty after timeout");
     }
 
-    public override void SetupQueue(Guid queueId, Guid retryType, int maxRetries,
-        int retryIntervalSeconds, Guid? errorQueueId)
+    public override void SetupQueue(
+        Guid queueId,
+        Guid retryType,
+        int maxRetries,
+        int retryIntervalSeconds,
+        Guid? errorQueueId
+    )
     {
-        string refError = errorQueueId.HasValue
-            ? $"'{errorQueueId.Value}'"
-            : "NULL";
+        string refError = errorQueueId.HasValue ? $"'{errorQueueId.Value}'" : "NULL";
 
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             UPDATE ""WorkQueue""
             SET ""refWorkQueueRetryTypeId"" = '{retryType}',
                 ""RetryIntervalSeconds""   = {retryIntervalSeconds},
@@ -102,12 +113,14 @@ public class PgSqlManager : SqlManager
             SET ""refErrorWorkQueueId"" = {refError}
             WHERE ""Command"" = 'Execute_FailingWorkQueueTest'
               AND ""refWorkQueueId"" = '{queueId}';
-            ");
+            "
+        );
     }
 
     public override void CreateWorkQueueModificationTrigger()
     {
-        var batch = @"
+        var batch =
+            @"
             DROP TABLE IF EXISTS ""TestWorkQueueEntryModifications"";
 
             CREATE TABLE ""TestWorkQueueEntryModifications"" (
@@ -149,7 +162,8 @@ public class PgSqlManager : SqlManager
 
     public override Dictionary<Guid, int> GetAttemptCountsInQueues(Guid entryId)
     {
-        string sql = $@"
+        string sql =
+            $@"
             SELECT ""refQueueId"", ""NumberOfExecutionsInWorkQueue""
             FROM ""TestWorkQueueEntryModifications""
             WHERE ""refEntryId"" = '{entryId}';
@@ -166,28 +180,34 @@ public class PgSqlManager : SqlManager
 
     public override void DeleteWorkQueueModificationTrigger()
     {
-        dataService.ExecuteSql(@"
+        dataService.ExecuteSql(
+            @"
             DROP TRIGGER IF EXISTS ""TR_Test_WorkQueueEntry_Updated"" ON ""WorkQueueEntry"";
             DROP FUNCTION IF EXISTS trg_update_workqueue_entry();
             DROP TABLE IF EXISTS ""TestWorkQueueEntryModifications"";
-            ");
+            "
+        );
     }
 
     public override void InsertOneEntryIntoFailingQueue()
     {
-        dataService.ExecuteSql($@"
+        dataService.ExecuteSql(
+            $@"
             DELETE FROM ""WorkQueueEntry"";
             INSERT INTO ""WorkQueueEntry"" (""b5"", ""d8"", ""b1"", ""g6"", ""i5"", ""c2"", ""s9"", ""b8"", ""g5"", ""g14"", ""g15"", ""d2"", ""c3"", ""g20"", ""blob1"", ""d9"", ""g11"", ""g17"", ""g8"", ""g18"", ""s3"", ""refRel1Id"", ""b10"", ""d6"", ""d1"", ""c6"", ""refLockedByBusinessPartnerId"", ""refRel2Id"", ""refRel4Id"", ""f8"", ""f5"", ""d5"", ""f9"", ""refRel7Id"", ""refRel5Id"", ""i2"", ""refRel3Id"", ""ErrorText"", ""m4"", ""g10"", ""s2"", ""b3"", ""b2"", ""c5"", ""m3"", ""i4"", ""b6"", ""g3"", ""d10"", ""g7"", ""f3"", ""i6"", ""g2"", ""m5"", ""m2"", ""refId"", ""s5"", ""d3"", ""f7"", ""b4"", ""g12"", ""i8"", ""c7"", ""g9"", ""f10"", ""b9"", ""f6"", ""s4"", ""d7"", ""c4"", ""s8"", ""i7"", ""c1"", ""f2"", ""i3"", ""c10"", ""s7"", ""s1"", ""i9"", ""i1"", ""g4"", ""f4"", ""refWorkQueueId"", ""m1"", ""g19"", ""g13"", ""c9"", ""refRel6Id"", ""f1"", ""s6"", ""c8"", ""g1"", ""s10"", ""b7"", ""i10"", ""IsLocked"", ""g16"", ""d4"", ""RecordCreatedBy"", ""RecordUpdatedBy"", ""Id"", ""RecordCreated"", ""RecordUpdated"", ""AttemptCount"", ""InRetry"") VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-06T17:59:51.000'::timestamp, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, 'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, '6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0AB10C2F-386E-4DD1-992E-5E3765A28447', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, false, NULL, NULL, '51043176-e365-48a1-bb9c-3db724b918c6', NULL, '{FailingEntryId}', '2023-02-06T17:59:51.397'::timestamp, NULL, 0, false);
-        ");
+        "
+        );
     }
 
     public override int GetFailingQueueEntryAttempts()
     {
-        string result = dataService.ExecuteSql($@"
+        string result = dataService.ExecuteSql(
+            $@"
             SELECT ""AttemptCount""
             FROM ""WorkQueueEntry""
             WHERE ""refWorkQueueId"" = '{FailingQueue}';
-            ");
+            "
+        );
         var match = Regex.Match(result, @"-------------\s*\n(\d+)");
         if (match.Success)
         {
@@ -198,11 +218,13 @@ public class PgSqlManager : SqlManager
 
     public override int GetEntryCount(Guid workQueueId)
     {
-        string result = dataService.ExecuteSql($@"
+        string result = dataService.ExecuteSql(
+            $@"
             SELECT COUNT(""Id"") AS ""EntryCount""
             FROM ""WorkQueueEntry""
             WHERE ""refWorkQueueId"" = '{workQueueId}';
-            ");
+            "
+        );
         var match = Regex.Match(result, @"(\d+)");
         if (match.Success)
         {
@@ -238,7 +260,8 @@ public class PgSqlManager : SqlManager
         return matches.Select(m => Guid.Parse(m.Groups[1].Value)).ToList();
     }
 
-    private string createTestDataSql = @"
+    private string createTestDataSql =
+        @"
         DELETE FROM ""WorkQueueEntry"";
 
         -- TestQueue1

@@ -22,23 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA;
+
 public class DatabaseTableNotFoundException : Exception
 {
-    public DatabaseTableNotFoundException(string tableName, 
-        Exception innerException) : base(innerException.Message, innerException)
+    public DatabaseTableNotFoundException(string tableName, Exception innerException)
+        : base(innerException.Message, innerException)
     {
         _tableName = tableName;
     }
+
     private string _tableName;
     public string TableName
     {
-        get
-        {
-            return _tableName;
-        }
-        set
-        {
-            _tableName = value;
-        }
+        get { return _tableName; }
+        set { _tableName = value; }
     }
 }

@@ -22,11 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-
 using Origam.Schema.GuiModel;
 using Origam.DA;
 using Origam.Workbench.Services;
-
 using CrystalDecisions.CrystalReports.Engine;
 using log4net.Core;
 using Origam.Extensions;
@@ -50,9 +48,12 @@ public class CrystalReportHelper
 	#region Public Functions
 	public ReportDocument CreateReport(Guid reportId, Hashtable parameters, string transactionId)
 	{
-		if(parameters == null) parameters = new Hashtable();
-		// get report model element
-		var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+		if(parameters == null)
+        {
+            parameters = new Hashtable();
+        }
+        // get report model element
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 		ReportHelper.PopulateDefaultValues(report, parameters);
         ReportHelper.ComputeXsltValueParameters(report, parameters);
         // load data
@@ -86,9 +87,12 @@ public class CrystalReportHelper
 	}
 	public ReportDocument CreateReport(Guid reportId, DataSet data, Hashtable parameters)
 	{
-		if(parameters == null) parameters = new Hashtable();
-		// get report model element
-		var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+		if(parameters == null)
+        {
+            parameters = new Hashtable();
+        }
+        // get report model element
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 		TraceReportData(data, report.Name);
 		ReportHelper.PopulateDefaultValues(report, parameters);
         ReportHelper.ComputeXsltValueParameters(report, parameters);
@@ -110,8 +114,12 @@ public class CrystalReportHelper
         {
             WriteInfoLog(reportElement, "Generating report started");
         }
-        if (parameters == null) throw new NullReferenceException(ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
-		ReportDocument result = null;
+        if (parameters == null)
+        {
+            throw new NullReferenceException(ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
+        }
+
+        ReportDocument result = null;
         string path = fileName;
         try
 		{
@@ -196,12 +204,32 @@ public class CrystalReportHelper
 		foreach(CrystalDecisions.CrystalReports.Engine.Table table in report.Database.Tables)
 		{
 			CrystalDecisions.Shared.TableLogOnInfo logon = table.LogOnInfo;
-			if(connection["DatabaseName"] != null) logon.ConnectionInfo.DatabaseName = Convert.ToString(connection["DatabaseName"]);
-			if(connection["IntegratedSecurity"] != null) logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(connection["IntegratedSecurity"]);
-			if(connection["ServerName"] != null) logon.ConnectionInfo.ServerName = Convert.ToString(connection["ServerName"]);
-			if(connection["UserID"] != null) logon.ConnectionInfo.UserID = Convert.ToString(connection["UserID"]);
-			if(connection["Password"] != null) logon.ConnectionInfo.Password = Convert.ToString(connection["Password"]);
-			table.ApplyLogOnInfo(logon);
+			if(connection["DatabaseName"] != null)
+            {
+                logon.ConnectionInfo.DatabaseName = Convert.ToString(connection["DatabaseName"]);
+            }
+
+            if (connection["IntegratedSecurity"] != null)
+            {
+                logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(connection["IntegratedSecurity"]);
+            }
+
+            if (connection["ServerName"] != null)
+            {
+                logon.ConnectionInfo.ServerName = Convert.ToString(connection["ServerName"]);
+            }
+
+            if (connection["UserID"] != null)
+            {
+                logon.ConnectionInfo.UserID = Convert.ToString(connection["UserID"]);
+            }
+
+            if (connection["Password"] != null)
+            {
+                logon.ConnectionInfo.Password = Convert.ToString(connection["Password"]);
+            }
+
+            table.ApplyLogOnInfo(logon);
 		}
 	}
 	private void SetReportParameters(Hashtable parameters, ReportDocument report, CrystalReport reportElement)
@@ -215,8 +243,12 @@ public class CrystalReportHelper
 					if(paramDef.Name == (string)entry.Key)
 					{
 						object val = entry.Value;
-						if(val is Guid) val = entry.Value.ToString();
-						report.SetParameterValue(paramDef.Name, val);
+						if(val is Guid)
+                        {
+                            val = entry.Value.ToString();
+                        }
+
+                        report.SetParameterValue(paramDef.Name, val);
 					}
 				}
 			}

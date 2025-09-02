@@ -56,6 +56,5 @@ public class NewUserBuilder : AbstractDatabaseBuilder
     }
     public override void Rollback()
     {
-        
     }
 }
