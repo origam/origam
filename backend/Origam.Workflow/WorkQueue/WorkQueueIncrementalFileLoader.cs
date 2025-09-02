@@ -87,7 +87,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         if(filenameSegments.Length == 1)
         {
             // Non-zip file: enforce maximum size before reading
-            long maxUncompressedBytes = GetMaxUncompressedBytes();
+            long maxUncompressedBytes = WorkQueueConfig.GetMaxUncompressedBytes();
             string path = filenameSegments[0];
             FileInfo fi = new FileInfo(path);
             if (fi.Exists && fi.Length > maxUncompressedBytes)
@@ -111,7 +111,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         string archiveName, string filename)
     {
         // Harden against zip-bomb and invalid entry issues
-        long maxUncompressedBytes = GetMaxUncompressedBytes();
+        long maxUncompressedBytes = WorkQueueConfig.GetMaxUncompressedBytes();
 
         using (
             FileStream fileStream = new FileStream(
@@ -140,7 +140,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             }
             if (
                 entry.CompressedLength > 0
-                && (entry.Length / (double)entry.CompressedLength) > GetMaxCompressionRatio()
+                && (entry.Length / (double)entry.CompressedLength) > WorkQueueConfig.GetMaxCompressionRatio()
             )
             {
                 throw new InvalidOperationException(
@@ -304,21 +304,5 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
         dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
         return dataTable;
-    }
-
-    private static long GetMaxUncompressedBytes()
-    {
-        const int defaultMb = 50; // default for Architect and fallback
-        IConfig config = ConfigFactory.GetConfig();
-        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
-        return maxZipSizeMb * 1024L * 1024L;
-    }
-
-    private static double GetMaxCompressionRatio()
-    {
-        const double defaultRatio = 100.0;
-        IConfig config = ConfigFactory.GetConfig();
-        double? configured = config.GetValue(new [] { "WorkQueue", "MaxCompressionRatio" });
-        return configured ?? defaultRatio;
     }
 }

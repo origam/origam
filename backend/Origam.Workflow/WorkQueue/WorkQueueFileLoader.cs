@@ -82,23 +82,6 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    // Security limits for unzipping / reading
-    private static long GetMaxUncompressedBytes()
-    {
-        const int defaultMb = 50;
-        IConfig config = ConfigFactory.GetConfig();
-        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
-        return maxZipSizeMb * 1024L * 1024L;
-    }
-
-    private static double GetMaxCompressionRatio()
-    {
-        const double defaultRatio = 100.0;
-        IConfig config = ConfigFactory.GetConfig();
-        double? configured = config.GetValue(new [] { "WorkQueue", "MaxCompressionRatio" });
-        return configured ?? defaultRatio;
-    }
-
     private class LimitedReadStream : Stream
     {
         private readonly Stream _inner;
@@ -369,7 +352,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
             var zipEntry = zipStream.GetNextEntry();
             if (zipEntry != null)
             {
-                long maxBytes = GetMaxUncompressedBytes();
+                long maxBytes = WorkQueueConfig.GetMaxUncompressedBytes();
                 if (zipEntry.Size >= 0 && zipEntry.Size > maxBytes)
                 {
                     throw new InvalidOperationException("Archive entry too large.");
@@ -377,7 +360,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 if (zipEntry.CompressedSize > 0 && zipEntry.Size >= 0)
                 {
                     double ratio = zipEntry.Size / (double)zipEntry.CompressedSize;
-                    if (ratio > GetMaxCompressionRatio())
+                    if (ratio > WorkQueueConfig.GetMaxCompressionRatio())
                     {
                         throw new InvalidOperationException("Archive entry has suspicious compression ratio.");
                     }
@@ -560,7 +543,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
     }
     private static void ReadBinaryStream(Stream stream, DataRow dataRow)
     {
-        long maxBytes = GetMaxUncompressedBytes();
+        long maxBytes = WorkQueueConfig.GetMaxUncompressedBytes();
         byte[] data;
         if(stream.CanSeek)
         {
@@ -600,7 +583,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
     private static void ReadTextStream(
         Stream stream, string encoding, DataRow dataRow)
     {
-        long maxBytes = GetMaxUncompressedBytes();
+        long maxBytes = WorkQueueConfig.GetMaxUncompressedBytes();
         Stream effective = stream;
         if (stream.CanSeek)
         {
