@@ -1,6 +1,6 @@
-#region license
+﻿#region license
 /*
-Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,23 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
+using System.Collections.Generic;
 
-namespace Origam.Server.Configuration;
-public class ChatConfig
+namespace Origam.Server.Model.Chat
 {
-    public string PathToChatApp { get; set; }
-    public int ChatRefreshInterval { get; set; }
-    
-    public ChatConfig(IConfiguration configuration)
+    public class NewChatRoom
     {
-        var chatSection = configuration
-            .GetSectionOrThrow("ChatConfig");
-
-        PathToChatApp = chatSection
-            .GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection
-            .GetValue("ChatRefreshInterval", 1000);
+        public string Topic { get; set; }
+        public List<InviteUser> InviteUsers { get; set; }
+        public string ReferenceCategory { get; set; }
+        public System.Guid? ReferenceRecordId { get; set; }
     }
 }
