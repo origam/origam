@@ -197,11 +197,11 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 						}
 					}
 					catch (Exception ex)
-                    {
+					{
 						throw new Exception(
-							"An error has occurred while parsing the connection string: "
-							+ ex.Message);
-                    }
+							ResourceUtils.GetString("ErrorParsingConnectionString")
+							+ ": " + ex.Message);
+					}
 				}
 			}
 		}
@@ -291,10 +291,10 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 			case ReadType.SplitByRows:
 				result = RetrieveNextSegment(dataTable);
 				break;
-            default:
-				throw new ArgumentOutOfRangeException(
-					"readType", _readType, "Unknown ReadType value.");
-        }
+        				default:
+					throw new ArgumentOutOfRangeException(
+						"readType", _readType, ResourceUtils.GetString("UnknownReadType"));
+			}
 		return result
 			? new WorkQueueAdapterResult(
 				DataDocumentFactory.New(dataTable.DataSet))
@@ -355,14 +355,14 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 long maxBytes = WorkQueueConfig.GetMaxUncompressedBytes();
                 if (zipEntry.Size >= 0 && zipEntry.Size > maxBytes)
                 {
-                    throw new InvalidOperationException("Archive entry too large.");
+                    throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntryTooLarge"));
                 }
                 if (zipEntry.CompressedSize > 0 && zipEntry.Size >= 0)
                 {
                     double ratio = zipEntry.Size / (double)zipEntry.CompressedSize;
                     if (ratio > WorkQueueConfig.GetMaxCompressionRatio())
                     {
-                        throw new InvalidOperationException("Archive entry has suspicious compression ratio.");
+                        throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntrySuspiciousCompressionRatio"));
                     }
                 }
             }
@@ -549,7 +549,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         {
             if (stream.Length > maxBytes)
             {
-                throw new InvalidOperationException("Stream exceeds allowed size.");
+                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
             }
             data = new byte[stream.Length];
             stream.Read(data, 0, Convert.ToInt32(stream.Length));
@@ -569,7 +569,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                         total += count;
                         if (total > maxBytes)
                         {
-                            throw new InvalidOperationException("Stream exceeds allowed size.");
+                            throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
                         }
                         memoryStream.Write(buffer, 0, count);
                     }
@@ -589,7 +589,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         {
             if (stream.Length > maxBytes)
             {
-                throw new InvalidOperationException("Stream exceeds allowed size.");
+                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
             }
             stream.Position = 0;
         }
@@ -603,7 +603,7 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         string content = streamReader.ReadToEnd();
         if (content.Length > maxBytes)
         {
-            throw new InvalidOperationException("Stream exceeds allowed size.");
+            throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
         }
         dataRow["Data"] = content;
     }

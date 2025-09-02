@@ -92,12 +92,12 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             FileInfo fi = new FileInfo(path);
             if (fi.Exists && fi.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException("File exceeds allowed size.");
+                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
             }
             string content = File.ReadAllText(path);
             if (content.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException("File exceeds allowed size.");
+                throw new InvalidOperationException(ResourceUtils.GetString("StreamExceedsAllowedSize"));
             }
             return content;
         }
@@ -129,14 +129,14 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             if (entry == null)
             {
                 throw new InvalidOperationException(
-                    $"Entry '{filename}' not found in archive '{archiveName}'."
+                    string.Format(ResourceUtils.GetString("EntryNotFoundInArchive"), filename, archiveName)
                 );
             }
 
             // Guard against zip bombs: excessive uncompressed size or ratio
             if (entry.Length > maxUncompressedBytes)
             {
-                throw new InvalidOperationException("Archive entry too large.");
+                throw new InvalidOperationException(ResourceUtils.GetString("ArchiveEntryTooLarge"));
             }
             if (
                 entry.CompressedLength > 0
@@ -144,7 +144,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             )
             {
                 throw new InvalidOperationException(
-                    "Archive entry has suspicious compression ratio."
+                    ResourceUtils.GetString("ArchiveEntrySuspiciousCompressionRatio")
                 );
             }
 
@@ -155,7 +155,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 if (content.Length > maxUncompressedBytes)
                 {
                     throw new InvalidOperationException(
-                        "Archive entry exceeds allowed size."
+                        ResourceUtils.GetString("StreamExceedsAllowedSize")
                     );
                 }
                 return content;
@@ -268,7 +268,7 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                         : StringComparison.Ordinal;
                     if (!destinationFileName.StartsWith(fullDestinationDirPath, comparison))
                     {
-                        throw new InvalidOperationException("Entry is outside the target dir: " + destinationFileName);
+                        throw new InvalidOperationException(string.Format(ResourceUtils.GetString("EntryOutsideTargetDir"), destinationFileName));
                     }
                     if(FitsMask(archiveEntry.Name) 
                     && !hashIndexFile.IsZipArchiveEntryProcessed(
