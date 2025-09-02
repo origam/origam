@@ -224,6 +224,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
+            id={"editor_" + property.modelInstanceId}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
@@ -251,6 +252,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
+            id={"editor_" + property.modelInstanceId}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(firstCheckInput) =>

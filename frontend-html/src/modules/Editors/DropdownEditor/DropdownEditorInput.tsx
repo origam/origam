@@ -26,6 +26,7 @@ import { T } from "utils/translation";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
+  id: string;
   foregroundColor?: string;
   customStyle?: any;
 }) {
@@ -111,6 +112,7 @@ export function DropdownEditorInput(props: {
     <Observer>
       {() => (
         <input
+          id={props.id}
           className={cx(getClassNames())}
           title={getTitle()}
           readOnly={beh.isReadOnly}

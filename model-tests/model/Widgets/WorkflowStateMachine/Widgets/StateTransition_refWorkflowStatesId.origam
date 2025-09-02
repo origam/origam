@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:sm2="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachine/6.0.0"
+  xmlns:sme="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineEvent/6.0.0"
+  xmlns:smo="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineOperation/6.0.0"
+  xmlns:sms="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineState/6.0.0">
+  <sm2:WorkflowStateMachine
+    asi:abstract="false"
+    sm2:entity="Widgets/DataEntity/Widgets/StateTransition.origam#StateTransition/0ebe03b0-e53c-4415-b7b4-c4f587b30838"
+    sm2:field="Widgets/DataEntity/Widgets/StateTransition.origam#StateTransition/refWorkflowStatesId/3c9ab14b-b04b-4f74-874a-20bb1d602fd9"
+    x:id="0228dd04-4c8e-465b-b8e4-01b62e84d8d8"
+    asi:name="StateTransition_refWorkflowStatesId">
+    <sme:StateMachineEvent
+      asi:abstract="false"
+      sme:action="Widgets/Workflow/Widgets/StateTransition.origam#StateTransition/170011ca-7bd6-435d-b538-0f93e1f0d906"
+      x:id="53b75c5d-ba15-4086-92a2-a564a0412dc3"
+      asi:name="OnEnd"
+      sme:newState="Widgets/WorkflowStateMachine/Widgets/StateTransition_refWorkflowStatesId.origam#StateTransition_refWorkflowStatesId/End/4a45f632-a23b-4c9a-a447-6ed2b1a122f9"
+      sme:roles="*"
+      sme:type="StateEntry" />
+    <sms:StateMachineState
+      asi:abstract="false"
+      x:id="4a45f632-a23b-4c9a-a447-6ed2b1a122f9"
+      asi:name="End"
+      sms:type="Final"
+      sms:value="bcd46e3a-638d-4d96-ae1b-49005cf9754a" />
+    <sms:StateMachineState
+      asi:abstract="false"
+      x:id="b137d4bb-e88e-4d8a-a75f-99fad333e5d0"
+      asi:name="Error"
+      sms:type="Running"
+      sms:value="82792f50-5232-4096-a953-4ccd66711352" />
+    <sms:StateMachineState
+      asi:abstract="false"
+      x:id="eb44138f-b112-4624-b576-fb30786165aa"
+      asi:name="Start"
+      sms:type="Initial"
+      sms:value="d8f7f09e-a18f-4345-89a3-9dafc3afefd1">
+      <smo:StateMachineOperation
+        asi:abstract="false"
+        x:id="dcab12a5-41a1-4da0-99d7-140517be716d"
+        asi:name="End"
+        smo:roles="*"
+        smo:targetState="Widgets/WorkflowStateMachine/Widgets/StateTransition_refWorkflowStatesId.origam#StateTransition_refWorkflowStatesId/End/4a45f632-a23b-4c9a-a447-6ed2b1a122f9" />
+    </sms:StateMachineState>
+  </sm2:WorkflowStateMachine>
+</x:file>

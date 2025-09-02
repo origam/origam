@@ -60,14 +60,27 @@ export class UIState {
 
   loadStateFromLocalStorage(key: EStorageKeys) {
     try {
+      const serializedState = localStorage.getItem(key);
+
+      if (serializedState === null || serializedState === '') {
+        if (key === EStorageKeys.SETTINGS) {
+          return { ...defaultSettings };
+        }
+        return [];
+      }
+
+      const parsedState = JSON.parse(serializedState);
+
       if (key === EStorageKeys.TREE_EXPANDED_NODES) {
-        const serializedState = localStorage.getItem(key) ?? '';
-        return JSON.parse(serializedState) ?? [];
+        return Array.isArray(parsedState) ? parsedState : [];
       }
       if (key === EStorageKeys.SETTINGS) {
-        const serializedState = localStorage.getItem(key) ?? '';
-        return JSON.parse(serializedState) ?? { ...defaultSettings };
+        return typeof parsedState === 'object' && parsedState !== null
+          ? parsedState
+          : { ...defaultSettings };
       }
+
+      return [];
     } catch (err) {
       console.error('Error loading state from local storage:', err);
       if (key === EStorageKeys.SETTINGS) {

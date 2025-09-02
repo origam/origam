@@ -21,6 +21,23 @@
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     dcrmi:refreshPortalAfterSave="false"
     ami:roles="*" />
+  <frmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    frmi:autoSaveOnListRecordChange="false"
+    ami:displayName="State Transition"
+    x:id="f69ef86f-7fad-44c0-9ecb-78164a656a38"
+    asi:name="StateTransition"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    frmi:readOnlyAccess="false"
+    frmi:refreshAfterSaveType="RefreshChangedRecords"
+    frmi:refreshOnFocus="false"
+    frmi:refreshPortalAfterSave="false"
+    frmi:requestSaveAfterUpdate="false"
+    ami:roles="*"
+    frmi:screen="Widgets/FormControlSet/Widgets/StateTransition.origam#StateTransition/1ad19560-77e4-47ca-9af8-8ba1526a8e47" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"

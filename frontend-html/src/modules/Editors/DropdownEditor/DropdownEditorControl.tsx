@@ -105,6 +105,7 @@ class TriggerContextMenuState {
 
 export function DropdownEditorControl(props: {
   backgroundColor?: string;
+  id: string;
   foregroundColor?: string;
   customStyle?: any;
 }) {
@@ -118,6 +119,7 @@ export function DropdownEditorControl(props: {
       {() => (
         <div className={CS.control} ref={ref} onMouseDown={beh.handleControlMouseDown}>
           <DropdownEditorInput
+            id={props.id}
             backgroundColor={props.backgroundColor}
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}

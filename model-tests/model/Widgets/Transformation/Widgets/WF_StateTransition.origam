@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:at="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractTransformation/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1">
+  <xt:Transformation
+    asi:abstract="false"
+    x:id="387a36a2-d376-4bea-928a-25c07f789b66"
+    asi:name="WF_StateTransition"
+    xt:text="-***-ExternalFile:WF_StateTransition.origam___text___387a36a2-d376-4bea-928a-25c07f789b66.xslt" />
+</x:file>
