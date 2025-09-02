@@ -1,0 +1,4 @@
+﻿ALTER TABLE "StateTransition" 
+ADD CONSTRAINT "FK_StateTransition_refWorkflowStatesId_WorkflowStates"
+FOREIGN KEY ("refWorkflowStatesId")
+REFERENCES "WorkflowStates" ("Id");

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="9f63dc66-d4cf-4664-a793-38b4a5aa33bf"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupWorkflowStates.origam#LookupWorkflowStates/34c91165-8a97-4d9c-a03c-cceb0bd7f7bf"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="WorkflowStates"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupWorkflowStates.origam#LookupWorkflowStates/34c91165-8a97-4d9c-a03c-cceb0bd7f7bf"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupWorkflowStates.origam#LookupWorkflowStates/GetId/5090f7bc-6b48-4655-86a4-48acd95bfc3d"
+    adl:valueValueMember="Id" />
+</x:file>

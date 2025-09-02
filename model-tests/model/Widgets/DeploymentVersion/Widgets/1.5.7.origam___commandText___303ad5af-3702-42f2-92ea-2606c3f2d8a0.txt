@@ -1,0 +1,1 @@
+﻿INSERT INTO [dbo].[StateTransition] (Name, refWorkflowStatesId, RecordCreated, RecordUpdatedBy, Id, RecordCreatedBy, RecordUpdated) VALUES (N'test', N'd8f7f09e-a18f-4345-89a3-9dafc3afefd1', N'2025-08-27 16:28:51.047', null, N'd6b4e4ac-3871-44fb-823b-75f855d7a688', N'69aacf26-300e-477b-b9a6-408324ca1cad', null);

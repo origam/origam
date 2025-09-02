@@ -153,6 +153,9 @@
     "DropDownTypingDebouncingDelayMilliseconds": 300,
     "GetLookupLabelExDebouncingDelayMilliseconds": 667
   },
+  "MiniProfiler": {
+    "Enabled": "false"
+  },
   "Logging": {
 	"LogLevel": {
 	  "Default":     "Warning",

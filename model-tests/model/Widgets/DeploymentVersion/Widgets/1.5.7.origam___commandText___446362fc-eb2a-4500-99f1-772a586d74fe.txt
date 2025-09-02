@@ -1,0 +1,8 @@
+﻿CREATE TABLE "WorkflowStates" (
+    "Name" VARCHAR(30) NOT NULL,
+    "RecordCreated" TIMESTAMP NULL,
+    "RecordUpdatedBy" UUID NULL,
+    "Id" UUID NOT NULL PRIMARY KEY,
+    "RecordCreatedBy" UUID NULL,
+    "RecordUpdated" TIMESTAMP NULL
+);
