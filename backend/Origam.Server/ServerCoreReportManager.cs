@@ -27,58 +27,73 @@ using Origam.DA;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 
 namespace Origam.Server;
+
 public class ServerCoreReportManager : IReportManager
 {
     private readonly SessionManager sessionManager;
+
     public ServerCoreReportManager(SessionManager sessionManager)
     {
         this.sessionManager = sessionManager;
     }
+
     public string GetReport(
-        string sessionFormIdentifier, string entity, object id, 
-        string reportId, Hashtable parameterMappings)
+        string sessionFormIdentifier,
+        string entity,
+        object id,
+        string reportId,
+        Hashtable parameterMappings
+    )
     {
         Guid key = Guid.NewGuid();
-        SessionStore sessionStore = sessionManager.GetSession(
-            new Guid(sessionFormIdentifier));
+        SessionStore sessionStore = sessionManager.GetSession(new Guid(sessionFormIdentifier));
         DataRow row = sessionStore.GetSessionRow(entity, id);
         Hashtable resultParams = DatasetTools.RetrieveParameters(
-            parameterMappings, new List<DataRow>{row});
-        sessionManager.AddReportRequest(
-            key, new ReportRequest(reportId, resultParams));
+            parameterMappings,
+            new List<DataRow> { row }
+        );
+        sessionManager.AddReportRequest(key, new ReportRequest(reportId, resultParams));
         return ReportRequestKeyToUrl(key);
     }
+
     public string GetReportFromMenu(Guid menuId)
     {
         Guid key = Guid.NewGuid();
-        IPersistenceService persistenceService = ServiceManager.Services
-            .GetService<IPersistenceService>();
-        ReportReferenceMenuItem reportReferenceMenuItem 
-            = persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractMenuItem), 
-                new ModelElementKey(menuId)) 
-            as ReportReferenceMenuItem;
-        sessionManager.AddReportRequest(key, new ReportRequest(
-            reportReferenceMenuItem.ReportId.ToString(), 
-            new Hashtable(),
-            reportReferenceMenuItem.ExportFormatType));
+        IPersistenceService persistenceService =
+            ServiceManager.Services.GetService<IPersistenceService>();
+        ReportReferenceMenuItem reportReferenceMenuItem =
+            persistenceService.SchemaProvider.RetrieveInstance(
+                typeof(AbstractMenuItem),
+                new ModelElementKey(menuId)
+            ) as ReportReferenceMenuItem;
+        sessionManager.AddReportRequest(
+            key,
+            new ReportRequest(
+                reportReferenceMenuItem.ReportId.ToString(),
+                new Hashtable(),
+                reportReferenceMenuItem.ExportFormatType
+            )
+        );
         return ReportRequestKeyToUrl(key);
     }
+
     public string GetReportStandalone(
-        string reportId, Hashtable parameters, 
-        DataReportExportFormatType dataReportExportFormatType)
+        string reportId,
+        Hashtable parameters,
+        DataReportExportFormatType dataReportExportFormatType
+    )
     {
         Guid key = Guid.NewGuid();
         sessionManager.AddReportRequest(
-            key, 
-            new ReportRequest(reportId, parameters, 
-            dataReportExportFormatType));
+            key,
+            new ReportRequest(reportId, parameters, dataReportExportFormatType)
+        );
         return ReportRequestKeyToUrl(key);
     }
+
     private static string ReportRequestKeyToUrl(Guid key)
     {
         return "internalApi/Report/" + key;

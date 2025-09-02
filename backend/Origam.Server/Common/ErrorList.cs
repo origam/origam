@@ -43,9 +43,10 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace Origam.Server;
+
 class ErrorList
 {
-    private Dictionary<int, string> _fieldErrors = new Dictionary<int,string>();
+    private Dictionary<int, string> _fieldErrors = new Dictionary<int, string>();
     private string _rowError;
     public Dictionary<int, string> FieldErrors
     {

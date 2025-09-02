@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server.Model.UIService;
+
 public class SaveFavoritesInput
 {
     public string ConfigXml;

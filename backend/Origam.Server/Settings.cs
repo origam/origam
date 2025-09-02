@@ -20,31 +20,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
-using IdentityServer4;
 using IdentityServer4.Models;
 using Origam.Server.Configuration;
 using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
 namespace Origam.Server;
+
 static class Settings
 {
     internal static ApiResource[] GetIdentityApiResources()
     {
-        return new[]
-        {
-            new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
-        };
+        return new[] { new ApiResource(IdentityServerConstants.LocalApi.ScopeName) };
     }
+
     internal static IdentityResource[] GetIdentityResources()
     {
         return new IdentityResource[]
         {
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile()
+            new IdentityResources.Profile(),
         };
     }
-    internal static Client[] GetIdentityClients(
-        IdentityServerConfig identityServerConfig)
+
+    internal static Client[] GetIdentityClients(IdentityServerConfig identityServerConfig)
     {
         List<Client> clients = new List<Client>();
         if (identityServerConfig.ServerClient != null)
@@ -52,10 +50,13 @@ static class Settings
             Client serverClient = new Client
             {
                 ClientId = "serverClient",
-                ClientSecrets = new[] {new Secret(identityServerConfig.ServerClient.ClientSecret.Sha256())},
+                ClientSecrets = new[]
+                {
+                    new Secret(identityServerConfig.ServerClient.ClientSecret.Sha256()),
+                },
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                AllowedScopes = new List<string> {IdentityServerConstants.LocalApi.ScopeName},
-                AccessTokenType = AccessTokenType.Reference
+                AllowedScopes = new List<string> { IdentityServerConstants.LocalApi.ScopeName },
+                AccessTokenType = AccessTokenType.Reference,
             };
             clients.Add(serverClient);
         }
@@ -66,7 +67,7 @@ static class Settings
                 ClientId = "origamMobileClient",
                 AllowedGrantTypes = GrantTypes.Code,
                 RequireClientSecret = false,
-                RedirectUris =  identityServerConfig.MobileClient.RedirectUris,
+                RedirectUris = identityServerConfig.MobileClient.RedirectUris,
                 RequireConsent = false,
                 RequirePkce = true,
                 PostLogoutRedirectUris = identityServerConfig.MobileClient.PostLogoutRedirectUris,
@@ -79,7 +80,7 @@ static class Settings
                 },
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true,
-                AccessTokenType = AccessTokenType.Reference
+                AccessTokenType = AccessTokenType.Reference,
             };
             clients.Add(mobileClient);
         }
@@ -90,7 +91,7 @@ static class Settings
                 ClientId = "origamWebClient",
                 AllowedGrantTypes = GrantTypes.Code,
                 RequireClientSecret = false,
-                RedirectUris =  identityServerConfig.WebClient.RedirectUris,
+                RedirectUris = identityServerConfig.WebClient.RedirectUris,
                 RequireConsent = false,
                 RequirePkce = true,
                 PostLogoutRedirectUris = identityServerConfig.WebClient.PostLogoutRedirectUris,
@@ -106,15 +107,13 @@ static class Settings
                 AccessTokenType = AccessTokenType.Reference,
                 AllowedCorsOrigins = identityServerConfig.WebClient.AllowedCorsOrigins,
             };
-            clients.Add( webClient);
+            clients.Add(webClient);
         }
         return clients.ToArray();
     }
+
     public static IEnumerable<ApiScope> GetApiScopes()
     {
-        return new List<ApiScope>
-        {
-            new ApiScope(IdentityServerConstants.LocalApi.ScopeName),
-        };
+        return new List<ApiScope> { new ApiScope(IdentityServerConstants.LocalApi.ScopeName) };
     }
 }

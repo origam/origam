@@ -39,31 +39,34 @@ public class UserApiTokenAuthenticationMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public UserApiTokenAuthenticationMiddleware(RequestDelegate next,
-        IAuthenticationSchemeProvider schemes)
+    public UserApiTokenAuthenticationMiddleware(
+        RequestDelegate next,
+        IAuthenticationSchemeProvider schemes
+    )
     {
         _next = next ?? throw new ArgumentNullException(nameof(next));
         Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
     }
 
     public IAuthenticationSchemeProvider Schemes { get; set; }
-    
+
     public async Task Invoke(HttpContext context)
     {
-        context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
-        {
-            OriginalPath = context.Request.Path,
-            OriginalPathBase = context.Request.PathBase
-        });
+        context.Features.Set<IAuthenticationFeature>(
+            new AuthenticationFeature
+            {
+                OriginalPath = context.Request.Path,
+                OriginalPathBase = context.Request.PathBase,
+            }
+        );
 
         // Give any IAuthenticationRequestHandler schemes a chance to handle the request
-        var handlers = context.RequestServices
-            .GetRequiredService<IAuthenticationHandlerProvider>();
+        var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
         foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
         {
             var handler =
-                await handlers.GetHandlerAsync(context, scheme.Name) as
-                    IAuthenticationRequestHandler;
+                await handlers.GetHandlerAsync(context, scheme.Name)
+                as IAuthenticationRequestHandler;
             if (handler != null && await handler.HandleRequestAsync())
             {
                 return;
@@ -72,7 +75,9 @@ public class UserApiTokenAuthenticationMiddleware
 
         // Using the IdentityServerConstants.LocalApi.AuthenticationScheme here
         // causes the authentication to use the IdentityServerAccessToken.
-        var result = await context.AuthenticateAsync(IdentityServerConstants.LocalApi.AuthenticationScheme);
+        var result = await context.AuthenticateAsync(
+            IdentityServerConstants.LocalApi.AuthenticationScheme
+        );
         if (result?.Principal != null)
         {
             context.User = result.Principal;

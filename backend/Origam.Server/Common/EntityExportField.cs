@@ -41,6 +41,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server;
+
 public class EntityExportField
 {
     private string caption;
@@ -48,12 +49,29 @@ public class EntityExportField
     private string lookupId;
     private string format;
     private EntityExportPolymorphRules polymorphRules;
-    public string Caption { get => caption; set => caption = value; }
-    public string FieldName { get => fieldName; set => fieldName = value; }
-    public string LookupId { get => lookupId; set => lookupId = value; }
-    public string Format { get => format; set => format = value; }
+    public string Caption
+    {
+        get => caption;
+        set => caption = value;
+    }
+    public string FieldName
+    {
+        get => fieldName;
+        set => fieldName = value;
+    }
+    public string LookupId
+    {
+        get => lookupId;
+        set => lookupId = value;
+    }
+    public string Format
+    {
+        get => format;
+        set => format = value;
+    }
     public EntityExportPolymorphRules PolymorphRules
     {
-        get => polymorphRules; set => polymorphRules = value;
+        get => polymorphRules;
+        set => polymorphRules = value;
     }
 }

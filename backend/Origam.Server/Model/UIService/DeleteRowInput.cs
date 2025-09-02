@@ -23,12 +23,15 @@ using System;
 using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
+
 public class DeleteRowInput
 {
     [RequiredNonDefault]
     public Guid DataStructureEntityId { get; set; }
+
     [RequiredNonDefault]
     public Guid RowIdToDelete { get; set; }
+
     [RequiredNonDefault]
     public Guid MenuId { get; set; }
 }

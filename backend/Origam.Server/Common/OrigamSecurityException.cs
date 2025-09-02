@@ -23,9 +23,8 @@ using System;
 
 namespace Origam.Server;
 
-public class OrigamSecurityException: Exception
+public class OrigamSecurityException : Exception
 {
-    public OrigamSecurityException(string message) : base(message)
-    {
-    }
+    public OrigamSecurityException(string message)
+        : base(message) { }
 }

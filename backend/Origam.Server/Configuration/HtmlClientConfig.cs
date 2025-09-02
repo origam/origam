@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server.Configuration;
+
 public class HtmlClientConfig
 {
     public bool ShowToolTipsForMemoFieldsOnly { get; set; }

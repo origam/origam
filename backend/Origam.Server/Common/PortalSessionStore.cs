@@ -25,17 +25,20 @@ using System.Data;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public class PortalSessionStore
 {
     private DateTime? sessionStart;
     private object _profileId;
     private IList<SessionStore> _formSessions = new List<SessionStore>();
-    private bool _isExclusiveScreenOpen = false;
+    private bool _isExclusiveScreenOpen;
+
     public PortalSessionStore(object profileId)
     {
         _profileId = profileId;
         sessionStart = DateTime.Now;
     }
+
     public object ProfileId
     {
         get { return _profileId; }
@@ -47,14 +50,8 @@ public class PortalSessionStore
     }
     public bool IsExclusiveScreenOpen
     {
-        get
-        {
-            return _isExclusiveScreenOpen;
-        }
-        set
-        {
-            _isExclusiveScreenOpen = value;
-        }
+        get { return _isExclusiveScreenOpen; }
+        set { _isExclusiveScreenOpen = value; }
     }
     public SessionStore ExclusiveSession
     {
@@ -69,36 +66,33 @@ public class PortalSessionStore
                         return item;
                     }
                 }
-                throw new System.Exception("Exclusive screen not found.");
+                throw new Exception("Exclusive screen not found.");
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
+
     public bool ShouldBeCleared()
     {
         DataSet data = CoreServices.DataService.Instance.LoadData(
             new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
-            Guid.Empty, 
-            Guid.Empty, 
+            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
+            Guid.Empty,
+            Guid.Empty,
             null,
             "OrigamOnlineUser_par_UserName",
-            SecurityManager.CurrentPrincipal.Identity.Name);
+            SecurityManager.CurrentPrincipal.Identity.Name
+        );
         if (data.Tables[0].Rows.Count == 0)
         {
             return false;
         }
-        else
-        {
-            DataRow row = data.Tables[0].Rows[0];
-            return Nullable.Compare<DateTime>(
-                row["ClearSessionRequestTimestamp"] as DateTime?, sessionStart) 
-                > 0;
-        }
+
+        DataRow row = data.Tables[0].Rows[0];
+        return Nullable.Compare(row["ClearSessionRequestTimestamp"] as DateTime?, sessionStart) > 0;
     }
+
     public void ResetSessionStart()
     {
         sessionStart = DateTime.Now;

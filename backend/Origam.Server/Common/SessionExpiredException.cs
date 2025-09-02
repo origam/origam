@@ -22,9 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Server;
+
 public class SessionExpiredException : Exception
 {
-	public SessionExpiredException() : base(Resources.ErrorSessionExpired)
-	{ 
-	}
+    public SessionExpiredException()
+        : base(Resources.ErrorSessionExpired) { }
 }

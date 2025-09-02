@@ -37,13 +37,24 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Authorization;
-public class PersistedGrantStore: IPersistedGrantStore
+
+public class PersistedGrantStore : IPersistedGrantStore
 {
-    private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid("ee21a554-9cd7-49bd-b989-4596d918af63");
-    private static readonly Guid GetGrandByKeyFilterId = new Guid("12cffef2-6d1b-40d0-9e45-0e8b095c7248");
-    private static readonly Guid GetGrandBySubjectIdFilterId = new Guid("32682bdb-191b-448a-8414-388c9b4a695b");
-    private static readonly Guid GetBySubjectIdClientIdFilterId = new Guid("4a66c4da-f309-4aa5-93f1-9724e628fe12");
-    private static readonly Guid GetBySubjectIdClientIdTypeFilterId = new Guid("d2ea1683-a049-4a26-bed2-1abcb7218ddf");
+    private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid(
+        "ee21a554-9cd7-49bd-b989-4596d918af63"
+    );
+    private static readonly Guid GetGrandByKeyFilterId = new Guid(
+        "12cffef2-6d1b-40d0-9e45-0e8b095c7248"
+    );
+    private static readonly Guid GetGrandBySubjectIdFilterId = new Guid(
+        "32682bdb-191b-448a-8414-388c9b4a695b"
+    );
+    private static readonly Guid GetBySubjectIdClientIdFilterId = new Guid(
+        "4a66c4da-f309-4aa5-93f1-9724e628fe12"
+    );
+    private static readonly Guid GetBySubjectIdClientIdTypeFilterId = new Guid(
+        "d2ea1683-a049-4a26-bed2-1abcb7218ddf"
+    );
     private static readonly string GrantTableName = "OrigamIdentityGrant";
     private static readonly string KeyParameterName = "OrigamIdentityGrant_parKey";
     private static readonly string SubjectIdParameterName = "OrigamIdentityGrant_parSubjectId";
@@ -57,15 +68,19 @@ public class PersistedGrantStore: IPersistedGrantStore
         FireStateMachineEvents = false,
         LoadActualValuesAfterUpdate = false,
     };
+
     public Task StoreAsync(PersistedGrant grant)
     {
-        IPersistenceProvider schemaProvider = ServiceManager.Services
-            .GetService<IPersistenceService>()
+        IPersistenceProvider schemaProvider = ServiceManager
+            .Services.GetService<IPersistenceService>()
             .SchemaProvider;
         DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
-        DataStructure dataStructure = (DataStructure)schemaProvider.RetrieveInstance(typeof(ISchemaItem), 
-            new ModelElementKey(OrigamIdentityGrantDataStructureId));
-        
+        DataStructure dataStructure = (DataStructure)
+            schemaProvider.RetrieveInstance(
+                typeof(ISchemaItem),
+                new ModelElementKey(OrigamIdentityGrantDataStructureId)
+            );
+
         DataSet dataSet = dataSetGenerator.CreateDataSet(dataStructure);
         DataRow newRow = dataSet.Tables[GrantTableName].NewRow();
         newRow.SetField("Key", grant.Key);
@@ -76,24 +91,27 @@ public class PersistedGrantStore: IPersistedGrantStore
         newRow.SetField("Expiration", grant.Expiration);
         newRow.SetField("Data", grant.Data);
         newRow.SetField("SessionId", grant.SessionId);
-        
+
         dataSet.Tables[GrantTableName].Rows.Add(newRow);
         DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
-        
+
         return Task.CompletedTask;
     }
+
     public Task<PersistedGrant> GetAsync(string key)
     {
         DataSet dataSet = DataService.Instance.LoadData(
-            OrigamIdentityGrantDataStructureId, 
+            OrigamIdentityGrantDataStructureId,
             GetGrandByKeyFilterId,
             Guid.Empty,
             Guid.Empty,
             null,
             KeyParameterName,
-            key);
+            key
+        );
         return Task.FromResult(GrantsFromDataSet(dataSet).FirstOrDefault());
     }
+
     public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
     {
         QueryParameterCollection parameters = FilterToParameterCollection(filter);
@@ -107,8 +125,9 @@ public class PersistedGrantStore: IPersistedGrantStore
         );
         return Task.FromResult(GrantsFromDataSet(dataSet));
     }
+
     private static QueryParameterCollection FilterToParameterCollection(PersistedGrantFilter filter)
-    { 
+    {
         QueryParameterCollection parameters = new QueryParameterCollection();
         if (!string.IsNullOrEmpty(filter.ClientId))
         {
@@ -128,28 +147,32 @@ public class PersistedGrantStore: IPersistedGrantStore
         }
         return parameters;
     }
+
     public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
     {
         DataSet dataSet = DataService.Instance.LoadData(
-            OrigamIdentityGrantDataStructureId, 
+            OrigamIdentityGrantDataStructureId,
             GetGrandBySubjectIdFilterId,
             Guid.Empty,
             Guid.Empty,
             null,
             SubjectIdParameterName,
-            subjectId);
+            subjectId
+        );
         return Task.FromResult(GrantsFromDataSet(dataSet));
     }
+
     public Task RemoveAsync(string key)
     {
         DataSet dataSet = DataService.Instance.LoadData(
-            OrigamIdentityGrantDataStructureId, 
+            OrigamIdentityGrantDataStructureId,
             GetGrandByKeyFilterId,
             Guid.Empty,
             Guid.Empty,
             null,
             KeyParameterName,
-            key);
+            key
+        );
         if (dataSet.Tables[GrantTableName].Rows.Count == 0)
         {
             throw new ArgumentException($"Grant {key} not found.");
@@ -158,6 +181,7 @@ public class PersistedGrantStore: IPersistedGrantStore
         DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
         return Task.CompletedTask;
     }
+
     public Task RemoveAllAsync(PersistedGrantFilter filter)
     {
         QueryParameterCollection parameters = FilterToParameterCollection(filter);
@@ -167,7 +191,8 @@ public class PersistedGrantStore: IPersistedGrantStore
             Guid.Empty,
             Guid.Empty,
             null,
-            parameters);
+            parameters
+        );
         foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
         {
             row.Delete();
@@ -175,67 +200,69 @@ public class PersistedGrantStore: IPersistedGrantStore
         DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
         return Task.CompletedTask;
     }
+
     public Task RemoveAllAsync(string subjectId, string clientId)
     {
         var parameters = new QueryParameterCollection();
         parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
         parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
         DataSet dataSet = DataService.Instance.LoadData(
-            OrigamIdentityGrantDataStructureId, 
+            OrigamIdentityGrantDataStructureId,
             GetBySubjectIdClientIdFilterId,
             Guid.Empty,
             Guid.Empty,
             null,
-            parameters);
+            parameters
+        );
         foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
         {
             row.Delete();
         }
-        
+
         DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
-        
+
         return Task.CompletedTask;
     }
+
     public Task RemoveAllAsync(string subjectId, string clientId, string type)
     {
-        
         var parameters = new QueryParameterCollection();
         parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
         parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
         parameters.Add(new QueryParameter(TypeParameterName, type));
         DataSet dataSet = DataService.Instance.LoadData(
-            OrigamIdentityGrantDataStructureId, 
+            OrigamIdentityGrantDataStructureId,
             GetBySubjectIdClientIdTypeFilterId,
             Guid.Empty,
             Guid.Empty,
             null,
-            parameters);
+            parameters
+        );
         foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
         {
             row.Delete();
         }
-        
+
         DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
-        
+
         return Task.CompletedTask;
     }
+
     private static IEnumerable<PersistedGrant> GrantsFromDataSet(DataSet dataSet)
     {
-        return dataSet.Tables[GrantTableName].Rows
-            .Cast<DataRow>()
-            .Select(
-                row =>
-                    new PersistedGrant
-                    {
-                        Key = row["Key"] as string,
-                        Type = row["Type"] as string,
-                        SubjectId = row["SubjectId"] as string,
-                        ClientId = row["ClientId"] as string,
-                        CreationTime = (DateTime) row["CreationTime"],
-                        Expiration = (DateTime) row["Expiration"],
-                        Data = row["Data"] as string,
-                        SessionId = row["SessionId"] as string,
-                    } 
-            );
+        return dataSet
+            .Tables[GrantTableName]
+            .Rows.Cast<DataRow>()
+            .Select(row => new PersistedGrant
+            {
+                Key = row["Key"] as string,
+                Type = row["Type"] as string,
+                SubjectId = row["SubjectId"] as string,
+                ClientId = row["ClientId"] as string,
+                CreationTime = (DateTime)row["CreationTime"],
+                Expiration = (DateTime)row["Expiration"],
+                Data = row["Data"] as string,
+                SessionId = row["SessionId"] as string,
+            });
     }
 }

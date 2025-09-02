@@ -44,6 +44,7 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace Origam.Server;
+
 public class EntityExportInfo
 {
     private string _entity;
@@ -52,7 +53,7 @@ public class EntityExportInfo
     private string _sessionFormIdentifier;
     private SessionStore _ss;
     public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
-    
+
     public string Entity
     {
         get { return _entity; }
@@ -75,24 +76,18 @@ public class EntityExportInfo
     }
     public DataTable Table
     {
-        get 
-        {
-            return Store.GetDataTable(Entity, DataSource);
-        }
+        get { return Store.GetDataTable(Entity, DataSource); }
     }
     public DataSet DataSource
     {
         get
         {
-            if (Store.IsPagedLoading 
-				&& Store.DataListEntity == Entity)
+            if (Store.IsPagedLoading && Store.DataListEntity == Entity)
             {
                 return Store.DataList;
             }
-            else
-            {
-                return Store.Data;
-            }
+
+            return Store.Data;
         }
     }
     public SessionStore Store

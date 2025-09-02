@@ -22,9 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Server;
-public class ServerObjectDisposedException: Exception
+
+public class ServerObjectDisposedException : Exception
 {
-    public ServerObjectDisposedException(string message) : base(message)
-    {
-    }
+    public ServerObjectDisposedException(string message)
+        : base(message) { }
 }

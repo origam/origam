@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server.Model.About;
+
 public class AboutInfo
 {
     public string ServerVersion { get; set; }

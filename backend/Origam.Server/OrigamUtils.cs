@@ -23,26 +23,26 @@ using System;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
-using Origam.DA.Common;
 using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
-using Origam.Workflow;
 
 namespace Origam.Server;
+
 public static class OrigamUtils
 {
-    public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
-        bool reloadModelWhenFilesChangesDetected)
+    public static void ConnectOrigamRuntime(
+        ILoggerFactory loggerFactory,
+        bool reloadModelWhenFilesChangesDetected
+    )
     {
         OrigamEngine.OrigamEngine.ConnectRuntime();
         if (!reloadModelWhenFilesChangesDetected)
         {
             return;
         }
-        IPersistenceService persistence 
-            = ServiceManager.Services.GetService<IPersistenceService>();
+        IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
         if (persistence is FilePersistenceService filePersistenceService)
         {
             filePersistenceService.ReloadNeeded += (sender, args) =>
@@ -50,8 +50,7 @@ public static class OrigamUtils
                 string errorMessage = "";
                 try
                 {
-                    Maybe<XmlLoadError> maybeError =
-                        filePersistenceService.Reload();
+                    Maybe<XmlLoadError> maybeError = filePersistenceService.Reload();
                     if (maybeError.HasValue)
                     {
                         errorMessage = maybeError.Value.Message;
@@ -64,8 +63,10 @@ public static class OrigamUtils
                 if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
                     FatalErrorMiddleware.ErrorMessage =
-                        "An error has occured during automatic model reload. Please restart the server.\n" + errorMessage;
-                    loggerFactory.CreateLogger("Model Reload")
+                        "An error has occured during automatic model reload. Please restart the server.\n"
+                        + errorMessage;
+                    loggerFactory
+                        .CreateLogger("Model Reload")
                         .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
                 }
             };
@@ -76,6 +77,10 @@ public static class OrigamUtils
     {
         IDataService dataService = DataServiceFactory.GetDataService();
         dataService.ExecuteProcedure(
-            "OrigamIdentityGrantCleanup", "", new DataStructureQuery(), null);
+            "OrigamIdentityGrantCleanup",
+            "",
+            new DataStructureQuery(),
+            null
+        );
     }
 }

@@ -43,6 +43,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Data;
 
 namespace Origam.Server;
+
 class DeletedRowInfo
 {
     public DeletedRowInfo(DataRow row)
@@ -52,9 +53,10 @@ class DeletedRowInfo
         {
             _originalRowData = GetRowData(row, DataRowVersion.Original);
         }
-        
+
         _state = row.RowState;
     }
+
     public void ImportData(DataTable table)
     {
         if (_originalRowData != null)
@@ -67,7 +69,7 @@ class DeletedRowInfo
                 DataColumn col = table.Columns[i];
                 if (!col.ReadOnly && (col.Expression == "" || col.Expression == null))
                 {
-                    newRow[col] = _rowData[i]; 
+                    newRow[col] = _rowData[i];
                 }
             }
         }
@@ -82,6 +84,7 @@ class DeletedRowInfo
             }
         }
     }
+
     private object[] GetRowData(DataRow row, DataRowVersion version)
     {
         int count = row.Table.Columns.Count;
@@ -92,7 +95,8 @@ class DeletedRowInfo
         }
         return result;
     }
-    private object[] _originalRowData = null;
-    private object[] _rowData = null;
+
+    private object[] _originalRowData;
+    private object[] _rowData;
     private DataRowState _state;
 }
