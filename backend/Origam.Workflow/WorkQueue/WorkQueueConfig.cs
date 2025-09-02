@@ -29,7 +29,7 @@ static class WorkQueueConfig
     {
         const int defaultMb = 50; // default for Architect and fallback
         IConfig config = ConfigFactory.GetConfig();
-        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedMbInZip" }) ?? defaultMb;
+        long maxZipSizeMb = config.GetValue(new [] { "WorkQueue", "MaxUncompressedFileSizeMb" }) ?? defaultMb;
         return maxZipSizeMb * 1024L * 1024L;
     }
 

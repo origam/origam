@@ -163,7 +163,7 @@
 	}
   },
   "WorkQueue": {
-    "MaxUncompressedMbInZip": 100,
+    "MaxUncompressedFileSizeMb": 100,
     "MaxCompressionRatio": 150
   }
 }
