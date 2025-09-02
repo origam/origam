@@ -29,7 +29,7 @@ public interface IConfig
 public static class ConfigFactory {
     public static IConfig GetConfig()
     {
-#pragma warning disableCS0162
+#pragma warning disable CS0162
 #if NETSTANDARD
         return new Config();
 #endif

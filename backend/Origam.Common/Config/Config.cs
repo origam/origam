@@ -34,7 +34,7 @@ public class Config : IConfig
 {
     private static readonly Lazy<string> userSecretsId = new (ResolveUserSecretsId);
 
-    private static string? ResolveUserSecretsId()
+    private static string ResolveUserSecretsId()
     {
         try
         {
@@ -62,7 +62,7 @@ public class Config : IConfig
         return null;
     }
 
-    private static bool TryGetJsonValue(string filePath, string[] path, out string? value)
+    private static bool TryGetJsonValue(string filePath, string[] path, out string value)
     {
         value = null;
         try
