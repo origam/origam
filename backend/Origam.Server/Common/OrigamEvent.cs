@@ -19,5 +19,4 @@ public static class OrigamEvent
     public static readonly (string FeatureCode, Guid EventId) ExportToExcel 
         = ("EVENT_EXPORT_TO_EXCEL", 
             new Guid("62f161e9-b817-4631-93e3-360551257dc2"));
-    
 }
