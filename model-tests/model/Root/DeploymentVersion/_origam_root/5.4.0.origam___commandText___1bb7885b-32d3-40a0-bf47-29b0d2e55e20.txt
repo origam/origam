@@ -1,0 +1,8 @@
+﻿CREATE TABLE "OrigamEventType" (
+    "Name" varchar(50) NULL,
+    "RecordCreated" timestamptz(3) NULL,
+    "RecordUpdatedBy" uuid NULL,
+    "Id" uuid NOT NULL PRIMARY KEY,
+    "RecordCreatedBy" uuid NULL,
+    "RecordUpdated" timestamptz(3) NULL
+);

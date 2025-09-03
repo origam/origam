@@ -1,0 +1,11 @@
+﻿CREATE TABLE [OrigamEvent] (
+	[Timestamp] DateTime NOT NULL,
+	[Details] nvarchar(max) NULL,
+	[Instance] NVarChar(50) NOT NULL,
+	[refBusinessPartnerId] UniqueIdentifier NOT NULL,
+	[refOrigamEventTypeId] UniqueIdentifier NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);

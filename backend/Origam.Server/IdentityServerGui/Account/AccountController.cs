@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Authorization;
+using Origam.Server.Common;
 using Origam.Server.Configuration;
 using Origam.Server.IdentityServerGui.Home;
 
@@ -423,7 +424,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             if (result.Succeeded && user != null)
             {
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
-                
+                if (FeatureTools.IsFeatureOn(OrigamEvent.SignIn.FeatureCode))
+                {
+                    OrigamEventTools.RecordSignInEvent();
+                }
                 if (context != null)
                 {
                     if (context.IsNativeClient())
@@ -560,6 +564,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
         if (User?.Identity.IsAuthenticated == true)
         {
+            if (FeatureTools.IsFeatureOn(OrigamEvent.SignOut.FeatureCode))
+            {
+                OrigamEventTools.RecordSignOutEvent();
+            }
             // delete local authentication cookie
             await _signInManager.SignOutAsync();
             _sessionObjects.UIService.Logout();

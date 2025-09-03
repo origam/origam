@@ -1,0 +1,12 @@
+﻿CREATE TABLE "OrigamEvent" (
+    "Timestamp" TIMESTAMPTZ(3) NOT NULL,
+    "Details" TEXT NULL,
+    "Instance" VARCHAR(50) NOT NULL,
+    "refBusinessPartnerId" UUID NOT NULL,
+    "refOrigamEventTypeId" UUID NOT NULL,
+    "RecordCreated" TIMESTAMPTZ(3) NULL,
+    "RecordUpdatedBy" UUID NULL,
+    "Id" UUID NOT NULL PRIMARY KEY,
+    "RecordCreatedBy" UUID NULL,
+    "RecordUpdated" TIMESTAMPTZ(3) NULL
+);

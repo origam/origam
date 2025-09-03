@@ -1,0 +1,6 @@
+﻿insert into [OrigamEventType] ([Id], [Name])
+values
+('3d91cd2c-1265-4022-8834-150de0237a3c', 'Sign In'),
+('b737ea8b-1cda-42d1-845a-c0c909386389', 'Sign Out'),
+('4c14c1da-797b-4f0f-b6df-f787ca7e9647', 'Open Screen'),
+('62f161e9-b817-4631-93e3-360551257dc2', 'Export to Excel')
