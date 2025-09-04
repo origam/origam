@@ -1,6 +1,6 @@
-#region license
+﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,22 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.UI;
+namespace Origam.Config;
 
-namespace Origam.Workbench;
-public static class WorkbenchSingleton
+public class NullConfig : IConfig
 {
-	static IWorkbench workbench = null;
-	
-	public static IWorkbench Workbench 
-	{
-		get 
-		{
-			return workbench;
-		}
-		set 
-		{
-			workbench = value;
-		}
-	}
+    public long? GetValue(string[] appSettingsPath)
+    {
+        return null;
+    }
 }

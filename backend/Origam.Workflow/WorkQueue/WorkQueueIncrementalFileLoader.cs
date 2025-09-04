@@ -29,6 +29,8 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Data;
+using System.Runtime.InteropServices;
+using Origam.Config;
 
 namespace Origam.Workflow.WorkQueue;
 public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
@@ -84,7 +86,20 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
         string[] filenameSegments = filename.Split('|');
         if(filenameSegments.Length == 1)
         {
-            return File.ReadAllText(filenameSegments[0]);
+            // Non-zip file: enforce maximum size before reading
+            long maxUncompressedBytes = WorkQueueConfig.GetMaxUncompressedBytes();
+            string path = filenameSegments[0];
+            FileInfo fi = new FileInfo(path);
+            if (fi.Exists && fi.Length > maxUncompressedBytes)
+            {
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
+            }
+            string content = File.ReadAllText(path);
+            if (content.Length > maxUncompressedBytes)
+            {
+                throw new InvalidOperationException(Strings.StreamExceedsAllowedSize);
+            }
+            return content;
         }
         else
         {
@@ -95,13 +110,56 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
     private string GetContentFromZipArchive(
         string archiveName, string filename)
     {
-        using(FileStream fileStream = new FileStream(
-            archiveName, FileMode.Open))
-        using(ZipArchive archive = new ZipArchive(fileStream))
-        using(Stream stream = archive.GetEntry(filename).Open())
-        using(StreamReader streamReader = new StreamReader(stream))
+        // Harden against zip-bomb and invalid entry issues
+        long maxUncompressedBytes = WorkQueueConfig.GetMaxUncompressedBytes();
+
+        using (
+            FileStream fileStream = new FileStream(
+                archiveName,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read
+            )
+        )
+        using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Read, false))
         {
-            return streamReader.ReadToEnd();
+            // Zip spec uses forward slashes for separators; normalize for lookup
+            string normalizedEntryName = filename.Replace('\\', '/');
+            ZipArchiveEntry entry = archive.GetEntry(normalizedEntryName);
+            if (entry == null)
+            {
+                throw new InvalidOperationException(
+                    string.Format(Strings.EntryNotFoundInArchive, filename, archiveName)
+                );
+            }
+
+            // Guard against zip bombs: excessive uncompressed size or ratio
+            if (entry.Length > maxUncompressedBytes)
+            {
+                throw new InvalidOperationException(Strings.ArchiveEntryTooLarge);
+            }
+            if (
+                entry.CompressedLength > 0
+                && (entry.Length / (double)entry.CompressedLength) > WorkQueueConfig.GetMaxCompressionRatio()
+            )
+            {
+                throw new InvalidOperationException(
+                    Strings.ArchiveEntrySuspiciousCompressionRatio
+                );
+            }
+
+            using (Stream stream = entry.Open())
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                string content = streamReader.ReadToEnd();
+                if (content.Length > maxUncompressedBytes)
+                {
+                    throw new InvalidOperationException(
+                        ResourceUtils.GetString("StreamExceedsAllowedSize")
+                    );
+                }
+                return content;
+            }
         }
     }
     private void SetupTransaction(string transactionId, string connection)
@@ -147,25 +205,24 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                     default:
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName", pair[0],
-                            ResourceUtils.GetString(
-                                "ErrorInvalidConnectionString"));
+                            Strings.ErrorInvalidConnectionString);
                 }
             }
         }
         if (path == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoPath"));
+                Strings.ErrorNoPath);
         }
         if (indexFile == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoIndexFile"));
+                Strings.ErrorNoIndexFile);
         }
         if (searchPattern == null)
         {
             throw new Exception(
-                ResourceUtils.GetString("ErrorNoSearchPattern"));
+                Strings.ErrorNoSearchPattern);
         }
     }
     private void InitializeFileList()
@@ -202,10 +259,15 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 string fullDestinationDirPath = Path.GetFullPath(path + Path.DirectorySeparatorChar);
                 foreach(ZipArchiveEntry archiveEntry in archive.Entries)
                 {
-                    string destinationFileName = Path.GetFullPath(Path.Combine(path, archiveEntry.FullName));
-                    if (!destinationFileName.StartsWith(fullDestinationDirPath))
+                    string destinationFileName = Path.GetFullPath(
+                        Path.Combine(path, archiveEntry.FullName)
+                    );
+                    var comparison = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                        ? StringComparison.OrdinalIgnoreCase
+                        : StringComparison.Ordinal;
+                    if (!destinationFileName.StartsWith(fullDestinationDirPath, comparison))
                     {
-                        throw new InvalidOperationException("Entry is outside the target dir: " + destinationFileName);
+                        throw new InvalidOperationException(string.Format(ResourceUtils.GetString("EntryOutsideTargetDir"), destinationFileName));
                     }
                     if(FitsMask(archiveEntry.Name) 
                     && !hashIndexFile.IsZipArchiveEntryProcessed(

@@ -516,4 +516,25 @@
   <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
     <value>Nebyly vybrány žádné záznamy, není možné spustit požadovaný povel.</value>
   </data>
+  <data name="ErrorParsingConnectionString" xml:space="preserve">
+    <value>Došlo k chybě při parsování připojovacího řetězce</value>
+  </data>
+  <data name="UnknownReadType" xml:space="preserve">
+    <value>Neznámá hodnota ReadType.</value>
+  </data>
+  <data name="ArchiveEntryTooLarge" xml:space="preserve">
+    <value>Položka archivu je příliš velká.</value>
+  </data>
+  <data name="ArchiveEntrySuspiciousCompressionRatio" xml:space="preserve">
+    <value>Položka archivu má podezřelý kompresní poměr.</value>
+  </data>
+  <data name="StreamExceedsAllowedSize" xml:space="preserve">
+    <value>Soubor překračuje povolenou velikost.</value>
+  </data>
+  <data name="EntryNotFoundInArchive" xml:space="preserve">
+    <value>Položka '{0}' nebyla nalezena v archivu '{1}'.</value>
+  </data>
+  <data name="EntryOutsideTargetDir" xml:space="preserve">
+    <value>Položka je mimo cílový adresář: {0}</value>
+  </data>
 </root>

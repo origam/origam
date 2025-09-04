@@ -161,5 +161,9 @@
 	  "Default":     "Warning",
 	  "Microsoft.*": "Warning" 
 	}
+  },
+  "WorkQueue": {
+    "MaxUncompressedFileSizeMb": 100,
+    "MaxCompressionRatio": 150
   }
 }
