@@ -21,4 +21,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.Attributes;
 
-public class NotAModelPropertyAttribute() : Attribute { }
+public class NotAModelPropertyAttribute : Attribute;

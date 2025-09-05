@@ -27,15 +27,8 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PackageController : ControllerBase
+public class PackageController(SchemaService schemaService) : ControllerBase
 {
-    private readonly SchemaService schemaService;
-
-    public PackageController(SchemaService schemaService)
-    {
-        this.schemaService = schemaService;
-    }
-
     [HttpGet("GetAll")]
     public PackagesInfo GetAll()
     {

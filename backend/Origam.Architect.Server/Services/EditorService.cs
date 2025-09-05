@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Concurrent;
 using System.Reflection;
 using Origam.Architect.Server.ArchitectLogic;
-using Origam.Architect.Server.Controllers;
+using Origam.Architect.Server.Models;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.GuiModel;

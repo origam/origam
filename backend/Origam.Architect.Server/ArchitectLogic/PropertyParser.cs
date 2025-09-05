@@ -25,15 +25,8 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.ArchitectLogic;
 
-public class PropertyParser
+public class PropertyParser(IPersistenceService persistenceService)
 {
-    private readonly IPersistenceService persistenceService;
-
-    public PropertyParser(IPersistenceService persistenceService)
-    {
-        this.persistenceService = persistenceService;
-    }
-
     public object Parse(PropertyInfo property, string value)
     {
         if (value == null)
