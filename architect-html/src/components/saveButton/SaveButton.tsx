@@ -22,6 +22,7 @@ import S from '@components/saveButton/SaveButton.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
+import { VscSave } from 'react-icons/vsc';
 
 export const SaveButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -55,7 +56,8 @@ export const SaveButton = observer(() => {
         color: activeEditor.isDirty ? '#fff' : 'var(--foreground1)',
       }}
     >
-      {T('Save', 'save_button_label')}
+      <VscSave />
+      <span>{T('Save', 'save_button_label')}</span>
     </button>
   );
 });
