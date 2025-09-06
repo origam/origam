@@ -24,7 +24,7 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscSave } from 'react-icons/vsc';
 
-export const SaveButton = observer(() => {
+const SaveButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const progressBarState = rootStore.progressBarState;
   const editorTabViewState = rootStore.editorTabViewState;
@@ -33,6 +33,8 @@ export const SaveButton = observer(() => {
     return null;
   }
   const handleSave = () => {
+    if (!activeEditor.isDirty) return;
+
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         progressBarState.isWorking = true;
@@ -46,18 +48,14 @@ export const SaveButton = observer(() => {
   };
 
   return (
-    <button
-      className={S.root}
+    <div
+      className={S.root + ' ' + (activeEditor.isDirty ? S.dirty : S.default)}
       onClick={handleSave}
-      disabled={!activeEditor.isDirty}
-      style={{
-        backgroundColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--background1)',
-        borderColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--foreground1)',
-        color: activeEditor.isDirty ? '#fff' : 'var(--foreground1)',
-      }}
     >
       <VscSave />
       <span>{T('Save', 'save_button_label')}</span>
-    </button>
+    </div>
   );
 });
+
+export default SaveButton;
