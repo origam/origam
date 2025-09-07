@@ -4,6 +4,8 @@
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
   xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
   xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
@@ -17,6 +19,32 @@
     tmi:mappedObjectName="OrigamEvent"
     asi:name="OrigamEvent"
     ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="630c7434-5f38-456e-b5a0-0d313905eb4c"
+      asi:name="ix_OrigamEvent_Timestamp"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamEvent.origam#OrigamEvent/Timestamp/05056f95-ae71-474b-92c6-84c6d8361ea0"
+        x:id="f284a634-6e89-4474-9ed7-b0ebd69349c6"
+        asi:name="0_Timestamp"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="e3b413a6-0f39-4d22-be05-48578a290eb2"
+      asi:name="ix_OrigamEvent_refBusinessPartnerId"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamEvent.origam#OrigamEvent/refBusinessPartnerId/468489c3-c74d-478c-b708-8e1e6928fa31"
+        x:id="e84e4e5e-b903-4c53-8e4b-49e129719686"
+        asi:name="0_refBusinessPartnerId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"

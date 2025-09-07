@@ -4,7 +4,12 @@
   xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
-  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds1:DataStructure
     asi:abstract="false"
     x:id="c35a0893-1b41-4a4a-a70d-795a088957ae"
@@ -22,5 +27,30 @@
       dse:relationType="Normal"
       dse:serializeAsSingleJsonObject="false"
       dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="988761ab-1d48-4aea-943a-1150e7dfc1c5"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/OrigamEvent/77a636b3-a5c2-4643-afe6-0d95531791d6"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="1a28cf55-19d3-4928-a0b4-98178a011917"
+        asi:name="OrigamEvent_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="aab9d5fe-7035-4638-8126-4b363861cf12"
+      asi:name="Default">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/OrigamEvent/77a636b3-a5c2-4643-afe6-0d95531791d6"
+        dsssi:fieldName="Timestamp"
+        x:id="54f8174f-9659-4465-8b1e-a431ddb0453a"
+        asi:name="OrigamEvent_0_Timestamp"
+        dsssi:sortDirection="Descending" />
+    </dsss:DataStructureSortSet>
   </ds1:DataStructure>
 </x:file>

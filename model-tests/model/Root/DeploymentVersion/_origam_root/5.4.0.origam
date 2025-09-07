@@ -28,6 +28,22 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___20236de9-df25-4ecc-9d03-029d51f15057.txt"
+      x:id="20236de9-df25-4ecc-9d03-029d51f15057"
+      asi:name="00090_PG_Index_OrigamEvent.ix_OrigamEvent_refBusinessPartnerId"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___27b11847-5056-4ff8-bf1c-3511e1582f47.txt"
+      x:id="27b11847-5056-4ff8-bf1c-3511e1582f47"
+      asi:name="00080_PG_Index_OrigamEvent.ix_OrigamEvent_Timestamp"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="40"
       scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___30386c4d-dbda-4368-bda2-d1a4ca646301.txt"
       x:id="30386c4d-dbda-4368-bda2-d1a4ca646301"
@@ -76,11 +92,27 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___887df1dd-5d82-41f3-9041-3ec1ecbd5b7c.txt"
+      x:id="887df1dd-5d82-41f3-9041-3ec1ecbd5b7c"
+      asi:name="00090_Index_OrigamEvent.ix_OrigamEvent_refBusinessPartnerId"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___894e29e8-5191-4714-90b2-380e04ae0403.txt"
       x:id="894e29e8-5191-4714-90b2-380e04ae0403"
       asi:name="00020_PG_Database_Entity_OrigamEventType_l10n"
       scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:5.4.0.origam___commandText___a4a09e3f-6e5d-4be2-a65d-8b7c40978b98.txt"
+      x:id="a4a09e3f-6e5d-4be2-a65d-8b7c40978b98"
+      asi:name="00080_Index_OrigamEvent.ix_OrigamEvent_Timestamp"
+      scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
