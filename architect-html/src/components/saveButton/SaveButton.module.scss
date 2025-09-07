@@ -45,12 +45,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .dirty {
   cursor: pointer;
 
-  background: var(--warning2);
-  border: 1px solid var(--warning2);
-  opacity: 0.9;
+  color: #fff;
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  opacity: 1;
 
   &:hover {
-    background: var(--warning2);
-    opacity: 1;
+    background: var(--brand);
+    opacity: 0.9;
   }
 }
