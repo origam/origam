@@ -229,6 +229,11 @@ public class UIManager
                     sessionManager.GetSessionStats());
             });
         }
+        if (request.IsNewSession && request.RegisterSession
+           && FeatureTools.IsFeatureOn(OrigamEvent.OpenScreen.FeatureCode))
+        {
+            OrigamEventTools.RecordOpenScreen(ss);
+        }
         return result;
     }
     private static void SetFormXml(UIResult result, UserProfile profile,
