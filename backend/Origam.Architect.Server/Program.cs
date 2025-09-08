@@ -27,7 +27,6 @@ using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
-using Origam.Architect.Server.Wrappers;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 
@@ -53,7 +52,6 @@ public class Program
             });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddSingleton<ConfigManager>();
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();

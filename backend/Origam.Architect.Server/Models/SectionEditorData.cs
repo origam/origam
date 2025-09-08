@@ -44,5 +44,5 @@ public class DataSource
 public class EditorField
 {
     public OrigamDataType Type { get; set; }
-    public String Name { get; set; }
+    public string Name { get; set; }
 }
