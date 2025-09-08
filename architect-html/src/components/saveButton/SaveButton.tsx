@@ -48,10 +48,7 @@ const SaveButton = observer(() => {
   };
 
   return (
-    <div
-      className={S.root + ' ' + (activeEditor.isDirty ? S.dirty : S.default)}
-      onClick={handleSave}
-    >
+    <div className={S.root + ' ' + (activeEditor.isDirty && S.dirty)} onClick={handleSave}>
       <VscSave />
       <span>{T('Save', 'save_button_label')}</span>
     </div>
