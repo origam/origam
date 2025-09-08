@@ -1398,6 +1398,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/trusted-types@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "@types/trusted-types@npm:1.0.6"
+  checksum: 10c0/4bc61ac65b8e42d17c77a23f29cdf94e498acd2e23f4c00cf15c8281de94263ac313d46cbcd7cd1d03c066d497f9396845e3210ff0074f5f90f212cb3e8aac28
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:^8.42.0":
   version: 8.42.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.42.0"
@@ -1661,7 +1668,7 @@ __metadata:
     mobx: "npm:^6.13.7"
     mobx-react-lite: "npm:^4.1.0"
     moment: "npm:^2.30.1"
-    monaco-editor: "npm:^0.52.2"
+    monaco-editor: "npm:^0.53.0"
     monaco-vim: "npm:^0.4.2"
     prettier: "npm:^3.6.2"
     react: "npm:^19.1.1"
@@ -3986,10 +3993,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:^0.52.2":
-  version: 0.52.2
-  resolution: "monaco-editor@npm:0.52.2"
-  checksum: 10c0/5a92da64f1e2ab375c0ce99364137f794d057c97bed10ecc65a08d6e6846804b8ecbd377eacf01e498f7dfbe1b21e8be64f728256681448f0484df90e767b435
+"monaco-editor@npm:^0.53.0":
+  version: 0.53.0
+  resolution: "monaco-editor@npm:0.53.0"
+  dependencies:
+    "@types/trusted-types": "npm:^1.0.6"
+  checksum: 10c0/016495f0b869ea3a4151b660e5b8653999e54da9834001b4e7e88edae5c749aee2f1b56020bfece51cd08fc8e7125cd9732f414e373aea554e2f2812ee8245f1
   languageName: node
   linkType: hard
 
