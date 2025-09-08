@@ -18,21 +18,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main.tsx';
-import S from '@components/editorTabView/EditorTabView.module.scss';
 import { IEditorState } from '@components/editorTabView/IEditorState.ts';
+import S from '@components/editorTabView/TabHeader.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Item, Menu, TriggerEvent, useContextMenu } from 'react-contexify';
+import { VscClose, VscCloseAll } from 'react-icons/vsc';
 
-export const TabHeader: React.FC<{
-  editor: IEditorState;
-}> = observer(props => {
+export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
-  const menuId = 'TabMenu_' + props.editor.editorId;
+  const menuId = 'TabMenu_' + editor.editorId;
 
   const { show, hideAll } = useContextMenu({
     id: menuId,
@@ -44,16 +43,6 @@ export const TabHeader: React.FC<{
 
   async function handleContextMenu(event: TriggerEvent) {
     show({ event, props: {} });
-  }
-
-  function getLabel(editor: IEditorState) {
-    if (!editor.isDirty) {
-      return editor.label;
-    }
-    if (!editor.label) {
-      return '*';
-    }
-    return editor.label + ' *';
   }
 
   function closeAllTabsExcept(ignoreId: string | null) {
@@ -80,22 +69,27 @@ export const TabHeader: React.FC<{
 
   return (
     <div
-      key={props.editor.label}
-      className={S.labelContainer}
-      onClick={() => action(() => state.setActiveEditor(props.editor.editorId))()}
+      key={editor.label}
+      className={S.root + ' ' + (editor.isActive ? S.activeTab : '')}
+      onClick={() => action(() => state.setActiveEditor(editor.editorId))()}
     >
-      <div className={props.editor.isActive ? S.activeTab : ''} onContextMenu={handleContextMenu}>
-        {getLabel(props.editor)}
+      <div className={S.title} onContextMenu={handleContextMenu}>
+        <span className={S.label}>{editor.label}</span>
+        {editor.isDirty && <span className={S.asterisk}>*</span>}
       </div>
-      <div className={S.closeSymbol} onClick={() => onClose(props.editor)}>
-        X
+
+      <div className={S.close} onClick={() => onClose(editor)}>
+        <VscClose />
       </div>
+
       <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-        <Item id="closeAll" onClick={() => closeAllTabsExcept(null)}>
-          {T('Close All', 'tab_header_close_all')}
+        <Item className={S.contextMenuButton} onClick={() => closeAllTabsExcept(null)}>
+          <VscCloseAll />
+          <span>{T('Close All', 'tab_header_close_all')}</span>
         </Item>
-        <Item id="closeAllButThis" onClick={() => closeAllTabsExcept(props.editor.editorId)}>
-          {T('Close All But This', 'tab_header_close_all_but_this')}
+        <Item className={S.contextMenuButton} onClick={() => closeAllTabsExcept(editor.editorId)}>
+          <VscCloseAll />
+          <span>{T('Close All But This', 'tab_header_close_all_but_this')}</span>
         </Item>
       </Menu>
     </div>
