@@ -38,7 +38,7 @@ public class ModelController(
     TreeNodeFactory treeNodeFactory
 ) : ControllerBase
 {
-    private readonly IPersistenceProvider _persistenceProvider = persistenceService.SchemaProvider;
+    private readonly IPersistenceProvider persistenceProvider = persistenceService.SchemaProvider;
 
     [HttpGet("GetTopNodes")]
     public ActionResult<List<TreeNode>> GetTopNodes()
@@ -101,7 +101,7 @@ public class ModelController(
 
     private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem, string nodeText)
     {
-        IBrowserNode2 provider = _persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
+        IBrowserNode2 provider = persistenceProvider.RetrieveInstance<IBrowserNode2>(id);
         if (isNonPersistentItem)
         {
             provider = new NonpersistentSchemaItemNode
@@ -166,16 +166,16 @@ public class ModelController(
 
         try
         {
-            _persistenceProvider.BeginTransaction();
+            persistenceProvider.BeginTransaction();
             instance.Delete();
         }
         catch (InvalidOperationException ex)
         {
-            _persistenceProvider.EndTransactionDontSave();
+            persistenceProvider.EndTransactionDontSave();
             return StatusCode(400, ex.Message);
         }
 
-        _persistenceProvider.EndTransaction();
+        persistenceProvider.EndTransaction();
         return Ok();
     }
 
@@ -199,7 +199,7 @@ public class ModelController(
             return provider.NewItemTypes.Select(GetMenuInfo);
         }
 
-        IBrowserNode2 instance = _persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
+        IBrowserNode2 instance = persistenceProvider.RetrieveInstance<IBrowserNode2>(schemaItemId);
 
         ISchemaItemFactory factory = isNonPersistentItem
             ? new NonpersistentSchemaItemNode { NodeText = nodeText, ParentNode = instance }
