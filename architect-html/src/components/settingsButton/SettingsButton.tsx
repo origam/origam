@@ -22,8 +22,9 @@ import S from '@components/settingsButton/SettingsButton.module.scss';
 import { SettingsModal } from '@components/settingsButton/SettingsModal.tsx';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
+import { VscSettingsGear } from 'react-icons/vsc';
 
-export const SettingsButton = observer(() => {
+const SettingsButton = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   const handleOnClick = () => {
@@ -37,7 +38,10 @@ export const SettingsButton = observer(() => {
 
   return (
     <div className={S.root} onClick={handleOnClick}>
-      {T('Settings', 'settings_button_open_label')}
+      <VscSettingsGear />
+      <span>{T('Settings', 'settings_button_open_label')}</span>
     </div>
   );
 });
+
+export default SettingsButton;

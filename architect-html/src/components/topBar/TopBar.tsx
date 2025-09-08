@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { SaveButton } from '@components/saveButton/SaveButton.tsx';
-import { SettingsButton } from '@components/settingsButton/SettingsButton.tsx';
+import SaveButton from '@components/saveButton/SaveButton.tsx';
+import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
 import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
 

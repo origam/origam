@@ -1669,6 +1669,7 @@ __metadata:
     react-dnd: "npm:^16.0.1"
     react-dnd-html5-backend: "npm:^16.0.1"
     react-dom: "npm:^19.1.1"
+    react-icons: "npm:^5.5.0"
     react-inlinesvg: "npm:^4.2.0"
     sass: "npm:^1.92.0"
     typescript: "npm:^5.9.2"
@@ -4447,6 +4448,15 @@ __metadata:
   peerDependencies:
     react: 16.8 - 19
   checksum: 10c0/1f1fd17d5d08ca2a714dde9a9559c54747eefdc9d1a45d84befb4e036957f197681c0ac5ddea325ac30d0a646c070ec9bb458ebfab281f4e380023451a3a28a0
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-icons@npm:5.5.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/a24309bfc993c19cbcbfc928157e53a137851822779977b9588f6dd41ffc4d11ebc98b447f4039b0d309a858f0a42980f6bfb4477fb19f9f2d1bc2e190fcf79c
   languageName: node
   linkType: hard
 
