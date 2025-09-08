@@ -17,12 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.gridEditor {
+.root {
   flex: 1;
-}
 
-.title {
-  color: var(--background8);
-  font-size: 1.8em;
-  margin-bottom: 20px;
+  .title {
+    color: var(--background8);
+    font-size: 1.4rem;
+    margin: 1rem;
+    font-weight: bold;
+  }
+
+  .propertiesBox {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }

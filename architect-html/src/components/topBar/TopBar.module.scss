@@ -20,13 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   display: flex;
   width: 100%;
-  border-bottom: 1px solid #ccc;
-}
+  border-bottom: 1px solid var(--background3);
 
-.buttonsBox {
-  padding-top: 1rem;
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  justify-content: space-between;
+  .buttonsBox {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
 }

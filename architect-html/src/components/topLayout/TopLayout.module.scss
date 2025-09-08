@@ -21,33 +21,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
   flex: 1;
-}
 
-.topToolbar {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  display: flex;
-  min-height: 100px;
-}
+  .topToolbar {
+    display: flex;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
-.mainArea {
-  display: flex;
-  min-height: 0;
-  flex: 1;
-}
+  .mainArea {
+    display: flex;
+    flex: 1;
+    min-height: 0;
 
-.editorArea {
-  display: flex;
-  padding: 1rem;
-  flex: 1;
-  overflow: auto;
-}
+    .editorArea {
+      display: flex;
+      flex: 1;
+      padding: 1rem;
+      overflow: auto;
+    }
 
-.sideBar {
-  display: flex;
-  min-width: 300px;
-  width: 400px;
-  padding-top: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+    .sideBar {
+      display: flex;
+      min-width: 300px;
+      width: 400px;
+      padding-top: 1rem;
+      padding-right: 1rem;
+      padding-bottom: 1rem;
+    }
+  }
 }

@@ -21,13 +21,14 @@ import { DesignSurface } from '@editors/designerEditor/common/DesignSurface.tsx'
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
 import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox.tsx';
-import React from 'react';
 
-export const ScreenSectionEditor: React.FC<{
+export const ScreenSectionEditor = ({
+  designerState,
+}: {
   designerState: ScreenSectionEditorState;
-}> = ({ designerState }) => {
+}) => {
   return (
-    <div className={S.componentDesigner}>
+    <div className={S.root}>
       <SectionToolbox designerState={designerState} />
       <DesignSurface designerState={designerState} />
     </div>

@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { RootStoreContext } from '@/main.tsx';
 import S from '@components/topBar/ProgressBar.module.scss';
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { createPortal } from 'react-dom';
 
-export const ProgressBar: React.FC = observer(() => {
+export const ProgressBar = observer(() => {
   const progressBarState = useContext(RootStoreContext).progressBarState;
 
   return (
@@ -39,7 +39,7 @@ export const ProgressBar: React.FC = observer(() => {
   );
 });
 
-export const Overlay: React.FC = observer(() => {
+export const Overlay = observer(() => {
   const progressBarState = useContext(RootStoreContext).progressBarState;
 
   return createPortal(

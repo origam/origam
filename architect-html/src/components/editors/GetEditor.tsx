@@ -37,7 +37,7 @@ import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionE
 import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
 import { DocumentationEditorState } from '@editors/documentationEditor/DocumentationEditorState.ts';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
-import { GridEditor } from '@editors/gridEditor/GridEditor.tsx';
+import GridEditor from '@editors/gridEditor/GridEditor.tsx';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor.tsx';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';

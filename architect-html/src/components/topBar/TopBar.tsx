@@ -22,7 +22,7 @@ import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
 import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
 
-export const TopBar = () => {
+export default function TopBar() {
   return (
     <div className={S.root}>
       <ProgressBar />
@@ -36,4 +36,4 @@ export const TopBar = () => {
       </div>
     </div>
   );
-};
+}

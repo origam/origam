@@ -18,20 +18,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@components/topLayout/TopLayout.module.scss';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
-export const TopLayout: React.FC<{
+export default function TopLayout({
+  topToolBar,
+  editorArea,
+  sideBar,
+}: {
   topToolBar: ReactNode;
   editorArea: ReactNode;
   sideBar: ReactNode;
-}> = props => {
+}) {
   return (
     <div className={S.root}>
-      <div className={S.topToolbar}>{props.topToolBar}</div>
+      <div className={S.topToolbar}>{topToolBar}</div>
       <div className={S.mainArea}>
-        <div className={S.editorArea}>{props.editorArea}</div>
-        <div className={S.sideBar}>{props.sideBar}</div>
+        <div className={S.editorArea}>{editorArea}</div>
+        <div className={S.sideBar}>{sideBar}</div>
       </div>
     </div>
   );
-};
+}

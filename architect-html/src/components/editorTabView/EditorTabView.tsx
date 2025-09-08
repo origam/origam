@@ -22,9 +22,9 @@ import S from '@components/editorTabView/EditorTabView.module.scss';
 import { TabHeader } from '@components/editorTabView/TabHeader.tsx';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 
-export const EditorTabView: React.FC = observer(() => {
+export const EditorTabView = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
   const editors = state.editors.map(x => x.state);
@@ -37,9 +37,13 @@ export const EditorTabView: React.FC = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (editors.length === 0) {
+    return null;
+  }
+
   return (
     <div className={S.root}>
-      <div className={S.labels}>
+      <div className={S.tabs}>
         {editors.map(editor => (
           <TabHeader key={editor.editorId} editor={editor} />
         ))}

@@ -21,19 +21,18 @@ import S from '@editors/gridEditor/GridEditor.module.scss';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor.tsx';
 import { observer } from 'mobx-react-lite';
-import React from 'react';
 
-export const GridEditor: React.FC<{
-  editorState: GridEditorState;
-  title: string;
-}> = observer(props => {
-  return (
-    <div className={S.gridEditor}>
-      <h3 className={S.title}>{props.title}</h3>
-      <PropertyEditor
-        propertyManager={props.editorState}
-        properties={props.editorState.properties}
-      />
-    </div>
-  );
-});
+const GridEditor = observer(
+  ({ editorState, title }: { editorState: GridEditorState; title: string }) => {
+    return (
+      <div className={S.root}>
+        <div className={S.title}>{title}</div>
+        <div className={S.propertiesBox}>
+          <PropertyEditor propertyManager={editorState} properties={editorState.properties} />
+        </div>
+      </div>
+    );
+  },
+);
+
+export default GridEditor;
