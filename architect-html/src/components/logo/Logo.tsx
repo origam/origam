@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,25 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  width: 100%;
-  border-bottom: 1px solid var(--background3);
+import S from '@components/logo/Logo.module.scss';
 
-  .panel {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    width: 100%;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-
-    .actionBar {
-      display: flex;
-      flex-grow: 1;
-      gap: 1rem;
-      justify-content: space-between;
-    }
-  }
+export default function Logo() {
+  return (
+    <div className={S.root}>
+      <img src="/ORIGAM-logo.svg" alt="ORIGAM" />
+      <span>Architect</span>
+    </div>
+  );
 }

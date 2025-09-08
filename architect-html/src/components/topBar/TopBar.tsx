@@ -17,23 +17,29 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext } from '@/main.tsx';
+import Logo from '@components/logo/Logo.tsx';
 import SaveButton from '@components/saveButton/SaveButton.tsx';
 import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
 import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
 
-export default function TopBar() {
+export default observer(function TopBar() {
+  const rootStore = useContext(RootStoreContext);
+  const activeEditor = rootStore.editorTabViewState.activeEditorState;
+
   return (
     <div className={S.root}>
       <ProgressBar />
-      <div className={S.buttonsBox}>
-        <div>
-          <SaveButton />
-        </div>
-        <div>
+      <div className={S.panel}>
+        <Logo />
+        <div className={S.actionBar}>
+          {activeEditor ? <SaveButton /> : <div />}
           <SettingsButton />
         </div>
       </div>
     </div>
   );
-}
+});
