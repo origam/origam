@@ -21,7 +21,6 @@ import { RootStoreContext } from '@/main.tsx';
 import Logo from '@components/logo/Logo.tsx';
 import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
 import { ProgressBar } from '@components/topBar/ProgressBar';
-import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 import { observer } from 'mobx-react-lite';
