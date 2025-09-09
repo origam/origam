@@ -24,7 +24,7 @@ import {
   getComponentTypeKey,
   toComponentType,
 } from '@editors/designerEditor/common/ComponentType';
-import { Toolbox } from '@editors/designerEditor/common/Toolbox';
+import Toolbox from '@editors/designerEditor/common/Toolbox';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
 import { action } from 'mobx';

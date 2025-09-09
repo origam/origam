@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { T } from '@/main';
 import { IToolBoxItem } from '@api/IArchitectApi';
 import { ComponentType } from '@editors/designerEditor/common/ComponentType';
-import { Toolbox } from '@editors/designerEditor/common/Toolbox';
+import Toolbox from '@editors/designerEditor/common/Toolbox';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { action } from 'mobx';
