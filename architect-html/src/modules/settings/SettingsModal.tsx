@@ -18,12 +18,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import S from '@components/settingsButton/SettingsModal.module.scss';
 import { ModalWindow } from '@dialogs/ModalWindow.tsx';
+import S from '@modules/settings/SettingsModal.module.scss';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
-export const SettingsModal = observer(({ onClose }: { onClose: () => void }) => {
+export default observer(function SettingsModal({ onClose }: { onClose: () => void }) {
   const rootStore = useContext(RootStoreContext);
   const uiState = rootStore.uiState;
 

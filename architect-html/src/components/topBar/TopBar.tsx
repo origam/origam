@@ -20,9 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { RootStoreContext } from '@/main.tsx';
 import Logo from '@components/logo/Logo.tsx';
 import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
-import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
+import { ProgressBar } from '@components/topBar/ProgressBar';
 import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
+import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
@@ -37,7 +38,7 @@ export default observer(function TopBar() {
         <Logo />
         <div className={S.actionBar}>
           {activeEditor ? <SaveButtonHOC /> : <div />}
-          <SettingsButton />
+          <SettingsButtonHOC />
         </div>
       </div>
     </div>
