@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext } from '@/main.tsx';
 import Logo from '@components/logo/Logo.tsx';
-import SaveButton from '@components/saveButton/SaveButton.tsx';
+import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
 import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
 import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
 import S from '@components/topBar/TopBar.module.scss';
@@ -36,7 +36,7 @@ export default observer(function TopBar() {
       <div className={S.panel}>
         <Logo />
         <div className={S.actionBar}>
-          {activeEditor ? <SaveButton /> : <div />}
+          {activeEditor ? <SaveButtonHOC /> : <div />}
           <SettingsButton />
         </div>
       </div>
