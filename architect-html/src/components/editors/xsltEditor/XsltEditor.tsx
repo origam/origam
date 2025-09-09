@@ -65,10 +65,12 @@ const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
           {
             label: T('Settings', 'xsl_editor_tab2'),
             node: (
-              <PropertyEditor
-                propertyManager={editorState}
-                properties={editorState.properties.filter(x => x.name !== getFieldName())}
-              />
+              <div className={S.propertiesBox}>
+                <PropertyEditor
+                  propertyManager={editorState}
+                  properties={editorState.properties.filter(x => x.name !== getFieldName())}
+                />
+              </div>
             ),
           },
         ]}
