@@ -17,31 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main';
 import Logo from '@components/logo/Logo';
-import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
 import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
-import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
 
-const TopBar = observer(() => {
-  const rootStore = useContext(RootStoreContext);
-  const activeEditor = rootStore.editorTabViewState.activeEditorState;
-
+const TopBar = () => {
   return (
     <div className={S.root}>
       <ProgressBar />
       <div className={S.panel}>
         <Logo />
         <div className={S.actionBar}>
-          {activeEditor ? <SaveButtonHOC /> : <div />}
           <SettingsButtonHOC />
         </div>
       </div>
     </div>
   );
-});
+};
 
 export default TopBar;

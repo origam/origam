@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import ActionPanel from '@components/ActionPanel/ActionPanel';
 import S from '@editors/gridEditor/GridEditor.module.scss';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
@@ -26,7 +27,7 @@ const GridEditor = observer(
   ({ editorState, title }: { editorState: GridEditorState; title: string }) => {
     return (
       <div className={S.root}>
-        <div className={S.title}>{title}</div>
+        <ActionPanel title={title} />
         <div className={S.propertiesBox}>
           <PropertyEditor propertyManager={editorState} properties={editorState.properties} />
         </div>

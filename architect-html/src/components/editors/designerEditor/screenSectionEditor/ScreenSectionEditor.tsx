@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import { T } from '@/main';
 import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
@@ -29,8 +31,19 @@ export const ScreenSectionEditor = ({
 }) => {
   return (
     <div className={S.root}>
-      <SectionToolbox designerState={designerState} />
-      <DesignSurface designerState={designerState} />
+      <div>
+        <ActionPanel
+          title={T(
+            'Screen section editor: {0}',
+            'screen_section_editor_title',
+            designerState.sectionToolbox.toolboxState.name,
+          )}
+        />
+      </div>
+      <div className={S.box}>
+        <SectionToolbox designerState={designerState} />
+        <DesignSurface designerState={designerState} />
+      </div>
     </div>
   );
 };

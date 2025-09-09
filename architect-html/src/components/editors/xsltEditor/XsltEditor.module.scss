@@ -21,6 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex: 1;
 
+  .editorBox {
+    width: 100%;
+  }
+
   .propertiesBox {
     width: 100%;
     margin: 1rem;

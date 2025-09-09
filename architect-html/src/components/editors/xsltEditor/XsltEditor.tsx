@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import { RootStoreContext, T } from '@/main';
 import { TabView } from '@components/tabView/TabView';
 import { TabViewState } from '@components/tabView/TabViewState';
@@ -55,21 +56,39 @@ const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
           {
             label: T('XSL', 'xsl_editor_tab1'),
             node: (
-              <CodeEditor
-                defaultLanguage="xml"
-                value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
-                onChange={text => handleInputChange(text)}
-              />
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('XSL', 'xsl_editor_tab1') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                />
+                <CodeEditor
+                  defaultLanguage="xml"
+                  value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
+                  onChange={text => handleInputChange(text)}
+                />
+              </div>
             ),
           },
           {
             label: T('Settings', 'xsl_editor_tab2'),
             node: (
-              <div className={S.propertiesBox}>
-                <PropertyEditor
-                  propertyManager={editorState}
-                  properties={editorState.properties.filter(x => x.name !== getFieldName())}
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('Settings', 'xsl_editor_tab2') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
                 />
+                <div className={S.propertiesBox}>
+                  <PropertyEditor
+                    propertyManager={editorState}
+                    properties={editorState.properties.filter(x => x.name !== getFieldName())}
+                  />
+                </div>
               </div>
             ),
           },

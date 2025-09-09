@@ -53,6 +53,7 @@ export function getEditor(args: {
 }) {
   const { editorType, editorData, propertiesState, architectApi } = args;
   const { node, data, isDirty } = editorData;
+
   if (editorType === 'GridEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
     const editorState = new GridEditorState(
@@ -72,6 +73,7 @@ export function getEditor(args: {
       ),
     );
   }
+
   if (editorType === 'XsltEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
     const editorState = new GridEditorState(
@@ -83,6 +85,7 @@ export function getEditor(args: {
     );
     return new Editor(editorState, <XsltEditor editorState={editorState} />);
   }
+
   if (editorType === 'ScreenSectionEditor') {
     const sectionData = data as ISectionEditorData;
     const sectionToolboxState = new SectionToolboxState(sectionData, node.origamId, architectApi);
@@ -98,6 +101,7 @@ export function getEditor(args: {
     );
     return new Editor(state, <ScreenSectionEditor designerState={state} />);
   }
+
   if (editorType === 'ScreenEditor') {
     const screenData = data as IScreenEditorData;
     const screenToolboxState = new ScreenToolboxState(screenData, node.origamId, architectApi);
@@ -113,6 +117,7 @@ export function getEditor(args: {
     );
     return new Editor(state, <ScreenEditor designerState={state} />);
   }
+
   if (editorType === 'DocumentationEditor') {
     const documentationData = data as DocumentationEditorData;
     const editorState = new DocumentationEditorState(
@@ -132,6 +137,7 @@ export function getEditor(args: {
       ),
     );
   }
+
   return null;
 }
 
