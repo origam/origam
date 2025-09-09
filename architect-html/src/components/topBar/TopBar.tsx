@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { RootStoreContext } from '@/main';
 import Logo from '@components/logo/Logo';
 import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
-import { ProgressBar } from '@components/topBar/ProgressBar';
+import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 import { observer } from 'mobx-react-lite';

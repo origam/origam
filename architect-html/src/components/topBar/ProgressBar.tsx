@@ -23,7 +23,16 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { createPortal } from 'react-dom';
 
-export const ProgressBar = observer(() => {
+const Overlay = observer(() => {
+  const progressBarState = useContext(RootStoreContext).progressBarState;
+
+  return createPortal(
+    <>{progressBarState.isWorking && <div className={S.overlay} />}</>,
+    document.getElementById('modal-window-portal')!,
+  );
+});
+
+const ProgressBar = observer(() => {
   const progressBarState = useContext(RootStoreContext).progressBarState;
 
   return (
@@ -39,11 +48,4 @@ export const ProgressBar = observer(() => {
   );
 });
 
-export const Overlay = observer(() => {
-  const progressBarState = useContext(RootStoreContext).progressBarState;
-
-  return createPortal(
-    <>{progressBarState.isWorking && <div className={S.overlay} />}</>,
-    document.getElementById('modal-window-portal')!,
-  );
-});
+export default ProgressBar;
