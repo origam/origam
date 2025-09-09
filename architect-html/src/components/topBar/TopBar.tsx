@@ -26,7 +26,7 @@ import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
-export default observer(function TopBar() {
+const TopBar = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const activeEditor = rootStore.editorTabViewState.activeEditorState;
 
@@ -43,3 +43,5 @@ export default observer(function TopBar() {
     </div>
   );
 });
+
+export default TopBar;

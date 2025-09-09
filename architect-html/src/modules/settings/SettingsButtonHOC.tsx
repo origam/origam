@@ -24,7 +24,7 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscSettingsGear } from 'react-icons/vsc';
 
-export default observer(function SettingsButtonHOC() {
+const SettingsButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   const handleOnClick = () => {
@@ -46,3 +46,5 @@ export default observer(function SettingsButtonHOC() {
     />
   );
 });
+
+export default SettingsButtonHOC;

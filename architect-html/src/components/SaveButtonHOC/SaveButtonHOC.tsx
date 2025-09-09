@@ -24,14 +24,16 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscSave } from 'react-icons/vsc';
 
-export default observer(function SaveButtonHOC() {
+const SaveButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const progressBarState = rootStore.progressBarState;
   const editorTabViewState = rootStore.editorTabViewState;
   const activeEditor = editorTabViewState.activeEditorState;
+
   if (!activeEditor) {
     return null;
   }
+
   const handleSave = () => {
     if (!activeEditor.isDirty) return;
 
@@ -57,3 +59,5 @@ export default observer(function SaveButtonHOC() {
     />
   );
 });
+
+export default SaveButtonHOC;

@@ -19,11 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from '@components/logo/Logo.module.scss';
 
-export default function Logo() {
+const Logo = () => {
   return (
     <div className={S.root}>
       <img src="/ORIGAM-logo.svg" alt="ORIGAM" />
       <span>Architect</span>
     </div>
   );
-}
+};
+
+export default Logo;

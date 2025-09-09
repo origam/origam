@@ -22,12 +22,12 @@ import { TabView } from '@components/tabView/TabView';
 import { TabViewState } from '@components/tabView/TabViewState';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
-import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor';
+import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useContext } from 'react';
 
-export default function XsltEditor({ editorState }: { editorState: GridEditorState }) {
+const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const getFieldName = (): 'TextStore' | 'Xsl' => {
@@ -75,4 +75,6 @@ export default function XsltEditor({ editorState }: { editorState: GridEditorSta
       />
     </div>
   );
-}
+};
+
+export default XsltEditor;

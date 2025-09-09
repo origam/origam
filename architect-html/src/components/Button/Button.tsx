@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/button/Button.module.scss';
 import cn from 'classnames';
 
-export default function Button({
+const Button = ({
   title,
   type,
   prefix,
@@ -34,7 +34,7 @@ export default function Button({
   isDisabled?: boolean;
   isAnimated?: boolean;
   onClick: () => void;
-}) {
+}) => {
   return (
     <div
       className={cn(S.root, {
@@ -49,4 +49,6 @@ export default function Button({
       <span>{title}</span>
     </div>
   );
-}
+};
+
+export default Button;

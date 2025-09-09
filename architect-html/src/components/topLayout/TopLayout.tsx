@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from '@components/topLayout/TopLayout.module.scss';
 import { ReactNode } from 'react';
 
-export default function TopLayout({
+const TopLayout = ({
   topToolBar,
   editorArea,
   sideBar,
@@ -28,7 +28,7 @@ export default function TopLayout({
   topToolBar: ReactNode;
   editorArea: ReactNode;
   sideBar: ReactNode;
-}) {
+}) => {
   return (
     <div className={S.root}>
       <div className={S.topToolbar}>{topToolBar}</div>
@@ -38,4 +38,6 @@ export default function TopLayout({
       </div>
     </div>
   );
-}
+};
+
+export default TopLayout;

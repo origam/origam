@@ -23,16 +23,16 @@ import { RootStoreContext, T } from '@/main';
 import { EditorTabView } from '@components/editorTabView/EditorTabView';
 import ModelTree from '@components/modelTree/ModelTree';
 import { Packages } from '@components/packages/Packages';
-import { Properties } from '@components/properties/Properties';
+import Properties from '@components/properties/Properties';
 import { TabView } from '@components/tabView/TabView';
 import TopBar from '@components/topBar/TopBar';
 import TopLayout from '@components/topLayout/TopLayout';
 import { ApplicationDialogStack } from '@dialogs/DialogStack';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
-const App: React.FC = observer(() => {
+const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   useEffect(() => {

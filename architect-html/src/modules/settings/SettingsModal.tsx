@@ -23,7 +23,7 @@ import S from '@modules/settings/SettingsModal.module.scss';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
-export default observer(function SettingsModal({ onClose }: { onClose: () => void }) {
+const SettingsModal = observer(({ onClose }: { onClose: () => void }) => {
   const rootStore = useContext(RootStoreContext);
   const uiState = rootStore.uiState;
 
@@ -70,3 +70,5 @@ export default observer(function SettingsModal({ onClose }: { onClose: () => voi
     </ModalWindow>
   );
 });
+
+export default SettingsModal;

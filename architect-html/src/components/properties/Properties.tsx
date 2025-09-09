@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext } from '@/main';
 import S from '@components/properties/Properties.module.scss';
-import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor';
+import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
-export const Properties: React.FC = observer(() => {
+const Properties = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const propertiesState = rootStore.propertiesState;
+
   return (
     <div>
       <div className={S.editedItemLabel}>{propertiesState.editedItemName}</div>
@@ -33,3 +34,5 @@ export const Properties: React.FC = observer(() => {
     </div>
   );
 });
+
+export default Properties;
