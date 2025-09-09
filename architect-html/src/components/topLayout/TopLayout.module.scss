@@ -44,9 +44,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       display: flex;
       min-width: 300px;
       width: 400px;
-      padding-top: 1rem;
-      padding-right: 1rem;
-      padding-bottom: 1rem;
+      padding: 1rem;
+
+      background: var(--background2);
+      border-left: 1px solid var(--background4);
     }
   }
 }
