@@ -23,6 +23,7 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput';
 import S from '@editors/propertyEditor/PropertyEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
@@ -101,7 +102,7 @@ const PropertyEditor = observer(
               <div className={S.property} key={property.name}>
                 <div
                   title={property.error}
-                  className={S.propertyName + (property.error ? ' ' + S.errorProperty : '')}
+                  className={cn(S.propertyName, { [S.errorProperty]: property.error })}
                 >
                   {property.name}
                 </div>
