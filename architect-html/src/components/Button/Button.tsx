@@ -30,7 +30,7 @@ const Button = ({
 }: {
   title: string;
   type: 'primary' | 'secondary';
-  prefix: React.ReactNode;
+  prefix?: React.ReactNode;
   isDisabled?: boolean;
   isAnimated?: boolean;
   onClick: () => void;
