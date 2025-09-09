@@ -63,7 +63,7 @@ export const ScreenToolbox: React.FC<{
         {
           label: T('Screen Sections', 'screen_tool_box_tab1'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {toolboxState.sections.map(section => getToolboxComponent(section))}
             </div>
           ),
@@ -71,7 +71,7 @@ export const ScreenToolbox: React.FC<{
         {
           label: T('Widgets', 'screen_tool_box_tab2'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {toolboxState.widgets.map(widget => getToolboxComponent(widget))}
             </div>
           ),

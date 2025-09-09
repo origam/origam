@@ -94,7 +94,7 @@ export const SectionToolbox: React.FC<{
         {
           label: T('Fields', 'section_tool_box_tab1'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {sectionToolbox.fields.map(field => getToolboxComponent(field))}
             </div>
           ),
@@ -102,7 +102,7 @@ export const SectionToolbox: React.FC<{
         {
           label: T('Widgets', 'section_tool_box_tab2'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {getControlComponent(ComponentType.AsCheckBox)}
               {getControlComponent(ComponentType.AsCombo)}
               {getControlComponent(ComponentType.AsDateBox)}
