@@ -1,0 +1,9 @@
+﻿CREATE TABLE [SelectionDialogTest] (
+	[DateFrom] Bit NULL,
+	[Name] NVarChar(50) NOT NULL,
+	[DateTo] Bit NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);

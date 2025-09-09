@@ -1,0 +1,7 @@
+﻿CREATE TABLE [TestingEntity] (
+	[TestingField] nvarchar(max) NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);
