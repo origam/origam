@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUpdatePropertiesResult } from 'src/API/IArchitectApi.ts';
-import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty.ts';
+import { IUpdatePropertiesResult } from 'src/API/IArchitectApi';
+import { EditorProperty } from 'src/components/editors/gridEditor/EditorProperty';
 
 export interface IPropertyManager {
   onPropertyUpdated(

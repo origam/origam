@@ -30,7 +30,7 @@ import {
   IScreenEditorModel,
   ISectionEditorModel,
   IUpdatePropertiesResult,
-} from '@api/IArchitectApi.ts';
+} from '@api/IArchitectApi';
 import axios, { AxiosInstance } from 'axios';
 
 export class ArchitectApi implements IArchitectApi {

@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { T } from '@/main.tsx';
-import { IToolBoxItem } from '@api/IArchitectApi.ts';
-import { ComponentType } from '@editors/designerEditor/common/ComponentType.tsx';
+import { T } from '@/main';
+import { IToolBoxItem } from '@api/IArchitectApi';
+import { ComponentType } from '@editors/designerEditor/common/ComponentType';
+import { Toolbox } from '@editors/designerEditor/common/Toolbox';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
-import { Toolbox } from '@editors/designerEditor/common/Toolbox.tsx';
-import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

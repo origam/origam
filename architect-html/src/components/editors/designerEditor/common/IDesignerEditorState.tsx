@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IEditorState } from '@components/editorTabView/IEditorState.ts';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState.tsx';
+import { IEditorState } from '@components/editorTabView/IEditorState';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
+import { DesignSurfaceState } from '@editors/designerEditor/common/DesignSurfaceState';
 
 export interface IDesignerEditorState extends IEditorState {
   surface: DesignSurfaceState;

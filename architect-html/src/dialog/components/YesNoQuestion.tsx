@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ModalWindow } from '@dialogs/ModalWindow';
 import S from '@dialogs/ModalWindow.module.scss';
-import { ModalWindow } from '@dialogs/ModalWindow.tsx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

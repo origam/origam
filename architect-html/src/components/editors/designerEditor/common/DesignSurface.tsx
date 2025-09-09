@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
-import { ComponentType } from '@editors/designerEditor/common/ComponentType.tsx';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { RootStoreContext } from '@/main';
+import { ComponentType } from '@editors/designerEditor/common/ComponentType';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/DesignerSurface.module.scss';
-import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState.tsx';
-import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState.tsx';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { ResizeHandle } from '@editors/designerEditor/common/DesignSurfaceState';
+import { IDesignerEditorState } from '@editors/designerEditor/common/IDesignerEditorState';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Item, Menu } from 'react-contexify';

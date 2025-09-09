@@ -18,8 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@editors/gridEditor/GridEditor.module.scss';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor.tsx';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor';
 import { observer } from 'mobx-react-lite';
 
 const GridEditor = observer(

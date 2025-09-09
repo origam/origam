@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiControl, IDesignerEditorData } from '@api/IArchitectApi.ts';
-import { PropertiesState } from '@components/properties/PropertiesState.ts';
-import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
-import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
+import { IApiControl, IDesignerEditorData } from '@api/IArchitectApi';
+import { PropertiesState } from '@components/properties/PropertiesState';
+import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
+import { toComponentRecursive } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { ReactElement } from 'react';

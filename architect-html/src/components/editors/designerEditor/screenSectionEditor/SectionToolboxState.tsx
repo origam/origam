@@ -22,8 +22,8 @@ import {
   IEditorField,
   ISectionEditorData,
   ISectionEditorModel,
-} from '@api/IArchitectApi.ts';
-import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
+} from '@api/IArchitectApi';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState';
 import { observable } from 'mobx';
 
 export class SectionToolboxState {

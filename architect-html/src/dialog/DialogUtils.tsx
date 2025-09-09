@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { T } from '@/main.tsx';
-import { YesNoQuestion } from '@dialogs/components/YesNoQuestion.tsx';
-import { IDialogStackState } from '@dialogs/types.ts';
+import { T } from '@/main';
+import { YesNoQuestion } from '@dialogs/components/YesNoQuestion';
+import { IDialogStackState } from '@dialogs/types';
 import { action } from 'mobx';
 
 export function askYesNoQuestion(

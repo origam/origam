@@ -18,11 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { observable } from 'mobx';
-import { IArchitectApi, IPackage, IPackagesInfo } from 'src/API/IArchitectApi.ts';
-import { ModelTreeState } from 'src/components/modelTree/ModelTreeState.ts';
-import { TabViewState } from 'src/components/tabView/TabViewState.ts';
-import { ProgressBarState } from 'src/components/topBar/ProgressBarState.ts';
-import { UIState } from 'src/stores/UiState.ts';
+import { IArchitectApi, IPackage, IPackagesInfo } from 'src/API/IArchitectApi';
+import { ModelTreeState } from 'src/components/modelTree/ModelTreeState';
+import { TabViewState } from 'src/components/tabView/TabViewState';
+import { ProgressBarState } from 'src/components/topBar/ProgressBarState';
+import { UIState } from 'src/stores/UiState';
 
 export class PackagesState {
   @observable.shallow accessor packages: IPackage[] = [];

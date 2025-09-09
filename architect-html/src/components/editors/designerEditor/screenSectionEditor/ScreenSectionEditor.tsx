@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DesignSurface } from '@editors/designerEditor/common/DesignSurface.tsx';
+import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
-import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
-import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox.tsx';
+import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
+import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox';
 
 export const ScreenSectionEditor = ({
   designerState,

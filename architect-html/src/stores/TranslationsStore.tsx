@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getLocaleFromCookie, setLocaleToCookie } from '@utils/cookie.ts';
+import { getLocaleFromCookie, setLocaleToCookie } from '@utils/cookie';
 import axios from 'axios';
 import { observable } from 'mobx';
 

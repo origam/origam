@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
-import Logo from '@components/logo/Logo.tsx';
+import { RootStoreContext } from '@/main';
+import Logo from '@components/logo/Logo';
 import SaveButtonHOC from '@components/SaveButtonHOC/SaveButtonHOC';
 import { ProgressBar } from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
-import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
+import { sectionLayer } from '@editors/designerEditor/common/Layers';
 import { ReactElement } from 'react';
 
 export class AsPanel extends Component {

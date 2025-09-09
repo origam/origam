@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi, ISectionEditorData } from '@api/IArchitectApi.ts';
-import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
-import { PropertiesState } from '@components/properties/PropertiesState.ts';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { controlToComponent } from '@editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
-import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState.tsx';
-import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
-import { toChanges } from '@editors/gridEditor/EditorProperty.ts';
-import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
+import { IArchitectApi, ISectionEditorData } from '@api/IArchitectApi';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { PropertiesState } from '@components/properties/PropertiesState';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
+import { controlToComponent } from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState';
+import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState';
+import { toChanges } from '@editors/gridEditor/EditorProperty';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 
 export class ScreenSectionEditorState extends DesignerEditorState {

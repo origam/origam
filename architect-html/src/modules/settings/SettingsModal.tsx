@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { ModalWindow } from '@dialogs/ModalWindow.tsx';
+import { ModalWindow } from '@dialogs/ModalWindow';
 import S from '@modules/settings/SettingsModal.module.scss';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';

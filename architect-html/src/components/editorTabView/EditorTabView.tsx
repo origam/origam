@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
+import { RootStoreContext } from '@/main';
 import S from '@components/editorTabView/EditorTabView.module.scss';
-import { TabHeader } from '@components/editorTabView/TabHeader.tsx';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { TabHeader } from '@components/editorTabView/TabHeader';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useMemo } from 'react';
 

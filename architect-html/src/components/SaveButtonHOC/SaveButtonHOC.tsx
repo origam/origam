@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 import { VscSave } from 'react-icons/vsc';

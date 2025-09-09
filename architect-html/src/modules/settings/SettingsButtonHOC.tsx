@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
+import { RootStoreContext, T } from '@/main';
 import Button from '@components/Button/Button';
 import SettingsModal from '@modules/settings/SettingsModal';
 import { observer } from 'mobx-react-lite';
