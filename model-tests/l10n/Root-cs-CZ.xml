@@ -1563,4 +1563,37 @@
   <Element Id="9e8d3e42-d6ba-462f-bb90-385750a8412e" Path="OrigamOnlineUser/ClearSessionRequest">
     <Caption OriginalText="Clear Session">Clear Session</Caption>
   </Element>
+  <Element Id="792e138f-7f9e-43bc-bb79-12b8a1263905" Path="OrigamEvent">
+    <Caption OriginalText="Origam Event">Událost</Caption>
+  </Element>
+  <Element Id="05056f95-ae71-474b-92c6-84c6d8361ea0" Path="OrigamEvent/Timestamp">
+    <Caption OriginalText="Timestamp">Datum</Caption>
+  </Element>
+  <Element Id="1d73d067-9e76-4643-9b68-fe114c014a68" Path="OrigamEvent/Details">
+    <Caption OriginalText="Details">Detaily</Caption>
+  </Element>
+  <Element Id="3ccc2343-0871-4bb0-8036-2302c9972d71" Path="OrigamEvent/Instance">
+    <Caption OriginalText="Instance Name">Název instance</Caption>
+  </Element>
+  <Element Id="468489c3-c74d-478c-b708-8e1e6928fa31" Path="OrigamEvent/refBusinessPartnerId">
+    <Caption OriginalText="User">Uživatel</Caption>
+  </Element>
+  <Element Id="bdad74ef-8467-4a8d-b767-ab00a01b8da2" Path="OrigamEvent/refOrigamEventTypeId">
+    <Caption OriginalText="Event Type">Typ události</Caption>
+  </Element>
+  <Element Id="546e2da9-6183-4d51-b16f-0764a2f8bd50" Path="OrigamEventType">
+    <Caption OriginalText="Origam Event Type">Typ události</Caption>
+  </Element>
+  <Element Id="86a07f59-cd7f-44ba-9c3a-fe75212bdb2d" Path="OrigamEventType_l10n">
+    <Caption OriginalText="Origam Event Type Localization">Lokalizace typu události</Caption>
+  </Element>
+  <Element Id="0fc68be6-3c3c-4ff9-82eb-2ab489176b3e" Path="OrigamEventType_l10n/refOrigamEventTypeId">
+    <Caption OriginalText="Origam Event Type">Typ události</Caption>
+  </Element>
+  <Element Id="6d7b5591-93bc-4a55-a286-5adeee7bda99" Path="OrigamEvent/OrigamEventRootControl/AsPanel1/PanelTitle">
+    <Value OriginalText="Events">Události</Value>
+  </Element>
+  <Element Id="28be949c-6e5e-4d1e-b6f8-6656596daf05" Path="OrigamEvent/OrigamEventRootControl/PanelTitle">
+    <Value OriginalText="Events">Události</Value>
+  </Element>
 </OrigamLocalization>
