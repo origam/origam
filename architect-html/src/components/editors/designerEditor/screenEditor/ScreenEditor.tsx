@@ -17,22 +17,33 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DesignSurface } from '@editors/designerEditor/common/DesignSurface.tsx';
-import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
-import { ScreenToolbox } from '@editors/designerEditor/screenEditor/ScreenToolbox.tsx';
-import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
-import React, { createContext } from 'react';
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import { T } from '@/main';
+import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
+import S from '@editors/designerEditor/screenEditor/ScreenEditor.module.scss';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
+import { ScreenToolbox } from '@editors/designerEditor/screenEditor/ScreenToolbox';
+import { createContext } from 'react';
 
 export const DesignerStateContext = createContext<ScreenEditorState | null>(null);
 
-export const ScreenEditor: React.FC<{
-  designerState: ScreenEditorState;
-}> = ({ designerState }) => {
+const ScreenEditor = ({ designerState }: { designerState: ScreenEditorState }) => {
   return (
     <DesignerStateContext.Provider value={designerState}>
-      <div className={S.componentDesigner}>
-        <ScreenToolbox designerState={designerState} />
-        <DesignSurface designerState={designerState} />
+      <div className={S.root}>
+        <div>
+          <ActionPanel
+            title={T(
+              'Screen editor: {0}',
+              'screen_editor_title',
+              designerState.screenToolbox.toolboxState.name,
+            )}
+          />
+        </div>
+        <div className={S.box}>
+          <ScreenToolbox designerState={designerState} />
+          <DesignSurface designerState={designerState} />
+        </div>
       </div>
     </DesignerStateContext.Provider>
   );

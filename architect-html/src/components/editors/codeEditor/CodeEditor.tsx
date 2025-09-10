@@ -25,88 +25,92 @@ import { observer } from 'mobx-react-lite';
 import * as monacoVim from 'monaco-vim';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 
-export default observer(function CodeEditor({
-  value,
-  onChange,
-  defaultLanguage = 'xml',
-}: {
-  value: string;
-  onChange: (value: string | undefined) => void;
-  defaultLanguage: string;
-}) {
-  const editorRef = useRef<any>(null);
-  const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
-  const vimModeRef = useRef<any>(null);
+const CodeEditor = observer(
+  ({
+    value,
+    onChange,
+    defaultLanguage = 'xml',
+  }: {
+    value: string;
+    onChange: (value: string | undefined) => void;
+    defaultLanguage: string;
+  }) => {
+    const editorRef = useRef<any>(null);
+    const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
+    const vimModeRef = useRef<any>(null);
 
-  const rootStore = useContext(RootStoreContext);
-  const uiState = rootStore.uiState;
+    const rootStore = useContext(RootStoreContext);
+    const uiState = rootStore.uiState;
 
-  const initVim = useCallback(() => {
-    if (
-      uiState.settings.isVimEnabled &&
-      editorRef.current &&
-      vimStatusBarRef.current &&
-      !vimModeRef.current
-    ) {
-      vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
-    }
-  }, [uiState.settings.isVimEnabled]);
-
-  useEffect(() => {
-    return () => {
-      if (vimModeRef.current) {
-        vimModeRef.current.dispose();
+    const initVim = useCallback(() => {
+      if (
+        uiState.settings.isVimEnabled &&
+        editorRef.current &&
+        vimStatusBarRef.current &&
+        !vimModeRef.current
+      ) {
+        vimModeRef.current = monacoVim.initVimMode(editorRef.current, vimStatusBarRef.current);
       }
-    };
-  }, []);
+    }, [uiState.settings.isVimEnabled]);
 
-  useEffect(() => {
-    if (uiState.settings.isVimEnabled) {
-      initVim();
-    } else {
-      if (vimModeRef.current) {
-        vimModeRef.current.dispose();
-        vimModeRef.current = null;
-      }
-    }
-
-    // Force layout recalculation after VIM mode changed
-    if (editorRef.current) {
-      requestAnimationFrame(() => {
-        if (editorRef.current) {
-          editorRef.current.layout();
+    useEffect(() => {
+      return () => {
+        if (vimModeRef.current) {
+          vimModeRef.current.dispose();
         }
-      });
-    }
-  }, [uiState.settings.isVimEnabled, initVim]);
+      };
+    }, []);
 
-  const handleEditorDidMount: EditorProps['onMount'] = editor => {
-    editorRef.current = editor;
-    initVim();
-  };
+    useEffect(() => {
+      if (uiState.settings.isVimEnabled) {
+        initVim();
+      } else {
+        if (vimModeRef.current) {
+          vimModeRef.current.dispose();
+          vimModeRef.current = null;
+        }
+      }
 
-  const handleEditorChange = (value: string | undefined) => {
-    onChange(value);
-  };
+      // Force layout recalculation after VIM mode changed
+      if (editorRef.current) {
+        requestAnimationFrame(() => {
+          if (editorRef.current) {
+            editorRef.current.layout();
+          }
+        });
+      }
+    }, [uiState.settings.isVimEnabled, initVim]);
 
-  return (
-    <div className={S.root}>
-      <div className={S.editorContainer}>
-        <Editor
-          height="100%"
-          defaultLanguage={defaultLanguage}
-          value={value}
-          onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false },
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-          }}
-        />
+    const handleEditorDidMount: EditorProps['onMount'] = editor => {
+      editorRef.current = editor;
+      initVim();
+    };
+
+    const handleEditorChange = (value: string | undefined) => {
+      onChange(value);
+    };
+
+    return (
+      <div className={S.root}>
+        <div className={S.editorContainer}>
+          <Editor
+            height="100%"
+            defaultLanguage={defaultLanguage}
+            value={value}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              lineNumbers: 'on',
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+            }}
+          />
+        </div>
+        {uiState.settings.isVimEnabled && <div ref={vimStatusBarRef} className={S.vimStatus} />}
       </div>
-      {uiState.settings.isVimEnabled && <div ref={vimStatusBarRef} className={S.vimStatus} />}
-    </div>
-  );
-});
+    );
+  },
+);
+
+export default CodeEditor;

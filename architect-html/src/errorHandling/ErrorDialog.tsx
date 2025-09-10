@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from '@components/icon/Icon.tsx';
-import { ModalWindow } from '@dialogs/ModalWindow.tsx';
-import { IDialogStackState } from '@dialogs/types.ts';
+import { Icon } from '@components/icon/Icon';
+import { ModalWindow } from '@dialogs/ModalWindow';
+import { IDialogStackState } from '@dialogs/types';
 import S from '@errors/ErrorDialog.module.scss';
-import { requestFocus } from '@utils/focus.ts';
+import { requestFocus } from '@utils/focus';
 import _ from 'lodash';
 import { action, computed, observable } from 'mobx';
 import { Observer, observer } from 'mobx-react-lite';

@@ -17,41 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
+import S from '@components/ActionPanel/ActionPanel.module.scss';
 
-  position: relative;
-  padding: 0.5rem 1rem;
-  cursor: not-allowed;
+const ActionPanel = ({ title }: { title: string }) => {
+  return (
+    <div className={S.root}>
+      <div className={S.title}>{title}</div>
+      <SaveButtonHOC />
+    </div>
+  );
+};
 
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  opacity: 0.5;
-
-  color: #000;
-  font-size: 1rem;
-  user-select: none;
-
-  &:hover {
-    background: #f5f5f5;
-    opacity: 1;
-  }
-}
-
-.dirty {
-  cursor: pointer;
-
-  color: #fff;
-  background: var(--brand);
-  border: 1px solid var(--brand);
-  opacity: 1;
-
-  &:hover {
-    background: var(--brand);
-    opacity: 0.9;
-  }
-}
+export default ActionPanel;

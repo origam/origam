@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,23 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ErrorDialogController } from '@errors/ErrorDialog';
-import { flow } from 'mobx';
+.root {
+  display: inline-block;
+  position: relative;
 
-const HANDLED = Symbol('_$ErrorHandled');
+  > img {
+    height: 24px;
+    width: auto;
+  }
 
-export function handleError(controller: ErrorDialogController) {
-  return function* handleError(error: any) {
-    if (error.code === 'ERR_NETWORK' && error.name === 'AxiosError') {
-      yield* controller.pushError('Network Unavailable');
-      return;
-    }
-    if (error[HANDLED]) {
-      yield error[HANDLED];
-      return;
-    }
-    const promise = flow(() => controller.pushError(error))();
-    error[HANDLED] = promise;
-    yield promise;
-  };
+  > span {
+    position: absolute;
+    bottom: -6px;
+    right: 0;
+    font-size: 12px;
+    color: var(--brand);
+    line-height: 1;
+    font-weight: 400;
+  }
 }

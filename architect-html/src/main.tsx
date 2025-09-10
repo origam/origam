@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import App from '@/App.tsx';
+import App from '@/App';
 import '@/index.css';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
-import { RootStore } from '@stores/RootStore.ts';
-import { getLocaleFromCookie, initLocaleCookie } from '@utils/cookie.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { RootStore } from '@stores/RootStore';
+import { getLocaleFromCookie, initLocaleCookie } from '@utils/cookie';
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 

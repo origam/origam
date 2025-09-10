@@ -46,9 +46,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     background: linear-gradient(
       to right,
       var(--background1) 0%,
-      var(--foreground2) 34%,
-      var(--foreground3) 50%,
-      var(--foreground2) 66%,
+      var(--brand-light) 34%,
+      var(--brand) 50%,
+      var(--brand-light) 66%,
       var(--background1) 100%
     );
   }

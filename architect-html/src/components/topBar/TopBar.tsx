@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import SaveButton from '@components/saveButton/SaveButton.tsx';
-import SettingsButton from '@components/settingsButton/SettingsButton.tsx';
-import { ProgressBar } from '@components/topBar/ProgressBar.tsx';
+import Logo from '@components/logo/Logo';
+import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
+import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
 
-export const TopBar = () => {
+const TopBar = () => {
   return (
     <div className={S.root}>
       <ProgressBar />
-      <div className={S.buttonsBox}>
-        <div>
-          <SaveButton />
-        </div>
-        <div>
-          <SettingsButton />
+      <div className={S.panel}>
+        <Logo />
+        <div className={S.actionBar}>
+          <SettingsButtonHOC />
         </div>
       </div>
     </div>
   );
 };
+
+export default TopBar;

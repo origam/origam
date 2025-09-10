@@ -22,41 +22,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: column;
   width: 400px;
   flex: 1;
-}
 
-.content {
-  display: flex;
-  overflow: auto;
-  flex: 1;
-}
+  .tabs {
+    display: flex;
+    gap: 0.25rem;
+  }
 
-.labels {
-  display: flex;
-  gap: 10px;
-}
+  .content {
+    display: flex;
+    overflow: auto;
+    flex: 1;
+    border: 1px solid var(--background3);
+    border-top: 4px solid var(--brand);
 
-.hidden {
-  display: none;
-}
+    .hidden {
+      display: none;
+    }
 
-.visible {
-  display: flex;
-  flex: 1;
-}
-
-.labelContainer {
-  display: flex;
-  justify-content: space-between;
-  min-width: 80px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.closeSymbol {
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.activeTab {
-  font-weight: bold;
+    .visible {
+      display: flex;
+      flex: 1;
+    }
+  }
 }

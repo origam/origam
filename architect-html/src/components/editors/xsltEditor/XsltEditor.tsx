@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
-import { TabView } from '@components/tabView/TabView.tsx';
-import { TabViewState } from '@components/tabView/TabViewState.ts';
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import { RootStoreContext, T } from '@/main';
+import { TabView } from '@components/tabView/TabView';
+import { TabViewState } from '@components/tabView/TabViewState';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import { PropertyEditor } from '@editors/propertyEditor/PropertyEditor.tsx';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useContext } from 'react';
 
-export default function XsltEditor({ editorState }: { editorState: GridEditorState }) {
+const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const getFieldName = (): 'TextStore' | 'Xsl' => {
@@ -55,24 +56,46 @@ export default function XsltEditor({ editorState }: { editorState: GridEditorSta
           {
             label: T('XSL', 'xsl_editor_tab1'),
             node: (
-              <CodeEditor
-                defaultLanguage="xml"
-                value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
-                onChange={text => handleInputChange(text)}
-              />
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('XSL', 'xsl_editor_tab1') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                />
+                <CodeEditor
+                  defaultLanguage="xml"
+                  value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
+                  onChange={text => handleInputChange(text)}
+                />
+              </div>
             ),
           },
           {
             label: T('Settings', 'xsl_editor_tab2'),
             node: (
-              <PropertyEditor
-                propertyManager={editorState}
-                properties={editorState.properties.filter(x => x.name !== getFieldName())}
-              />
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('Settings', 'xsl_editor_tab2') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                />
+                <div className={S.propertiesBox}>
+                  <PropertyEditor
+                    propertyManager={editorState}
+                    properties={editorState.properties.filter(x => x.name !== getFieldName())}
+                  />
+                </div>
+              </div>
             ),
           },
         ]}
       />
     </div>
   );
-}
+};
+
+export default XsltEditor;

@@ -23,10 +23,10 @@ import {
   IApiTreeNode,
   IArchitectApi,
   IMenuItemInfo,
-} from '@api/IArchitectApi.ts';
-import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
-import { EditorData } from '@components/modelTree/EditorData.ts';
-import { RootStore } from '@stores/RootStore.ts';
+} from '@api/IArchitectApi';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { EditorData } from '@components/modelTree/EditorData';
+import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 
 export class TreeNode implements IEditorNode {

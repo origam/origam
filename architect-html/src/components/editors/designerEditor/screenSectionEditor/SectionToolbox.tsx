@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { T } from '@/main.tsx';
-import { IEditorField } from '@api/IArchitectApi.ts';
+import { T } from '@/main';
+import { IEditorField } from '@api/IArchitectApi';
 import {
   ComponentType,
   getComponentTypeKey,
   toComponentType,
-} from '@editors/designerEditor/common/ComponentType.tsx';
+} from '@editors/designerEditor/common/ComponentType';
+import Toolbox from '@editors/designerEditor/common/Toolbox';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
-import { Toolbox } from '@editors/designerEditor/common/Toolbox.tsx';
-import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
+import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -94,7 +94,7 @@ export const SectionToolbox: React.FC<{
         {
           label: T('Fields', 'section_tool_box_tab1'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {sectionToolbox.fields.map(field => getToolboxComponent(field))}
             </div>
           ),
@@ -102,7 +102,7 @@ export const SectionToolbox: React.FC<{
         {
           label: T('Widgets', 'section_tool_box_tab2'),
           node: (
-            <div className={S.draggAbles}>
+            <div className={S.draggables}>
               {getControlComponent(ComponentType.AsCheckBox)}
               {getControlComponent(ComponentType.AsCombo)}
               {getControlComponent(ComponentType.AsDateBox)}

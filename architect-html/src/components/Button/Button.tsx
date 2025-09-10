@@ -17,23 +17,38 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ErrorDialogController } from '@errors/ErrorDialog';
-import { flow } from 'mobx';
+import S from '@components/button/Button.module.scss';
+import cn from 'classnames';
 
-const HANDLED = Symbol('_$ErrorHandled');
+const Button = ({
+  title,
+  type,
+  prefix,
+  isDisabled,
+  isAnimated,
+  onClick,
+}: {
+  title: string;
+  type: 'primary' | 'secondary';
+  prefix?: React.ReactNode;
+  isDisabled?: boolean;
+  isAnimated?: boolean;
+  onClick: () => void;
+}) => {
+  return (
+    <div
+      className={cn(S.root, {
+        [S.primary]: type === 'primary',
+        [S.secondary]: type === 'secondary',
+        [S.disabled]: isDisabled,
+        [S.animate]: isAnimated,
+      })}
+      onClick={onClick}
+    >
+      {prefix}
+      <span>{title}</span>
+    </div>
+  );
+};
 
-export function handleError(controller: ErrorDialogController) {
-  return function* handleError(error: any) {
-    if (error.code === 'ERR_NETWORK' && error.name === 'AxiosError') {
-      yield* controller.pushError('Network Unavailable');
-      return;
-    }
-    if (error[HANDLED]) {
-      yield error[HANDLED];
-      return;
-    }
-    const promise = flow(() => controller.pushError(error))();
-    error[HANDLED] = promise;
-    yield promise;
-  };
-}
+export default Button;

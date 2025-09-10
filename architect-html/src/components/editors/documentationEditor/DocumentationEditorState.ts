@@ -21,10 +21,10 @@ import {
   DocumentationEditorData,
   IArchitectApi,
   IUpdatePropertiesResult,
-} from '@api/IArchitectApi.ts';
-import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
-import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty.ts';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
+} from '@api/IArchitectApi';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { EditorProperty, toChanges } from '@editors/gridEditor/EditorProperty';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 
 export class DocumentationEditorState extends GridEditorState {
   constructor(

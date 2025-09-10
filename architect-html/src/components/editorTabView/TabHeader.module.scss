@@ -19,23 +19,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   display: flex;
-  width: 100%;
-  border-bottom: 1px solid var(--background4);
+  justify-content: space-between;
+  min-width: 80px;
+  border: 1px solid var(--background3);
+  padding: 0.25rem 0.5rem;
+  overflow: hidden;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
 
-  .panel {
+  &.activeTab {
+    border: 1px solid var(--brand);
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .title {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 2rem;
-    width: 100%;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    min-width: 0;
+    user-select: none;
 
-    .actionBar {
-      display: flex;
-      flex-grow: 1;
-      gap: 1rem;
-      justify-content: flex-end;
+    .label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .asterisk {
+      flex-shrink: 0;
+      margin-left: 0.25rem;
+    }
+  }
+
+  .close {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .contextMenuButton {
+    font-weight: normal;
+
+    svg {
+      font-weight: normal;
+      margin-right: 0.5rem;
     }
   }
 }

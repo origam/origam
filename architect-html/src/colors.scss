@@ -52,6 +52,8 @@ $error1: #fe5461;
 
 // Brand colors
 $brand: #f15b47;
+$brand-light: color.adjust($brand, $lightness: 35%);
+$brand-desaturate: color.adjust($brand, $saturation: -100%);
 
 :root {
   // HEX values
@@ -79,6 +81,8 @@ $brand: #f15b47;
   --error1: #{$error1};
 
   --brand: #{$brand};
+  --brand-light: #{$brand-light};
+  --brand-desaturate: #{$brand-desaturate};
 
   // RGB values
   --background1-rgb: #{hexToRGB($background1)};

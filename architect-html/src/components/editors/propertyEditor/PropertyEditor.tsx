@@ -17,104 +17,106 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
-import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
-import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
+import { RootStoreContext } from '@/main';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
+import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput';
 import S from '@editors/propertyEditor/PropertyEditor.module.scss';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
-export const PropertyEditor: React.FC<{
-  properties: EditorProperty[];
-  propertyManager: IPropertyManager;
-}> = observer(props => {
-  const rootStore = useContext(RootStoreContext);
+const PropertyEditor = observer(
+  (props: { properties: EditorProperty[]; propertyManager: IPropertyManager }) => {
+    const rootStore = useContext(RootStoreContext);
 
-  if (!props.properties) {
-    return null;
-  }
-
-  function onValueChange(property: EditorProperty, value: any) {
-    runInFlowWithHandler(rootStore.errorDialogController)({
-      generator: function* () {
-        const parsedValue = property.type === 'enum' ? parseInt(value) : value;
-        yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
-      },
-    });
-  }
-
-  const { groupedProperties, sortedCategories } = getSortedProperties(props.properties);
-
-  function renderPropertyEditor(property: EditorProperty) {
-    if (property.type === 'enum' || property.type === 'looukup') {
-      return (
-        <select
-          value={property.value ?? ''}
-          onChange={e => onValueChange(property, e.target.value)}
-        >
-          {property.dropDownValues.map(x => (
-            <option key={property.value + x.name} value={x.value}>
-              {x.name}
-            </option>
-          ))}
-        </select>
-      );
+    if (!props.properties) {
+      return null;
     }
-    if (property.type === 'boolean') {
-      return (
-        <div className={S.checkboxContainer}>
-          <input
-            type="checkbox"
-            checked={property.value}
-            onChange={e => onValueChange(property, e.target.checked)}
-            disabled={property.readOnly}
-            className={S.checkbox}
+
+    function onValueChange(property: EditorProperty, value: any) {
+      runInFlowWithHandler(rootStore.errorDialogController)({
+        generator: function* () {
+          const parsedValue = property.type === 'enum' ? parseInt(value) : value;
+          yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
+        },
+      });
+    }
+
+    const { groupedProperties, sortedCategories } = getSortedProperties(props.properties);
+
+    function renderPropertyEditor(property: EditorProperty) {
+      if (property.type === 'enum' || property.type === 'looukup') {
+        return (
+          <select
+            value={property.value ?? ''}
+            onChange={e => onValueChange(property, e.target.value)}
+          >
+            {property.dropDownValues.map(x => (
+              <option key={property.value + x.name} value={x.value}>
+                {x.name}
+              </option>
+            ))}
+          </select>
+        );
+      }
+      if (property.type === 'boolean') {
+        return (
+          <div className={S.checkboxContainer}>
+            <input
+              type="checkbox"
+              checked={property.value}
+              onChange={e => onValueChange(property, e.target.checked)}
+              disabled={property.readOnly}
+              className={S.checkbox}
+            />
+          </div>
+        );
+      }
+      if (property.type === 'integer' || property.type === 'float') {
+        return (
+          <NumericPropertyInput
+            property={property}
+            type={property.type}
+            onChange={value => onValueChange(property, value)}
           />
-        </div>
-      );
-    }
-    if (property.type === 'integer' || property.type === 'float') {
+        );
+      }
       return (
-        <NumericPropertyInput
-          property={property}
-          type={property.type}
-          onChange={value => onValueChange(property, value)}
+        <input
+          type="text"
+          disabled={property.readOnly}
+          value={property.value != null ? property.value : undefined}
+          onChange={e => onValueChange(property, e.target.value)}
         />
       );
     }
-    return (
-      <input
-        type="text"
-        disabled={property.readOnly}
-        value={property.value != null ? property.value : undefined}
-        onChange={e => onValueChange(property, e.target.value)}
-      />
-    );
-  }
 
-  return (
-    <div className={S.root}>
-      {sortedCategories.map(category => (
-        <div className={S.category} key={category}>
-          <h4>{category ?? 'Misc'}</h4>
-          {groupedProperties[category].map((property: EditorProperty) => (
-            <div className={S.property} key={property.name}>
-              <div
-                title={property.error}
-                className={S.propertyName + (property.error ? ' ' + S.errorProperty : '')}
-              >
-                {property.name}
+    return (
+      <div className={S.root}>
+        {sortedCategories.map(category => (
+          <div className={S.category} key={category}>
+            <h4>{category ?? 'Misc'}</h4>
+            {groupedProperties[category].map((property: EditorProperty) => (
+              <div className={S.property} key={property.name}>
+                <div
+                  title={property.error}
+                  className={cn(S.propertyName, { [S.errorProperty]: property.error })}
+                >
+                  {property.name}
+                </div>
+                {renderPropertyEditor(property)}
               </div>
-              {renderPropertyEditor(property)}
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-});
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  },
+);
+
+export default PropertyEditor;
 
 function getSortedProperties(properties: EditorProperty[]) {
   const groupedProperties = properties.reduce(
