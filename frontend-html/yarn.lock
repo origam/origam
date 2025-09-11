@@ -2946,12 +2946,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/leaflet-draw@npm:1.0.12":
-  version: 1.0.12
-  resolution: "@types/leaflet-draw@npm:1.0.12"
+"@types/leaflet-draw@npm:1.0.13":
+  version: 1.0.13
+  resolution: "@types/leaflet-draw@npm:1.0.13"
   dependencies:
-    "@types/leaflet": "npm:*"
-  checksum: 10c0/54edaad4a90aba11304d4db5e2e16b124f7da4ecb92dda67e549601702a2d0ebcecb1e1d94de485db83ff3bd70dadbe3aaac561ff66550356249918f6749fed9
+    "@types/leaflet": "npm:^1.9"
+  checksum: 10c0/0b72a8afc38cd097fb024cd767dae1bd053c15987a7fa57ec7b13802adfa280a952665a0fd314d0a69686095b67f5eeb0e00c1f5dc02eb3507b6995ea5a3b024
   languageName: node
   linkType: hard
 
@@ -7265,7 +7265,7 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     "@types/js-cookie": "npm:^3.0.6"
     "@types/leaflet": "npm:1.7.11"
-    "@types/leaflet-draw": "npm:^1.0.12"
+    "@types/leaflet-draw": "npm:^1.0.13"
     "@types/lodash": "npm:^4.17.20"
     "@types/mapbox__geojson-area": "npm:^0.2.6"
     "@types/numeral": "npm:^2.0.5"
