@@ -26,11 +26,6 @@ variables:
 
 resources:
   repositories:
-   - repository: origam-chat
-     type: github
-     endpoint: https://github.com/origam/
-     name: origam/origam-html-chat
-     ref: $(BRANCH)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
@@ -264,18 +259,10 @@ jobs:
     steps:
      - checkout: origam
        fetchDepth: 1
-     - checkout: origam-chat
-       fetchDepth: 1
      - task: NodeTool@0
        displayName: 'Use Node 18.x'
        inputs:
          versionSpec: 18.x
-     - task: Cache@2
-       displayName: 'Yarn Cache'
-       inputs:
-         key: 'yarn-2025-08-02-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam/architect-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
-         path: '$(YARN_CACHE_FOLDER)'
-         restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: corepack enable
        displayName: 'Enable Corepack'
      - script: |
@@ -294,16 +281,16 @@ jobs:
        condition: succeededOrFailed()
      - script: |
         yarn install --frozen-lockfile
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\dist
        displayName: 'origam-chat yarn'
      - script: |
         yarn build
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\dist
        displayName: 'origam-chat yarn build'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-chat'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\chat-html\dist\dist'
          ArtifactName: origam-chat
        condition: succeededOrFailed()
      - script: |
@@ -332,19 +319,11 @@ jobs:
      - checkout: origam
        fetchDepth: 1
        persistCredentials: true
-     - checkout: origam-chat
-       fetchDepth: 1
-       persistCredentials: true
      - powershell: |
          $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
          Write-Host $commitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
        displayName: Store origam-origam commit id
-     - powershell: |
-         $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
-         Write-Host $htmlChatCommitId
-         Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_CHAT_COMMIT_ID;]$htmlChatCommitId"
-       displayName: Store origam-chat commit id
      - task: DownloadBuildArtifacts@0
        displayName: Download origam-setup artifact
        inputs:
@@ -446,26 +425,12 @@ jobs:
          tag: '$(TAG_LATEST)'
        displayName: Delete previous GitHub origam/$(TAG_LATEST) release
        continueOnError: true
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'delete'
-         tag: '$(TAG)'
-       displayName: Delete previous GitHub origam-html-chat/$(TAG) release
-       continueOnError: true
      - script: |
         git tag -f $(TAG)
         git tag -f $(TAG_LATEST)
         git push -f origin --tags
        workingDirectory: $(Agent.BuildDirectory)\s\origam
        displayName: 'Tag origam'
-     - script: |
-        git tag -f $(TAG)
-        git tag -f $(TAG_LATEST)
-        git push -f origin --tags
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat
-       displayName: 'Tag origam-chat'
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-architect-server", "$(build.artifactstagingdirectory)\origam-architect-server.zip"); }
@@ -501,7 +466,6 @@ jobs:
            ```
            docker pull origam/architect:$(TAG).$(Build.BuildId).linux
            ```
-           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
@@ -542,7 +506,6 @@ jobs:
            ```
            docker pull origam/architect:$(TAG_LATEST).linux
            ```
-           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
@@ -561,28 +524,6 @@ jobs:
            **\*.*
          RemoveSourceFolder: false
        displayName: 'origam-release clean up'
-     # ------------------------------------
-     # RELEASE ORIGAM_HTML_CHAT - TAG
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'create'
-         target: $(ORIGAM_HTML_CHAT_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG)'
-         title: '$(TAG)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(TAG) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG)">origam-source/$(TAG)</a>
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub origam-html-chat/$(TAG) release
   # ------------------------------------
   # DOCKER Linux
   # ------------------------------------
