@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,25 +16,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
-
-namespace Origam.Server.Configuration;
-public class ChatConfig
-{
-    public string PathToChatApp { get; set; }
-    public int ChatRefreshInterval { get; set; }
-    
-    public ChatConfig(IConfiguration configuration)
-    {
-        var chatSection = configuration
-            .GetSectionOrThrow("ChatConfig");
-
-        PathToChatApp = chatSection
-            .GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection
-            .GetValue("ChatRefreshInterval", 1000);
-    }
+export function flf2mof(flf: string) {
+  return flf
+    .replace(/YYYYY/g, "YYYY")
+    .replace(/E/g, "d")
+    .replace(/A/g, "a")
+    .replace(/H/g, "k")
+    .replace(/J/g, "H")
+    .replace(/K/g, "h")
+    .replace(/N/g, "m")
+    .replace(/S/g, "s")
+    .replace(/Q/g, "S");
 }

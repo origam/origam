@@ -15,3 +15,4 @@ RuntimeModelConfiguration.json
 /test/tests_e2e/node_modules
 /docker/server/HTML5-SOURCE/
 /docker/server/Scheduler/
+/chat-html/dist

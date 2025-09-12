@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,25 +16,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
+import React from "react";
 
-namespace Origam.Server.Configuration;
-public class ChatConfig
-{
-    public string PathToChatApp { get; set; }
-    public int ChatRefreshInterval { get; set; }
-    
-    public ChatConfig(IConfiguration configuration)
-    {
-        var chatSection = configuration
-            .GetSectionOrThrow("ChatConfig");
-
-        PathToChatApp = chatSection
-            .GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection
-            .GetValue("ChatRefreshInterval", 1000);
-    }
+export function MessageHeader(props: { personName: React.ReactNode; messageDateTime: React.ReactNode }) {
+  return (
+    <div className="header">
+      <div className="header__personName">{props.personName}</div>
+      <div className="header__messageDateTime">{props.messageDateTime}</div>
+    </div>
+  );
 }
