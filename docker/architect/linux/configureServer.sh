@@ -32,5 +32,5 @@ fill_origam_settings_config "$ORIGAM_SETTINGS_FILE"
 
 #export OrigamSettings_DbUsername
 #export OrigamSettings_DbPassword
-#./updateEnvironment.sh
-#sudo ./updateEnvironmentRoot.sh
+#./cleanUpEnvironment.sh
+#sudo ./cleanUpEnvironmentRoot.sh
