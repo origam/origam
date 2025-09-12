@@ -8,8 +8,8 @@ fi
 
 sudo /root/updateTimezone.sh
 cd /home/origam/Setup
-./updateEnvironment.sh
-sudo ./updateEnvironmentRoot.sh
+./cleanUpEnvironment.sh
+sudo ./cleanUpEnvironmentRoot.sh
 
 if [ -z "$ContainerMode" ] || [ "$ContainerMode" = 'server' ]; then
   cd /etc/nginx/ssl

@@ -67,21 +67,20 @@ server/linux/configureServer.sh \
 server/linux/fill_origam_settings_config.sh \
 server/linux/entrypoint.sh \
 server/log4net.server.config \
-server/linux/updateEnvironment.sh \
-server/linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
 RUN mv /home/origam/HTML5/log4net.server.config /home/origam/HTML5/log4net.config
-COPY --chown=origam:origam server/linux/updateEnvironment.sh \
-server/linux/updateEnvironmentRoot.sh \
+COPY --chown=origam:origam server/linux/cleanUpEnvironment.sh \
+server/linux/cleanUpEnvironmentRoot.sh \
 /home/origam/Setup/
 WORKDIR /home/origam/Scheduler \
 RUN chmod +x configureScheduler.sh \
 && chmod +x fill_origam_settings_config.sh
+WORKDIR /home/origam/Setup/
+RUN chmod +x cleanUpEnvironment.sh \
+&& chmod +x cleanUpEnvironmentRoot.sh
 WORKDIR /home/origam/HTML5
 RUN mkdir logs \
 && chmod +x configureServer.sh \
 && chmod +x fill_origam_settings_config.sh \
-&& chmod +x entrypoint.sh \
-&& chmod +x updateEnvironment.sh \
-&& chmod +x updateEnvironmentRoot.sh
+&& chmod +x entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
