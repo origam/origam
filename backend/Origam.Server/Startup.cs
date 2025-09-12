@@ -392,26 +392,25 @@ public class Startup
         });
         if (string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
         {
-            return;
-        }
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(chatConfig.PathToChatApp),
-            RequestPath = new PathString("/chatrooms"),
-            OnPrepareResponse = ctx =>
+            app.UseStaticFiles(new StaticFileOptions
             {
-                if (ctx.File.Name == "index.html")
+                FileProvider = new PhysicalFileProvider(chatConfig.PathToChatApp!),
+                RequestPath = new PathString("/chatrooms"),
+                OnPrepareResponse = ctx =>
                 {
-                    ctx.Context.Response.Headers.Append(
-                        "Cache-Control", $"no-store, max-age=0");
+                    if (ctx.File.Name == "index.html")
+                    {
+                        ctx.Context.Response.Headers.Append(
+                            "Cache-Control", $"no-store, max-age=0");
+                    }
                 }
-            }
-        });
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            RequestPath = new PathString("/chatAssets"),
-            FileProvider = new PhysicalFileProvider(Path.Combine(chatConfig.PathToChatApp, "chatAssets"))
-        });
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/chatAssets"),
+                FileProvider = new PhysicalFileProvider(Path.Combine(chatConfig.PathToChatApp, "chatAssets"))
+            });
+        }
         app.UseCors(builder => 
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         if (startUpConfiguration.EnableMiniProfiler)
