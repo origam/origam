@@ -5,6 +5,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  logLevel: 'warn',
   plugins: [
     react({
       babel: {
@@ -34,7 +35,22 @@ export default defineConfig({
         find: 'stream',
         replacement: `stream-browserify`,
       },
+      {
+        find: 'buffer',
+        replacement: 'buffer',
+      },
+      {
+        find: 'events',
+        replacement: 'events',
+      },
+      {
+        find: 'react-virtualized',
+        replacement: 'react-virtualized/dist/commonjs',
+      },
     ],
+  },
+  optimizeDeps: {
+    include: ['buffer', 'events', 'stream-browserify', 'readable-stream', 'safe-buffer']
   },
   css:{
     modules: {
@@ -42,10 +58,21 @@ export default defineConfig({
     }
   },
   build: {
+    chunkSizeWarningLimit: 3000,
     commonjsOptions: {
       transformMixedEsModules: true
     },
     rollupOptions: {
+      onwarn(warning, warn) {
+        const msg = typeof warning.message === 'string' ? warning.message : '';
+        if (msg.includes('externalized for browser compatibility')) {
+          return;
+        }
+        if ((warning as any).code === 'chunkSize') {
+          return;
+        }
+        warn(warning);
+      },
       output: {
         assetFileNames: (assetInfo) => {
           return `chatAssets/[name]-[hash][extname]`;
