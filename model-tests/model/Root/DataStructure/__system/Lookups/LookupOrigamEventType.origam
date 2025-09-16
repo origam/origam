@@ -12,7 +12,7 @@
   <ds1:DataStructure
     asi:abstract="false"
     x:id="6b11b97e-2308-4633-9c18-7ad7e25be825"
-    ds1:localized="false"
+    ds1:localized="true"
     asi:name="LookupOrigamEventType">
     <dse:DataStructureEntity
       asi:abstract="false"
@@ -29,7 +29,7 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamEventType.origam#OrigamEventType/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         dsc:hideInOutput="false"
         x:id="72bd400e-a3a9-41e9-8d9c-2768a2f1b932"
         asi:name="Id"
@@ -50,6 +50,18 @@
         dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamEventType.origam#OrigamEventType/OrigamEventType_l10n/eb9d544b-e4b8-4c84-97ce-283f77744114"
+        x:id="aec4bff0-2224-4685-82a1-cfb25bb99b63"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamEventType_l10n"
+        dse:relationType="LeftJoin"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
