@@ -390,7 +390,7 @@ public class Startup
         {
             FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp)
         });
-        if (string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
+        if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
         {
             app.UseStaticFiles(new StaticFileOptions
             {
