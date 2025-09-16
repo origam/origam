@@ -387,7 +387,9 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 		// try to load it with a partial name
 		// Assembly asm = Assembly.Load(classname + "," + assembly);
 		
-		Assembly asm = Assembly.Load(assembly);
+#pragma warning disable CS0618 // Type or member is obsolete, Assembly.Load(classname + "," + assembly); does not work
+		Assembly asm = Assembly.LoadWithPartialName(assembly);
+#pragma warning restore CS0618 // Type or member is obsolete
 		if(asm!=null)
 		{
 			return asm.GetType(classname);
