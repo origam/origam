@@ -27,11 +27,14 @@ public class ChatConfig
 {
     public string PathToChatApp { get; set; }
     public int ChatRefreshInterval { get; set; }
-    
+
+    public ChatConfig() {
+    }
+
     public ChatConfig(IConfiguration configuration)
     {
         var chatSection = configuration
-            .GetSectionOrThrow("ChatConfig");
+            .GetSection("ChatConfig");
 
         PathToChatApp = chatSection
             .GetValue("PathToChatApp", "");
