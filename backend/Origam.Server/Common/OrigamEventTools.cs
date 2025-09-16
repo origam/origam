@@ -21,8 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Buffers;
+using System.Collections;
 using System.Data;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
@@ -31,10 +33,10 @@ namespace Origam.Server.Common;
 
 public static class OrigamEventTools
 {
-    private static readonly JsonEncodedText FormId
-        = JsonEncodedText.Encode("formId");
-    private static readonly JsonEncodedText FormName      
-        = JsonEncodedText.Encode("formName");
+    private static readonly JsonEncodedText ObjectId
+        = JsonEncodedText.Encode("objectId");
+    private static readonly JsonEncodedText Title    
+        = JsonEncodedText.Encode("title");
     private static readonly JsonEncodedText EntityName    
         = JsonEncodedText.Encode("entityName");
     private static readonly JsonEncodedText Fields        
@@ -45,8 +47,8 @@ public static class OrigamEventTools
         = JsonEncodedText.Encode("caption");
     private static readonly JsonEncodedText NumberOfRows  
         = JsonEncodedText.Encode("numberOfRows");
-    private static readonly JsonEncodedText FormLabel     
-        = JsonEncodedText.Encode("formLabel");
+    private static readonly JsonEncodedText Parameters     
+        = JsonEncodedText.Encode("parameters");
     
     public static void RecordSignInEvent()
     {
@@ -83,13 +85,18 @@ public static class OrigamEventTools
         EntityExportInfo entityExportInfo, 
         int numberOfRows)
     {
+        string formLabel = ResolveDynamicFormLabel(entityExportInfo.Store);
         return BuildJson(w =>
         {
             w.WriteStartObject();
-            w.WritePropertyName(FormId);
-            w.WriteStringValue(entityExportInfo.Store.FormId);
-            w.WritePropertyName(FormName);
-            w.WriteStringValue(entityExportInfo.Store.Name);
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(entityExportInfo.Store.Request.ObjectId);
+            w.WritePropertyName(Title);
+            w.WriteStringValue(entityExportInfo.Store.Title);
+            w.WritePropertyName(Caption);
+            w.WriteStringValue(!string.IsNullOrEmpty(formLabel)
+                ? formLabel
+                : entityExportInfo.Store.Request.Caption);
             w.WritePropertyName(EntityName);
             w.WriteStringValue(entityExportInfo.Entity);
             w.WritePropertyName(Fields);
@@ -112,30 +119,33 @@ public static class OrigamEventTools
 
     private static string CreateOpenScreenDetails(SessionStore sessionStore)
     {
-        string formLabel = null;
-        if (sessionStore is FormSessionStore formSessionStore
-            && !string.IsNullOrEmpty(
-                formSessionStore.MenuItem.DynamicFormLabelField)
-            && (formSessionStore.MenuItem.MethodId != Guid.Empty))
-        {
-            string labelEntitySource = formSessionStore.MenuItem
-                .DynamicFormLabelEntity.EntityDefinition.Name;
-            formLabel = formSessionStore.Data.Tables[labelEntitySource]
-                ?.Rows[0][formSessionStore.MenuItem.DynamicFormLabelField]
-                .ToString();
-        }
+        string formLabel = ResolveDynamicFormLabel(sessionStore);
         return BuildJson(w =>
         {
             w.WriteStartObject();
-            w.WritePropertyName(FormId);
-            w.WriteStringValue(sessionStore.FormId);
-            w.WritePropertyName(FormName);
-            w.WriteStringValue(sessionStore.Name);
-            if (!string.IsNullOrEmpty(formLabel))
+            w.WritePropertyName(ObjectId);
+            w.WriteStringValue(sessionStore.Request.ObjectId);
+            w.WritePropertyName(Title);
+            w.WriteStringValue(sessionStore.Title);
+            w.WritePropertyName(Caption);
+            w.WriteStringValue(!string.IsNullOrEmpty(formLabel)
+                ? formLabel
+                : sessionStore.Request.Caption);
+            w.WritePropertyName(Parameters);
+            w.WriteStartObject();
+            foreach (DictionaryEntry requestParameter 
+                     in sessionStore.Request.Parameters)
             {
-                    w.WritePropertyName(FormLabel);
-                    w.WriteStringValue(formLabel);
+                if (requestParameter.Key.ToString() == null)
+                {
+                    continue;
+                }
+                w.WritePropertyName(requestParameter.Key.ToString()!);
+                w.WriteStringValue(requestParameter.Value != null
+                    ? requestParameter.Value.ToString()
+                    : "");
             }
+            w.WriteEndObject();
             w.WriteEndObject();
         });
     }
@@ -144,10 +154,34 @@ public static class OrigamEventTools
     {
         var buffer = new ArrayBufferWriter<byte>(); 
         using var writer = new Utf8JsonWriter(
-            buffer, new JsonWriterOptions {Indented = true});
+            buffer, new JsonWriterOptions
+            {
+                Indented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
         write(writer);
         writer.Flush();
         return Encoding.UTF8.GetString(buffer.WrittenSpan);
+    }
+
+    private static string ResolveDynamicFormLabel(SessionStore sessionStore)
+    {
+        if (sessionStore is not FormSessionStore formSessionStore
+            || string.IsNullOrEmpty(
+                formSessionStore.MenuItem.DynamicFormLabelField)
+            || (formSessionStore.MenuItem.MethodId == Guid.Empty))
+        {
+            return null;
+        }
+        string labelEntitySource = formSessionStore.MenuItem
+            .DynamicFormLabelEntity.EntityDefinition.Name;
+        if (formSessionStore.Data.Tables[labelEntitySource]?.Rows.Count > 0)
+        {
+            return formSessionStore.Data.Tables[labelEntitySource]
+                .Rows[0][formSessionStore.MenuItem.DynamicFormLabelField]
+                .ToString();
+        }
+        return null;
     }
 
     private static void RecordEvent(Guid eventId, string details)

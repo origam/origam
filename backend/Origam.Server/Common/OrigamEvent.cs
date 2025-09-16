@@ -26,7 +26,7 @@ namespace Origam.Server.Common;
 public static class OrigamEvent
 {
     public static readonly Guid DataStructureId 
-        = new Guid("c35a0893-1b41-4a4a-a70d-795a088957ae");
+        = new("c35a0893-1b41-4a4a-a70d-795a088957ae");
     
     public static readonly (string FeatureCode, Guid EventId) SignIn 
         = ("EVENT_SIGN_IN", 
