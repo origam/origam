@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IUpdatePropertiesResult } from '@api/IArchitectApi';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
-import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
+import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { observable } from 'mobx';
 
 export class PropertiesState implements IPropertyManager {

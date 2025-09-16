@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,18 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  position: relative;
-  border: 1px solid var(--foreground6);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  text-align: center;
-  background-color: var(--background1);
-  font-size: 1rem;
-  color: var(--foreground6);
-  user-select: none;
-}
+import S from '@components/logo/Logo.module.scss';
 
-.root:hover {
-  background-color: #f5f5f5;
-}
+const Logo = () => {
+  return (
+    <div className={S.root}>
+      <img src="/ORIGAM-logo.svg" alt="ORIGAM" />
+      <span>Architect</span>
+    </div>
+  );
+};
+
+export default Logo;

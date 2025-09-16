@@ -180,4 +180,25 @@
   <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
     <value>Keine Datensätze ausgewählt. Aktion kann nicht ausgeführt werden.</value>
   </data>
+  <data name="ErrorParsingConnectionString" xml:space="preserve">
+    <value>Beim Parsen der Verbindungszeichenfolge ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnknownReadType" xml:space="preserve">
+    <value>Unbekannter ReadType-Wert.</value>
+  </data>
+  <data name="ArchiveEntryTooLarge" xml:space="preserve">
+    <value>Archiv-Eintrag ist zu groß.</value>
+  </data>
+  <data name="ArchiveEntrySuspiciousCompressionRatio" xml:space="preserve">
+    <value>Archiv-Eintrag hat ein verdächtiges Kompressionsverhältnis.</value>
+  </data>
+  <data name="StreamExceedsAllowedSize" xml:space="preserve">
+    <value>Datei überschreitet die zulässige Größe.</value>
+  </data>
+  <data name="EntryNotFoundInArchive" xml:space="preserve">
+    <value>Eintrag '{0}' wurde im Archiv '{1}' nicht gefunden.</value>
+  </data>
+  <data name="EntryOutsideTargetDir" xml:space="preserve">
+    <value>Eintrag liegt außerhalb des Zielverzeichnisses: {0}</value>
+  </data>
 </root>

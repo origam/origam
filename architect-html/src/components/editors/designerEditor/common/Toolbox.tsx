@@ -17,57 +17,64 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
-import { ITabViewItem, TabView } from '@components/tabView/TabView.tsx';
+import { RootStoreContext, T } from '@/main';
+import { ITabViewItem, TabView } from '@components/tabView/TabView';
 import S from '@editors/designerEditor/common/Toolbox.module.scss';
-import { ToolboxState } from '@editors/designerEditor/common/ToolboxState.tsx';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { ToolboxState } from '@editors/designerEditor/common/ToolboxState';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
-export const Toolbox: React.FC<{
-  toolboxState: ToolboxState;
-  tabViewItems: ITabViewItem[];
-}> = observer(({ toolboxState, tabViewItems }) => {
-  const rootStore = useContext(RootStoreContext);
-  const run = runInFlowWithHandler(rootStore.errorDialogController);
+const Toolbox = observer(
+  ({
+    toolboxState,
+    tabViewItems,
+  }: {
+    toolboxState: ToolboxState;
+    tabViewItems: ITabViewItem[];
+  }) => {
+    const rootStore = useContext(RootStoreContext);
+    const run = runInFlowWithHandler(rootStore.errorDialogController);
 
-  return (
-    <div className={S.toolbox}>
-      <div className={S.inputs}>
-        <div className={S.inputContainer}>
-          <div>{T('Data Source', 'tool_box_data_source')}</div>
-          <select
-            value={toolboxState.selectedDataSourceId ?? ''}
-            onChange={e =>
-              run({ generator: toolboxState.selectedDataSourceIdChanged(e.target.value) })
-            }
-          >
-            {toolboxState.dataSources.map(x => (
-              <option key={x.schemaItemId + x.name} value={x.schemaItemId}>
-                {x.name}
-              </option>
-            ))}
-          </select>
+    return (
+      <div className={S.toolbox}>
+        <div className={S.inputs}>
+          <div className={S.inputContainer}>
+            <div>{T('Data Source', 'tool_box_data_source')}</div>
+            <select
+              value={toolboxState.selectedDataSourceId ?? ''}
+              onChange={e =>
+                run({ generator: toolboxState.selectedDataSourceIdChanged(e.target.value) })
+              }
+            >
+              {toolboxState.dataSources.map(x => (
+                <option key={x.schemaItemId + x.name} value={x.schemaItemId}>
+                  {x.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={S.inputContainer}>
+            <div>{T('Name', 'tool_box_name')}</div>
+            <input
+              type="text"
+              value={toolboxState.name}
+              onChange={e => run({ generator: toolboxState.nameChanged(e.target.value) })}
+            />
+          </div>
+          <div className={S.inputContainer}>
+            <div>Id</div>
+            <input disabled={true} type="text" value={toolboxState.id} />
+          </div>
+          <div className={S.inputContainer}>
+            <div>{T('Package', 'tool_box_package')}</div>
+            <input disabled={true} type="text" value={toolboxState.schemaExtensionId} />
+          </div>
         </div>
-        <div className={S.inputContainer}>
-          <div>{T('Name', 'tool_box_name')}</div>
-          <input
-            type="text"
-            value={toolboxState.name}
-            onChange={e => run({ generator: toolboxState.nameChanged(e.target.value) })}
-          />
-        </div>
-        <div className={S.inputContainer}>
-          <div>Id</div>
-          <input disabled={true} type="text" value={toolboxState.id} />
-        </div>
-        <div className={S.inputContainer}>
-          <div>{T('Package', 'tool_box_package')}</div>
-          <input disabled={true} type="text" value={toolboxState.schemaExtensionId} />
-        </div>
+        <TabView width={260} state={toolboxState.tabViewState} items={tabViewItems} />
       </div>
-      <TabView width={260} state={toolboxState.tabViewState} items={tabViewItems} />
-    </div>
-  );
-});
+    );
+  },
+);
+
+export default Toolbox;

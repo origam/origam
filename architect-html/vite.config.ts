@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import mkcert from 'vite-plugin-mkcert';
 import path from 'path';
+import { defineConfig } from 'vite';
+import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
   plugins: [
@@ -22,6 +22,7 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, 'src/utils'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@editors': path.resolve(__dirname, 'src/components/editors'),
+      '@modules': path.resolve(__dirname, 'src/modules'),
     },
   },
   css: {

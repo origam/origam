@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,18 +16,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-namespace Origam.Architect.Server.Wrappers;
+import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
+import S from '@components/ActionPanel/ActionPanel.module.scss';
 
-public class ConfigManager
-{
-    public OrigamSettings ActiveConfiguration
-    {
-        get => ConfigurationManager.GetActiveConfiguration();
-        set => ConfigurationManager.SetActiveConfiguration(value);
-    }
+const ActionPanel = ({ title }: { title: string }) => {
+  return (
+    <div className={S.root}>
+      <div className={S.title}>{title}</div>
+      <SaveButtonHOC />
+    </div>
+  );
+};
 
-    public IEnumerable<string> Available =>
-        ConfigurationManager.GetAllConfigurations().Cast<OrigamSettings>().Select(x => x.Name);
-}
+export default ActionPanel;

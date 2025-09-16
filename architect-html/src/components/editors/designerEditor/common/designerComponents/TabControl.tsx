@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main.tsx';
-import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { RootStoreContext } from '@/main';
+import { ComponentType, IComponentData } from '@editors/designerEditor/common/ComponentType';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
-import { screenLayer } from '@editors/designerEditor/common/Layers.ts';
-import { DesignerStateContext } from '@editors/designerEditor/screenEditor/ScreenEditor.tsx';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { screenLayer } from '@editors/designerEditor/common/Layers';
+import { DesignerStateContext } from '@editors/designerEditor/screenEditor/ScreenEditor';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { Observer, observer } from 'mobx-react-lite';
 import { ReactElement, useContext } from 'react';

@@ -104,11 +104,8 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 		   ln -s `pwd`/`ls` `pwd`/origam
 		   #need to move to gitRootDirectory everytime
 		   cd origam
-		   if [ -f _OrigamSettings.mssql.template ]; then
-			cp _OrigamSettings.mssql.template ../../
-		   fi
-		   if [ -f _OrigamSettings.postgres.template ]; then
-			cp _OrigamSettings.postgres.template ../../
+		   if [ -f _OrigamSettings.template ]; then
+			cp _OrigamSettings.template ../../
 		   fi
 		   if [ -f _appsettings.template ]; then
 			cp _appsettings.template ../../

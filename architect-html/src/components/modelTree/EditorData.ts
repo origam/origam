@@ -26,9 +26,9 @@ import {
   IApiEditorProperty,
   IScreenEditorData,
   ISectionEditorData,
-} from '@api/IArchitectApi.ts';
-import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
-import { TreeNode } from '@components/modelTree/TreeNode.ts';
+} from '@api/IArchitectApi';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { TreeNode } from '@components/modelTree/TreeNode';
 
 export class EditorNode implements IEditorNode {
   id: string;

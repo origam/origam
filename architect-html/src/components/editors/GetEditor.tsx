@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { T } from '@/main.tsx';
+import { T } from '@/main';
 import {
   DocumentationEditorData,
   EditorType,
@@ -25,22 +25,22 @@ import {
   IArchitectApi,
   IScreenEditorData,
   ISectionEditorData,
-} from '@api/IArchitectApi.ts';
-import { IEditorState } from '@components/editorTabView/IEditorState.ts';
-import { EditorData } from '@components/modelTree/EditorData.ts';
-import { PropertiesState } from '@components/properties/PropertiesState.ts';
-import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor.tsx';
-import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState.tsx';
-import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
-import ScreenSectionEditor from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.tsx';
-import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
-import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState.tsx';
-import { DocumentationEditorState } from '@editors/documentationEditor/DocumentationEditorState.ts';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
-import { GridEditor } from '@editors/gridEditor/GridEditor.tsx';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import XsltEditor from '@editors/xsltEditor/XsltEditor.tsx';
-import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
+} from '@api/IArchitectApi';
+import { IEditorState } from '@components/editorTabView/IEditorState';
+import { EditorData } from '@components/modelTree/EditorData';
+import { PropertiesState } from '@components/properties/PropertiesState';
+import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
+import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
+import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
+import ScreenSectionEditor from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor';
+import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
+import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState';
+import { DocumentationEditorState } from '@editors/documentationEditor/DocumentationEditorState';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
+import GridEditor from '@editors/gridEditor/GridEditor';
+import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import XsltEditor from '@editors/xsltEditor/XsltEditor';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import React from 'react';
 
@@ -53,6 +53,7 @@ export function getEditor(args: {
 }) {
   const { editorType, editorData, propertiesState, architectApi } = args;
   const { node, data, isDirty } = editorData;
+
   if (editorType === 'GridEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
     const editorState = new GridEditorState(
@@ -72,6 +73,7 @@ export function getEditor(args: {
       ),
     );
   }
+
   if (editorType === 'XsltEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
     const editorState = new GridEditorState(
@@ -83,6 +85,7 @@ export function getEditor(args: {
     );
     return new Editor(editorState, <XsltEditor editorState={editorState} />);
   }
+
   if (editorType === 'ScreenSectionEditor') {
     const sectionData = data as ISectionEditorData;
     const sectionToolboxState = new SectionToolboxState(sectionData, node.origamId, architectApi);
@@ -97,8 +100,8 @@ export function getEditor(args: {
       args.runGeneratorHandled,
     );
     return new Editor(state, <ScreenSectionEditor designerState={state} />);
-    return new Editor(state, <ScreenSectionEditor designerState={state} />);
   }
+
   if (editorType === 'ScreenEditor') {
     const screenData = data as IScreenEditorData;
     const screenToolboxState = new ScreenToolboxState(screenData, node.origamId, architectApi);
@@ -113,8 +116,8 @@ export function getEditor(args: {
       args.runGeneratorHandled,
     );
     return new Editor(state, <ScreenEditor designerState={state} />);
-    return new Editor(state, <ScreenEditor designerState={state} />);
   }
+
   if (editorType === 'DocumentationEditor') {
     const documentationData = data as DocumentationEditorData;
     const editorState = new DocumentationEditorState(
@@ -134,6 +137,7 @@ export function getEditor(args: {
       ),
     );
   }
+
   return null;
 }
 

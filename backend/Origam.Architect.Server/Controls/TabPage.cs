@@ -49,7 +49,7 @@ public class TabPage : IControl
 
     public void Initialize(ControlSetItem controlSetItem)
     {
-        Regex tabPageNumberRegex = new Regex(@"TabPage(\d*)");
+        var tabPageNumberRegex = new Regex(@"TabPage(\d*)");
         var tabs = controlSetItem.ParentItem.ChildItems.OfType<ControlSetItem>().ToList();
         var labelTexts = tabs.Select(tab => tab.GetPropertyOrNull("Text")?.Value)
             .Where(labelText => labelText != null);

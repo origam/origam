@@ -17,13 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
-import S from '@components/settingsButton/SettingsButton.module.scss';
-import { SettingsModal } from '@components/settingsButton/SettingsModal.tsx';
+import { RootStoreContext, T } from '@/main';
+import Button from '@components/Button/Button';
+import SettingsModal from '@modules/settings/SettingsModal';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
+import { VscSettingsGear } from 'react-icons/vsc';
 
-export const SettingsButton = observer(() => {
+const SettingsButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
 
   const handleOnClick = () => {
@@ -36,8 +37,14 @@ export const SettingsButton = observer(() => {
   };
 
   return (
-    <div className={S.root} onClick={handleOnClick}>
-      {T('Settings', 'settings_button_open_label')}
-    </div>
+    <Button
+      type="secondary"
+      title={T('Settings', 'settings_button_open_label')}
+      prefix={<VscSettingsGear />}
+      onClick={handleOnClick}
+      isAnimated
+    />
   );
 });
+
+export default SettingsButtonHOC;

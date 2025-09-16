@@ -24,8 +24,8 @@ using System.Reflection;
 using System.Xml;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Attributes;
-using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.Controls;
+using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Extensions;
@@ -276,4 +276,4 @@ public class ControlAdapter(
 }
 
 [AttributeUsage(AttributeTargets.Property)]
-public class SchemaItemPropertyAttribute : Attribute { }
+public class SchemaItemPropertyAttribute : Attribute;

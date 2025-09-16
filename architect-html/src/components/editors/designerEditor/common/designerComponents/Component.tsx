@@ -17,14 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IComponentData } from '@editors/designerEditor/common/ComponentType.tsx';
+import { IComponentData } from '@editors/designerEditor/common/ComponentType';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
-import {
-  LabelPosition,
-  parseLabelPosition,
-} from '@editors/designerEditor/common/LabelPosition.tsx';
-import { controlLayer, sectionLayer } from '@editors/designerEditor/common/Layers.ts';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/common/LabelPosition';
+import { controlLayer, sectionLayer } from '@editors/designerEditor/common/Layers';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
 import { ReactElement } from 'react';
 

@@ -17,19 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ArchitectApi } from '@api/ArchitectApi.ts';
-import { IArchitectApi } from '@api/IArchitectApi.ts';
-import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState.ts';
-import { ModelTreeState } from '@components/modelTree/ModelTreeState.ts';
-import { PackagesState } from '@components/packages/PackagesState.ts';
+import { ArchitectApi } from '@api/ArchitectApi';
+import { IArchitectApi } from '@api/IArchitectApi';
+import { EditorTabViewState } from '@components/editorTabView/EditorTabViewState';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
+import { PackagesState } from '@components/packages/PackagesState';
 import { PropertiesState } from '@components/properties/PropertiesState';
-import { TabViewState } from '@components/tabView/TabViewState.ts';
-import { ProgressBarState } from '@components/topBar/ProgressBarState.ts';
-import { DialogStackState } from '@dialogs/DialogStackState.tsx';
-import { IDialogStackState } from '@dialogs/types.ts';
-import { ErrorDialogController } from '@errors/ErrorDialog.tsx';
-import { TranslationsStore } from '@stores/TranslationsStore.tsx';
-import { UIState } from '@stores/UiState.ts';
+import { TabViewState } from '@components/tabView/TabViewState';
+import { ProgressBarState } from '@components/topBar/ProgressBarState';
+import { DialogStackState } from '@dialogs/DialogStackState';
+import { IDialogStackState } from '@dialogs/types';
+import { ErrorDialogController } from '@errors/ErrorDialog';
+import { TranslationsStore } from '@stores/TranslationsStore';
+import { UIState } from '@stores/UiState';
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;

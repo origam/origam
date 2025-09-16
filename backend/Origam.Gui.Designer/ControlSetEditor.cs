@@ -543,7 +543,9 @@ public class ControlSetEditor : AbstractEditor
 			throw new ArgumentException("Parameter is null or inner parameters are null", "cntrlSet");
 	
 		Type type;
-		Assembly asm = Assembly.Load(cntrlSet.ControlItem.ControlNamespace);
+#pragma warning disable CS0618 // Type or member is obsolete
+		Assembly asm = Assembly.LoadWithPartialName(cntrlSet.ControlItem.ControlNamespace);
+#pragma warning restore CS0618 // Type or member is obsolete
 		type = asm.GetType(cntrlSet.ControlItem.ControlType);
 		if(type==null)
 			throw new NullReferenceException("Unsupported type:" + cntrlSet.ControlItem.ControlType);

@@ -24,7 +24,7 @@ import {
   IPropertyChange,
   IPropertyUpdate,
   PropertyType,
-} from 'src/API/IArchitectApi.ts';
+} from 'src/API/IArchitectApi';
 
 export class EditorProperty implements IApiEditorProperty {
   name: string;

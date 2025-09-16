@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
-import { Icon } from '@components/icon/Icon.tsx';
+import { RootStoreContext, T } from '@/main';
+import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
-import { TreeNode } from '@components/modelTree/TreeNode.ts';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { TreeNode } from '@components/modelTree/TreeNode';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@dialogs/ModalWindow.module.scss';
-import { requestFocus } from '@utils/focus.ts';
+import { requestFocus } from '@utils/focus';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useRef } from 'react';
 

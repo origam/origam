@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -19,33 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.Wrappers;
+namespace Origam.Config;
 
-namespace Origam.Architect.Server.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class ProjectController : ControllerBase
+public interface IConfig
 {
-    private readonly ConfigManager configManager;
-    private readonly Workbench workbench;
+    public long? GetValue(string[] appSettingsPath);
+}
 
-    public ProjectController(ConfigManager configManager, Workbench workbench)
+public static class ConfigFactory {
+    public static IConfig GetConfig()
     {
-        this.configManager = configManager;
-        this.workbench = workbench;
-    }
-
-    [HttpGet("[action]")]
-    public IActionResult GetAvailable()
-    {
-        return Ok(configManager.Available);
-    }
-
-    [HttpPost("[action]")]
-    public IActionResult SetActive()
-    {
-        return Ok();
+#pragma warning disable CS0162
+#if NETSTANDARD
+        return new Config();
+#endif
+        return new NullConfig();
+#pragma warning restore CS0162
     }
 }

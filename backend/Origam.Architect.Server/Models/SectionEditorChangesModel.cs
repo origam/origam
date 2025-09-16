@@ -19,8 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Controllers;
-
 namespace Origam.Architect.Server.Models;
 
 public class SectionEditorChangesModel

@@ -25,5 +25,7 @@
   "tab_header_close_all": "Close All",
   "tab_header_close_all_but_this": "Close All But This",
   "grid_editor_title": "Editing: {0}",
-  "documentation_editor_title": "Documentation: {0}"
+  "documentation_editor_title": "Documentation: {0}",
+  "screen_section_editor_title": "Screen Section Editor: {0}",
+  "screen_editor_title": "Screen Editor: {0}"
 }

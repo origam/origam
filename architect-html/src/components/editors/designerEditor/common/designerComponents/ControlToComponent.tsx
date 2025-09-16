@@ -17,14 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiControl } from '@api/IArchitectApi.ts';
-import {
-  ComponentType,
-  parseComponentType,
-} from '@editors/designerEditor/common/ComponentType.tsx';
-import { AsCheckBox } from '@editors/designerEditor/common/designerComponents/AsCheckBox.tsx';
-import { AsForm } from '@editors/designerEditor/common/designerComponents/AsForm.tsx';
-import { AsPanel } from '@editors/designerEditor/common/designerComponents/AsPanel.tsx';
+import { IApiControl } from '@api/IArchitectApi';
+import { ComponentType, parseComponentType } from '@editors/designerEditor/common/ComponentType';
+import { AsCheckBox } from '@editors/designerEditor/common/designerComponents/AsCheckBox';
+import { AsForm } from '@editors/designerEditor/common/designerComponents/AsForm';
+import { AsPanel } from '@editors/designerEditor/common/designerComponents/AsPanel';
 import {
   AsCombo,
   AsDateBox,
@@ -34,14 +31,11 @@ import {
   GroupBox,
   TagInput,
   TextArea,
-} from '@editors/designerEditor/common/designerComponents/Component.tsx';
-import { FormPanel } from '@editors/designerEditor/common/designerComponents/FormPanel.tsx';
-import { SplitPanel } from '@editors/designerEditor/common/designerComponents/SplitPanel.tsx';
-import {
-  TabControl,
-  TabPage,
-} from '@editors/designerEditor/common/designerComponents/TabControl.tsx';
-import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
+} from '@editors/designerEditor/common/designerComponents/Component';
+import { FormPanel } from '@editors/designerEditor/common/designerComponents/FormPanel';
+import { SplitPanel } from '@editors/designerEditor/common/designerComponents/SplitPanel';
+import { TabControl, TabPage } from '@editors/designerEditor/common/designerComponents/TabControl';
+import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
 
 export async function controlToComponent(

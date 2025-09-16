@@ -17,21 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext, T } from '@/main.tsx';
-import S from '@components/saveButton/SaveButton.module.scss';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { RootStoreContext, T } from '@/main';
+import Button from '@components/Button/Button';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
+import { VscSave } from 'react-icons/vsc';
 
-export const SaveButton = observer(() => {
+const SaveButtonHOC = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const progressBarState = rootStore.progressBarState;
   const editorTabViewState = rootStore.editorTabViewState;
   const activeEditor = editorTabViewState.activeEditorState;
+
   if (!activeEditor) {
     return null;
   }
+
   const handleSave = () => {
+    if (!activeEditor.isDirty) return;
+
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         progressBarState.isWorking = true;
@@ -45,17 +50,14 @@ export const SaveButton = observer(() => {
   };
 
   return (
-    <button
-      className={S.root}
+    <Button
+      type="primary"
+      title={T('Save', 'save_button_label')}
+      prefix={<VscSave />}
       onClick={handleSave}
-      disabled={!activeEditor.isDirty}
-      style={{
-        backgroundColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--background1)',
-        borderColor: activeEditor.isDirty ? 'var(--warning2)' : 'var(--foreground1)',
-        color: activeEditor.isDirty ? '#fff' : 'var(--foreground1)',
-      }}
-    >
-      {T('Save', 'save_button_label')}
-    </button>
+      isDisabled={!activeEditor.isDirty}
+    />
   );
 });
+
+export default SaveButtonHOC;

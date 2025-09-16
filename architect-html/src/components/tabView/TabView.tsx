@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@components/tabView/TabView.module.scss';
-import { TabViewState } from '@components/tabView/TabViewState.ts';
+import { TabViewState } from '@components/tabView/TabViewState';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { ReactNode } from 'react';

@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EditorType, IApiEditorData, IApiEditorNode, IArchitectApi } from '@api/IArchitectApi.ts';
-import { EditorData } from '@components/modelTree/EditorData.ts';
-import { TreeNode } from '@components/modelTree/TreeNode.ts';
-import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils.tsx';
-import { Editor, getEditor } from '@editors/GetEditor.tsx';
-import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
-import { RootStore } from '@stores/RootStore.ts';
+import { EditorType, IApiEditorData, IApiEditorNode, IArchitectApi } from '@api/IArchitectApi';
+import { EditorData } from '@components/modelTree/EditorData';
+import { TreeNode } from '@components/modelTree/TreeNode';
+import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
+import { Editor, getEditor } from '@editors/GetEditor';
+import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
+import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 

@@ -33,7 +33,8 @@
       "@stores/*": ["src/stores/*"],
       "@utils/*": ["src/utils/*"],
       "@components/*": ["src/components/*"],
-      "@editors/*": ["src/components/editors/*"]
+      "@editors/*": ["src/components/editors/*"],
+      "@modules/*": ["src/modules/*"]
     },
     "allowSyntheticDefaultImports": true
   },

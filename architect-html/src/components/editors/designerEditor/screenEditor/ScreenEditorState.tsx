@@ -17,20 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IArchitectApi, IScreenEditorData } from '@api/IArchitectApi.ts';
-import { IEditorNode } from '@components/editorTabView/EditorTabViewState.ts';
-import { PropertiesState } from '@components/properties/PropertiesState.ts';
-import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { IArchitectApi, IScreenEditorData } from '@api/IArchitectApi';
+import { IEditorNode } from '@components/editorTabView/EditorTabViewState';
+import { PropertiesState } from '@components/properties/PropertiesState';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import {
   controlToComponent,
   toComponentRecursive,
-} from '@editors/designerEditor/common/designerComponents/ControlToComponent.tsx';
-import { TabControl } from '@editors/designerEditor/common/designerComponents/TabControl.tsx';
-import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState.tsx';
-import { SectionItem } from '@editors/designerEditor/common/SectionItem.tsx';
-import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState.tsx';
-import { toChanges } from '@editors/gridEditor/EditorProperty.ts';
-import { FlowHandlerInput } from '@errors/runInFlowWithHandler.ts';
+} from '@editors/designerEditor/common/designerComponents/ControlToComponent';
+import { TabControl } from '@editors/designerEditor/common/designerComponents/TabControl';
+import { DesignerEditorState } from '@editors/designerEditor/common/DesignerEditorState';
+import { SectionItem } from '@editors/designerEditor/common/SectionItem';
+import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
+import { toChanges } from '@editors/gridEditor/EditorProperty';
+import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { ReactElement } from 'react';
 

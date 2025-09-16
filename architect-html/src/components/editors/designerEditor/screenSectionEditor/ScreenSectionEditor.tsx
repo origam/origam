@@ -17,19 +17,33 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DesignSurface } from '@editors/designerEditor/common/DesignSurface.tsx';
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import { T } from '@/main';
+import { DesignSurface } from '@editors/designerEditor/common/DesignSurface';
 import S from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditor.module.scss';
-import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState.tsx';
-import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox.tsx';
-import React from 'react';
+import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
+import { SectionToolbox } from '@editors/designerEditor/screenSectionEditor/SectionToolbox';
 
-export const ScreenSectionEditor: React.FC<{
+export const ScreenSectionEditor = ({
+  designerState,
+}: {
   designerState: ScreenSectionEditorState;
-}> = ({ designerState }) => {
+}) => {
   return (
-    <div className={S.componentDesigner}>
-      <SectionToolbox designerState={designerState} />
-      <DesignSurface designerState={designerState} />
+    <div className={S.root}>
+      <div>
+        <ActionPanel
+          title={T(
+            'Screen section editor: {0}',
+            'screen_section_editor_title',
+            designerState.sectionToolbox.toolboxState.name,
+          )}
+        />
+      </div>
+      <div className={S.box}>
+        <SectionToolbox designerState={designerState} />
+        <DesignSurface designerState={designerState} />
+      </div>
     </div>
   );
 };
