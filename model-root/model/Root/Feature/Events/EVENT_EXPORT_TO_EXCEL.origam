@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:f="http://schemas.origam.com/Origam.Schema.Feature/6.0.0">
+  <f:Feature
+    asi:abstract="false"
+    x:id="552c0e08-db81-47ff-a0ab-1749351cf051"
+    asi:name="EVENT_EXPORT_TO_EXCEL" />
+</x:file>

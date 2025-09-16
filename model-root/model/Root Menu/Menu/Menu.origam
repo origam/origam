@@ -164,6 +164,27 @@
           frmi:requestSaveAfterUpdate="false"
           ami:roles="FRM_Roles"
           frmi:screen="Security/FormControlSet/Security/OrigamRole.origam#OrigamRole/e14b9201-0490-434b-b44b-b47332a60493" />
+        <frmi:MenuItem
+          asi:abstract="false"
+          ami:alwaysOpenNew="false"
+          frmi:autoSaveOnListRecordChange="false"
+          ami:displayName="Events"
+          x:id="e771cb35-c98b-46c7-95a8-72e955c864cb"
+          frmi:listDataStructure="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/c35a0893-1b41-4a4a-a70d-795a088957ae"
+          frmi:listEntity="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/OrigamEvent/77a636b3-a5c2-4643-afe6-0d95531791d6"
+          frmi:listSortSet="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/Default/aab9d5fe-7035-4638-8126-4b363861cf12"
+          frmi:method="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/GetId/988761ab-1d48-4aea-943a-1150e7dfc1c5"
+          asi:name="OrigamEvent"
+          ami:openExclusively="false"
+          ami:order="100"
+          frmi:readOnlyAccess="true"
+          frmi:refreshAfterSaveType="RefreshChangedRecords"
+          frmi:refreshOnFocus="false"
+          frmi:refreshPortalAfterSave="false"
+          frmi:requestSaveAfterUpdate="false"
+          ami:roles="FRM_Events"
+          frmi:screen="Root/FormControlSet/__system/OrigamEvent.origam#OrigamEvent/be55f5e6-aae6-4c3d-bb73-0c061daf9761"
+          frmi:sortSet="Root/DataStructure/__system/OrigamEvent.origam#OrigamEvent/Default/aab9d5fe-7035-4638-8126-4b363861cf12" />
         <wrmi:MenuItem
           asi:abstract="false"
           ami:displayName="Add User"

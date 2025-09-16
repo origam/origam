@@ -1,0 +1,13 @@
+﻿CREATE TABLE "OrigamEventType_l10n" (
+    "refOrigamEventTypeId" uuid NOT NULL,
+    "Name" varchar(50) NULL,
+    "refLanguageId" uuid NOT NULL,
+    "RecordCreated" timestamptz(3) NULL,
+    "RecordUpdatedBy" uuid NULL,
+    "Id" uuid NOT NULL PRIMARY KEY,
+    "RecordCreatedBy" uuid NULL,
+    "RecordUpdated" timestamptz(3) NULL
+);
+
+CREATE UNIQUE INDEX "ix_unq_OrigamEventType"
+    ON "OrigamEventType_l10n" ("refOrigamEventTypeId" ASC, "refLanguageId" ASC);

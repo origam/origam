@@ -1,0 +1,10 @@
+﻿CREATE TABLE [OrigamEventType_l10n] (
+	[refOrigamEventTypeId] UniqueIdentifier NOT NULL,
+	[Name] NVarChar(50) NULL,
+	[refLanguageId] UniqueIdentifier NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE UNIQUE  INDEX  [ix_unq_OrigamEventType] ON [OrigamEventType_l10n] ([refOrigamEventTypeId] ASC, [refLanguageId] ASC);
