@@ -263,7 +263,7 @@ jobs:
        displayName: 'Use Node 18.x'
        inputs:
          versionSpec: 18.x
-    - task: Cache@2
+     - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
          key: 'yarn-2025-09-17-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam/architect-html/yarn.lock,$(Agent.BuildDirectory)/s/origam/chat-html/yarn.lock'
