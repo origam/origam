@@ -1,0 +1,82 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.userTable {
+  min-width: 70%;
+  tr {
+    &:hover {
+      background-color: #6f7a9e;
+      color: white;
+    }
+  }
+}
+
+.chatroomTable {
+  min-width: 70%;
+  tr {
+    &:hover {
+      background-color: #6f7a9e;
+      color: white;
+    }
+  }
+}
+
+.adminApp {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminScreen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &__header {
+    flex: 0 0 60px;
+    border-bottom: 1px solid grey;
+  }
+  &__actions {
+    flex: 0 0 30px;
+    border-bottom: 1px solid grey;
+  }
+  &__content {
+    flex: 1 0 0;
+  }
+}
+
+.dataCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid rgb(197, 197, 197);
+  padding: 2px 10px 2px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  &.row0 {
+    background-color: rgb(245, 245, 245);
+  }
+  &.row1 {
+    background-color: rgb(235, 235, 235);
+  }
+  &.header {
+    font-weight: bold;
+    justify-content: center;
+  }
+}

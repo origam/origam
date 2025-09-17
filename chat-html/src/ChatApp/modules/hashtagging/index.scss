@@ -1,0 +1,206 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-size: 12px;
+}
+
+a {
+  color: #4c84ff;
+}
+
+.App {
+  height: 100%;
+  background-color: rgb(233, 232, 240);
+}
+
+.hashtaggingDialogContainer {
+  height: 50vh;
+  min-height: 300px;
+  min-width: 640px;
+}
+
+.splitPaneH {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hashtagDialogContent {
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.searchPanes {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 0;
+}
+
+.footer {
+  flex: 0 0 30px;
+  padding: 0 20px 20px 20px;
+}
+
+.formSection {
+  padding: 20px;
+  flex: 0 0;
+  display: flex;
+  flex-direction: row;
+  .label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 20px;
+  }
+
+  .inputField {
+    flex: 1 0 0;
+  }
+}
+
+.dataTable {
+  flex: 1 0;
+  padding: 0px 20px 20px 20px;
+  position: relative;
+
+  .dataTableOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ReactVirtualized__Grid {
+    border-radius: 2px;
+    overflow: hidden;
+    &:focus {
+      outline: 1px solid #4c84ff;
+    }
+  }
+
+  .dataTable__headerRow {
+    background-color: #f7f6fa;
+  }
+
+  .dataTable__headerCell {
+    font-weight: bold;
+    background-color: #f7f6fa;
+  }
+
+  .dataTable__dataCell,
+  .dataTable__headerCell {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid #eeedf1;
+    padding: 0 10px 0 10px;
+    &.isSelectedRow {
+      //background-color: #EAF0F9 !important;
+      background-color: #dde7f7 !important;
+    }
+    &.c0 {
+      background-color: white;
+      &.cl {
+      }
+    }
+    &.c1 {
+      background-color: #f7f6fa;
+      &.cl {
+      }
+    }
+    .columnWidthHandle {
+      position: absolute;
+      right: 0px;
+      top: 0;
+      flex-shrink: 0;
+      background: #e9e8f0;
+      border-color: #f7f6fa;
+      border-style: solid;
+      border-width: 0 4px;
+      cursor: ew-resize;
+      margin: 0;
+      padding: 0;
+      width: 9px;
+      height: 100%;
+
+      &:hover {
+        background: #4c84ff;
+      }
+    }
+  }
+
+  .dataTable__headerCell.selectionCheckbox {
+    padding: 0;
+    justify-content: center;
+    background-color: white;
+  }
+
+  .dataTable__dataCell.selectionCheckbox {
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+.objectSearch__input,
+.categorySearch__input {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 2px;
+  transition: all 300ms linear;
+  background: #f7f6fa;
+  border: 1px solid #b0afb7;
+  color: #0d0d0d;
+  padding: 0.25em 0.34em;
+
+  &:focus {
+    background: #ffffff;
+    border-color: #4c84ff;
+    outline: none;
+  }
+}

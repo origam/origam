@@ -1,6 +1,5 @@
-#region license
 /*
-Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,28 +16,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
+import { createContext, useContext } from "react";
+import { HashtagRootStore } from "../stores/RootStore";
 
-namespace Origam.Server.Configuration;
-public class ChatConfig
-{
-    public string PathToChatApp { get; set; }
-    public int ChatRefreshInterval { get; set; }
+export const CtxHashtagRootStore = createContext<HashtagRootStore>(null!);
 
-    public ChatConfig() {
-    }
-
-    public ChatConfig(IConfiguration configuration)
-    {
-        var chatSection = configuration
-            .GetSection("ChatConfig");
-
-        PathToChatApp = chatSection
-            .GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection
-            .GetValue("ChatRefreshInterval", 1000);
-    }
+export function useRootStore() {
+  return useContext(CtxHashtagRootStore);
 }

@@ -66,6 +66,7 @@ public class Startup
     private readonly IdentityServerConfig identityServerConfig;
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
+    private readonly ChatConfig chatConfig;
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -74,6 +75,7 @@ public class Startup
         identityServerConfig = new IdentityServerConfig(configuration);
         lockoutConfig = new UserLockoutConfig(configuration);
         languageConfig = new LanguageConfig(configuration);
+        chatConfig = new ChatConfig(configuration);
     }
     public void ConfigureServices(IServiceCollection services)
     {
@@ -388,6 +390,27 @@ public class Startup
         {
             FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp)
         });
+        if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(chatConfig.PathToChatApp!),
+                RequestPath = new PathString("/chatrooms"),
+                OnPrepareResponse = ctx =>
+                {
+                    if (ctx.File.Name == "index.html")
+                    {
+                        ctx.Context.Response.Headers.Append(
+                            "Cache-Control", $"no-store, max-age=0");
+                    }
+                }
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = new PathString("/chatAssets"),
+                FileProvider = new PhysicalFileProvider(Path.Combine(chatConfig.PathToChatApp, "chatAssets"))
+            });
+        }
         app.UseCors(builder => 
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         if (startUpConfiguration.EnableMiniProfiler)
