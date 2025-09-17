@@ -51,4 +51,8 @@
   <Element Id="080cb3f6-ca4b-407d-a412-3559b822b857" Path="Menu/Settings/General/AsapNotificationTemplate">
     <DisplayName OriginalText="Notification Templates">Šablony notifikací</DisplayName>
   </Element>
+  <Element Id="e771cb35-c98b-46c7-95a8-72e955c864cb" Path="Menu/Settings/UserManagement/OrigamEvent">
+    <Order OriginalText="100">100</Order>
+    <DisplayName OriginalText="Events">Události</DisplayName>
+  </Element>
 </OrigamLocalization>

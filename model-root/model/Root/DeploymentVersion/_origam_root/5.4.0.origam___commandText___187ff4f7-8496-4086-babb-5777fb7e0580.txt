@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [OrigamEventType_l10n] ADD CONSTRAINT [FK_OrigamEventType_l10n_refOrigamEventTypeId_OrigamEventType]
+	FOREIGN KEY (
+		[refOrigamEventTypeId]
+	)
+
+	REFERENCES [OrigamEventType] (
+		[Id]
+	);
+ALTER TABLE [OrigamEventType_l10n] ADD CONSTRAINT [FK_OrigamEventType_l10n_refLanguageId_Language]
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	);

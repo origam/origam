@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.4.0&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.4.5"
+    x:id="e24dfc8f-5eb7-4a54-bed7-5b585bc4d62f"
+    asi:name="1.3.0"
+    dv:version="1.3.0">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.3.0.origam___commandText___0b99dbfe-bd98-4c97-95ad-ceae54f8d092.txt"
+      x:id="0b99dbfe-bd98-4c97-95ad-ceae54f8d092"
+      asi:name="00010_PG_AddRole_FRM_Events"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.3.0.origam___commandText___e51875fe-3a83-4ee7-875f-35bbb8b441ff.txt"
+      x:id="e51875fe-3a83-4ee7-875f-35bbb8b441ff"
+      asi:name="00010_AddRole_FRM_Events"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

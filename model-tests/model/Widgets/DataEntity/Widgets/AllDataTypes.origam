@@ -10,6 +10,7 @@
   xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
   xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
   xmlns:esr1="http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0"
@@ -268,6 +269,33 @@
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
+    <ema:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      euia:default="false"
+      x:id="ae37c20c-360e-42a8-ba9f-db3b90a99b28"
+      euia:label="Single Record"
+      ema:menu="Widgets/Menu/Menu.origam#Menu/_hidden/AllDataTypes_SingleRecord/984a9885-96e5-44ab-8c9f-aec9afd925ab"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="SingleRecord"
+      euia:order="1"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      euia:roles="*"
+      euia:valueType="SavedValue">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="Id"
+        x:id="ce7dd3ae-b9c3-43ec-981c-099f3124930f"
+        asi:name="AllDataTypes_parId"
+        euiapm:type="Current" />
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="c8929804-687b-4f8f-9bad-f9b65dec919e"
+        asi:name="AllDataTypes"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ema:EntityUIAction>
     <eri:EntityRelation
       asi:abstract="false"
       x:id="9a7b8c2c-f8a8-4fed-8470-895d2618499a"

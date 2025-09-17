@@ -1,0 +1,11 @@
+﻿insert into [OrigamFeatureList]
+	([Id], [ReferenceCode], [DisplayName], [Description], [IsFeatureOn])
+values
+('3f370f05-2aa6-4af9-9b8c-a5151de4dbae', 'EVENT_SIGN_IN', 'Event - Sign In',
+'When turned on user sign in event is recorded in the table OrigamEvent.', 0),
+('9e39a6e8-580a-4bf4-a575-4070141db336', 'EVENT_SIGN_OUT', 'Event - Sign Out',
+'When turned on user sign out event is recorded in the table OrigamEvent.', 0),
+('9ea1745d-1b3d-4efe-bd47-529a7d33f641', 'EVENT_OPEN_SCREEN', 'Event - Open Screen',
+'When turned on user open screen event is recorded in the table OrigamEvent.', 0),
+('ece007cb-7a12-4b8f-8d75-db97c2b1f34f', 'EVENT_EXPORT_TO_EXCEL', 'Event - Export to Excel',
+'When turned on user export to excel event is recorded in the table OrigamEvent.', 0)

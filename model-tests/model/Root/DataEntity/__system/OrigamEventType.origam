@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="546e2da9-6183-4d51-b16f-0764a2f8bd50"
+    ade:label="Origam Event Type"
+    tmi:localizationRelation="Root/DataEntity/__system/OrigamEventType.origam#OrigamEventType/OrigamEventType_l10n/eb9d544b-e4b8-4c84-97ce-283f77744114"
+    tmi:mappedObjectName="OrigamEventType"
+    asi:name="OrigamEventType"
+    ade:readOnly="false">
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="9576f590-7ea4-4911-bb1c-a6d46ba8023a"
+      asi:name="OrigamEventType_l10n_all"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamEventType_l10n.origam#OrigamEventType_l10n/86a07f59-cd7f-44ba-9c3a-fe75212bdb2d"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="3782bc12-c904-438f-b84f-51b18b451738"
+        asi:name="OrigamEventType_l10n_allKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamEventType_l10n.origam#OrigamEventType_l10n/refOrigamEventTypeId/0fc68be6-3c3c-4ff9-82eb-2ab489176b3e" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="eb9d544b-e4b8-4c84-97ce-283f77744114"
+      asi:name="OrigamEventType_l10n"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamEventType_l10n.origam#OrigamEventType_l10n/86a07f59-cd7f-44ba-9c3a-fe75212bdb2d"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c9167b94-4923-42f8-ad17-75f5fb58f2b2"
+        asi:name="OrigamEventType_l10nKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamEventType_l10n.origam#OrigamEventType_l10n/refOrigamEventTypeId/0fc68be6-3c3c-4ff9-82eb-2ab489176b3e" />
+      <erf:EntityRelationFilter
+        asi:abstract="false"
+        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
+        x:id="3eccf186-a6e1-4424-b4aa-5c7adc08eeb0"
+        asi:name="GetByLanguageId" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="742322c6-0aea-43a5-8462-41d7fed1ccf9"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="35b0c2ae-9472-421f-9bb7-f034ec9d2295" />
+  </tmi:DataEntity>
+</x:file>

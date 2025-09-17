@@ -48,6 +48,7 @@ using Origam.Schema.WorkflowModel;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Rule;
+using Origam.Server.Common;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
@@ -96,7 +97,8 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
             {
                 conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
             }
-            if (conditionResult && IsInRole(action.Roles) && IsFeatureOn(action.Features))
+            if (conditionResult && SecurityTools.IsInRole(action.Roles) 
+				&& FeatureTools.IsFeatureOn(action.Features))
             {
                 IWorkflowPageActionHandler handler;
                 if (action is RedirectWorkflowPageAction)
@@ -121,17 +123,5 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
                 response.Redirect(request.UrlReferrerAbsoluteUri);
             }
         }
-    }
-    private bool IsFeatureOn(string featureCode)
-    {
-        return ServiceManager.Services
-	        .GetService<IParameterService>()
-	        .IsFeatureOn(featureCode);
-    }
-    private bool IsInRole(string roleName)
-    {
-        return SecurityManager
-	        .GetAuthorizationProvider()
-	        .Authorize(SecurityManager.CurrentPrincipal, roleName);
     }
 }

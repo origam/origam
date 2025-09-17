@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Authorization;
+using Origam.Server.Common;
 using Origam.Server.Configuration;
 using Origam.Server.IdentityServerGui.Home;
 
@@ -400,7 +401,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                 if (context.IsNativeClient())
                 {
-                    // The client is native, so this change in how to
+                    // The client is native, so this changes in how to
                     // return the response is for better UX for the end user.
                     return this.LoadingPage("Redirect", model.ReturnUrl);
                 }
@@ -423,7 +424,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             if (result.Succeeded && user != null)
             {
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
-                
+                if (FeatureTools.IsFeatureOn(OrigamEvent.SignIn.FeatureCode))
+                {
+                    OrigamEventTools.RecordSignInEvent();
+                }
                 if (context != null)
                 {
                     if (context.IsNativeClient())
@@ -560,6 +564,10 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
         if (User?.Identity.IsAuthenticated == true)
         {
+            if (FeatureTools.IsFeatureOn(OrigamEvent.SignOut.FeatureCode))
+            {
+                OrigamEventTools.RecordSignOutEvent();
+            }
             // delete local authentication cookie
             await _signInManager.SignOutAsync();
             _sessionObjects.UIService.Logout();

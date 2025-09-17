@@ -1,0 +1,9 @@
+﻿ALTER TABLE "OrigamEvent"
+ADD CONSTRAINT "FK_OrigamEvent_refBusinessPartnerId_BusinessPartner"
+FOREIGN KEY ("refBusinessPartnerId")
+REFERENCES "BusinessPartner" ("Id");
+
+ALTER TABLE "OrigamEvent"
+ADD CONSTRAINT "FK_OrigamEvent_refOrigamEventTypeId_OrigamEventType"
+FOREIGN KEY ("refOrigamEventTypeId")
+REFERENCES "OrigamEventType" ("Id");

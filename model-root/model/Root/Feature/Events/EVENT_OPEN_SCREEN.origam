@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:f="http://schemas.origam.com/Origam.Schema.Feature/6.0.0">
+  <f:Feature
+    asi:abstract="false"
+    x:id="ef325028-75f6-4e41-aebb-4a265466e594"
+    asi:name="EVENT_OPEN_SCREEN" />
+</x:file>

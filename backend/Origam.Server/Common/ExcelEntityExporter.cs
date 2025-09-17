@@ -34,6 +34,7 @@ using Origam.DA;
 using Origam.Excel;
 using Origam.Workbench.Services;
 using Origam.Extensions;
+using Origam.Server.Common;
 
 namespace Origam.Server;
 public class ExcelEntityExporter
@@ -71,6 +72,10 @@ public class ExcelEntityExporter
             rowIndex++;
             AddRowToSheet(info, workbook, sheet, rowIndex, columns, row.ToList());
         }
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ExportToExcel.FeatureCode))
+        {
+            OrigamEventTools.RecordExportToExcel(info, rowIndex + 1);
+        }
         return workbook;
     }
     public IWorkbook FillWorkBook(EntityExportInfo info)
@@ -79,9 +84,9 @@ public class ExcelEntityExporter
         SetupDateCellStyle(workbook);
         ISheet sheet = workbook.CreateSheet("Data");
         SetupSheetHeader(sheet, info);
-        bool isPkGuid
-            = info.Table.PrimaryKey[0].DataType == typeof(Guid);
-        for (int rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
+        bool isPkGuid = info.Table.PrimaryKey[0].DataType == typeof(Guid);
+        int rowNumber = 1;
+        for (; rowNumber <= info.RowIds.Count; rowNumber++)
         {
             if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
                                    && (rowNumber > settings.ExportRecordsLimit))
@@ -94,6 +99,10 @@ public class ExcelEntityExporter
             {
                 AddRowToSheet(info, workbook, sheet, rowNumber, row);
             }
+        }
+        if (FeatureTools.IsFeatureOn(OrigamEvent.ExportToExcel.FeatureCode))
+        {
+            OrigamEventTools.RecordExportToExcel(info, rowNumber - 1);
         }
         return workbook;
     }

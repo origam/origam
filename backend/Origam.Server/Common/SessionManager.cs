@@ -28,6 +28,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
 using Origam.Server;
+using Origam.Server.Common;
 using Origam.Service.Core;
 
 namespace Origam.Server;

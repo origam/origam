@@ -1,0 +1,2 @@
+﻿CREATE INDEX ix_OrigamEvent_Timestamp 
+    ON "OrigamEvent" ("Timestamp");
