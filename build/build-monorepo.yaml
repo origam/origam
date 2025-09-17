@@ -288,16 +288,16 @@ jobs:
        condition: succeededOrFailed()
      - script: |
         yarn install --frozen-lockfile
-       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\dist
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\
        displayName: 'origam-chat yarn'
      - script: |
         yarn build
-       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\dist
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\chat-html\
        displayName: 'origam-chat yarn build'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-chat'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\chat-html\dist\dist'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\chat-html\dist\'
          ArtifactName: origam-chat
        condition: succeededOrFailed()
      - script: |
