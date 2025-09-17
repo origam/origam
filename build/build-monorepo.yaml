@@ -318,6 +318,7 @@ jobs:
      - checkout: origam
        fetchDepth: 1
        persistCredentials: true
+       path: s/origam
      - powershell: |
          $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
          Write-Host $commitId
