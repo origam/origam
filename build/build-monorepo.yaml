@@ -261,9 +261,9 @@ jobs:
        fetchDepth: 1
        path: s/origam
      - task: NodeTool@0
-       displayName: 'Use Node 18.x'
+       displayName: 'Use Node 22.x'
        inputs:
-         versionSpec: 18.x
+         versionSpec: 22.x
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
