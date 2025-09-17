@@ -259,7 +259,7 @@ jobs:
     steps:
      - checkout: origam
        fetchDepth: 1
-       path: origam
+       path: s/origam
      - task: NodeTool@0
        displayName: 'Use Node 18.x'
        inputs:
