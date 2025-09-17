@@ -5,7 +5,7 @@ variables:
 - name: NUGET_PACKAGES # location of nuget packages (used by cache)
   value: $(Pipeline.Workspace)/.nuget/packages
 - name: YARN_CACHE_FOLDER # location of yarn cache
-  value: $(Pipeline.Workspace)/.yarn
+  value: $(Pipeline.Workspace)/s/.yarn
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
