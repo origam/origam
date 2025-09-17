@@ -2655,12 +2655,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/draftjs-to-html@npm:^0.8.1":
-  version: 0.8.1
-  resolution: "@types/draftjs-to-html@npm:0.8.1"
+"@types/draftjs-to-html@npm:^0.8.4":
+  version: 0.8.4
+  resolution: "@types/draftjs-to-html@npm:0.8.4"
   dependencies:
     "@types/draft-js": "npm:*"
-  checksum: 10c0/a54b0c274323ea2f506d4a7e0aa7d3885ab81d79e58c25bd2aa20f2b3b8eb7a626a69830d433173e7de4bbfd734414bf414cf909230714bc2d4787cf2f698301
+  checksum: 10c0/f7d459adbaad0241b89a9bf3209839b14e05ada907d48a97549e26a84a2965232248fcd46b0abe1db21dce1e0e68ba9a50860655a71a9d036db9d5baf03b3279
   languageName: node
   linkType: hard
 
@@ -3257,7 +3257,7 @@ __metadata:
     "@testing-library/react": "npm:^12.1.5"
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/draft-js": "npm:^0.11.14"
-    "@types/draftjs-to-html": "npm:^0.8.1"
+    "@types/draftjs-to-html": "npm:^0.8.4"
     "@types/emoji-mart": "npm:^3.0.8"
     "@types/faker": "npm:^5.5.8"
     "@types/jest": "npm:^30.0.0"
