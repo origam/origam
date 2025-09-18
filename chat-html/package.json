@@ -10,7 +10,7 @@
     "@types/draft-js": "^0.11.14",
     "@types/draftjs-to-html": "^0.8.4",
     "@types/emoji-mart": "^3.0.8",
-    "@types/faker": "^5.5.8",
+    "@types/faker": "^6.6.11",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.5.1",

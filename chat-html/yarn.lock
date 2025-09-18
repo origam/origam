@@ -2681,10 +2681,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/faker@npm:^5.5.8":
-  version: 5.5.9
-  resolution: "@types/faker@npm:5.5.9"
-  checksum: 10c0/2c1e2de0709a9eab249904a3fdf69ad2b2a8233187b9547ee1a081ae25867382bae5f47bbc6fc80929fd8464564783b783e77d1196d0111cc3773e0343005c66
+"@types/faker@npm:^6.6.11":
+  version: 6.6.11
+  resolution: "@types/faker@npm:6.6.11"
+  dependencies:
+    faker: "npm:*"
+  checksum: 10c0/8db4090741b550feb6ef8a99859b9fd145798751c208e473d50b81718e5b4339de697873ad17d9b1e1171a98c3fd23b6f4b3d6ba1ef2f451cb6de02d5df70dfb
   languageName: node
   linkType: hard
 
@@ -3269,7 +3271,7 @@ __metadata:
     "@types/draft-js": "npm:^0.11.14"
     "@types/draftjs-to-html": "npm:^0.8.4"
     "@types/emoji-mart": "npm:^3.0.8"
-    "@types/faker": "npm:^5.5.8"
+    "@types/faker": "npm:^6.6.11"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.20"
     "@types/node": "npm:^24.5.1"
@@ -3901,6 +3903,13 @@ __metadata:
   version: 3.1.2
   resolution: "exponential-backoff@npm:3.1.2"
   checksum: 10c0/d9d3e1eafa21b78464297df91f1776f7fbaa3d5e3f7f0995648ca5b89c069d17055033817348d9f4a43d1c20b0eab84f75af6991751e839df53e4dfd6f22e844
+  languageName: node
+  linkType: hard
+
+"faker@npm:*":
+  version: 6.6.6
+  resolution: "faker@npm:6.6.6"
+  checksum: 10c0/21f6a57adc921ffb61e5ff767024a699a414047264ff4bbb080bd4994ec5a8061e1828aae9a4be812f6f356f1b6fd082bc2d54df7c37163b943a421a8f7f7079
   languageName: node
   linkType: hard
 
