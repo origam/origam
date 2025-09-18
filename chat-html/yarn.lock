@@ -2905,7 +2905,7 @@ __metadata:
     emoji-mart: "npm:^5.6.0"
     immutable: "npm:^5.1.3"
     lodash: "npm:^4.17.21"
-    mobx: "npm:5"
+    mobx: "npm:6"
     mobx-react: "npm:6.3.1"
     moment: "npm:^2.30.1"
     patch-package: "npm:^8.0.0"
@@ -4711,10 +4711,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:5":
-  version: 5.15.7
-  resolution: "mobx@npm:5.15.7"
-  checksum: 10c0/ff493828f21e92470e21e294b8d3e5663d030cde78c10cd99e1d5f9154eeecd1e37b15b3fa377ea44ac3d81009fcaf6d48210a016c268a6cfc52399f4e1fd026
+"mobx@npm:6":
+  version: 6.13.7
+  resolution: "mobx@npm:6.13.7"
+  checksum: 10c0/3ae7f8c586a48a0a2b9b4900871455bc93d3878bdff70b6820ba830c6b883d7f8a0222aa2a0fec7201d25f38a19cb340e62a18a3939182a676dc35d857f35dd6
   languageName: node
   linkType: hard
 
