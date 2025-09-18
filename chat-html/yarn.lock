@@ -2665,12 +2665,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/emoji-mart@npm:^3.0.8":
-  version: 3.0.9
-  resolution: "@types/emoji-mart@npm:3.0.9"
+"@types/emoji-mart@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@types/emoji-mart@npm:5.3.0"
   dependencies:
-    "@types/react": "npm:*"
-  checksum: 10c0/42bc0ccb08b80284c2adaceb4cb25c9137e2bb33c94eff033ddf5266d2a23d01dea7a1be6bae2a4718b5f1e2c1317f5b48bb7f166451b102cee51deabb0c1767
+    emoji-mart: "npm:*"
+  checksum: 10c0/751ba65bc9bf0f4a372bbfef22979db4c667d225fcbb4126a667d8b4130e7d2b5ed3b724b1abb0bb784d00a226bc04a50637c4bf102cec680f31b542bd4e5b8e
   languageName: node
   linkType: hard
 
@@ -3270,7 +3270,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/draft-js": "npm:^0.11.14"
     "@types/draftjs-to-html": "npm:^0.8.4"
-    "@types/emoji-mart": "npm:^3.0.8"
+    "@types/emoji-mart": "npm:^5.3.0"
     "@types/faker": "npm:^6.6.11"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.20"
@@ -3292,7 +3292,7 @@ __metadata:
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
     draftjs-utils: "npm:^0.10.2"
-    emoji-mart: "npm:^5.5.2"
+    emoji-mart: "npm:^5.6.0"
     immutable: "npm:^5.1.3"
     lodash: "npm:^4.17.21"
     mobx: "npm:5"
@@ -3665,10 +3665,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emoji-mart@npm:^5.5.2":
-  version: 5.5.2
-  resolution: "emoji-mart@npm:5.5.2"
-  checksum: 10c0/398a7d7f27930d39487648beb0c79d1e1424223bbd5985b0159188dadb90c2188022a3fa06afdf7ae9fb293b8cf7cbe3b46e60426b1edc7cf0f7ddf3b33cb01e
+"emoji-mart@npm:*, emoji-mart@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "emoji-mart@npm:5.6.0"
+  checksum: 10c0/23e68ab10984f101b696d8f8e103e553ffa8e4d644e9a315190a9657903f71b833db09aac51b05de20f33bb9eef5bc1425eecdb2437042b25aff2dad0231f029
   languageName: node
   linkType: hard
 
