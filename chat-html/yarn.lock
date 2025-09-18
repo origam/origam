@@ -2938,10 +2938,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"animated-scroll-to@npm:^2.2.0":
-  version: 2.3.0
-  resolution: "animated-scroll-to@npm:2.3.0"
-  checksum: 10c0/f885a71a20570c0328b3a2bf8841611080e426aac9a2815c9270f8beb1b867424069adb2ec119608837866a6916573e2975c27671d4d1003acc0eb2d81f75aab
+"animated-scroll-to@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "animated-scroll-to@npm:2.3.2"
+  checksum: 10c0/f27f076479cb17bd3b39b1476c1ed100a7d516895cae4f1a4c8d572e35f2aedeca273e71de09c9a77c1a4624a7ad997d8ca7f30bcb9d482c80267774fe60e20b
   languageName: node
   linkType: hard
 
@@ -3294,7 +3294,7 @@ __metadata:
     "@vitejs/plugin-basic-ssl": "npm:^2.1.0"
     "@vitejs/plugin-react": "npm:^5.0.2"
     "@xstate/inspect": "npm:^0.8.0"
-    animated-scroll-to: "npm:^2.2.0"
+    animated-scroll-to: "npm:^2.3.2"
     axios: "npm:^1.11.0"
     classnames: "npm:^2.5.1"
     draft-js: "npm:^0.11.7"
