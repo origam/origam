@@ -5,21 +5,21 @@ variables:
 - name: NUGET_PACKAGES # location of nuget packages (used by cache)
   value: $(Pipeline.Workspace)/.nuget/packages
 - name: BRANCH # branch to be used
-  value: master
+  value: 2025.9
 - name: VERSION_NUMBER # version number of the build
-  value: 2025.10.0.$(Build.BuildId)
+  value: 2025.9.1.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 25.10.0.$(Build.BuildId)
+  value: 25.9.1.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2025.10.alpha
+  value: 2025.9.1
 - name: TAG_LATEST # tag to be used
-  value: master-latest
+  value: 2025.9.1
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2025.9.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2025.10
+  value: 2025.9
 
 
 resources:
@@ -477,46 +477,6 @@ jobs:
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub $(TAG) release
-     # ------------------------------------
-     # RELEASE ORIGAM_ORIGAM - TAG_LATEST
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam'
-         action: 'create'
-         target: $(ORIGAM_ORIGAM_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG_LATEST)'
-         title: '$(TAG_LATEST)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
-           
-           ---
-           
-           Server Docker Images
-           ```
-           docker pull origam/server:$(TAG_LATEST).linux
-           docker pull origam/server:$(TAG_LATEST).win-nano
-           docker pull origam/server:$(TAG_LATEST).win-core
-           ```
-           Architect Server Docker Images
-           ```
-           docker pull origam/architect:$(TAG_LATEST).linux
-           ```
-         assets: |
-           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
-           $(Build.ArtifactStagingDirectory)/origam-server.zip
-           $(Build.ArtifactStagingDirectory)/origam-model.zip
-           $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
-           $(Build.ArtifactStagingDirectory)/origam-architect-server.zip
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub $(TAG_LATEST) release
      - task: DeleteFiles@1
        inputs:
          SourceFolder: '$(Build.ArtifactStagingDirectory)'
@@ -524,6 +484,11 @@ jobs:
            **\*.*
          RemoveSourceFolder: false
        displayName: 'origam-release clean up'
+     - task: ado-discord-webhook@2
+       inputs:
+         webhookId: '1159149912907333722'
+         webhookKey: 'fltKzMh0vLlA7nCIMk7-WLeWWQ5pJsU9EhSf0ouHd695fbLjIg_p9Lsds-n8iYH8_p5L'
+         content: 'New $(TAG) build: https://github.com/origam/origam/releases/tag/$(TAG)'
   # ------------------------------------
   # DOCKER Linux
   # ------------------------------------
