@@ -31,6 +31,16 @@ public class Program
             options.ServiceName = "OrigamScheduler";
         });
         builder.Logging.ClearProviders();
+        // Make Microsoft logging allow everything and discard logging
+        // settings from appsettings.json.
+        // This is done to prevent appsettings.json from
+        // overriding log levels set in log4net.json.
+        builder.Logging.SetMinimumLevel(LogLevel.Trace);
+        builder.Services.Configure<LoggerFilterOptions>(o =>
+        {
+            o.MinLevel = LogLevel.Trace; 
+            o.Rules.Clear();             
+        });
         builder.Logging.AddLog4Net("log4net.config");
         builder.Services.AddHostedService<SchedulerWorker>();
         var host = builder.Build();
