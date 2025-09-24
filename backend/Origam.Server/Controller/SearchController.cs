@@ -41,7 +41,7 @@ public class SearchController: AbstractController
     
     // .NetCore 3.1 cannot stream data, looks like this will be possible in .Net 5.0.0
     // https://github.com/dotnet/runtime/issues/1570
-    [HttpGet("{searchTerm}")]
+    [HttpGet("{*searchTerm}")]
     [DecodeQueryParameter("searchTerm")]
     public IActionResult Get(string searchTerm)
     {
