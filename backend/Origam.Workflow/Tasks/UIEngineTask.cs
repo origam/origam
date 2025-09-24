@@ -115,20 +115,9 @@ public class UIEngineTask : AbstractWorkflowEngineTask
 	}
 	public void Abort(bool isDirty)
 	{
-		if (isDirty)
-		{
-			OnFinished(
-				new WorkflowEngineTaskEventArgs(
-					new WorkflowCancelledByUserException(
-						ResourceUtils.GetString("ErrorUserCanceled"))));
-		}
-		else
-		{
-			OnFinished(((UIFormTask)Step).IsFinalForm
-				? new WorkflowEngineTaskEventArgs()
-				: new WorkflowEngineTaskEventArgs(
-					new WorkflowCancelledByUserException(
-						ResourceUtils.GetString("ErrorUserCanceled"))));
-		}
+		bool showAbortError = isDirty || !((UIFormTask)Step).IsFinalForm;
+		OnFinished(showAbortError
+			? new WorkflowEngineTaskEventArgs(new WorkflowCancelledByUserException(ResourceUtils.GetString("ErrorUserCanceled")))
+			: new WorkflowEngineTaskEventArgs());
 	}
 }
