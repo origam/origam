@@ -25,6 +25,14 @@
       cs:isReturnValue="false"
       asi:name="MergeThroughDifferentEntity"
       cs:structure="Workflow/DataStructure/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/2ddb9548-2649-4f92-b63f-745799ba317f" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="b296c4e5-b427-41c9-bb3b-06d1d37a87b6"
+      cs:isReturnValue="false"
+      asi:name="WorkflowMergeTestEntity"
+      cs:structure="Workflow/DataStructure/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/c3b7bc07-2b1c-4f90-9462-0eec30657075" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="a4844bb8-90eb-495d-b3ae-0a6d02b9a774"
