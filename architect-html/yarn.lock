@@ -1621,7 +1621,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.5.4"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^5.2.0"
-    eslint-plugin-react-refresh: "npm:^0.4.21"
+    eslint-plugin-react-refresh: "npm:^0.4.22"
     lodash: "npm:^4.17.21"
     mobx: "npm:^6.13.7"
     mobx-react-lite: "npm:^4.1.0"
@@ -2615,12 +2615,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:^0.4.21":
-  version: 0.4.21
-  resolution: "eslint-plugin-react-refresh@npm:0.4.21"
+"eslint-plugin-react-refresh@npm:^0.4.22":
+  version: 0.4.22
+  resolution: "eslint-plugin-react-refresh@npm:0.4.22"
   peerDependencies:
     eslint: ">=8.40"
-  checksum: 10c0/327f09c10ff8f73610170697ac4e82768fb68af3a469db627109fd0f5c9bfd985a5510bada5a0489d09c5149d7bbc2f5cb4f30693d6ee1140d8638344e501aca
+  checksum: 10c0/029cf19dc001c6611c9d8d29421e0c19bbe607f401a739b4049747ce3e7abadb59dea213833886c4259702eb65a2ddbcb9f406b1ccc018acc5a01ec5a62b25f5
   languageName: node
   linkType: hard
 
