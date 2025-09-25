@@ -561,9 +561,9 @@ public abstract class AbstractController: ControllerBase
                     .ToList(),
                 renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
-            MethodId = sessionStore.WQClass.WorkQueueStructureUserListMethodId,
-            SortSetId = sessionStore.WQClass.WorkQueueStructureSortSetId,
-            DataSourceId = sessionStore.WQClass.WorkQueueStructureId
+            MethodId = sessionStore.WorkQueueClass.WorkQueueStructureUserListMethodId,
+            SortSetId = sessionStore.WorkQueueClass.WorkQueueStructureSortSetId,
+            DataSourceId = sessionStore.WorkQueueClass.WorkQueueStructureId
         };
         if (input.Parameters != null)
         {

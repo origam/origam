@@ -20,16 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Data;
 
 using Origam.Schema;
 using Origam.Service.Core;
 
 namespace Origam.Workbench.Services;
-/// <summary>
-/// Summary description for IWorkQueueService.
-/// </summary>
+
 public interface IWorkQueueService : IWorkbenchService
 {
 	DataSet UserQueueList();
@@ -61,4 +58,5 @@ public interface IWorkQueueService : IWorkbenchService
             , DataRow workQueueRow
             , string transactionId
         );
+	string CustomScreenName(Guid queueId);
 }

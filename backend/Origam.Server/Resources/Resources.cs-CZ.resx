@@ -291,4 +291,7 @@
   <data name="ErrorPseudoparameterBodyNotDefined" xml:space="preserve">
     <value>Pseudoparametr 'body' nebyl definován jako parametr datové stránky API, ale byl použit během volání PUT.</value>
   </data>
+  <data name="NoGetByIdFilterSet" xml:space="preserve">
+    <value>Datová struktura {0} neobsahuje filtrovou sadu GetById.</value>
+  </data>
 </root>

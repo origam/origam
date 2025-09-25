@@ -272,7 +272,6 @@ public class SessionManager
                         reportMenuItem.SelectionPanelId, menuItem.Name, reportMenuItem.SelectionDialogEndRule, analytics);
                     break;
                 case UIRequestType.WorkQueue:
-                    // WORK QUEUE OK
                     ss = new WorkQueueSessionStore(basicUIService, request, Resources.WorkQueueTitle + " " + request.Caption, analytics);
                     break;
             }

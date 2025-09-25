@@ -546,6 +546,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datová struktura {0} neobsahuje filtrovou sadu GetById..
+        /// </summary>
+        public static string NoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("NoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chyba průvodce.
         /// </summary>
         public static string WorkflowErrorTitle {

@@ -291,4 +291,7 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>
   </data>
+  <data name="NoGetByIdFilterSet" xml:space="preserve">
+    <value>Data structure filter set with name GetById was not found under WorkQueueStructure {0}.</value>
+  </data>
 </root>

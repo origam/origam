@@ -121,7 +121,7 @@ public class ServerEntityUIActionRunner: EntityUIActionRunner
             {
                 CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
             }
-            WorkQueueWorkflowCommand cmd = wqss.WQClass.GetCommand((string)cmdRow["Command"]);
+            WorkQueueWorkflowCommand cmd = wqss.WorkQueueClass.GetCommand((string)cmdRow["Command"]);
             // We handle the UI actions, work queue service will handle all the other background actions
             if (cmd.ActionType == PanelActionType.OpenForm)
             {
@@ -153,7 +153,7 @@ public class ServerEntityUIActionRunner: EntityUIActionRunner
             }
         }
         // otherwise we ask the work queue service to process the command
-        wqs.HandleAction(new Guid(wqss.Request.ObjectId), wqss.WQClass.Name,
+        wqs.HandleAction(new Guid(wqss.Request.ObjectId), wqss.WorkQueueClass.Name,
             selectedRows,
             (Guid)cmdRow["refWorkQueueCommandTypeId"],
             cmdRow.IsNull("Command") ? null : (string)cmdRow["Command"],

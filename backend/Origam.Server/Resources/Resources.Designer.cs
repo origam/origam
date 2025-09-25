@@ -546,6 +546,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data structure filter set with name GetById was not found under WorkQueueStructure {0}..
+        /// </summary>
+        public static string NoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("NoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Taskflow Error.
         /// </summary>
         public static string WorkflowErrorTitle {
