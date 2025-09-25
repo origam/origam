@@ -294,4 +294,7 @@
   <data name="NoGetByIdFilterSet" xml:space="preserve">
     <value>Datová struktura {0} neobsahuje filtrovou sadu GetById.</value>
   </data>
+  <data name="WorkQueueClassNotFound" xml:space="preserve">
+    <value>Pro frontu id {0} nebyla nalezena odpovídající třída.</value>
+  </data>
 </root>

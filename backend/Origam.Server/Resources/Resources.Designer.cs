@@ -582,6 +582,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Work Queue Class for work queue with id {0} not found..
+        /// </summary>
+        public static string WorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("WorkQueueClassNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Work Queue.
         /// </summary>
         public static string WorkQueueTitle {

@@ -582,6 +582,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arbeitswarteschlangenklasse für Warteschlange mit der ID {0} nicht gefunden..
+        /// </summary>
+        public static string WorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("WorkQueueClassNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Arbeitsvorrat.
         /// </summary>
         public static string WorkQueueTitle {

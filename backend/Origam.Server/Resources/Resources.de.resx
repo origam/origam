@@ -294,4 +294,7 @@
   <data name="NoGetByIdFilterSet" xml:space="preserve">
     <value>Datenstruktur-Filterset mit dem Namen GetById wurde unter WorkQueueStructure {0} nicht gefunden.</value>
   </data>
+  <data name="WorkQueueClassNotFound" xml:space="preserve">
+    <value>Arbeitswarteschlangenklasse für Warteschlange mit der ID {0} nicht gefunden.</value>
+  </data>
 </root>

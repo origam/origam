@@ -24,10 +24,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Data;
 using System.Linq;
-using System.Web;
 using Origam.Gui;
 using Origam.Schema.EntityModel;
-using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Session_Stores;
 using CoreServices = Origam.Workbench.Services.CoreServices;
@@ -42,7 +40,8 @@ public class WorkQueueSessionStore : SessionStore
     private WorkQueueClass workQueueClass;
     public WorkQueueClass WorkQueueClass => workQueueClass;
 
-    private FormControlSet customScreen;
+    private WorkQueueCustomScreen customScreen;
+    private Guid dataStructureId;
     private Guid? methodId;
 
     public WorkQueueSessionStore(
@@ -55,6 +54,7 @@ public class WorkQueueSessionStore : SessionStore
         RefreshOnInitUI = true;
         RetrieveWorkQueueClassAndCustomScreen(new Guid(request.ObjectId));
         InitializeMethodId();
+        InitializeDataStructureId();
     }
 
     private void RetrieveWorkQueueClassAndCustomScreen(Guid workQueueId)
@@ -63,19 +63,25 @@ public class WorkQueueSessionStore : SessionStore
             = ServiceManager.Services.GetService<IWorkQueueService>();
         workQueueClass 
             = workQueueService.WQClass(workQueueId) as WorkQueueClass;
-        SortSet = workQueueClass?.WorkQueueStructureSortSet;
+        if (workQueueClass == null)
+        {
+            throw new Exception(
+                string.Format(Resources.WorkQueueClassNotFound, workQueueId));
+        }
+        SortSet = workQueueClass.WorkQueueStructureSortSet;
         string customScreenName
             = workQueueService.CustomScreenName(workQueueId);
         if (string.IsNullOrEmpty(customScreenName))
         {
             return;
         }
-        
+        customScreen = workQueueClass.GetChildByName(customScreenName,
+            WorkQueueCustomScreen.CategoryConst) as WorkQueueCustomScreen;
     }
 
     private void InitializeMethodId()
     {
-        methodId = workQueueClass
+        methodId = customScreen?.MethodId ?? workQueueClass
             .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
             .FirstOrDefault(x => x.Name == "GetById")
             ?.Id;
@@ -86,7 +92,12 @@ public class WorkQueueSessionStore : SessionStore
                     Resources.NoGetByIdFilterSet, 
                     workQueueClass.WorkQueueStructure.Id));
         }
-        
+    }
+
+    private void InitializeDataStructureId()
+    {
+        dataStructureId = customScreen?.Screen.DataStructure.Id
+                          ?? workQueueClass.WorkQueueStructureId;
     }
     
     private void PrepareData()
@@ -125,10 +136,10 @@ public class WorkQueueSessionStore : SessionStore
                 }
                 CurrentRecordId = null;
                 SetDataSource(CoreServices.DataService.Instance.LoadData(
-                        dataStructureId: workQueueClass.WorkQueueStructureId, 
+                        dataStructureId: dataStructureId, 
                         methodId: methodId!.Value, 
                         defaultSetId: Guid.Empty, 
-                        sortSetId: workQueueClass.WorkQueueStructureSortSetId, 
+                        sortSetId: Guid.Empty, 
                         transactionId: null, 
                         paramName1: "WorkQueueEntry_parId", 
                         paramValue1: id));
@@ -169,8 +180,12 @@ public class WorkQueueSessionStore : SessionStore
     public override XmlDocument GetFormXml()
     {
         XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder
-            .GetXml(workQueueClass, Data, Request.Caption, 
-                new Guid(Request.ObjectId));
+            .GetXml(
+                wqc: workQueueClass,
+                dataset: Data,
+                screenTitle: Request.Caption,
+                customScreen: customScreen,
+                queueId: new Guid(Request.ObjectId));
         return formXml;
     } 
     

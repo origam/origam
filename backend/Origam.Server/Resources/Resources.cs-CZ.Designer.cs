@@ -582,6 +582,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pro frontu id {0} nebyla nalezena odpovídající třída..
+        /// </summary>
+        public static string WorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("WorkQueueClassNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fronta zpráv.
         /// </summary>
         public static string WorkQueueTitle {

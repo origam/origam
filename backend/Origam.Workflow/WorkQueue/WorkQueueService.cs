@@ -479,7 +479,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     public string CustomScreenName(Guid queueId)
     {
-        return workQueueUtils.CustomScreeName(queueId);
+        return workQueueUtils.CustomScreenName(queueId);
     }
 
     private OrigamNotificationContactData GetNotificationContacts(Guid workQueueNotificationContactTypeId,
