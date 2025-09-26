@@ -50,6 +50,8 @@ public class FormXmlBuilder
     private const int GENERIC_FIELD_HEIGHT = 20;
     private const int GENERIC_FIELD_VERTICAL_SPACE = 2;
     private static readonly string Entity_WorkQueueEntry = "WorkQueueEntry";
+    private static readonly string RootGridXPath
+	    = "//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']";
     public static XmlOutput GetXml(Guid menuId)
 	{
 		IPersistenceService persistence = ServiceManager.Services.GetService(
@@ -429,12 +431,11 @@ public class FormXmlBuilder
 			confirmSelectionChangeEntity: string.Empty);
 		if (showCheckboxes)
 		{
-			var rootGrid = (XmlElement)xml.SelectSingleNode(
-				"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']");
+			var rootGrid = (XmlElement)xml.SelectSingleNode(RootGridXPath);
 			rootGrid?.SetAttribute("ShowSelectionCheckboxes", XmlConvert.ToString(true));
 		}
 		var actionsElement = (XmlElement)xml.SelectSingleNode(
-			"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']/Actions");
+			$"{RootGridXPath}/Actions");
 		return actionsElement;
 	}
 	
@@ -1758,7 +1759,7 @@ public class FormXmlBuilder
 		)
 	{
 		// check if there is no root grid
-		XmlNodeList grids = doc.SelectNodes("//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']");
+		XmlNodeList grids = doc.SelectNodes(RootGridXPath);
 		if(grids.Count == 0)
 		{
 			grids = doc.SelectNodes("//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootEntity = 'true']");
