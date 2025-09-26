@@ -181,7 +181,7 @@ public class WorkQueueSessionStore : SessionStore
     {
         XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder
             .GetXml(
-                wqc: workQueueClass,
+                workQueueClass: workQueueClass,
                 dataset: Data,
                 screenTitle: Request.Caption,
                 customScreen: customScreen,

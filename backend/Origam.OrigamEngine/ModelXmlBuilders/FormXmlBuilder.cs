@@ -49,6 +49,7 @@ public class FormXmlBuilder
 	public const string WORKFLOW_FINISHED_FORMID = "C4E5DE43-69A4-40e6-9F7F-ED2AF8692429";
     private const int GENERIC_FIELD_HEIGHT = 20;
     private const int GENERIC_FIELD_VERTICAL_SPACE = 2;
+    private static readonly string Entity_WorkQueueEntry = "WorkQueueEntry";
     public static XmlOutput GetXml(Guid menuId)
 	{
 		IPersistenceService persistence = ServiceManager.Services.GetService(
@@ -263,220 +264,92 @@ public class FormXmlBuilder
 		return windowElement.SelectSingleNode("ComponentBindings") as XmlElement;
 	}
 	public static XmlDocument GetXml(
-		WorkQueueClass wqc, 
+		WorkQueueClass workQueueClass, 
 		DataSet dataset, 
 		string screenTitle, 
 		WorkQueueCustomScreen customScreen,
 		Guid queueId)
 	{
-		Hashtable dataSources = new Hashtable();
+		var dataSources = new Hashtable();
 		OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-		DataTable table = dataset.Tables["WorkQueueEntry"];
-        var parameterService = ServiceManager.Services.GetService<IParameterService>();
-        QueryParameterCollection pms = new QueryParameterCollection();
-		pms.Add(new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId));
-		DataSet commands = core.DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
-        var commandRows = new List<DataRow>();
-        IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-        foreach (DataRow cmdRow in commands.Tables["WorkQueueCommand"].Rows)
+		IOrigamAuthorizationProvider authorizationProvider 
+			= SecurityManager.GetAuthorizationProvider();
+        var parameterService 
+	        = ServiceManager.Services.GetService<IParameterService>();
+        DataSet workQueueCommands = core.DataService.Instance.LoadData(
+	        dataStructureId: new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"),
+	        methodId: new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"),
+	        defaultSetId: Guid.Empty,
+	        sortSetId: Guid.Empty,
+	        transactionId: null,
+	        parameters: new QueryParameterCollection
+	        {
+		        new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId)
+	        });
+        List<DataRow> authorizedCommands = workQueueCommands
+	        .Tables["WorkQueueCommand"]
+	        .Rows
+	        .Cast<DataRow>()
+	        .Where(dataRow => !dataRow.IsNull("Roles")
+	                          && authorizationProvider.Authorize(
+		                          SecurityManager.CurrentPrincipal,
+		                          (string)dataRow["Roles"]))
+	        .ToList();
+        bool showCheckboxes = authorizedCommands.Any(command =>
         {
-            if (cmdRow.IsNull("Roles") || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)cmdRow["Roles"]))
-            {
-                continue;
-            }
-            commandRows.Add(cmdRow);
-        }
-        bool showCheckboxes = commandRows.Any(cmdRow =>
-        {
-			if ((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand"))
-			{
-				WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
-				return cmd.Mode == PanelActionMode.MultipleCheckboxes;
-			}
-			return true;
+	        if ((Guid)command["refWorkQueueCommandTypeId"]
+	            != (Guid)parameterService.GetParameterValue(
+		            "WorkQueueCommandType_WorkQueueClassCommand"))
+	        {
+		        return true;
+	        }
+	        WorkQueueWorkflowCommand commandDefinition 
+		        = workQueueClass.GetCommand((string)command["Command"]);
+			return commandDefinition.Mode == PanelActionMode.MultipleCheckboxes;
         });
-        // Window
-        XmlDocument doc = GetWindowBaseXml(
-			screenTitle, Guid.Empty, settings.WorkQueueListRefreshPeriod, false, false, false);
-		XmlElement windowElement = WindowElement(doc);
-		XmlElement uiRootElement = UIRootElement(windowElement);
-		XmlElement bindingsElement = ComponentBindingsElement(windowElement);
-		XmlElement actionsElement;
+        // base element
+        XmlDocument xmlDocument = GetWindowBaseXml(
+			name: screenTitle, 
+			menuId: Guid.Empty, 
+			autoRefreshInterval: settings.WorkQueueListRefreshPeriod, 
+			refreshOnFocus: false, 
+			autoSaveOnListRecordChange:false, 
+			requestSaveAfterUpdate: false);
+		XmlElement windowElement = WindowElement(xmlDocument);
 		windowElement.SetAttribute("SuppressSave", "true");
 		windowElement.SetAttribute("CacheOnClient", "false");
-		if (customScreen == null)
-		{
-			// generated UI
-			SplitPanelBuilder.Build(uiRootElement, SplitPanelOrientation.Horizontal, false);
-			uiRootElement.SetAttribute("ModelInstanceId", "52DEFCEA-587C-47e0-97F5-3590B6AC492F");
-			XmlElement children = doc.CreateElement("UIChildren");
-			uiRootElement.AppendChild(children);
-			XmlElement listElement = doc.CreateElement("UIElement");
-			children.AppendChild(listElement);
-			// Panel
-			UIElementRenderData renderData = new UIElementRenderData();
-			renderData.PanelTitle = ResourceUtils.GetString("WorkQueueFromTitle");
-			renderData.IsGridVisible = true;
-			renderData.DataMember = "WorkQueueEntry";
-			AsPanelBuilder.Build(listElement, renderData, queueId.ToString(), "queuePanel1", table, dataSources, 
-				table.PrimaryKey[0].ColumnName, showCheckboxes, Guid.Empty, false);
-			listElement.SetAttribute("Id", "queuePanel1");
-			listElement.SetAttribute("ModelInstanceId", queueId.ToString());
-			listElement.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
-			listElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-			listElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
-			XmlElement formRootElement = AsPanelBuilder.FormRootElement(listElement);
-			XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(listElement);
-			actionsElement = AsPanelBuilder.ActionsElement(listElement);
-			
-			XmlElement propertyNamesElement = doc.CreateElement("PropertyNames");
-			formRootElement.AppendChild(propertyNamesElement);
-			DataStructureColumn memoColumn = null;
-			// Panel controls
-			int lastPos = 5;
-			var mappedColumns = wqc.ChildItemsByType<WorkQueueClassEntityMapping>(WorkQueueClassEntityMapping.CategoryConst);
-			mappedColumns.Sort();
-			DataStructureEntity entity = wqc.WorkQueueStructure.Entities[0];
-			foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
-			{
-				// don't add RecordCreated twice
-				if(mapping.Name == "RecordCreated") 
-				{
-					continue;
-				}
-				AddColumn(entity, mapping.Name, ref memoColumn, 
-					ref lastPos, propertiesElement,	propertyNamesElement, table, mapping.FormatPattern);
-			}
-			AddColumn(entity, "IsLocked", ref memoColumn, 
-				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddColumn(entity, "refLockedByBusinessPartnerId", ref memoColumn, 
-				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddColumn(entity, "ErrorText", ref memoColumn, 
-				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddColumn(entity, "RecordCreated", ref memoColumn,
-				ref lastPos, propertiesElement, propertyNamesElement, table, null);
-			SetUserConfig(doc, listElement, wqc.DefaultPanelConfiguration, queueId, Guid.Empty);
-			if(memoColumn != null)
-			{
-				XmlElement memoElement = doc.CreateElement("UIElement");
-				children.AppendChild(memoElement);
-				UIElementRenderData memoRenderData = new UIElementRenderData();
-				memoRenderData.DataMember = "WorkQueueEntry";
-				memoRenderData.HideNavigationPanel = true;
-				memoRenderData.PanelTitle = memoColumn.Caption;
-				AsPanelBuilder.Build(memoElement, memoRenderData, queueId.ToString(), "memoPanel1",
-					table, dataSources, table.PrimaryKey[0].ColumnName, false, Guid.Empty, false);
-				memoElement.SetAttribute("Id", "memoPanel");
-				memoElement.SetAttribute("ModelInstanceId", "65DF44F9-C050-4554-AD9A-896445314279");
-				memoElement.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
-				memoElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
-				memoElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
-				memoElement.SetAttribute("ParentId", queueId.ToString());
-				memoElement.SetAttribute("ParentEntityName", "WorkQueueEntry");
-				XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
-				memoElement.AppendChild(filterExpressionsElement);
-				foreach(DataColumn col in table.PrimaryKey)
-				{
-					XmlElement filterElement = doc.CreateElement("FilterExpression");
-					filterExpressionsElement.AppendChild(filterElement);
-					filterElement.SetAttribute("ParentProperty", col.ColumnName);
-					filterElement.SetAttribute("ItemProperty", col.ColumnName);
-				}
-				XmlElement memoFormRootElement = AsPanelBuilder.FormRootElement(memoElement);
-				XmlElement memoPropertiesElement = AsPanelBuilder.PropertiesElement(memoElement);
-			
-				XmlElement memoPropertyNamesElement = doc.CreateElement("PropertyNames");
-				memoFormRootElement.AppendChild(memoPropertyNamesElement);
-				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
-					propertiesElement: memoPropertiesElement,
-					propertyNamesElement: memoPropertyNamesElement, 
-					modelId: memoColumn.Id, 
-					bindingMember: memoColumn.Name, 
-					caption: "", 
-					gridCaption: null, 
-					table: table,
-					readOnly: true, 
-					left: 0, 
-					top: 0, 
-					width: 100, 
-					height: 16, 
-					captionLength: 100, 
-					captionPosition: "None", 
-					gridColumnWidth: "500", 
-					style: null, 
-					tabIndex: null,
-					fieldType: memoColumn.Field.FieldType
-					);
-				TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo);
-				buildDefinition.Dock = "Fill";
-				buildDefinition.Multiline = true;
-				TextBoxBuilder.Build(propertyElement, buildDefinition);
-				// binding from the parent grid to the memo grid (same entity)
-				CreateComponentBinding(doc, bindingsElement, queueId.ToString(), "Id", "WorkQueueEntry", "65DF44F9-C050-4554-AD9A-896445314279", "Id", "WorkQueueEntry", false);
-			}
-		}
-		else
-		{
-			// custom UI injection
-			IPersistenceService persistence
-				= ServiceManager.Services.GetService(
-					typeof(IPersistenceService)) as IPersistenceService;
-			DataStructure structure
-				= persistence.SchemaProvider.RetrieveInstance(
-					typeof(DataStructure),
-					new ModelElementKey(customScreen.Screen.DataStructure.Id)) 
-					as DataStructure;
-			XmlOutput xmlOutput = new XmlOutput { Document = doc };
-			int controlCounter = 0;
-			RenderUIElement(
-				xmlOutput: xmlOutput,
-				parentNode: uiRootElement,
-				item: FormTools.GetItemFromControlSet(customScreen.Screen),
-				dataset: dataset,
-				dataSources: dataSources,
-				controlCounter: ref controlCounter,
-				isPreloaded: false,
-				formId: customScreen.Screen.Id,
-				menuWorkflowId: Guid.Empty,
-				forceReadOnly: true,
-				confirmSelectionChangeEntity: "",
-				structure: structure);
-			RenderDataSources(windowElement, dataSources);
-			PostProcessScreenXml(
-				doc, dataset, windowElement, confirmSelectionChangeEntity: "");
-			if (showCheckboxes)
-			{
-				XmlElement rootGridElement = doc.SelectSingleNode(
-						"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']")
-					as XmlElement;
-				rootGridElement.SetAttribute(
-					"ShowSelectionCheckboxes",
-					XmlConvert.ToString(true));
-			}
-			actionsElement = doc.SelectSingleNode(
-					"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']/Actions")
-				as XmlElement;
-		}
-		IOrderedEnumerable<DataRow> orderedCommands = commandRows
-			.OrderBy(x => x["SortOrder"]);
-		foreach(DataRow cmdRow in orderedCommands)
+		XmlElement uiRootElement = UIRootElement(windowElement);
+		XmlElement bindingsElement = ComponentBindingsElement(windowElement);
+		XmlElement actionsElement = customScreen is null
+			? BuildGeneratedWorkQueueScreen(
+				xmlDocument, uiRootElement, bindingsElement, dataSources,
+				dataset, workQueueClass, queueId, showCheckboxes)
+			: BuildCustomWorkQueueScreen(xmlDocument,
+				windowElement, uiRootElement, dataSources, dataset,
+				customScreen, showCheckboxes);
+		foreach (DataRow authorizedCommand in authorizedCommands.OrderBy(
+			         x => x["SortOrder"]))
 		{
 			Hashtable cmdParams = new Hashtable();
 			string confirmationMessage = null;
-			if((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand"))
+			if ((Guid)authorizedCommand["refWorkQueueCommandTypeId"] 
+			   == (Guid)parameterService.GetParameterValue(
+				   "WorkQueueCommandType_WorkQueueClassCommand"))
 			{
-				WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
+				WorkQueueWorkflowCommand workQueueWorkflowCommand 
+					= workQueueClass.GetCommand(
+						(string)authorizedCommand["Command"]);
                 var config = new ActionConfiguration
                 {
 	                Type = PanelActionType.QueueAction,
-	                Mode = cmd.Mode,
-	                Placement = cmd.Placement,
-	                ActionId = cmdRow["Id"].ToString(),
+	                Mode = workQueueWorkflowCommand.Mode,
+	                Placement = workQueueWorkflowCommand.Placement,
+	                ActionId = authorizedCommand["Id"].ToString(),
 	                GroupId = "",
-	                Caption = (string)cmdRow["Text"],
-	                IconUrl = cmd.ButtonIcon == null ? null : cmd.ButtonIcon.Name,
-	                IsDefault = (bool)cmdRow["IsDefault"],
-	                ConfirmationMessage = confirmationMessage,
+	                Caption = (string)authorizedCommand["Text"],
+	                IconUrl = workQueueWorkflowCommand.ButtonIcon?.Name,
+	                IsDefault = (bool)authorizedCommand["IsDefault"],
+	                ConfirmationMessage = null,
 	                Parameters = cmdParams
                 };
                 AsPanelActionButtonBuilder.Build(actionsElement, config);
@@ -484,12 +357,17 @@ public class FormXmlBuilder
 			else
 			{
 				string iconName = "";
-				if((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Remove"))
+				if ((Guid)authorizedCommand["refWorkQueueCommandTypeId"] 
+				    == (Guid)parameterService.GetParameterValue(
+					    "WorkQueueCommandType_Remove"))
 				{
 					iconName = "queue_remove.png";
-					confirmationMessage = ResourceUtils.GetString("WorkQueueRemoveConfirmationMessage");
+					confirmationMessage = ResourceUtils.GetString(
+						"WorkQueueRemoveConfirmationMessage");
 				}
-				else if((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_StateChange"))
+				else if ((Guid)authorizedCommand["refWorkQueueCommandTypeId"] 
+				         == (Guid)parameterService.GetParameterValue(
+					         "WorkQueueCommandType_StateChange"))
 				{
 					iconName = "queue_statechange.png";
 				}
@@ -498,11 +376,11 @@ public class FormXmlBuilder
 					Type = PanelActionType.QueueAction,
 					Mode = PanelActionMode.MultipleCheckboxes,
 					Placement = ActionButtonPlacement.Toolbar,
-					ActionId = cmdRow["Id"].ToString(),
+					ActionId = authorizedCommand["Id"].ToString(),
 					GroupId = "",
-					Caption = (string)cmdRow["Text"],
+					Caption = (string)authorizedCommand["Text"],
 					IconUrl = iconName,
-					IsDefault = (bool)cmdRow["IsDefault"],
+					IsDefault = (bool)authorizedCommand["IsDefault"],
 					Parameters = cmdParams,
 					ConfirmationMessage = confirmationMessage,
 					ShowAlways = true
@@ -511,8 +389,221 @@ public class FormXmlBuilder
 			}
 		}
 		RenderDataSources(windowElement, dataSources);
-		return doc;
+		return xmlDocument;
 	}
+	
+	private static XmlElement BuildCustomWorkQueueScreen(
+		XmlDocument xml,
+		XmlElement windowElement,
+		XmlElement uiRoot,
+		Hashtable dataSources,
+		DataSet dataset,
+		WorkQueueCustomScreen customScreen,
+		bool showCheckboxes)
+	{
+		var persistenceService 
+			= ServiceManager.Services.GetService<IPersistenceService>();
+		var structure
+			= persistenceService.SchemaProvider.RetrieveInstance<DataStructure>(
+				customScreen.Screen.DataStructure.Id);
+		var xmlOutput = new XmlOutput
+		{
+			Document = xml
+		};
+		int controlCounter = 0;
+		RenderUIElement(
+			xmlOutput: xmlOutput,
+			parentNode: uiRoot,
+			item: FormTools.GetItemFromControlSet(customScreen.Screen),
+			dataset: dataset,
+			dataSources: dataSources,
+			controlCounter: ref controlCounter,
+			isPreloaded: false,
+			formId: customScreen.Screen.Id,
+			menuWorkflowId: Guid.Empty,
+			forceReadOnly: true,
+			confirmSelectionChangeEntity: string.Empty,
+			structure: structure);
+		RenderDataSources(windowElement, dataSources);
+		PostProcessScreenXml(xml, dataset, windowElement, 
+			confirmSelectionChangeEntity: string.Empty);
+		if (showCheckboxes)
+		{
+			var rootGrid = (XmlElement)xml.SelectSingleNode(
+				"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']");
+			rootGrid?.SetAttribute("ShowSelectionCheckboxes", XmlConvert.ToString(true));
+		}
+		var actionsElement = (XmlElement)xml.SelectSingleNode(
+			"//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']/Actions");
+		return actionsElement;
+	}
+	
+	private static XmlElement BuildGeneratedWorkQueueScreen(
+		XmlDocument xml,
+		XmlElement uiRoot,
+		XmlElement bindings,
+		Hashtable dataSources,
+		DataSet dataset,
+		WorkQueueClass workQueueClass,
+		Guid queueId,
+		bool showCheckboxes)
+	{
+		var table = dataset.Tables[Entity_WorkQueueEntry];
+		SplitPanelBuilder.Build(
+			parentNode: uiRoot, 
+			orientation: SplitPanelOrientation.Horizontal, 
+			fixedSize: false);
+		uiRoot.SetAttribute(
+			"ModelInstanceId", "52DEFCEA-587C-47e0-97F5-3590B6AC492F");
+		XmlElement children = xml.CreateElement("UIChildren");
+		uiRoot.AppendChild(children);
+		XmlElement listElement = xml.CreateElement("UIElement");
+		children.AppendChild(listElement);
+		var panelData = new UIElementRenderData
+		{
+			PanelTitle = ResourceUtils.GetString("WorkQueueFromTitle"),
+			IsGridVisible = true,
+			DataMember = Entity_WorkQueueEntry
+		};
+		AsPanelBuilder.Build(
+			parentNode: listElement,
+			renderData: panelData,
+			modelId: queueId.ToString(),
+			controlId: "queuePanel1",
+			table: table,
+			dataSources: dataSources,
+			primaryKeyColumnName: table.PrimaryKey[0].ColumnName,
+			showSelectionCheckboxes: showCheckboxes,
+			formId: Guid.Empty,
+			isIndependent: false);
+		listElement.SetAttribute("Id", "queuePanel1");
+		listElement.SetAttribute("ModelInstanceId", queueId.ToString());
+		listElement.SetAttribute("IsRootGrid", XmlConvert.ToString(true));
+		listElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
+		listElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+		XmlElement formRoot = AsPanelBuilder.FormRootElement(listElement);
+		XmlElement properties = AsPanelBuilder.PropertiesElement(listElement);
+		XmlElement actions = AsPanelBuilder.ActionsElement(listElement);
+		XmlElement propertyNames = xml.CreateElement("PropertyNames");
+		formRoot.AppendChild(propertyNames);
+		int lastPos = 5;
+		DataStructureColumn memoColumn = null;
+		var mappedColumns = workQueueClass
+			.ChildItemsByType<WorkQueueClassEntityMapping>(
+				WorkQueueClassEntityMapping.CategoryConst);
+		mappedColumns.Sort();
+		var entity = workQueueClass.WorkQueueStructure.Entities[0];
+		foreach (var mapping in mappedColumns)
+		{
+			// don't add RecordCreated twice
+			if (mapping.Name == "RecordCreated") 
+			{
+				continue; 
+			}
+			AddColumn(entity, mapping.Name, ref memoColumn, ref lastPos, 
+				properties, propertyNames, table, mapping.FormatPattern);
+		}
+		AddColumn(entity, "IsLocked", ref memoColumn, ref lastPos, 
+			properties, propertyNames, table, null);
+		AddColumn(entity, "refLockedByBusinessPartnerId", 
+			ref memoColumn, ref lastPos, properties, propertyNames, table, 
+			null);
+		AddColumn(entity, "ErrorText", ref memoColumn, ref lastPos, 
+			properties, propertyNames, table, null);
+		AddColumn(entity, "RecordCreated", ref memoColumn, ref lastPos, 
+			properties, propertyNames, table, null);
+		SetUserConfig(xml, listElement, 
+			workQueueClass.DefaultPanelConfiguration, queueId, 
+			Guid.Empty);
+		if (memoColumn is not null)
+		{
+			BuildMemoPanel(xml, children, bindings, dataSources, table, queueId, 
+				memoColumn);
+		}
+		return actions;
+	}
+	
+	private static void BuildMemoPanel(
+		XmlDocument xml,
+		XmlElement children,
+		XmlElement bindings,
+		Hashtable dataSources,
+		DataTable table,
+		Guid queueId,
+		DataStructureColumn memoColumn)
+	{
+		XmlElement memoElement = xml.CreateElement("UIElement");
+		children.AppendChild(memoElement);
+		var memoRenderData = new UIElementRenderData
+		{
+			DataMember = Entity_WorkQueueEntry,
+			HideNavigationPanel = true,
+			PanelTitle = memoColumn.Caption
+		};
+		AsPanelBuilder.Build(
+			parentNode: memoElement,
+			renderData: memoRenderData,
+			modelId: queueId.ToString(),
+			controlId: "memoPanel1",
+			table: table,
+			dataSources: dataSources,
+			primaryKeyColumnName: table.PrimaryKey[0].ColumnName,
+			showSelectionCheckboxes: false,
+			formId: Guid.Empty,
+			isIndependent: false);
+		memoElement.SetAttribute("Id", "memoPanel");
+		memoElement.SetAttribute("ModelInstanceId",
+			"65DF44F9-C050-4554-AD9A-896445314279");
+		memoElement.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
+		memoElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
+		memoElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
+		memoElement.SetAttribute("ParentId", queueId.ToString());
+		memoElement.SetAttribute("ParentEntityName", Entity_WorkQueueEntry);
+		var filterExpressions = xml.CreateElement("FilterExpressions");
+		memoElement.AppendChild(filterExpressions);
+		foreach (DataColumn dataColumn in table.PrimaryKey)
+		{
+			XmlElement filter = xml.CreateElement("FilterExpression");
+			filterExpressions.AppendChild(filter);
+			filter.SetAttribute("ParentProperty", dataColumn.ColumnName);
+			filter.SetAttribute("ItemProperty", dataColumn.ColumnName);
+		}
+		XmlElement memoFormRoot = AsPanelBuilder.FormRootElement(memoElement);
+		XmlElement memoProperties 
+			= AsPanelBuilder.PropertiesElement(memoElement);
+		XmlElement memoPropertyNames = xml.CreateElement("PropertyNames");
+		memoFormRoot.AppendChild(memoPropertyNames);
+		var propertyElement = AsPanelPropertyBuilder.CreateProperty(
+			propertiesElement: memoProperties,
+			propertyNamesElement: memoPropertyNames,
+			modelId: memoColumn.Id,
+			bindingMember: memoColumn.Name,
+			caption: string.Empty,
+			gridCaption: null,
+			table: table,
+			readOnly: true,
+			left: 0,
+			top: 0,
+			width: 100,
+			height: 16,
+			captionLength: 100,
+			captionPosition: "None",
+			gridColumnWidth: "500",
+			style: null,
+			tabIndex: null,
+			fieldType: memoColumn.Field.FieldType);
+		var buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo)
+		{
+			Dock = "Fill",
+			Multiline = true
+		};
+		TextBoxBuilder.Build(propertyElement, buildDefinition);
+		// binding from the parent grid to the memo grid (same entity)
+		CreateComponentBinding(xml, bindings, queueId.ToString(), "Id",
+			Entity_WorkQueueEntry, "65DF44F9-C050-4554-AD9A-896445314279", "Id",
+			Entity_WorkQueueEntry, false);
+	}
+	
 	internal static void AddColumn(DataStructureEntity entity, string columnName,
        ref DataStructureColumn memoColumn, ref int lastPos,
         XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
