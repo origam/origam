@@ -66,7 +66,8 @@ public class WorkQueueSessionStore : SessionStore
         if (workQueueClass == null)
         {
             throw new Exception(
-                string.Format(Resources.WorkQueueClassNotFound, workQueueId));
+                string.Format(
+                    Resources.ErrorWorkQueueClassNotFound, workQueueId));
         }
         SortSet = workQueueClass.WorkQueueStructureSortSet;
         string customScreenName
@@ -77,6 +78,12 @@ public class WorkQueueSessionStore : SessionStore
         }
         customScreen = workQueueClass.GetChildByName(customScreenName,
             WorkQueueCustomScreen.CategoryConst) as WorkQueueCustomScreen;
+        if (customScreen is null)
+        {
+            throw new Exception(string.Format(
+                Resources.ErrorSpecifiedCustomWorkQueueScreenNotFound,
+                customScreenName));
+        }
     }
 
     private void InitializeMethodId()
@@ -89,7 +96,7 @@ public class WorkQueueSessionStore : SessionStore
         {
             throw new Exception(
                 string.Format(
-                    Resources.NoGetByIdFilterSet, 
+                    Resources.ErrorNoGetByIdFilterSet, 
                     workQueueClass.WorkQueueStructure.Id));
         }
     }
@@ -102,16 +109,16 @@ public class WorkQueueSessionStore : SessionStore
     
     private void PrepareData()
     {
-        var data = InitializeFullStructure(defaultSet: null);
+        var data = InitializeFullStructure();
         SetDataSource(data);
         IsDelayedLoading = true;
         DataListEntity = "WorkQueueEntry";
     }
     
-    private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+    private DataSet InitializeFullStructure()
     {
         return dataSetBuilder.InitializeFullStructure(
-            workQueueClass.WorkQueueStructureId, defaultSet);
+            dataStructureId, defaultSet: null);
     }
     
     public override List<ChangeInfo> GetRowData(

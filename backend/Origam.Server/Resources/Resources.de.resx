@@ -291,10 +291,13 @@
   <data name="ErrorWorkQueueCommandNotFound" xml:space="preserve">
     <value>Befehl nicht gefunden.</value>
   </data>
-  <data name="NoGetByIdFilterSet" xml:space="preserve">
+  <data name="ErrorNoGetByIdFilterSet" xml:space="preserve">
     <value>Datenstruktur-Filterset mit dem Namen GetById wurde unter WorkQueueStructure {0} nicht gefunden.</value>
   </data>
-  <data name="WorkQueueClassNotFound" xml:space="preserve">
+  <data name="ErrorWorkQueueClassNotFound" xml:space="preserve">
     <value>Arbeitswarteschlangenklasse für Warteschlange mit der ID {0} nicht gefunden.</value>
+  </data>
+  <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
+    <value>Benutzerdefinierter Arbeitswarteschlangenbildschirm {0} wurde nicht gefunden.</value>
   </data>
 </root>

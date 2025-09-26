@@ -291,10 +291,13 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>
   </data>
-  <data name="NoGetByIdFilterSet" xml:space="preserve">
+  <data name="ErrorNoGetByIdFilterSet" xml:space="preserve">
     <value>Data structure filter set with name GetById was not found under WorkQueueStructure {0}.</value>
   </data>
-  <data name="WorkQueueClassNotFound" xml:space="preserve">
+  <data name="ErrorWorkQueueClassNotFound" xml:space="preserve">
     <value>Work Queue Class for work queue with id {0} not found.</value>
+  </data>
+  <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
+    <value>Custom Work Queue Screen {0} not found.</value>
   </data>
 </root>

@@ -291,10 +291,13 @@
   <data name="ErrorPseudoparameterBodyNotDefined" xml:space="preserve">
     <value>Pseudoparametr 'body' nebyl definován jako parametr datové stránky API, ale byl použit během volání PUT.</value>
   </data>
-  <data name="NoGetByIdFilterSet" xml:space="preserve">
+  <data name="ErrorNoGetByIdFilterSet" xml:space="preserve">
     <value>Datová struktura {0} neobsahuje filtrovou sadu GetById.</value>
   </data>
-  <data name="WorkQueueClassNotFound" xml:space="preserve">
+  <data name="ErrorWorkQueueClassNotFound" xml:space="preserve">
     <value>Pro frontu id {0} nebyla nalezena odpovídající třída.</value>
+  </data>
+  <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
+    <value>Nenalezena požadovaná frontová obrazovka {0}.</value>
   </data>
 </root>

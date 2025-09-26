@@ -339,6 +339,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datová struktura {0} neobsahuje filtrovou sadu GetById..
+        /// </summary>
+        public static string ErrorNoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("ErrorNoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nebyly vybrány žádné záznamy, není možné spustit požadovaný povel..
         /// </summary>
         public static string ErrorNoRecordsSelectedForAction {
@@ -425,6 +434,15 @@ namespace Origam.Server {
         public static string ErrorSessionNotFound {
             get {
                 return ResourceManager.GetString("ErrorSessionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nenalezena požadovaná frontová obrazovka {0}..
+        /// </summary>
+        public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
+            get {
+                return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
             }
         }
         
@@ -519,6 +537,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pro frontu id {0} nebyla nalezena odpovídající třída..
+        /// </summary>
+        public static string ErrorWorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("ErrorWorkQueueClassNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Příkaz nenalezen..
         /// </summary>
         public static string ErrorWorkQueueCommandNotFound {
@@ -546,15 +573,6 @@ namespace Origam.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Datová struktura {0} neobsahuje filtrovou sadu GetById..
-        /// </summary>
-        public static string NoGetByIdFilterSet {
-            get {
-                return ResourceManager.GetString("NoGetByIdFilterSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Chyba průvodce.
         /// </summary>
         public static string WorkflowErrorTitle {
@@ -578,15 +596,6 @@ namespace Origam.Server {
         public static string WorkflowFinishedTitle {
             get {
                 return ResourceManager.GetString("WorkflowFinishedTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pro frontu id {0} nebyla nalezena odpovídající třída..
-        /// </summary>
-        public static string WorkQueueClassNotFound {
-            get {
-                return ResourceManager.GetString("WorkQueueClassNotFound", resourceCulture);
             }
         }
         
