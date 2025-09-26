@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="9da3e167-3f3f-422d-b454-3fbea660d9cf"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_CustomScreenName.origam#LookupWorkQueue_CustomScreenName/c462180c-9252-4d7d-84cd-6373e48678c9"
+    adl:listDisplayMember="CustomScreenName"
+    adl:listValueMember="Id"
+    asi:name="WorkQueue_CustomScreenName"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_CustomScreenName.origam#LookupWorkQueue_CustomScreenName/c462180c-9252-4d7d-84cd-6373e48678c9"
+    adl:valueDisplayMember="CustomScreenName"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_CustomScreenName.origam#LookupWorkQueue_CustomScreenName/GetId/435377d3-f474-4492-bffd-83b753b499b1"
+    adl:valueValueMember="Id" />
+</x:file>

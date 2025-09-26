@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WorkQueue] ADD [CustomScreenName] NVarChar(50) NULL
