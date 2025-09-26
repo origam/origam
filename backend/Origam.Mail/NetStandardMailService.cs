@@ -179,21 +179,24 @@ public class NetStandardMailService : AbstractMailService
                     }
                 }
             }
-            //put html body inside
-            if (mailrow.MessageBody.StartsWith("<"))
+            if (!mailrow.IsMessageBodyNull())
             {
-                AlternateView plainTextView =
-                    AlternateView.CreateAlternateViewFromString(
-                        HtmlToText(mailrow.MessageBody), null, MediaTypeNames.Text.Plain);
-                m.AlternateViews.Add(plainTextView);
-                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-                    WebUtility.HtmlDecode(mailrow.MessageBody), null, MediaTypeNames.Text.Html);
-                m.AlternateViews.Add(htmlView);                    
-            }
-            else
-            {
-                m.Body = mailrow.MessageBody;
-                m.IsBodyHtml = false;
+                //put html body inside
+                if (mailrow.MessageBody.StartsWith("<"))
+                {
+                    AlternateView plainTextView =
+                        AlternateView.CreateAlternateViewFromString(
+                            HtmlToText(mailrow.MessageBody), null, MediaTypeNames.Text.Plain);
+                    m.AlternateViews.Add(plainTextView);
+                    AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
+                        WebUtility.HtmlDecode(mailrow.MessageBody), null, MediaTypeNames.Text.Html);
+                    m.AlternateViews.Add(htmlView);                    
+                }
+                else
+                {
+                    m.Body = mailrow.MessageBody;
+                    m.IsBodyHtml = false;
+                }
             }
             foreach (MailData.MailAttachmentRow attachment in mailrow.GetMailAttachmentRows())
             {
