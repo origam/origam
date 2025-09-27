@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
-using Origam.Composer.ProjectBuilderTasks;
 using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
