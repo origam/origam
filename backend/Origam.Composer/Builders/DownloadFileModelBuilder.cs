@@ -23,7 +23,6 @@ using System.IO.Compression;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.Git;
-using Spectre.Console;
 
 namespace Origam.Composer.Builders;
 
@@ -36,8 +35,6 @@ public class DownloadFileModelBuilder : AbstractBuilder
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         SourcesFolder = project.ProjectFolder;
         RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
 

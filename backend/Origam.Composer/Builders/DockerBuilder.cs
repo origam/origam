@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Text;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
-using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Builders;
@@ -33,8 +32,6 @@ public class DockerBuilder : AbstractBuilder
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         Directory.CreateDirectory(project.DockerFolder);
 
         DockerConfig dockerConfigLinux = GetDockerConfigLinux(project);

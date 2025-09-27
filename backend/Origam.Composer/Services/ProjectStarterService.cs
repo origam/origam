@@ -23,6 +23,7 @@ using Origam.Composer.Builders;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.Services;
+using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Services;
@@ -66,6 +67,7 @@ public class ProjectStarterService : IProjectStarterService
             {
                 activeTask = builder;
                 builder.State = TaskState.Running;
+                AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {builder.Name}");
                 builder.Execute(project);
                 builder.State = TaskState.Finished;
             }
