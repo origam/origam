@@ -37,12 +37,12 @@ public class DockerBuilder : AbstractBuilder
 
         Directory.CreateDirectory(project.DockerFolder);
 
-        DockerConfig dockerConfigLinux = GetDockerConfig(Platform.Linux, project);
+        DockerConfig dockerConfigLinux = GetDockerConfigLinux(project);
         CreateEnvFile(project, dockerConfigLinux);
         CreateCmdFile(project, dockerConfigLinux);
         CreateCmdFileArchitect(project, dockerConfigLinux);
 
-        DockerConfig dockerConfigWindows = GetDockerConfig(Platform.Windows, project);
+        DockerConfig dockerConfigWindows = GetDockerConfigWindows(project);
         CreateEnvFile(project, dockerConfigWindows);
         CreateCmdFile(project, dockerConfigWindows);
     }
@@ -118,28 +118,30 @@ public class DockerBuilder : AbstractBuilder
         File.WriteAllText(project.DockerCmdPathLinuxArchitect, sb.ToString());
     }
 
-    private static DockerConfig GetDockerConfig(Platform platform, Project project)
+    private DockerConfig GetDockerConfigLinux(Project project)
     {
-        return platform switch
+        var dockerConfig = new DockerConfig
         {
-            Platform.Linux => new DockerConfig
-            {
-                EnvFilePath = project.DockerEnvPathLinux,
-                CustomAssetsPath = "/home/origam/projectData/customAssets",
-                ModelPath = "/home/origam/projectData/model",
-                CmdFilePath = project.DockerCmdPathLinux,
-                BaseImage = "origam/server:master-latest.linux", // TODO: Fetch from parameters
-            },
-            Platform.Windows => new DockerConfig
-            {
-                EnvFilePath = project.DockerEnvPathWindows,
-                CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
-                ModelPath = @"C:\home\origam\projectData\model",
-                CmdFilePath = project.DockerCmdPathWindows,
-                BaseImage = "origam/server:master-latest.win", // TODO: Fetch from parameters
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform"),
+            EnvFilePath = project.DockerEnvPathLinux,
+            CustomAssetsPath = "/home/origam/projectData/customAssets",
+            ModelPath = "/home/origam/projectData/model",
+            CmdFilePath = project.DockerCmdPathLinux,
+            BaseImage = "origam/server:master-latest.linux", // TODO: Fetch from parameters
         };
+        return dockerConfig;
+    }
+
+    private DockerConfig GetDockerConfigWindows(Project project)
+    {
+        var dockerConfig = new DockerConfig
+        {
+            EnvFilePath = project.DockerEnvPathWindows,
+            CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
+            ModelPath = @"C:\home\origam\projectData\model",
+            CmdFilePath = project.DockerCmdPathWindows,
+            BaseImage = "origam/server:master-latest.win", // TODO: Fetch from parameters
+        };
+        return dockerConfig;
     }
 
     private string GetDbHost(Project project)
@@ -164,12 +166,6 @@ public class DockerBuilder : AbstractBuilder
             return "https://localhost";
         }
         return "https://localhost:" + project.DockerPort;
-    }
-
-    private enum Platform
-    {
-        Windows,
-        Linux,
     }
 
     private class DockerConfig
