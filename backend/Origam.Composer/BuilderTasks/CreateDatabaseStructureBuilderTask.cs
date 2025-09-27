@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -19,12 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
-using Origam.Composer.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Composer.ProjectBuilderTasks;
+namespace Origam.Composer.BuilderTasks;
 
 public class CreateDatabaseStructureBuilderTask : AbstractDatabaseBuilderTask
 {
