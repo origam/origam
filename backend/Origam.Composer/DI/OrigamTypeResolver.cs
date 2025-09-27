@@ -19,22 +19,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.DTOs;
-using Origam.Composer.Services;
-using Origam.Git;
+using Spectre.Console.Cli;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.DI;
 
-public class CreateGitRepositoryBuilder : AbstractBuilder
+public class OrigamTypeResolver(IServiceProvider provider) : ITypeResolver
 {
-    public override string Name => "Init Git";
-
-    public override void Execute(Project project)
+    public object? Resolve(Type? type)
     {
-        GitManager.CreateRepository(project.ProjectFolder);
-        var gitManager = new GitManager(project.ProjectFolder);
-        gitManager.Init(project.GitUsername, project.GitEmail);
+        return type == null ? null : provider.GetService(type);
     }
 
-    public override void Rollback() { }
+    public void Dispose()
+    {
+        if (provider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+    }
 }

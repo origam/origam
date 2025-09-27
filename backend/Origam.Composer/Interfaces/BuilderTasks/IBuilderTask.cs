@@ -20,26 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
-using Origam.Composer.Services;
-using Origam.Workbench.Services;
+using Origam.Composer.Enums;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.Interfaces.BuilderTasks;
 
-public class CreateNewPackageBuilder : AbstractBuilder
+public interface IBuilderTask
 {
-    public override string Name => "Create new Package";
+    string Name { get; }
 
-    public override void Execute(Project project)
-    {
-        var schema = ServiceManager.Services.GetService<SchemaService>();
-        schema.UnloadSchema();
-        PackageHelper.CreatePackage(
-            project.Name,
-            new Guid(project.NewPackageId),
-            new Guid(project.BasePackageId)
-        );
-        schema.UnloadSchema();
-    }
+    BuilderTaskState State { get; set; }
 
-    public override void Rollback() { }
+    void Execute(Project project);
+
+    void Rollback();
 }

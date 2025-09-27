@@ -1,4 +1,5 @@
-﻿using Origam.Composer.Interfaces.Services;
+﻿using Origam.Composer.Interfaces.BuilderTasks;
+using Origam.Composer.Interfaces.Services;
 using Spectre.Console;
 
 namespace Origam.Composer.Services;
@@ -103,10 +104,10 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
     }
 
-    public void PrintProjectCreateTasks(List<IProjectBuilder> tasks)
+    public void PrintProjectCreateTasks(List<IBuilderTask> tasks)
     {
         var actionsList = new List<string>();
-        foreach (IProjectBuilder projectBuilderTask in tasks)
+        foreach (IBuilderTask projectBuilderTask in tasks)
         {
             actionsList.Add(projectBuilderTask.Name);
         }

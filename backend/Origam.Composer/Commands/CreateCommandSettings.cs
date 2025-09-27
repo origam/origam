@@ -21,9 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Spectre.Console.Cli;
 
-namespace Origam.Composer;
+namespace Origam.Composer.Commands;
 
-public class AppSettings : CommandSettings
+public class CreateCommandSettings : CommandSettings
 {
     #region Database
 

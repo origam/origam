@@ -21,16 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
 
-namespace Origam.Composer.Interfaces.Services;
+namespace Origam.Composer.BuilderTasks;
 
-public interface IProjectBuilder
+public abstract class AbstractBuilderTask : IBuilderTask
 {
-    string Name { get; }
+    public abstract string Name { get; }
 
-    TaskState State { get; set; }
+    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    void Execute(Project project);
+    public abstract void Execute(Project project);
 
-    void Rollback();
+    public abstract void Rollback();
 }

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.DependencyInjection;
 using Origam.Composer.Commands;
+using Origam.Composer.DI;
 using Origam.Composer.Interfaces.Services;
 using Origam.Composer.Services;
 using Spectre.Console.Cli;
@@ -33,7 +34,7 @@ class Program
     {
         var services = new ServiceCollection();
         services.AddSingleton<IVisualService, VisualService>();
-        services.AddSingleton<IProjectStarterService, ProjectStarterService>();
+        services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
 
         var registrar = new OrigamTypeRegistrar(services);
 

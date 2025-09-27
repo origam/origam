@@ -22,9 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.Composer.Services;
+namespace Origam.Composer.BuilderTasks;
 
-public abstract class AbstractDatabaseBuilder : AbstractBuilder
+public abstract class AbstractDatabaseBuilderTask : AbstractBuilderTask
 {
     AbstractSqlDataService _dataService = null;
 

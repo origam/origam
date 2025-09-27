@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.IO.Compression;
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.Git;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.ProjectBuilderTasks;
 
-public class DownloadFileModelBuilder : AbstractBuilder
+public class DownloadFileModelBuilderTask : AbstractBuilderTask
 {
     public override string Name => "Download ORIGAM model-root from repository";
 

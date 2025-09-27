@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Text;
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.ProjectBuilderTasks;
 
-public class DockerBuilder : AbstractBuilder
+public class DockerBuilderTask : AbstractBuilderTask
 {
     public override string Name => "Create Docker run scripts";
 

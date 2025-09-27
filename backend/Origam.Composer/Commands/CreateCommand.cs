@@ -28,10 +28,10 @@ namespace Origam.Composer.Commands;
 
 public class CreateCommand(
     IVisualService visualService,
-    IProjectStarterService projectStarterService
-) : Command<AppSettings>
+    IProjectBuilderService projectBuilderService
+) : Command<CreateCommandSettings>
 {
-    public override int Execute(CommandContext context, AppSettings settings)
+    public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
         GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings, gitIdentity);
@@ -96,17 +96,17 @@ public class CreateCommand(
         };
 
         // Prepare tasks
-        projectStarterService.PrepareTasks(project);
-        visualService.PrintProjectCreateTasks(projectStarterService.GetTasks());
+        projectBuilderService.PrepareTasks(project);
+        visualService.PrintProjectCreateTasks(projectBuilderService.GetTasks());
 
         // Execute
-        projectStarterService.Create(project);
+        projectBuilderService.Create(project);
         visualService.PrintBye();
 
         return 0;
     }
 
-    private void ShowVisualBanner(AppSettings settings, GitIdentity gitIdentity)
+    private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
     {
         visualService.PrintHeader("Create New Project");
         visualService.PrintDatabaseValues(
@@ -126,7 +126,7 @@ public class CreateCommand(
         visualService.PrintGitValues(settings.GitEnabled, gitIdentity.User, gitIdentity.Email);
     }
 
-    private GitIdentity GitIdentityResolver(AppSettings settings)
+    private GitIdentity GitIdentityResolver(CreateCommandSettings settings)
     {
         var gitUser = "";
         var gitEmail = "";
