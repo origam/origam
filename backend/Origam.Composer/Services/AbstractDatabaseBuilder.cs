@@ -28,10 +28,10 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
 {
     AbstractSqlDataService _dataService = null;
 
-    internal AbstractSqlDataService DataService()
+    internal AbstractSqlDataService? DataService()
     {
         _dataService = null;
-        return _dataService;
+        return null;
     }
 
     internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
@@ -43,7 +43,7 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
         return _dataService;
     }
 
-    internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
+    private AbstractSqlDataService CreateService(DatabaseType DatabaseType)
     {
         if (DatabaseType == DatabaseType.MsSql)
         {
