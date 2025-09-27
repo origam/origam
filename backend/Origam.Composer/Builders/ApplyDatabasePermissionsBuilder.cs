@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
-using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Builders;
@@ -36,8 +35,6 @@ public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         DatabaseType = project.DatabaseType;
 
         DataService(DatabaseType).DbUser = project.Name;

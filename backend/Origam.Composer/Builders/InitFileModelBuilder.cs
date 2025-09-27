@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.Workbench.Services;
-using Spectre.Console;
 
 namespace Origam.Composer.Builders;
 
@@ -34,8 +33,6 @@ public class InitFileModelBuilder : AbstractBuilder
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
 
         SchemaService = ServiceManager.Services.GetService<SchemaService>();

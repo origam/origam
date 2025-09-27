@@ -23,7 +23,6 @@ using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.DA;
 using Origam.Security.Common;
-using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Builders;
@@ -36,8 +35,6 @@ public class CreateNewUserBuilder : AbstractDatabaseBuilder
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
         string hashPassword = adaptivePassword.HashPassword(project.WebUserPassword);
 

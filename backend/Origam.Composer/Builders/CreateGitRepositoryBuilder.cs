@@ -22,18 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.Git;
-using Spectre.Console;
 
 namespace Origam.Composer.Builders;
 
-class CreateGitRepositoryBuilder : AbstractBuilder
+public class CreateGitRepositoryBuilder : AbstractBuilder
 {
     public override string Name => "Init Git";
 
     public override void Execute(Project project)
     {
-        AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {Name}");
-
         GitManager.CreateRepository(project.ProjectFolder);
         var gitManager = new GitManager(project.ProjectFolder);
         gitManager.Init(project.GitUsername, project.GitEmail);
