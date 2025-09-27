@@ -45,7 +45,7 @@
           asi:abstract="false"
           x:id="7233a8c2-da32-479f-b86e-9dd7c7e34cd1"
           asi:name="WorkflowMergetTestFirstPhase_NewRecord"
-          tr:transformation="Workflow/Transformation/Workflow/WorkflowMergetTestFirstPhase_NewRecord.origam#WorkflowMergetTestFirstPhase_NewRecord/db1fc7f8-dceb-4477-8d46-c8455ebfd540" />
+          tr:transformation="Workflow/Transformation/Workflow/WorkflowMergeTestFirstPhase_NewRecord.origam#WorkflowMergeTestFirstPhase_NewRecord/db1fc7f8-dceb-4477-8d46-c8455ebfd540" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -162,7 +162,7 @@
         x:id="b433dd8a-e0c2-4440-8b40-8597b41d8f7c"
         asi:name="After_0010_LoadPreviousRecord"
         wtd:startEvent="Success"
-        wtd:task="Workflow/Workflow/Workflow/MergeTestFirstPhase.origam#MergeTestFirstPhase/0010_LoadPreviousRecord/b1e61062-fd3e-47ce-8dfa-44df5792a1dd" />
+        wtd:task="Workflow/Workflow/Workflow/MergeTestFirstPhase.origam#MergeTestFirstPhase/0010_LoadPreviousRecords/b1e61062-fd3e-47ce-8dfa-44df5792a1dd" />
     </smct:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"

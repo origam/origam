@@ -156,7 +156,7 @@ public class WorkflowHost : IDisposable
 				isRefreshSuppressedBeforeFirstSave, saveConfirmationRule, refreshPortalAfterSave));
 		}
 	}
-	public void AbortWorkflowForm(Guid taskId)
+	public void AbortWorkflowForm(Guid taskId, bool isDirty)
     {
         Tasks.UIEngineTask task = _runningForms[taskId];
         if (task == null)
@@ -164,7 +164,7 @@ public class WorkflowHost : IDisposable
             throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
         }
         _runningForms.Remove(taskId);
-        Thread thread = new Thread(task.Abort);
+        Thread thread = new Thread(() => task.Abort(isDirty));
         PrepareAndStartThread(thread, task);
     }
     public void FinishWorkflowForm(Guid taskId, IDataDocument data)
