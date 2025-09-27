@@ -87,7 +87,7 @@ public class CreateCommand(
             ),
             DockerEnvPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Config_Windows.env"
+                settings.ProjectName + "_Environments_Windows.env"
             ),
             DockerCmdPathWindows = Path.Combine(
                 DockerFolder,
