@@ -33,7 +33,7 @@ public class CreateCommand(
 {
     public override int Execute(CommandContext context, AppSettings settings)
     {
-        Tuple<string, string> gitIdentity = GitIdentityResolver(settings);
+        GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings, gitIdentity);
 
         // TODO: Use builder pattern
@@ -68,8 +68,8 @@ public class CreateCommand(
             NewPackageId = Guid.NewGuid().ToString(),
 
             IsGitInit = settings.GitEnabled,
-            GitUsername = gitIdentity.Item1,
-            GitEmail = gitIdentity.Item2,
+            GitUsername = gitIdentity.User,
+            GitEmail = gitIdentity.Email,
 
             // Docker
             DockerFolder = DockerFolder,
@@ -106,7 +106,7 @@ public class CreateCommand(
         return 0;
     }
 
-    private void ShowVisualBanner(AppSettings settings, Tuple<string, string> gitIdentity)
+    private void ShowVisualBanner(AppSettings settings, GitIdentity gitIdentity)
     {
         visualService.PrintHeader("Create New Project");
         visualService.PrintDatabaseValues(
@@ -123,11 +123,10 @@ public class CreateCommand(
             settings.ProjectAdminEmail
         );
         visualService.PrintArchitectValues(settings.ArchitectDockerImage, settings.ArchitectPort);
-        visualService.PrintGitValues(settings.GitEnabled, gitIdentity.Item1, gitIdentity.Item2);
+        visualService.PrintGitValues(settings.GitEnabled, gitIdentity.User, gitIdentity.Email);
     }
 
-    // TODO: Maybe record, not tuple
-    private Tuple<string, string> GitIdentityResolver(AppSettings settings)
+    private GitIdentity GitIdentityResolver(AppSettings settings)
     {
         var gitUser = "";
         var gitEmail = "";
@@ -146,6 +145,6 @@ public class CreateCommand(
             gitEmail = settings.GitEmail;
         }
 
-        return new Tuple<string, string>(gitUser, gitEmail);
+        return new GitIdentity(gitUser, gitEmail);
     }
 }
