@@ -77,14 +77,14 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
 		{
 			WorkQueueClass item = Owner as WorkQueueClass;
 			DataSet dataset = new DatasetGenerator(true).CreateDataSet(item.WorkQueueStructure);
-			doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(item, dataset, strings.Massages_XmlItem, Guid.Empty);
+			doc = FormXmlBuilder.GetXml(item, dataset, strings.Massages_XmlItem, null, Guid.Empty);
 		}
 		else if(Owner is AbstractDashboardWidget)
 		{
 			AbstractDashboardWidget item = Owner as AbstractDashboardWidget;
 			
 			string config = "<configuration><item id=\"" + Guid.NewGuid().ToString() + "\" componentId=\"" + item.Id.ToString() + "\" left=\"0\" top=\"0\" colSpan=\"1\" rowSpan=\"1\"/></configuration>";
-			doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(config, "test", item.Id, null);
+			doc = FormXmlBuilder.GetXml(config, "test", item.Id, null);
 		}
 		System.Text.StringBuilder sb = new System.Text.StringBuilder();
 		System.IO.StringWriter sw = new System.IO.StringWriter(sb);

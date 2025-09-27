@@ -679,12 +679,12 @@ public class UIServiceController : AbstractController
                     .Map(queryData =>
                     {
                         var query = queryData.DataStructureQuery;
-                        query.MethodId = workQueueSessionStore.WQClass
+                        query.MethodId = workQueueSessionStore.WorkQueueClass
                             .WorkQueueStructureUserListMethodId;
-                        query.SortSetId = workQueueSessionStore.WQClass
+                        query.SortSetId = workQueueSessionStore.WorkQueueClass
                             .WorkQueueStructureSortSetId;
                         query.DataSourceId = workQueueSessionStore
-                            .WQClass.WorkQueueStructureId;
+                            .WorkQueueClass.WorkQueueStructureId;
                         query.Parameters.Add(new QueryParameter(
                             "WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId));
                         return query;
@@ -714,7 +714,7 @@ public class UIServiceController : AbstractController
     
     private EntityData GetWorkQueueEntityData(WorkQueueSessionStore workQueueSessionStore)
     {
-        List<DataStructureEntity> entities = workQueueSessionStore.WQClass
+        List<DataStructureEntity> entities = workQueueSessionStore.WorkQueueClass
             .WorkQueueStructure
             .Entities;
         var structureEntity = entities
@@ -722,7 +722,7 @@ public class UIServiceController : AbstractController
             .FirstOrDefault(entity => entity.Name == workQueueEntity);
         if (entities.Count != 1 || structureEntity == null)
         {
-            throw new ArgumentException($"WorkQueueStructure {workQueueSessionStore.WQClass.WorkQueueStructure.Id} must contain exactly one {nameof(DataStructureEntity)} called \"{workQueueEntity}\"");
+            throw new ArgumentException($"WorkQueueStructure {workQueueSessionStore.WorkQueueClass.WorkQueueStructure.Id} must contain exactly one {nameof(DataStructureEntity)} called \"{workQueueEntity}\"");
         }
         return new EntityData
         {
@@ -1006,9 +1006,9 @@ public class UIServiceController : AbstractController
                 renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
             AggregatedColumns = input.AggregatedColumns,
-            MethodId = sessionStore.WQClass.WorkQueueStructureUserListMethodId,
-            SortSetId = sessionStore.WQClass.WorkQueueStructureSortSetId,
-            DataSourceId = sessionStore.WQClass.WorkQueueStructureId
+            MethodId = sessionStore.WorkQueueClass.WorkQueueStructureUserListMethodId,
+            SortSetId = sessionStore.WorkQueueClass.WorkQueueStructureSortSetId,
+            DataSourceId = sessionStore.WorkQueueClass.WorkQueueStructureId
         };
         var parameters = sessionObjects.UIService.GetParameters(
             sessionStore.Id);

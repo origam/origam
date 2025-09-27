@@ -339,6 +339,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data structure filter set with name GetById was not found under WorkQueueStructure {0}..
+        /// </summary>
+        public static string ErrorNoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("ErrorNoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No records selected. Cannot execute action..
         /// </summary>
         public static string ErrorNoRecordsSelectedForAction {
@@ -429,6 +438,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Work Queue Screen {0} not found..
+        /// </summary>
+        public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
+            get {
+                return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many screens are open. You have to close some tabs before opening new screens..
         /// </summary>
         public static string ErrorTooManyTabsOpen {
@@ -515,6 +533,15 @@ namespace Origam.Server {
         public static string ErrorWorkflowSessionInvalid {
             get {
                 return ResourceManager.GetString("ErrorWorkflowSessionInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Queue Class for work queue with id {0} not found..
+        /// </summary>
+        public static string ErrorWorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("ErrorWorkQueueClassNotFound", resourceCulture);
             }
         }
         

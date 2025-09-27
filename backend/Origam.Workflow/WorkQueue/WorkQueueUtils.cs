@@ -83,6 +83,21 @@ public class WorkQueueUtils
         return (string)lookupService.GetDisplayText(
             new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
     }
+    
+    public string CustomScreenName(Guid queueId)
+    {
+        object retrievedValue = lookupService.GetDisplayText(
+            lookupId: new Guid("9da3e167-3f3f-422d-b454-3fbea660d9cf"), 
+            lookupValue: queueId, 
+            useCache: false, 
+            returnMessageIfNull: false, 
+            transactionId: null);
+        if (retrievedValue is string stringValue)
+        {
+            return stringValue;
+        }
+        return string.Empty;
+    }
 
     public string WorkQueueClassNameByMessageId(Guid queueMessageId)
     {

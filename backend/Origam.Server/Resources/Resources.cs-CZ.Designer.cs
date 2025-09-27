@@ -339,6 +339,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datová struktura {0} neobsahuje filtrovou sadu GetById..
+        /// </summary>
+        public static string ErrorNoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("ErrorNoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nebyly vybrány žádné záznamy, není možné spustit požadovaný povel..
         /// </summary>
         public static string ErrorNoRecordsSelectedForAction {
@@ -429,6 +438,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nenalezena požadovaná frontová obrazovka {0}..
+        /// </summary>
+        public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
+            get {
+                return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Je otevřeno příliš mnoho obrazovek. Před otevřením nové obrazovky zavřete některé záložky..
         /// </summary>
         public static string ErrorTooManyTabsOpen {
@@ -515,6 +533,15 @@ namespace Origam.Server {
         public static string ErrorWorkflowSessionInvalid {
             get {
                 return ResourceManager.GetString("ErrorWorkflowSessionInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pro frontu id {0} nebyla nalezena odpovídající třída..
+        /// </summary>
+        public static string ErrorWorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("ErrorWorkQueueClassNotFound", resourceCulture);
             }
         }
         

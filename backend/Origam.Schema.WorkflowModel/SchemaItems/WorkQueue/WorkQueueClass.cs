@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -30,13 +29,11 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel;
-/// <summary>
-/// Summary description for AbstractService.
-/// </summary>
+
 [SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
-public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
+public class WorkQueueClass : AbstractSchemaItem
 {
 	public const string CategoryConst = "WorkQueueClass";
 	public WorkQueueClass() : base() {Init();}
@@ -56,9 +53,10 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	}
 	private void Init()
 	{
-		this.ChildItemTypes.Add(typeof(WorkQueueClassEntityMapping));
-		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommand));
-		this.ChildItemTypes.Add(typeof(WorkqueueLoader));
+		ChildItemTypes.Add(typeof(WorkQueueClassEntityMapping));
+		ChildItemTypes.Add(typeof(WorkQueueWorkflowCommand));
+		ChildItemTypes.Add(typeof(WorkqueueLoader));
+		ChildItemTypes.Add(typeof(WorkQueueCustomScreen));
 	}
 	#region Overriden ISchemaItem Members
 	
