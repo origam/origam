@@ -6,7 +6,7 @@ public interface IProjectStarterService
 {
     void Create(Project project);
 
-    void CreateTasks(Project project);
+    void PrepareTasks(Project project);
 
     List<IProjectBuilder> GetTasks();
 }

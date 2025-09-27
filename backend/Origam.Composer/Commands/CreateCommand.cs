@@ -96,7 +96,7 @@ public class CreateCommand(
         };
 
         // Prepare tasks
-        projectStarterService.CreateTasks(project);
+        projectStarterService.PrepareTasks(project);
         visualService.PrintProjectCreateTasks(projectStarterService.GetTasks());
 
         // Execute
