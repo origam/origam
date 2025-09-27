@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -28,7 +28,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Create new web user";
+    public override string Name => "Create new user (Client web application)";
 
     private DatabaseType _databaseType;
 
