@@ -19,34 +19,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.Builders;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
+using Origam.Composer.ProjectBuilderTasks;
 using Spectre.Console;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Services;
 
-public class ProjectStarterService : IProjectStarterService
+public class ProjectBuilderService : IProjectBuilderService
 {
-    private readonly List<IProjectBuilder> Tasks = [];
-    private readonly CreateDatabaseBuilder CreateDatabaseBuilder = new();
-    private readonly DockerBuilder DockerBuilder = new();
+    private readonly List<IBuilderTask> Tasks = [];
+    private readonly CreateDatabaseBuilderTask _createDatabaseBuilderTask = new();
+    private readonly DockerBuilderTask _dockerBuilderTask = new();
 
-    public ProjectStarterService()
+    public ProjectBuilderService()
     {
         SecurityManager.SetServerIdentity();
     }
 
     public void Create(Project project)
     {
-        CreateDatabaseBuilder.ResetDataservice();
-        project.BuilderDataConnectionString = CreateDatabaseBuilder.BuildConnectionStringArchitect(
-            project,
-            false
-        );
-        project.BaseUrl = DockerBuilder.WebSiteUrl(project);
+        _createDatabaseBuilderTask.ResetDataservice();
+        project.BuilderDataConnectionString =
+            _createDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
+        project.BaseUrl = _dockerBuilderTask.WebSiteUrl(project);
 
         var settings = new OrigamSettings
         {
@@ -60,21 +59,21 @@ public class ProjectStarterService : IProjectStarterService
         };
         ConfigurationManager.SetActiveConfiguration(settings);
 
-        IProjectBuilder activeTask = null;
+        IBuilderTask activeTask = null;
         try
         {
-            foreach (IProjectBuilder builder in Tasks)
+            foreach (IBuilderTask builder in Tasks)
             {
                 activeTask = builder;
-                builder.State = TaskState.Running;
+                builder.State = BuilderTaskState.Running;
                 AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {builder.Name}");
                 builder.Execute(project);
-                builder.State = TaskState.Finished;
+                builder.State = BuilderTaskState.Finished;
             }
         }
         catch
         {
-            activeTask.State = TaskState.Failed;
+            activeTask.State = BuilderTaskState.Failed;
             for (var i = Tasks.Count - 1; i >= 0; i--)
             {
                 Rollback(Tasks[i]);
@@ -88,50 +87,50 @@ public class ProjectStarterService : IProjectStarterService
         switch (project.DatabaseType)
         {
             case DatabaseType.MsSql:
-                Tasks.Add(CreateDatabaseBuilder);
-                Tasks.Add(new DownloadFileModelBuilder());
+                Tasks.Add(_createDatabaseBuilderTask);
+                Tasks.Add(new DownloadFileModelBuilderTask());
                 // Tasks.Add(new ApplyDatabasePermissionsBuilder());
                 break;
             case DatabaseType.PgSql:
-                Tasks.Add(new DownloadFileModelBuilder());
-                Tasks.Add(CreateDatabaseBuilder);
+                Tasks.Add(new DownloadFileModelBuilderTask());
+                Tasks.Add(_createDatabaseBuilderTask);
                 // Tasks.Add(new ApplyDatabasePermissionsBuilder());
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(project));
         }
 
-        Tasks.Add(new InitFileModelBuilder());
-        Tasks.Add(new CreateDatabaseStructureBuilder());
-        Tasks.Add(new CreateNewPackageBuilder());
-        Tasks.Add(new CreateNewUserBuilder());
-        Tasks.Add(new DockerBuilder());
+        Tasks.Add(new InitFileModelBuilderTask());
+        Tasks.Add(new CreateDatabaseStructureBuilderTask());
+        Tasks.Add(new CreateNewPackageBuilderTask());
+        Tasks.Add(new CreateNewUserBuilderTask());
+        Tasks.Add(new DockerBuilderTask());
 
         if (project.IsGitInit)
         {
-            Tasks.Add(new CreateGitRepositoryBuilder());
+            Tasks.Add(new CreateGitRepositoryBuilderTask());
         }
     }
 
-    public List<IProjectBuilder> GetTasks()
+    public List<IBuilderTask> GetTasks()
     {
         return Tasks;
     }
 
-    private void Rollback(IProjectBuilder builder)
+    private void Rollback(IBuilderTask builderTask)
     {
         try
         {
-            if (builder.State == TaskState.Finished)
+            if (builderTask.State == BuilderTaskState.Finished)
             {
-                builder.State = TaskState.RollingBack;
-                builder.Rollback();
-                builder.State = TaskState.RolledBack;
+                builderTask.State = BuilderTaskState.RollingBack;
+                builderTask.Rollback();
+                builderTask.State = BuilderTaskState.RolledBack;
             }
         }
         catch
         {
-            builder.State = TaskState.RollbackFailed;
+            builderTask.State = BuilderTaskState.RollbackFailed;
         }
     }
 }

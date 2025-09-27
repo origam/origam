@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.ProjectBuilderTasks;
 
-public class CreateDatabaseBuilder : AbstractDatabaseBuilder
+public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Create database (new empty)";
 

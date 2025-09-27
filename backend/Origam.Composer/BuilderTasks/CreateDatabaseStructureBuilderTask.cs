@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -19,33 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Composer.Builders;
+namespace Origam.Composer.ProjectBuilderTasks;
 
-public class InitFileModelBuilder : AbstractBuilder
+public class CreateDatabaseStructureBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Initialize model from files";
-
-    private SchemaService SchemaService;
+    public override string Name => "Create database structure (from model)";
 
     public override void Execute(Project project)
     {
-        OrigamEngine.OrigamEngine.InitializeRuntimeServices();
+        var schema = ServiceManager.Services.GetService<SchemaService>();
+        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schema);
 
-        SchemaService = ServiceManager.Services.GetService<SchemaService>();
+        var deploymentService = ServiceManager.Services.GetService<IDeploymentService>();
+        deploymentService.Deploy();
 
-        var workbench = new Workbench(SchemaService); // TODO: Refactor this
-        workbench.InitializeDefaultServices();
-
-        SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
+        var parameterService = ServiceManager.Services.GetService<IParameterService>();
+        parameterService.RefreshParameters();
     }
 
-    public override void Rollback()
-    {
-        SchemaService.UnloadSchema();
-        OrigamEngine.OrigamEngine.UnloadConnectedServices();
-    }
+    public override void Rollback() { }
 }

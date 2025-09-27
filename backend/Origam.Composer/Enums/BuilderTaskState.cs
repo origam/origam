@@ -19,22 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Spectre.Console.Cli;
+namespace Origam.Composer.Enums;
 
-namespace Origam.Composer;
-
-public class OrigamTypeResolver(IServiceProvider provider) : ITypeResolver
+public enum BuilderTaskState
 {
-    public object? Resolve(Type? type)
-    {
-        return type == null ? null : provider.GetService(type);
-    }
-
-    public void Dispose()
-    {
-        if (provider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-    }
+    Prepared,
+    Running,
+    Finished,
+    RollingBack,
+    RolledBack,
+    RollbackFailed,
+    Failed,
 }

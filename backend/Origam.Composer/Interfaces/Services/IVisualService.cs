@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.Interfaces.BuilderTasks;
+
 namespace Origam.Composer.Interfaces.Services;
 
 public interface IVisualService
@@ -39,7 +41,7 @@ public interface IVisualService
 
     void PrintGitValues(bool isEnabled, string user, string email);
 
-    void PrintProjectCreateTasks(List<IProjectBuilder> tasks);
+    void PrintProjectCreateTasks(List<IBuilderTask> tasks);
 
     void PrintBye();
 }

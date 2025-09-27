@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
-namespace Origam.Composer;
+namespace Origam.Composer.DI;
 
 public class OrigamTypeRegistrar(IServiceCollection services) : ITypeRegistrar
 {
