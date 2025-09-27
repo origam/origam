@@ -83,7 +83,7 @@ public class ProjectStarterService : IProjectStarterService
         }
     }
 
-    public void CreateTasks(Project project)
+    public void PrepareTasks(Project project)
     {
         switch (project.DatabaseType)
         {
