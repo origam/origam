@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -79,7 +79,7 @@ public class DockerBuilderTask : AbstractBuilderTask
     {
         var sb = new StringBuilder();
         sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" ^");
-        sb.AppendLine($"  -it --name {project.Name} ^");
+        sb.AppendLine($"  -it --name {project.Name}_Client ^");
         sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} ^");
         sb.AppendLine(
             $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} ^"
