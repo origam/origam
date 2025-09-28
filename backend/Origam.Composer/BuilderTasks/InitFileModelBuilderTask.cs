@@ -58,13 +58,5 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
         }
 
         parameterService.RefreshParameters();
-        // we have to initialize the new user after parameter service gets loaded
-        // otherwise it would fail generating SQL statements
-        if (isEmpty)
-        {
-            string userName = SecurityManager.CurrentPrincipal.Identity.Name;
-            IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
-            profileProvider.AddUser("Architect (" + userName + ")", userName);
-        }
     }
 }
