@@ -25,7 +25,6 @@ using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
 using Spectre.Console;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.Services;
 
