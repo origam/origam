@@ -84,21 +84,9 @@ public class ProjectBuilderService : IProjectBuilderService
 
     public void PrepareTasks(Project project)
     {
-        switch (project.DatabaseType)
-        {
-            case DatabaseType.MsSql:
-                Tasks.Add(_createDatabaseBuilderTask);
-                Tasks.Add(new DownloadFileModelBuilderTask());
-                // Tasks.Add(new ApplyDatabasePermissionsBuilder());
-                break;
-            case DatabaseType.PgSql:
-                Tasks.Add(new DownloadFileModelBuilderTask());
-                Tasks.Add(_createDatabaseBuilderTask);
-                // Tasks.Add(new ApplyDatabasePermissionsBuilder());
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(project));
-        }
+        Tasks.Add(new DownloadFileModelBuilderTask());
+        Tasks.Add(_createDatabaseBuilderTask);
+        // Tasks.Add(new ApplyDatabasePermissionsBuilder());
 
         Tasks.Add(new InitFileModelBuilderTask());
         Tasks.Add(new CreateDatabaseStructureBuilderTask());
