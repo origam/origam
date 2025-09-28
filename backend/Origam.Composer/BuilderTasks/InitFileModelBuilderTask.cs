@@ -33,11 +33,8 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
     public override void Execute(Project project)
     {
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
-
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
-
-        var workbench = new Workbench(SchemaService); // TODO: Refactor this
-        workbench.InitializeDefaultServices();
+        SchemaService.SchemaLoaded += _schema_SchemaLoaded;
 
         SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
     }
@@ -46,5 +43,28 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
     {
         SchemaService.UnloadSchema();
         OrigamEngine.OrigamEngine.UnloadConnectedServices();
+    }
+
+    private void _schema_SchemaLoaded(object sender, bool isInteractive)
+    {
+        OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(SchemaService);
+        var deployment = ServiceManager.Services.GetService<IDeploymentService>();
+        var parameterService = ServiceManager.Services.GetService<IParameterService>();
+
+        var isEmpty = deployment.IsEmptyDatabase();
+        if (isEmpty)
+        {
+            deployment.Deploy();
+        }
+
+        parameterService.RefreshParameters();
+        // we have to initialize the new user after parameter service gets loaded
+        // otherwise it would fail generating SQL statements
+        if (isEmpty)
+        {
+            string userName = SecurityManager.CurrentPrincipal.Identity.Name;
+            IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
+            profileProvider.AddUser("Architect (" + userName + ")", userName);
+        }
     }
 }
