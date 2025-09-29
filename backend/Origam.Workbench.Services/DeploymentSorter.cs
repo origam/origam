@@ -24,8 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
-using MoreLinq;
-using Origam.Schema;
+using static MoreLinq.Extensions.ForEachExtension;
 using Origam.Schema.DeploymentModel;
 
 namespace Origam.Workbench.Services;
@@ -47,7 +46,7 @@ public class DeploymentSorter
         {
             int remainingDeploymentsBefore = remainingDeployments.Count;
             remainingDeployments
-                .Where(x => !HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
+                .Where(x => !HasActiveDependencies(x) && SomeDeploymentsHaveToRunBefore(x).Count == 0)
                 .OrderBy(deployment => deployment)
                 .ToList()
                 .ForEach(ProcessDependent);
@@ -82,6 +81,16 @@ public class DeploymentSorter
             $"Candidate: {x.PackageName} {x.Version}\r\n" +
                 $"\tDependencies:\r\n" +
                     $"\t\t{string.Join("\r\n\t\t", GetDependencyList(x))}");
+        var blockers = remainingDeployments.SelectMany(SomeDeploymentsHaveToRunBefore)
+            .Where(blocker => blocker != null)
+            .Distinct()
+            .Where(blocker => !HasActiveDependencies(blocker.ConflictingDependency))
+            .Select(blocker => 
+                $"Blocker: {blocker.PackageName} {blocker.Version}\r\n" +
+                    $"\tDependencies:\r\n" +
+                         $"\t\t{string.Join("\r\n\t\t", blocker.DeployedDependency.PackageName+ " "+blocker.DeployedDependency.Version)}")
+            .ToList();
+        
         string message = 
             "Deployment version order could not be determined, because circular\r\n" +
             "dependencies were detected among some deployment versions.\r\n"+
@@ -89,6 +98,15 @@ public class DeploymentSorter
             $"{sortedDeploymentsStr}\r\n"+
             "The sorting process failed with these deployment versions as the next step candidates:\r\n"+
             $"{string.Join("\r\n", nextStepCandidates)}\r\n";
+
+        if (blockers.Count > 0)
+        {
+            message +=  "The following deployments would not be able to run later because they\r\n" +
+                        "depend on other deployments from the current step." +
+                        "That is why the sorting cannot progress any further.\r\n";
+            message +=  $"{string.Join("\r\n", blockers)}\r\n";
+        }
+        
         SortingFailed?.Invoke(this, message);
     }
     private IEnumerable<string> GetDependencyList(IDeploymentVersion deployment)
@@ -135,7 +153,7 @@ public class DeploymentSorter
     {
         MoveToSorted(deployment);
         GetDependentDeployments(deployment)
-            .Where(x => !HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
+            .Where(x => !HasActiveDependencies(x) && SomeDeploymentsHaveToRunBefore(x).Count == 0)
             .OrderBy(x => x, new OtherPackagesFirst(current.SchemaExtensionId))
             .ForEach(ProcessDependent);
     }
@@ -165,18 +183,45 @@ public class DeploymentSorter
             .Any(IsInRemainingDeployments);
     }
     
-    private bool SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
+    private List<DeploymentBlocker> SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
     {
         var previousDeployment = sortedDeployments
             .LastOrDefault(x => x.SchemaExtensionId == deployment.SchemaExtensionId);
         if (previousDeployment == null)
         {
-            return false;
+            return [];
         }
-        return remainingDeployments
+        IEnumerable<IDeploymentVersion> haveToRunBefore =  remainingDeployments
             .Where(x => x != deployment)
-            .Any(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
+            .Where(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
+        return haveToRunBefore
+            .Select(blockingDeployment => new DeploymentBlocker(blockingDeployment, previousDeployment, deployment))
+            .ToList();
     }
+
+    record DeploymentBlocker(IDeploymentVersion Deployment, IDeploymentVersion DeployedDependency, IDeploymentVersion ConflictingDependency)
+    {
+        public string PackageName { get; } = Deployment.PackageName;
+        public string Version { get; } = Deployment.Version;
+        
+        private readonly string dependencyVersion = DeployedDependency.Version;
+        
+        public virtual bool Equals(DeploymentBlocker other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(PackageName, other.PackageName) 
+                   && Equals(Version, other.Version) 
+                   && Equals(dependencyVersion, other.dependencyVersion)
+                   && Equals(DeployedDependency.PackageName, other.DeployedDependency.PackageName);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PackageName, Version, dependencyVersion, DeployedDependency.PackageName);
+        }
+    }
+
     private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
     {
         bool alreadyDependsOnPreviousVersion =
