@@ -135,4 +135,27 @@
   <data name="ErrorOlderModel" xml:space="preserve">
     <value>Das zu importierende Modell ist älter als das aktuelle. Das Modell wird nicht importiert.</value>
   </data>
+  <data name="DeploymentDeadlockHeader" xml:space="preserve">
+    <value>Die Reihenfolge der Deployment-Versionen konnte nicht ermittelt werden, da zirkuläre Abhängigkeiten zwischen einigen Deployment-Versionen festgestellt wurden. 
+Erfolgreich sortierte Deployment-Versionen:
+{0}
+Der Sortiervorgang ist bei diesen Deployment-Versionen als Kandidaten für den nächsten Schritt fehlgeschlagen:
+{1}
+</value>
+  </data>
+  <data name="DeploymentDeadlockPrereqConflicts" xml:space="preserve">
+    <value>Die folgenden Deployments könnten später nicht ausgeführt werden, weil sie von anderen Deployments aus dem aktuellen Schritt abhängen. Daher kann der Sortiervorgang nicht fortgesetzt werden.
+{0}
+</value>
+  </data>
+  <data name="DeploymentDeadlockCandidateFormat" xml:space="preserve">
+    <value>Kandidat: {0} {1}
+	Abhängigkeiten:
+		{2}</value>
+  </data>
+  <data name="DeploymentDeadlockBlockerFormat" xml:space="preserve">
+    <value>Blocker: {0} {1}
+	Abhängigkeiten:
+		{2}</value>
+  </data>
 </root>

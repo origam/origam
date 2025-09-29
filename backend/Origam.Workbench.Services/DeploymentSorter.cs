@@ -30,8 +30,7 @@ using Origam.Schema.DeploymentModel;
 namespace Origam.Workbench.Services;
 public class DeploymentSorter
 {
-    private readonly List<IDeploymentVersion> sortedDeployments =
-        new List<IDeploymentVersion>();
+    private readonly List<IDeploymentVersion> sortedDeployments = new();
     private List<IDeploymentVersion> remainingDeployments;
     private IDeploymentVersion current;
     private List<IDeploymentVersion> allDeployments;
@@ -65,7 +64,7 @@ public class DeploymentSorter
         }
         if (inputSize != sortedDeployments.Count)
         {
-            throw new Exception("Number of input and output deployments doesn't match");
+            throw new Exception(Strings.ErrorDeploymentSorterInputOutputCountMismatch);
         }
         return sortedDeployments;
     }
@@ -78,33 +77,27 @@ public class DeploymentSorter
             .Select(group => 
                 group.OrderBy(deploymentVersion => deploymentVersion.Version).First());
         var nextStepCandidates = deadlockedDeployments.Select(x =>
-            $"Candidate: {x.PackageName} {x.Version}\r\n" +
-                $"\tDependencies:\r\n" +
-                    $"\t\t{string.Join("\r\n\t\t", GetDependencyList(x))}");
+            string.Format(Strings.DeploymentDeadlockCandidateFormat,
+                x.PackageName, x.Version,
+                string.Join("\r\n\t\t", GetDependencyList(x))));
         var prerequisiteConflicts = remainingDeployments.SelectMany(FindPrerequisiteConflicts)
             .Where(blocker => blocker != null)
             .Distinct()
             .Where(blocker => !HasActiveDependencies(blocker.ConflictingDependency))
-            .Select(blocker => 
-                $"Blocker: {blocker.PackageName} {blocker.Version}\r\n" +
-                    $"\tDependencies:\r\n" +
-                         $"\t\t{string.Join("\r\n\t\t", blocker.DeployedDependency.PackageName+ " "+blocker.DeployedDependency.Version)}")
+            .Select(blocker =>
+                string.Format(Strings.DeploymentDeadlockBlockerFormat,
+                    blocker.PackageName, blocker.Version,
+                    string.Join("\r\n\t\t", blocker.DeployedDependency.PackageName + " " + blocker.DeployedDependency.Version)))
             .ToList();
         
-        string message = 
-            "Deployment version order could not be determined, because circular\r\n" +
-            "dependencies were detected among some deployment versions.\r\n"+
-            $"Successfully ordered deployment versions:\r\n" +
-            $"{sortedDeploymentsStr}\r\n"+
-            "The sorting process failed with these deployment versions as the next step candidates:\r\n"+
-            $"{string.Join("\r\n", nextStepCandidates)}\r\n";
+        string message = string.Format(Strings.DeploymentDeadlockHeader,
+            sortedDeploymentsStr,
+            string.Join("\r\n", nextStepCandidates));
 
         if (prerequisiteConflicts.Count > 0)
         {
-            message +=  "The following deployments would not be able to run later because they\r\n" +
-                        "depend on other deployments from the current step." +
-                        "That is why the sorting cannot progress any further.\r\n";
-            message +=  $"{string.Join("\r\n", prerequisiteConflicts)}\r\n";
+            message += string.Format(Strings.DeploymentDeadlockPrereqConflicts,
+                string.Join("\r\n", prerequisiteConflicts));
         }
         
         SortingFailed?.Invoke(this, message);
@@ -142,12 +135,12 @@ public class DeploymentSorter
             if (dependsOnItSelf)
             {
                 throw new Exception(
-                    $"Deployment version: {deploymentVersion.Version}" +
-                    $" of package: {deploymentVersion.PackageName} depends " +
-                    "on itself! Remove the dependency to continue.");
+                    string.Format(Strings.ErrorDeploymentDependsOnItself,
+                        deploymentVersion.Version,
+                        deploymentVersion.PackageName));
             }
         }
-        SortingFailed?.Invoke(this, "Infinite loop! Could not find any deployments without active dependencies.");
+        SortingFailed?.Invoke(this, Strings.ErrorInfiniteLoopNoDependencies);
     }
     private void ProcessDependent(IDeploymentVersion deployment)
     {

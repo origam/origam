@@ -1,114 +1,215 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="ResMimeType">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="Version">
-		<value>1.0.0.0</value>
-	</resheader>
-	<resheader name="Reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="Writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="ErrorFormLookupControlFail">
-		<value>Form not passed with the lookup control. This will cause a memory leak.</value>
-	</data>
-	<data name="ErrorParametersNull">
-		<value>Parameters cannot be null.</value>
-	</data>
-	<data name="ErrorGetLookupText">
-		<value>Failed getting lookup text for lookup: {0}</value>
-	</data>
-	<data name="ErrorUnknownLookupType">
-		<value>Unknown lookup type</value>
-	</data>
-	<data name="ErrorNoSuchColumn">
-		<value>Filter specified but current lookup list does not contain such a column.</value>
-	</data>
-	<data name="ErrorUpdateRunning">
-		<value>Update is already running. Cannot start update.</value>
-	</data>
-	<data name="ErrorUpdateFailed">
-		<value>Update failed.</value>
-	</data>
-	<data name="ErrorUnsupportedActivityType">
-		<value>Activity type not supported by the deployment service.</value>
-	</data>
-	<data name="ErrorUnsupportedTarget">
-		<value>Target location not supported by the deployment service.</value>
-	</data>
-	<data name="ErrorNoDataServiceNoDocsService">
-		<value>Data service not loaded! Cannot load the Documentation Service.</value>
-	</data>
-	<data name="ErrorParamNotFound">
-		<value>Data constant/parameter not found.</value>
-	</data>
-	<data name="ErrorConstantNotFound">
-		<value>Constant not found.</value>
-	</data>
-	<data name="ErrorModelNotLoaded">
-		<value>Model not loaded.</value>
-	</data>
-	<data name="ErrorFeatureNotFound">
-		<value>Requested feature not found in the current model.</value>
-	</data>
-	<data name="ErrorFeatureListFailed">
-		<value>Could not load feature list.</value>
-	</data>
-	<data name="Loading">
-		<value>Loading {0}...</value>
-	</data>
-	<data name="ErrorTooMuchExtensions">
-		<value>Maximum number of loaded extensions in one step exceeded.</value>
-	</data>
-	<data name="ErrorSchemaListFailed">
-		<value>Could not load schema list, check configuration file.\n{0}</value>
-	</data>
-	<data name="ErrorRepositoryUpdateFailed">
-		<value>Repository update failed.{0}</value>
-	</data>
-	<data name="ErrorWhenUpdateScript">
-		<value>Error occured while running update script '{0}'{1}</value>
-	</data>
-	<data name="ErrorSettingsNotFound">
-		<value>OrigamSettings not found.</value>
-	</data>
-	<data name="ErrorUnknownService">
-		<value>Unknown service</value>
-	</data>
-	<data name="ErrorPackageLoadFailed">
-		<value>Cannot load package. The package does not exist in this model.</value>
-	</data>
-	<data name="ErrorStringNotFound">
-		<value>Řetězec nebyl nalezen.</value>
-	</data>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorFormLookupControlFail" xml:space="preserve">
+    <value>Form not passed with the lookup control. This will cause a memory leak.</value>
+  </data>
+  <data name="ErrorParametersNull" xml:space="preserve">
+    <value>Parameters cannot be null.</value>
+  </data>
+  <data name="ErrorGetLookupText" xml:space="preserve">
+    <value>Failed getting lookup text for lookup: {0}</value>
+  </data>
+  <data name="ErrorUnknownLookupType" xml:space="preserve">
+    <value>Unknown lookup type</value>
+  </data>
+  <data name="ErrorNoSuchColumn" xml:space="preserve">
+    <value>Filter specified but current lookup list does not contain such a column.</value>
+  </data>
+  <data name="ErrorUpdateRunning" xml:space="preserve">
+    <value>Update is already running. Cannot start update.</value>
+  </data>
+  <data name="ErrorUpdateFailed" xml:space="preserve">
+    <value>Update failed.</value>
+  </data>
+  <data name="ErrorUnsupportedActivityType" xml:space="preserve">
+    <value>Activity type not supported by the deployment service.</value>
+  </data>
+  <data name="ErrorUnsupportedTarget" xml:space="preserve">
+    <value>Target location not supported by the deployment service.</value>
+  </data>
+  <data name="ErrorNoDataServiceNoDocsService" xml:space="preserve">
+    <value>Data service not loaded! Cannot load the Documentation Service.</value>
+  </data>
+  <data name="ErrorParamNotFound" xml:space="preserve">
+    <value>Data constant/parameter not found.</value>
+  </data>
+  <data name="ErrorConstantNotFound" xml:space="preserve">
+    <value>Constant not found.</value>
+  </data>
+  <data name="ErrorModelNotLoaded" xml:space="preserve">
+    <value>Model not loaded.</value>
+  </data>
+  <data name="ErrorFeatureNotFound" xml:space="preserve">
+    <value>Requested feature not found in the current model.</value>
+  </data>
+  <data name="ErrorFeatureListFailed" xml:space="preserve">
+    <value>Could not load feature list.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading {0}...</value>
+  </data>
+  <data name="ErrorTooMuchExtensions" xml:space="preserve">
+    <value>Maximum number of loaded extensions in one step exceeded.</value>
+  </data>
+  <data name="ErrorSchemaListFailed" xml:space="preserve">
+    <value>Could not load schema list, check configuration file.\n{0}</value>
+  </data>
+  <data name="ErrorRepositoryUpdateFailed" xml:space="preserve">
+    <value>Repository update failed.{0}</value>
+  </data>
+  <data name="ErrorWhenUpdateScript" xml:space="preserve">
+    <value>Error occured while running update script '{0}'{1}</value>
+  </data>
+  <data name="ErrorSettingsNotFound" xml:space="preserve">
+    <value>OrigamSettings not found.</value>
+  </data>
+  <data name="ErrorUnknownService" xml:space="preserve">
+    <value>Unknown service</value>
+  </data>
+  <data name="ErrorPackageLoadFailed" xml:space="preserve">
+    <value>Cannot load package. The package does not exist in this model.</value>
+  </data>
+  <data name="ErrorStringNotFound" xml:space="preserve">
+    <value>Řetězec nebyl nalezen.</value>
+  </data>
+  <data name="DeploymentDeadlockHeader" xml:space="preserve">
+    <value>Pořadí verzí nasazení nelze určit, protože mezi některými verzemi nasazení byly zjištěny cyklické závislosti.
+Úspěšně seřazené verze nasazení:
+{0}
+Řazení selhalo u těchto verzí nasazení, které byly kandidáty pro další krok:
+{1}
+</value>
+  </data>
+  <data name="DeploymentDeadlockPrereqConflicts" xml:space="preserve">
+    <value>Následující nasazení by později nemohla proběhnout, protože závisí na jiných nasazeních z aktuálního kroku. Proto se v řazení nelze posunout dál.
+{0}
+</value>
+  </data>
+  <data name="DeploymentDeadlockCandidateFormat" xml:space="preserve">
+    <value>Kandidát: {0} {1}
+	Závislosti:
+		{2}</value>
+  </data>
+  <data name="DeploymentDeadlockBlockerFormat" xml:space="preserve">
+    <value>Blokující nasazení: {0} {1}
+	Závislosti:
+		{2}</value>
+  </data>
 </root>
