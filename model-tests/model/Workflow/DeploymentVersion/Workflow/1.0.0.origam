@@ -7,7 +7,8 @@
   xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
-    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.2"
+	dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.2&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.3.2"
+    
     x:id="38c5e74e-d0e1-4528-acec-9ca5954097c1"
     asi:name="1.0.0"
     dv:version="1.0.0">
