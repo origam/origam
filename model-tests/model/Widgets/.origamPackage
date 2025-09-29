@@ -29,8 +29,5 @@
     <pr:packageReference
       x:id="e7134a68-c9ae-4f3e-884f-2c33b560ed3b"
       pr:referencedPackage="Audit/.origamPackage#255eec22-89c5-479a-b48d-e7bc9baa564a" />
-    <pr:packageReference
-      x:id="eab68261-d7b2-401d-8a9b-2ffab091edad"
-      pr:referencedPackage="Workflow/.origamPackage#a9c25bbd-9a31-427d-bde5-1a442d4d9c38" />
   </p:package>
 </x:file>
