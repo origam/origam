@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
+
 public class CreateObjectInput
 {
     public Guid SessionFormIdentifier { get; set; }

@@ -23,7 +23,9 @@ using System;
 using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
+
 public class RevertChangesInput
 {
-    [RequiredNonDefault] public Guid SessionFormIdentifier { get; set; }
+    [RequiredNonDefault]
+    public Guid SessionFormIdentifier { get; set; }
 }

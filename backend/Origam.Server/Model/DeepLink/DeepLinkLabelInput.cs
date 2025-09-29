@@ -19,7 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 namespace Origam.Server.Model.DeepLink;
+
 public class DeepLinkLabelInput
 {
-       public object[] LabelIds { get; set; }
+    public object[] LabelIds { get; set; }
 }

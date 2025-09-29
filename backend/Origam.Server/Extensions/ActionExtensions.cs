@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Origam.Server.Extensions;
+
 public static class ActionExtensions
 {
     public static string GetMessage(this IActionResult actionResult)

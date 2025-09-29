@@ -29,6 +29,7 @@ public class LookupNewRecordInitialValuesInput : AbstractLookupRowDataInput
 {
     // key parameter name, value target field
     public IDictionary<string, string> ParameterMappings { get; set; }
+
     // key parameter name, value source field
     public IDictionary<string, object> Parameters { get; set; }
     public string SearchText { get; set; }

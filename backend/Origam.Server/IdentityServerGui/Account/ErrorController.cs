@@ -27,7 +27,8 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Server.IdentityServerGui.Home;
 
 namespace Origam.Server.IdentityServerGui.Account;
-public class ErrorController: Microsoft.AspNetCore.Mvc.Controller
+
+public class ErrorController : Microsoft.AspNetCore.Mvc.Controller
 {
     [HttpGet]
     [AllowAnonymous]

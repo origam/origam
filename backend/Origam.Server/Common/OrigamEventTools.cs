@@ -33,57 +33,45 @@ namespace Origam.Server.Common;
 
 public static class OrigamEventTools
 {
-    private static readonly JsonEncodedText ObjectId
-        = JsonEncodedText.Encode("objectId");
-    private static readonly JsonEncodedText Title    
-        = JsonEncodedText.Encode("title");
-    private static readonly JsonEncodedText EntityName    
-        = JsonEncodedText.Encode("entityName");
-    private static readonly JsonEncodedText Fields        
-        = JsonEncodedText.Encode("fields");
-    private static readonly JsonEncodedText Field         
-        = JsonEncodedText.Encode("field");
-    private static readonly JsonEncodedText Caption       
-        = JsonEncodedText.Encode("caption");
-    private static readonly JsonEncodedText NumberOfRows  
-        = JsonEncodedText.Encode("numberOfRows");
-    private static readonly JsonEncodedText Parameters     
-        = JsonEncodedText.Encode("parameters");
-    
+    private static readonly JsonEncodedText ObjectId = JsonEncodedText.Encode("objectId");
+    private static readonly JsonEncodedText Title = JsonEncodedText.Encode("title");
+    private static readonly JsonEncodedText EntityName = JsonEncodedText.Encode("entityName");
+    private static readonly JsonEncodedText Fields = JsonEncodedText.Encode("fields");
+    private static readonly JsonEncodedText Field = JsonEncodedText.Encode("field");
+    private static readonly JsonEncodedText Caption = JsonEncodedText.Encode("caption");
+    private static readonly JsonEncodedText NumberOfRows = JsonEncodedText.Encode("numberOfRows");
+    private static readonly JsonEncodedText Parameters = JsonEncodedText.Encode("parameters");
+
     public static void RecordSignInEvent()
     {
-        RecordEvent(
-            eventId: OrigamEvent.SignIn.EventId, 
-            details: null);
+        RecordEvent(eventId: OrigamEvent.SignIn.EventId, details: null);
     }
 
     public static void RecordSignOutEvent()
     {
-        RecordEvent(
-            eventId: OrigamEvent.SignOut.EventId, 
-            details: null);
+        RecordEvent(eventId: OrigamEvent.SignOut.EventId, details: null);
     }
 
     public static void RecordOpenScreen(SessionStore sessionStore)
     {
         RecordEvent(
             eventId: OrigamEvent.OpenScreen.EventId,
-            details: CreateOpenScreenDetails(sessionStore));
+            details: CreateOpenScreenDetails(sessionStore)
+        );
     }
 
-    public static void RecordExportToExcel(
-        EntityExportInfo entityExportInfo,
-        int numberOfRows)
+    public static void RecordExportToExcel(EntityExportInfo entityExportInfo, int numberOfRows)
     {
         RecordEvent(
             eventId: OrigamEvent.ExportToExcel.EventId,
-            details: CreateExportToExcelDetails(
-                entityExportInfo, numberOfRows));
+            details: CreateExportToExcelDetails(entityExportInfo, numberOfRows)
+        );
     }
 
     private static string CreateExportToExcelDetails(
-        EntityExportInfo entityExportInfo, 
-        int numberOfRows)
+        EntityExportInfo entityExportInfo,
+        int numberOfRows
+    )
     {
         string formLabel = ResolveDynamicFormLabel(entityExportInfo.Store);
         return BuildJson(w =>
@@ -94,9 +82,11 @@ public static class OrigamEventTools
             w.WritePropertyName(Title);
             w.WriteStringValue(entityExportInfo.Store.Title);
             w.WritePropertyName(Caption);
-            w.WriteStringValue(!string.IsNullOrEmpty(formLabel)
-                ? formLabel
-                : entityExportInfo.Store.Request.Caption);
+            w.WriteStringValue(
+                !string.IsNullOrEmpty(formLabel)
+                    ? formLabel
+                    : entityExportInfo.Store.Request.Caption
+            );
             w.WritePropertyName(EntityName);
             w.WriteStringValue(entityExportInfo.Entity);
             w.WritePropertyName(Fields);
@@ -128,37 +118,38 @@ public static class OrigamEventTools
             w.WritePropertyName(Title);
             w.WriteStringValue(sessionStore.Title);
             w.WritePropertyName(Caption);
-            w.WriteStringValue(!string.IsNullOrEmpty(formLabel)
-                ? formLabel
-                : sessionStore.Request.Caption);
+            w.WriteStringValue(
+                !string.IsNullOrEmpty(formLabel) ? formLabel : sessionStore.Request.Caption
+            );
             w.WritePropertyName(Parameters);
             w.WriteStartObject();
-            foreach (DictionaryEntry requestParameter 
-                     in sessionStore.Request.Parameters)
+            foreach (DictionaryEntry requestParameter in sessionStore.Request.Parameters)
             {
                 if (requestParameter.Key.ToString() == null)
                 {
                     continue;
                 }
                 w.WritePropertyName(requestParameter.Key.ToString()!);
-                w.WriteStringValue(requestParameter.Value != null
-                    ? requestParameter.Value.ToString()
-                    : "");
+                w.WriteStringValue(
+                    requestParameter.Value != null ? requestParameter.Value.ToString() : ""
+                );
             }
             w.WriteEndObject();
             w.WriteEndObject();
         });
     }
-    
+
     private static string BuildJson(Action<Utf8JsonWriter> write)
     {
-        var buffer = new ArrayBufferWriter<byte>(); 
+        var buffer = new ArrayBufferWriter<byte>();
         using var writer = new Utf8JsonWriter(
-            buffer, new JsonWriterOptions
+            buffer,
+            new JsonWriterOptions
             {
                 Indented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            });
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            }
+        );
         write(writer);
         writer.Flush();
         return Encoding.UTF8.GetString(buffer.WrittenSpan);
@@ -166,18 +157,23 @@ public static class OrigamEventTools
 
     private static string ResolveDynamicFormLabel(SessionStore sessionStore)
     {
-        if (sessionStore is not FormSessionStore formSessionStore
-            || string.IsNullOrEmpty(
-                formSessionStore.MenuItem.DynamicFormLabelField)
-            || (formSessionStore.MenuItem.MethodId == Guid.Empty))
+        if (
+            sessionStore is not FormSessionStore formSessionStore
+            || string.IsNullOrEmpty(formSessionStore.MenuItem.DynamicFormLabelField)
+            || (formSessionStore.MenuItem.MethodId == Guid.Empty)
+        )
         {
             return null;
         }
-        string labelEntitySource = formSessionStore.MenuItem
-            .DynamicFormLabelEntity.EntityDefinition.Name;
+        string labelEntitySource = formSessionStore
+            .MenuItem
+            .DynamicFormLabelEntity
+            .EntityDefinition
+            .Name;
         if (formSessionStore.Data.Tables[labelEntitySource]?.Rows.Count > 0)
         {
-            return formSessionStore.Data.Tables[labelEntitySource]
+            return formSessionStore
+                .Data.Tables[labelEntitySource]
                 .Rows[0][formSessionStore.MenuItem.DynamicFormLabelField]
                 .ToString();
         }
@@ -187,16 +183,14 @@ public static class OrigamEventTools
     private static void RecordEvent(Guid eventId, string details)
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        var dataService  = DataServiceFactory.GetDataService();
-        DataSet origamEventDataSet = dataService.GetEmptyDataSet(
-            OrigamEvent.DataStructureId);
+        var dataService = DataServiceFactory.GetDataService();
+        DataSet origamEventDataSet = dataService.GetEmptyDataSet(OrigamEvent.DataStructureId);
         DataRow origamEventRecord = origamEventDataSet.Tables[0].NewRow();
         DatasetTools.ApplyPrimaryKey(origamEventRecord);
         origamEventRecord["Timestamp"] = DateTime.Now;
         origamEventRecord["Instance"] = settings.Name;
         origamEventRecord["refOrigamEventTypeId"] = eventId;
-        origamEventRecord["refBusinessPartnerId"]
-            = SecurityManager.CurrentUserProfile().Id;
+        origamEventRecord["refBusinessPartnerId"] = SecurityManager.CurrentUserProfile().Id;
         if (!string.IsNullOrEmpty(details))
         {
             origamEventRecord["Details"] = details;
@@ -206,6 +200,7 @@ public static class OrigamEventTools
             dataStructureId: OrigamEvent.DataStructureId,
             data: origamEventDataSet,
             loadActualValuesAfterUpdate: false,
-            transactionId: null);
+            transactionId: null
+        );
     }
 }

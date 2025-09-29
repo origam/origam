@@ -24,9 +24,13 @@ using Origam.Schema.GuiModel;
 using Origam.Server;
 
 namespace Origam.Server;
+
 public interface IBasicUIService
 {
-    string GetReportStandalone(string reportId, Hashtable parameters,
-        DataReportExportFormatType dataReportExportFormatType);
+    string GetReportStandalone(
+        string reportId,
+        Hashtable parameters,
+        DataReportExportFormatType dataReportExportFormatType
+    );
     UIResult InitUI(UIRequest request);
 }

@@ -40,11 +40,12 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA;
 
 namespace Origam.Server;
+
 public class UIRequest
 {
     public bool SupportsPagedData { get; set; } = false;
@@ -68,7 +69,7 @@ public class UIRequest
     public bool IsModalDialog { get; set; } = false;
     public bool RegisterSession { get; set; } = true;
     public bool DataRequested { get; set; } = true;
-    public IDictionary NewRecordInitialValues { get; set; } 
+    public IDictionary NewRecordInitialValues { get; set; }
     public QueryParameterCollection QueryParameters
     {
         get
@@ -76,7 +77,7 @@ public class UIRequest
             QueryParameterCollection qparams = new QueryParameterCollection();
             foreach (DictionaryEntry entry in Parameters)
             {
-                qparams.Add(new QueryParameter((string) entry.Key, entry.Value));
+                qparams.Add(new QueryParameter((string)entry.Key, entry.Value));
             }
             return qparams;
         }

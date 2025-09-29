@@ -41,17 +41,18 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Server;
+
 public class WorkQueueInfo
 {
-    public WorkQueueInfo()
-    {
-    }
+    public WorkQueueInfo() { }
+
     public WorkQueueInfo(string id, string name, long countTotal)
     {
         Id = id;
         Name = name;
         CountTotal = countTotal;
     }
+
     private string _id;
     public string Id
     {

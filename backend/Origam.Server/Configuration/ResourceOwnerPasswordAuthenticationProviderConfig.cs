@@ -34,11 +34,10 @@ public class ResourceOwnerPasswordAuthenticationProviderConfig
     public string ClientSecret { get; set; }
     public string UserName { get; set; }
     public string Password { get; set; }
-    
+
     public ResourceOwnerPasswordAuthenticationProviderConfig(IConfiguration configuration)
     {
-        var section = configuration
-            .GetSection("ResourceOwnerPasswordAuthenticationProviderConfig");
+        var section = configuration.GetSection("ResourceOwnerPasswordAuthenticationProviderConfig");
         if (!section.Exists())
         {
             return;

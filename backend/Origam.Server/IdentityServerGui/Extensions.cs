@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.Server.IdentityServerGui.Account;
 
 namespace Origam.Server.IdentityServerGui;
+
 public static class Extensions
 {
     /// <summary>
@@ -15,10 +16,14 @@ public static class Extensions
     public static bool IsNativeClient(this AuthorizationRequest context)
     {
         return !context.RedirectUri.StartsWith("https", StringComparison.Ordinal)
-               && !context.RedirectUri.StartsWith("http", StringComparison.Ordinal);
+            && !context.RedirectUri.StartsWith("http", StringComparison.Ordinal);
     }
-    
-    public static IActionResult LoadingPage(this Microsoft.AspNetCore.Mvc.Controller controller, string viewName, string redirectUri)
+
+    public static IActionResult LoadingPage(
+        this Microsoft.AspNetCore.Mvc.Controller controller,
+        string viewName,
+        string redirectUri
+    )
     {
         return new RedirectResult(url: redirectUri);
     }

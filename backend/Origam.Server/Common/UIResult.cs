@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Server;
+
 public class UIResult
 {
     private Guid _sessionId;
@@ -40,7 +41,13 @@ public class UIResult
     private bool _hasPartialData;
     private IDictionary<string, IDictionary> _variables;
     private string _workflowTaskId;
-    public UIResult(Guid sessionId, IDictionary<string, object> data, IDictionary<string, IDictionary> variables, bool isDirty)
+
+    public UIResult(
+        Guid sessionId,
+        IDictionary<string, object> data,
+        IDictionary<string, IDictionary> variables,
+        bool isDirty
+    )
     {
         IsDirty = isDirty;
         this.SessionId = sessionId;
@@ -50,6 +57,7 @@ public class UIResult
             this.Variables = variables;
         }
     }
+
     public bool IsDirty { get; }
     public string FormDefinition
     {
@@ -107,13 +115,14 @@ public class UIResult
         get { return _variables; }
         set { _variables = value; }
     }
+
     /// <summary>
     /// Compatibility with Flash Client v. 1486
     /// </summary>
     //TODO: Remove after Flash Client v. 1486 will not be in use
     public string[] Notification
     {
-        get 
+        get
         {
             if (this.Notifications == null)
             {
@@ -123,7 +132,6 @@ public class UIResult
             for (int i = 0; i < this.Notifications.Count; i++)
             {
                 result[i] = this.Notifications[i].Text;
-                
             }
             return result;
         }
@@ -138,6 +146,7 @@ public class UIResult
         get { return _tooltip; }
         set { _tooltip = value; }
     }
+
     /// <summary>
     /// Indicates to the client that only a list of primary keys is returned and the client has to request data as they are displayed.
     /// </summary>
@@ -147,12 +156,14 @@ public class UIResult
         set { _hasPartialData = value; }
     }
 }
+
 public class LookupConfig
 {
     private Guid _lookupId;
     private string _menuId;
     private bool _dependsOnValue;
     private string _selectionPanelId;
+
     public LookupConfig(Guid lookupId, string menuId, bool dependsOnValue, string selectionPanelId)
     {
         _lookupId = lookupId;
@@ -160,6 +171,7 @@ public class LookupConfig
         _dependsOnValue = dependsOnValue;
         _selectionPanelId = selectionPanelId;
     }
+
     public Guid LookupId
     {
         get { return _lookupId; }
@@ -181,6 +193,7 @@ public class LookupConfig
         set { _selectionPanelId = value; }
     }
 }
+
 public class UIElement
 {
     private Guid _id;
@@ -190,6 +203,7 @@ public class UIElement
         set { _id = value; }
     }
 }
+
 public class UIPanel : UIElement
 {
     private Guid _instanceId;
@@ -211,6 +225,7 @@ public class UIPanel : UIElement
         set { _instanceId = value; }
     }
 }
+
 public class AbstractPanelConfig
 {
     private UIPanel _panel;
@@ -220,11 +235,13 @@ public class AbstractPanelConfig
         set { _panel = value; }
     }
 }
+
 public class UIPanelConfig : AbstractPanelConfig
 {
     private UIGridFilterConfiguration _initialFilter;
     private IList<UIGridFilterConfiguration> _filters = new List<UIGridFilterConfiguration>();
-    private IList<UIGridColumnConfiguration> _columnConfigurations = new List<UIGridColumnConfiguration>();
+    private IList<UIGridColumnConfiguration> _columnConfigurations =
+        new List<UIGridColumnConfiguration>();
     private IList<UIGridSortConfiguration> _defaultSort = new List<UIGridSortConfiguration>();
     private bool _allowCreate = true;
     public UIGridFilterConfiguration InitialFilter
@@ -250,6 +267,7 @@ public class UIPanelConfig : AbstractPanelConfig
         set { _allowCreate = value; }
     }
 }
+
 public class UISplitConfig : AbstractPanelConfig
 {
     private int _position;
@@ -258,22 +276,23 @@ public class UISplitConfig : AbstractPanelConfig
         get { return _position; }
         set { _position = value; }
     }
-
 }
+
 public class UIGridColumnConfiguration
 {
     private string _property;
     private int _width;
     private bool _isHidden;
-    public UIGridColumnConfiguration()
-    {
-    }
+
+    public UIGridColumnConfiguration() { }
+
     public UIGridColumnConfiguration(string property, int width, bool isHidden)
     {
         this.Property = property;
         this.Width = width;
         this.IsHidden = isHidden;
     }
+
     public string Property
     {
         get { return _property; }
@@ -290,20 +309,22 @@ public class UIGridColumnConfiguration
         set { _isHidden = value; }
     }
 }
+
 public class UIGridFilterConfiguration
 {
     private string _name;
     private bool _isGlobal;
     private Guid _id;
-    public UIGridFilterConfiguration()
-    {
-    }
+
+    public UIGridFilterConfiguration() { }
+
     public UIGridFilterConfiguration(Guid id, string name, bool isGlobal)
     {
         _id = id;
         _name = name;
         _isGlobal = isGlobal;
     }
+
     public Guid Id
     {
         get { return _id; }
@@ -321,17 +342,18 @@ public class UIGridFilterConfiguration
         set { _isGlobal = value; }
     }
 
-    public List<UIGridFilterFieldConfiguration> Details { get; set; } = new ();
+    public List<UIGridFilterFieldConfiguration> Details { get; set; } = new();
 }
+
 public class UIGridFilterFieldConfiguration
 {
     private string _property;
     private object _value1;
     private object _value2;
     private int _operator;
-    public UIGridFilterFieldConfiguration()
-    {
-    }
+
+    public UIGridFilterFieldConfiguration() { }
+
     public UIGridFilterFieldConfiguration(string property, object value1, object value2, int oper)
     {
         _property = property;
@@ -339,6 +361,7 @@ public class UIGridFilterFieldConfiguration
         _value2 = value2;
         _operator = oper;
     }
+
     public string Property
     {
         get { return _property; }

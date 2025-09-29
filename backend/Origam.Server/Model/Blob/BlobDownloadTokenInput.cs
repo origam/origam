@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.Server.Model.Blob;
+
 public class BlobDownloadTokenInput : AmbiguousInput
 {
     public string Property { get; set; }

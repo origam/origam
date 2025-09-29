@@ -41,14 +41,15 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Security.Principal;
-using System.Collections;
-using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Workbench.Services;
 
 namespace Origam.Server;
+
 public class BlobUploadRequest
 {
     private DataRow _row;
@@ -58,10 +59,16 @@ public class BlobUploadRequest
     private DateTime _dateLastModified;
     private string _property;
     private DataStructureEntity _entity;
+
     public BlobUploadRequest(
-        DataRow row, IPrincipal principal, IDictionary parameters, 
-        DateTime dateCreated, DateTime dateLastModified, string property,
-        DataStructureEntity entity = null)
+        DataRow row,
+        IPrincipal principal,
+        IDictionary parameters,
+        DateTime dateCreated,
+        DateTime dateLastModified,
+        string property,
+        DataStructureEntity entity = null
+    )
     {
         _row = row;
         _userName = principal.Identity.Name;
@@ -71,6 +78,7 @@ public class BlobUploadRequest
         _property = property;
         _entity = entity;
     }
+
     public DataRow Row
     {
         get { return _row; }
@@ -106,41 +114,96 @@ public class BlobUploadRequest
         get { return _entity; }
         set { _entity = value; }
     }
-    public string BlobMember {get {return (string)this.Parameters["BlobMember"]; } }
-    public string FileSizeMember { get { return (string)this.Parameters["FileSizeMember"]; } }
-    public Guid ThumbnailHeightConstantId { get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); } }
-    public Guid DefaultCompressionConstantId { get { return new Guid((string)this.Parameters["DefaultCompressionConstantId"]); } }
-    public Guid BlobLookupId { get { return new Guid((string)this.Parameters["BlobLookupId"]); } }
-    public string GridColumnCaption { get { return (string)this.Parameters["GridColumnCaption"]; } }
-    public string AuthorMember { get { return (string)this.Parameters["AuthorMember"]; } }
-    public Guid StorageTypeDefaultConstantId { get { return new Guid((string)this.Parameters["StorageTypeDefaultConstantId"]); } }
-    public string ThumbnailMember { get { return (string)this.Parameters["ThumbnailMember"]; } }
-    public string DateCreatedMember { get { return (string)this.Parameters["DateCreatedMember"]; } }
-    public string RemarkMember { get { return (string)this.Parameters["RemarkMember"]; } }
-    public string DisplayStorageTypeSelection { get { return (string)this.Parameters["DisplayStorageTypeSelection"]; } }
-    public Guid ThumbnailWidthConstantId { get { return new Guid((string)this.Parameters["ThumbnailWidthConstantId"]); } }
-    public string DateLastModifiedMember { get { return (string)this.Parameters["DateLastModifiedMember"]; } }
-    public string OriginalPathMember { get { return (string)this.Parameters["OriginalPathMember"]; } }
-    public string FileName { get { return (string)this.Parameters["FileName"]; } }
-    public string CompressionStateMember { get { return (string)this.Parameters["CompressionStateMember"]; } }
+    public string BlobMember
+    {
+        get { return (string)this.Parameters["BlobMember"]; }
+    }
+    public string FileSizeMember
+    {
+        get { return (string)this.Parameters["FileSizeMember"]; }
+    }
+    public Guid ThumbnailHeightConstantId
+    {
+        get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); }
+    }
+    public Guid DefaultCompressionConstantId
+    {
+        get { return new Guid((string)this.Parameters["DefaultCompressionConstantId"]); }
+    }
+    public Guid BlobLookupId
+    {
+        get { return new Guid((string)this.Parameters["BlobLookupId"]); }
+    }
+    public string GridColumnCaption
+    {
+        get { return (string)this.Parameters["GridColumnCaption"]; }
+    }
+    public string AuthorMember
+    {
+        get { return (string)this.Parameters["AuthorMember"]; }
+    }
+    public Guid StorageTypeDefaultConstantId
+    {
+        get { return new Guid((string)this.Parameters["StorageTypeDefaultConstantId"]); }
+    }
+    public string ThumbnailMember
+    {
+        get { return (string)this.Parameters["ThumbnailMember"]; }
+    }
+    public string DateCreatedMember
+    {
+        get { return (string)this.Parameters["DateCreatedMember"]; }
+    }
+    public string RemarkMember
+    {
+        get { return (string)this.Parameters["RemarkMember"]; }
+    }
+    public string DisplayStorageTypeSelection
+    {
+        get { return (string)this.Parameters["DisplayStorageTypeSelection"]; }
+    }
+    public Guid ThumbnailWidthConstantId
+    {
+        get { return new Guid((string)this.Parameters["ThumbnailWidthConstantId"]); }
+    }
+    public string DateLastModifiedMember
+    {
+        get { return (string)this.Parameters["DateLastModifiedMember"]; }
+    }
+    public string OriginalPathMember
+    {
+        get { return (string)this.Parameters["OriginalPathMember"]; }
+    }
+    public string FileName
+    {
+        get { return (string)this.Parameters["FileName"]; }
+    }
+    public string CompressionStateMember
+    {
+        get { return (string)this.Parameters["CompressionStateMember"]; }
+    }
     public bool ShouldCompress
     {
         get
         {
             if (this.CompressionStateMember != "" && this.CompressionStateMember != null)
             {
-                IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+                IParameterService param =
+                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    as IParameterService;
                 bool compress = false;
                 if (DefaultCompressionConstantId != Guid.Empty)
                 {
-                    compress = (bool)param.GetParameterValue(DefaultCompressionConstantId, OrigamDataType.Boolean);
+                    compress = (bool)
+                        param.GetParameterValue(
+                            DefaultCompressionConstantId,
+                            OrigamDataType.Boolean
+                        );
                 }
                 return compress;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }

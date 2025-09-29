@@ -23,7 +23,8 @@ using System;
 using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
+
 public class WorkflowNextInput
 {
     public Guid SessionFormIdentifier { get; set; }
-} 
+}

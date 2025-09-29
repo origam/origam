@@ -24,12 +24,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
+
 public class CopyObjectInput
 {
     public Guid SessionFormIdentifier { get; set; }
     public string Entity { get; set; }
     public Guid OriginalId { get; set; }
     public Guid RequestingGridId { get; set; }
-    public List<string> Entities  { get; set; }
+    public List<string> Entities { get; set; }
     public IDictionary<string, object> ForcedValues { get; set; }
 }

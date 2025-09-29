@@ -36,19 +36,21 @@ using Origam.Server.Common;
 using Origam.Server.Model.Session;
 
 namespace Origam.Server.Controller;
+
 [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class SessionController : AbstractController
 {
-    
-    public SessionController(SessionObjects sessionObjects, 
-        ILogger<AbstractController> log, IWebHostEnvironment environment) 
-        : base(log, sessionObjects, environment)
-    {
-    }
+    public SessionController(
+        SessionObjects sessionObjects,
+        ILogger<AbstractController> log,
+        IWebHostEnvironment environment
+    )
+        : base(log, sessionObjects, environment) { }
+
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
+    public async Task<IActionResult> CreateSessionAsync([FromBody] CreateSessionData sessionData)
     {
         return await RunWithErrorHandlerAsync(async () =>
         {
@@ -64,72 +66,77 @@ public class SessionController : AbstractController
                 FormSessionId = newSessionId.ToString(),
                 ObjectId = sessionData.MenuId.ToString(),
                 Parameters = sessionData.Parameters,
-                RegisterSession = true
+                RegisterSession = true,
             };
             UIResult uiResult = sessionObjects.UIManager.InitUI(
                 request: uiRequest,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: sessionObjects.UIService);
+                basicUIService: sessionObjects.UIService
+            );
             await Task.CompletedTask; //CS1998
             return Ok(newSessionId);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult DeleteSession([FromBody]DeleteSessionData sessionData)
+    public IActionResult DeleteSession([FromBody] DeleteSessionData sessionData)
     {
         return RunWithErrorHandler(() =>
         {
-            new SessionHelper(sessionObjects.SessionManager)
-                .DeleteSession(sessionData.SessionId);
+            new SessionHelper(sessionObjects.SessionManager).DeleteSession(sessionData.SessionId);
             CallOrigamUserUpdate();
             return Ok();
         });
     }
-    
+
     [HttpPost("[action]")]
-    public IActionResult DeleteRow([FromBody]DeleteRowData sessionData)
+    public IActionResult DeleteRow([FromBody] DeleteRowData sessionData)
     {
         return RunWithErrorHandler(() =>
         {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
-            IList output = ss.DeleteObject(
-                sessionData.Entity,
-                sessionData.RowId);
+            SessionStore ss = sessionObjects.SessionManager.GetSession(
+                sessionData.SessionFormIdentifier
+            );
+            IList output = ss.DeleteObject(sessionData.Entity, sessionData.RowId);
             CallOrigamUserUpdate();
             return Ok(output);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult ChangeMasterRecord([FromBody]ChangeMasterRecordData sessionData)
+    public IActionResult ChangeMasterRecord([FromBody] ChangeMasterRecordData sessionData)
     {
         return RunWithErrorHandler(() =>
         {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
-            List<ChangeInfo> output = ss.GetRowData(
-                sessionData.Entity,
-                sessionData.RowId,
-                false);
+            SessionStore ss = sessionObjects.SessionManager.GetSession(
+                sessionData.SessionFormIdentifier
+            );
+            List<ChangeInfo> output = ss.GetRowData(sessionData.Entity, sessionData.RowId, false);
             CallOrigamUserUpdate();
             return Ok(output);
         });
     }
+
     [HttpGet("[action]")]
-    public IActionResult Rows([FromQuery][RequiredNonDefault] Guid sessionFormIdentifier, 
-        [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
-        [FromQuery][Required] string rootRecordId)
+    public IActionResult Rows(
+        [FromQuery] [RequiredNonDefault] Guid sessionFormIdentifier,
+        [FromQuery] [Required] string childEntity,
+        [FromQuery] [Required] string parentRecordId,
+        [FromQuery] [Required] string rootRecordId
+    )
     {
         return RunWithErrorHandler(() =>
         {
             SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
-            IList output = ss.GetData(childEntity, parentRecordId,  rootRecordId);
+            IList output = ss.GetData(childEntity, parentRecordId, rootRecordId);
             CallOrigamUserUpdate();
             return Ok(output);
         });
     }
-    
+
     [HttpPost("[action]")]
-    public IActionResult SaveData([FromBody]SaveDataData saveData)
+    public IActionResult SaveData([FromBody] SaveDataData saveData)
     {
         return RunWithErrorHandler(() =>
         {
@@ -139,53 +146,61 @@ public class SessionController : AbstractController
             return Ok(output);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult CreateRow([FromBody]NewRowData newRowData)
+    public IActionResult CreateRow([FromBody] NewRowData newRowData)
     {
         return RunWithErrorHandler(() =>
         {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(newRowData.SessionFormIdentifier);
+            SessionStore ss = sessionObjects.SessionManager.GetSession(
+                newRowData.SessionFormIdentifier
+            );
             IList output = ss.CreateObject(
                 newRowData.Entity,
                 newRowData.Values,
                 newRowData.Parameters,
-                newRowData.RequestingGridId.ToString());
+                newRowData.RequestingGridId.ToString()
+            );
             CallOrigamUserUpdate();
             return Ok(output);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult UpdateRow([FromBody]UpdateRowData updateData)
+    public IActionResult UpdateRow([FromBody] UpdateRowData updateData)
     {
         return RunWithErrorHandler(() =>
         {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(updateData.SessionFormIdentifier);
+            SessionStore ss = sessionObjects.SessionManager.GetSession(
+                updateData.SessionFormIdentifier
+            );
             IEnumerable<ChangeInfo> output = ss.UpdateObject(
                 entity: updateData.Entity,
                 id: updateData.Id,
                 property: updateData.Property,
-                newValue: updateData.NewValue);
+                newValue: updateData.NewValue
+            );
             CallOrigamUserUpdate();
             return Ok(output);
         });
     }
+
     [HttpPost("[action]")]
     public IActionResult CloseSession()
     {
-        PortalSessionStore pss = 
-            sessionObjects.SessionManager.GetPortalSession();
+        PortalSessionStore pss = sessionObjects.SessionManager.GetPortalSession();
         if (pss == null)
         {
             return BadRequest("Portal session not found.");
         }
-        SessionHelper sessionHelper = new SessionHelper(
-            sessionObjects.SessionManager);
-        while(pss.FormSessions.Count > 0)
+        SessionHelper sessionHelper = new SessionHelper(sessionObjects.SessionManager);
+        while (pss.FormSessions.Count > 0)
         {
             sessionHelper.DeleteSession(pss.FormSessions[0].Id);
         }
         return Ok();
     }
+
     private void CallOrigamUserUpdate()
     {
         var principal = SecurityManager.CurrentPrincipal;
@@ -194,7 +209,8 @@ public class SessionController : AbstractController
             Thread.CurrentPrincipal = principal;
             SecurityTools.CreateUpdateOrigamOnlineUser(
                 SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionObjects.SessionManager.GetSessionStats());
+                sessionObjects.SessionManager.GetSessionStats()
+            );
         });
     }
 }

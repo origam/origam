@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema.EntityModel;
 using System.Data;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Server.Model.UIService;
+
 public class RowData
 {
     public DataRow Row { get; set; }

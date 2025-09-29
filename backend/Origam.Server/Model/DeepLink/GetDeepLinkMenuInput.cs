@@ -19,7 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
+
 namespace Origam.Server.Model.DeepLink;
+
 public class GetDeepLinkMenuInput
 {
     public string Category { get; set; }

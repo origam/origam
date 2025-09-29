@@ -24,22 +24,23 @@ using System.Collections.Concurrent;
 using Origam.Server;
 
 namespace Origam.Server;
+
 public class SessionObjects
 {
     public SessionManager SessionManager { get; }
     public UIManager UIManager { get; }
     public ServerCoreUIService UIService { get; }
+
     public SessionObjects()
     {
         var analytics = Analytics.Instance;
         SessionManager = new SessionManager(
             portalSessions: new ConcurrentDictionary<Guid, PortalSessionStore>(),
             formSessions: new ConcurrentDictionary<Guid, SessionStore>(),
+            analytics: analytics,
             reportRequests: new ConcurrentDictionary<Guid, ReportRequest>(),
-            blobDownloadRequests: new ConcurrentDictionary<Guid, 
-                BlobDownloadRequest>(),
-            blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>(),
-            analytics: analytics);
+            blobDownloadRequests: new ConcurrentDictionary<Guid, BlobDownloadRequest>(),
+            blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>());
         UIManager = new UIManager(50, SessionManager, analytics);
         UIService = new ServerCoreUIService(UIManager, SessionManager);
     }

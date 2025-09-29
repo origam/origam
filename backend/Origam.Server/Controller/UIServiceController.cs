@@ -19,20 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Origam.DA;
-using Origam.DA.Service;
-using Origam.OrigamEngine.ModelXmlBuilders;
-using Origam.Schema.EntityModel;
-using Origam.Schema.LookupModel;
-using Origam.Schema.MenuModel;
-using Origam.Services;
-using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,21 +27,36 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
+using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Origam.DA;
+using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Schema.EntityModel;
+using Origam.Schema.LookupModel;
+using Origam.Schema.MenuModel;
 using Origam.Server.Common;
 using Origam.Server.Configuration;
 using Origam.Server.Model.Search;
 using Origam.Server.Model.UIService;
-using Origam.Workbench;
 using Origam.Service.Core;
+using Origam.Services;
+using Origam.Workbench;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
 namespace Origam.Server.Controller;
+
 [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
 [ApiController]
 [Route("internalApi/[controller]")]
@@ -68,6 +69,7 @@ public class UIServiceController : AbstractController
     private readonly CustomAssetsConfig customAssetsConfig;
     private readonly HtmlClientConfig htmlClientConfig;
     private readonly ChatConfig chatConfig;
+
     public UIServiceController(
         SessionObjects sessionObjects,
         IStringLocalizer<SharedResources> localizer,
@@ -77,7 +79,8 @@ public class UIServiceController : AbstractController
         IOptions<ClientFilteringConfig> filteringConfig,
         IOptions<HtmlClientConfig> htmlClientConfigOptions,
         IOptions<ChatConfig> chatConfigOptions,
-        IWebHostEnvironment environment)
+        IWebHostEnvironment environment
+    )
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
@@ -85,10 +88,10 @@ public class UIServiceController : AbstractController
         this.localizationOptions = localizationOptions.Value;
         customAssetsConfig = customAssetsOptions.Value;
         htmlClientConfig = htmlClientConfigOptions.Value;
-        lookupService
-            = ServiceManager.Services.GetService<IDataLookupService>();
+        lookupService = ServiceManager.Services.GetService<IDataLookupService>();
         chatConfig = chatConfigOptions.Value;
     }
+
     #region Endpoints
     [HttpGet("[action]")]
     // ReSharper disable once UnusedParameter.Global
@@ -102,31 +105,40 @@ public class UIServiceController : AbstractController
             return Ok(result);
         });
     }
+
     [AllowAnonymous]
     [HttpGet("[action]")]
     public IActionResult DefaultLocalizationCookie()
     {
         return RunWithErrorHandler(() =>
         {
-            var cultureProvider = localizationOptions.RequestCultureProviders
-                .OfType<OrigamCookieRequestCultureProvider>().First();
+            var cultureProvider = localizationOptions
+                .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
+                .First();
             string localizationCookie = cultureProvider.MakeCookieValue(
-                localizationOptions.DefaultRequestCulture);
+                localizationOptions.DefaultRequestCulture
+            );
             return Ok(localizationCookie);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult InitUI([FromBody]UIRequest request)
+    public IActionResult InitUI([FromBody] UIRequest request)
     {
-        return RunWithErrorHandler(() => 
-            Ok(sessionObjects.UIManager.InitUI(
-                request: request,
-                addChildSession: false,
-                parentSession: null,
-                basicUIService: sessionObjects.UIService)));
+        return RunWithErrorHandler(() =>
+            Ok(
+                sessionObjects.UIManager.InitUI(
+                    request: request,
+                    addChildSession: false,
+                    parentSession: null,
+                    basicUIService: sessionObjects.UIService
+                )
+            )
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult DestroyUI([FromBody]DestroyInput input)
+    public IActionResult DestroyUI([FromBody] DestroyInput input)
     {
         return RunWithErrorHandler(() =>
         {
@@ -134,26 +146,29 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpGet("[action]/{sessionFormIdentifier:guid}")]
     public IActionResult RefreshData(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.RefreshData(
-                sessionFormIdentifier, localizer)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.RefreshData(sessionFormIdentifier, localizer))
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult RestoreData([FromBody]RestoreDataInput input)
+    public IActionResult RestoreData([FromBody] RestoreDataInput input)
     {
-        return RunWithErrorHandler(()
-            => Ok(sessionObjects.UIService.RestoreData(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.RestoreData(input)));
     }
+
     [HttpGet("[action]/{sessionFormIdentifier:guid}")]
     public IActionResult SaveDataQuery(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.SaveDataQuery(
-                sessionFormIdentifier)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.SaveDataQuery(sessionFormIdentifier))
+        );
     }
+
     [HttpGet("[action]/{sessionFormIdentifier:guid}")]
     public IActionResult SaveData(Guid sessionFormIdentifier)
     {
@@ -163,103 +178,102 @@ public class UIServiceController : AbstractController
             var errors = ruleExceptionData
                 .Cast<RuleExceptionData>()
                 .Where(data => data.Severity == RuleExceptionSeverity.High)
-                .Select(data =>$"Entity: {data.EntityName}, Field: {data.FieldName}, Message: {data.Message}, Severity: {data.Severity}")
+                .Select(data =>
+                    $"Entity: {data.EntityName}, Field: {data.FieldName}, Message: {data.Message}, Severity: {data.Severity}"
+                )
                 .ToList();
             if (errors.Count > 0)
             {
                 return StatusCode(409, string.Join("\n", errors));
             }
-            return Ok(sessionObjects.UIService.SaveData(
-                sessionFormIdentifier));
+            return Ok(sessionObjects.UIService.SaveData(sessionFormIdentifier));
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult RevertChanges([FromBody]RevertChangesInput input)
+    public IActionResult RevertChanges([FromBody] RevertChangesInput input)
     {
         return RunWithErrorHandler(() =>
         {
             sessionObjects.UIService.RevertChanges(input);
             return Ok();
         });
-    }        
-    [HttpPost("[action]")]
-    public IActionResult MasterRecord([FromBody]MasterRecordInput input)
-    {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.GetRowData(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetData([FromBody]GetDataInput input)
+    public IActionResult MasterRecord([FromBody] MasterRecordInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.GetData(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.GetRowData(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult RowStates([FromBody]RowStatesInput input)
+    public IActionResult GetData([FromBody] GetDataInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.RowStates(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.GetData(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult CreateObject(
-        [FromBody][Required]CreateObjectInput input)
+    public IActionResult RowStates([FromBody] RowStatesInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.CreateObject(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.RowStates(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult CopyObject(
-        [FromBody][Required]CopyObjectInput input)
+    public IActionResult CreateObject([FromBody] [Required] CreateObjectInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.CopyObject(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.CreateObject(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult UpdateObject(
-        [FromBody][Required]UpdateObjectInput input)
+    public IActionResult CopyObject([FromBody] [Required] CopyObjectInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.UpdateObject(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.CopyObject(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult DeleteObject(
-        [FromBody][Required]DeleteObjectInput input)
+    public IActionResult UpdateObject([FromBody] [Required] UpdateObjectInput input)
+    {
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.UpdateObject(input)));
+    }
+
+    [HttpPost("[action]")]
+    public IActionResult DeleteObject([FromBody] [Required] DeleteObjectInput input)
     {
         //todo: handle deleting non existing objects
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.DeleteObject(input)));
-    }        
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.DeleteObject(input)));
+    }
+
     [HttpPost("[action]")]
     public IActionResult DeleteObjectInOrderedList(
-        [FromBody][Required]DeleteObjectInOrderedListInput input)
+        [FromBody] [Required] DeleteObjectInOrderedListInput input
+    )
     {
         //todo: handle deleting non existing objects
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.DeleteObjectInOrderedList(input)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.DeleteObjectInOrderedList(input))
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult ExecuteActionQuery(
-        [FromBody][Required]ExecuteActionQueryInput input)
+    public IActionResult ExecuteActionQuery([FromBody] [Required] ExecuteActionQueryInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.ExecuteActionQuery(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.ExecuteActionQuery(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult ExecuteAction(
-        [FromBody][Required]ExecuteActionInput input)
+    public IActionResult ExecuteAction([FromBody] [Required] ExecuteActionInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.ExecuteAction(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.ExecuteAction(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetLookupLabels(
-        [FromBody][Required]LookupLabelsInput input)
+    public IActionResult GetLookupLabels([FromBody] [Required] LookupLabelsInput input)
     {
         return RunWithErrorHandler(() =>
         {
             // todo: unify approach
             var checkResult = CheckLookup(input);
-            if(checkResult != null)
+            if (checkResult != null)
             {
                 return checkResult;
             }
@@ -267,41 +281,43 @@ public class UIServiceController : AbstractController
             return Ok(labelDictionary);
         });
     }
+
     [HttpPost("[action]")]
     public IActionResult GetLookupCacheDependencies(
-        [FromBody][Required]GetLookupCacheDependenciesInput input)
+        [FromBody] [Required] GetLookupCacheDependenciesInput input
+    )
     {
         return RunWithErrorHandler(() =>
         {
-            var dependencies 
-                = new Dictionary<string, object>(input.LookupIds.Length);
-            foreach(var lookupId in input.LookupIds)
+            var dependencies = new Dictionary<string, object>(input.LookupIds.Length);
+            foreach (var lookupId in input.LookupIds)
             {
-                dependencies.Add((string)lookupId, 
-                    GetLookupCacheDependencies((string)lookupId));
+                dependencies.Add((string)lookupId, GetLookupCacheDependencies((string)lookupId));
             }
             return Ok(dependencies);
         });
     }
+
     [HttpGet("[action]")]
     public IActionResult WorkQueueList()
     {
-        return RunWithErrorHandler(() => 
-            Ok(ServerCoreUIService.WorkQueueList(localizer)));
+        return RunWithErrorHandler(() => Ok(ServerCoreUIService.WorkQueueList(localizer)));
     }
+
     [HttpPost("[action]")]
     public IActionResult ResetScreenColumnConfiguration(
-        [FromBody][Required]ResetScreenColumnConfigurationInput input)
+        [FromBody] [Required] ResetScreenColumnConfigurationInput input
+    )
     {
         return RunWithErrorHandler(() =>
         {
             sessionObjects.UIService.ResetScreenColumnConfiguration(input);
             return Ok();
         });
-    }        
+    }
+
     [HttpPost("[action]")]
-    public IActionResult SaveObjectConfig(
-        [FromBody][Required]SaveObjectConfigInput input)
+    public IActionResult SaveObjectConfig([FromBody] [Required] SaveObjectConfigInput input)
     {
         return RunWithErrorHandler(() =>
         {
@@ -309,9 +325,9 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult SaveSplitPanelConfig(
-        [FromBody][Required]SaveSplitPanelConfigInput input)
+    public IActionResult SaveSplitPanelConfig([FromBody] [Required] SaveSplitPanelConfigInput input)
     {
         return RunWithErrorHandler(() =>
         {
@@ -319,16 +335,17 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetLookupLabelsEx([FromBody]LookupLabelsInput[] inputs)
+    public IActionResult GetLookupLabelsEx([FromBody] LookupLabelsInput[] inputs)
     {
         return RunWithErrorHandler(() =>
         {
             var result = new Dictionary<Guid, Dictionary<object, string>>();
-            foreach(var input in inputs)
+            foreach (var input in inputs)
             {
                 var checkResult = CheckLookup(input);
-                if(checkResult != null)
+                if (checkResult != null)
                 {
                     return checkResult;
                 }
@@ -338,8 +355,9 @@ public class UIServiceController : AbstractController
             return Ok(result);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetLookupList([FromBody]LookupListInput input)
+    public IActionResult GetLookupList([FromBody] LookupListInput input)
     {
         //todo: implement GetFilterLookupList
         return LookupInputToRowData(input)
@@ -347,145 +365,166 @@ public class UIServiceController : AbstractController
             .Map(ToActionResult)
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
     public IActionResult GetLookupNewRecordInitialValues(
-        [FromBody]LookupNewRecordInitialValuesInput input)
+        [FromBody] LookupNewRecordInitialValuesInput input
+    )
     {
         return LookupInputToRowData(input)
             .Bind(rowData => RowDataToNewRecordInitialValues(input, rowData))
             .Map(ToActionResult)
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetRows([FromBody]GetRowsInput input)
+    public IActionResult GetRows([FromBody] GetRowsInput input)
     {
         return RunWithErrorHandler(() =>
         {
             var sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier);
+                input.SessionFormIdentifier
+            );
             if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
             {
                 return WorkQueueGetRowsGetRowsQuery(input, workQueueSessionStore)
                     .Bind(dataStructureQuery =>
                         ExecuteDataReader(
                             dataStructureQuery: dataStructureQuery,
-                            methodId: input.MenuId))
+                            methodId: input.MenuId
+                        )
+                    )
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             }
             return EntityIdentificationToEntityData(input)
                 .Bind(entityData => GetRowsGetQuery(input, entityData))
-                .Bind(dataStructureQuery=>
+                .Bind(dataStructureQuery =>
                     ExecuteDataReader(
                         dataStructureQuery: dataStructureQuery,
-                        methodId: input.MenuId))
+                        methodId: input.MenuId
+                    )
+                )
                 .Map(ToActionResult)
                 .Finally(UnwrapReturnValue);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetRow([FromBody]MasterRecordInput input)
+    public IActionResult GetRow([FromBody] MasterRecordInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.GetRow(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.GetRow(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetAggregations([FromBody]GetGroupsAggregations input)
+    public IActionResult GetAggregations([FromBody] GetGroupsAggregations input)
     {
-        return RunWithErrorHandler(() => { 
-           var sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier);
+        return RunWithErrorHandler(() =>
+        {
+            var sessionStore = sessionObjects.SessionManager.GetSession(
+                input.SessionFormIdentifier
+            );
             if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
             {
-               return WorkQueueGetRowsGetAggregationQuery(input, workQueueSessionStore)
+                return WorkQueueGetRowsGetAggregationQuery(input, workQueueSessionStore)
                     .Bind(ExecuteDataReaderGetPairs)
                     .Bind(ExtractAggregationList)
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             }
             return EntityIdentificationToEntityData(input)
-                .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
+                .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))
                 .Bind(ExecuteDataReaderGetPairs)
                 .Bind(ExtractAggregationList)
                 .Map(ToActionResult)
                 .Finally(UnwrapReturnValue);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetGroups([FromBody]GetGroupsInput input)
+    public IActionResult GetGroups([FromBody] GetGroupsInput input)
     {
         return RunWithErrorHandler(() =>
         {
             return EntityIdentificationToEntityData(input)
-                .Bind(entityData => GetRowsGetGroupQuery(input, entityData))                    
+                .Bind(entityData => GetRowsGetGroupQuery(input, entityData))
                 .Bind(ExecuteDataReaderGetPairs)
                 .Map(ToActionResult)
                 .Finally(UnwrapReturnValue);
         });
     }
+
     [HttpPut("[action]")]
-    public IActionResult Row([FromBody]UpdateRowInput input)
+    public IActionResult Row([FromBody] UpdateRowInput input)
     {
         return FindItem<FormReferenceMenuItem>(input.MenuId)
             .Bind(Authorize)
-            .Bind(menuItem => GetEntityData(
-                input.DataStructureEntityId, 
-                (FormReferenceMenuItem)menuItem))
+            .Bind(menuItem =>
+                GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            )
             .Bind(CheckEntityBelongsToMenu)
-            .Bind(entityData => 
+            .Bind(entityData =>
                 GetRow(
                     dataService,
-                    entityData.Entity, 
+                    entityData.Entity,
                     input.DataStructureEntityId,
                     Guid.Empty,
-                    input.RowId))
+                    input.RowId
+                )
+            )
             .Tap(rowData => FillRow(rowData, input.NewValues))
             .Map(rowData => SubmitChange(rowData, Operation.Update))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult Row([FromBody]NewRowInput input)
+    public IActionResult Row([FromBody] NewRowInput input)
     {
         return FindItem<FormReferenceMenuItem>(input.MenuId)
             .Bind(Authorize)
-            .Bind(menuItem => GetEntityData(
-                input.DataStructureEntityId, 
-                (FormReferenceMenuItem)menuItem))
+            .Bind(menuItem =>
+                GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            )
             .Bind(CheckEntityBelongsToMenu)
             .Map(entityData => MakeEmptyRow(entityData.Entity))
             .Tap(rowData => FillRow(input, rowData))
             .Map(rowData => SubmitChange(rowData, Operation.Create))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult NewEmptyRow([FromBody]NewEmptyRowInput input)
+    public IActionResult NewEmptyRow([FromBody] NewEmptyRowInput input)
     {
         return FindItem<FormReferenceMenuItem>(input.MenuId)
             .Bind(Authorize)
             .Bind(menuItem =>
-                GetEntityData(input.DataStructureEntityId,
-                    (FormReferenceMenuItem)menuItem))
+                GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            )
             .Bind(CheckEntityBelongsToMenu)
             .Map(entityData => MakeEmptyRow(entityData.Entity))
             .Map(PrepareNewRow)
             .Map(rowData => SubmitChange(rowData, Operation.Create))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpDelete("[action]")]
-    public IActionResult Row([FromBody]DeleteRowInput input)
+    public IActionResult Row([FromBody] DeleteRowInput input)
     {
         return FindItem<FormReferenceMenuItem>(input.MenuId)
             .Bind(Authorize)
-            .Bind(menuItem => GetEntityData(
-                input.DataStructureEntityId, 
-                (FormReferenceMenuItem)menuItem))
+            .Bind(menuItem =>
+                GetEntityData(input.DataStructureEntityId, (FormReferenceMenuItem)menuItem)
+            )
             .Bind(CheckEntityBelongsToMenu)
-            .Bind(entityData => GetRow(
-                dataService,
-                entityData.Entity,
-                input.DataStructureEntityId,
-                Guid.Empty,
-                input.RowIdToDelete))
+            .Bind(entityData =>
+                GetRow(
+                    dataService,
+                    entityData.Entity,
+                    input.DataStructureEntityId,
+                    Guid.Empty,
+                    input.RowIdToDelete
+                )
+            )
             .Map(rowData =>
             {
                 rowData.Row.Delete();
@@ -494,51 +533,51 @@ public class UIServiceController : AbstractController
             .Map(ThrowAwayReturnData)
             .Finally(UnwrapReturnValue);
     }
+
     [HttpGet("[action]/{sessionFormIdentifier}")]
     public IActionResult WorkflowNextQuery(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.WorkflowNextQuery(
-                sessionFormIdentifier)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.WorkflowNextQuery(sessionFormIdentifier))
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult WorkflowNext(
-        [FromBody][Required]WorkflowNextInput input)
+    public IActionResult WorkflowNext([FromBody] [Required] WorkflowNextInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.WorkflowNext(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.WorkflowNext(input)));
     }
+
     [HttpGet("[action]/{sessionFormIdentifier}")]
     public IActionResult WorkflowAbort(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.WorkflowAbort(
-                sessionFormIdentifier)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.WorkflowAbort(sessionFormIdentifier))
+        );
     }
+
     [HttpGet("[action]/{sessionFormIdentifier}")]
     public IActionResult WorkflowRepeat(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.WorkflowRepeat(
-                sessionFormIdentifier, localizer).Result));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.WorkflowRepeat(sessionFormIdentifier, localizer).Result)
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult AttachmentCount(
-        [FromBody][Required]AttachmentCountInput input)
+    public IActionResult AttachmentCount([FromBody] [Required] AttachmentCountInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.AttachmentCount(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.AttachmentCount(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult AttachmentList(
-        [FromBody][Required]AttachmentListInput input)
+    public IActionResult AttachmentList([FromBody] [Required] AttachmentListInput input)
     {
-        return RunWithErrorHandler(() 
-            => Ok(sessionObjects.UIService.AttachmentList(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.AttachmentList(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetRecordTooltip(
-        [FromBody]GetRecordTooltipInput input)
+    public IActionResult GetRecordTooltip([FromBody] GetRecordTooltipInput input)
     {
         return AmbiguousInputToRowData(input, dataService)
             .Map(RowDataToRecordTooltip)
@@ -551,36 +590,41 @@ public class UIServiceController : AbstractController
                 if (result.Error is NotFoundObjectResult notFoundResult)
                 {
                     XmlDocument doc = new XmlDocument();
-                    doc.LoadXml("<tooltip title=\"'Error'\">"+
-                                    $"<cell type=\"text\" x=\"0\" y=\"1\" height=\"1\" width=\"1\">Error</cell>"+
-                                    $"<cell type=\"text\" x=\"0\" y=\"2\" height=\"1\" width=\"1\">{notFoundResult.Value}</cell>"+
-                                "</tooltip>");
+                    doc.LoadXml(
+                        "<tooltip title=\"'Error'\">"
+                            + $"<cell type=\"text\" x=\"0\" y=\"1\" height=\"1\" width=\"1\">Error</cell>"
+                            + $"<cell type=\"text\" x=\"0\" y=\"2\" height=\"1\" width=\"1\">{notFoundResult.Value}</cell>"
+                            + "</tooltip>"
+                    );
                     return Ok(doc);
                 }
                 return result.Error;
             });
     }
+
     [HttpGet("[action]")]
     public IActionResult GetNotificationBoxContent()
     {
         XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
         {
             Indent = true,
-            NewLineOnAttributes = true
+            NewLineOnAttributes = true,
         };
-        return Ok(ServerCoreUIService.NotificationBoxContent().ToBeautifulString(xmlWriterSettings));
+        return Ok(
+            ServerCoreUIService.NotificationBoxContent().ToBeautifulString(xmlWriterSettings)
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetAudit([FromBody]GetAuditInput input)
+    public IActionResult GetAudit([FromBody] GetAuditInput input)
     {
         return AmbiguousInputToEntityId(input)
-            .Map(entityId => 
-                GetAuditLog(entityId, input.RowId))
+            .Map(entityId => GetAuditLog(entityId, input.RowId))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult SaveFavorites(
-        [FromBody][Required]SaveFavoritesInput input)
+    public IActionResult SaveFavorites([FromBody] [Required] SaveFavoritesInput input)
     {
         return RunWithErrorHandler(() =>
         {
@@ -588,30 +632,32 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpGet("[action]/{sessionFormIdentifier:guid}")]
     public IActionResult PendingChanges(Guid sessionFormIdentifier)
     {
-        return RunWithErrorHandler(() => Ok(
-            sessionObjects.UIService.GetPendingChanges(
-                sessionFormIdentifier)));
+        return RunWithErrorHandler(() =>
+            Ok(sessionObjects.UIService.GetPendingChanges(sessionFormIdentifier))
+        );
     }
+
     [HttpPost("[action]")]
-    public IActionResult Changes([FromBody]ChangesInput input)
+    public IActionResult Changes([FromBody] ChangesInput input)
     {
-        return RunWithErrorHandler(() => Ok(
-            sessionObjects.UIService.GetChanges(input)));
+        return RunWithErrorHandler(() => Ok(sessionObjects.UIService.GetChanges(input)));
     }
+
     [HttpPost("[action]")]
-    public IActionResult SaveFilter([FromBody]SaveFilterInput input)
+    public IActionResult SaveFilter([FromBody] SaveFilterInput input)
     {
         return FindEntity(input.DataStructureEntityId)
-            .Bind(dataStructureEntity
-                => ServerCoreUIService.SaveFilter(dataStructureEntity, input))
+            .Bind(dataStructureEntity => ServerCoreUIService.SaveFilter(dataStructureEntity, input))
             .Map(filterId => ToActionResult(filterId))
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult DeleteFilter([FromBody]DeleteFilterInput deleteFilterInput)
+    public IActionResult DeleteFilter([FromBody] DeleteFilterInput deleteFilterInput)
     {
         return RunWithErrorHandler(() =>
         {
@@ -619,21 +665,21 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult SetDefaultFilter(
-        [FromBody]SetDefaultFilterInput input)
+    public IActionResult SetDefaultFilter([FromBody] SetDefaultFilterInput input)
     {
         return FindEntity(input.DataStructureEntityId)
-            .Tap(dataStructureEntity
-                => sessionObjects.UIService.SetDefaultFilter(
-                    input, dataStructureEntity))
+            .Tap(dataStructureEntity =>
+                sessionObjects.UIService.SetDefaultFilter(input, dataStructureEntity)
+            )
             .Map(ToActionResult)
             .Map(ThrowAwayReturnData)
             .Finally(UnwrapReturnValue);
     }
+
     [HttpPost("[action]")]
-    public IActionResult ResetDefaultFilter(
-        [FromBody]ResetDefaultFilterInput input)
+    public IActionResult ResetDefaultFilter([FromBody] ResetDefaultFilterInput input)
     {
         return RunWithErrorHandler(() =>
         {
@@ -641,6 +687,7 @@ public class UIServiceController : AbstractController
             return Ok();
         });
     }
+
     [HttpGet("[action]/{menuId}")]
     public IActionResult ReportFromMenu(Guid menuId)
     {
@@ -648,45 +695,52 @@ public class UIServiceController : AbstractController
         {
             return FindItem<ReportReferenceMenuItem>(menuId)
                 .Bind(Authorize)
-                .Map(menuItem => sessionObjects.UIService.ReportFromMenu(
-                    menuItem.Id))
+                .Map(menuItem => sessionObjects.UIService.ReportFromMenu(menuItem.Id))
                 .Map(ToActionResult)
                 .Finally(UnwrapReturnValue);
         });
     }
+
     [HttpPost("[action]")]
-    public IActionResult GetMenuId([FromBody]GetMenuInput input)
+    public IActionResult GetMenuId([FromBody] GetMenuInput input)
     {
-        return RunWithErrorHandler(() => Ok(GetMenuId(
-            lookupId: input.LookupId, 
-            referenceId: input.ReferenceId))
+        return RunWithErrorHandler(() =>
+            Ok(GetMenuId(lookupId: input.LookupId, referenceId: input.ReferenceId))
         );
     }
-    
+
     [HttpPost("[action]")]
-    public IActionResult GetFilterListValues(
-        [FromBody] GetFilterListValuesInput input)
+    public IActionResult GetFilterListValues([FromBody] GetFilterListValuesInput input)
     {
         return RunWithErrorHandler(() =>
         {
             var sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier);
+                input.SessionFormIdentifier
+            );
             if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
             {
                 return GetFilterListValuesQuery(
                         input,
-                        GetWorkQueueEntityData(workQueueSessionStore))
+                        GetWorkQueueEntityData(workQueueSessionStore)
+                    )
                     .Map(queryData =>
                     {
                         var query = queryData.DataStructureQuery;
-                        query.MethodId = workQueueSessionStore.WorkQueueClass
+                        query.MethodId = workQueueSessionStore
+                            .WorkQueueClass
                             .WorkQueueStructureUserListMethodId;
-                        query.SortSetId = workQueueSessionStore.WorkQueueClass
+                        query.SortSetId = workQueueSessionStore
+                            .WorkQueueClass
                             .WorkQueueStructureSortSetId;
                         query.DataSourceId = workQueueSessionStore
-                            .WorkQueueClass.WorkQueueStructureId;
-                        query.Parameters.Add(new QueryParameter(
-                            "WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId));
+                            .WorkQueueClass
+                            .WorkQueueStructureId;
+                        query.Parameters.Add(
+                            new QueryParameter(
+                                "WorkQueueEntry_parWorkQueueId",
+                                sessionStore.Request.ObjectId
+                            )
+                        );
                         return query;
                     })
                     .Bind(ExecuteDataReaderGetPairs)
@@ -695,14 +749,15 @@ public class UIServiceController : AbstractController
                     .Finally(UnwrapReturnValue);
             }
             return EntityIdentificationToEntityData(input)
-                .Bind(entityData => GetFilterListValuesQuery(
-                    input, entityData))
+                .Bind(entityData => GetFilterListValuesQuery(input, entityData))
                 .Bind(queryData =>
                     AddMethodAndSource(
-                        queryData.SessionFormIdentifier, 
-                        Guid.Empty, 
+                        queryData.SessionFormIdentifier,
+                        Guid.Empty,
                         queryData.EntityData,
-                        queryData.DataStructureQuery))
+                        queryData.DataStructureQuery
+                    )
+                )
                 .Bind(ExecuteDataReaderGetPairs)
                 .Bind(StreamlineFilterListValues)
                 .Map(ToActionResult)
@@ -710,11 +765,11 @@ public class UIServiceController : AbstractController
         });
     }
     #endregion
-    
-    
+
     private EntityData GetWorkQueueEntityData(WorkQueueSessionStore workQueueSessionStore)
     {
-        List<DataStructureEntity> entities = workQueueSessionStore.WorkQueueClass
+        List<DataStructureEntity> entities = workQueueSessionStore
+            .WorkQueueClass
             .WorkQueueStructure
             .Entities;
         var structureEntity = entities
@@ -722,167 +777,188 @@ public class UIServiceController : AbstractController
             .FirstOrDefault(entity => entity.Name == workQueueEntity);
         if (entities.Count != 1 || structureEntity == null)
         {
-            throw new ArgumentException($"WorkQueueStructure {workQueueSessionStore.WorkQueueClass.WorkQueueStructure.Id} must contain exactly one {nameof(DataStructureEntity)} called \"{workQueueEntity}\"");
+            throw new ArgumentException(
+                $"WorkQueueStructure {workQueueSessionStore.WorkQueueClass.WorkQueueStructure.Id} must contain exactly one {nameof(DataStructureEntity)} called \"{workQueueEntity}\""
+            );
         }
-        return new EntityData
-        {
-            Entity = structureEntity,
-            MenuItem = null
-        };
+        return new EntityData { Entity = structureEntity, MenuItem = null };
     }
-    
+
     private string GetMenuId(Guid lookupId, Guid referenceId)
     {
-        return ServiceManager.Services
-            .GetService<IDataLookupService>()
+        return ServiceManager
+            .Services.GetService<IDataLookupService>()
             .GetMenuBinding(lookupId, referenceId)
             .MenuId;
     }
-    private Result<object, IActionResult> ExtractAggregationList(IEnumerable<Dictionary<string, object>> readerResult)
+
+    private Result<object, IActionResult> ExtractAggregationList(
+        IEnumerable<Dictionary<string, object>> readerResult
+    )
     {
         var rowList = readerResult?.ToList();
-        if(rowList == null || rowList.Count == 0)
+        if (rowList == null || rowList.Count == 0)
         {
             return Result.Success<object, IActionResult>(new List<Dictionary<string, object>>());
         }
         var firstRow = rowList[0];
-        if(firstRow == null || !firstRow.ContainsKey("aggregations"))
+        if (firstRow == null || !firstRow.ContainsKey("aggregations"))
         {
             return Result.Success<object, IActionResult>(new List<Dictionary<string, object>>());
         }
         return Result.Success<object, IActionResult>(firstRow["aggregations"]);
     }
+
     private Result<IEnumerable<object>, IActionResult> StreamlineFilterListValues(
-        IEnumerable<IEnumerable<KeyValuePair<string, object>>> fullReaderResult)
+        IEnumerable<IEnumerable<KeyValuePair<string, object>>> fullReaderResult
+    )
     {
         var streamlinedList = new List<object>();
-        foreach(var entry in fullReaderResult)
+        foreach (var entry in fullReaderResult)
         {
             streamlinedList.Add(entry.First().Value);
         }
         return Result.Success<IEnumerable<object>, IActionResult>(streamlinedList);
     }
-    private Dictionary<object, string> GetLookupLabelsInternal(
-        LookupLabelsInput input)
+
+    private Dictionary<object, string> GetLookupLabelsInternal(LookupLabelsInput input)
     {
         var labelDictionary = input.LabelIds.ToDictionary(
-                id => id,
-                id =>
-                {
-                    object lookupResult
-                        = lookupService.GetDisplayText(
-                            input.LookupId, id, false, true, null);
-                    return lookupResult is decimal result
-                        ? result.ToString("0.#")
-                        : lookupResult.ToString();
-                });
+            id => id,
+            id =>
+            {
+                object lookupResult = lookupService.GetDisplayText(
+                    input.LookupId,
+                    id,
+                    false,
+                    true,
+                    null
+                );
+                return lookupResult is decimal result
+                    ? result.ToString("0.#")
+                    : lookupResult.ToString();
+            }
+        );
         return labelDictionary;
     }
+
     private IList<string> GetLookupCacheDependencies(string lookupId)
     {
         // TODO: Later we can implement multiple dependencies e.g. for entities based on views where we
         // could name all the source entities/tables on which the view is dependent so even view based
         // lookups could be handled correctly and reset when source table change.
         var result = new List<string>();
-        var persistenceService 
-            = ServiceManager.Services.GetService<IPersistenceService>();
-        var dataServiceDataLookup 
-            = persistenceService.SchemaProvider
-                .RetrieveInstance<DataServiceDataLookup>(
-                    new Guid(lookupId));
+        var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+        var dataServiceDataLookup =
+            persistenceService.SchemaProvider.RetrieveInstance<DataServiceDataLookup>(
+                new Guid(lookupId)
+            );
         var datasetGenerator = new DatasetGenerator(true);
         var comboListDataset = datasetGenerator.CreateDataSet(
-            dataServiceDataLookup.ListDataStructure);
-        var comboListTable = comboListDataset.Tables[
             dataServiceDataLookup.ListDataStructure
-                .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)[0]
-            .Name];
+        );
+        var comboListTable = comboListDataset.Tables[
+            dataServiceDataLookup
+                .ListDataStructure.ChildItemsByType<DataStructureEntity>(
+                    DataStructureEntity.CategoryConst
+                )[0]
+                .Name
+        ];
         var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
-        if(tableName != null)
+        if (tableName != null)
         {
             result.Add(tableName);
         }
         return result;
     }
+
     private IActionResult CheckLookup(LookupLabelsInput input)
     {
-        if(input.MenuId == Guid.Empty)
+        if (input.MenuId == Guid.Empty)
         {
             SecurityTools.CurrentUserProfile();
         }
         else
         {
-            var menuResult = FindItem<FormReferenceMenuItem>(
-                input.MenuId)
+            var menuResult = FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
-                .Bind(menuItem
-                    => CheckLookupIsAllowedInMenu(
-                        (FormReferenceMenuItem)menuItem, input.LookupId));
-            if(menuResult.IsFailure)
+                .Bind(menuItem =>
+                    CheckLookupIsAllowedInMenu((FormReferenceMenuItem)menuItem, input.LookupId)
+                );
+            if (menuResult.IsFailure)
             {
                 return menuResult.Error;
             }
         }
         return null;
     }
-  
+
     private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(
-        FormReferenceMenuItem menuItem, Guid lookupId)
+        FormReferenceMenuItem menuItem,
+        Guid lookupId
+    )
     {
-        if(!MenuLookupIndex.HasDataFor(menuItem.Id))
+        if (!MenuLookupIndex.HasDataFor(menuItem.Id))
         {
             var xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
-            MenuLookupIndex.AddIfNotPresent(
-                menuItem.Id, xmlOutput.ContainedLookups);
+            MenuLookupIndex.AddIfNotPresent(menuItem.Id, xmlOutput.ContainedLookups);
         }
         return MenuLookupIndex.IsAllowed(menuItem.Id, lookupId)
             ? Result.Success<FormReferenceMenuItem, IActionResult>(menuItem)
             : Result.Failure<FormReferenceMenuItem, IActionResult>(
-                BadRequest("Lookup is not referenced in any entity in the Menu item"));
+                BadRequest("Lookup is not referenced in any entity in the Menu item")
+            );
     }
-    private IEnumerable<object[]> GetRowData(
-        LookupListInput input, DataTable dataTable)
+
+    private IEnumerable<object[]> GetRowData(LookupListInput input, DataTable dataTable)
     {
         var lookup = FindItem<DataServiceDataLookup>(input.LookupId).Value;
-        if(lookup.IsFilteredServerside || string.IsNullOrEmpty(input.SearchText))
+        if (lookup.IsFilteredServerside || string.IsNullOrEmpty(input.SearchText))
         {
-            return dataTable.Rows
-                .Cast<DataRow>()
+            return dataTable
+                .Rows.Cast<DataRow>()
                 .Select(row => GetColumnValues(row, input.ColumnNames));
         }
         var columnNamesWithoutPrimaryKey = FilterOutPrimaryKey(
-            input.ColumnNames, dataTable.PrimaryKey);
-        return dataTable.Rows
-            .Cast<DataRow>()
-            .Where(row => Filter(row, columnNamesWithoutPrimaryKey, 
-                input.SearchText))
+            input.ColumnNames,
+            dataTable.PrimaryKey
+        );
+        return dataTable
+            .Rows.Cast<DataRow>()
+            .Where(row => Filter(row, columnNamesWithoutPrimaryKey, input.SearchText))
             .Select(row => GetColumnValues(row, input.ColumnNames));
     }
-    private static object[] GetColumnValues(
-        DataRow row, IEnumerable<string> columnNames)
+
+    private static object[] GetColumnValues(DataRow row, IEnumerable<string> columnNames)
     {
         return columnNames.Select(colName => row[colName]).ToArray();
     }
+
     private static string[] FilterOutPrimaryKey(
-        IEnumerable<string> columnNames, DataColumn[] primaryKey)
+        IEnumerable<string> columnNames,
+        DataColumn[] primaryKey
+    )
     {
         return columnNames
-            .Where(columnName => primaryKey.All(
-                dataColumn => dataColumn.ColumnName != columnName))
+            .Where(columnName => primaryKey.All(dataColumn => dataColumn.ColumnName != columnName))
             .ToArray();
     }
-    private static bool Filter(
-        DataRow row, IEnumerable<string> columnNames, string likeParameter)
+
+    private static bool Filter(DataRow row, IEnumerable<string> columnNames, string likeParameter)
     {
         return columnNames
             .Select(colName => row[colName])
-            .Any(colValue => 
-                colValue.ToString().Contains(
-                    likeParameter, 
-                    StringComparison.InvariantCultureIgnoreCase));
+            .Any(colValue =>
+                colValue
+                    .ToString()
+                    .Contains(likeParameter, StringComparison.InvariantCultureIgnoreCase)
+            );
     }
-    private Result<IEnumerable<object[]>,IActionResult> GetLookupRows(
-        LookupListInput input, RowData rowData)
+
+    private Result<IEnumerable<object[]>, IActionResult> GetLookupRows(
+        LookupListInput input,
+        RowData rowData
+    )
     {
         var internalRequest = new LookupListRequest
         {
@@ -893,105 +969,124 @@ public class UIServiceController : AbstractController
             SearchText = input.SearchText,
             PageSize = input.PageSize,
             PageNumber = input.PageNumber,
-            ParameterMappings = DictionaryToHashtable(input.Parameters)
+            ParameterMappings = DictionaryToHashtable(input.Parameters),
         };
         var dataTable = lookupService.GetList(internalRequest);
         return AreColumnNamesValid(input, dataTable)
-            ? Result.Success<IEnumerable<object[]>, IActionResult>(
-                GetRowData(input, dataTable))
+            ? Result.Success<IEnumerable<object[]>, IActionResult>(GetRowData(input, dataTable))
             : Result.Failure<IEnumerable<object[]>, IActionResult>(
-                BadRequest("Some of the supplied column names are not in the table."));
-    } 
-    private Result<Dictionary<string, string>, IActionResult> 
-        RowDataToNewRecordInitialValues(
-            LookupNewRecordInitialValuesInput input, RowData rowData)
+                BadRequest("Some of the supplied column names are not in the table.")
+            );
+    }
+
+    private Result<Dictionary<string, string>, IActionResult> RowDataToNewRecordInitialValues(
+        LookupNewRecordInitialValuesInput input,
+        RowData rowData
+    )
     {
         var initialValues = new Dictionary<string, string>();
         // key parameter name, value target column name
-        foreach (KeyValuePair<string, string> parameterMapping 
-                 in input.ParameterMappings)
+        foreach (KeyValuePair<string, string> parameterMapping in input.ParameterMappings)
         {
-            if (parameterMapping.Key.Equals(
+            if (
+                parameterMapping.Key.Equals(
                     "SearchText",
-                    StringComparison.InvariantCultureIgnoreCase))
+                    StringComparison.InvariantCultureIgnoreCase
+                )
+            )
             {
                 initialValues.Add(
                     // target column name
                     parameterMapping.Value,
                     // target column value
-                    input.SearchText);
+                    input.SearchText
+                );
             }
-            else if (rowData.Row.Table.Columns.Contains(
-                        (string)input.Parameters[parameterMapping.Key]))
+            else if (
+                rowData.Row.Table.Columns.Contains((string)input.Parameters[parameterMapping.Key])
+            )
             {
                 initialValues.Add(
                     // target column name
                     parameterMapping.Value,
                     // target column value
-                    rowData.Row[(string)input.Parameters[
-                            parameterMapping.Key]].ToString());
+                    rowData.Row[(string)input.Parameters[parameterMapping.Key]].ToString()
+                );
             }
             else
             {
                 throw new ArgumentException(
-                    $"Parameter '{parameterMapping.Key}' maps to not available source column '{input.Parameters[parameterMapping.Key]}'.");
+                    $"Parameter '{parameterMapping.Key}' maps to not available source column '{input.Parameters[parameterMapping.Key]}'."
+                );
             }
         }
         return initialValues;
-    } 
-    private Result<RowData, IActionResult> LookupInputToRowData(
-        AbstractLookupRowDataInput input)
+    }
+
+    private Result<RowData, IActionResult> LookupInputToRowData(AbstractLookupRowDataInput input)
     {
-        if(input.SessionFormIdentifier == Guid.Empty)
+        if (input.SessionFormIdentifier == Guid.Empty)
         {
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
-                .Bind(menuItem => CheckLookupIsAllowedInMenu(
-                    (FormReferenceMenuItem)menuItem, input.LookupId))
-                .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                .Bind(menuItem =>
+                    CheckLookupIsAllowedInMenu((FormReferenceMenuItem)menuItem, input.LookupId)
+                )
+                .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem))
                 .Bind(CheckEntityBelongsToMenu)
-                .Bind(entityData => GetRow(
-                    dataService,
-                    entityData.Entity, input.DataStructureEntityId,
-                    Guid.Empty, input.Id));
+                .Bind(entityData =>
+                    GetRow(
+                        dataService,
+                        entityData.Entity,
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.Id
+                    )
+                );
         }
-        if(input.DataStructureEntityId == Guid.Empty)
+        if (input.DataStructureEntityId == Guid.Empty)
         {
             return sessionObjects.UIService.GetRow(
-               sessionFormIdentifier: input.SessionFormIdentifier,
-               entity: input.Entity,
-               dataStructureEntity: null, 
-               rowId: input.Id); 
+                sessionFormIdentifier: input.SessionFormIdentifier,
+                entity: input.Entity,
+                dataStructureEntity: null,
+                rowId: input.Id
+            );
         }
         return FindEntity(input.DataStructureEntityId)
             .Bind(dataStructureEntity =>
                 sessionObjects.UIService.GetRow(
-                    input.SessionFormIdentifier, input.Entity,
-                    dataStructureEntity, input.Id));
+                    input.SessionFormIdentifier,
+                    input.Entity,
+                    dataStructureEntity,
+                    input.Id
+                )
+            );
     }
+
     private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
     {
         var result = new Hashtable(source.Count);
-        foreach(var(key, value) in source)
+        foreach (var (key, value) in source)
         {
             result.Add(key, value);
         }
         return result;
     }
-    private static bool AreColumnNamesValid(
-        LookupListInput input, DataTable dataTable)
+
+    private static bool AreColumnNamesValid(LookupListInput input, DataTable dataTable)
     {
-        var actualColumnNames = dataTable.Columns
-            .Cast<DataColumn>()
+        var actualColumnNames = dataTable
+            .Columns.Cast<DataColumn>()
             .Select(x => x.ColumnName)
             .ToArray();
-        return input.ColumnNames
-            .All(colName => actualColumnNames.Contains(colName));
+        return input.ColumnNames.All(colName => actualColumnNames.Contains(colName));
     }
-    private Result<DataStructureQuery, IActionResult>
-        WorkQueueGetRowsGetAggregationQuery(GetGroupsAggregations input,
-            WorkQueueSessionStore sessionStore)
+
+    private Result<DataStructureQuery, IActionResult> WorkQueueGetRowsGetAggregationQuery(
+        GetGroupsAggregations input,
+        WorkQueueSessionStore sessionStore
+    )
     {
         var query = new DataStructureQuery
         {
@@ -999,32 +1094,33 @@ public class UIServiceController : AbstractController
             CustomFilters = new CustomFilters
             {
                 Filters = input.Filter,
-                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>(),
             },
             ColumnsInfo = new ColumnsInfo(
-                columns: new List<ColumnData>(), 
-                renderSqlForDetachedFields: true),
+                columns: new List<ColumnData>(),
+                renderSqlForDetachedFields: true
+            ),
             ForceDatabaseCalculation = true,
             AggregatedColumns = input.AggregatedColumns,
             MethodId = sessionStore.WorkQueueClass.WorkQueueStructureUserListMethodId,
             SortSetId = sessionStore.WorkQueueClass.WorkQueueStructureSortSetId,
-            DataSourceId = sessionStore.WorkQueueClass.WorkQueueStructureId
+            DataSourceId = sessionStore.WorkQueueClass.WorkQueueStructureId,
         };
-        var parameters = sessionObjects.UIService.GetParameters(
-            sessionStore.Id);
-        foreach(var key in parameters.Keys)
+        var parameters = sessionObjects.UIService.GetParameters(sessionStore.Id);
+        foreach (var key in parameters.Keys)
         {
-            query.Parameters.Add(
-                new QueryParameter(key.ToString(),
-                    parameters[key]));
+            query.Parameters.Add(new QueryParameter(key.ToString(), parameters[key]));
         }
-        query.Parameters.Add(new QueryParameter(
-            "WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId));
+        query.Parameters.Add(
+            new QueryParameter("WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId)
+        );
         return query;
     }
-    
+
     private Result<DataStructureQuery, IActionResult> GetRowsGetAggregationQuery(
-        GetGroupsAggregations input, EntityData entityData)
+        GetGroupsAggregations input,
+        EntityData entityData
+    )
     {
         var query = new DataStructureQuery
         {
@@ -1032,40 +1128,48 @@ public class UIServiceController : AbstractController
             CustomFilters = new CustomFilters
             {
                 Filters = input.Filter,
-                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>(),
             },
             ColumnsInfo = new ColumnsInfo(
-                columns: new List<ColumnData>(), 
-                renderSqlForDetachedFields: true),
+                columns: new List<ColumnData>(),
+                renderSqlForDetachedFields: true
+            ),
             ForceDatabaseCalculation = true,
-            AggregatedColumns = input.AggregatedColumns
+            AggregatedColumns = input.AggregatedColumns,
         };
         return AddMethodAndSource(
-            input.SessionFormIdentifier, input.MasterRowId, entityData, query);
+            input.SessionFormIdentifier,
+            input.MasterRowId,
+            entityData,
+            query
+        );
     }
+
     private Result<QueryData, IActionResult> GetFilterListValuesQuery(
-        GetFilterListValuesInput input, EntityData entityData)
+        GetFilterListValuesInput input,
+        EntityData entityData
+    )
     {
         var column = entityData.Entity.Column(input.Property);
         if (column == null)
         {
             return Result.Failure<QueryData, IActionResult>(
-                BadRequest($"Cannot get values for \"{input.Property}\" because the column does not exist."));
+                BadRequest(
+                    $"Cannot get values for \"{input.Property}\" because the column does not exist."
+                )
+            );
         }
         var field = column.Field;
         ColumnData columnData;
         string entity;
-        if((field is DetachedField detachedField)
-            && (detachedField.ArrayRelation != null))
+        if ((field is DetachedField detachedField) && (detachedField.ArrayRelation != null))
         {
             columnData = new ColumnData(
                 name: detachedField.ArrayValueField.Name,
                 isVirtual: (detachedField.ArrayValueField is DetachedField),
-                defaultValue: (detachedField.ArrayValueField 
-                    as DetachedField)
-                ?.DefaultValue?.Value,
-                hasRelation: (detachedField.ArrayValueField 
-                    as DetachedField) ?.ArrayRelation != null);
+                defaultValue: (detachedField.ArrayValueField as DetachedField)?.DefaultValue?.Value,
+                hasRelation: (detachedField.ArrayValueField as DetachedField)?.ArrayRelation != null
+            );
             entity = detachedField.ArrayRelation.AssociatedEntity.Name;
         }
         else
@@ -1073,62 +1177,69 @@ public class UIServiceController : AbstractController
             columnData = new ColumnData(
                 name: input.Property,
                 isVirtual: (field is DetachedField),
-                defaultValue: (field as DetachedField)
-                ?.DefaultValue?.Value,
-                hasRelation: (field as DetachedField)
-                ?.ArrayRelation != null);
+                defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+                hasRelation: (field as DetachedField)?.ArrayRelation != null
+            );
             entity = entityData.Entity.Name;
         }
-        var columns = new List<ColumnData> {columnData};
+        var columns = new List<ColumnData> { columnData };
         var query = new DataStructureQuery
         {
             Entity = entity,
             CustomFilters = new CustomFilters
             {
                 Filters = input.Filter,
-                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>(),
             },
             CustomOrderings = new CustomOrderings(new List<Ordering>()),
-            ColumnsInfo = new ColumnsInfo(
-                columns: columns, 
-                renderSqlForDetachedFields: true),
+            ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             Distinct = true,
             ForceDatabaseCalculation = true,
-            AggregatedColumns = new List<Aggregation>()
+            AggregatedColumns = new List<Aggregation>(),
         };
         return new QueryData
         {
             SessionFormIdentifier = input.SessionFormIdentifier,
             DataStructureQuery = query,
-            EntityData = entityData
+            EntityData = entityData,
         };
     }
+
     private class QueryData
     {
         public Guid SessionFormIdentifier { get; set; }
         public DataStructureQuery DataStructureQuery { get; set; }
         public EntityData EntityData { get; set; }
     }
+
     private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
-        GetGroupsInput input, EntityData entityData)
+        GetGroupsInput input,
+        EntityData entityData
+    )
     {
         var customOrdering = GetOrderings(input.OrderingList);
         DataStructureColumn column = entityData.Entity.Column(input.GroupBy);
         if (column == null)
         {
-            return Result.Failure<DataStructureQuery, IActionResult>(BadRequest($"Cannot group by \"{input.GroupBy}\" because the column does not exist."));
+            return Result.Failure<DataStructureQuery, IActionResult>(
+                BadRequest(
+                    $"Cannot group by \"{input.GroupBy}\" because the column does not exist."
+                )
+            );
         }
         var field = column.Field;
         var columnData = new ColumnData(
             name: input.GroupBy,
             isVirtual: (field is DetachedField),
-            defaultValue: (field as DetachedField)
-            ?.DefaultValue?.Value,
-            hasRelation: (field as DetachedField)
-            ?.ArrayRelation != null);
+            defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+            hasRelation: (field as DetachedField)?.ArrayRelation != null
+        );
         List<ColumnData> columns = new List<ColumnData>
-            {columnData, ColumnData.GroupByCountColumn};
-        if(input.GroupByLookupId != Guid.Empty)
+        {
+            columnData,
+            ColumnData.GroupByCountColumn,
+        };
+        if (input.GroupByLookupId != Guid.Empty)
         {
             columns.Add(ColumnData.GroupByCaptionColumn);
         }
@@ -1138,55 +1249,68 @@ public class UIServiceController : AbstractController
             CustomFilters = new CustomFilters
             {
                 Filters = input.Filter,
-                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>(),
             },
             CustomOrderings = customOrdering,
             RowLimit = input.RowLimit,
-            ColumnsInfo = new ColumnsInfo(
-                columns: columns, 
-                renderSqlForDetachedFields: true),
+            ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
-            CustomGrouping= new Grouping(
-                input.GroupBy, input.GroupByLookupId, input.GroupingUnit),
-            AggregatedColumns = input.AggregatedColumns 
+            CustomGrouping = new Grouping(input.GroupBy, input.GroupByLookupId, input.GroupingUnit),
+            AggregatedColumns = input.AggregatedColumns,
         };
         return AddMethodAndSource(
-            input.SessionFormIdentifier, input.MasterRowId, entityData, query);
+            input.SessionFormIdentifier,
+            input.MasterRowId,
+            entityData,
+            query
+        );
     }
-    private static void FillRow(
-        RowData rowData, Dictionary<string, string> newValues)
+
+    private static void FillRow(RowData rowData, Dictionary<string, string> newValues)
     {
-        foreach(var(key, value) in newValues)
+        foreach (var (key, value) in newValues)
         {
             var dataType = rowData.Row.Table.Columns[key].DataType;
             rowData.Row[key] = DatasetTools.ConvertValue(value, dataType);
         }
     }
+
     private RowData MakeEmptyRow(DataStructureEntity entity)
     {
         var dataSet = dataService.GetEmptyDataSet(
-            entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
+            entity.RootEntity.ParentItemId,
+            CultureInfo.InvariantCulture
+        );
         var table = dataSet.Tables[entity.Name];
         var row = table.NewRow();
         return new RowData { Entity = entity, Row = row };
     }
+
     private static RowData FillRow(NewRowInput input, RowData rowData)
     {
         DatasetTools.ApplyPrimaryKey(rowData.Row);
         DatasetTools.UpdateOrigamSystemColumns(
-            rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
+            rowData.Row,
+            true,
+            SecurityManager.CurrentUserProfile().Id
+        );
         FillRow(rowData, input.NewValues);
         rowData.Row.Table.Rows.Add(rowData.Row);
         return rowData;
     }
+
     private static RowData PrepareNewRow(RowData rowData)
     {
         DatasetTools.ApplyPrimaryKey(rowData.Row);
         DatasetTools.UpdateOrigamSystemColumns(
-            rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
+            rowData.Row,
+            true,
+            SecurityManager.CurrentUserProfile().Id
+        );
         rowData.Row.Table.NewRow();
         return rowData;
     }
+
     private IActionResult SubmitDelete(RowData rowData)
     {
         try
@@ -1195,49 +1319,44 @@ public class UIServiceController : AbstractController
                 dataStructureId: rowData.Entity.RootEntity.ParentItemId,
                 data: rowData.Row.Table.DataSet,
                 loadActualValuesAfterUpdate: false,
-                transactionId: null);
+                transactionId: null
+            );
         }
-        catch(DBConcurrencyException ex)
+        catch (DBConcurrencyException ex)
         {
-            if(string.IsNullOrEmpty(ex.Message) 
-                && (ex.InnerException != null))
+            if (string.IsNullOrEmpty(ex.Message) && (ex.InnerException != null))
             {
                 return Conflict(ex.InnerException.Message);
             }
             return Conflict(ex.Message);
         }
-        return Ok(new ChangeInfo
-        {
-            Entity = rowData.Row.Table.TableName,
-            Operation = Operation.Delete,
-        });
+        return Ok(
+            new ChangeInfo { Entity = rowData.Row.Table.TableName, Operation = Operation.Delete }
+        );
     }
+
     private IActionResult ThrowAwayReturnData(IActionResult arg)
     {
         return Ok();
     }
+
     private IActionResult RowDataToRecordTooltip(RowData rowData)
     {
-        var requestCultureFeature = Request.HttpContext.Features
-            .Get<IRequestCultureFeature>();
+        var requestCultureFeature = Request.HttpContext.Features.Get<IRequestCultureFeature>();
         var cultureInfo = requestCultureFeature.RequestCulture.Culture;
-        return Ok(ServerCoreUIService.DataRowToRecordTooltip(
-            rowData.Row, 
-            cultureInfo,
-            localizer));
+        return Ok(ServerCoreUIService.DataRowToRecordTooltip(rowData.Row, cultureInfo, localizer));
     }
+
     private IActionResult GetAuditLog(Guid entityId, object id)
     {
-        var auditLog = AuditLogDA.RetrieveLogTransformed(
-            entityId, id);
-        if(log != null)
+        var auditLog = AuditLogDA.RetrieveLogTransformed(entityId, id);
+        if (log != null)
         {
-            return Ok(DataTools.DatatableToDictionary(
-                auditLog.Tables[0], false));
+            return Ok(DataTools.DatatableToDictionary(auditLog.Tables[0], false));
         }
         return Ok();
     }
-    
+
     private void AddConfigData(PortalResult result)
     {
         result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.Html5ClientLogoUrl)
@@ -1248,9 +1367,12 @@ public class UIServiceController : AbstractController
             : chatConfig.ChatRefreshInterval;
         result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         result.ShowToolTipsForMemoFieldsOnly = htmlClientConfig.ShowToolTipsForMemoFieldsOnly;
-        result.RowStatesDebouncingDelayMilliseconds = htmlClientConfig.RowStatesDebouncingDelayMilliseconds;
-        result.DropDownTypingDebouncingDelayMilliseconds = htmlClientConfig.DropDownTypingDebouncingDelayMilliseconds;
-        result.GetLookupLabelExDebouncingDelayMilliseconds = htmlClientConfig.GetLookupLabelExDebouncingDelayMilliseconds;
+        result.RowStatesDebouncingDelayMilliseconds =
+            htmlClientConfig.RowStatesDebouncingDelayMilliseconds;
+        result.DropDownTypingDebouncingDelayMilliseconds =
+            htmlClientConfig.DropDownTypingDebouncingDelayMilliseconds;
+        result.GetLookupLabelExDebouncingDelayMilliseconds =
+            htmlClientConfig.GetLookupLabelExDebouncingDelayMilliseconds;
         result.FilteringConfig = clientFilteringConfig;
     }
 }

@@ -21,11 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Server.Model;
+
 public abstract class AmbiguousInput
 {
     public Guid DataStructureEntityId { get; set; }
     public Guid RowId { get; set; }
     public Guid MenuId { get; set; }
     public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
-    public string Entity {get; set;}
+    public string Entity { get; set; }
 }

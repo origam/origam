@@ -20,21 +20,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Server;
-using Origam.Server.Pages;
 using System.Net;
 using System.Text;
+using Origam.Server;
+using Origam.Server.Pages;
 
 namespace Origam.Server;
+
 public class CoreHttpTools : IHttpTools
 {
-    public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
-        string fileName, bool isPreview)
+    public void WriteFile(
+        IRequestWrapper request,
+        IResponseWrapper response,
+        byte[] file,
+        string fileName,
+        bool isPreview
+    )
     {
         throw new System.NotImplementedException();
     }
-    public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
-        string fileName, bool isPreview, string overrideContentType)
+
+    public void WriteFile(
+        IRequestWrapper request,
+        IResponseWrapper response,
+        byte[] file,
+        string fileName,
+        bool isPreview,
+        string overrideContentType
+    )
     {
         response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
         string disposition = GetFileDisposition(request.UserAgent, fileName);
@@ -42,16 +55,15 @@ public class CoreHttpTools : IHttpTools
         {
             disposition = "attachment; " + disposition;
         }
-        response.AppendHeader(
-            "content-length", 
-            file == null ? "0" : file.Length.ToString());
+        response.AppendHeader("content-length", file == null ? "0" : file.Length.ToString());
         response.AppendHeader("content-disposition", disposition);
         response.OutputStreamWrite(file, 0, file.Length);
     }
+
     public string GetFileDisposition(string userAgent, string fileName)
     {
         fileName = fileName.Replace(",", "");
         var encodedFileName = Uri.EscapeDataString(fileName);
-        return  $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
+        return $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
     }
 }
