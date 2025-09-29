@@ -46,7 +46,7 @@ public class DeploymentSorter
         {
             int remainingDeploymentsBefore = remainingDeployments.Count;
             remainingDeployments
-                .Where(x => !HasActiveDependencies(x) && SomeDeploymentsHaveToRunBefore(x).Count == 0)
+                .Where(x => !HasActiveDependencies(x) && FindPrerequisiteConflicts(x).Count == 0)
                 .OrderBy(deployment => deployment)
                 .ToList()
                 .ForEach(ProcessDependent);
@@ -81,7 +81,7 @@ public class DeploymentSorter
             $"Candidate: {x.PackageName} {x.Version}\r\n" +
                 $"\tDependencies:\r\n" +
                     $"\t\t{string.Join("\r\n\t\t", GetDependencyList(x))}");
-        var blockers = remainingDeployments.SelectMany(SomeDeploymentsHaveToRunBefore)
+        var prerequisiteConflicts = remainingDeployments.SelectMany(FindPrerequisiteConflicts)
             .Where(blocker => blocker != null)
             .Distinct()
             .Where(blocker => !HasActiveDependencies(blocker.ConflictingDependency))
@@ -99,12 +99,12 @@ public class DeploymentSorter
             "The sorting process failed with these deployment versions as the next step candidates:\r\n"+
             $"{string.Join("\r\n", nextStepCandidates)}\r\n";
 
-        if (blockers.Count > 0)
+        if (prerequisiteConflicts.Count > 0)
         {
             message +=  "The following deployments would not be able to run later because they\r\n" +
                         "depend on other deployments from the current step." +
                         "That is why the sorting cannot progress any further.\r\n";
-            message +=  $"{string.Join("\r\n", blockers)}\r\n";
+            message +=  $"{string.Join("\r\n", prerequisiteConflicts)}\r\n";
         }
         
         SortingFailed?.Invoke(this, message);
@@ -153,7 +153,7 @@ public class DeploymentSorter
     {
         MoveToSorted(deployment);
         GetDependentDeployments(deployment)
-            .Where(x => !HasActiveDependencies(x) && SomeDeploymentsHaveToRunBefore(x).Count == 0)
+            .Where(x => !HasActiveDependencies(x) && FindPrerequisiteConflicts(x).Count == 0)
             .OrderBy(x => x, new OtherPackagesFirst(current.SchemaExtensionId))
             .ForEach(ProcessDependent);
     }
@@ -183,7 +183,7 @@ public class DeploymentSorter
             .Any(IsInRemainingDeployments);
     }
     
-    private List<DeploymentBlocker> SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
+    private List<PrerequisiteConflict> FindPrerequisiteConflicts(IDeploymentVersion deployment)
     {
         var previousDeployment = sortedDeployments
             .LastOrDefault(x => x.SchemaExtensionId == deployment.SchemaExtensionId);
@@ -195,18 +195,32 @@ public class DeploymentSorter
             .Where(x => x != deployment)
             .Where(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
         return haveToRunBefore
-            .Select(blockingDeployment => new DeploymentBlocker(blockingDeployment, previousDeployment, deployment))
+            .Select(blockingDeployment => new PrerequisiteConflict(blockingDeployment, previousDeployment, deployment))
             .ToList();
     }
 
-    record DeploymentBlocker(IDeploymentVersion Deployment, IDeploymentVersion DeployedDependency, IDeploymentVersion ConflictingDependency)
+    // Represents a conflict where a deployment cannot proceed because another deployment
+    // still depends on a previous version of the same package.
+    // 
+    // Example scenario:
+    //   - "Deployment" (Workflow 1.1.0) depends on "DeployedDependency"
+    //     (Root 5.3.1) that has already been deployed (is in sortedDeployments).
+    //   - "Deployment" (Workflow 1.1.0) also depends on other deployments (for example Security 5.4.1)
+    //     which in turn depend on future version of the "DeployedDependency" (anything higher than Root 5.3.1)
+    //   - This creates a prerequisite conflict "Deployment" (Workflow 1.1.0) needs DeployedDependency (Root 5.3.1)
+    //     and at the same time some of its dependencies require the same deployment in a higher
+    //     version "ConflictingDependency" (Root 5.3.2)
+    //   - This creates a prerequisite conflict:
+    //       • "Deployment" (Workflow 1.1.0) insists on Root 5.3.1  
+    //       • Its other dependencies insist on Root ≥ 5.3.2  
+    record PrerequisiteConflict(IDeploymentVersion Deployment, IDeploymentVersion DeployedDependency, IDeploymentVersion ConflictingDependency)
     {
         public string PackageName { get; } = Deployment.PackageName;
         public string Version { get; } = Deployment.Version;
         
         private readonly string dependencyVersion = DeployedDependency.Version;
         
-        public virtual bool Equals(DeploymentBlocker other)
+        public virtual bool Equals(PrerequisiteConflict other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
