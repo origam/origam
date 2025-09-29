@@ -47,9 +47,7 @@ using Origam.Service.Core;
 using Timer = System.Timers.Timer;
 
 namespace Origam.Workflow.WorkQueue;
-/// <summary>
-/// Summary description for WorkQueueService.
-/// </summary>
+
 public class WorkQueueService : IWorkQueueService, IBackgroundService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -167,11 +165,11 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     {
         return workQueueUtils.WorkQueueClass(name);
     }
-     public ISchemaItem WQClass(Guid queueId)
-     {
-         return workQueueUtils.WorkQueueClass(queueId);
-     }
-     public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
+    public ISchemaItem WQClass(Guid queueId)
+    {
+        return workQueueUtils.WorkQueueClass(queueId);
+    }
+    public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
     {
         return workQueueUtils.LoadWorkQueueData(workQueueClass, queueId, 0, 0, null);
     }
@@ -478,6 +476,12 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             return notificationData;
         }
     }
+
+    public string CustomScreenName(Guid queueId)
+    {
+        return workQueueUtils.CustomScreenName(queueId);
+    }
+
     private OrigamNotificationContactData GetNotificationContacts(Guid workQueueNotificationContactTypeId,
         Guid origamNotificationChannelTypeId, string value, IXmlContainer context,
         DataRow workQueueRow, string transactionId)

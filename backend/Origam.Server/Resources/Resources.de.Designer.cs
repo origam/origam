@@ -339,6 +339,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datenstruktur-Filterset mit dem Namen GetById wurde unter WorkQueueStructure {0} nicht gefunden..
+        /// </summary>
+        public static string ErrorNoGetByIdFilterSet {
+            get {
+                return ResourceManager.GetString("ErrorNoGetByIdFilterSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keine Datensätze ausgewählt. Aktion kann nicht ausgeführt werden..
         /// </summary>
         public static string ErrorNoRecordsSelectedForAction {
@@ -429,6 +438,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Benutzerdefinierter Arbeitswarteschlangenbildschirm {0} wurde nicht gefunden..
+        /// </summary>
+        public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
+            get {
+                return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zu viele Fenster geöffnet. Bitte schliessen Sie unbenötigte Reiter vor dem Öffnen neuer Fenster..
         /// </summary>
         public static string ErrorTooManyTabsOpen {
@@ -515,6 +533,15 @@ namespace Origam.Server {
         public static string ErrorWorkflowSessionInvalid {
             get {
                 return ResourceManager.GetString("ErrorWorkflowSessionInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arbeitswarteschlangenklasse für Warteschlange mit der ID {0} nicht gefunden..
+        /// </summary>
+        public static string ErrorWorkQueueClassNotFound {
+            get {
+                return ResourceManager.GetString("ErrorWorkQueueClassNotFound", resourceCulture);
             }
         }
         
