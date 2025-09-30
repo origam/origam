@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.ComponentModel.DataAnnotations;
 using Spectre.Console.Cli;
 
 namespace Origam.Composer.Commands;
@@ -28,6 +29,7 @@ public class CreateCommandSettings : CommandSettings
     #region Database
 
     [CommandOption("--db-type <TYPE>")]
+    [AllowedValues("mssql", "postgres")]
     public string DbType { get; set; }
 
     [CommandOption("--db-host <HOST>")]
