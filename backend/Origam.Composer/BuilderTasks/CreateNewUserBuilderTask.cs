@@ -28,32 +28,28 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Create new user (Client web application)";
-
-    private DatabaseType _databaseType;
+    public override string Name => "Create new Admin user (Client web application)";
 
     public override void Execute(Project project)
     {
-        var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
-        string hashPassword = adaptivePassword.HashPassword(project.WebUserPassword);
+        var adaptivePassword = new InternalPasswordHasherWithLegacySupport(); // TODO: DI
 
-        _databaseType = project.DatabaseType;
-        DataService(_databaseType).DbUser = project.Name;
-        DataService(_databaseType).ConnectionString = project.BuilderDataConnectionString;
+        DataService(project.DatabaseType).DbUser = project.Name;
+        DataService(project.DatabaseType).ConnectionString = project.BuilderDataConnectionString; // TODO: Refactor
 
         var parameters = new QueryParameterCollection
         {
             new QueryParameter("Id", Guid.NewGuid().ToString()),
             new QueryParameter("UserName", project.WebUserName),
-            new QueryParameter("Password", hashPassword),
+            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebUserPassword)),
             new QueryParameter("FirstName", project.WebFirstName),
             new QueryParameter("Name", project.WebSurname),
             new QueryParameter("Email", project.WebEmail),
-            new QueryParameter("RoleId", "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2"),
+            new QueryParameter("RoleId", Common.Constants.OrigamRoleSuperUserId),
             new QueryParameter("RequestEmailConfirmation", "false"),
         };
 
-        DataService(_databaseType).CreateFirstNewWebUser(parameters);
+        DataService(project.DatabaseType).CreateFirstNewWebUser(parameters);
     }
 
     public override void Rollback() { }
