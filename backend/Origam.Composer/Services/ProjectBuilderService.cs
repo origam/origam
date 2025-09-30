@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -41,7 +41,6 @@ public class ProjectBuilderService : IProjectBuilderService
 
     public void Create(Project project)
     {
-        _createDatabaseBuilderTask.ResetDataservice();
         project.BuilderDataConnectionString =
             _createDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
         project.BaseUrl = _dockerBuilderTask.WebSiteUrl(project);
