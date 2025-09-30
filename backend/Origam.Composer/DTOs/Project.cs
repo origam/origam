@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -35,6 +35,18 @@ public class Project
     public required string DatabaseName { get; init; }
     public string UserPassword { get; } =
         Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9); // TODO: Really? Maybe use real password generator
+    public string GetDataDataService
+    {
+        get
+        {
+            return DatabaseType switch
+            {
+                DatabaseType.MsSql => "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
+                DatabaseType.PgSql => "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
+                _ => throw new ArgumentOutOfRangeException(nameof(DatabaseType)),
+            };
+        }
+    }
     public string BuilderDataConnectionString { get; set; }
     #endregion
 
