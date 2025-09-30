@@ -58,7 +58,11 @@ public class CreateCommand(
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
             ProjectFolder = settings.ProjectFolder,
 
-            ArchitectDockerImage = settings.ArchitectDockerImage,
+            ClientDockerImageLinux = settings.ProjectDockerImageLinux,
+            ClientDockerImageWin = settings.ProjectDockerImageWin,
+
+            ArchitectDockerImageLinux = settings.ArchitectDockerImageLinux,
+            ArchitectDockerImageWin = settings.ArchitectDockerImageWin,
             ArchitectPort = settings.ArchitectPort,
 
             WebUserName = settings.ProjectAdminName,
@@ -85,13 +89,17 @@ public class CreateCommand(
                 DockerFolder,
                 settings.ProjectName + "_Architect_Linux.cmd"
             ),
+            DockerCmdPathWinArchitect = Path.Combine(
+                DockerFolder,
+                settings.ProjectName + "_Architect_Win.cmd"
+            ),
             DockerEnvPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Environments_Windows.env"
+                settings.ProjectName + "_Environments_Win.env"
             ),
             DockerCmdPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Client_Windows.cmd"
+                settings.ProjectName + "_Client_Win.cmd"
             ),
         };
 
@@ -118,11 +126,16 @@ public class CreateCommand(
         visualService.PrintProjectValues(
             settings.ProjectName,
             settings.ProjectFolder,
-            settings.ProjectDockerImage,
+            settings.ProjectDockerImageLinux,
+            settings.ProjectDockerImageWin,
             settings.ProjectAdminName,
             settings.ProjectAdminEmail
         );
-        visualService.PrintArchitectValues(settings.ArchitectDockerImage, settings.ArchitectPort);
+        visualService.PrintArchitectValues(
+            settings.ArchitectDockerImageLinux,
+            settings.ArchitectDockerImageWin,
+            settings.ArchitectPort
+        );
         visualService.PrintGitValues(settings.GitEnabled, gitIdentity.User, gitIdentity.Email);
     }
 

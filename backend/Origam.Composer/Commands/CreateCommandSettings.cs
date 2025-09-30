@@ -51,8 +51,11 @@ public class CreateCommandSettings : CommandSettings
 
     #region Project
 
-    [CommandOption("--p-docker-image <IMAGE>")]
-    public string ProjectDockerImage { get; set; }
+    [CommandOption("--p-docker-image-linux <IMAGE>")]
+    public string ProjectDockerImageLinux { get; set; }
+
+    [CommandOption("--p-docker-image-win <IMAGE>")]
+    public string ProjectDockerImageWin { get; set; }
 
     [CommandOption("--p-name <NAME>")]
     public string ProjectName { get; set; }
@@ -73,8 +76,11 @@ public class CreateCommandSettings : CommandSettings
 
     #region Architect
 
-    [CommandOption("--arch-docker-image <IMAGE>")]
-    public string ArchitectDockerImage { get; set; }
+    [CommandOption("--arch-docker-image-linux <IMAGE>")]
+    public string ArchitectDockerImageLinux { get; set; }
+
+    [CommandOption("--arch-docker-image-win <IMAGE>")]
+    public string ArchitectDockerImageWin { get; set; }
 
     [CommandOption("--arch-port <PORT>")]
     public int ArchitectPort { get; set; }

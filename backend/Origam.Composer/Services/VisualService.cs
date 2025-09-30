@@ -20,7 +20,8 @@ public class VisualService : IVisualService
     public void PrintProjectValues(
         string name,
         string folder,
-        string dockerImage,
+        string dockerImageLinux,
+        string dockerImageWin,
         string adminName,
         string adminEmail
     )
@@ -33,7 +34,8 @@ public class VisualService : IVisualService
 
         table.AddRow("Project", name);
         table.AddRow("Project folder", folder);
-        table.AddRow("Docker image", dockerImage);
+        table.AddRow("Docker image (linux)", dockerImageLinux);
+        table.AddRow("Docker image (win)", dockerImageLinux);
         table.AddRow("Admin user", adminName);
         table.AddRow("Admin email", adminEmail);
 
@@ -67,7 +69,7 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
     }
 
-    public void PrintArchitectValues(string dockerImage, int port)
+    public void PrintArchitectValues(string dockerImageLinux, string dockerImageWin, int port)
     {
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -75,7 +77,8 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
-        table.AddRow("Architect image", dockerImage);
+        table.AddRow("Architect image (linux)", dockerImageLinux);
+        table.AddRow("Architect image (win)", dockerImageWin);
         table.AddRow("Architect port", port.ToString());
 
         var panel = new Panel(table)

@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -38,9 +38,10 @@ public class DockerBuilderTask : AbstractBuilderTask
         CreateCmdFile(project, dockerConfigLinux);
         CreateCmdFileArchitect(project, dockerConfigLinux);
 
-        DockerConfig dockerConfigWindows = GetDockerConfigWindows(project);
-        CreateEnvFile(project, dockerConfigWindows);
-        CreateCmdFile(project, dockerConfigWindows);
+        DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
+        CreateEnvFile(project, dockerConfigWin);
+        CreateCmdFile(project, dockerConfigWin);
+        CreateCmdFileArchitect(project, dockerConfigWin);
     }
 
     private void CreateEnvFile(Project project, DockerConfig config)
@@ -85,14 +86,14 @@ public class DockerBuilderTask : AbstractBuilderTask
             $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} ^"
         );
         sb.AppendLine($"  -p {project.DockerPort}:443 ^");
-        sb.AppendLine($"  {config.BaseImage}");
+        sb.AppendLine($"  {config.ClientBaseImage}");
         sb.AppendLine();
         sb.AppendLine("REM Open Client web application: https://localhost");
         sb.AppendLine();
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
 
-        File.WriteAllText(config.CmdFilePath, sb.ToString());
+        File.WriteAllText(config.ClientCmdFilePath, sb.ToString());
     }
 
     private void CreateCmdFileArchitect(Project project, DockerConfig config)
@@ -102,7 +103,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine($"  -it --name {project.Name}_Architect ^");
         sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} ^");
         sb.AppendLine($"  -p {project.ArchitectPort}:8081 ^");
-        sb.AppendLine($"  {project.ArchitectDockerImage}");
+        sb.AppendLine($"  {config.ArchitectBaseImage}");
         sb.AppendLine();
         sb.AppendLine(
             $"REM Open Architect web application: https://localhost:{project.ArchitectPort}"
@@ -111,7 +112,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
 
-        File.WriteAllText(project.DockerCmdPathLinuxArchitect, sb.ToString());
+        File.WriteAllText(config.ArchitectCmdFilePath, sb.ToString());
     }
 
     private DockerConfig GetDockerConfigLinux(Project project)
@@ -121,8 +122,10 @@ public class DockerBuilderTask : AbstractBuilderTask
             EnvFilePath = project.DockerEnvPathLinux,
             CustomAssetsPath = "/home/origam/projectData/customAssets",
             ModelPath = "/home/origam/projectData/model",
-            CmdFilePath = project.DockerCmdPathLinux,
-            BaseImage = "origam/server:master-latest.linux", // TODO: Fetch from parameters
+            ClientCmdFilePath = project.DockerCmdPathLinux,
+            ArchitectCmdFilePath = project.DockerCmdPathLinuxArchitect,
+            ClientBaseImage = project.ClientDockerImageLinux,
+            ArchitectBaseImage = project.ArchitectDockerImageLinux,
         };
         return dockerConfig;
     }
@@ -134,8 +137,10 @@ public class DockerBuilderTask : AbstractBuilderTask
             EnvFilePath = project.DockerEnvPathWindows,
             CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
             ModelPath = @"C:\home\origam\projectData\model",
-            CmdFilePath = project.DockerCmdPathWindows,
-            BaseImage = "origam/server:master-latest.win", // TODO: Fetch from parameters
+            ClientCmdFilePath = project.DockerCmdPathWindows,
+            ArchitectCmdFilePath = project.DockerCmdPathWinArchitect,
+            ClientBaseImage = project.ClientDockerImageWin,
+            ArchitectBaseImage = project.ArchitectDockerImageWin,
         };
         return dockerConfig;
     }
@@ -169,7 +174,9 @@ public class DockerBuilderTask : AbstractBuilderTask
         public string EnvFilePath { get; init; }
         public string CustomAssetsPath { get; init; }
         public string ModelPath { get; init; }
-        public string CmdFilePath { get; init; }
-        public string BaseImage { get; init; }
+        public string ClientCmdFilePath { get; init; }
+        public string ArchitectCmdFilePath { get; init; }
+        public string ClientBaseImage { get; init; }
+        public string ArchitectBaseImage { get; init; }
     }
 }
