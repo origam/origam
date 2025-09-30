@@ -31,14 +31,14 @@ public interface IVisualService
         string name,
         string folder,
         string dockerImageLinux,
-        string dockerImageWin,
+        string dockerImageWindows,
         string adminName,
         string adminEmail
     );
 
     void PrintDatabaseValues(string host, int port, string name, string username);
 
-    void PrintArchitectValues(string dockerImageLinux, string dockerImageWin, int port);
+    void PrintArchitectValues(string dockerImageLinux, string dockerImageWindows, int port);
 
     void PrintGitValues(bool isEnabled, string user, string email);
 
