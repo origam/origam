@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -33,7 +33,7 @@ public class Project
     public int DatabasePort { get; init; }
     public string DatabaseUserName { get; init; }
     public string DatabasePassword { get; init; }
-    public bool DatabaseIntegratedAuthentication { get; init; } // TODO: In Docker this will be a problem
+    public bool DatabaseIntegratedAuthentication { get; init; }
     public required string DatabaseName { get; init; }
     public string UserPassword { get; } =
         Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9); // TODO: Really? Maybe use real password generator
