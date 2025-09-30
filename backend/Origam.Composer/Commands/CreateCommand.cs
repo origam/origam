@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.Common;
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.Services;
 using Origam.Git;
@@ -61,7 +62,7 @@ public class CreateCommand(
             DatabaseIntegratedAuthentication = false,
             DatabaseName = settings.DbName,
 
-            Name = settings.ProjectName,
+            Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
             ProjectFolder = settings.ProjectFolder,
 
