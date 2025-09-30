@@ -131,11 +131,11 @@ public class DockerBuilderTask : AbstractBuilderTask
     {
         var dockerConfig = new DockerConfig
         {
-            EnvFilePath = project.DockerEnvPathLinux,
+            EnvFilePath = project.DockerEnvironmentsPathLinux,
             CustomAssetsPath = "/home/origam/projectData/customAssets",
             ModelPath = "/home/origam/projectData/model",
-            ClientCmdFilePath = project.DockerCmdPathLinux,
-            ArchitectCmdFilePath = project.DockerCmdPathLinuxArchitect,
+            ClientCmdFilePath = project.DockerClientPathLinux,
+            ArchitectCmdFilePath = project.DockerArchitectPathLinux,
             ClientBaseImage = project.ClientDockerImageLinux,
             ArchitectBaseImage = project.ArchitectDockerImageLinux,
             CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
@@ -147,11 +147,11 @@ public class DockerBuilderTask : AbstractBuilderTask
     {
         var dockerConfig = new DockerConfig
         {
-            EnvFilePath = project.DockerEnvPathWindows,
+            EnvFilePath = project.DockerEnvironmentsPathWindows,
             CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
             ModelPath = @"C:\home\origam\projectData\model",
-            ClientCmdFilePath = project.DockerCmdPathWindows,
-            ArchitectCmdFilePath = project.DockerCmdPathWinArchitect,
+            ClientCmdFilePath = project.DockerClientPathWindows,
+            ArchitectCmdFilePath = project.DockerArchitectPathWindows,
             ClientBaseImage = project.ClientDockerImageWin,
             ArchitectBaseImage = project.ArchitectDockerImageWin,
             CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
