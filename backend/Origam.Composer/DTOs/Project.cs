@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -26,27 +26,15 @@ namespace Origam.Composer.DTOs;
 public class Project
 {
     #region DB
-    public DatabaseType DatabaseType { get; set; } = DatabaseType.MsSql;
-    public required string DatabaseHost { get; set; }
-    public int DatabasePort { get; set; }
-    public string DatabaseUserName { get; set; }
-    public string DatabasePassword { get; set; }
-    public bool DatabaseIntegratedAuthentication { get; set; } // TODO: In Docker this will be a problem
-    public required string DatabaseName { get; set; }
+    public DatabaseType DatabaseType { get; init; } = DatabaseType.MsSql;
+    public required string DatabaseHost { get; init; }
+    public int DatabasePort { get; init; }
+    public string DatabaseUserName { get; init; }
+    public string DatabasePassword { get; init; }
+    public bool DatabaseIntegratedAuthentication { get; init; } // TODO: In Docker this will be a problem
+    public required string DatabaseName { get; init; }
     public string UserPassword { get; } =
         Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9); // TODO: Really? Maybe use real password generator
-    public string GetDataDataService
-    {
-        get
-        {
-            return DatabaseType switch
-            {
-                DatabaseType.MsSql => "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
-                DatabaseType.PgSql => "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
-                _ => throw new ArgumentOutOfRangeException(nameof(DatabaseType)),
-            };
-        }
-    }
     public string BuilderDataConnectionString { get; set; }
     #endregion
 
@@ -59,7 +47,7 @@ public class Project
     /// ./model-root/root menu/.origamPackage
     /// </summary>
     public string BasePackageId { get; set; } = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
-    public string NewPackageId { get; set; }
+    public string NewPackageId { get; init; }
 
     #endregion
 
