@@ -32,6 +32,13 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
 
     public override void Execute(Project project)
     {
+        var settings = new OrigamSettings
+        {
+            DataConnectionString = project.BuilderDataConnectionString,
+            ModelSourceControlLocation = project.ModelFolder,
+        };
+        ConfigurationManager.SetActiveConfiguration(settings);
+
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
         SchemaService.SchemaLoaded += EventHandler_SchemaLoaded;

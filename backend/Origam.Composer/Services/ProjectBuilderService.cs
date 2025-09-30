@@ -43,18 +43,6 @@ public class ProjectBuilderService : IProjectBuilderService
         project.BuilderDataConnectionString =
             _createDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
 
-        var settings = new OrigamSettings
-        {
-            Name = project.Name,
-            TitleText = project.Name,
-            DataConnectionString = project.BuilderDataConnectionString,
-            ServerUrl = project.BaseUrl,
-            DataDataService = project.GetDataDataService,
-            SchemaDataService = project.GetDataDataService,
-            ModelSourceControlLocation = project.ModelFolder,
-        };
-        ConfigurationManager.SetActiveConfiguration(settings);
-
         IBuilderTask activeTask = null;
         try
         {
