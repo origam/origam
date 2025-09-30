@@ -26,6 +26,10 @@ namespace Origam.Composer.Commands;
 
 public class CreateCommandSettings : CommandSettings
 {
+    [CommandOption("--commands-platform <PLATFORM>")]
+    [AllowedValues("windows", "linux")]
+    public string CommandsForPlatform { get; set; }
+
     #region Database
 
     [CommandOption("--db-type <TYPE>")]
