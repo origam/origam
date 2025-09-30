@@ -21,7 +21,7 @@ public class VisualService : IVisualService
         string name,
         string folder,
         string dockerImageLinux,
-        string dockerImageWin,
+        string dockerImageWindows,
         string adminName,
         string adminEmail
     )
@@ -32,12 +32,13 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
-        table.AddRow("Project", name);
-        table.AddRow("Project folder", folder);
-        table.AddRow("Docker image (linux)", dockerImageLinux);
-        table.AddRow("Docker image (win)", dockerImageLinux);
-        table.AddRow("Admin user", adminName);
+        table.AddRow("Name", name);
+        table.AddRow("Folder", folder);
+        table.AddRow("Admin username", adminName);
         table.AddRow("Admin email", adminEmail);
+        table.AddRow("Admin password", "[dim]-- masked --[/]");
+        table.AddRow("Docker image (linux)", dockerImageLinux);
+        table.AddRow("Docker image (win)", dockerImageWindows);
 
         var panel = new Panel(table)
             .Header("[green]Project Configuration[/]")
@@ -55,11 +56,11 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
-        table.AddRow("Database Host", host);
-        table.AddRow("Database Port", port.ToString());
-        table.AddRow("Database Name", name);
-        table.AddRow("Database Username", username);
-        table.AddRow("Database Password", "[dim]-- masked --[/]");
+        table.AddRow("Host", host);
+        table.AddRow("Port", port.ToString());
+        table.AddRow("Name", name);
+        table.AddRow("Username", username);
+        table.AddRow("Password", "[dim]-- masked --[/]");
 
         var panel = new Panel(table)
             .Header("[blue]Database Configuration[/]")
@@ -69,7 +70,7 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
     }
 
-    public void PrintArchitectValues(string dockerImageLinux, string dockerImageWin, int port)
+    public void PrintArchitectValues(string dockerImageLinux, string dockerImageWindows, int port)
     {
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -77,9 +78,9 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
-        table.AddRow("Architect image (linux)", dockerImageLinux);
-        table.AddRow("Architect image (win)", dockerImageWin);
-        table.AddRow("Architect port", port.ToString());
+        table.AddRow("Docker image (linux)", dockerImageLinux);
+        table.AddRow("Docker image (win)", dockerImageWindows);
+        table.AddRow("Docker port", port.ToString());
 
         var panel = new Panel(table)
             .Header("[purple]Architect Configuration[/]")
@@ -97,7 +98,7 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
-        table.AddRow("Git", isEnabled ? "[green]enabled[/]" : "[red]disabled[/]");
+        table.AddRow("Git", isEnabled ? "[green]Enabled[/]" : "[red]Disabled[/]");
         table.AddRow("Git user", user);
         table.AddRow("Git email", email);
 
@@ -135,7 +136,7 @@ public class VisualService : IVisualService
 
     public void PrintBye()
     {
-        AnsiConsole.MarkupLine("");
+        AnsiConsole.WriteLine();
         AnsiConsole.MarkupLine("[orange1]All steps completed. Bye![/]");
     }
 }
