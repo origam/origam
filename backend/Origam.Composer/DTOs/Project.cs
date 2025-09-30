@@ -84,12 +84,12 @@ public class Project
     public string ClientDockerImageWin { get; set; }
     public int DockerPort { get; set; } = Common.Constants.DefaultHttpsPort;
     public string DockerFolder { get; set; }
-    public string DockerEnvPathLinux { get; internal set; }
-    public string DockerCmdPathLinux { get; set; }
-    public string DockerCmdPathLinuxArchitect { get; set; }
-    public string DockerCmdPathWinArchitect { get; set; }
-    public string DockerEnvPathWindows { get; internal set; }
-    public string DockerCmdPathWindows { get; set; }
+    public string DockerEnvironmentsPathLinux { get; internal set; }
+    public string DockerClientPathLinux { get; set; }
+    public string DockerArchitectPathLinux { get; set; }
+    public string DockerArchitectPathWindows { get; set; }
+    public string DockerEnvironmentsPathWindows { get; internal set; }
+    public string DockerClientPathWindows { get; set; }
     #endregion
 
     #region Git

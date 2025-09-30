@@ -82,32 +82,37 @@ public class CreateCommand(
             GitUsername = gitIdentity.User,
             GitEmail = gitIdentity.Email,
 
-            // Docker
+            #region Docker
             DockerFolder = DockerFolder,
-            DockerEnvPathLinux = Path.Combine(
+
+            // Linux
+            DockerEnvironmentsPathLinux = Path.Combine(
                 DockerFolder,
                 settings.ProjectName + "_Environments_Linux.env"
             ),
-            DockerCmdPathLinux = Path.Combine(
+            DockerClientPathLinux = Path.Combine(
                 DockerFolder,
                 settings.ProjectName + "_Client_Linux."
             ),
-            DockerCmdPathLinuxArchitect = Path.Combine(
+            DockerArchitectPathLinux = Path.Combine(
                 DockerFolder,
                 settings.ProjectName + "_Architect_Linux."
             ),
-            DockerCmdPathWinArchitect = Path.Combine(
+
+            // Windows
+            DockerEnvironmentsPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Architect_Win."
+                settings.ProjectName + "_Environments_Windows.env"
             ),
-            DockerEnvPathWindows = Path.Combine(
+            DockerClientPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Environments_Win.env"
+                settings.ProjectName + "_Client_Windows."
             ),
-            DockerCmdPathWindows = Path.Combine(
+            DockerArchitectPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Client_Win."
+                settings.ProjectName + "_Architect_Windows."
             ),
+            #endregion
         };
 
         // Prepare tasks
