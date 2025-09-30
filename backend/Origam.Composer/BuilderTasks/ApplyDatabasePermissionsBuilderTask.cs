@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -28,22 +27,17 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Apply database permissions";
 
-    private DatabaseType DatabaseType;
-    private string LoginName;
-    private bool IsIntegratedAuthentication;
+    private Project? Project;
 
     public override void Execute(Project project)
     {
-        DatabaseType = project.DatabaseType;
+        Project = project;
 
-        DataService(DatabaseType).DbUser = project.Name;
-        LoginName = DataService(DatabaseType).DbUser;
-        IsIntegratedAuthentication = project.DatabaseIntegratedAuthentication;
-
-        DataService(DatabaseType).ConnectionString = BuildConnectionString(project);
-        DataService(DatabaseType)
+        DataService(project.DatabaseType).DbUser = project.Name;
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project);
+        DataService(project.DatabaseType)
             .CreateDatabaseUser(
-                LoginName,
+                project.Name,
                 project.UserPassword,
                 project.DatabaseName,
                 project.DatabaseIntegratedAuthentication
@@ -52,7 +46,7 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
 
     private string BuildConnectionString(Project project)
     {
-        var dataService = DataService(DatabaseType)
+        return DataService(project.DatabaseType)
             .BuildConnectionString(
                 project.DatabaseHost,
                 project.DatabasePort,
@@ -62,12 +56,14 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
                 project.DatabaseIntegratedAuthentication,
                 false
             );
-
-        return dataService;
     }
 
     public override void Rollback()
     {
-        DataService(DatabaseType).DeleteUser(LoginName, IsIntegratedAuthentication);
+        if (Project != null)
+        {
+            DataService(Project.DatabaseType)
+                .DeleteUser(Project.Name, Project.DatabaseIntegratedAuthentication);
+        }
     }
 }
