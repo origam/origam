@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.DTOs;
 using Origam.DA;
 using Origam.Security.Common;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -48,7 +47,6 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
             new QueryParameter("RoleId", Common.Constants.OrigamRoleSuperUserId),
             new QueryParameter("RequestEmailConfirmation", "false"),
         };
-
         DataService(project.DatabaseType).CreateFirstNewWebUser(parameters);
     }
 

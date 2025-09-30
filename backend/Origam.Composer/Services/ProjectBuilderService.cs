@@ -31,7 +31,7 @@ namespace Origam.Composer.Services;
 public class ProjectBuilderService : IProjectBuilderService
 {
     private readonly List<IBuilderTask> Tasks = [];
-    private readonly CreateDatabaseBuilderTask _createDatabaseBuilderTask = new();
+    private readonly CreateDatabaseBuilderTask CreateDatabaseBuilderTask = new();
 
     public ProjectBuilderService()
     {
@@ -41,7 +41,7 @@ public class ProjectBuilderService : IProjectBuilderService
     public void Create(Project project)
     {
         project.BuilderDataConnectionString =
-            _createDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
+            CreateDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
 
         IBuilderTask activeTask = null;
         try
@@ -60,7 +60,7 @@ public class ProjectBuilderService : IProjectBuilderService
             activeTask.State = BuilderTaskState.Failed;
             for (var i = Tasks.Count - 1; i >= 0; i--)
             {
-                Rollback(Tasks[i]);
+                RollbackTask(Tasks[i]);
             }
             throw;
         }
@@ -69,7 +69,7 @@ public class ProjectBuilderService : IProjectBuilderService
     public void PrepareTasks(Project project)
     {
         Tasks.Add(new DownloadFileModelBuilderTask());
-        Tasks.Add(_createDatabaseBuilderTask);
+        Tasks.Add(CreateDatabaseBuilderTask);
         // Tasks.Add(new ApplyDatabasePermissionsBuilder());
 
         Tasks.Add(new InitFileModelBuilderTask());
@@ -89,7 +89,7 @@ public class ProjectBuilderService : IProjectBuilderService
         return Tasks;
     }
 
-    private void Rollback(IBuilderTask builderTask)
+    private void RollbackTask(IBuilderTask builderTask)
     {
         try
         {
