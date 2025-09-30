@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -36,37 +35,31 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 
         CreateDatabase(project);
         CreateSchema(project);
-        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
-            project,
-            ""
-        );
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project, "");
     }
 
     private void CreateDatabase(Project project)
     {
-        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
-            project,
-            ""
-        );
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project, "");
         DataService(project.DatabaseType).CreateDatabase(project.DatabaseName);
     }
 
     private void CreateSchema(Project project)
     {
-        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionString(
             project,
             project.DatabaseName
         );
         DataService(project.DatabaseType).CreateSchema(project.DatabaseName);
     }
 
-    private string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
+    private string BuildConnectionString(Project project, string databaseName)
     {
         return DataService(project.DatabaseType)
             .BuildConnectionString(
                 project.DatabaseHost,
                 project.DatabasePort,
-                creatingDatabase,
+                databaseName,
                 project.DatabaseUserName,
                 project.DatabasePassword,
                 project.DatabaseIntegratedAuthentication,
@@ -74,30 +67,34 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
             );
     }
 
-    private string BuildConnectionString(Project project, bool pooling)
+    public override void Rollback()
     {
-        var dataService = DataService(project.DatabaseType)
-            .BuildConnectionString(
-                project.DatabaseHost,
-                project.DatabasePort,
-                project.DatabaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                pooling
-            );
-
-        return dataService;
+        OrigamUserContext.Reset();
+        if (Project != null)
+        {
+            DataService(Project.DatabaseType).DeleteDatabase(Project.DatabaseName);
+        }
     }
 
     public string? BuildConnectionStringArchitect(Project project, bool pooling)
     {
-        if (project.DatabaseType == DatabaseType.MsSql)
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
         {
-            return BuildConnectionString(project, pooling);
+            var dataService = DataService(project.DatabaseType)
+                .BuildConnectionString(
+                    project.DatabaseHost,
+                    project.DatabasePort,
+                    project.DatabaseName,
+                    project.DatabaseUserName,
+                    project.DatabasePassword,
+                    project.DatabaseIntegratedAuthentication,
+                    pooling
+                );
+
+            return dataService;
         }
 
-        if (project.DatabaseType == DatabaseType.PgSql)
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
         {
             DataService(project.DatabaseType).DbUser = project.Name;
             var dataService = DataService(project.DatabaseType)
@@ -115,14 +112,5 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
         }
 
         return null;
-    }
-
-    public override void Rollback()
-    {
-        OrigamUserContext.Reset();
-        if (Project != null)
-        {
-            DataService(Project.DatabaseType).DeleteDatabase(Project.DatabaseName);
-        }
     }
 }
