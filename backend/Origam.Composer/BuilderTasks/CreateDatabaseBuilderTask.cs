@@ -28,17 +28,15 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Create database (new empty)";
 
-    private string _databaseName;
-    private DatabaseType _databaseType;
+    private Project? Project;
 
     public override void Execute(Project project)
     {
-        _databaseType = project.DatabaseType;
-        _databaseName = project.DatabaseName;
+        Project = project;
 
         CreateDatabase(project);
         CreateSchema(project);
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
             project,
             ""
         );
@@ -46,25 +44,25 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 
     private void CreateDatabase(Project project)
     {
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
             project,
             ""
         );
-        DataService(_databaseType).CreateDatabase(_databaseName);
+        DataService(project.DatabaseType).CreateDatabase(project.DatabaseName);
     }
 
     private void CreateSchema(Project project)
     {
-        DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringCreateDatabase(
             project,
             project.DatabaseName
         );
-        DataService(_databaseType).CreateSchema(_databaseName);
+        DataService(project.DatabaseType).CreateSchema(project.DatabaseName);
     }
 
     private string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
     {
-        return DataService(_databaseType)
+        return DataService(project.DatabaseType)
             .BuildConnectionString(
                 project.DatabaseHost,
                 project.DatabasePort,
@@ -76,15 +74,8 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
             );
     }
 
-    public void ResetDataservice()
-    {
-        DataService();
-    }
-
     private string BuildConnectionString(Project project, bool pooling)
     {
-        _databaseType = project.DatabaseType;
-
         var dataService = DataService(project.DatabaseType)
             .BuildConnectionString(
                 project.DatabaseHost,
@@ -99,23 +90,22 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
         return dataService;
     }
 
-    public string BuildConnectionStringArchitect(Project project, bool pooling)
+    public string? BuildConnectionStringArchitect(Project project, bool pooling)
     {
-        _databaseType = project.DatabaseType;
-        if (_databaseType == DatabaseType.MsSql)
+        if (project.DatabaseType == DatabaseType.MsSql)
         {
             return BuildConnectionString(project, pooling);
         }
 
-        if (_databaseType == DatabaseType.PgSql)
+        if (project.DatabaseType == DatabaseType.PgSql)
         {
-            DataService(_databaseType).DbUser = project.Name;
+            DataService(project.DatabaseType).DbUser = project.Name;
             var dataService = DataService(project.DatabaseType)
                 .BuildConnectionString(
                     project.DatabaseHost,
                     project.DatabasePort,
                     project.DatabaseName,
-                    DataService(_databaseType).DbUser,
+                    DataService(project.DatabaseType).DbUser,
                     project.UserPassword,
                     project.DatabaseIntegratedAuthentication,
                     pooling
@@ -130,6 +120,9 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
     public override void Rollback()
     {
         OrigamUserContext.Reset();
-        DataService(_databaseType).DeleteDatabase(_databaseName);
+        if (Project != null)
+        {
+            DataService(Project.DatabaseType).DeleteDatabase(Project.DatabaseName);
+        }
     }
 }
