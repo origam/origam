@@ -32,7 +32,6 @@ public class ProjectBuilderService : IProjectBuilderService
 {
     private readonly List<IBuilderTask> Tasks = [];
     private readonly CreateDatabaseBuilderTask _createDatabaseBuilderTask = new();
-    private readonly DockerBuilderTask _dockerBuilderTask = new();
 
     public ProjectBuilderService()
     {
@@ -43,7 +42,6 @@ public class ProjectBuilderService : IProjectBuilderService
     {
         project.BuilderDataConnectionString =
             _createDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
-        project.BaseUrl = _dockerBuilderTask.WebSiteUrl(project);
 
         var settings = new OrigamSettings
         {

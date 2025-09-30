@@ -87,9 +87,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine($"  -p {project.DockerPort}:443 ^");
         sb.AppendLine($"  {config.BaseImage}");
         sb.AppendLine();
-        sb.AppendLine(
-            "REM After you run the above command go to https://localhost to open the client web application."
-        );
+        sb.AppendLine("REM Open Client web application: https://localhost");
         sb.AppendLine();
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
@@ -106,7 +104,9 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine($"  -p {project.ArchitectPort}:8081 ^");
         sb.AppendLine($"  {project.ArchitectDockerImage}");
         sb.AppendLine();
-        sb.AppendLine($"REM Run the command, visit https://localhost:{project.ArchitectPort}");
+        sb.AppendLine(
+            $"REM Open Architect web application: https://localhost:{project.ArchitectPort}"
+        );
         sb.AppendLine();
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
@@ -155,7 +155,7 @@ public class DockerBuilderTask : AbstractBuilderTask
 
     public override void Rollback() { }
 
-    public string WebSiteUrl(Project project)
+    private string WebSiteUrl(Project project)
     {
         if (project.DockerPort == Common.Constants.DefaultHttpsPort)
         {

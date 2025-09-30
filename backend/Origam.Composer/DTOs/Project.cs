@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -60,7 +60,7 @@ public class Project
     /// </summary>
     public string BasePackageId { get; set; } = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
     public string NewPackageId { get; set; }
-    public string BaseUrl { get; set; }
+
     #endregion
 
     #region Architect
