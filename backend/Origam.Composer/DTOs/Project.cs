@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -25,7 +25,10 @@ namespace Origam.Composer.DTOs;
 
 public class Project
 {
+    #region General
     public Enums.Platform CommandsForPlatform { get; set; }
+    public string OrigamRepositoryUrl => "https://github.com/origam/origam/archive/master.zip";
+    #endregion
 
     #region DB
     public DatabaseType DatabaseType { get; init; } = DatabaseType.MsSql;

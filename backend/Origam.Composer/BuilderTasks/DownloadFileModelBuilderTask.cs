@@ -38,7 +38,7 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
 
         CreateSourceFolder();
-        DownloadModelFromRepository();
+        DownloadModelFromRepository(project.OrigamRepositoryUrl);
         UnzipDefaultModelAndCopy();
         CreateCustomAssetsFolder();
     }
@@ -53,12 +53,10 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         dir.Create();
     }
 
-    private void DownloadModelFromRepository()
+    private void DownloadModelFromRepository(string origamRepositoryUrl)
     {
-        const string url = "https://github.com/origam/origam/archive/master.zip"; // TODO: Make configurable
-
         using var client = new HttpClient();
-        HttpResponseMessage response = client.GetAsync(url).Result;
+        HttpResponseMessage response = client.GetAsync(origamRepositoryUrl).Result;
         response.EnsureSuccessStatusCode();
 
         using var fs = new FileStream(RepositoryZipPath, FileMode.Create, FileAccess.Write);
