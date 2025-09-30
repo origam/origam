@@ -40,6 +40,13 @@ public class CreateCommand(
         var DockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
         {
+            CommandsForPlatform = settings.CommandsForPlatform.Equals(
+                "windows",
+                StringComparison.CurrentCultureIgnoreCase
+            )
+                ? Enums.Platform.Windows
+                : Enums.Platform.Linux,
+
             DatabaseType = settings.DbType.Equals(
                 "postgres",
                 StringComparison.CurrentCultureIgnoreCase
@@ -83,15 +90,15 @@ public class CreateCommand(
             ),
             DockerCmdPathLinux = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Client_Linux.cmd"
+                settings.ProjectName + "_Client_Linux."
             ),
             DockerCmdPathLinuxArchitect = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Architect_Linux.cmd"
+                settings.ProjectName + "_Architect_Linux."
             ),
             DockerCmdPathWinArchitect = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Architect_Win.cmd"
+                settings.ProjectName + "_Architect_Win."
             ),
             DockerEnvPathWindows = Path.Combine(
                 DockerFolder,
@@ -99,7 +106,7 @@ public class CreateCommand(
             ),
             DockerCmdPathWindows = Path.Combine(
                 DockerFolder,
-                settings.ProjectName + "_Client_Win.cmd"
+                settings.ProjectName + "_Client_Win."
             ),
         };
 

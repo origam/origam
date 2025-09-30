@@ -78,14 +78,20 @@ public class DockerBuilderTask : AbstractBuilderTask
 
     private void CreateCmdFile(Project project, DockerConfig config)
     {
+        var endChar = project.CommandsForPlatform == Enums.Platform.Windows ? '^' : '\\';
         var sb = new StringBuilder();
-        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" ^");
-        sb.AppendLine($"  -it --name {project.Name}_Client ^");
-        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} ^");
+        if (project.CommandsForPlatform == Enums.Platform.Linux)
+        {
+            sb.AppendLine("#!/bin/bash");
+            sb.AppendLine();
+        }
+        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
+        sb.AppendLine($"  -it --name {project.Name}_Client {endChar}");
+        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
         sb.AppendLine(
-            $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} ^"
+            $"  -v \"{project.ProjectFolder}\\customAssets\":{config.CustomAssetsPath} {endChar}"
         );
-        sb.AppendLine($"  -p {project.DockerPort}:443 ^");
+        sb.AppendLine($"  -p {project.DockerPort}:443 {endChar}");
         sb.AppendLine($"  {config.ClientBaseImage}");
         sb.AppendLine();
         sb.AppendLine("REM Open Client web application: https://localhost");
@@ -93,16 +99,22 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
 
-        File.WriteAllText(config.ClientCmdFilePath, sb.ToString());
+        File.WriteAllText(config.ClientCmdFilePath + config.CmdFileExtension, sb.ToString());
     }
 
     private void CreateCmdFileArchitect(Project project, DockerConfig config)
     {
+        var endChar = project.CommandsForPlatform == Enums.Platform.Windows ? '^' : '\\';
         var sb = new StringBuilder();
-        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" ^");
-        sb.AppendLine($"  -it --name {project.Name}_Architect ^");
-        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} ^");
-        sb.AppendLine($"  -p {project.ArchitectPort}:8081 ^");
+        if (project.CommandsForPlatform == Enums.Platform.Linux)
+        {
+            sb.AppendLine("#!/bin/bash");
+            sb.AppendLine();
+        }
+        sb.AppendLine($"docker run --env-file \"{config.EnvFilePath}\" {endChar}");
+        sb.AppendLine($"  -it --name {project.Name}_Architect {endChar}");
+        sb.AppendLine($"  -v \"{project.ModelFolder}\":{config.ModelPath} {endChar}");
+        sb.AppendLine($"  -p {project.ArchitectPort}:8081 {endChar}");
         sb.AppendLine($"  {config.ArchitectBaseImage}");
         sb.AppendLine();
         sb.AppendLine(
@@ -112,7 +124,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         sb.AppendLine("REM Official releases:");
         sb.Append("REM https://github.com/origam/origam/releases");
 
-        File.WriteAllText(config.ArchitectCmdFilePath, sb.ToString());
+        File.WriteAllText(config.ArchitectCmdFilePath + config.CmdFileExtension, sb.ToString());
     }
 
     private DockerConfig GetDockerConfigLinux(Project project)
@@ -126,6 +138,7 @@ public class DockerBuilderTask : AbstractBuilderTask
             ArchitectCmdFilePath = project.DockerCmdPathLinuxArchitect,
             ClientBaseImage = project.ClientDockerImageLinux,
             ArchitectBaseImage = project.ArchitectDockerImageLinux,
+            CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
         };
         return dockerConfig;
     }
@@ -141,6 +154,7 @@ public class DockerBuilderTask : AbstractBuilderTask
             ArchitectCmdFilePath = project.DockerCmdPathWinArchitect,
             ClientBaseImage = project.ClientDockerImageWin,
             ArchitectBaseImage = project.ArchitectDockerImageWin,
+            CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
         };
         return dockerConfig;
     }
@@ -178,5 +192,6 @@ public class DockerBuilderTask : AbstractBuilderTask
         public string ArchitectCmdFilePath { get; init; }
         public string ClientBaseImage { get; init; }
         public string ArchitectBaseImage { get; init; }
+        public string CmdFileExtension { get; init; }
     }
 }

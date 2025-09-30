@@ -25,6 +25,8 @@ namespace Origam.Composer.DTOs;
 
 public class Project
 {
+    public Enums.Platform CommandsForPlatform { get; set; }
+
     #region DB
     public DatabaseType DatabaseType { get; init; } = DatabaseType.MsSql;
     public required string DatabaseHost { get; init; }
