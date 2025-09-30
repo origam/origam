@@ -34,7 +34,7 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
     {
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
-        SchemaService.SchemaLoaded += _schema_SchemaLoaded;
+        SchemaService.SchemaLoaded += EventHandler_SchemaLoaded;
 
         SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
     }
@@ -45,7 +45,7 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
         OrigamEngine.OrigamEngine.UnloadConnectedServices();
     }
 
-    private void _schema_SchemaLoaded(object sender, bool isInteractive)
+    private void EventHandler_SchemaLoaded(object sender, bool isInteractive)
     {
         OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(SchemaService);
         var deployment = ServiceManager.Services.GetService<IDeploymentService>();
