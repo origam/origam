@@ -23,10 +23,10 @@ namespace Origam.Composer.Common;
 
 public static class Constants
 {
-    public static int DefaultHttpsPort = 443;
+    public const int DefaultHttpsPort = 443;
 
     /// <summary>
     /// Super User (Built-in)
     /// </summary>
-    public static string OrigamRoleSuperUserId = "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2";
+    public const string OrigamRoleSuperUserId = "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2";
 }
