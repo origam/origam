@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -52,7 +52,8 @@ public class Project
     #endregion
 
     #region Architect
-    public string ArchitectDockerImage { get; set; }
+    public string ArchitectDockerImageLinux { get; set; }
+    public string ArchitectDockerImageWin { get; set; }
     public int ArchitectPort { get; set; }
     #endregion
 
@@ -65,11 +66,14 @@ public class Project
     #endregion
 
     #region Docker
+    public string ClientDockerImageLinux { get; set; }
+    public string ClientDockerImageWin { get; set; }
     public int DockerPort { get; set; } = Common.Constants.DefaultHttpsPort;
     public string DockerFolder { get; set; }
     public string DockerEnvPathLinux { get; internal set; }
     public string DockerCmdPathLinux { get; set; }
     public string DockerCmdPathLinuxArchitect { get; set; }
+    public string DockerCmdPathWinArchitect { get; set; }
     public string DockerEnvPathWindows { get; internal set; }
     public string DockerCmdPathWindows { get; set; }
     #endregion

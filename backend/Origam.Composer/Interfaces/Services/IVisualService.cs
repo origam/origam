@@ -30,14 +30,15 @@ public interface IVisualService
     void PrintProjectValues(
         string name,
         string folder,
-        string dockerImage,
+        string dockerImageLinux,
+        string dockerImageWin,
         string adminName,
         string adminEmail
     );
 
     void PrintDatabaseValues(string host, int port, string name, string username);
 
-    void PrintArchitectValues(string dockerImage, int port);
+    void PrintArchitectValues(string dockerImageLinux, string dockerImageWin, int port);
 
     void PrintGitValues(bool isEnabled, string user, string email);
 
