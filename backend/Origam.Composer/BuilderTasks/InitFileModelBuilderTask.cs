@@ -36,6 +36,7 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
         {
             DataConnectionString = project.BuilderDataConnectionString,
             ModelSourceControlLocation = project.ModelFolder,
+            DataDataService = project.GetDataDataService,
         };
         ConfigurationManager.SetActiveConfiguration(settings);
 

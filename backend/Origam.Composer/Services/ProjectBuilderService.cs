@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -70,7 +70,7 @@ public class ProjectBuilderService : IProjectBuilderService
     {
         Tasks.Add(new DownloadFileModelBuilderTask());
         Tasks.Add(CreateDatabaseBuilderTask);
-        // Tasks.Add(new ApplyDatabasePermissionsBuilder());
+        Tasks.Add(new ApplyDatabasePermissionsBuilderTask());
 
         Tasks.Add(new InitFileModelBuilderTask());
         Tasks.Add(new CreateDatabaseStructureBuilderTask());
