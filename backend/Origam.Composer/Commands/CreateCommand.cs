@@ -60,7 +60,7 @@ public class CreateCommand(
             DatabaseUserName = settings.DbUsername,
             DatabasePassword = settings.DbPassword,
             DatabaseIntegratedAuthentication = false,
-            DatabaseName = settings.DbName,
+            DatabaseName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
 
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
