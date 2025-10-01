@@ -27,20 +27,26 @@ using Microsoft.AspNetCore.Localization;
 using Origam.Server.Configuration;
 
 namespace Origam.Server;
+
 public class OrigamCookieRequestCultureProvider : RequestCultureProvider
 {
-    private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
     private readonly LanguageConfig languageConfig;
     private static readonly char cookieSeparator = '|';
     private static readonly string culturePrefix = "c=";
     private static readonly string uiCulturePrefix = "uic=";
-    public string CookieName { get;} = "origamCurrentLocale";
+    public string CookieName { get; } = "origamCurrentLocale";
+
     public OrigamCookieRequestCultureProvider(LanguageConfig languageConfig)
     {
         this.languageConfig = languageConfig;
     }
-    
-    public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+
+    public override Task<ProviderCultureResult> DetermineProviderCultureResult(
+        HttpContext httpContext
+    )
     {
         if (httpContext == null)
         {
@@ -54,6 +60,7 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
         var providerResultCulture = ParseCookieValue(cookie);
         return Task.FromResult(providerResultCulture);
     }
+
     /// <summary>
     /// Creates a string representation of a <see cref="RequestCulture"/> for placement in a cookie.
     /// </summary>
@@ -65,13 +72,17 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
         {
             throw new ArgumentNullException(nameof(requestCulture));
         }
-        var cultureItem = languageConfig.CultureItems
-            .FirstOrDefault(items => items.CultureName == requestCulture.Culture.Name);
+        var cultureItem = languageConfig.CultureItems.FirstOrDefault(items =>
+            items.CultureName == requestCulture.Culture.Name
+        );
         if (cultureItem == null)
         {
-            throw new Exception($"The culture \"{requestCulture.Culture.Name}\" was not found among the allowed cultures in the LanguageConfig.");
+            throw new Exception(
+                $"The culture \"{requestCulture.Culture.Name}\" was not found among the allowed cultures in the LanguageConfig."
+            );
         }
-        return string.Join(cookieSeparator, 
+        return string.Join(
+            cookieSeparator,
             new[]
             {
                 $"{culturePrefix}{requestCulture.Culture.Name}",
@@ -83,9 +94,10 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
                 "defaultLongDateFormat=" + cultureItem.DefaultDateFormats.Long,
                 "defaultShortDateFormat=" + cultureItem.DefaultDateFormats.Short,
                 "defaultTimeFormat=" + cultureItem.DefaultDateFormats.Time,
-            } 
+            }
         );
     }
+
     /// <summary>
     /// Parses a <see cref="RequestCulture"/> from the specified cookie value.
     /// Returns <c>null</c> if parsing fails.
@@ -101,10 +113,13 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
         try
         {
             var parts = value.Split(cookieSeparator, StringSplitOptions.RemoveEmptyEntries);
-            
+
             var potentialCultureName = parts[0];
             var potentialUICultureName = parts[1];
-            if (!potentialCultureName.StartsWith(culturePrefix) || !potentialUICultureName.StartsWith(uiCulturePrefix))
+            if (
+                !potentialCultureName.StartsWith(culturePrefix)
+                || !potentialUICultureName.StartsWith(uiCulturePrefix)
+            )
             {
                 return null;
             }
@@ -116,8 +131,9 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
         {
             log.Warn(ex);
             return new ProviderCultureResult(
-                languageConfig.DefaultCulture.Culture.Name, 
-                languageConfig.DefaultCulture.UICulture.Name);
+                languageConfig.DefaultCulture.Culture.Name,
+                languageConfig.DefaultCulture.UICulture.Name
+            );
         }
     }
 }

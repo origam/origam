@@ -40,11 +40,11 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using MoreLinq;
 using Origam.Security.Common;
@@ -56,8 +56,8 @@ using Origam.Server.Middleware;
 using Origam.Service.Core;
 using SoapCore;
 
-
 namespace Origam.Server;
+
 public class Startup
 {
     private readonly StartUpConfiguration startUpConfiguration;
@@ -67,6 +67,7 @@ public class Startup
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -77,10 +78,10 @@ public class Startup
         languageConfig = new LanguageConfig(configuration);
         chatConfig = new ChatConfig(configuration);
     }
+
     public void ConfigureServices(IServiceCollection services)
     {
-        ServicePointManager.SecurityProtocol 
-            = startUpConfiguration.SecurityProtocol;
+        ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
@@ -95,18 +96,17 @@ public class Startup
         // remove limit for multipart body length
         services.Configure<FormOptions>(options =>
         {
-            options.ValueLengthLimit = 
-                startUpConfiguration.ValueLengthLimit;
-            options.MultipartBodyLengthLimit = 
-                startUpConfiguration.MultipartBodyLengthLimit;
-            options.MultipartHeadersLengthLimit =
-                startUpConfiguration.MultipartHeadersLengthLimit;
+            options.ValueLengthLimit = startUpConfiguration.ValueLengthLimit;
+            options.MultipartBodyLengthLimit = startUpConfiguration.MultipartBodyLengthLimit;
+            options.MultipartHeadersLengthLimit = startUpConfiguration.MultipartHeadersLengthLimit;
         });
         services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
         var builder = services.AddMvc().AddNewtonsoftJson();
         services.Configure<IdentityOptions>(options =>
         {
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(
+                lockoutConfig.LockoutTimeMinutes
+            );
             options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
         });
         services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
@@ -116,12 +116,16 @@ public class Startup
         services.AddSingleton<SessionObjects, SessionObjects>();
         services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
         services.AddScoped<SignInManager<IOrigamUser>>();
-        services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
+        services.AddScoped<
+            IUserClaimsPrincipalFactory<IOrigamUser>,
+            UserClaimsPrincipalFactory<IOrigamUser>
+        >();
         services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
         services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
         services.AddSingleton<LanguageConfig>();
         services.AddLocalization();
-        services.AddIdentity<IOrigamUser, Role>()
+        services
+            .AddIdentity<IOrigamUser, Role>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
         services.Configure<IdentityOptions>(options =>
@@ -135,85 +139,95 @@ public class Startup
             Configuration.GetSection("UserConfig").Bind(userConfig);
             if (!string.IsNullOrEmpty(userConfig.AllowedUserNameCharacters))
             {
-                options.User.AllowedUserNameCharacters = userConfig.AllowedUserNameCharacters;                    
+                options.User.AllowedUserNameCharacters = userConfig.AllowedUserNameCharacters;
             }
         });
-        
+
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddTransient<IPrincipal>(provider 
-            => provider.GetService<IHttpContextAccessor>()
-                .HttpContext?.User);
-        services.Configure<UserConfig>(options 
-            => Configuration.GetSection("UserConfig").Bind(options));
-        services.Configure<ClientFilteringConfig>(options 
-            => Configuration.GetSection("ClientFilteringConfig")
-                .Bind(options));
-        services.Configure<IdentityGuiConfig>(options 
-            => Configuration.GetSection("IdentityGuiConfig")
-                .Bind(options));
-        services.Configure<CustomAssetsConfig>(options 
-            => Configuration.GetSection("CustomAssetsConfig")
-                .Bind(options));
-        services.Configure<UserLockoutConfig>(options 
-            => Configuration.GetSection("UserLockoutConfig")
-                .Bind(options));
-        services.Configure<ChatConfig>(options 
-            => Configuration.GetSection("ChatConfig").Bind(options));
-        services.Configure<HtmlClientConfig>(options 
-            => Configuration.GetSection("HtmlClientConfig")
-                .Bind(options));
-        services.AddIdentityServer()
+        services.AddTransient<IPrincipal>(provider =>
+            provider.GetService<IHttpContextAccessor>().HttpContext?.User
+        );
+        services.Configure<UserConfig>(options =>
+            Configuration.GetSection("UserConfig").Bind(options)
+        );
+        services.Configure<ClientFilteringConfig>(options =>
+            Configuration.GetSection("ClientFilteringConfig").Bind(options)
+        );
+        services.Configure<IdentityGuiConfig>(options =>
+            Configuration.GetSection("IdentityGuiConfig").Bind(options)
+        );
+        services.Configure<CustomAssetsConfig>(options =>
+            Configuration.GetSection("CustomAssetsConfig").Bind(options)
+        );
+        services.Configure<UserLockoutConfig>(options =>
+            Configuration.GetSection("UserLockoutConfig").Bind(options)
+        );
+        services.Configure<ChatConfig>(options =>
+            Configuration.GetSection("ChatConfig").Bind(options)
+        );
+        services.Configure<HtmlClientConfig>(options =>
+            Configuration.GetSection("HtmlClientConfig").Bind(options)
+        );
+        services
+            .AddIdentityServer()
             .AddInMemoryApiResources(Settings.GetIdentityApiResources())
             .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
             .AddInMemoryIdentityResources(Settings.GetIdentityResources())
             .AddAspNetIdentity<IOrigamUser>()
-            .AddSigningCredential(new X509Certificate2(
-                identityServerConfig.PathToJwtCertificate,
-                identityServerConfig.PasswordForJwtCertificate))
+            .AddSigningCredential(
+                new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate
+                )
+            )
             .AddInMemoryApiScopes(Settings.GetApiScopes())
             .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
-        
+
         if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
         {
             services.ConfigureApplicationCookie(options =>
             {
-                options.ExpireTimeSpan = 
-                    TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
-                options.SlidingExpiration = 
-                    identityServerConfig.CookieSlidingExpiration;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(
+                    identityServerConfig.CookieExpirationMinutes
+                );
+                options.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
             });
         }
         services.AddSoapCore();
         services.AddSingleton<DataServiceSoap>();
         services.AddSingleton<WorkflowServiceSoap>();
         services.AddScoped<IProfileService, ProfileService>();
-        services.AddMvc(options => options.EnableEndpointRouting = false)
+        services
+            .AddMvc(options => options.EnableEndpointRouting = false)
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization(options => {
+            .AddDataAnnotationsLocalization(options =>
+            {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
                     factory.Create(typeof(SharedResources));
             });
-        
+
         ConfigureAuthentication(services);
-        
+
         services.Configure<RequestLocalizationOptions>(options =>
         {
             options.DefaultRequestCulture = languageConfig.DefaultCulture;
             options.SupportedCultures = languageConfig.AllowedCultures;
             options.SupportedUICultures = languageConfig.AllowedCultures;
             options.RequestCultureProviders.Clear();
-            options.RequestCultureProviders.Insert(0, 
-                new OrigamCookieRequestCultureProvider(languageConfig));
+            options.RequestCultureProviders.Insert(
+                0,
+                new OrigamCookieRequestCultureProvider(languageConfig)
+            );
         });
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
-            var customControllerAssembly = Assembly.LoadFrom(
-                controllerDllName);
-            services.AddControllers()
-                .AddApplicationPart(customControllerAssembly);
+            var customControllerAssembly = Assembly.LoadFrom(controllerDllName);
+            services.AddControllers().AddApplicationPart(customControllerAssembly);
         }
-        var providerFactory = 
-            LoadClientAuthenticationProviders(Configuration, startUpConfiguration);
+        var providerFactory = LoadClientAuthenticationProviders(
+            Configuration,
+            startUpConfiguration
+        );
         services.AddSingleton(providerFactory);
         if (startUpConfiguration.EnableMiniProfiler)
         {
@@ -222,13 +236,17 @@ public class Startup
                 options.RouteBasePath = "/profiler";
                 options.PopupDecimalPlaces = 1;
                 options.ResultsAuthorize = request =>
-                    SecurityManager.GetAuthorizationProvider()
+                    SecurityManager
+                        .GetAuthorizationProvider()
                         .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
             });
         }
     }
-    private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders( 
-        IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+
+    private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders(
+        IConfiguration configuration,
+        StartUpConfiguration startUpConfiguration
+    )
     {
         var providerFactory = new ClientAuthenticationProviderContainer();
         foreach (var providerDllName in startUpConfiguration.ExtensionDlls)
@@ -246,96 +264,99 @@ public class Startup
                 });
         }
         return providerFactory;
-    }  
+    }
+
     private void ConfigureAuthentication(IServiceCollection services)
     {
-        var authenticationBuilder = services
-            .AddLocalApiAuthentication()
-            .AddAuthentication();
-        if(identityServerConfig.GoogleLogin != null)
+        var authenticationBuilder = services.AddLocalApiAuthentication().AddAuthentication();
+        if (identityServerConfig.GoogleLogin != null)
         {
             authenticationBuilder.AddGoogle(
                 GoogleDefaults.AuthenticationScheme,
                 "SignInWithGoogleAccount",
                 options =>
                 {
-                    options.ClientId =
-                        identityServerConfig.GoogleLogin.ClientId;
-                    options.ClientSecret = identityServerConfig.GoogleLogin
-                        .ClientSecret;
+                    options.ClientId = identityServerConfig.GoogleLogin.ClientId;
+                    options.ClientSecret = identityServerConfig.GoogleLogin.ClientSecret;
                     options.SignInScheme = IdentityServer4
                         .IdentityServerConstants
                         .ExternalCookieAuthenticationScheme;
-                });
+                }
+            );
         }
-        if(identityServerConfig.MicrosoftLogin != null)
+        if (identityServerConfig.MicrosoftLogin != null)
         {
             authenticationBuilder.AddMicrosoftAccount(
                 MicrosoftAccountDefaults.AuthenticationScheme,
                 "SignInWithMicrosoftAccount",
                 microsoftOptions =>
                 {
-                    microsoftOptions.ClientId = identityServerConfig
-                        .MicrosoftLogin.ClientId;
+                    microsoftOptions.ClientId = identityServerConfig.MicrosoftLogin.ClientId;
                     microsoftOptions.ClientSecret = identityServerConfig
-                        .MicrosoftLogin.ClientSecret;
+                        .MicrosoftLogin
+                        .ClientSecret;
                     microsoftOptions.SignInScheme = IdentityServer4
                         .IdentityServerConstants
                         .ExternalCookieAuthenticationScheme;
-                });
+                }
+            );
         }
-        if(identityServerConfig.AzureAdLogin != null)
+        if (identityServerConfig.AzureAdLogin != null)
         {
             authenticationBuilder.AddOpenIdConnect(
                 IdentityServerDefaults.AzureAdScheme,
                 "SignInWithAzureAd",
                 options =>
                 {
-                    options.ClientId = identityServerConfig.AzureAdLogin
-                        .ClientId;
-                    options.Authority
-                        = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
+                    options.ClientId = identityServerConfig.AzureAdLogin.ClientId;
+                    options.Authority =
+                        $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
                     options.SignInScheme = IdentityServer4
                         .IdentityServerConstants
                         .ExternalCookieAuthenticationScheme;
-                    options.TokenValidationParameters
-                        = new TokenValidationParameters
-                        {
-                            ValidateIssuer = false,
-                            ValidAudience =
-                                $"{identityServerConfig.AzureAdLogin.ClientId}"
-                        };
-                });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidAudience = $"{identityServerConfig.AzureAdLogin.ClientId}",
+                    };
+                }
+            );
         }
         // ExternalController needs to tap the info for the callback
         // resolution
         services.AddSingleton(identityServerConfig);
         // Setup authentication post processor
-        if (string.IsNullOrEmpty(
-               identityServerConfig.AuthenticationPostProcessor))
+        if (string.IsNullOrEmpty(identityServerConfig.AuthenticationPostProcessor))
         {
-            services.AddSingleton<IAuthenticationPostProcessor, 
-                    AlwaysValidAuthenticationPostProcessor>();
+            services.AddSingleton<
+                IAuthenticationPostProcessor,
+                AlwaysValidAuthenticationPostProcessor
+            >();
         }
         else
         {
-            var classpath = identityServerConfig
-                .AuthenticationPostProcessor.Split(',');
-            var authenticationPostProcessor 
-                = Reflector.ResolveTypeFromAssembly(
-                    classpath[0], classpath[1]);
-            services.AddSingleton(typeof(IAuthenticationPostProcessor),
-                authenticationPostProcessor);
+            var classpath = identityServerConfig.AuthenticationPostProcessor.Split(',');
+            var authenticationPostProcessor = Reflector.ResolveTypeFromAssembly(
+                classpath[0],
+                classpath[1]
+            );
+            services.AddSingleton(
+                typeof(IAuthenticationPostProcessor),
+                authenticationPostProcessor
+            );
         }
     }
+
     public void Configure(
-        IApplicationBuilder app, IWebHostEnvironment env, 
-        ILoggerFactory loggerFactory)
+        IApplicationBuilder app,
+        IWebHostEnvironment env,
+        ILoggerFactory loggerFactory
+    )
     {
         loggerFactory.AddLog4Net();
-        
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -349,17 +370,18 @@ public class Startup
         {
             var forwardedHeadersOptions = new ForwardedHeadersOptions()
             {
-                ForwardedHeaders
-                    = ForwardedHeaders.XForwardedProto
-                      | ForwardedHeaders.XForwardedHost
-                      | ForwardedHeaders.XForwardedFor,
+                ForwardedHeaders =
+                    ForwardedHeaders.XForwardedProto
+                    | ForwardedHeaders.XForwardedHost
+                    | ForwardedHeaders.XForwardedFor,
             };
             forwardedHeadersOptions.KnownNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
             app.UseForwardedHeaders(forwardedHeadersOptions);
         }
-        var localizationOptions = app.ApplicationServices
-            .GetService<IOptions<RequestLocalizationOptions>>().Value;
+        var localizationOptions = app
+            .ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>()
+            .Value;
         app.UseRequestLocalization(localizationOptions);
         app.UseIdentityServer();
         app.UseMiddleware<FatalErrorMiddleware>();
@@ -371,48 +393,67 @@ public class Startup
         {
             app.UseSoapApi(
                 startUpConfiguration.SoapInterfaceRequiresAuthentication,
-                startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences);
+                startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
+            );
         }
-        app.UseStaticFiles(new StaticFileOptions() {
-            FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),
-            RequestPath = new PathString("/assets")
-        });
+        app.UseStaticFiles(
+            new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "assets")
+                ),
+                RequestPath = new PathString("/assets"),
+            }
+        );
         if (startUpConfiguration.HasCustomAssets)
         {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToCustomAssetsFolder),
-                RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder)
-            });                
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        startUpConfiguration.PathToCustomAssetsFolder
+                    ),
+                    RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder),
+                }
+            );
         }
         app.UseCustomWebAppExtenders(Configuration, startUpConfiguration);
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp)
-        });
+        app.UseStaticFiles(
+            new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp),
+            }
+        );
         if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
         {
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(chatConfig.PathToChatApp!),
-                RequestPath = new PathString("/chatrooms"),
-                OnPrepareResponse = ctx =>
+            app.UseStaticFiles(
+                new StaticFileOptions
                 {
-                    if (ctx.File.Name == "index.html")
+                    FileProvider = new PhysicalFileProvider(chatConfig.PathToChatApp!),
+                    RequestPath = new PathString("/chatrooms"),
+                    OnPrepareResponse = ctx =>
                     {
-                        ctx.Context.Response.Headers.Append(
-                            "Cache-Control", $"no-store, max-age=0");
-                    }
+                        if (ctx.File.Name == "index.html")
+                        {
+                            ctx.Context.Response.Headers.Append(
+                                "Cache-Control",
+                                $"no-store, max-age=0"
+                            );
+                        }
+                    },
                 }
-            });
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                RequestPath = new PathString("/chatAssets"),
-                FileProvider = new PhysicalFileProvider(Path.Combine(chatConfig.PathToChatApp, "chatAssets"))
-            });
+            );
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    RequestPath = new PathString("/chatAssets"),
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(chatConfig.PathToChatApp, "chatAssets")
+                    ),
+                }
+            );
         }
-        app.UseCors(builder => 
-            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         if (startUpConfiguration.EnableMiniProfiler)
         {
             app.UseMiniProfiler();
@@ -427,7 +468,10 @@ public class Startup
         // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
-        OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
+        OrigamUtils.ConnectOrigamRuntime(
+            loggerFactory,
+            startUpConfiguration.ReloadModelWhenFilesChangesDetected
+        );
         OrigamUtils.CleanUpDatabase();
     }
 }

@@ -39,6 +39,7 @@ using Origam.Workbench.Services.CoreServices;
 using Origam.Workflow;
 
 namespace Origam.Server.Controller;
+
 [AllowAnonymous]
 [Controller]
 [Route("internalApi/[controller]")]
@@ -46,14 +47,18 @@ public class ReportController : AbstractController
 {
     private readonly IStringLocalizer<SharedResources> localizer;
     private readonly CoreHttpTools httpTools = new();
+
     public ReportController(
-        SessionObjects sessionObjects, 
+        SessionObjects sessionObjects,
         IStringLocalizer<SharedResources> localizer,
-        ILogger<ReportController> log, IWebHostEnvironment environment) 
+        ILogger<ReportController> log,
+        IWebHostEnvironment environment
+    )
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
     }
+
     [HttpGet("{reportRequestId:guid}")]
     public IActionResult Get(Guid reportRequestId)
     {
@@ -72,17 +77,20 @@ public class ReportController : AbstractController
                 }
                 case FileSystemReport fileSystemReport:
                 {
-                    return HandleFileSystemReport(
-                        reportRequest, fileSystemReport);
+                    return HandleFileSystemReport(reportRequest, fileSystemReport);
                 }
                 default:
                 {
-                    if (reportRequest.DataReportExportFormatType
-                        == DataReportExportFormatType.ExternalViewer)
+                    if (
+                        reportRequest.DataReportExportFormatType
+                        == DataReportExportFormatType.ExternalViewer
+                    )
                     {
                         return HandleReportWithExternalViewer(
                             new Guid(reportRequest.ReportId),
-                            report, reportRequest.Parameters);
+                            report,
+                            reportRequest.Parameters
+                        );
                     }
                     // handle all other report by running
                     // report service agent's GetReport method
@@ -99,20 +107,24 @@ public class ReportController : AbstractController
             RemoveRequest(reportRequestId);
         }
     }
+
     private IActionResult HandleReportWithExternalViewer(
         Guid reportId,
-        AbstractReport report, 
-        Hashtable parameters)
+        AbstractReport report,
+        Hashtable parameters
+    )
     {
         var reportService = ReportServiceAgent.GetService(report);
         string url = reportService.PrepareExternalReportViewer(
             reportId,
-            data: null, 
+            data: null,
             DataReportExportFormatType.ExternalViewer.ToString(),
-            parameters, 
-            dbTransaction: null);
+            parameters,
+            dbTransaction: null
+        );
         return Redirect(url);
     }
+
     [HttpGet("[action]")]
     public IActionResult GetReportInfo(Guid reportRequestId)
     {
@@ -124,65 +136,73 @@ public class ReportController : AbstractController
                 : Ok(new ReportInfo { IsWebReport = report is WebReport });
         });
     }
+
     private (ReportRequest, AbstractReport) GetReport(Guid reportRequestId)
     {
-        ReportRequest reportRequest = sessionObjects.SessionManager
-            .GetReportRequest(reportRequestId);
+        ReportRequest reportRequest = sessionObjects.SessionManager.GetReportRequest(
+            reportRequestId
+        );
         if (reportRequest == null)
         {
             return (null, null);
         }
         // log in as the user originally requesting the report
-        // so row level security can be applied 
-        SecurityManager.SetCustomIdentity(
-            reportRequest.UserName, HttpContext);
+        // so row level security can be applied
+        SecurityManager.SetCustomIdentity(reportRequest.UserName, HttpContext);
         reportRequest.TimesRequested++;
         // get report model data
-        var persistenceService = ServiceManager
-            .Services.GetService<IPersistenceService>();
-        var report = persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractReport), 
-                new ModelElementKey(new Guid(reportRequest.ReportId))) 
-            as AbstractReport;
+        var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+        var report =
+            persistenceService.SchemaProvider.RetrieveInstance(
+                typeof(AbstractReport),
+                new ModelElementKey(new Guid(reportRequest.ReportId))
+            ) as AbstractReport;
         return (reportRequest, report);
     }
-    private IActionResult HandleReport(
-        ReportRequest reportRequest, string reportName)
+
+    private IActionResult HandleReport(ReportRequest reportRequest, string reportName)
     {
         byte[] report = ReportService.GetReport(
             new Guid(reportRequest.ReportId),
             data: null,
             reportRequest.DataReportExportFormatType.GetString(),
             reportRequest.Parameters,
-            transactionId: null);
+            transactionId: null
+        );
         Response.Headers.Append(
             HeaderNames.ContentDisposition,
-            "filename=\"" + reportName + "."
-            + reportRequest.DataReportExportFormatType.GetExtension() 
-            + "\"");
-        return File(report, 
-            reportRequest.DataReportExportFormatType.GetContentType());
+            "filename=\""
+                + reportName
+                + "."
+                + reportRequest.DataReportExportFormatType.GetExtension()
+                + "\""
+        );
+        return File(report, reportRequest.DataReportExportFormatType.GetContentType());
     }
-    private IActionResult HandleWebReport(
-        ReportRequest reportRequest, 
-        WebReport webReport)
+
+    private IActionResult HandleWebReport(ReportRequest reportRequest, WebReport webReport)
     {
-        ReportHelper.PopulateDefaultValues(
-            webReport, reportRequest.Parameters);
+        ReportHelper.PopulateDefaultValues(webReport, reportRequest.Parameters);
         string url = HttpTools.Instance.BuildUrl(
-            webReport.Url, reportRequest.Parameters, 
+            webReport.Url,
+            reportRequest.Parameters,
             webReport.ForceExternalUrl,
-            webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
+            webReport.ExternalUrlScheme,
+            webReport.IsUrlEscaped
+        );
         return Redirect(url);
     }
+
     private IActionResult HandleFileSystemReport(
-        ReportRequest reportRequest, 
-        FileSystemReport report)
+        ReportRequest reportRequest,
+        FileSystemReport report
+    )
     {
-        ReportHelper.PopulateDefaultValues(
-            report, reportRequest.Parameters);
+        ReportHelper.PopulateDefaultValues(report, reportRequest.Parameters);
         string filePath = ReportHelper.BuildFileSystemReportFilePath(
-            report.ReportPath, reportRequest.Parameters);
+            report.ReportPath,
+            reportRequest.Parameters
+        );
         if (!System.IO.File.Exists(filePath))
         {
             return NotFound();
@@ -191,24 +211,30 @@ public class ReportController : AbstractController
         string fileName = Path.GetFileName(filePath);
         Response.Headers.Append(
             HeaderNames.ContentDisposition,
-            httpTools.GetFileDisposition(
-                Request.GetUserAgent(), 
-                fileName));
+            httpTools.GetFileDisposition(Request.GetUserAgent(), fileName)
+        );
         var stream = new FileStream(filePath, FileMode.Open);
         // specifying filename forces content-disposition attachment;
         return File(stream, mimeType, fileName);
     }
+
     private void RemoveRequest(Guid reportRequestId)
     {
-        var reportRequest = sessionObjects.SessionManager
-            .GetReportRequest(reportRequestId);
-        if (reportRequest is not { TimesRequested: < 2 }
-            || (Request.Headers.ContainsKey(HeaderNames.UserAgent)
-                && (Request.Headers[HeaderNames.UserAgent].ToString()
-                    .IndexOf("Edge", StringComparison.Ordinal) == -1)))
+        var reportRequest = sessionObjects.SessionManager.GetReportRequest(reportRequestId);
+        if (
+            reportRequest is not { TimesRequested: < 2 }
+            || (
+                Request.Headers.ContainsKey(HeaderNames.UserAgent)
+                && (
+                    Request
+                        .Headers[HeaderNames.UserAgent]
+                        .ToString()
+                        .IndexOf("Edge", StringComparison.Ordinal) == -1
+                )
+            )
+        )
         {
-            sessionObjects.SessionManager.RemoveReportRequest(
-                reportRequestId);
+            sessionObjects.SessionManager.RemoveReportRequest(reportRequestId);
         }
     }
 }

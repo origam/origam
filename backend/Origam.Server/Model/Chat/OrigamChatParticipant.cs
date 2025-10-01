@@ -34,19 +34,32 @@ namespace Origam.Server.Model.Chat
             this.AvatarUrl = avatarUrl;
             this.Status = status;
         }
+
         public Guid Id { get; }
-        public string Name { get;  }
+        public string Name { get; }
         public string AvatarUrl { get; }
-        public string Status { get;  }
-        internal static List<OrigamChatParticipant> CreateJson(DataSet datasetParticipants, DataSet onlineUsers)
+        public string Status { get; }
+
+        internal static List<OrigamChatParticipant> CreateJson(
+            DataSet datasetParticipants,
+            DataSet onlineUsers
+        )
         {
             List<OrigamChatParticipant> messages = new List<OrigamChatParticipant>();
             foreach (DataRow row in datasetParticipants.Tables["BusinessPartner"].Rows)
             {
-                messages.Add(new OrigamChatParticipant(row.Field<Guid>("Id"), row.Field<string>("Username"), row.Field<Guid>("Id").ToString(), GetStatus(row.Field<string>("Username"), onlineUsers)));
+                messages.Add(
+                    new OrigamChatParticipant(
+                        row.Field<Guid>("Id"),
+                        row.Field<string>("Username"),
+                        row.Field<Guid>("Id").ToString(),
+                        GetStatus(row.Field<string>("Username"), onlineUsers)
+                    )
+                );
             }
             return messages;
         }
+
         private static string GetStatus(string userName, DataSet onlineUsers)
         {
             if (!string.IsNullOrEmpty(userName))

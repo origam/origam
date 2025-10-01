@@ -25,6 +25,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Origam.Server.Model.Session;
+
 public class DeleteSessionData
 {
     public Guid SessionId { get; set; }

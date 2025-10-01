@@ -25,14 +25,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Origam.DA;
 using Origam.Extensions;
-using Origam.Server.Attributes;
 using Origam.Server;
+using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
+
 public class GetGroupsAggregations : IEntityIdentification
 {
     [RequiredNonDefault]
     public Guid MenuId { get; set; }
+
     [RequiredNonDefault]
     public Guid DataStructureEntityId { get; set; }
     public string Filter { get; set; }

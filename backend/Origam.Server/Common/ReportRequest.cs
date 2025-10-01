@@ -24,33 +24,35 @@ using System.Collections;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Server;
+
 public class ReportRequest
 {
-	public ReportRequest(string reportId, Hashtable parameters) 
-        : this (reportId, parameters, DataReportExportFormatType.PDF)
-	{
-	}
+    public ReportRequest(string reportId, Hashtable parameters)
+        : this(reportId, parameters, DataReportExportFormatType.PDF) { }
+
     public ReportRequest(
-        string reportId, 
+        string reportId,
         Hashtable parameters,
-        DataReportExportFormatType dataReportExportFormatType)
+        DataReportExportFormatType dataReportExportFormatType
+    )
     {
         _reportId = reportId;
         _parameters = parameters;
         UserName = SecurityManager.CurrentPrincipal.Identity.Name;
         _dataReportExportFormatType = dataReportExportFormatType;
     }
+
     private string _reportId;
     public string ReportId
     {
         get { return _reportId; }
         set { _reportId = value; }
     }
-	private DataReportExportFormatType _dataReportExportFormatType;
-	public DataReportExportFormatType DataReportExportFormatType
-	{
-		get { return _dataReportExportFormatType; }
-	}	
+    private DataReportExportFormatType _dataReportExportFormatType;
+    public DataReportExportFormatType DataReportExportFormatType
+    {
+        get { return _dataReportExportFormatType; }
+    }
     private Hashtable _parameters;
     public Hashtable Parameters
     {

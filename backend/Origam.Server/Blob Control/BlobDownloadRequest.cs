@@ -41,16 +41,18 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Data;
 using System.Collections;
+using System.Data;
 
 namespace Origam.Server;
+
 public class BlobDownloadRequest
 {
     private DataRow _row;
     private IDictionary _parameters;
     private string _property;
     private bool _isPreview;
+
     public BlobDownloadRequest(DataRow row, IDictionary parameters, string property, bool isPreview)
     {
         _row = row;
@@ -58,6 +60,7 @@ public class BlobDownloadRequest
         _property = property;
         _isPreview = isPreview;
     }
+
     public DataRow Row
     {
         get { return _row; }
@@ -79,23 +82,74 @@ public class BlobDownloadRequest
         set { _isPreview = value; }
     }
 
-    public string BlobMember {get {return (string)this.Parameters["BlobMember"]; } }
-    public string FileSizeMember { get { return (string)this.Parameters["FileSizeMember"]; } }
-    public Guid ThumbnailHeightConstantId { get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); } }
-    public Guid DefaultCompressionConstantId { get { return new Guid((string)this.Parameters["DefaultCompressionConstantId"]); } }
-    public Guid BlobLookupId { get { return new Guid((string)this.Parameters["BlobLookupId"]); } }
-    public string GridColumnCaption { get { return (string)this.Parameters["GridColumnCaption"]; } }
-    public string AuthorMember { get { return (string)this.Parameters["AuthorMember"]; } }
-    public Guid StorageTypeDefaultConstantId { get { return new Guid((string)this.Parameters["StorageTypeDefaultConstantId"]); } }
-    public string ThumbnailMember { get { return (string)this.Parameters["ThumbnailMember"]; } }
-    public string DateCreatedMember { get { return (string)this.Parameters["DateCreatedMember"]; } }
-    public string RemarkMember { get { return (string)this.Parameters["RemarkMember"]; } }
-    public string DisplayStorageTypeSelection { get { return (string)this.Parameters["DisplayStorageTypeSelection"]; } }
-    public Guid ThumbnailWidthConstantId { get { return new Guid((string)this.Parameters["ThumbnailWidthConstantId"]); } }
-    public string DateLastModifiedMember { get { return (string)this.Parameters["DateLastModifiedMember"]; } }
-    public string OriginalPathMember { get { return (string)this.Parameters["OriginalPathMember"]; } }
-    public string FileName { get { return (string)this.Parameters["FileName"]; } }
-    public string CompressionStateMember { get { return (string)this.Parameters["CompressionStateMember"]; } }
+    public string BlobMember
+    {
+        get { return (string)this.Parameters["BlobMember"]; }
+    }
+    public string FileSizeMember
+    {
+        get { return (string)this.Parameters["FileSizeMember"]; }
+    }
+    public Guid ThumbnailHeightConstantId
+    {
+        get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); }
+    }
+    public Guid DefaultCompressionConstantId
+    {
+        get { return new Guid((string)this.Parameters["DefaultCompressionConstantId"]); }
+    }
+    public Guid BlobLookupId
+    {
+        get { return new Guid((string)this.Parameters["BlobLookupId"]); }
+    }
+    public string GridColumnCaption
+    {
+        get { return (string)this.Parameters["GridColumnCaption"]; }
+    }
+    public string AuthorMember
+    {
+        get { return (string)this.Parameters["AuthorMember"]; }
+    }
+    public Guid StorageTypeDefaultConstantId
+    {
+        get { return new Guid((string)this.Parameters["StorageTypeDefaultConstantId"]); }
+    }
+    public string ThumbnailMember
+    {
+        get { return (string)this.Parameters["ThumbnailMember"]; }
+    }
+    public string DateCreatedMember
+    {
+        get { return (string)this.Parameters["DateCreatedMember"]; }
+    }
+    public string RemarkMember
+    {
+        get { return (string)this.Parameters["RemarkMember"]; }
+    }
+    public string DisplayStorageTypeSelection
+    {
+        get { return (string)this.Parameters["DisplayStorageTypeSelection"]; }
+    }
+    public Guid ThumbnailWidthConstantId
+    {
+        get { return new Guid((string)this.Parameters["ThumbnailWidthConstantId"]); }
+    }
+    public string DateLastModifiedMember
+    {
+        get { return (string)this.Parameters["DateLastModifiedMember"]; }
+    }
+    public string OriginalPathMember
+    {
+        get { return (string)this.Parameters["OriginalPathMember"]; }
+    }
+    public string FileName
+    {
+        get { return (string)this.Parameters["FileName"]; }
+    }
+    public string CompressionStateMember
+    {
+        get { return (string)this.Parameters["CompressionStateMember"]; }
+    }
     public bool IsCompressed
     {
         get

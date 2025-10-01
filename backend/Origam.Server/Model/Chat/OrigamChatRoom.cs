@@ -27,8 +27,13 @@ namespace Origam.Server.Model.Chat
 {
     public class OrigamChatRoom
     {
-        public OrigamChatRoom(Guid id, string topic,int unreadMessageCount, 
-            string categoryName, Guid? referenceId)
+        public OrigamChatRoom(
+            Guid id,
+            string topic,
+            int unreadMessageCount,
+            string categoryName,
+            Guid? referenceId
+        )
         {
             this.Id = id;
             this.Topic = topic;
@@ -36,25 +41,32 @@ namespace Origam.Server.Model.Chat
             this.CategoryName = categoryName;
             this.ReferenceId = referenceId;
         }
+
         public Guid Id { get; set; }
         public string Topic { get; set; }
         public string CategoryName { get; set; }
         public Guid? ReferenceId { get; set; }
         public int UnreadMessageCount { get; private set; }
-        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet, Dictionary<Guid, int> unreadMessages)
+
+        internal static List<OrigamChatRoom> CreateJson(
+            DataSet ChatRoomDataSet,
+            Dictionary<Guid, int> unreadMessages
+        )
         {
             List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
-            DataTable table = ChatRoomDataSet.Tables["OrigamChatRoom"]; 
+            DataTable table = ChatRoomDataSet.Tables["OrigamChatRoom"];
             foreach (DataRow row in table.Rows)
             {
                 Guid chatRoomId = row.Field<Guid>("Id");
-                chatRoom.Add(new OrigamChatRoom(
-                    row.Field<Guid>("Id"),
-                    row.Field<string>("Name"),
-                    unreadMessages.ContainsKey(chatRoomId) ? unreadMessages[chatRoomId] : 0,
-                    row.Field<string>("ReferenceEntity"),
-                    row.Field<Nullable<Guid>>("ReferenceId")
-                    ));
+                chatRoom.Add(
+                    new OrigamChatRoom(
+                        row.Field<Guid>("Id"),
+                        row.Field<string>("Name"),
+                        unreadMessages.ContainsKey(chatRoomId) ? unreadMessages[chatRoomId] : 0,
+                        row.Field<string>("ReferenceEntity"),
+                        row.Field<Nullable<Guid>>("ReferenceId")
+                    )
+                );
             }
             return chatRoom;
         }

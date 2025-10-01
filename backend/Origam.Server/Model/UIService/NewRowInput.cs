@@ -25,12 +25,15 @@ using System.ComponentModel.DataAnnotations;
 using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
+
 public class NewRowInput
 {
     [RequiredNonDefault]
     public Guid DataStructureEntityId { get; set; }
+
     [Required]
     public Dictionary<string, string> NewValues { get; set; }
+
     [RequiredNonDefault]
     public Guid MenuId { get; set; }
 }

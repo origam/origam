@@ -21,15 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using Origam.Server.Attributes;
 using Origam.Server;
+using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService;
+
 public class GetFilterListValuesInput : IEntityIdentification
 {
     [RequiredNonDefault]
     public Guid MenuId { get; set; }
     public Guid SessionFormIdentifier { get; set; }
+
     [RequiredNonDefault]
     public Guid DataStructureEntityId { get; set; }
     public string Property { get; set; }

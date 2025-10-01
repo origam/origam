@@ -1,0 +1,37 @@
+﻿root = true
+[*.cs]
+# CSharpier Setup
+csharpier_formatter = csharp
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+# Analyzers Setup
+# Basic roslynator setup
+roslynator_blank_line_between_using_directives = never
+# Disable roslynator rules by default
+dotnet_analyzer_diagnostic.category-Roslynator.severity = none
+# IDE0005 requires documentation file, but we aren't using it,
+# thus we disable associated warning
+dotnet_diagnostic.CS1591.severity = none
+
+# Rules
+# Unused using
+dotnet_diagnostic.IDE0005.severity = warning
+# Add parameter name to improve readability
+dotnet_diagnostic.MA0003.severity = error
+# Order named arguments according to the order of parameters
+dotnet_diagnostic.RCS1205.severity = error
+# Enforce parentheses
+dotnet_diagnostic.RCS1123.severity = error
+# Enforce no blank lines between using directives
+dotnet_diagnostic.RCS0015.severity = error
+# No unnecessary blank lines
+dotnet_diagnostic.RCS0063.severity = error
+# Always braces for if statement
+dotnet_diagnostic.RCS1007.severity = error
+dotnet_diagnostic.RCS1126.severity = error
+# Switch braces
+dotnet_diagnostic.RCS1111.severity = error
+# Unnecessary else
+dotnet_diagnostic.RCS1211.severity = error

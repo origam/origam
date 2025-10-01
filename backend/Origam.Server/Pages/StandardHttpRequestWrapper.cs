@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.Collections.Generic;
-
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,6 +31,7 @@ using Origam.Server.Extensions;
 using UAParser;
 
 namespace Origam.Server.Pages;
+
 internal class StandardHttpRequestWrapper : IRequestWrapper
 {
     private readonly HttpContext httpContext;
@@ -39,6 +39,7 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     private readonly IHeaderDictionary headerDictionary;
     private readonly ClientInfo clientInfo;
     private readonly MediaTypeHeaderValue mediaTypeHeader;
+
     public StandardHttpRequestWrapper(HttpContext httpContext)
     {
         this.httpContext = httpContext;
@@ -46,10 +47,10 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
         headerDictionary = this.httpContext.Request.Headers;
         clientInfo = GetClientInfo();
         Params = GetParameters();
-        mediaTypeHeader = request.ContentType != null 
-            ? MediaTypeHeaderValue.Parse(request.ContentType) 
-            : null;
+        mediaTypeHeader =
+            request.ContentType != null ? MediaTypeHeaderValue.Parse(request.ContentType) : null;
     }
+
     public string AppRelativeCurrentExecutionFilePath => request.Path.ToUriComponent();
     public string ContentType => mediaTypeHeader?.MediaType.Value;
     public string AbsoluteUri => Url;
@@ -59,12 +60,9 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
     public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
     public string UserAgent => httpContext.Request.GetUserAgent();
-    public string Browser 
-        => clientInfo != null ? clientInfo.UA.Family : "";
-    public string BrowserVersion 
-        => clientInfo != null 
-            ? clientInfo.UA.Major + "." + clientInfo.UA.Minor
-            : "";
+    public string Browser => clientInfo != null ? clientInfo.UA.Family : "";
+    public string BrowserVersion =>
+        clientInfo != null ? clientInfo.UA.Major + "." + clientInfo.UA.Minor : "";
     public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
     public string UserHostName => request.Host.Value;
     public IEnumerable<string> UserLanguages
@@ -72,16 +70,15 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
         get
         {
             var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
-            return languages.Length == 0 
-                ? new string[0] 
-                : languages[0].Split(',');
+            return languages.Length == 0 ? new string[0] : languages[0].Split(',');
         }
     }
     public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
     public long ContentLength => request.ContentLength ?? 0;
-    public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
+    public IDictionary BrowserCapabilities => new Dictionary<string, string>(); //
     public string UrlReferrerAbsoluteUri => headerDictionary[HeaderNames.Referer];
     public Parameters Params { get; }
+
     public PostedFile FilesGet(string name)
     {
         var httpPostedFile = request.Form.Files[name];
@@ -90,9 +87,10 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
             ContentType = httpPostedFile.ContentType,
             InputStream = httpPostedFile.OpenReadStream(),
             ContentLength = httpPostedFile.Length,
-            FileName = httpPostedFile.FileName
+            FileName = httpPostedFile.FileName,
         };
     }
+
     private ClientInfo GetClientInfo()
     {
         if (string.IsNullOrEmpty(request.Headers[HeaderNames.UserAgent]))
@@ -102,12 +100,13 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
         var uaParser = Parser.GetDefault();
         return uaParser.Parse(request.Headers[HeaderNames.UserAgent]);
     }
+
     private Parameters GetParameters()
     {
-        var parameters = request.Query.Keys
-            .ToDictionary(
-                key => key,
-                key => request.Query[key].ToString());
+        var parameters = request.Query.Keys.ToDictionary(
+            key => key,
+            key => request.Query[key].ToString()
+        );
         foreach (var keyValuePair in request.Cookies)
         {
             parameters.Add(keyValuePair.Key, keyValuePair.Value);

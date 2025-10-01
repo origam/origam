@@ -41,11 +41,17 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
-using Origam.Schema.GuiModel;
 using System.Web;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Server.Pages;
+
 public interface IPageRequestHandler
 {
-    void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response);
+    void Execute(
+        AbstractPage page,
+        Dictionary<string, object> parameters,
+        IRequestWrapper request,
+        IResponseWrapper response
+    );
 }

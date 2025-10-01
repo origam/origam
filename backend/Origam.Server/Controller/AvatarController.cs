@@ -26,6 +26,7 @@ using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
+
 [Route("chatrooms/[controller]")]
 [Route("internalApi/[controller]")]
 [ApiController]
@@ -36,11 +37,16 @@ public class AvatarController : ControllerBase
     {
         QueryParameterCollection parameters = new QueryParameterCollection
         {
-            new QueryParameter("BusinessPartner_parId",avatarId)
+            new QueryParameter("BusinessPartner_parId", avatarId),
         };
-        DataSet datasetUsersForInvite = LoadData(new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"), 
-                                                 new Guid("d014e645-dda1-4999-b577-d82221715583"),
-           Guid.Empty, Guid.Empty, null, parameters);
+        DataSet datasetUsersForInvite = LoadData(
+            new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"),
+            new Guid("d014e645-dda1-4999-b577-d82221715583"),
+            Guid.Empty,
+            Guid.Empty,
+            null,
+            parameters
+        );
         if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
         {
             return NotFound();
@@ -51,8 +57,12 @@ public class AvatarController : ControllerBase
         {
             return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
         }
-        return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
+        return File(
+            imageBytes,
+            HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename"))
+        );
     }
+
     private static string MakeInitialsSvg(DataRow userRow)
     {
         string name = userRow.Field<string>("Name");
@@ -64,20 +74,28 @@ public class AvatarController : ControllerBase
         }
         initials += name.First().ToString().ToUpper();
         string userSvg =
-            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">" +
-                $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>" +
-            "</svg>";
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">"
+            + $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>"
+            + "</svg>";
         return userSvg;
     }
-    private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
-                            string transactionId, 
-                            QueryParameterCollection parameters)
+
+    private DataSet LoadData(
+        Guid dataStructureId,
+        Guid methodId,
+        Guid defaultSetId,
+        Guid sortSetId,
+        string transactionId,
+        QueryParameterCollection parameters
+    )
     {
-        return DataService.Instance.LoadData(dataStructureId,
-                 methodId,
-                 defaultSetId,
-                 sortSetId,
-                 transactionId,
-                 parameters);
+        return DataService.Instance.LoadData(
+            dataStructureId,
+            methodId,
+            defaultSetId,
+            sortSetId,
+            transactionId,
+            parameters
+        );
     }
 }

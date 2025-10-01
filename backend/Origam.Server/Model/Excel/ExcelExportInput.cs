@@ -25,16 +25,19 @@ using System.ComponentModel.DataAnnotations;
 using Origam.Server.Model.UIService;
 
 namespace Origam.Server.Model.Excel;
+
 public class ExcelExportInput
 {
     [Required]
     public string Entity { get; set; }
+
     [Required]
     public List<EntityExportField> Fields { get; set; }
+
     [Required]
     public Guid SessionFormIdentifier { get; set; }
-    
+
     public List<object> RowIds { get; set; }
-    
+
     public GetRowsInput LazyLoadedEntityInput { get; set; }
 }
