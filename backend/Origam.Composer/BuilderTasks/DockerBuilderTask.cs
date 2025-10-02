@@ -38,10 +38,13 @@ public class DockerBuilderTask : AbstractBuilderTask
         CreateCmdFile(project, dockerConfigLinux);
         CreateCmdFileArchitect(project, dockerConfigLinux);
 
-        DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
-        CreateEnvFile(project, dockerConfigWin);
-        CreateCmdFile(project, dockerConfigWin);
-        CreateCmdFileArchitect(project, dockerConfigWin);
+        if (!project.CommandsOnlyLinux)
+        {
+            DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
+            CreateEnvFile(project, dockerConfigWin);
+            CreateCmdFile(project, dockerConfigWin);
+            CreateCmdFileArchitect(project, dockerConfigWin);
+        }
     }
 
     private void CreateEnvFile(Project project, DockerConfig config)
