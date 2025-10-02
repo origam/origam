@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -38,7 +38,6 @@ public class CreateCommand(
         GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings, gitIdentity);
 
-        // TODO: Use builder pattern
         var DockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
         {
@@ -69,26 +68,30 @@ public class CreateCommand(
             DatabaseInternalUserPassword = passwordGeneratorService.Generate(24),
             #endregion
 
+            #region Project and client web app
+            NewPackageId = Guid.NewGuid().ToString(),
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
             ProjectFolder = settings.ProjectFolder,
 
+            // Admin user account for client web app
+            WebUserName = settings.ProjectAdminName,
+            WebUserPassword = settings.ProjectAdminPassword,
+            WebEmail = settings.ProjectAdminEmail,
+
             ClientDockerImageLinux = settings.ProjectDockerImageLinux,
             ClientDockerImageWin = settings.ProjectDockerImageWin,
+            #endregion
 
             ArchitectDockerImageLinux = settings.ArchitectDockerImageLinux,
             ArchitectDockerImageWin = settings.ArchitectDockerImageWin,
             ArchitectPort = settings.ArchitectPort,
 
-            WebUserName = settings.ProjectAdminName,
-            WebUserPassword = settings.ProjectAdminPassword,
-            WebEmail = settings.ProjectAdminEmail,
-
-            NewPackageId = Guid.NewGuid().ToString(),
-
+            #region Git
             IsGitEnabled = settings.GitEnabled,
             GitUsername = gitIdentity.User,
             GitEmail = gitIdentity.Email,
+            #endregion
 
             #region Docker
             DockerFolder = DockerFolder,
