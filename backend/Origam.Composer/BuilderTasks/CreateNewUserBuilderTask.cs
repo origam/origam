@@ -50,5 +50,5 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
         DataService(project.DatabaseType).CreateFirstNewWebUser(parameters);
     }
 
-    public override void Rollback() { }
+    public override void Rollback(Project project) { }
 }

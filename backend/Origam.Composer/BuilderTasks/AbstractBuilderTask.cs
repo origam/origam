@@ -33,5 +33,5 @@ public abstract class AbstractBuilderTask : IBuilderTask
 
     public abstract void Execute(Project project);
 
-    public abstract void Rollback();
+    public abstract void Rollback(Project project);
 }

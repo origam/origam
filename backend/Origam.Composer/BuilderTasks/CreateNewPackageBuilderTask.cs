@@ -40,5 +40,5 @@ public class CreateNewPackageBuilderTask : AbstractBuilderTask
         schema.UnloadSchema();
     }
 
-    public override void Rollback() { }
+    public override void Rollback(Project project) { }
 }

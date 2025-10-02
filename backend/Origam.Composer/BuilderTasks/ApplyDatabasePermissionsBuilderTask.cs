@@ -58,12 +58,9 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
             );
     }
 
-    public override void Rollback()
+    public override void Rollback(Project project)
     {
-        if (Project != null)
-        {
-            DataService(Project.DatabaseType)
-                .DeleteUser(Project.Name, Project.DatabaseIntegratedAuthentication);
-        }
+        DataService(project.DatabaseType)
+            .DeleteUser(project.DatabaseInternalUserName, project.DatabaseIntegratedAuthentication);
     }
 }

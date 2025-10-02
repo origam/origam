@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -175,7 +175,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         return project.DatabaseHost;
     }
 
-    public override void Rollback() { }
+    public override void Rollback(Project project) { }
 
     private string WebSiteUrl(Project project)
     {

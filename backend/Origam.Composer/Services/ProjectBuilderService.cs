@@ -60,7 +60,7 @@ public class ProjectBuilderService : IProjectBuilderService
             activeTask.State = BuilderTaskState.Failed;
             for (var i = Tasks.Count - 1; i >= 0; i--)
             {
-                RollbackTask(Tasks[i]);
+                RollbackTask(Tasks[i], project);
             }
             throw;
         }
@@ -89,14 +89,14 @@ public class ProjectBuilderService : IProjectBuilderService
         return Tasks;
     }
 
-    private void RollbackTask(IBuilderTask builderTask)
+    private void RollbackTask(IBuilderTask builderTask, Project project)
     {
         try
         {
             if (builderTask.State == BuilderTaskState.Finished)
             {
                 builderTask.State = BuilderTaskState.RollingBack;
-                builderTask.Rollback();
+                builderTask.Rollback(project);
                 builderTask.State = BuilderTaskState.RolledBack;
             }
         }

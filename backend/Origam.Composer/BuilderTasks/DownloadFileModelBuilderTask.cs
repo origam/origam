@@ -29,26 +29,24 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
 {
     public override string Name => "Download ORIGAM model-root from repository";
 
-    private string SourcesFolder;
     private string RepositoryZipPath;
 
     public override void Execute(Project project)
     {
-        SourcesFolder = project.ProjectFolder;
         RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
 
-        CreateSourceFolder();
+        CreateSourceFolder(project.ProjectFolder);
         DownloadModelFromRepository(project.OrigamRepositoryUrl);
-        UnzipDefaultModelAndCopy();
-        CreateCustomAssetsFolder();
+        UnzipDefaultModelAndCopy(project.ProjectFolder);
+        CreateCustomAssetsFolder(project.ProjectFolder);
     }
 
-    private void CreateSourceFolder()
+    private void CreateSourceFolder(string projectFolder)
     {
-        var dir = new DirectoryInfo(SourcesFolder);
+        var dir = new DirectoryInfo(projectFolder);
         if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
         {
-            throw new Exception($"Sources folder {SourcesFolder} already exists and is not empty.");
+            throw new Exception($"Sources folder {projectFolder} already exists and is not empty.");
         }
         dir.Create();
     }
@@ -63,7 +61,7 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         response.Content.CopyToAsync(fs).Wait();
     }
 
-    private void UnzipDefaultModelAndCopy()
+    private void UnzipDefaultModelAndCopy(string projectFolder)
     {
         var tempExtractPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         ZipFile.ExtractToDirectory(RepositoryZipPath, tempExtractPath);
@@ -72,7 +70,7 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
 
         if (Directory.Exists(modelRootPath))
         {
-            CopyDirectory(modelRootPath, SourcesFolder);
+            CopyDirectory(modelRootPath, projectFolder);
         }
         else
         {
@@ -91,9 +89,9 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         }
     }
 
-    private void CreateCustomAssetsFolder()
+    private void CreateCustomAssetsFolder(string projectFolder)
     {
-        var dir = new DirectoryInfo(Path.Combine(SourcesFolder, "customAssets"));
+        var dir = new DirectoryInfo(Path.Combine(projectFolder, "customAssets"));
         if (!dir.Exists)
         {
             dir.Create();
@@ -126,11 +124,11 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         }
     }
 
-    public override void Rollback()
+    public override void Rollback(Project project)
     {
-        if (Directory.Exists(SourcesFolder))
+        if (Directory.Exists(project.ProjectFolder))
         {
-            GitManager.DeleteDirectory(SourcesFolder); // TODO: Is GitManager necessary here?
+            GitManager.DeleteDirectory(project.ProjectFolder); // TODO: Is GitManager necessary here?
         }
     }
 }

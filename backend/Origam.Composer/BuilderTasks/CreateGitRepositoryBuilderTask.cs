@@ -35,5 +35,5 @@ public class CreateGitRepositoryBuilderTask : AbstractBuilderTask
         gitManager.Init(project.GitUsername, project.GitEmail);
     }
 
-    public override void Rollback() { }
+    public override void Rollback(Project project) { }
 }
