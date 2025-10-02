@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -93,14 +93,14 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
         {
-            DataService(project.DatabaseType).DbUser = project.Name;
+            DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
             var connectionString = DataService(project.DatabaseType)
                 .BuildConnectionString(
                     project.DatabaseHost,
                     project.DatabasePort,
                     project.DatabaseName,
-                    DataService(project.DatabaseType).DbUser,
-                    project.UserPassword,
+                    project.DatabaseInternalUserName,
+                    project.DatabaseInternalUserPassword,
                     project.DatabaseIntegratedAuthentication,
                     pooling
                 );
