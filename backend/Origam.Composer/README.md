@@ -32,13 +32,13 @@ Origam.Composer.exe create
 --db-username sa
 --db-password 3NHjcSMajQejgrpKGAD8egxNfEc7
 
---p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
---p-docker-image-win "origam/server:2025.9.alpha.3984.win"
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
 --p-admin-name admin
 --p-admin-password 5axg1zr8
 --p-admin-email "john.doe@example.com"
+--p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
+--p-docker-image-win "origam/server:2025.9.alpha.3984.win"
 
 --arch-docker-image-linux "origam/architect:2025.9.alpha.3984.linux"
 --arch-docker-image-win "origam/architect:2025.9.alpha.3984.win"
@@ -62,13 +62,13 @@ Origam.Composer.exe create
 --db-username postgres
 --db-password 3NHjcSMajQejgrpKGAD8egxNfEc7
 
---p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
---p-docker-image-win "origam/server:2025.9.alpha.3984.win"
 --p-name MyOrigamApp
 --p-folder "C:\OrigamProjects\MyOrigamApp"
 --p-admin-name admin
 --p-admin-password 5axg1zr8
 --p-admin-email "john.doe@example.com"
+--p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
+--p-docker-image-win "origam/server:2025.9.alpha.3984.win"
 
 --arch-docker-image-linux "origam/architect:2025.9.alpha.3984.linux"
 --arch-docker-image-win "origam/architect:2025.9.alpha.3984.win"
