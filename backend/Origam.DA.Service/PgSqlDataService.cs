@@ -113,7 +113,7 @@ public class PgSqlDataService : AbstractSqlDataService
     }
 
     public override string BuildConnectionString(
-        string hostName,
+        string serverName,
         int port,
         string databaseName,
         string userName,
@@ -122,10 +122,10 @@ public class PgSqlDataService : AbstractSqlDataService
         bool pooling
     )
     {
-        NpgsqlConnectionStringBuilder sb = new NpgsqlConnectionStringBuilder
+        var sb = new NpgsqlConnectionStringBuilder
         {
             ApplicationName = "Origam",
-            Host = hostName,
+            Host = serverName,
             Port = port,
             Username = userName,
             Password = password,
