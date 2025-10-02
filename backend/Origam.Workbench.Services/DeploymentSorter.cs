@@ -201,7 +201,7 @@ public class DeploymentSorter
     //   - "Deployment" (Workflow 1.1.0) also depends on other deployments (for example Security 5.4.1)
     //     which in turn depend on future version of the "DeployedDependency" (anything higher than Root 5.3.1)
     //   - This creates a prerequisite conflict "Deployment" (Workflow 1.1.0) needs DeployedDependency (Root 5.3.1)
-    //     and at the same time some of its dependencies require the same deployment in a higher
+    //     and at the same time some of its other dependencies require the same deployment in a higher
     //     version "ConflictingDependency" (Root 5.3.2)
     //   - This creates a prerequisite conflict:
     //       • "Deployment" (Workflow 1.1.0) insists on Root 5.3.1  
@@ -215,8 +215,14 @@ public class DeploymentSorter
         
         public virtual bool Equals(PrerequisiteConflict other)
         {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (other is null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
             return Equals(PackageName, other.PackageName) 
                    && Equals(Version, other.Version) 
                    && Equals(dependencyVersion, other.dependencyVersion)
