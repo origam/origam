@@ -32,5 +32,5 @@ public interface IBuilderTask
 
     void Execute(Project project);
 
-    void Rollback();
+    void Rollback(Project project);
 }

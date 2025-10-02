@@ -40,5 +40,5 @@ public class CreateDatabaseStructureBuilderTask : AbstractDatabaseBuilderTask
         parameterService.RefreshParameters();
     }
 
-    public override void Rollback() { }
+    public override void Rollback(Project project) { }
 }

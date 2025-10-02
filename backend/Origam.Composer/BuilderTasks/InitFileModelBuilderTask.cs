@@ -47,7 +47,7 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
         SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
     }
 
-    public override void Rollback()
+    public override void Rollback(Project project)
     {
         SchemaService.UnloadSchema();
         OrigamEngine.OrigamEngine.UnloadConnectedServices();

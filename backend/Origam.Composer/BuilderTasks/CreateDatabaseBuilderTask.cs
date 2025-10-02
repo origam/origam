@@ -67,13 +67,10 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
             );
     }
 
-    public override void Rollback()
+    public override void Rollback(Project project)
     {
         OrigamUserContext.Reset();
-        if (Project != null)
-        {
-            DataService(Project.DatabaseType).DeleteDatabase(Project.DatabaseName);
-        }
+        DataService(project.DatabaseType).DeleteDatabase(project.DatabaseName);
     }
 
     public string? BuildConnectionStringArchitect(Project project, bool pooling)
