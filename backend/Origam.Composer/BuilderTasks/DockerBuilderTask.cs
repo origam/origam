@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -55,11 +55,13 @@ public class DockerBuilderTask : AbstractBuilderTask
                 : project.DatabaseType.ToString().ToLower();
 
         string dbUserName =
-            project.DatabaseType == DatabaseType.PgSql ? project.Name : project.DatabaseUserName;
+            project.DatabaseType == DatabaseType.PgSql
+                ? project.DatabaseInternalUserName
+                : project.DatabaseUserName;
 
         string dbPassword =
             project.DatabaseType == DatabaseType.PgSql
-                ? project.UserPassword
+                ? project.DatabaseInternalUserPassword
                 : project.DatabasePassword;
 
         var sb = new StringBuilder();

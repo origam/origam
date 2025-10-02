@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -33,18 +33,22 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
     {
         Project = project;
 
-        DataService(project.DatabaseType).DbUser = project.Name;
-        DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project);
+        DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
+        DataService(project.DatabaseType).ConnectionString = BuildSuperAdminConnectionString(
+            project
+        );
+
+        // MSSQL: User will be created only if project.DatabaseIntegratedAuthentication == true
         DataService(project.DatabaseType)
             .CreateDatabaseUser(
-                project.Name,
-                project.UserPassword,
-                project.DatabaseName,
-                project.DatabaseIntegratedAuthentication
+                user: project.DatabaseInternalUserName,
+                password: project.DatabaseInternalUserPassword,
+                name: project.DatabaseName,
+                databaseIntegratedAuthentication: project.DatabaseIntegratedAuthentication
             );
     }
 
-    private string BuildConnectionString(Project project)
+    private string BuildSuperAdminConnectionString(Project project)
     {
         return DataService(project.DatabaseType)
             .BuildConnectionString(
