@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -29,6 +29,7 @@ namespace Origam.Composer.Commands;
 
 public class CreateCommand(
     IVisualService visualService,
+    IPasswordGeneratorService passwordGeneratorService,
     IProjectBuilderService projectBuilderService
 ) : Command<CreateCommandSettings>
 {
@@ -62,6 +63,7 @@ public class CreateCommand(
             DatabasePassword = settings.DbPassword,
             DatabaseIntegratedAuthentication = false,
             DatabaseName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
+            DatabaseInternalUserPassword = passwordGenerator.Generate(24),
 
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
