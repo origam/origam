@@ -41,6 +41,7 @@ public class CreateCommand(
         var DockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
         {
+            CommandsOnlyLinux = settings.CommandsOnlyLinux,
             CommandsForPlatform = settings.CommandsForPlatform.Equals(
                 "windows",
                 StringComparison.CurrentCultureIgnoreCase

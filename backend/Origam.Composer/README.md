@@ -22,6 +22,7 @@ All docker images are available on ORIGAM Github: https://github.com/origam/orig
 Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
+--commands-only-linux
 --commands-platform linux
 
 --db-type mssql
@@ -51,6 +52,7 @@ Origam.Composer.exe create
 Example for `PostgreSQL`:
 ```
 Origam.Composer.exe create
+--commands-only-linux
 --commands-platform linux
 
 --db-type postgres

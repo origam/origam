@@ -26,9 +26,16 @@ namespace Origam.Composer.Commands;
 
 public class CreateCommandSettings : CommandSettings
 {
+    #region General
+
+    [CommandOption("--commands-only-linux")]
+    public bool CommandsOnlyLinux { get; set; }
+
     [CommandOption("--commands-platform <PLATFORM>")]
     [AllowedValues("windows", "linux")]
     public string CommandsForPlatform { get; set; }
+
+    #endregion
 
     #region Database
 
