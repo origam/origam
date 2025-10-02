@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -42,6 +42,7 @@ public class CreateCommand(
         var DockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
         {
+            #region General
             CommandsOnlyLinux = settings.CommandsOnlyLinux,
             CommandsForPlatform = settings.CommandsForPlatform.Equals(
                 "windows",
@@ -49,7 +50,9 @@ public class CreateCommand(
             )
                 ? Enums.Platform.Windows
                 : Enums.Platform.Linux,
+            #endregion
 
+            #region DB
             DatabaseType = settings.DbType.Equals(
                 "postgres",
                 StringComparison.CurrentCultureIgnoreCase
@@ -58,12 +61,13 @@ public class CreateCommand(
                 : DA.Common.Enums.DatabaseType.MsSql,
             DatabaseHost = settings.DbHost,
             DatabasePort = settings.DbPort,
-
             DatabaseUserName = settings.DbUsername,
             DatabasePassword = settings.DbPassword,
             DatabaseIntegratedAuthentication = false,
             DatabaseName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
-            DatabaseInternalUserPassword = passwordGenerator.Generate(24),
+            DatabaseInternalUserName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
+            DatabaseInternalUserPassword = passwordGeneratorService.Generate(24),
+            #endregion
 
             Name = StringHelper.RemoveAllWhitespace(settings.ProjectName),
             ModelFolder = Path.Combine(settings.ProjectFolder, "model"),
