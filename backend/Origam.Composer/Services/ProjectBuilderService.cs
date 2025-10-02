@@ -78,7 +78,7 @@ public class ProjectBuilderService : IProjectBuilderService
         Tasks.Add(new CreateNewUserBuilderTask());
         Tasks.Add(new DockerBuilderTask());
 
-        if (project.IsGitInit)
+        if (project.IsGitEnabled)
         {
             Tasks.Add(new CreateGitRepositoryBuilderTask());
         }

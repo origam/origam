@@ -98,7 +98,7 @@ public class Project
     #endregion
 
     #region Git
-    public bool IsGitInit { get; set; }
+    public bool IsGitEnabled { get; set; }
     public string GitUsername { get; set; }
     public string GitEmail { get; set; }
     #endregion
