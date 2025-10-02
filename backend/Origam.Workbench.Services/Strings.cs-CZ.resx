@@ -212,4 +212,7 @@
 	Závislosti:
 		{2}</value>
   </data>
+  <data name="DeploymentDeadlockHint" xml:space="preserve">
+    <value>Závislosti nasazení jsou rozbité. Jediný způsob, jak je nyní opravit, je prozkoumat jednotlivé skripty nasazení v Architectu, určit správné pořadí jejich spuštění a poté upravit prvky deploymentDependenciesCsv v příslušných .origam souborech konfliktních DeploymentVersions.</value>
+  </data>
 </root>

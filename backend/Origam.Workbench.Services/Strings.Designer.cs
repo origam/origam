@@ -97,6 +97,15 @@ namespace Origam.Workbench.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The deployment dependencies are broken. The only way to fix them now is to examine the individual deployment scripts in Architect, determine the correct execution order, and then update the deploymentDependenciesCsv elements in the respective .origam files of the conflicting DeploymentVersions..
+        /// </summary>
+        internal static string DeploymentDeadlockHint {
+            get {
+                return ResourceManager.GetString("DeploymentDeadlockHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The following deployments would not be able to run later because they
         ///depend on other deployments from the current step.That is why the sorting cannot progress any further.
         ///{0}

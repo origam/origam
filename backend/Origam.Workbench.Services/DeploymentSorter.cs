@@ -99,6 +99,9 @@ public class DeploymentSorter
             message += string.Format(Strings.DeploymentDeadlockPrereqConflicts,
                 string.Join("\r\n", prerequisiteConflicts));
         }
+
+        message += "\r\n";
+        message += Strings.DeploymentDeadlockHint;
         
         SortingFailed?.Invoke(this, message);
     }

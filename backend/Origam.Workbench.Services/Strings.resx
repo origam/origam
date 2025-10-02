@@ -240,4 +240,7 @@ depend on other deployments from the current step.That is why the sorting cannot
 		{2}</value>
     <comment>Format for a blocker block in deadlock message.</comment>
   </data>
+  <data name="DeploymentDeadlockHint" xml:space="preserve">
+    <value>The deployment dependencies are broken. The only way to fix them now is to examine the individual deployment scripts in Architect, determine the correct execution order, and then update the deploymentDependenciesCsv elements in the respective .origam files of the conflicting DeploymentVersions.</value>
+  </data>
 </root>

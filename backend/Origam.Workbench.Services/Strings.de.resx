@@ -158,4 +158,7 @@ Der Sortiervorgang ist bei diesen Deployment-Versionen als Kandidaten für den n
 	Abhängigkeiten:
 		{2}</value>
   </data>
+  <data name="DeploymentDeadlockHint" xml:space="preserve">
+    <value>Die Deployment-Abhängigkeiten sind fehlerhaft. Der einzige Weg, sie jetzt zu beheben, besteht darin, die einzelnen Deployment-Skripte in Architect zu überprüfen, die korrekte Ausführungsreihenfolge festzulegen und anschließend die deploymentDependenciesCsv Elemente in den entsprechenden .origam Dateien der konflikterzeugenden DeploymentVersions zu aktualisieren.</value>
+  </data>
 </root>
