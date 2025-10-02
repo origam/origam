@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -25,7 +25,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Apply database permissions";
+    public override string Name => "Add new database user (with permissions)";
 
     private Project? Project;
 

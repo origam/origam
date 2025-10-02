@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -80,7 +80,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
     {
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
         {
-            var dataService = DataService(project.DatabaseType)
+            var connectionString = DataService(project.DatabaseType)
                 .BuildConnectionString(
                     project.DatabaseHost,
                     project.DatabasePort,
@@ -91,13 +91,13 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
                     pooling
                 );
 
-            return dataService;
+            return connectionString;
         }
 
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
         {
             DataService(project.DatabaseType).DbUser = project.Name;
-            var dataService = DataService(project.DatabaseType)
+            var connectionString = DataService(project.DatabaseType)
                 .BuildConnectionString(
                     project.DatabaseHost,
                     project.DatabasePort,
@@ -108,7 +108,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
                     pooling
                 );
 
-            return dataService;
+            return connectionString;
         }
 
         return null;
