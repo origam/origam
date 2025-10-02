@@ -39,8 +39,9 @@ public class Project
     public string DatabasePassword { get; init; }
     public bool DatabaseIntegratedAuthentication { get; init; }
     public required string DatabaseName { get; init; }
-    public string UserPassword { get; } =
-        Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9); // TODO: Really? Maybe use real password generator
+    public string DatabaseInternalUserName { get; init; }
+    public string DatabaseInternalUserPassword { get; init; }
+
     public string GetDataDataService
     {
         get
