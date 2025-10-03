@@ -48,7 +48,13 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
     }
 
-    public void PrintDatabaseValues(string host, int port, string name, string username)
+    public void PrintDatabaseValues(
+        string type,
+        string host,
+        int port,
+        string name,
+        string username
+    )
     {
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -56,6 +62,7 @@ public class VisualService : IVisualService
             .AddColumn("[bold]Parameter[/]")
             .AddColumn("[bold]Value[/]");
 
+        table.AddRow("Type", type);
         table.AddRow("Host", host);
         table.AddRow("Port", port.ToString());
         table.AddRow("Name", name);

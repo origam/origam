@@ -141,6 +141,7 @@ public class CreateCommand(
     {
         visualService.PrintHeader("Create New Project");
         visualService.PrintDatabaseValues(
+            settings.DbType,
             settings.DbHost,
             settings.DbPort,
             settings.DbName,
