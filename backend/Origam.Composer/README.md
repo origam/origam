@@ -1,14 +1,15 @@
 ﻿# Origam.Composer
 
 ## Install database (optional)
-You can use docker to install MS SQL database:
+You can use docker to install `MS SQL` database:
 ```
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=3NHjcSMajQejgrpKGAD8egxNfEc7" -p 1433:1433 --name mssql2022 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
-## Building
+or you can install `PostgreSQL` database:
 ```
-dotnet publish ./Origam.Composer/Origam.Composer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+docker volume create postgress_volume
+docker run --name Postgres_DB -e POSTGRES_PASSWORD=3NHjcSMajQejgrpKGAD8egxNfEc7 -v postgress_volume:/var/lib/postgresql/data -p 5432:5432 -d postgres
 ```
 
 ## Usage
@@ -18,6 +19,8 @@ Parameter `--commands-platform` specifies the platform for which the commands ar
 Both docker containers for Linux and Windows will always be generated.
 
 All docker images are available on ORIGAM Github: https://github.com/origam/origam/releases
+
+You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Program arguments`.
 
 Example for `MS SQL`:
 ```
@@ -78,3 +81,6 @@ Origam.Composer.exe create
 --git-user "Origam Dev"
 --git-email "no-reply@origam.com"
 ```
+
+## Warning!
+Do not forget to change the passwords. The passwords in the examples are **only for demonstration** purposes.
