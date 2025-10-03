@@ -27,12 +27,8 @@ public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Add new database user (with permissions)";
 
-    private Project? Project;
-
     public override void Execute(Project project)
     {
-        Project = project;
-
         DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
         DataService(project.DatabaseType).ConnectionString = BuildSuperAdminConnectionString(
             project

@@ -27,12 +27,8 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Create database (new empty)";
 
-    private Project? Project;
-
     public override void Execute(Project project)
     {
-        Project = project;
-
         CreateDatabase(project);
         CreateSchema(project);
         DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project, "");
