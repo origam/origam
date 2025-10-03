@@ -24,7 +24,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class InitFileModelBuilderTask : AbstractBuilderTask
+public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask
 {
     public override string Name => "Initialize model from files";
 
@@ -34,7 +34,7 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
     {
         var settings = new OrigamSettings
         {
-            DataConnectionString = project.BuilderDataConnectionString,
+            DataConnectionString = BuildConnectionStringArchitect(project),
             ModelSourceControlLocation = project.ModelFolder,
             DataDataService = project.GetDataDataService,
         };
@@ -66,5 +66,38 @@ public class InitFileModelBuilderTask : AbstractBuilderTask
         }
 
         parameterService.RefreshParameters();
+    }
+
+    private string? BuildConnectionStringArchitect(Project project)
+    {
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
+        {
+            return DataService(project.DatabaseType)
+                .BuildConnectionString(
+                    project.DatabaseHost,
+                    project.DatabasePort,
+                    project.DatabaseName,
+                    project.DatabaseUserName,
+                    project.DatabasePassword,
+                    project.DatabaseIntegratedAuthentication,
+                    false
+                );
+        }
+
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
+        {
+            return DataService(project.DatabaseType)
+                .BuildConnectionString(
+                    project.DatabaseHost,
+                    project.DatabasePort,
+                    project.DatabaseName,
+                    project.DatabaseInternalUserName,
+                    project.DatabaseInternalUserPassword,
+                    project.DatabaseIntegratedAuthentication,
+                    false
+                );
+        }
+
+        return null;
     }
 }

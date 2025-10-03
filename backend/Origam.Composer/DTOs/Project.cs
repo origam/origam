@@ -54,7 +54,6 @@ public class Project
             };
         }
     }
-    public string BuilderDataConnectionString { get; set; }
     #endregion
 
     #region Project

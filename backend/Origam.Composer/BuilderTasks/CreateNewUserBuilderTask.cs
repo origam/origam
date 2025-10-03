@@ -31,10 +31,12 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
 
     public override void Execute(Project project)
     {
-        var adaptivePassword = new InternalPasswordHasherWithLegacySupport(); // TODO: DI
+        var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
 
-        DataService(project.DatabaseType).DbUser = project.Name;
-        DataService(project.DatabaseType).ConnectionString = project.BuilderDataConnectionString; // TODO: Refactor
+        DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
+        DataService(project.DatabaseType).ConnectionString = BuildConnectionStringArchitect(
+            project
+        );
 
         var parameters = new QueryParameterCollection
         {
@@ -51,4 +53,37 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
     }
 
     public override void Rollback(Project project) { }
+
+    private string? BuildConnectionStringArchitect(Project project)
+    {
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
+        {
+            return DataService(project.DatabaseType)
+                .BuildConnectionString(
+                    project.DatabaseHost,
+                    project.DatabasePort,
+                    project.DatabaseName,
+                    project.DatabaseUserName,
+                    project.DatabasePassword,
+                    project.DatabaseIntegratedAuthentication,
+                    false
+                );
+        }
+
+        if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
+        {
+            return DataService(project.DatabaseType)
+                .BuildConnectionString(
+                    project.DatabaseHost,
+                    project.DatabasePort,
+                    project.DatabaseName,
+                    project.DatabaseInternalUserName,
+                    project.DatabaseInternalUserPassword,
+                    project.DatabaseIntegratedAuthentication,
+                    false
+                );
+        }
+
+        return null;
+    }
 }
