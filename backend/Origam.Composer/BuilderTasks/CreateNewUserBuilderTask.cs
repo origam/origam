@@ -41,11 +41,11 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
         var parameters = new QueryParameterCollection
         {
             new QueryParameter("Id", Guid.NewGuid().ToString()),
-            new QueryParameter("UserName", project.WebUserName),
-            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebUserPassword)),
-            new QueryParameter("FirstName", project.WebFirstName),
-            new QueryParameter("Name", project.WebSurname),
-            new QueryParameter("Email", project.WebEmail),
+            new QueryParameter("UserName", project.WebAdminUsername),
+            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebAdminPassword)),
+            new QueryParameter("FirstName", project.WebAdminUsername),
+            new QueryParameter("Name", project.WebAdminUsername),
+            new QueryParameter("Email", project.WebAdminEmail),
             new QueryParameter("RoleId", Common.Constants.OrigamRoleSuperUserId),
             new QueryParameter("RequestEmailConfirmation", "false"),
         };
