@@ -29,12 +29,4 @@ public class OrigamTypeResolver(IServiceProvider provider) : ITypeResolver
     {
         return type == null ? null : provider.GetService(type);
     }
-
-    public void Dispose()
-    {
-        if (provider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-    }
 }
