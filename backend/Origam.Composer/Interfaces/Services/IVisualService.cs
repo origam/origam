@@ -36,7 +36,7 @@ public interface IVisualService
         string adminEmail
     );
 
-    void PrintDatabaseValues(string host, int port, string name, string username);
+    void PrintDatabaseValues(string type, string host, int port, string name, string username);
 
     void PrintArchitectValues(string dockerImageLinux, string dockerImageWindows, int port);
 
