@@ -26,21 +26,15 @@ namespace Origam.Composer.BuilderTasks;
 
 public abstract class AbstractDatabaseBuilderTask : AbstractBuilderTask
 {
-    AbstractSqlDataService _dataService = null;
-
-    internal AbstractSqlDataService? DataService()
-    {
-        _dataService = null;
-        return null;
-    }
+    private AbstractSqlDataService? DataServicePointer;
 
     internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
     {
-        if (_dataService == null)
+        if (DataServicePointer == null)
         {
-            _dataService = CreateService(DatabaseType);
+            DataServicePointer = CreateService(DatabaseType);
         }
-        return _dataService;
+        return DataServicePointer;
     }
 
     private AbstractSqlDataService CreateService(DatabaseType DatabaseType)
@@ -53,6 +47,6 @@ public abstract class AbstractDatabaseBuilderTask : AbstractBuilderTask
         {
             return new PgSqlDataService();
         }
-        throw new ArgumentOutOfRangeException("DatabaseType is wrong ", DatabaseType.ToString());
+        throw new ArgumentOutOfRangeException(nameof(DatabaseType), DatabaseType.ToString());
     }
 }

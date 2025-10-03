@@ -24,7 +24,6 @@ using Origam.Composer.Commands;
 using Origam.Composer.DI;
 using Origam.Composer.Interfaces.Services;
 using Origam.Composer.Services;
-using Origam.Security.Common;
 using Spectre.Console.Cli;
 
 namespace Origam.Composer;
