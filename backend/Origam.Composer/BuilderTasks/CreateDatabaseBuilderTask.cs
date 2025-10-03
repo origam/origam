@@ -69,7 +69,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
         DataService(project.DatabaseType).DeleteDatabase(project.DatabaseName);
     }
 
-    public string? BuildConnectionStringArchitect(Project project, bool pooling)
+    public string? BuildConnectionStringArchitect(Project project)
     {
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
         {
@@ -81,7 +81,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
                     project.DatabaseUserName,
                     project.DatabasePassword,
                     project.DatabaseIntegratedAuthentication,
-                    pooling
+                    false
                 );
 
             return connectionString;
@@ -98,7 +98,7 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
                     project.DatabaseInternalUserName,
                     project.DatabaseInternalUserPassword,
                     project.DatabaseIntegratedAuthentication,
-                    pooling
+                    false
                 );
 
             return connectionString;

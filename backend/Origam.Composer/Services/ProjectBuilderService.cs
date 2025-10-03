@@ -41,7 +41,7 @@ public class ProjectBuilderService : IProjectBuilderService
     public void Create(Project project)
     {
         project.BuilderDataConnectionString =
-            CreateDatabaseBuilderTask.BuildConnectionStringArchitect(project, false);
+            CreateDatabaseBuilderTask.BuildConnectionStringArchitect(project);
 
         IBuilderTask activeTask = null;
         try
