@@ -31,6 +31,8 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
     {
         CreateDatabase(project);
         CreateSchema(project);
+
+        DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
         DataService(project.DatabaseType).ConnectionString = BuildConnectionString(project, "");
     }
 
@@ -67,43 +69,5 @@ public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask
     {
         OrigamUserContext.Reset();
         DataService(project.DatabaseType).DeleteDatabase(project.DatabaseName);
-    }
-
-    public string? BuildConnectionStringArchitect(Project project)
-    {
-        if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
-        {
-            var connectionString = DataService(project.DatabaseType)
-                .BuildConnectionString(
-                    project.DatabaseHost,
-                    project.DatabasePort,
-                    project.DatabaseName,
-                    project.DatabaseUserName,
-                    project.DatabasePassword,
-                    project.DatabaseIntegratedAuthentication,
-                    false
-                );
-
-            return connectionString;
-        }
-
-        if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
-        {
-            DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
-            var connectionString = DataService(project.DatabaseType)
-                .BuildConnectionString(
-                    project.DatabaseHost,
-                    project.DatabasePort,
-                    project.DatabaseName,
-                    project.DatabaseInternalUserName,
-                    project.DatabaseInternalUserPassword,
-                    project.DatabaseIntegratedAuthentication,
-                    false
-                );
-
-            return connectionString;
-        }
-
-        return null;
     }
 }

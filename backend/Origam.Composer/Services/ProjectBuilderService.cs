@@ -31,7 +31,6 @@ namespace Origam.Composer.Services;
 public class ProjectBuilderService : IProjectBuilderService
 {
     private readonly List<IBuilderTask> Tasks = [];
-    private readonly CreateDatabaseBuilderTask CreateDatabaseBuilderTask = new();
 
     public ProjectBuilderService()
     {
@@ -40,9 +39,6 @@ public class ProjectBuilderService : IProjectBuilderService
 
     public void Create(Project project)
     {
-        project.BuilderDataConnectionString =
-            CreateDatabaseBuilderTask.BuildConnectionStringArchitect(project);
-
         IBuilderTask activeTask = null;
         try
         {
@@ -69,9 +65,8 @@ public class ProjectBuilderService : IProjectBuilderService
     public void PrepareTasks(Project project)
     {
         Tasks.Add(new DownloadFileModelBuilderTask());
-        Tasks.Add(CreateDatabaseBuilderTask);
+        Tasks.Add(new CreateDatabaseBuilderTask());
         Tasks.Add(new ApplyDatabasePermissionsBuilderTask());
-
         Tasks.Add(new InitFileModelBuilderTask());
         Tasks.Add(new CreateDatabaseStructureBuilderTask());
         Tasks.Add(new CreateNewPackageBuilderTask());
