@@ -26,7 +26,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateDatabaseStructureBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Create database structure (from file model)";
+    public override string Name => "Create database structure (from model)";
 
     public override void Execute(Project project)
     {

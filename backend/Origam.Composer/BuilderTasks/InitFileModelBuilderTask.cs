@@ -26,7 +26,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask
 {
-    public override string Name => "Initialize model from files";
+    public override string Name => "Initialize model (from files)";
 
     private SchemaService SchemaService;
 
