@@ -76,11 +76,9 @@ public class Project
     #endregion
 
     #region WebUser
-    public string WebUserName { get; set; }
-    public string WebUserPassword { get; set; }
-    public string WebFirstName { get; set; }
-    public string WebSurname { get; set; }
-    public string WebEmail { get; set; }
+    public string WebAdminUsername { get; set; }
+    public string WebAdminPassword { get; set; }
+    public string WebAdminEmail { get; set; }
     #endregion
 
     #region Docker

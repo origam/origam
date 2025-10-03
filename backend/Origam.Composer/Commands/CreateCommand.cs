@@ -75,9 +75,9 @@ public class CreateCommand(
             ProjectFolder = settings.ProjectFolder,
 
             // Admin user account for client web app
-            WebUserName = settings.ProjectAdminName,
-            WebUserPassword = settings.ProjectAdminPassword,
-            WebEmail = settings.ProjectAdminEmail,
+            WebAdminUsername = settings.ProjectWebAdminUsername,
+            WebAdminPassword = settings.ProjectWebAdminPassword,
+            WebAdminEmail = settings.ProjectWebAdminEmail,
 
             ClientDockerImageLinux = settings.ProjectDockerImageLinux,
             ClientDockerImageWin = settings.ProjectDockerImageWin,
@@ -152,8 +152,8 @@ public class CreateCommand(
             settings.ProjectFolder,
             settings.ProjectDockerImageLinux,
             settings.ProjectDockerImageWin,
-            settings.ProjectAdminName,
-            settings.ProjectAdminEmail
+            settings.ProjectWebAdminUsername,
+            settings.ProjectWebAdminEmail
         );
         visualService.PrintArchitectValues(
             settings.ArchitectDockerImageLinux,

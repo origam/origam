@@ -74,14 +74,14 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--p-folder <FOLDER>")]
     public string ProjectFolder { get; set; }
 
-    [CommandOption("--p-admin-name <NAME>")]
-    public string ProjectAdminName { get; set; }
+    [CommandOption("--p-admin-username <NAME>")]
+    public string ProjectWebAdminUsername { get; set; }
 
     [CommandOption("--p-admin-password <PASSWORD>")]
-    public string ProjectAdminPassword { get; set; }
+    public string ProjectWebAdminPassword { get; set; }
 
     [CommandOption("--p-admin-email <EMAIL>")]
-    public string ProjectAdminEmail { get; set; }
+    public string ProjectWebAdminEmail { get; set; }
 
     #endregion
 
