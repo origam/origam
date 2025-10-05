@@ -16,7 +16,7 @@ docker run --name Postgres_DB -e POSTGRES_PASSWORD=3NHjcSMajQejgrpKGAD8egxNfEc7 
 
 Parameter `--commands-platform` specifies the platform for which the commands are generated. It can be either `linux` (bash scripts) or `windows` (cmd scripts).
 
-Both docker containers for Linux and Windows will always be generated.
+Both docker containers for Linux and Windows will always be generated, but you can disable Windows version by parameter `--commands-only-linux`.
 
 All docker images are available on ORIGAM Github: https://github.com/origam/origam/releases
 
