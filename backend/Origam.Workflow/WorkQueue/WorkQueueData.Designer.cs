@@ -564,6 +564,8 @@ namespace Origam.Workflow.WorkQueue {
             
             private global::System.Data.DataColumn columnrefWorkQueueExternalSourceTypeId;
             
+            private global::System.Data.DataColumn columnCustomScreenName;
+            
             private global::System.Data.DataColumn columnRecordCreatedBy;
             
             private global::System.Data.DataColumn columnRecordUpdated;
@@ -939,6 +941,14 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CustomScreenNameColumn {
+                get {
+                    return this.columnCustomScreenName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn RecordCreatedByColumn {
                 get {
                     return this.columnRecordCreatedBy;
@@ -1033,6 +1043,7 @@ namespace Origam.Workflow.WorkQueue {
                         string ExternalSourceLastMessage, 
                         string ApiAccessRoles, 
                         System.Guid refWorkQueueExternalSourceTypeId, 
+                        string CustomScreenName, 
                         System.Guid RecordCreatedBy, 
                         System.DateTime RecordUpdated) {
                 WorkQueueRow rowWorkQueueRow = ((WorkQueueRow)(this.NewRow()));
@@ -1079,6 +1090,7 @@ namespace Origam.Workflow.WorkQueue {
                         ExternalSourceLastMessage,
                         ApiAccessRoles,
                         refWorkQueueExternalSourceTypeId,
+                        CustomScreenName,
                         RecordCreatedBy,
                         RecordUpdated};
                 rowWorkQueueRow.ItemArray = columnValuesArray;
@@ -1152,6 +1164,7 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnExternalSourceLastMessage = base.Columns["ExternalSourceLastMessage"];
                 this.columnApiAccessRoles = base.Columns["ApiAccessRoles"];
                 this.columnrefWorkQueueExternalSourceTypeId = base.Columns["refWorkQueueExternalSourceTypeId"];
+                this.columnCustomScreenName = base.Columns["CustomScreenName"];
                 this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
                 this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
@@ -1243,6 +1256,8 @@ namespace Origam.Workflow.WorkQueue {
                 base.Columns.Add(this.columnApiAccessRoles);
                 this.columnrefWorkQueueExternalSourceTypeId = new global::System.Data.DataColumn("refWorkQueueExternalSourceTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueExternalSourceTypeId);
+                this.columnCustomScreenName = new global::System.Data.DataColumn("CustomScreenName", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCustomScreenName);
                 this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRecordCreatedBy);
                 this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
@@ -1366,6 +1381,9 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnApiAccessRoles.MaxLength = 500;
                 this.columnrefWorkQueueExternalSourceTypeId.Namespace = "";
                 this.columnrefWorkQueueExternalSourceTypeId.Caption = "External Source";
+                this.columnCustomScreenName.Namespace = "";
+                this.columnCustomScreenName.Caption = "Custom Screen Name";
+                this.columnCustomScreenName.MaxLength = 50;
                 this.columnRecordCreatedBy.Namespace = "";
                 this.columnRecordCreatedBy.Caption = "Created By";
                 this.columnRecordUpdated.Namespace = "";
@@ -3990,6 +4008,22 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string CustomScreenName {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.CustomScreenNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CustomScreenName\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.CustomScreenNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid RecordCreatedBy {
                 get {
                     try {
@@ -4330,6 +4364,18 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetrefWorkQueueExternalSourceTypeIdNull() {
                 this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCustomScreenNameNull() {
+                return this.IsNull(this.tableWorkQueue.CustomScreenNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCustomScreenNameNull() {
+                this[this.tableWorkQueue.CustomScreenNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
