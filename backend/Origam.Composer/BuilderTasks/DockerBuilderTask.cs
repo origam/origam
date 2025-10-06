@@ -21,15 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Text;
 using Origam.Composer.DTOs;
+using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class DockerBuilderTask : AbstractBuilderTask
+public class DockerBuilderTask : IDockerBuilderTask
 {
-    public override string Name => "Create Docker run scripts";
+    public string Name => "Create Docker run scripts";
+    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    public override void Execute(Project project)
+    public void Execute(Project project)
     {
         Directory.CreateDirectory(project.DockerFolder);
 
@@ -177,7 +180,7 @@ public class DockerBuilderTask : AbstractBuilderTask
         return project.DatabaseHost;
     }
 
-    public override void Rollback(Project project) { }
+    public void Rollback(Project project) { }
 
     private string WebSiteUrl(Project project)
     {

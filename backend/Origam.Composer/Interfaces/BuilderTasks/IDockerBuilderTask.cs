@@ -19,24 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.DTOs;
-using Origam.Composer.Enums;
-using Origam.Composer.Interfaces.BuilderTasks;
-using Origam.Git;
+namespace Origam.Composer.Interfaces.BuilderTasks;
 
-namespace Origam.Composer.BuilderTasks;
-
-public class CreateGitRepositoryBuilderTask : ICreateGitRepositoryBuilderTask
-{
-    public string Name => "Init Git";
-    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
-
-    public void Execute(Project project)
-    {
-        GitManager.CreateRepository(project.ProjectFolder);
-        var gitManager = new GitManager(project.ProjectFolder);
-        gitManager.Init(project.GitUsername, project.GitEmail);
-    }
-
-    public void Rollback(Project project) { }
-}
+public interface IDockerBuilderTask : IBuilderTask;

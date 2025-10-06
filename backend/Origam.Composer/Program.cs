@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -20,8 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Extensions.DependencyInjection;
+using Origam.Composer.BuilderTasks;
 using Origam.Composer.Commands;
 using Origam.Composer.DI;
+using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
 using Origam.Composer.Services;
 using Spectre.Console.Cli;
@@ -36,6 +38,22 @@ class Program
         services.AddSingleton<IVisualService, VisualService>();
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
+
+        services.AddSingleton<IDownloadFileModelBuilderTask, DownloadFileModelBuilderTask>();
+        services.AddSingleton<ICreateDatabaseBuilderTask, CreateDatabaseBuilderTask>();
+        services.AddSingleton<
+            IApplyDatabasePermissionsBuilderTask,
+            ApplyDatabasePermissionsBuilderTask
+        >();
+        services.AddSingleton<IInitFileModelBuilderTask, InitFileModelBuilderTask>();
+        services.AddSingleton<
+            ICreateDatabaseStructureBuilderTask,
+            CreateDatabaseStructureBuilderTask
+        >();
+        services.AddSingleton<ICreateNewPackageBuilderTask, CreateNewPackageBuilderTask>();
+        services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
+        services.AddSingleton<IDockerBuilderTask, DockerBuilderTask>();
+        services.AddSingleton<ICreateGitRepositoryBuilderTask, CreateGitRepositoryBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);
 

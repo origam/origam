@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.BuilderTasks;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
@@ -30,10 +29,39 @@ namespace Origam.Composer.Services;
 
 public class ProjectBuilderService : IProjectBuilderService
 {
+    private readonly IDownloadFileModelBuilderTask DownloadFileModelBuilderTask;
+    private readonly ICreateDatabaseBuilderTask CreateDatabaseBuilderTask;
+    private readonly IApplyDatabasePermissionsBuilderTask ApplyDatabasePermissionsBuilderTask;
+    private readonly IInitFileModelBuilderTask InitFileModelBuilderTask;
+    private readonly ICreateDatabaseStructureBuilderTask CreateDatabaseStructureBuilderTask;
+    private readonly ICreateNewPackageBuilderTask CreateNewPackageBuilderTask;
+    private readonly ICreateNewUserBuilderTask CreateNewUserBuilderTask;
+    private readonly IDockerBuilderTask DockerBuilderTask;
+    private readonly ICreateGitRepositoryBuilderTask CreateGitRepositoryBuilderTask;
     private readonly List<IBuilderTask> Tasks = [];
 
-    public ProjectBuilderService()
+    public ProjectBuilderService(
+        IDownloadFileModelBuilderTask downloadFileModelBuilderTask,
+        ICreateDatabaseBuilderTask createDatabaseBuilderTask,
+        IApplyDatabasePermissionsBuilderTask applyDatabasePermissionsBuilderTask,
+        IInitFileModelBuilderTask initFileModelBuilderTask,
+        ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
+        ICreateNewPackageBuilderTask createNewPackageBuilderTask,
+        ICreateNewUserBuilderTask createNewUserBuilderTask,
+        IDockerBuilderTask dockerBuilderTask,
+        ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask
+    )
     {
+        DownloadFileModelBuilderTask = downloadFileModelBuilderTask;
+        CreateDatabaseBuilderTask = createDatabaseBuilderTask;
+        ApplyDatabasePermissionsBuilderTask = applyDatabasePermissionsBuilderTask;
+        InitFileModelBuilderTask = initFileModelBuilderTask;
+        CreateDatabaseStructureBuilderTask = createDatabaseStructureBuilderTask;
+        CreateNewPackageBuilderTask = createNewPackageBuilderTask;
+        CreateNewUserBuilderTask = createNewUserBuilderTask;
+        DockerBuilderTask = dockerBuilderTask;
+        CreateGitRepositoryBuilderTask = createGitRepositoryBuilderTask;
+
         SecurityManager.SetServerIdentity();
     }
 
@@ -64,18 +92,18 @@ public class ProjectBuilderService : IProjectBuilderService
 
     public void PrepareTasks(Project project)
     {
-        Tasks.Add(new DownloadFileModelBuilderTask());
-        Tasks.Add(new CreateDatabaseBuilderTask());
-        Tasks.Add(new ApplyDatabasePermissionsBuilderTask());
-        Tasks.Add(new InitFileModelBuilderTask());
-        Tasks.Add(new CreateDatabaseStructureBuilderTask());
-        Tasks.Add(new CreateNewPackageBuilderTask());
-        Tasks.Add(new CreateNewUserBuilderTask());
-        Tasks.Add(new DockerBuilderTask());
+        Tasks.Add(DownloadFileModelBuilderTask);
+        Tasks.Add(CreateDatabaseBuilderTask);
+        Tasks.Add(ApplyDatabasePermissionsBuilderTask);
+        Tasks.Add(InitFileModelBuilderTask);
+        Tasks.Add(CreateDatabaseStructureBuilderTask);
+        Tasks.Add(CreateNewPackageBuilderTask);
+        Tasks.Add(CreateNewUserBuilderTask);
+        Tasks.Add(DockerBuilderTask);
 
         if (project.IsGitEnabled)
         {
-            Tasks.Add(new CreateGitRepositoryBuilderTask());
+            Tasks.Add(CreateGitRepositoryBuilderTask);
         }
     }
 

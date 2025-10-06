@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
+using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Workbench.Services;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask
+public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileModelBuilderTask
 {
     public override string Name => "Initialize model (from files)";
 

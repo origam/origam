@@ -19,19 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.DTOs;
-using Origam.Composer.Enums;
-using Origam.Composer.Interfaces.BuilderTasks;
+namespace Origam.Composer.Interfaces.BuilderTasks;
 
-namespace Origam.Composer.BuilderTasks;
-
-public abstract class AbstractBuilderTask : IBuilderTask
-{
-    public abstract string Name { get; }
-
-    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
-
-    public abstract void Execute(Project project);
-
-    public abstract void Rollback(Project project);
-}
+public interface ICreateNewPackageBuilderTask : IBuilderTask;

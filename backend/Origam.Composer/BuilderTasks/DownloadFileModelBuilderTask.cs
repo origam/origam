@@ -21,17 +21,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO.Compression;
 using Origam.Composer.DTOs;
-using Origam.Git;
+using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
+using Origam.Composer.Interfaces.Services;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class DownloadFileModelBuilderTask : AbstractBuilderTask
+public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
+    : IDownloadFileModelBuilderTask
 {
-    public override string Name => "Download ORIGAM model-root from repository";
+    public string Name => "Download ORIGAM model-root from repository";
+    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
     private string RepositoryZipPath;
 
-    public override void Execute(Project project)
+    public void Execute(Project project)
     {
         RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
 
@@ -124,7 +128,7 @@ public class DownloadFileModelBuilderTask : AbstractBuilderTask
         }
     }
 
-    public override void Rollback(Project project)
+    public void Rollback(Project project)
     {
         if (Directory.Exists(project.ProjectFolder))
         {

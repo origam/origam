@@ -20,10 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
+using Origam.Composer.Interfaces.BuilderTasks;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class ApplyDatabasePermissionsBuilderTask : AbstractDatabaseBuilderTask
+public class ApplyDatabasePermissionsBuilderTask
+    : AbstractDatabaseBuilderTask,
+        IApplyDatabasePermissionsBuilderTask
 {
     public override string Name => "Add new database user (with permissions)";
 

@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Composer.DTOs;
+using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.DA;
 using Origam.Security.Common;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask
+public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewUserBuilderTask
 {
     public override string Name => "Create new Admin user (Client web application)";
 
