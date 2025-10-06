@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -39,7 +39,7 @@ class Program
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IFileSystemService, FileSystemService>();
-
+        services.AddSingleton<IGitService, GitService>();
         services.AddSingleton<IDownloadFileModelBuilderTask, DownloadFileModelBuilderTask>();
         services.AddSingleton<ICreateDatabaseBuilderTask, CreateDatabaseBuilderTask>();
         services.AddSingleton<

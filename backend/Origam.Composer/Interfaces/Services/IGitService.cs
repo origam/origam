@@ -19,24 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Composer.DTOs;
-using Origam.Composer.Enums;
-using Origam.Composer.Interfaces.BuilderTasks;
-using Origam.Composer.Interfaces.Services;
+namespace Origam.Composer.Interfaces.Services;
 
-namespace Origam.Composer.BuilderTasks;
-
-public class CreateGitRepositoryBuilderTask(IGitService gitService)
-    : ICreateGitRepositoryBuilderTask
+public interface IGitService
 {
-    public string Name => "Initialize Git";
-    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
+    public void CreateRepository(string path);
 
-    public void Execute(Project project)
-    {
-        gitService.CreateRepository(project.ProjectFolder);
-        gitService.InitCommit(project.GitUsername, project.GitEmail);
-    }
+    public void InitCommit(string username, string userEmail);
 
-    public void Rollback(Project project) { }
+    public string[]? FetchGitUserFromGlobalConfig();
 }

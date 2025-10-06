@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.Common;
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.Services;
-using Origam.Git;
 using Spectre.Console.Cli;
 
 namespace Origam.Composer.Commands;
@@ -30,7 +29,8 @@ namespace Origam.Composer.Commands;
 public class CreateCommand(
     IVisualService visualService,
     IPasswordGeneratorService passwordGeneratorService,
-    IProjectBuilderService projectBuilderService
+    IProjectBuilderService projectBuilderService,
+    IGitService gitService
 ) : Command<CreateCommandSettings>
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
@@ -167,7 +167,7 @@ public class CreateCommand(
     {
         var gitUser = "";
         var gitEmail = "";
-        string[] gitCredentials = new GitManager().GitConfig();
+        string[]? gitCredentials = gitService.FetchGitUserFromGlobalConfig();
         if (gitCredentials != null)
         {
             gitUser = gitCredentials[0];
