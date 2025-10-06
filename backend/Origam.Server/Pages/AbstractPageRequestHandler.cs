@@ -43,12 +43,10 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Web;
 using System.Xml;
 using Origam.Rule;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 
 namespace Origam.Server.Pages;

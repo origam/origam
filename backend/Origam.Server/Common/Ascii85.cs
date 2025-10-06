@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
+#pragma warning disable CS1570 // XML comment has badly formed XML
 
 /// <summary>
 /// C# implementation of ASCII85 encoding.

@@ -27,7 +27,6 @@ using Origam.DA;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 
 namespace Origam.Server;

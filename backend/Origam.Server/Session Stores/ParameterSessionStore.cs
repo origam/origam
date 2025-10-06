@@ -41,7 +41,6 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Xml;
@@ -50,7 +49,6 @@ using Origam.Gui;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
-using Origam.Server;
 using Origam.Workbench.Services;
 
 namespace Origam.Server;

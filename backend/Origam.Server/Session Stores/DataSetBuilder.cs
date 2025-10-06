@@ -20,11 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using CSharpFunctionalExtensions;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using Origam.Schema.GuiModel;
-using Origam.Server;
 
 namespace Origam.Server;
 

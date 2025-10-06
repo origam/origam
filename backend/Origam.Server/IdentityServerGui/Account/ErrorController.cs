@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Origam.Server.IdentityServerGui.Home;
 
 namespace Origam.Server.IdentityServerGui.Account;
 

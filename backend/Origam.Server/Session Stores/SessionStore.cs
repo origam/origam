@@ -41,6 +41,8 @@ using Origam.Schema.GuiModel;
 using Origam.Server.Common;
 using Origam.Service.Core;
 using CoreServices = Origam.Workbench.Services.CoreServices;
+#pragma warning disable CS1572 // XML comment has a param tag, but there is no parameter by that name
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
 namespace Origam.Server;
 

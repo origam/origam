@@ -1,9 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using IdentityServer4.Models;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Mvc;
-using Origam.Server.IdentityServerGui.Account;
 
 namespace Origam.Server.IdentityServerGui;
 

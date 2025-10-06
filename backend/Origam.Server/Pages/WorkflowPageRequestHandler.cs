@@ -49,7 +49,6 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Common;
 using Origam.Service.Core;
-using Origam.Workbench.Services;
 using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Pages;

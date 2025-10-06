@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Concurrent;
-using Origam.Server;
 
 namespace Origam.Server;
 
@@ -40,7 +39,8 @@ public class SessionObjects
             analytics: analytics,
             reportRequests: new ConcurrentDictionary<Guid, ReportRequest>(),
             blobDownloadRequests: new ConcurrentDictionary<Guid, BlobDownloadRequest>(),
-            blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>());
+            blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>()
+        );
         UIManager = new UIManager(50, SessionManager, analytics);
         UIService = new ServerCoreUIService(UIManager, SessionManager);
     }

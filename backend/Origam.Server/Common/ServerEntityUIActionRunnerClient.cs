@@ -23,13 +23,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Origam;
 using Origam.DA;
 using Origam.Gui;
-using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Server;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 

@@ -19,10 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using Origam.Gui;
-using Origam.Schema.GuiModel;
-using Origam.Server;
 
 namespace Origam.Server;
 

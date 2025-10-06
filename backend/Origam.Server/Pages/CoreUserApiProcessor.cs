@@ -22,8 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.AspNetCore.Hosting;
-using Origam.Server;
-using Origam.Server.Pages;
 
 namespace Origam.Server.Pages;
 

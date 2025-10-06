@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
-using IdentityServer4;
 using IdentityServer4.Models;
 using Origam.Server.Configuration;
 using IdentityServerConstants = IdentityServer4.IdentityServerConstants;

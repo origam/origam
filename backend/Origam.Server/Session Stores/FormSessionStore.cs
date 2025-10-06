@@ -31,6 +31,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using CoreServices = Origam.Workbench.Services.CoreServices;
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
 namespace Origam.Server;
 

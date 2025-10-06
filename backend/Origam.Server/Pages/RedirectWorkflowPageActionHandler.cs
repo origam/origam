@@ -41,10 +41,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
-using System.Web;
-using System.Xml;
 using System.Xml.XPath;
-using Microsoft.AspNetCore.Http;
 using Origam.Rule;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;

@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
 
 namespace Origam.Server.Configuration;
 

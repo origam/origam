@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Principal;
-using Microsoft.Extensions.Logging;
 using Origam.Schema.MenuModel;
 using Origam.Server.Model.Search;
 using Origam.Workbench.Services;

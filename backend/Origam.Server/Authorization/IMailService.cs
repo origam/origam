@@ -19,8 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Net.Mail;
-using System.Threading.Tasks;
 using Origam.Security.Common;
 
 namespace Origam.Server;

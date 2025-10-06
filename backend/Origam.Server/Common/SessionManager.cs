@@ -26,7 +26,6 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Server;
 using Origam.Server.Common;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
