@@ -38,6 +38,7 @@ class Program
         services.AddSingleton<IVisualService, VisualService>();
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
+        services.AddSingleton<IFileSystemService, FileSystemService>();
 
         services.AddSingleton<IDownloadFileModelBuilderTask, DownloadFileModelBuilderTask>();
         services.AddSingleton<ICreateDatabaseBuilderTask, CreateDatabaseBuilderTask>();

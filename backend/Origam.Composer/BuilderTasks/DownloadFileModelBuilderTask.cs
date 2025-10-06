@@ -132,7 +132,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     {
         if (Directory.Exists(project.ProjectFolder))
         {
-            GitManager.DeleteDirectory(project.ProjectFolder); // TODO: Is GitManager necessary here?
+            fileSystemService.DeleteDirectory(project.ProjectFolder);
         }
     }
 }
