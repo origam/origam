@@ -1,6 +1,80 @@
 ﻿<Project>
-<Choose>
-    <When Condition="'$(MSBuildProjectName)' == 'Origam.Server' or '$(MSBuildProjectName)' == 'Origam.Architect.Server'">
+  <PropertyGroup>
+    <EnabledProjects>
+<!--      Origam.Workbench.Services;-->
+<!--      Origam.Workbench.Diagram;-->
+<!--      Origam.Security;-->
+<!--      Origam.Schema.MenuModel;-->
+<!--      Origam.BI.CrystalReports.NetFx;-->
+<!--      Origam.BI;-->
+<!--      OrigamScheduler;-->
+<!--      Origam.Schema.TestModel;-->
+<!--      ScheduleTimer;-->
+<!--      Origam.Schema.LookupModel;-->
+<!--      Origam.Gui.Win;-->
+<!--      Origam.DA.Common;-->
+<!--      Origam.UI;-->
+<!--      Origam.Schema.GuiModel;-->
+<!--      Origam.Gui.Designer;-->
+<!--      Origam.Schema.EntityModel;-->
+<!--      OrigamArchitect;-->
+<!--      Origam.Schema.WorkflowModel;-->
+<!--      Origam.Workflow;-->
+<!--      Origam.Rule;-->
+<!--      Origam.Schema.RuleModel;-->
+<!--      Origam.DA.Service;-->
+<!--      Origam.Workbench;-->
+<!--      Origam.Common.NetFX;-->
+<!--      Origam.Mail;-->
+<!--      Origam.ReflectorCache;-->
+<!--      MIMEParser;-->
+<!--      Origam.Schema.DeploymentModel;-->
+<!--      Origam.OrigamEngine;-->
+<!--      Origam.Workflow.SimplicorService;-->
+<!--      Origam.Services;-->
+<!--      Origam.UI.Common;-->
+<!--      Origam.Schema.EntityModel.UI;-->
+<!--      Origam.Schema.WorkflowModel.UI;-->
+<!--      Origam.Schema.LookupModel.UI;-->
+<!--      Origam.Workbench.BaseComponents;-->
+<!--      Origam.BI.PrintIt;-->
+<!--      Origam.ProjectAutomation;-->
+<!--      Origam.Workflow.FileService;-->
+<!--      Origam.Windows.Editor;-->
+<!--      Origam.Gui;-->
+<!--      Origam.RuleTests;-->
+<!--      Origam.GuiTest;-->
+<!--      Origam.CommonTests;-->
+<!--      Origam.DA.ServiceTests;-->
+<!--      Origam.Workbench.ServicesTests;-->
+<!--      Origam.SchemaTests;-->
+<!--      Origam.TestCommon;-->
+<!--      Origam.Git;-->
+<!--      Origam.GitTests;-->
+<!--      Origam.Excel;-->
+<!--      Origam.Common;-->
+<!--      Origam.Security.Identity;-->
+<!--      Origam.workflow.mail;-->
+<!--      Origam.Schema;-->
+<!--      Origam.Services.NetFx;-->
+<!--      Origam.UI.Common.NetFx;-->
+<!--      origam-utils;-->
+<!--      Origam.Schema.DeploymentModel.UI;-->
+<!--      Origam.Security.Common;-->
+<!--      Origam.BI.FastReport;-->
+      Origam.Server;
+<!--      Origam.Documentation;-->
+<!--      Origam.BI.SSRS;-->
+<!--      Origam.BI.SSRS.NetFx;-->
+<!--      Origam.BI.CrystalReports;-->
+<!--      Origam.BI.Excel;-->
+<!--      Origam.WorkflowTests;-->
+      Origam.Architect.Server;
+<!--      Origam.Server.Common-->
+    </EnabledProjects>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$([System.String]::Copy(';$(EnabledProjects);')).Contains(';$(MSBuildProjectName);')">
 
         <PropertyGroup>
             <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -24,5 +98,5 @@
         </ItemGroup>
 
     </When>
-</Choose>
+  </Choose>
 </Project>
