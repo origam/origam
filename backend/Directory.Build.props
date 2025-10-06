@@ -1,0 +1,28 @@
+﻿<Project>
+<Choose>
+    <When Condition="'$(MSBuildProjectName)' == 'Origam.Server' or '$(MSBuildProjectName)' == 'Origam.Architect.Server'">
+
+        <PropertyGroup>
+            <GenerateDocumentationFile>true</GenerateDocumentationFile>
+            <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
+            <AnalysisLevel>8.0</AnalysisLevel>
+            <EnableNETAnalyzers>true</EnableNETAnalyzers>
+            <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+            <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
+                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+            <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
+                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+        </ItemGroup>
+        
+        <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
+            <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
+                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+        </ItemGroup>
+
+    </When>
+</Choose>
+</Project>
