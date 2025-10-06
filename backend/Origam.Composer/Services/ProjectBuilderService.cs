@@ -27,46 +27,24 @@ using Spectre.Console;
 
 namespace Origam.Composer.Services;
 
-public class ProjectBuilderService : IProjectBuilderService
+public class ProjectBuilderService(
+    IDownloadFileModelBuilderTask downloadFileModelBuilderTask,
+    ICreateDatabaseBuilderTask createDatabaseBuilderTask,
+    IApplyDatabasePermissionsBuilderTask applyDatabasePermissionsBuilderTask,
+    IInitFileModelBuilderTask initFileModelBuilderTask,
+    ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
+    ICreateNewPackageBuilderTask createNewPackageBuilderTask,
+    ICreateNewUserBuilderTask createNewUserBuilderTask,
+    IDockerBuilderTask dockerBuilderTask,
+    ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask
+) : IProjectBuilderService
 {
-    private readonly IDownloadFileModelBuilderTask DownloadFileModelBuilderTask;
-    private readonly ICreateDatabaseBuilderTask CreateDatabaseBuilderTask;
-    private readonly IApplyDatabasePermissionsBuilderTask ApplyDatabasePermissionsBuilderTask;
-    private readonly IInitFileModelBuilderTask InitFileModelBuilderTask;
-    private readonly ICreateDatabaseStructureBuilderTask CreateDatabaseStructureBuilderTask;
-    private readonly ICreateNewPackageBuilderTask CreateNewPackageBuilderTask;
-    private readonly ICreateNewUserBuilderTask CreateNewUserBuilderTask;
-    private readonly IDockerBuilderTask DockerBuilderTask;
-    private readonly ICreateGitRepositoryBuilderTask CreateGitRepositoryBuilderTask;
     private readonly List<IBuilderTask> Tasks = [];
-
-    public ProjectBuilderService(
-        IDownloadFileModelBuilderTask downloadFileModelBuilderTask,
-        ICreateDatabaseBuilderTask createDatabaseBuilderTask,
-        IApplyDatabasePermissionsBuilderTask applyDatabasePermissionsBuilderTask,
-        IInitFileModelBuilderTask initFileModelBuilderTask,
-        ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
-        ICreateNewPackageBuilderTask createNewPackageBuilderTask,
-        ICreateNewUserBuilderTask createNewUserBuilderTask,
-        IDockerBuilderTask dockerBuilderTask,
-        ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask
-    )
-    {
-        DownloadFileModelBuilderTask = downloadFileModelBuilderTask;
-        CreateDatabaseBuilderTask = createDatabaseBuilderTask;
-        ApplyDatabasePermissionsBuilderTask = applyDatabasePermissionsBuilderTask;
-        InitFileModelBuilderTask = initFileModelBuilderTask;
-        CreateDatabaseStructureBuilderTask = createDatabaseStructureBuilderTask;
-        CreateNewPackageBuilderTask = createNewPackageBuilderTask;
-        CreateNewUserBuilderTask = createNewUserBuilderTask;
-        DockerBuilderTask = dockerBuilderTask;
-        CreateGitRepositoryBuilderTask = createGitRepositoryBuilderTask;
-
-        SecurityManager.SetServerIdentity();
-    }
 
     public void Create(Project project)
     {
+        SecurityManager.SetServerIdentity();
+
         IBuilderTask activeTask = null;
         try
         {
@@ -92,18 +70,18 @@ public class ProjectBuilderService : IProjectBuilderService
 
     public void PrepareTasks(Project project)
     {
-        Tasks.Add(DownloadFileModelBuilderTask);
-        Tasks.Add(CreateDatabaseBuilderTask);
-        Tasks.Add(ApplyDatabasePermissionsBuilderTask);
-        Tasks.Add(InitFileModelBuilderTask);
-        Tasks.Add(CreateDatabaseStructureBuilderTask);
-        Tasks.Add(CreateNewPackageBuilderTask);
-        Tasks.Add(CreateNewUserBuilderTask);
-        Tasks.Add(DockerBuilderTask);
+        Tasks.Add(downloadFileModelBuilderTask);
+        Tasks.Add(createDatabaseBuilderTask);
+        Tasks.Add(applyDatabasePermissionsBuilderTask);
+        Tasks.Add(initFileModelBuilderTask);
+        Tasks.Add(createDatabaseStructureBuilderTask);
+        Tasks.Add(createNewPackageBuilderTask);
+        Tasks.Add(createNewUserBuilderTask);
+        Tasks.Add(dockerBuilderTask);
 
         if (project.IsGitEnabled)
         {
-            Tasks.Add(CreateGitRepositoryBuilderTask);
+            Tasks.Add(createGitRepositoryBuilderTask);
         }
     }
 
