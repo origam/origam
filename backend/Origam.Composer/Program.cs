@@ -57,7 +57,6 @@ class Program
         services.AddSingleton<ICreateGitRepositoryBuilderTask, CreateGitRepositoryBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);
-
         var app = new CommandApp(registrar);
         app.Configure(config =>
         {

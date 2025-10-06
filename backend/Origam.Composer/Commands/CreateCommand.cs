@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -38,7 +38,7 @@ public class CreateCommand(
         GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings, gitIdentity);
 
-        var DockerFolder = Path.Combine(settings.ProjectFolder, "docker");
+        var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
         {
             #region General
@@ -94,33 +94,33 @@ public class CreateCommand(
             #endregion
 
             #region Docker
-            DockerFolder = DockerFolder,
+            DockerFolder = dockerFolder,
 
             // Linux
             DockerEnvironmentsPathLinux = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Environments_Linux.env"
             ),
             DockerClientPathLinux = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Client_Linux."
             ),
             DockerArchitectPathLinux = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Architect_Linux."
             ),
 
             // Windows
             DockerEnvironmentsPathWindows = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Environments_Windows.env"
             ),
             DockerClientPathWindows = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Client_Windows."
             ),
             DockerArchitectPathWindows = Path.Combine(
-                DockerFolder,
+                dockerFolder,
                 settings.ProjectName + "_Architect_Windows."
             ),
             #endregion
