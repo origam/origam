@@ -19,14 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Composer.DTOs;
+using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 
-public abstract class AbstractDatabaseBuilderTask : AbstractBuilderTask
+public abstract class AbstractDatabaseBuilderTask : IBuilderTask
 {
+    public abstract string Name { get; }
+    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
+
     private AbstractSqlDataService? DataServicePointer;
+
+    public abstract void Execute(Project project);
+
+    public abstract void Rollback(Project project);
 
     internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
     {
