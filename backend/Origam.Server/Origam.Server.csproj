@@ -5,6 +5,7 @@
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>10</LangVersion>
     <GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <PropertyGroup>
