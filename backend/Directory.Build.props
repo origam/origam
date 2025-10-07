@@ -60,8 +60,8 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services.NetFx'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common.NetFx'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel.UI'">true</EnableStrictBuild> -->
+<!--         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel.UI'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Common'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.FastReport'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</EnableStrictBuild> -->
