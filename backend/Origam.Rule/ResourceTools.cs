@@ -35,8 +35,11 @@ public class ResourceTools : IResourceTools
 {
     private readonly IBusinessServicesService businessService;
     private readonly Func<UserProfile> userProfileGetter;
-    
-    public ResourceTools(IBusinessServicesService businessService, Func<UserProfile> userProfileGetter)
+
+    public ResourceTools(
+        IBusinessServicesService businessService,
+        Func<UserProfile> userProfileGetter
+    )
     {
         this.businessService = businessService;
         this.userProfileGetter = userProfileGetter;
@@ -44,26 +47,33 @@ public class ResourceTools : IResourceTools
 
     public string ResourceIdByActiveProfile()
     {
-        DataStructureQuery query = new DataStructureQuery(new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"), new Guid("84848e4c-129c-4079-95a4-6319e21399af"));
+        DataStructureQuery query = new DataStructureQuery(
+            new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"),
+            new Guid("84848e4c-129c-4079-95a4-6319e21399af")
+        );
 
-        query.Parameters.Add(new QueryParameter("Resource_parBusinessPartnerId", userProfileGetter().Id));
+        query.Parameters.Add(
+            new QueryParameter("Resource_parBusinessPartnerId", userProfileGetter().Id)
+        );
 
         DataSet ds = LoadData(query);
 
-        if(ds.Tables["Resource"].Rows.Count == 0)
+        if (ds.Tables["Resource"].Rows.Count == 0)
         {
             throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
         }
-        else if(ds.Tables["Resource"].Rows.Count > 1)
+        else if (ds.Tables["Resource"].Rows.Count > 1)
         {
-            throw new Exception(ResourceUtils.GetString("ErrorMoreResources", userProfileGetter().Id));
+            throw new Exception(
+                ResourceUtils.GetString("ErrorMoreResources", userProfileGetter().Id)
+            );
         }
         else
         {
             return ds.Tables["Resource"].Rows[0]["Id"].ToString();
         }
     }
-		
+
     private DataSet LoadData(DataStructureQuery query)
     {
         var dataServiceAgent = businessService.GetAgent("DataService", null, null);

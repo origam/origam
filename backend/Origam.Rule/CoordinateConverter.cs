@@ -44,12 +44,14 @@ public static class CoordinateConverter
         // Make sure the value signs and order is correct
         if (x < 0 && y < 0)
         {
-            x=-x;
-            y=-y;
+            x = -x;
+            y = -y;
         }
-        if (y > x) {
+        if (y > x)
+        {
             (x, y) = (y, x);
-        };
+        }
+        ;
         return JtskToWgsInternal(x, y, h);
     }
 
@@ -105,7 +107,9 @@ public static class CoordinateConverter
         double zCartesian = ((1 - e2) * ro + h) * Math.Sin(bjtsk);
 
         // Step 3: Transform to WGS-84 Cartesian coordinates
-        double dx = 570.69, dy = 85.69, dz = 462.84;
+        double dx = 570.69,
+            dy = 85.69,
+            dz = 462.84;
         double wz = -5.2611 / 3600 * Math.PI / 180;
         double wy = -1.58676 / 3600 * Math.PI / 180;
         double wx = -4.99821 / 3600 * Math.PI / 180;

@@ -24,6 +24,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Origam.Rule.XsltFunctions;
+
 public class XsltCryptoFunctionContainer
 {
     public string Nonce()
@@ -31,23 +32,20 @@ public class XsltCryptoFunctionContainer
         Guid guid = Guid.NewGuid();
         return Convert.ToBase64String(guid.ToByteArray());
     }
-    public string PasswordDigest(
-        string password, string timestamp, string nonce)
+
+    public string PasswordDigest(string password, string timestamp, string nonce)
     {
         SHA1 sha1 = SHA1Managed.Create();
-        byte[] passwordHashedBytes = sha1.ComputeHash(
-            Encoding.UTF8.GetBytes(password));
-        byte[] timestampBytes 
-            = string.IsNullOrEmpty(timestamp) 
-            ? new byte[0] 
+        byte[] passwordHashedBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(password));
+        byte[] timestampBytes = string.IsNullOrEmpty(timestamp)
+            ? new byte[0]
             : Encoding.UTF8.GetBytes(timestamp);
-        byte[] nonceBytes 
-            = string.IsNullOrEmpty(nonce) 
-            ? new byte[0] 
+        byte[] nonceBytes = string.IsNullOrEmpty(nonce)
+            ? new byte[0]
             : Convert.FromBase64String(nonce);
         byte[] input = new byte[
-            passwordHashedBytes.Length + timestampBytes.Length 
-            + nonceBytes.Length];
+            passwordHashedBytes.Length + timestampBytes.Length + nonceBytes.Length
+        ];
         int offset = 0;
         nonceBytes.CopyTo(input, offset);
         offset += nonceBytes.Length;

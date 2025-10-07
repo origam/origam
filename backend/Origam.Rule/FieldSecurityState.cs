@@ -20,90 +20,64 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for ColumnSecurityState.
 /// </summary>
 public class FieldSecurityState
 {
-	string _name;
-	bool _allowUpdate;
-	bool _allowRead;
-	string _dynamicLabel;
-	int _backgroundColor;
-	int _foregroundColor;
-	public FieldSecurityState(string name, bool allowUpdate, bool allowRead, string dynamicLabel, int backgroundColor, int foregroundColor)
-	{
-		_name = name;
-		_allowUpdate = allowUpdate;
-		_allowRead = allowRead;
-		_dynamicLabel = dynamicLabel;
-		_backgroundColor = backgroundColor;
-		_foregroundColor = foregroundColor;
-	}
-	public string Name 
-	{
-		get
-		{
-			return _name;
-		}
-		set
-		{
-			_name = value;
-		}
-	}
-	public string DynamicLabel
-	{
-		get
-		{
-			return _dynamicLabel;
-		}
-		set
-		{
-			_dynamicLabel = value;
-		}
-	}
-	public int BackgroundColor
-	{
-		get
-		{
-			return _backgroundColor;
-		}
-		set
-		{
-			_backgroundColor = value;
-		}
-	}
-	public int ForegroundColor
-	{
-		get
-		{
-			return _foregroundColor;
-		}
-		set
-		{
-			_foregroundColor = value;
-		}
-	}
-	public bool AllowUpdate
-	{
-		get
-		{
-			return _allowUpdate;
-		}
-		set
-		{
-			_allowUpdate = value;
-		}
-	}
-	public bool AllowRead
-	{
-		get
-		{
-			return _allowRead;
-		}
-		set
-		{
-			_allowRead = value;
-		}
-	}
+    string _name;
+    bool _allowUpdate;
+    bool _allowRead;
+    string _dynamicLabel;
+    int _backgroundColor;
+    int _foregroundColor;
+
+    public FieldSecurityState(
+        string name,
+        bool allowUpdate,
+        bool allowRead,
+        string dynamicLabel,
+        int backgroundColor,
+        int foregroundColor
+    )
+    {
+        _name = name;
+        _allowUpdate = allowUpdate;
+        _allowRead = allowRead;
+        _dynamicLabel = dynamicLabel;
+        _backgroundColor = backgroundColor;
+        _foregroundColor = foregroundColor;
+    }
+
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    public string DynamicLabel
+    {
+        get { return _dynamicLabel; }
+        set { _dynamicLabel = value; }
+    }
+    public int BackgroundColor
+    {
+        get { return _backgroundColor; }
+        set { _backgroundColor = value; }
+    }
+    public int ForegroundColor
+    {
+        get { return _foregroundColor; }
+        set { _foregroundColor = value; }
+    }
+    public bool AllowUpdate
+    {
+        get { return _allowUpdate; }
+        set { _allowUpdate = value; }
+    }
+    public bool AllowRead
+    {
+        get { return _allowRead; }
+        set { _allowRead = value; }
+    }
 }
