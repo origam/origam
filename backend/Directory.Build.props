@@ -15,7 +15,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Win'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Common'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.GuiModel'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Designer'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel'">true</EnableStrictBuild> -->
