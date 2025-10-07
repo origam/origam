@@ -20,21 +20,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema;
+
 public enum OrigamDataType
 {
-	Boolean,
-	Blob,
-	Byte,
-	Currency,
-	Date,
-	Long,
-	Memo,
-	Float,
-	Integer,
-	String,
-	UniqueIdentifier,
-	Xml,
-	Array,
-	Geography,
-	Object
+    Boolean,
+    Blob,
+    Byte,
+    Currency,
+    Date,
+    Long,
+    Memo,
+    Float,
+    Integer,
+    String,
+    UniqueIdentifier,
+    Xml,
+    Array,
+    Geography,
+    Object,
 }

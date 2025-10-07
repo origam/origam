@@ -22,45 +22,53 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Use this attribute to specify a name and folder name of the schema item.
 /// </summary>
-[AttributeUsage( AttributeTargets.Class, AllowMultiple=false, Inherited=true )]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public class SchemaItemDescriptionAttribute : Attribute
 {
-	private string _name;
-	private string _folderName;
-	private int _icon;
+    private string _name;
+    private string _folderName;
+    private int _icon;
     private string _iconName = null;
+
     public SchemaItemDescriptionAttribute(string name, int icon)
-	{
-		this._name = name;
-		this._icon = icon;
-	}
+    {
+        this._name = name;
+        this._icon = icon;
+    }
+
     public SchemaItemDescriptionAttribute(string name, string iconName)
     {
         this._name = name;
         this._iconName = iconName;
     }
-    public SchemaItemDescriptionAttribute(string name, string folderName, int icon) : this(name, icon)
-	{
-		this._folderName = folderName;
-	}
-    public SchemaItemDescriptionAttribute(string name, string folderName, string iconName) : this(name, iconName)
+
+    public SchemaItemDescriptionAttribute(string name, string folderName, int icon)
+        : this(name, icon)
     {
         this._folderName = folderName;
     }
-    public string Name 
-	{
-		get{return _name ?? GetType().Name;}
-	}
-	public string FolderName
-	{
-		get{return _folderName;}
-	}
-	public object Icon
-	{
-		get
+
+    public SchemaItemDescriptionAttribute(string name, string folderName, string iconName)
+        : this(name, iconName)
+    {
+        this._folderName = folderName;
+    }
+
+    public string Name
+    {
+        get { return _name ?? GetType().Name; }
+    }
+    public string FolderName
+    {
+        get { return _folderName; }
+    }
+    public object Icon
+    {
+        get
         {
             if (_iconName != null)
             {
@@ -71,18 +79,23 @@ public class SchemaItemDescriptionAttribute : Attribute
                 return _icon;
             }
         }
-	}
+    }
 }
+
 public static class Extensions
 {
     public static SchemaItemDescriptionAttribute SchemaItemDescription(this Type type)
     {
-        object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
+        object[] attributes = type.GetCustomAttributes(
+            typeof(SchemaItemDescriptionAttribute),
+            true
+        );
         if (attributes != null && attributes.Length > 0)
             return attributes[0] as SchemaItemDescriptionAttribute;
         else
             return null;
     }
+
     public static object SchemaItemIcon(this Type type)
     {
         SchemaItemDescriptionAttribute att = type.SchemaItemDescription();

@@ -25,52 +25,59 @@ using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Summary description for SchemaItem.
 /// </summary>
 public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 {
-	/// <summary>
-	/// Gets or sets the schema extensions, under which this item was defined.
-	/// </summary>
-	Package Package{get; set;}
-	ModelElementKey OldPrimaryKey{get; set;}
-	string Name{get; set;}
-	SchemaItemAncestorCollection AllAncestors{get;}
-	List<SchemaItemParameter> Parameters{get;}
-	Dictionary<string, ParameterReference> ParameterReferences{get;}
-	bool HasParameterReferences{get;}
-	string ItemType{get;}
-	ISchemaItem GetChildByName(string name);
-	ISchemaItem GetChildById(Guid id);
-	List<ISchemaItem> ChildItemsByTypeRecursive(string itemType);
-	/// <summary>
-	/// Gets or sets the parent schema item.
-	/// </summary>
-	ISchemaItem ParentItem{get; set;}
-	/// <summary>
-	/// Gets the root schema item.
-	/// </summary>
-	ISchemaItem RootItem{get;}
-	/// <summary>
-	/// Gets or sets the group where this item is located.
-	/// </summary>
-	SchemaItemGroup Group{get; set;}
-	IEnumerable<ISchemaItem> Parents{get;}
-	/// <summary>
-	/// Gets or sets the item from which this item has been derived
-	/// </summary>
-	ISchemaItem DerivedFrom{get; set;}
-	bool IsAbstract{get; set;}
-	bool IsPersistable{get; set;}
-	List<ISchemaItem> GetDependencies(bool ignoreErrors);
-	void UpdateReferences();
-	object Clone(bool keepKeys);
-	void SetExtensionRecursive(Package extension);
+    /// <summary>
+    /// Gets or sets the schema extensions, under which this item was defined.
+    /// </summary>
+    Package Package { get; set; }
+    ModelElementKey OldPrimaryKey { get; set; }
+    string Name { get; set; }
+    SchemaItemAncestorCollection AllAncestors { get; }
+    List<SchemaItemParameter> Parameters { get; }
+    Dictionary<string, ParameterReference> ParameterReferences { get; }
+    bool HasParameterReferences { get; }
+    string ItemType { get; }
+    ISchemaItem GetChildByName(string name);
+    ISchemaItem GetChildById(Guid id);
+    List<ISchemaItem> ChildItemsByTypeRecursive(string itemType);
+
+    /// <summary>
+    /// Gets or sets the parent schema item.
+    /// </summary>
+    ISchemaItem ParentItem { get; set; }
+
+    /// <summary>
+    /// Gets the root schema item.
+    /// </summary>
+    ISchemaItem RootItem { get; }
+
+    /// <summary>
+    /// Gets or sets the group where this item is located.
+    /// </summary>
+    SchemaItemGroup Group { get; set; }
+    IEnumerable<ISchemaItem> Parents { get; }
+
+    /// <summary>
+    /// Gets or sets the item from which this item has been derived
+    /// </summary>
+    ISchemaItem DerivedFrom { get; set; }
+    bool IsAbstract { get; set; }
+    bool IsPersistable { get; set; }
+    List<ISchemaItem> GetDependencies(bool ignoreErrors);
+    void UpdateReferences();
+    object Clone(bool keepKeys);
+    void SetExtensionRecursive(Package extension);
     string ModelDescription();
 
-    public void GetParameterReferences(ISchemaItem parentItem,
-	    Dictionary<string, ParameterReference> list);
+    public void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    );
     bool DeleteChildItems { get; set; }
     bool ClearCacheOnPersist { get; set; }
     bool ThrowEventOnPersist { get; set; }
@@ -79,7 +86,8 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
     string Path { get; }
     bool UseFolders { get; }
     IEnumerable<ISchemaItem> ChildrenRecursive { get; }
-    T FirstParentOfType<T>() where T : class;
+    T FirstParentOfType<T>()
+        where T : class;
     string PackageName { get; }
     string RelativeFilePath { get; }
     Guid SchemaExtensionId { get; set; }

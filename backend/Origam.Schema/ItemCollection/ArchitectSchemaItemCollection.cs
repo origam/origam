@@ -29,19 +29,19 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.ItemCollection;
 
-class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
-    ISchemaItemCollection
+class ArchitectISchemaItemCollection : SchemaItemCollectionBase<Key>, ISchemaItemCollection
 {
-    private Dictionary<Key, ISchemaItem> nonPersistedItems = new ();
+    private Dictionary<Key, ISchemaItem> nonPersistedItems = new();
     private readonly IPersistenceProvider persistence;
     private readonly ISchemaItemProvider rootProvider;
-    
-    public ArchitectISchemaItemCollection()
-    {
-    }
-    
-    public ArchitectISchemaItemCollection(IPersistenceProvider persistence,
-        ISchemaItemProvider rootProvider, ISchemaItem parentItem)
+
+    public ArchitectISchemaItemCollection() { }
+
+    public ArchitectISchemaItemCollection(
+        IPersistenceProvider persistence,
+        ISchemaItemProvider rootProvider,
+        ISchemaItem parentItem
+    )
     {
         this.persistence = persistence;
         this.rootProvider = rootProvider;
@@ -93,7 +93,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     {
         return base.Remove(item?.PrimaryKey);
     }
-    
+
     public int IndexOf(ISchemaItem item)
     {
         return base.IndexOf(item?.PrimaryKey);
@@ -103,13 +103,13 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     {
         base.Insert(index, item?.PrimaryKey);
     }
-    
+
     public new ISchemaItem this[int index]
     {
         get => GetItem(base[index]);
         set => base[index] = value.PrimaryKey;
     }
-    
+
     private ISchemaItem GetItem(Key key)
     {
         ISchemaItem item = null;
@@ -119,28 +119,26 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
             item.RootProvider = rootProvider;
             return item;
         }
-        
-        item = persistence.RetrieveInstance(typeof(ISchemaItem), key,
-                true, false) as ISchemaItem;
+
+        item = persistence.RetrieveInstance(typeof(ISchemaItem), key, true, false) as ISchemaItem;
         if (item == null)
         {
             nonPersistedItems?.TryGetValue(key, out item);
             if (item == null)
             {
-                throw new ArgumentOutOfRangeException(
-                    "Item not found by primary key");
+                throw new ArgumentOutOfRangeException("Item not found by primary key");
             }
         }
         else
         {
             nonPersistedItems?.Remove(key);
         }
-        
+
         SetDerivedFrom(item);
         item.RootProvider = rootProvider;
         return item;
     }
-    
+
     protected override void OnClear()
     {
         if (!disposing)
@@ -180,6 +178,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
             clearing = false;
         }
     }
+
     protected override void OnInsert(int index, Key value)
     {
         var item = GetItem(value);
@@ -189,7 +188,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
         }
         item.Deleted += SchemaItem_Deleted;
     }
-    
+
     protected override void OnRemove(int index, Key value)
     {
         ISchemaItem item = null;
@@ -214,6 +213,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
             item.Deleted -= SchemaItem_Deleted;
         }
     }
+
     protected override void OnSet(int index, Key oldValue, Key newValue)
     {
         var oldItem = GetItem(oldValue);
@@ -234,6 +234,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
             Add(item);
         }
     }
+
     private void SchemaItem_Deleted(object sender, EventArgs e)
     {
         if (!clearing)
@@ -251,6 +252,7 @@ class SchemaItemEnumerator : IEnumerator<ISchemaItem>
 {
     private readonly Func<Key, ISchemaItem> keyToItem;
     private readonly IEnumerator<Key> keyEnumerator;
+
     public SchemaItemEnumerator(IList<Key> keys, Func<Key, ISchemaItem> keyToItem)
     {
         this.keyToItem = keyToItem;
@@ -267,13 +269,14 @@ class SchemaItemEnumerator : IEnumerator<ISchemaItem>
         keyEnumerator.Reset();
     }
 
-    public ISchemaItem Current {
+    public ISchemaItem Current
+    {
         get
         {
             Key currentKey = keyEnumerator.Current;
             return keyToItem(currentKey);
         }
-    } 
+    }
 
     object IEnumerator.Current => Current;
 
