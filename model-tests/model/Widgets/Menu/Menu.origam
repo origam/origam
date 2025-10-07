@@ -724,6 +724,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="OnFailureStepTest"
+    x:id="27f51ecc-e9ad-4d4d-b751-ce4792a3ccfd"
+    asi:name="OnFailureStepTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/OnFailureStepTest.origam#OnFailureStepTest/b2d4f1df-0946-4eee-a262-2ebe627f736c" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="ParametrizedReportFilename"
     x:id="37723fa7-7a4a-4ebe-97ab-2b10877b3aa7"
     asi:name="ParametrizedReportFilename"

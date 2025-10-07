@@ -97,7 +97,9 @@ public class WorkflowForm : AsForm
     private void AbortTask()
 	{
 		this.FormGenerator.UnloadForm(true);
-		this.Host.AbortWorkflowForm(_taskId);
+		// isDirty: false is set here because it was not immediately obvious how to get the actual value.
+		// Desktop Architect will be at end of life soon anyway.
+		this.Host.AbortWorkflowForm(taskId: _taskId, isDirty: false);
 		InvokeToolStripsRemoved();
 	}
 	public void FinishTask()
