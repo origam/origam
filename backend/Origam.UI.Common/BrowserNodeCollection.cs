@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.UI;
+
 using System;
 using System.Collections;
-
 
 /// <summary>
 ///     <para>
@@ -31,16 +31,15 @@ using System.Collections;
 /// </summary>
 /// <seealso cref='Origam.UI.BrowserNodeCollection'/>
 [Serializable()]
-public class BrowserNodeCollection : CollectionBase {
-    
+public class BrowserNodeCollection : CollectionBase
+{
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.UI.BrowserNodeCollection'/>.
     ///    </para>
     /// </summary>
-    public BrowserNodeCollection() {
-    }
-    
+    public BrowserNodeCollection() { }
+
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.UI.BrowserNodeCollection'/> based on another <see cref='Origam.UI.BrowserNodeCollection'/>.
@@ -49,10 +48,11 @@ public class BrowserNodeCollection : CollectionBase {
     /// <param name='value'>
     ///       A <see cref='Origam.UI.BrowserNodeCollection'/> from which the contents are copied
     /// </param>
-    public BrowserNodeCollection(BrowserNodeCollection value) {
+    public BrowserNodeCollection(BrowserNodeCollection value)
+    {
         this.AddRange(value);
     }
-    
+
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.UI.BrowserNodeCollection'/> containing any array of <see cref='Origam.UI.IBrowserNode'/> objects.
@@ -61,10 +61,11 @@ public class BrowserNodeCollection : CollectionBase {
     /// <param name='value'>
     ///       A array of <see cref='Origam.UI.IBrowserNode'/> objects with which to intialize the collection
     /// </param>
-    public BrowserNodeCollection(IBrowserNode[] value) {
+    public BrowserNodeCollection(IBrowserNode[] value)
+    {
         this.AddRange(value);
     }
-    
+
     /// <summary>
     /// <para>Represents the entry at the specified index of the <see cref='Origam.UI.IBrowserNode'/>.</para>
     /// </summary>
@@ -73,17 +74,14 @@ public class BrowserNodeCollection : CollectionBase {
     ///    <para> The entry at the specified index of the collection.</para>
     /// </value>
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
-    public IBrowserNode this[int index] {
-        get {
-            return ((IBrowserNode)(List[index]));
-        }
-        set {
-            List[index] = value;
-        }
+    public IBrowserNode this[int index]
+    {
+        get { return ((IBrowserNode)(List[index])); }
+        set { List[index] = value; }
     }
-    
+
     /// <summary>
-    ///    <para>Adds a <see cref='Origam.UI.IBrowserNode'/> with the specified value to the 
+    ///    <para>Adds a <see cref='Origam.UI.IBrowserNode'/> with the specified value to the
     ///    <see cref='Origam.UI.BrowserNodeCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.UI.IBrowserNode'/> to add.</param>
@@ -91,10 +89,11 @@ public class BrowserNodeCollection : CollectionBase {
     ///    <para>The index at which the new element was inserted.</para>
     /// </returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.AddRange'/>
-    public int Add(IBrowserNode value) {
+    public int Add(IBrowserNode value)
+    {
         return List.Add(value);
     }
-    
+
     /// <summary>
     /// <para>Copies the elements of an array to the end of the <see cref='Origam.UI.BrowserNodeCollection'/>.</para>
     /// </summary>
@@ -105,12 +104,14 @@ public class BrowserNodeCollection : CollectionBase {
     ///   <para>None.</para>
     /// </returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Add'/>
-    public void AddRange(IBrowserNode[] value) {
-        for (int i = 0; (i < value.Length); i = (i + 1)) {
+    public void AddRange(IBrowserNode[] value)
+    {
+        for (int i = 0; (i < value.Length); i = (i + 1))
+        {
             this.Add(value[i]);
         }
     }
-    
+
     /// <summary>
     ///     <para>
     ///       Adds the contents of another <see cref='Origam.UI.BrowserNodeCollection'/> to the end of the collection.
@@ -123,28 +124,31 @@ public class BrowserNodeCollection : CollectionBase {
     ///   <para>None.</para>
     /// </returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Add'/>
-    public void AddRange(BrowserNodeCollection value) {
-        for (int i = 0; (i < value.Count); i = (i + 1)) {
+    public void AddRange(BrowserNodeCollection value)
+    {
+        for (int i = 0; (i < value.Count); i = (i + 1))
+        {
             this.Add(value[i]);
         }
     }
-    
+
     /// <summary>
-    /// <para>Gets a value indicating whether the 
+    /// <para>Gets a value indicating whether the
     ///    <see cref='Origam.UI.BrowserNodeCollection'/> contains the specified <see cref='Origam.UI.IBrowserNode'/>.</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.UI.IBrowserNode'/> to locate.</param>
     /// <returns>
-    /// <para><see langword='true'/> if the <see cref='Origam.UI.IBrowserNode'/> is contained in the collection; 
+    /// <para><see langword='true'/> if the <see cref='Origam.UI.IBrowserNode'/> is contained in the collection;
     ///   otherwise, <see langword='false'/>.</para>
     /// </returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.IndexOf'/>
-    public bool Contains(IBrowserNode value) {
+    public bool Contains(IBrowserNode value)
+    {
         return List.Contains(value);
     }
-    
+
     /// <summary>
-    /// <para>Copies the <see cref='Origam.UI.BrowserNodeCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the 
+    /// <para>Copies the <see cref='Origam.UI.BrowserNodeCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the
     ///    specified index.</para>
     /// </summary>
     /// <param name='array'><para>The one-dimensional <see cref='System.Array'/> that is the destination of the values copied from <see cref='Origam.UI.BrowserNodeCollection'/> .</para></param>
@@ -156,24 +160,26 @@ public class BrowserNodeCollection : CollectionBase {
     /// <exception cref='System.ArgumentNullException'><paramref name='array'/> is <see langword='null'/>. </exception>
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='arrayIndex'/> is less than <paramref name='array'/>'s lowbound. </exception>
     /// <seealso cref='System.Array'/>
-    public void CopyTo(IBrowserNode[] array, int index) {
+    public void CopyTo(IBrowserNode[] array, int index)
+    {
         List.CopyTo(array, index);
     }
-    
+
     /// <summary>
-    ///    <para>Returns the index of a <see cref='Origam.UI.IBrowserNode'/> in 
+    ///    <para>Returns the index of a <see cref='Origam.UI.IBrowserNode'/> in
     ///       the <see cref='Origam.UI.BrowserNodeCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.UI.IBrowserNode'/> to locate.</param>
     /// <returns>
-    /// <para>The index of the <see cref='Origam.UI.IBrowserNode'/> of <paramref name='value'/> in the 
+    /// <para>The index of the <see cref='Origam.UI.IBrowserNode'/> of <paramref name='value'/> in the
     /// <see cref='Origam.UI.BrowserNodeCollection'/>, if found; otherwise, -1.</para>
     /// </returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Contains'/>
-    public int IndexOf(IBrowserNode value) {
+    public int IndexOf(IBrowserNode value)
+    {
         return List.IndexOf(value);
     }
-    
+
     /// <summary>
     /// <para>Inserts a <see cref='Origam.UI.IBrowserNode'/> into the <see cref='Origam.UI.BrowserNodeCollection'/> at the specified index.</para>
     /// </summary>
@@ -181,89 +187,87 @@ public class BrowserNodeCollection : CollectionBase {
     /// <param name=' value'>The <see cref='Origam.UI.IBrowserNode'/> to insert.</param>
     /// <returns><para>None.</para></returns>
     /// <seealso cref='Origam.UI.BrowserNodeCollection.Add'/>
-    public void Insert(int index, IBrowserNode value) {
+    public void Insert(int index, IBrowserNode value)
+    {
         List.Insert(index, value);
     }
-    
+
     /// <summary>
-    ///    <para>Returns an enumerator that can iterate through 
+    ///    <para>Returns an enumerator that can iterate through
     ///       the <see cref='Origam.UI.BrowserNodeCollection'/> .</para>
     /// </summary>
     /// <returns><para>None.</para></returns>
     /// <seealso cref='System.Collections.IEnumerator'/>
-    public new IBrowserNodeEnumerator GetEnumerator() {
+    public new IBrowserNodeEnumerator GetEnumerator()
+    {
         return new IBrowserNodeEnumerator(this);
     }
-    
+
     /// <summary>
-    ///    <para> Removes a specific <see cref='Origam.UI.IBrowserNode'/> from the 
+    ///    <para> Removes a specific <see cref='Origam.UI.IBrowserNode'/> from the
     ///    <see cref='Origam.UI.BrowserNodeCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.UI.IBrowserNode'/> to remove from the <see cref='Origam.UI.BrowserNodeCollection'/> .</param>
     /// <returns><para>None.</para></returns>
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
-    public void Remove(IBrowserNode value) {
+    public void Remove(IBrowserNode value)
+    {
         List.Remove(value);
     }
-    
-	protected override void OnSet(int index, object oldValue, object newValue) 
-	{
-		// TODO: Add code here to handle an existing value within
-		//       the collection be replaced with a new value
-	}
-    
-	protected override void OnInsert(int index, object value) 
-	{
-	}
-    
-	protected override void OnClear() 
-	{
-	}
-    
-	protected override void OnRemove(int index, object value) 
-	{
-	}
-    
-	protected override void OnValidate(object value) 
-	{
-	}
-    public class IBrowserNodeEnumerator : object, IEnumerator 
-	{
-        
+
+    protected override void OnSet(int index, object oldValue, object newValue)
+    {
+        // TODO: Add code here to handle an existing value within
+        //       the collection be replaced with a new value
+    }
+
+    protected override void OnInsert(int index, object value) { }
+
+    protected override void OnClear() { }
+
+    protected override void OnRemove(int index, object value) { }
+
+    protected override void OnValidate(object value) { }
+
+    public class IBrowserNodeEnumerator : object, IEnumerator
+    {
         private IEnumerator baseEnumerator;
-        
+
         private IEnumerable temp;
-        
-        public IBrowserNodeEnumerator(BrowserNodeCollection mappings) {
+
+        public IBrowserNodeEnumerator(BrowserNodeCollection mappings)
+        {
             this.temp = ((IEnumerable)(mappings));
             this.baseEnumerator = temp.GetEnumerator();
         }
-        
-        public IBrowserNode Current {
-            get {
-                return ((IBrowserNode)(baseEnumerator.Current));
-            }
+
+        public IBrowserNode Current
+        {
+            get { return ((IBrowserNode)(baseEnumerator.Current)); }
         }
-        
-        object IEnumerator.Current {
-            get {
-                return baseEnumerator.Current;
-            }
+
+        object IEnumerator.Current
+        {
+            get { return baseEnumerator.Current; }
         }
-        
-        public bool MoveNext() {
+
+        public bool MoveNext()
+        {
             return baseEnumerator.MoveNext();
         }
-        
-        bool IEnumerator.MoveNext() {
+
+        bool IEnumerator.MoveNext()
+        {
             return baseEnumerator.MoveNext();
         }
-        
-        public void Reset() {
+
+        public void Reset()
+        {
             baseEnumerator.Reset();
         }
-        
-        void IEnumerator.Reset() {
+
+        void IEnumerator.Reset()
+        {
             baseEnumerator.Reset();
         }
     }
