@@ -21,7 +21,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamArchitect'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Rule'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.RuleModel'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Service'">true</EnableStrictBuild> -->
@@ -101,6 +101,6 @@
     </Choose>
     <PropertyGroup>
         <!-- Disable CS1591: Missing XML comment for publicly visible type or member -->
-        <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075;RCS1102;CS1572;CS0419;CS1734;RCS1263;RCS1138;CS1587;   RCS1203;RCS1194;RCS1059;RCS1215;RCS1155;RCS1172</NoWarn>
+        <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075;RCS1102;CS1572;CS0419;CS1734;RCS1263;RCS1138;CS1587;CS1574;   RCS1203;RCS1194;RCS1059;RCS1215;RCS1155;RCS1172;RCS1044;CA2200</NoWarn>
     </PropertyGroup>
 </Project>

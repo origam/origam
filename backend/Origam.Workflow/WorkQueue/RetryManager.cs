@@ -29,7 +29,7 @@ public class RetryManager
     private readonly Func<DateTime> getTimeNow;
     private static readonly Random RandomGenerator = new();
 
-    public RetryManager(Func<DateTime> getTimeNow=null)
+    public RetryManager(Func<DateTime> getTimeNow = null)
     {
         DateTime GetTimeNowDefault()
         {
@@ -39,14 +39,17 @@ public class RetryManager
         this.getTimeNow = getTimeNow ?? GetTimeNowDefault;
     }
 
-    public void SetEntryRetryData(DataRow queueEntryRow,
-        WorkQueueData.WorkQueueRow queue, string errorMessage)
+    public void SetEntryRetryData(
+        DataRow queueEntryRow,
+        WorkQueueData.WorkQueueRow queue,
+        string errorMessage
+    )
     {
         Guid retryType = queue.refWorkQueueRetryTypeId;
         int maxRetries = queue.MaxRetries;
         int retryIntervalSeconds = queue.RetryIntervalSeconds;
         double exponentialRetryBase = decimal.ToDouble(queue.ExponentialRetryBase);
-        
+
         var failureTime = getTimeNow();
         queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
         queueEntryRow["LastAttemptTime"] = failureTime;
@@ -55,8 +58,7 @@ public class RetryManager
         int retryNumber = newAttemptCount;
         queueEntryRow["AttemptCount"] = newAttemptCount;
 
-        if (Equals(retryType, WorkQueueRetryType.NoRetry) ||
-            retryNumber > maxRetries)  
+        if (Equals(retryType, WorkQueueRetryType.NoRetry) || retryNumber > maxRetries)
         {
             queueEntryRow["InRetry"] = false;
             queueEntryRow["NextAttemptTime"] = DateTime.MaxValue;
@@ -65,40 +67,42 @@ public class RetryManager
         if (Equals(retryType, WorkQueueRetryType.LinearRetry))
         {
             queueEntryRow["InRetry"] = true;
-            queueEntryRow["NextAttemptTime"] =
-                failureTime.AddSeconds(retryIntervalSeconds);
+            queueEntryRow["NextAttemptTime"] = failureTime.AddSeconds(retryIntervalSeconds);
             return;
         }
         if (Equals(retryType, WorkQueueRetryType.ExponentialRetry))
         {
-            int minInterval = (int)Math.Pow(exponentialRetryBase, retryNumber - 1)
-                              * retryIntervalSeconds;
-            int maxInterval = (int)Math.Pow(exponentialRetryBase, retryNumber) 
-                              * retryIntervalSeconds;
+            int minInterval =
+                (int)Math.Pow(exponentialRetryBase, retryNumber - 1) * retryIntervalSeconds;
+            int maxInterval =
+                (int)Math.Pow(exponentialRetryBase, retryNumber) * retryIntervalSeconds;
             int waitTimeSeconds = RandomGenerator.Next(minInterval, maxInterval);
-            
+
             queueEntryRow["InRetry"] = true;
-            queueEntryRow["NextAttemptTime"] =
-                failureTime.AddSeconds(waitTimeSeconds);
+            queueEntryRow["NextAttemptTime"] = failureTime.AddSeconds(waitTimeSeconds);
             return;
         }
 
-        throw new NotImplementedException(
-            $"retryType: {retryType} not implemented");
+        throw new NotImplementedException($"retryType: {retryType} not implemented");
     }
 
-    public bool CanRunNow(DataRow queueEntryRow,
-        WorkQueueData.WorkQueueRow queue, bool processErrors)
+    public bool CanRunNow(
+        DataRow queueEntryRow,
+        WorkQueueData.WorkQueueRow queue,
+        bool processErrors
+    )
     {
         Guid retryType = queue.refWorkQueueRetryTypeId;
         int maxRetries = queue.MaxRetries;
         int attemptCount = GetAttemptCount(queueEntryRow);
         bool inRetry = (bool)queueEntryRow["InRetry"];
 
-        if (!inRetry && 
-            !processErrors && 
-            !queueEntryRow.IsNull("ErrorText") &&
-            (string)queueEntryRow["ErrorText"] != "")
+        if (
+            !inRetry
+            && !processErrors
+            && !queueEntryRow.IsNull("ErrorText")
+            && (string)queueEntryRow["ErrorText"] != ""
+        )
         {
             return false;
         }
@@ -121,7 +125,8 @@ public class RetryManager
         if (queueEntryRow["NextAttemptTime"] == DBNull.Value)
         {
             throw new Exception(
-                $"NextAttemptTime is not set on WorkQueueEntry {queueEntryRow["Id"]} while WorkQueueRetryType is not NoRetry and the AttemptCount is not null or 0");
+                $"NextAttemptTime is not set on WorkQueueEntry {queueEntryRow["Id"]} while WorkQueueRetryType is not NoRetry and the AttemptCount is not null or 0"
+            );
         }
 
         return (DateTime)queueEntryRow["NextAttemptTime"] <= getTimeNow();
@@ -134,7 +139,7 @@ public class RetryManager
         queueEntryRow["NextAttemptTime"] = DBNull.Value;
         queueEntryRow["InRetry"] = false;
     }
-    
+
     private int GetAttemptCount(DataRow queueEntryRow)
     {
         return queueEntryRow["AttemptCount"] == DBNull.Value

@@ -23,39 +23,29 @@ using System;
 using System.Xml.Serialization;
 
 namespace Origam.Workflow;
+
 /// <summary>
 /// Summary description for TextReaderAgentSettings.
 /// </summary>
 [Serializable()]
 public class MultiRecordTextReaderRecordType
 {
-    public MultiRecordTextReaderRecordType()
-    {
-    }
+    public MultiRecordTextReaderRecordType() { }
+
     private TextReaderOptions _options;
     private string _selectorXPath;
+
     [XmlAttribute]
     public string SelectorXPath
     {
-        get
-        {
-            return _selectorXPath;
-        }
-        set
-        {
-            _selectorXPath = value;
-        }
+        get { return _selectorXPath; }
+        set { _selectorXPath = value; }
     }
+
     [XmlElement]
     public TextReaderOptions Options
     {
-        get
-        {
-            return _options;
-        }
-        set
-        {
-            _options = value;
-        }
+        get { return _options; }
+        set { _options = value; }
     }
 }

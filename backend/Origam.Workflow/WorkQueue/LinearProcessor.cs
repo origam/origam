@@ -26,20 +26,25 @@ using System.Threading;
 using Origam.DA;
 using Origam.Schema.WorkflowModel;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
+
 namespace Origam.Workflow.WorkQueue;
 
 public class LinearProcessor : IWorkQueueProcessor
 {
-    private static readonly log4net.ILog log = log4net.LogManager
-        .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
     private readonly WorkQueueUtils workQueueUtils;
     private readonly RetryManager retryManager;
     private readonly WorkQueueThrottle workQueueThrottle;
     private readonly Action<WorkQueueRow, DataRow> itemProcessAction;
 
-    public LinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
-        WorkQueueUtils workQueueUtils, RetryManager retryManager,
-        WorkQueueThrottle workQueueThrottle)
+    public LinearProcessor(
+        Action<WorkQueueRow, DataRow> itemProcessAction,
+        WorkQueueUtils workQueueUtils,
+        RetryManager retryManager,
+        WorkQueueThrottle workQueueThrottle
+    )
     {
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
@@ -54,65 +59,68 @@ public class LinearProcessor : IWorkQueueProcessor
             ProcessAutoQueueCommands(
                 queue: queue,
                 cancellationToken: cancellationToken,
-                maxItemsToProcess: null);
+                maxItemsToProcess: null
+            );
         }
     }
-    
-    public int ProcessAutoQueueCommands(WorkQueueRow queue,
-        CancellationToken cancellationToken, int? maxItemsToProcess=null, 
-        int forceWaitMillis=0)
+
+    public int ProcessAutoQueueCommands(
+        WorkQueueRow queue,
+        CancellationToken cancellationToken,
+        int? maxItemsToProcess = null,
+        int forceWaitMillis = 0
+    )
     {
         var processErrors = IsAnyCommandSetToAutoProcessedWithErrors(queue);
         int itemsProcessed = 0;
-        while(true)
+        while (true)
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                log.Info($"Stopping worker on thread " +
-                         $"{Thread.CurrentThread.ManagedThreadId}");
+                log.Info($"Stopping worker on thread " + $"{Thread.CurrentThread.ManagedThreadId}");
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            var queueItemRow = GetNextItem(
-                queue, null, processErrors, cancellationToken);
+            var queueItemRow = GetNextItem(queue, null, processErrors, cancellationToken);
             if (queueItemRow == null)
             {
                 return itemsProcessed;
             }
             if (log.IsDebugEnabled)
             {
-                string errorText = queueItemRow.IsNull("ErrorText") 
+                string errorText = queueItemRow.IsNull("ErrorText")
                     ? "NULL"
                     : queueItemRow["ErrorText"].ToString();
-                log.Debug($"Checking whether processing failed - IsLocked: {queueItemRow["IsLocked"]}, ErrorText: {errorText}");
+                log.Debug(
+                    $"Checking whether processing failed - IsLocked: {queueItemRow["IsLocked"]}, ErrorText: {errorText}"
+                );
             }
             // we have to store the item id now because later the queue entry can be removed by HandleRemove() command
             itemProcessAction(queue, queueItemRow);
             itemsProcessed++;
-            if (maxItemsToProcess.HasValue && 
-                itemsProcessed >= maxItemsToProcess.Value)
+            if (maxItemsToProcess.HasValue && itemsProcessed >= maxItemsToProcess.Value)
             {
                 return itemsProcessed;
             }
-            
+
             if (forceWaitMillis != 0)
             {
                 if (log.IsInfoEnabled)
                 {
                     log.Info(
-                        $"forceWait parameter causes worker on thread " +
-                        $"{Thread.CurrentThread.ManagedThreadId} to sleep for: " +
-                        $"{forceWaitMillis} ms");
+                        $"forceWait parameter causes worker on thread "
+                            + $"{Thread.CurrentThread.ManagedThreadId} to sleep for: "
+                            + $"{forceWaitMillis} ms"
+                    );
                 }
                 Thread.Sleep(forceWaitMillis);
             }
         }
     }
-    
+
     private bool IsAnyCommandSetToAutoProcessedWithErrors(WorkQueueRow queue)
     {
         bool processErrors = false;
-        foreach (WorkQueueData.WorkQueueCommandRow cmd in
-                 queue.GetWorkQueueCommandRows())
+        foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.GetWorkQueueCommandRows())
         {
             if (cmd.IsAutoProcessedWithErrors)
             {
@@ -122,9 +130,13 @@ public class LinearProcessor : IWorkQueueProcessor
         }
         return processErrors;
     }
-    
-    public DataRow GetNextItem(WorkQueueRow queue, string transactionId, bool processErrors,
-        CancellationToken cancellationToken)
+
+    public DataRow GetNextItem(
+        WorkQueueRow queue,
+        string transactionId,
+        bool processErrors,
+        CancellationToken cancellationToken
+    )
     {
         const int pageSize = 10;
         int pageNumber = 1;
@@ -137,16 +149,22 @@ public class LinearProcessor : IWorkQueueProcessor
                 return null;
             }
             DataSet queueItems = workQueueUtils.LoadWorkQueueData(
-                workQueueClass.Name, queue.Id, pageSize, pageNumber,
-                transactionId);
+                workQueueClass.Name,
+                queue.Id,
+                pageSize,
+                pageNumber,
+                transactionId
+            );
             DataTable queueTable = queueItems.Tables[0];
             if (queueTable.Rows.Count > 0)
             {
                 foreach (DataRow queueRow in queueTable.Rows)
                 {
-                    if ((bool)queueRow["IsLocked"] == false 
+                    if (
+                        (bool)queueRow["IsLocked"] == false
                         && retryManager.CanRunNow(queueRow, queue, processErrors)
-                        && workQueueThrottle.CanRunNow(queue))
+                        && workQueueThrottle.CanRunNow(queue)
+                    )
                     {
                         result = DatasetTools.CloneRow(queueRow);
                         if (workQueueUtils.LockQueueItems(workQueueClass, result.Table))

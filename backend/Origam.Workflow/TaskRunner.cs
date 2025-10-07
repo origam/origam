@@ -27,32 +27,33 @@ using System.Threading.Tasks;
 using Origam.Extensions;
 
 namespace Origam.Workflow;
+
 public class TaskRunner
 {
-    private static readonly log4net.ILog log 
-        = log4net.LogManager
-            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     private readonly List<Task> tasks = new List<Task>();
     private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
     private readonly Action<CancellationToken> funcToRun;
     private readonly int workerCount;
+
     public TaskRunner(Action<CancellationToken> funcToRun, int workerCount)
     {
         this.funcToRun = funcToRun;
         this.workerCount = workerCount;
     }
+
     public void Run()
     {
         var cancToken = tokenSource.Token;
         for (int i = 0; i < workerCount; i++)
         {
-            tasks.Add(Task.Factory.StartNew(
-                ()=> funcToRun(cancToken),
-                cancToken)
-            );
+            tasks.Add(Task.Factory.StartNew(() => funcToRun(cancToken), cancToken));
         }
     }
+
     public void CleanUp()
     {
         tasks
@@ -63,14 +64,17 @@ public class TaskRunner
             .ToList()
             .ForEach(LogTaskException);
     }
+
     public void Cancel()
     {
         tokenSource.Cancel();
     }
+
     public bool AllTasksFinished()
     {
-        return tasks.All(task => task.IsCompleted || task.IsCanceled );
+        return tasks.All(task => task.IsCompleted || task.IsCanceled);
     }
+
     public void Wait()
     {
         try
@@ -79,13 +83,10 @@ public class TaskRunner
         }
         catch (AggregateException aggrEx)
         {
-            aggrEx.Flatten()
-                .InnerExceptions
-                .AsEnumerable()
-                .ToList()
-                .ForEach(LogTaskException);
+            aggrEx.Flatten().InnerExceptions.AsEnumerable().ToList().ForEach(LogTaskException);
         }
     }
+
     private void LogTaskException(Exception ex)
     {
         log.Error("THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");

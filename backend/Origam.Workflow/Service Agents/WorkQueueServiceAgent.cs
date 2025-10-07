@@ -22,20 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Xml;
-
 using Origam.DA;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow;
+
 /// <summary>
 /// Summary description for WorkQueueServiceAgent.
 /// </summary>
 public class WorkQueueServiceAgent : AbstractServiceAgent
 {
-	public WorkQueueServiceAgent()
-	{
-	}
+    public WorkQueueServiceAgent() { }
+
     private object _result;
     public override object Result
     {
@@ -46,11 +45,13 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
             return temp;
         }
     }
-	public override void Run()
-	{
-        IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
+
+    public override void Run()
+    {
+        IWorkQueueService wqs =
+            ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
         switch (this.MethodName)
-		{
+        {
             case "Add":
                 Add(wqs);
                 break;
@@ -67,10 +68,14 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
                 GenerateNotificationMessage(wqs);
                 break;
             default:
-				throw new ArgumentOutOfRangeException("MethodName", 
-                    MethodName, ResourceUtils.GetString("InvalidMethodName"));
-		}
-	}
+                throw new ArgumentOutOfRangeException(
+                    "MethodName",
+                    MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
+        }
+    }
+
     private void GetNextItem(IWorkQueueService wqs)
     {
         string queueName = Parameters["QueueName"] as string;
@@ -84,28 +89,40 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
             _result = DataDocumentFactory.New(row.Table.DataSet);
         }
     }
+
     private void GenerateNotificationMessage(IWorkQueueService wqs)
     {
         // check input parameters
         if (!(this.Parameters["NotificationTemplateId"] is Guid))
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorNotificationTemplateIdNotGuid"));
+            throw new InvalidCastException(
+                ResourceUtils.GetString("ErrorNotificationTemplateIdNotGuid")
+            );
         if (!(this.Parameters["NotificationSource"] is IXmlContainer))
-            throw new InvalidCastException(ResourceUtils.GetString("ErrorNotificationSourceNotXmlDocument"));
+            throw new InvalidCastException(
+                ResourceUtils.GetString("ErrorNotificationSourceNotXmlDocument")
+            );
         WorkQueue.OrigamNotificationContactData recipientDataDS = null;
         if (this.Parameters.Contains("RecipientData"))
         {
             if (!(this.Parameters["RecipientData"] is IDataDocument))
-                throw new InvalidCastException(ResourceUtils.GetString("ErrorRecipientDataNotXmlDataDocument"));
+                throw new InvalidCastException(
+                    ResourceUtils.GetString("ErrorRecipientDataNotXmlDataDocument")
+                );
             recipientDataDS = new WorkQueue.OrigamNotificationContactData();
-            DatasetTools.MergeDataSetVerbose(recipientDataDS, (this.Parameters["RecipientData"] as IDataDocument).DataSet);
+            DatasetTools.MergeDataSetVerbose(
+                recipientDataDS,
+                (this.Parameters["RecipientData"] as IDataDocument).DataSet
+            );
         }
         _result = wqs.GenerateNotificationMessage(
-            (Guid)this.Parameters["NotificationTemplateId"]
-            , this.Parameters["NotificationSource"] as IXmlContainer
-            , (recipientDataDS == null) ? null : recipientDataDS.OrigamNotificationContact[0],
+            (Guid)this.Parameters["NotificationTemplateId"],
+            this.Parameters["NotificationSource"] as IXmlContainer,
+            (recipientDataDS == null) ? null : recipientDataDS.OrigamNotificationContact[0],
             null,
-            this.TransactionId);
+            this.TransactionId
+        );
     }
+
     private void Get(IWorkQueueService wqs)
     {
         // Check input parameters
@@ -114,6 +131,7 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
         TraceLog("MessageId");
         _result = wqs.WorkQueueGetMessage((Guid)this.Parameters["MessageId"], this.TransactionId);
     }
+
     private void Remove(IWorkQueueService wqs)
     {
         // Check input parameters
@@ -122,17 +140,37 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
         if (!(this.Parameters["QueueId"] is Guid))
             throw new InvalidCastException("QueueId must be Guid.");
         TraceLog("MessageId");
-        wqs.WorkQueueRemove((Guid)this.Parameters["QueueId"], this.Parameters["MessageId"], this.TransactionId);
+        wqs.WorkQueueRemove(
+            (Guid)this.Parameters["QueueId"],
+            this.Parameters["MessageId"],
+            this.TransactionId
+        );
     }
+
     private void TraceLog(string parameter)
     {
-        ITracingService trace = ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
-        if (this.Trace && this.OutputMethod == ServiceOutputMethod.Ignore && ((Origam.Schema.ISchemaItem)this.OutputStructure)?.Path == "_any")
+        ITracingService trace =
+            ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
+        if (
+            this.Trace
+            && this.OutputMethod == ServiceOutputMethod.Ignore
+            && ((Origam.Schema.ISchemaItem)this.OutputStructure)?.Path == "_any"
+        )
         {
-            trace.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, this.OutputMethod.ToString(), "Input", this.OutputStructure.Name,
-                Workflow.WorkflowEngine.ContextData(this.Parameters[parameter]), "", null);
+            trace.TraceStep(
+                this.TraceWorkflowId,
+                this.TraceStepName,
+                this.TraceStepId,
+                this.OutputMethod.ToString(),
+                "Input",
+                this.OutputStructure.Name,
+                Workflow.WorkflowEngine.ContextData(this.Parameters[parameter]),
+                "",
+                null
+            );
         }
     }
+
     private void Add(IWorkQueueService wqs)
     {
         // Check input parameters
@@ -146,7 +184,9 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
             DataSet attachmentsDS = null;
             if (!(this.Parameters["Attachments"] is IDataDocument))
             {
-                throw new InvalidCastException(ResourceUtils.GetString("ErrorParamNotXmlDataDocument", "Attachments"));
+                throw new InvalidCastException(
+                    ResourceUtils.GetString("ErrorParamNotXmlDataDocument", "Attachments")
+                );
             }
             attachmentsDS = (this.Parameters["Attachments"] as IDataDocument).DataSet;
             attachments = new WorkQueueAttachment[attachmentsDS.Tables["Attachment"].Rows.Count];
@@ -161,7 +201,12 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
             }
         }
         TraceLog("Data");
-        wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IXmlContainer, attachments, this.TransactionId);
+        wqs.WorkQueueAdd(
+            this.Parameters["QueueName"] as String,
+            this.Parameters["Data"] as IXmlContainer,
+            attachments,
+            this.TransactionId
+        );
         _result = null;
     }
 }
