@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace Origam.Extensions;
+
 public static class HashSetExtensions
 {
     public static void AddOrReplace<T>(this HashSet<T> hashSet, T item)

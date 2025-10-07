@@ -23,9 +23,8 @@ using System;
 
 namespace Origam;
 
-public class OrigamValidationException: Exception
+public class OrigamValidationException : Exception
 {
-    public OrigamValidationException(string message) : base(message)
-    {
-    }
+    public OrigamValidationException(string message)
+        : base(message) { }
 }

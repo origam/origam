@@ -20,17 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using newton = Newtonsoft.Json.Converters;
 using System.Data;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Origam.Service.Core;
+using newton = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
+
 class DataRowConverter : JsonConverter
 {
-    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-        Newtonsoft.Json.JsonSerializer serializer)
+    public override void WriteJson(
+        Newtonsoft.Json.JsonWriter writer,
+        object value,
+        Newtonsoft.Json.JsonSerializer serializer
+    )
     {
         DataRow row = (DataRow)value;
         DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
@@ -41,12 +45,16 @@ class DataRowConverter : JsonConverter
             {
                 continue;
             }
-            if (serializer.NullValueHandling == NullValueHandling.Ignore 
-                && (row[column] == null || row[column] == DBNull.Value))
+            if (
+                serializer.NullValueHandling == NullValueHandling.Ignore
+                && (row[column] == null || row[column] == DBNull.Value)
+            )
                 continue;
-            writer.WritePropertyName((resolver != null) 
-                ? resolver.GetResolvedPropertyName(column.ColumnName) 
-                : column.ColumnName);
+            writer.WritePropertyName(
+                (resolver != null)
+                    ? resolver.GetResolvedPropertyName(column.ColumnName)
+                    : column.ColumnName
+            );
             serializer.Serialize(writer, row[column]);
         }
         foreach (DataRelation relation in row.Table.ChildRelations)
@@ -54,20 +62,26 @@ class DataRowConverter : JsonConverter
             if (relation.Nested)
             {
                 string childTableName = relation.ChildTable.TableName;
-                writer.WritePropertyName((resolver != null) 
-                    ? resolver.GetResolvedPropertyName(childTableName) 
-                    : childTableName);
-                bool serializeAsSingleJsonObject = relation.ChildTable
-                    .ExtendedProperties.ContainsKey(
-                        Constants.SerializeAsSingleJsonObject)
-                    ? relation.ChildTable.ExtendedProperties
-                        .Get<bool>(Constants.SerializeAsSingleJsonObject)
-                    : false;
+                writer.WritePropertyName(
+                    (resolver != null)
+                        ? resolver.GetResolvedPropertyName(childTableName)
+                        : childTableName
+                );
+                bool serializeAsSingleJsonObject =
+                    relation.ChildTable.ExtendedProperties.ContainsKey(
+                        Constants.SerializeAsSingleJsonObject
+                    )
+                        ? relation.ChildTable.ExtendedProperties.Get<bool>(
+                            Constants.SerializeAsSingleJsonObject
+                        )
+                        : false;
                 if (serializeAsSingleJsonObject && row.GetChildRows(relation).Length > 1)
                 {
-                    throw new OrigamException("JSON Serialization failed. "
-                        + $"Table '{childTableName}' is defined to serialize to a "
-                        + $"single object, but multiple objects came ({row.GetChildRows(relation).Length}).");
+                    throw new OrigamException(
+                        "JSON Serialization failed. "
+                            + $"Table '{childTableName}' is defined to serialize to a "
+                            + $"single object, but multiple objects came ({row.GetChildRows(relation).Length})."
+                    );
                 }
                 if (!serializeAsSingleJsonObject)
                 {
@@ -82,13 +96,20 @@ class DataRowConverter : JsonConverter
                     writer.WriteEndArray();
                 }
             }
-        }            
+        }
         writer.WriteEndObject();
     }
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+
+    public override object ReadJson(
+        JsonReader reader,
+        Type objectType,
+        object existingValue,
+        JsonSerializer serializer
+    )
     {
         throw new NotImplementedException();
     }
+
     public override bool CanConvert(Type objectType)
     {
         return typeof(DataRow).IsAssignableFrom(objectType);

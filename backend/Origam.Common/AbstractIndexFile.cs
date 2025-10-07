@@ -26,31 +26,37 @@ using System.Linq;
 using System.Text;
 
 namespace Origam;
-public abstract class AbstractIndexFile:  IDisposable
+
+public abstract class AbstractIndexFile : IDisposable
 {
     private readonly string indexFile;
     private readonly FileStream fileStream;
     private bool disposed;
+
     protected AbstractIndexFile(string indexFile)
     {
         this.indexFile = indexFile;
-        fileStream = File.Open(indexFile, FileMode.OpenOrCreate,
-            FileAccess.ReadWrite, FileShare.None);
+        fileStream = File.Open(
+            indexFile,
+            FileMode.OpenOrCreate,
+            FileAccess.ReadWrite,
+            FileShare.None
+        );
     }
+
     public void AddEntryToIndexFile(string entry)
     {
-        if (disposed) throw new ObjectDisposedException("Dispose method has been already called and file is closed!");
+        if (disposed)
+            throw new ObjectDisposedException(
+                "Dispose method has been already called and file is closed!"
+            );
         try
         {
-            byte[] bytes = new UTF8Encoding(true)
-                .GetBytes(entry + Environment.NewLine);
+            byte[] bytes = new UTF8Encoding(true).GetBytes(entry + Environment.NewLine);
             fileStream.Seek(0, SeekOrigin.End);
-            fileStream.Write(
-                array: bytes, 
-                offset: 0, 
-                count: bytes.Length);
-        } 
-        catch(Exception)
+            fileStream.Write(array: bytes, offset: 0, count: bytes.Length);
+        }
+        catch (Exception)
         {
             Dispose();
             throw;
@@ -75,12 +81,10 @@ public abstract class AbstractIndexFile:  IDisposable
         }
         return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
     }
+
     protected IEnumerable<string> ReadAllLines()
     {
-        return ReadAllText()
-            .Split('\n')
-            .Select(line => line.Trim())
-            .Where(line => line != "");
+        return ReadAllText().Split('\n').Select(line => line.Trim()).Where(line => line != "");
     }
 
     public void Dispose()
@@ -93,7 +97,7 @@ public abstract class AbstractIndexFile:  IDisposable
         disposed = true;
     }
 
-    ~AbstractIndexFile() 
+    ~AbstractIndexFile()
     {
         Dispose();
     }

@@ -47,14 +47,21 @@ public class Request
     public string UserName { get; }
     public string AuthenticationType { get; }
 
-    public Request(string url, string method, string content = null,
-        string contentType = null, Hashtable headers = null,
+    public Request(
+        string url,
+        string method,
+        string content = null,
+        string contentType = null,
+        Hashtable headers = null,
         string authenticationType = null,
-        string userName = null, string password = null,
+        string userName = null,
+        string password = null,
         bool returnAsStream = false,
-        int? timeout = null, bool throwExceptionOnError = true,
+        int? timeout = null,
+        bool throwExceptionOnError = true,
         CookieCollection cookies = null,
-        bool ignoreHttpsErrors = false)
+        bool ignoreHttpsErrors = false
+    )
     {
         Url = url;
         Method = method;
@@ -66,16 +73,26 @@ public class Request
         ThrowExceptionOnError = throwExceptionOnError;
         Cookies = cookies;
         IgnoreHttpsErrors = ignoreHttpsErrors;
-        (AuthenticationType, UserName, Password) =
-            ParseAuthentication(url, authenticationType, userName, password);
+        (AuthenticationType, UserName, Password) = ParseAuthentication(
+            url,
+            authenticationType,
+            userName,
+            password
+        );
     }
 
     private (string type, string userName, string password) ParseAuthentication(
-        string url, string authenticationType, string userName, string password)
+        string url,
+        string authenticationType,
+        string userName,
+        string password
+    )
     {
-        if (string.IsNullOrEmpty(authenticationType) 
-            && string.IsNullOrEmpty(password) 
-            && string.IsNullOrEmpty(userName))
+        if (
+            string.IsNullOrEmpty(authenticationType)
+            && string.IsNullOrEmpty(password)
+            && string.IsNullOrEmpty(userName)
+        )
         {
             var myUrl = new Uri(url);
             // try to parse user credentials and if present:
@@ -91,7 +108,8 @@ public class Request
                 return (
                     "Basic",
                     Uri.UnescapeDataString(credentialsSplit[0]),
-                    Uri.UnescapeDataString(credentialsSplit[1]));
+                    Uri.UnescapeDataString(credentialsSplit[1])
+                );
             }
         }
         return (authenticationType, userName, password);
@@ -99,59 +117,53 @@ public class Request
 
     public override bool Equals(object obj)
     {
-        return obj is Request request 
-               && Url == request.Url 
-               && Method == request.Method 
-               && Content == request.Content 
-               && ContentType == request.ContentType 
-               && (
-                   EqualityComparer<Hashtable>.Default.Equals(Headers,
-                       request.Headers) ||
-                   (Headers != null && Headers.Count == 0) &&
-                   (request.Headers != null && request.Headers.Count == 0)
-               ) 
-               && ReturnAsStream == request.ReturnAsStream 
-               && Timeout == request.Timeout 
-               && ThrowExceptionOnError == request.ThrowExceptionOnError 
-               && EqualityComparer<CookieCollection>.Default.Equals(Cookies,
-                   request.Cookies) 
-               && IgnoreHttpsErrors == request.IgnoreHttpsErrors 
-               && Password == request.Password 
-               && UserName == request.UserName 
-               && AuthenticationType == request.AuthenticationType;
+        return obj is Request request
+            && Url == request.Url
+            && Method == request.Method
+            && Content == request.Content
+            && ContentType == request.ContentType
+            && (
+                EqualityComparer<Hashtable>.Default.Equals(Headers, request.Headers)
+                || (Headers != null && Headers.Count == 0)
+                    && (request.Headers != null && request.Headers.Count == 0)
+            )
+            && ReturnAsStream == request.ReturnAsStream
+            && Timeout == request.Timeout
+            && ThrowExceptionOnError == request.ThrowExceptionOnError
+            && EqualityComparer<CookieCollection>.Default.Equals(Cookies, request.Cookies)
+            && IgnoreHttpsErrors == request.IgnoreHttpsErrors
+            && Password == request.Password
+            && UserName == request.UserName
+            && AuthenticationType == request.AuthenticationType;
     }
 
     public override int GetHashCode()
     {
         int hashCode = 612240280;
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(Url);
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(Method);
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(Content);
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(ContentType);
-        hashCode = hashCode * -1521134295 
-                   + (Headers is { Count: 0 }
-                       ? emptyHashTableHash
-                       : EqualityComparer<Hashtable>.Default.GetHashCode(
-                           Headers)
-                   );
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Url);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Method);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Content);
+        hashCode =
+            hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ContentType);
+        hashCode =
+            hashCode * -1521134295
+            + (
+                Headers is { Count: 0 }
+                    ? emptyHashTableHash
+                    : EqualityComparer<Hashtable>.Default.GetHashCode(Headers)
+            );
         hashCode = hashCode * -1521134295 + ReturnAsStream.GetHashCode();
         hashCode = hashCode * -1521134295 + Timeout.GetHashCode();
         hashCode = hashCode * -1521134295 + ThrowExceptionOnError.GetHashCode();
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<CookieCollection>.Default.GetHashCode(
-                       Cookies);
+        hashCode =
+            hashCode * -1521134295
+            + EqualityComparer<CookieCollection>.Default.GetHashCode(Cookies);
         hashCode = hashCode * -1521134295 + IgnoreHttpsErrors.GetHashCode();
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(Password);
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(UserName);
-        hashCode = hashCode * -1521134295 
-                   + EqualityComparer<string>.Default.GetHashCode(
-                       AuthenticationType);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserName);
+        hashCode =
+            hashCode * -1521134295
+            + EqualityComparer<string>.Default.GetHashCode(AuthenticationType);
         return hashCode;
     }
 }

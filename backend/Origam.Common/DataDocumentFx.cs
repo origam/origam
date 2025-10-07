@@ -24,15 +24,18 @@ using System.Xml;
 using Origam.Service.Core;
 
 namespace Origam;
+
 #if !NETSTANDARD
 public class DataDocumentFx : IDataDocument
 {
 #pragma warning disable 618 // XmlDataDocument is obsolete, but we cannot get rid of it just yet
     private readonly XmlDataDocument xmlDataDocument;
+
     public DataDocumentFx(DataSet dataSet)
     {
         xmlDataDocument = new XmlDataDocument(dataSet);
     }
+
     public DataDocumentFx(XmlDocument xmlDoc)
     {
         xmlDataDocument = new XmlDataDocument();
@@ -45,29 +48,35 @@ public class DataDocumentFx : IDataDocument
 #pragma warning restore 618
     public XmlDocument Xml => xmlDataDocument;
     public DataSet DataSet => xmlDataDocument.DataSet;
+
     public void AppendChild(XmlNodeType element, string prefix, string name)
     {
         XmlNode node = xmlDataDocument.CreateNode(element, prefix, name);
         xmlDataDocument.AppendChild(node);
     }
+
     public void AppendChild(XmlElement documentElement, bool deep)
     {
         XmlNode node = xmlDataDocument.ImportNode(documentElement, true);
         xmlDataDocument.AppendChild(node);
     }
+
     public void DocumentElementAppendChild(XmlNode node)
     {
         XmlNode newNode = xmlDataDocument.ImportNode(node, true);
         xmlDataDocument.DocumentElement.AppendChild(newNode);
     }
+
     public void Load(XmlReader xmlReader, bool doProcessing)
     {
         xmlDataDocument.Load(xmlReader);
     }
+
     public void LoadXml(string xmlString)
     {
         xmlDataDocument.LoadXml(xmlString);
     }
+
     public object Clone()
     {
         return new DataDocumentFx(xmlDataDocument);

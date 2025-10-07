@@ -28,7 +28,13 @@ namespace Origam;
 
 public interface IHttpTools
 {
-    string BuildUrl(string url, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped);
+    string BuildUrl(
+        string url,
+        Hashtable parameters,
+        bool forceExternal,
+        string externalScheme,
+        bool isUrlEscaped
+    );
 
     HttpResult SendRequest(Request request);
 
