@@ -1,101 +1,105 @@
 ﻿<Project>
-  <PropertyGroup>
-    <!-- Per-project enable switches (comment/uncomment individual lines) -->
-    <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server'">true</EnableStrictBuild>
-    <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Architect.Server'">true</EnableStrictBuild>
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.Services'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.Diagram'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.MenuModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports.NetFx'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamScheduler'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.TestModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'ScheduleTimer'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Win'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Common'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.GuiModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Designer'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamArchitect'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Rule'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.RuleModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Service'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common.NetFX'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Mail'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ReflectorCache'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'MIMEParser'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.OrigamEngine'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.SimplicorService'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel.UI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel.UI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel.UI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.BaseComponents'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.PrintIt'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.FileService'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Windows.Editor'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.RuleTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GuiTest'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.CommonTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.ServiceTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.ServicesTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.SchemaTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.TestCommon'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Git'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GitTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Excel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Identity'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.workflow.mail'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services.NetFx'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common.NetFx'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel.UI'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Common'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.FastReport'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.SSRS'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.SSRS.NetFx'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.Excel'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.WorkflowTests'">true</EnableStrictBuild> -->
-    <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server.Common'">true</EnableStrictBuild> -->
-  </PropertyGroup>
-  <Choose>
-    <When Condition="'$(EnableStrictBuild)' == 'true'">
+    <PropertyGroup>
+        <!-- Per-project enable switches (comment/uncomment individual lines) -->
+        <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server'">true</EnableStrictBuild>
+        <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Architect.Server'">true</EnableStrictBuild>
+        <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.Services'">true</EnableStrictBuild>
+        <!--     <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.Diagram'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.MenuModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports.NetFx'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamScheduler'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.TestModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'ScheduleTimer'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Win'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Common'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.GuiModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Designer'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamArchitect'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Rule'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.RuleModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Service'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common.NetFX'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Mail'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ReflectorCache'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'MIMEParser'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.OrigamEngine'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.SimplicorService'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel.UI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel.UI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel.UI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.BaseComponents'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.PrintIt'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.FileService'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Windows.Editor'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.RuleTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GuiTest'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.CommonTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.ServiceTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.ServicesTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.SchemaTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.TestCommon'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Git'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GitTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Excel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Identity'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.workflow.mail'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services.NetFx'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common.NetFx'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.DeploymentModel.UI'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Common'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.FastReport'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.SSRS'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.SSRS.NetFx'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.Excel'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.WorkflowTests'">true</EnableStrictBuild> -->
+        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server.Common'">true</EnableStrictBuild> -->
+    </PropertyGroup>
+    <Choose>
+        <When Condition="'$(EnableStrictBuild)' == 'true'">
 
-        <PropertyGroup>
-            <GenerateDocumentationFile>true</GenerateDocumentationFile>
-            <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
-            <AnalysisLevel>8.0</AnalysisLevel>
-            <EnableNETAnalyzers>true</EnableNETAnalyzers>
-            <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-            <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        </PropertyGroup>
+            <PropertyGroup>
+                <GenerateDocumentationFile>true</GenerateDocumentationFile>
+                <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
+                <AnalysisLevel>8.0</AnalysisLevel>
+                <EnableNETAnalyzers>true</EnableNETAnalyzers>
+                <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+            </PropertyGroup>
 
-        <ItemGroup>
-            <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
-                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
-            <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
-                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
-        </ItemGroup>
-        
-        <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
-            <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
-                              PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
-        </ItemGroup>
+            <ItemGroup>
+                <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+                <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+            </ItemGroup>
 
-    </When>
-  </Choose>
+            <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
+                <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+            </ItemGroup>
+
+        </When>
+    </Choose>
+    <PropertyGroup>
+        <!-- Disable CS1591: Missing XML comment for publicly visible type or member -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+    </PropertyGroup>
 </Project>

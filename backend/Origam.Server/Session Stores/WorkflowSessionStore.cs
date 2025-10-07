@@ -550,9 +550,7 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.WorkflowInstanceId
         );
         handler.Subscribe();
-        Host.AbortWorkflowForm(
-            taskId: TaskId, 
-            isDirty: HasChanges());
+        Host.AbortWorkflowForm(taskId: TaskId, isDirty: HasChanges());
         handler.Event.WaitOne();
         HandleWorkflow(handler);
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
