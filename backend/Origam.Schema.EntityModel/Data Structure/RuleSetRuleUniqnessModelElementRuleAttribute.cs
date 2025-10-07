@@ -28,21 +28,26 @@ using Origam.DA.ObjectPersistence;
 /// Chekcs the root ruleset for recursion (whether there aren't duplicate rules)
 /// </summary>
 namespace Origam.Schema.EntityModel;
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+
+[AttributeUsage(
+    AttributeTargets.Property | AttributeTargets.Field,
+    AllowMultiple = false,
+    Inherited = true
+)]
 public class RuleSetRuleUniqnessModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-    public RuleSetRuleUniqnessModelElementRuleAttribute()
-    {
-    }
+    public RuleSetRuleUniqnessModelElementRuleAttribute() { }
+
     public override Exception CheckRule(object instance)
     {
-        DataStructureRuleSetReference currentRuleSetReference = instance as DataStructureRuleSetReference;
+        DataStructureRuleSetReference currentRuleSetReference =
+            instance as DataStructureRuleSetReference;
         if (currentRuleSetReference.RuleSet == null)
         {
             return null;
         }
-        
-        // get the datastructure 
+
+        // get the datastructure
         DataStructure ds = currentRuleSetReference.RootItem as DataStructure;
         HashSet<Guid> ruleSetUniqIds = new HashSet<Guid>();
         // examine all root rulesets for circural ruleset references
@@ -55,12 +60,13 @@ public class RuleSetRuleUniqnessModelElementRuleAttribute : AbstractModelElement
             catch (Exception ex)
             {
                 return ex;
-            }    
+            }
             // reset before checking next root ruleset
             ruleSetUniqIds.Clear();
         }
         return null;
     }
+
     public override Exception CheckRule(object instance, string memberName)
     {
         return CheckRule(instance);

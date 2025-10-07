@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Rule Set Reference", "icon_rule-set-reference.png")]
 [HelpTopic("Rule+Set+Reference")]
 [XmlModelRoot(CategoryConst)]
@@ -37,42 +37,56 @@ namespace Origam.Schema.EntityModel;
 public class DataStructureRuleSetReference : AbstractSchemaItem
 {
     public const string CategoryConst = "DataStructureRuleSetReference";
-    public DataStructureRuleSetReference() : base(){ }
-    public DataStructureRuleSetReference(Guid schemaExtensionId) : base(schemaExtensionId) { }
-    public DataStructureRuleSetReference(Key primaryKey) : base(primaryKey)	{ }
+
+    public DataStructureRuleSetReference()
+        : base() { }
+
+    public DataStructureRuleSetReference(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureRuleSetReference(Key primaryKey)
+        : base(primaryKey) { }
+
     #region Properties
     public Guid DataStructureRuleSetId;
+
     [Category("Ruleset reference")]
-    [Description("Choose a ruleset (from current datastructure). All rules of chosen ruleset will be applied in the current (parent) ruleset. Could be handy if you have to many rules and want to organize them or you don't want to run all rules for some reasons (e.g. optimization reasons).")]
+    [Description(
+        "Choose a ruleset (from current datastructure). All rules of chosen ruleset will be applied in the current (parent) ruleset. Could be handy if you have to many rules and want to organize them or you don't want to run all rules for some reasons (e.g. optimization reasons)."
+    )]
     [TypeConverter(typeof(DataStructureRuleSetConverter))]
     [RefreshProperties(RefreshProperties.Repaint)]
-    [RuleSetRuleUniqnessModelElementRule()]        
-    [NotNullModelElementRule()]    
+    [RuleSetRuleUniqnessModelElementRule()]
+    [NotNullModelElementRule()]
     [XmlReference("ruleSet", "DataStructureRuleSetId")]
     public DataStructureRuleSet RuleSet
     {
         get
         {
-            return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureRuleSet), new ModelElementKey(this.DataStructureRuleSetId));
+            return (DataStructureRuleSet)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(DataStructureRuleSet),
+                    new ModelElementKey(this.DataStructureRuleSetId)
+                );
         }
         set
         {
-            this.DataStructureRuleSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+            this.DataStructureRuleSetId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
             if (this.RuleSet != null)
             {
                 this.Name = this.RuleSet.Name;
+            }
         }
-    }
     }
     #endregion
     #region Overriden ISchemaItem Members
     public override string ItemType
     {
-        get
-        {
-            return CategoryConst; 
-        }
+        get { return CategoryConst; }
     }
+
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (RuleSet != null)
@@ -97,6 +111,7 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
         }
         base.UpdateReferences();
     }
+
     public override int CompareTo(object obj)
     {
         if ((obj as DataStructureRuleSetReference) != null)

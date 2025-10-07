@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
-using System.Xml.Serialization;
-using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for TransformationReference.
 /// </summary>
@@ -37,78 +38,104 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class EntityFilterLookupReference : AbstractSchemaItem
 {
-	public const string CategoryConst = "EntityFilterLookupReference";
-	public EntityFilterLookupReference() : base() {Init();}
-	public EntityFilterLookupReference(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public EntityFilterLookupReference(Key primaryKey) : base(primaryKey)	{Init();}
+    public const string CategoryConst = "EntityFilterLookupReference";
 
-	private void Init()
-	{
-		this.ChildItemTypes.AddRange(
-			new Type[] {
-						   typeof(ParameterReference),
-						   typeof(EntityColumnReference),
-						   typeof(FunctionCall),
-						   typeof(DataConstantReference)
-					   }
-			);
-	}
-	
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.Lookup != null)
-			base.GetParameterReferences(Lookup, list);
-		base.GetParameterReferences(this, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Lookup);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override IList<string> NewTypeNames
-	{
-		get
-		{
-			try
-			{
-				IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-				IServiceAgent agent = agents.GetAgent("DataService", null, null);
-				return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
-			}
-			catch
-			{
-				return new string[] {};
-			}
-		}
-	}
-	#endregion
-	#region Properties
-	public Guid LookupId;
-	[Category("Reference")]
-	[TypeConverter(typeof(DataLookupConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
+    public EntityFilterLookupReference()
+        : base()
+    {
+        Init();
+    }
+
+    public EntityFilterLookupReference(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public EntityFilterLookupReference(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.AddRange(
+            new Type[]
+            {
+                typeof(ParameterReference),
+                typeof(EntityColumnReference),
+                typeof(FunctionCall),
+                typeof(DataConstantReference),
+            }
+        );
+    }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.Lookup != null)
+            base.GetParameterReferences(Lookup, list);
+        base.GetParameterReferences(this, list);
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Lookup);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override IList<string> NewTypeNames
+    {
+        get
+        {
+            try
+            {
+                IBusinessServicesService agents =
+                    ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                    as IBusinessServicesService;
+                IServiceAgent agent = agents.GetAgent("DataService", null, null);
+                return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
+            }
+            catch
+            {
+                return new string[] { };
+            }
+        }
+    }
+    #endregion
+    #region Properties
+    public Guid LookupId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(DataLookupConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
     [XmlReference("lookup", "LookupId")]
     public IDataLookup Lookup
-	{
-		get
-		{
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
-		}
-		set
-		{
-			this.LookupId = (Guid)value.PrimaryKey["Id"];
-			this.Name = this.Lookup.Name;
-		}
-	}
-	#endregion
+    {
+        get
+        {
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        typeof(ISchemaItem),
+                        new ModelElementKey(this.LookupId)
+                    ) as IDataLookup;
+        }
+        set
+        {
+            this.LookupId = (Guid)value.PrimaryKey["Id"];
+            this.Name = this.Lookup.Name;
+        }
+    }
+    #endregion
 }

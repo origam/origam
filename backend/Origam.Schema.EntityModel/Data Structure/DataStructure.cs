@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Xml.Serialization;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for EntityRelationItem.
 /// </summary>
@@ -34,26 +35,45 @@ namespace Origam.Schema.EntityModel;
 [HelpTopic("Data+Structures")]
 public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 {
-	public DataStructure() : base(){ Init(); }
-	
-	public DataStructure(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-	public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
-	#region Properties
-	[Browsable(false)]
-	public List<DataStructureEntity> Entities
-	{
-		get
-		{
-			var entities = new List<DataStructureEntity>();
-			foreach(var entity in ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
-			{
-				entities.Add(entity);
-				entities.AddRange(GetChildEntities(entity));
-			}
-			return entities;
-		}
-	}
-	[Browsable(false)]
+    public DataStructure()
+        : base()
+    {
+        Init();
+    }
+
+    public DataStructure(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public DataStructure(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    #region Properties
+    [Browsable(false)]
+    public List<DataStructureEntity> Entities
+    {
+        get
+        {
+            var entities = new List<DataStructureEntity>();
+            foreach (
+                var entity in ChildItemsByType<DataStructureEntity>(
+                    DataStructureEntity.CategoryConst
+                )
+            )
+            {
+                entities.Add(entity);
+                entities.AddRange(GetChildEntities(entity));
+            }
+            return entities;
+        }
+    }
+
+    [Browsable(false)]
     public IList<DataStructureEntity> LocalizableEntities
     {
         get
@@ -70,90 +90,96 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
             return result;
         }
     }
-	[Browsable(false)]
-	public List<DataStructureDefaultSet> DefaultSets =>
-		ChildItemsByType<DataStructureDefaultSet>(DataStructureDefaultSet.CategoryConst);
 
-	[Browsable(false)]
-	public List<DataStructureTemplateSet> TemplateSets => 
-		ChildItemsByType<DataStructureTemplateSet>(DataStructureTemplateSet.CategoryConst);
+    [Browsable(false)]
+    public List<DataStructureDefaultSet> DefaultSets =>
+        ChildItemsByType<DataStructureDefaultSet>(DataStructureDefaultSet.CategoryConst);
 
-	[Browsable(false)]
-	public List<DataStructureMethod> Methods => 
-		ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
+    [Browsable(false)]
+    public List<DataStructureTemplateSet> TemplateSets =>
+        ChildItemsByType<DataStructureTemplateSet>(DataStructureTemplateSet.CategoryConst);
 
-	[Browsable(false)]
-	public List<DataStructureRuleSet> RuleSets =>
-		ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst);
+    [Browsable(false)]
+    public List<DataStructureMethod> Methods =>
+        ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
 
-	[Browsable(false)]
-	public List<DataStructureSortSet> SortSets =>
-		ChildItemsByType<DataStructureSortSet>(DataStructureSortSet.CategoryConst);
+    [Browsable(false)]
+    public List<DataStructureRuleSet> RuleSets =>
+        ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst);
 
-	private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
-	{
-		var entities = new List<DataStructureEntity>();
-		foreach(var childEntity in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
-		{
-			entities.Add(childEntity);
-			entities.AddRange(GetChildEntities(childEntity));
-		}
-		return entities;
-	}
-	private bool _isLocalized = false;
-	[Description("Translate data for all entities, that has realtion marked with IsMultilingual='true'. If set to true, any read-write operation will fail.")]
+    [Browsable(false)]
+    public List<DataStructureSortSet> SortSets =>
+        ChildItemsByType<DataStructureSortSet>(DataStructureSortSet.CategoryConst);
+
+    private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
+    {
+        var entities = new List<DataStructureEntity>();
+        foreach (
+            var childEntity in entity.ChildItemsByType<DataStructureEntity>(
+                DataStructureEntity.CategoryConst
+            )
+        )
+        {
+            entities.Add(childEntity);
+            entities.AddRange(GetChildEntities(childEntity));
+        }
+        return entities;
+    }
+
+    private bool _isLocalized = false;
+
+    [Description(
+        "Translate data for all entities, that has realtion marked with IsMultilingual='true'. If set to true, any read-write operation will fail."
+    )]
     [XmlAttribute("localized")]
-	public bool IsLocalized
-	{
-		get
-		{
-			return _isLocalized;
-		}
-		set
-		{
-			_isLocalized = value;
-		}
-	}
-	private string _dataSetClass;
-	[Description("A fully qualified name of a class followed by an assembly name which has a class in it. A class should correspond (should have same xsd) as a xsd of a current datastructure. A class will be used everytime a dataset is to be created from a datastructure. A class is worth defining when we need to seamlessly pass a dataset between origam and a service agent (library) code.")]
+    public bool IsLocalized
+    {
+        get { return _isLocalized; }
+        set { _isLocalized = value; }
+    }
+    private string _dataSetClass;
+
+    [Description(
+        "A fully qualified name of a class followed by an assembly name which has a class in it. A class should correspond (should have same xsd) as a xsd of a current datastructure. A class will be used everytime a dataset is to be created from a datastructure. A class is worth defining when we need to seamlessly pass a dataset between origam and a service agent (library) code."
+    )]
     [XmlAttribute("dataSetClass")]
     public string DataSetClass
-	{
-		get
-		{
-			return _dataSetClass;
-		}
-		set
-		{
-			_dataSetClass = value;
-		}
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	private void Init()
-	{
-		this.ChildItemTypes.InsertRange(0,
-			new Type[] {
-						   typeof(DataStructureEntity),
-						   typeof(DataStructureFilterSet),
-						   typeof(DataStructureDefaultSet),
-						   typeof(DataStructureTemplateSet),
-						   typeof(DataStructureRuleSet),
-						   typeof(DataStructureSortSet),
-						   typeof(SchemaItemParameter)
-					   }
-			   );                        
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		foreach(DataStructureEntity item in Entities)
-		{
-			item.GetParameterReferences(item, list);
-		}
-		foreach(DataStructureDefaultSet defset in DefaultSets)
-		{
-			defset.GetParameterReferences(defset, list);
-		}
-	}
-	#endregion
+    {
+        get { return _dataSetClass; }
+        set { _dataSetClass = value; }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    private void Init()
+    {
+        this.ChildItemTypes.InsertRange(
+            0,
+            new Type[]
+            {
+                typeof(DataStructureEntity),
+                typeof(DataStructureFilterSet),
+                typeof(DataStructureDefaultSet),
+                typeof(DataStructureTemplateSet),
+                typeof(DataStructureRuleSet),
+                typeof(DataStructureSortSet),
+                typeof(SchemaItemParameter),
+            }
+        );
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        foreach (DataStructureEntity item in Entities)
+        {
+            item.GetParameterReferences(item, list);
+        }
+        foreach (DataStructureDefaultSet defset in DefaultSets)
+        {
+            defset.GetParameterReferences(defset, list);
+        }
+    }
+    #endregion
 }

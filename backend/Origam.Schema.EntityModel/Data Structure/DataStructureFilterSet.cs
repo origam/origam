@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for DataQuery.
 /// </summary>
@@ -34,39 +35,41 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class DataStructureFilterSet : DataStructureMethod
 {
-	public DataStructureFilterSet() {}
-	public DataStructureFilterSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureFilterSet(Key primaryKey) : base(primaryKey)	{}
+    public DataStructureFilterSet() { }
 
-	#region Properties
-	private bool _isDynamic = false;
-	[DefaultValue(false)]
+    public DataStructureFilterSet(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureFilterSet(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    private bool _isDynamic = false;
+
+    [DefaultValue(false)]
     [XmlAttribute("dynamic")]
     [DynamicModelElementRule]
     public bool IsDynamic
-	{
-		get => _isDynamic;
-		set => _isDynamic = value;
-	}
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureFilterSetFilter)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		string itemName = null;
-		if(typeof(T) == typeof(DataStructureFilterSetFilter))
-		{
-			itemName = "NewDataStructureFilterSetFilter";
-		}
-		else if(typeof(T) == typeof(DataStructureFilterSetOrExpression))
-		{
-			itemName = "OR";
-		}
-		return base.NewItem<T>(schemaExtensionId, group, itemName);
-	}
-	#endregion
+    {
+        get => _isDynamic;
+        set => _isDynamic = value;
+    }
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataStructureFilterSetFilter) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        string itemName = null;
+        if (typeof(T) == typeof(DataStructureFilterSetFilter))
+        {
+            itemName = "NewDataStructureFilterSetFilter";
+        }
+        else if (typeof(T) == typeof(DataStructureFilterSetOrExpression))
+        {
+            itemName = "OR";
+        }
+        return base.NewItem<T>(schemaExtensionId, group, itemName);
+    }
+    #endregion
 }

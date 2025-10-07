@@ -19,21 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [ClassMetaVersion("6.0.0")]
 public class DatabaseParameter : SchemaItemParameter, IDatabaseDataTypeMapping
 {
-    public DatabaseParameter() : base() { }
-    public DatabaseParameter(Guid schemaExtensionId) : base(schemaExtensionId) { }
-    public DatabaseParameter(Key primaryKey) : base(primaryKey) { }
-    
+    public DatabaseParameter()
+        : base() { }
+
+    public DatabaseParameter(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DatabaseParameter(Key primaryKey)
+        : base(primaryKey) { }
+
     public Guid dataTypeMappingId;
+
     [Category("Database Mapping")]
     [TypeConverter(typeof(DataTypeMappingConverter))]
     [Description("Database specific data type")]
@@ -43,14 +50,12 @@ public class DatabaseParameter : SchemaItemParameter, IDatabaseDataTypeMapping
     {
         get
         {
-            return (DatabaseDataType)PersistenceProvider.RetrieveInstance(
-                typeof(DatabaseDataType), new ModelElementKey(dataTypeMappingId))
-                as DatabaseDataType;
+            return (DatabaseDataType)
+                    PersistenceProvider.RetrieveInstance(
+                        typeof(DatabaseDataType),
+                        new ModelElementKey(dataTypeMappingId)
+                    ) as DatabaseDataType;
         }
-        set
-        {
-            dataTypeMappingId = (value == null ? Guid.Empty
-                : (Guid)value.PrimaryKey["Id"]);
-        }
+        set { dataTypeMappingId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
     }
 }

@@ -18,23 +18,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.DA.ObjectPersistence;
-using Origam.Schema.EntityModel.Interfaces;
 using System;
 using System.Data;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.EntityModel;
+
 public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
         return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
     }
+
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (memberName == String.Empty | memberName == null) CheckRule(instance);
+        if (memberName == String.Empty | memberName == null)
+            CheckRule(instance);
         var iDataLookup = ((ILookupReference)instance).Lookup;
-        if(iDataLookup == null || iDataLookup.IsFilteredServerside)
+        if (iDataLookup == null || iDataLookup.IsFilteredServerside)
         {
             return null;
         }

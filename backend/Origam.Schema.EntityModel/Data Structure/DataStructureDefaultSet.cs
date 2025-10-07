@@ -19,37 +19,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 [SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
 [HelpTopic("Default+Set+Default")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DataStructureDefaultSet : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureDefaultSet";
-	public DataStructureDefaultSet() {}
-	public DataStructureDefaultSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureDefaultSet(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "DataStructureDefaultSet";
 
-	#region Overriden AbstractDataEntityColumn Members
-	public override string ItemType => CategoryConst;
-	public override bool UseFolders => false;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureDefaultSetDefault)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group,
-			typeof(T) == typeof(DataStructureDefaultSetDefault)
-				? "NewDataStructureDefaultSetDefault" : null);
-	}
-	#endregion
+    public DataStructureDefaultSet() { }
+
+    public DataStructureDefaultSet(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureDefaultSet(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+    public override string ItemType => CategoryConst;
+    public override bool UseFolders => false;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataStructureDefaultSetDefault) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(DataStructureDefaultSetDefault)
+                ? "NewDataStructureDefaultSetDefault"
+                : null
+        );
+    }
+    #endregion
 }

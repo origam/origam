@@ -19,30 +19,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema.EntityModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.ObjectPersistence.Attributes;
+
 public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribute
 {
-    public RelationshipWithKeyRuleAttribute()
-    {
-    }
+    public RelationshipWithKeyRuleAttribute() { }
+
     public override Exception CheckRule(object instance)
     {
         return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
     }
+
     public override Exception CheckRule(object instance, string memberName)
     {
-        if (memberName == String.Empty | memberName == null) CheckRule(instance);
+        if (memberName == String.Empty | memberName == null)
+            CheckRule(instance);
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {
-            var schemaItems = dataStructure.Entity.ChildItemsByType<EntityRelationColumnPairItem>(EntityRelationColumnPairItem.CategoryConst);
+            var schemaItems = dataStructure.Entity.ChildItemsByType<EntityRelationColumnPairItem>(
+                EntityRelationColumnPairItem.CategoryConst
+            );
             if (schemaItems.Count == 0)
             {
                 return new DataException("Relationship has no key");
