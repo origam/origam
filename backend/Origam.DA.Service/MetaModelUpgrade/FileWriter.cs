@@ -22,19 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 
 namespace Origam.DA.Service.MetaModelUpgrade;
+
 public interface IFileWriter
 {
     void Write(FileInfo file, string text);
     void Delete(FileInfo file);
 }
+
 public class NullFileWriter : IFileWriter
 {
-    public void Write(FileInfo file, string text)
-    {
-    }
-    public void Delete(FileInfo file)
-    {
-    }
+    public void Write(FileInfo file, string text) { }
+
+    public void Delete(FileInfo file) { }
 }
 
 class FileWriter : IFileWriter
@@ -43,6 +42,7 @@ class FileWriter : IFileWriter
     {
         File.WriteAllText(file.FullName, text);
     }
+
     public void Delete(FileInfo file)
     {
         file.Delete();

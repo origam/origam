@@ -32,12 +32,11 @@ namespace Origam.DA.Service.NamespaceMapping
 {
     public static class XmlNamespaceTools
     {
-        private static readonly ConcurrentDictionary<Type, OrigamNameSpace> namespaces 
-            =  new ConcurrentDictionary<Type, OrigamNameSpace>();
-        private static readonly Dictionary<Type, string> namespaceNames
-            =  new Dictionary<Type, string>();
-        
-        
+        private static readonly ConcurrentDictionary<Type, OrigamNameSpace> namespaces =
+            new ConcurrentDictionary<Type, OrigamNameSpace>();
+        private static readonly Dictionary<Type, string> namespaceNames =
+            new Dictionary<Type, string>();
+
         public static OrigamNameSpace GetXmlNameSpace(Type type)
         {
             if (!namespaces.ContainsKey(type))
@@ -59,33 +58,30 @@ namespace Origam.DA.Service.NamespaceMapping
 
         public static string GetXmlNamespaceName(string typeName)
         {
-            var charArray = typeName
-                .Where(char.IsUpper)
-                .Select(char.ToLower)
-                .ToArray();
+            var charArray = typeName.Where(char.IsUpper).Select(char.ToLower).ToArray();
             return new string(charArray);
         }
 
         private static string GetNamespaceName(Type type, Dictionary<Type, string> namespaceDict)
         {
-            if (type.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
-                is XmlNamespaceNameAttribute attribute)
+            if (
+                type.GetCustomAttribute(typeof(XmlNamespaceNameAttribute))
+                is XmlNamespaceNameAttribute attribute
+            )
             {
                 return attribute.XmlNamespaceName;
             }
-                    
+
             string namespaceName = GetXmlNamespaceName(type.Name);
-            
+
             Regex regex = new Regex($"{namespaceName}$|{namespaceName}(\\d+)");
-            var orderNumbers = namespaceDict.Values
-                .Select(name => regex.Match(name))
+            var orderNumbers = namespaceDict
+                .Values.Select(name => regex.Match(name))
                 .Where(match => match.Success)
                 .Select(match =>
                 {
                     string nameNumber = match.Groups[1].Value;
-                    return nameNumber == "" 
-                        ? 0 
-                        : int.Parse(nameNumber);
+                    return nameNumber == "" ? 0 : int.Parse(nameNumber);
                 })
                 .OrderBy(number => number)
                 .ToList();

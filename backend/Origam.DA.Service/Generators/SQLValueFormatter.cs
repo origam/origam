@@ -22,19 +22,25 @@ using System;
 using Origam.Schema;
 
 namespace Origam.DA.Service;
+
 public class SQLValueFormatter
 {
     private readonly string trueValue;
     private readonly string falseValue;
     private readonly Func<string, string> escapeLikeInput;
-    public SQLValueFormatter(string trueValue, string falseValue, Func<string, string> escapeLikeInput)
+
+    public SQLValueFormatter(
+        string trueValue,
+        string falseValue,
+        Func<string, string> escapeLikeInput
+    )
     {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
         this.escapeLikeInput = escapeLikeInput;
     }
-        
-    internal string RenderString(string text, string sqlOperator=null)
+
+    internal string RenderString(string text, string sqlOperator = null)
     {
         string escapedValue;
         switch (sqlOperator)
@@ -48,7 +54,8 @@ public class SQLValueFormatter
         }
         return "'" + escapedValue.Replace("'", "''") + "'";
     }
-    public string Format(OrigamDataType dataType, object value, string sqlOperator=null)
+
+    public string Format(OrigamDataType dataType, object value, string sqlOperator = null)
     {
         switch (dataType)
         {
@@ -57,12 +64,10 @@ public class SQLValueFormatter
             case OrigamDataType.Currency:
                 return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
             case OrigamDataType.Boolean:
-                bool boolValue = value is string maybeBoolValue 
-                    ? bool.Parse(maybeBoolValue) 
-                    : (bool) value;
-                return boolValue 
-                    ? trueValue 
-                    : falseValue;
+                bool boolValue = value is string maybeBoolValue
+                    ? bool.Parse(maybeBoolValue)
+                    : (bool)value;
+                return boolValue ? trueValue : falseValue;
             case OrigamDataType.UniqueIdentifier:
                 return value.ToString() == "null" ? "NULL" : "'" + value + "'";
             case OrigamDataType.Array:
@@ -70,28 +75,35 @@ public class SQLValueFormatter
             case OrigamDataType.Xml:
             case OrigamDataType.Memo:
             case OrigamDataType.String:
-                return value.ToString() == "null" ? "NULL" : RenderString(value.ToString(), sqlOperator);
+                return value.ToString() == "null"
+                    ? "NULL"
+                    : RenderString(value.ToString(), sqlOperator);
             case OrigamDataType.Date:
-                if (value == null || 
-                    value.Equals("null") || 
-                    value is string strValue1 && string.IsNullOrWhiteSpace(strValue1)) return "null";
+                if (
+                    value == null
+                    || value.Equals("null")
+                    || value is string strValue1 && string.IsNullOrWhiteSpace(strValue1)
+                )
+                    return "null";
                 DateTime date;
                 if (value is string strValue)
                 {
                     bool success = DateTime.TryParse(strValue, out var parsedDate);
                     if (!success)
                     {
-                        throw new ArgumentException($"Cannot parse \"{value}\" to date"); 
+                        throw new ArgumentException($"Cannot parse \"{value}\" to date");
                     }
                     date = parsedDate;
                 }
                 else
                 {
-                    date = (DateTime) value;
+                    date = (DateTime)value;
                 }
                 return date.ToString(@" \'yyyy-MM-dd HH:mm:ss\' ");
             default:
-                throw new NotImplementedException(ResourceUtils.GetString("TypeNotImplementedByDatabase", dataType.ToString()));
+                throw new NotImplementedException(
+                    ResourceUtils.GetString("TypeNotImplementedByDatabase", dataType.ToString())
+                );
         }
     }
 }

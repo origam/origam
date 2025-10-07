@@ -25,6 +25,7 @@ using System.IO;
 using Origam.Extensions;
 
 namespace Origam.DA.Service;
+
 public class OrigamReferenceFile : ITrackeableFile
 {
     public OrigamReferenceFile(OrigamPath origamPath, IDictionary<string, Guid> parentFolders)
@@ -33,18 +34,25 @@ public class OrigamReferenceFile : ITrackeableFile
         FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
         ParentFolderIds = new ParentFolders(parentFolders, origamPath);
     }
+
     public OrigamReferenceFile(OrigamPath origamPath, List<string> parentFolders)
     {
         Path = origamPath;
         FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
         ParentFolderIds = new ParentFolders(parentFolders);
     }
-    public OrigamReferenceFile(OrigamPath origamPath, IDictionary<string, Guid> parentFolderIds, string fileHash)
+
+    public OrigamReferenceFile(
+        OrigamPath origamPath,
+        IDictionary<string, Guid> parentFolderIds,
+        string fileHash
+    )
     {
         Path = origamPath;
         ParentFolderIds = new ParentFolders(parentFolderIds, origamPath);
         FileHash = fileHash;
     }
+
     public IDictionary<Guid, PersistedObjectInfo> ContainedObjects { get; } =
         new Dictionary<Guid, PersistedObjectInfo>();
     public OrigamPath Path { get; set; }

@@ -30,13 +30,12 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 
 public class XslTransformationScriptContainer : UpgradeScriptContainer
 {
-    public override string FullTypeName { get; } 
-        = typeof(XslTransformation).FullName;
+    public override string FullTypeName { get; } = typeof(XslTransformation).FullName;
 
-    public override string[] OldPropertyXmlNames { get; } = {};
+    public override string[] OldPropertyXmlNames { get; } = { };
     public override List<string> OldFullTypeNames { get; }
 
-    public XslTransformationScriptContainer() 
+    public XslTransformationScriptContainer()
     {
         upgradeScripts.Add(
             new UpgradeScript(
@@ -44,10 +43,13 @@ public class XslTransformationScriptContainer : UpgradeScriptContainer
                 toVersion: new Version("6.0.1"),
                 transformation: (node, doc) =>
                 {
-                    XNamespace newNameSpace= "http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1";
+                    XNamespace newNameSpace =
+                        "http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.1";
                     node.Attributes()
                         .FirstOrDefault(x => x.Name.LocalName == "engineType")
                         ?.Remove();
-                }));
+                }
+            )
+        );
     }
 }

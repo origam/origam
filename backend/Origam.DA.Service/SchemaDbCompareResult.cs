@@ -20,122 +20,74 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-
 using Origam.Schema;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.DA;
+
 public enum DbCompareResultType
 {
-	MissingInDatabase = 0,
-	MissingInSchema = 1,
-	ExistingButDifferent = 2
+    MissingInDatabase = 0,
+    MissingInSchema = 1,
+    ExistingButDifferent = 2,
 }
+
 /// <summary>
 /// Summary description for SchemaCompareResult.
 /// </summary>
 public class SchemaDbCompareResult
 {
-	public SchemaDbCompareResult()
-	{
-	}
-	#region Properties
-	private ISchemaItem _schemaItem;
-	public ISchemaItem SchemaItem
-	{
-		get
-		{
-			return _schemaItem;
-		}
-		set
-		{
-			_schemaItem = value;
-		}
-	}
-	private Type _schemaItemType;
-	public Type SchemaItemType
-	{
-		get
-		{
-			return _schemaItemType;
-		}
-		set
-		{
-			_schemaItemType = value;
-		}
-	}
-	private object _parentSchemaItem;
-	public object ParentSchemaItem
-	{
-		get
-		{
-			return _parentSchemaItem;
-		}
-		set
-		{
-			_parentSchemaItem = value;
-		}
-	}
-	private DbCompareResultType _resultType;
-	public DbCompareResultType ResultType
-	{
-		get
-		{
-			return _resultType;
-		}
-		set
-		{
-			_resultType = value;
-		}
-	}
-	private string _itemName;
-	public string ItemName
-	{
-		get
-		{
-			return _itemName;
-		}
-		set
-		{
-			_itemName = value;
-		}
-	}
-	private string _remark = "";
-	public string Remark
-	{
-		get
-		{
-			return _remark;
-		}
-		set
-		{
-			_remark = value;
-		}
-	}
-	private string _script = "";
-	public string Script
-	{
-		get
-		{
-			return _script;
-		}
-		set
-		{
-			_script = value;
-		}
-	}
-	private string _script2 = "";
-	public string Script2
-	{
-		get
-		{
-			return _script2;
-		}
-		set
-		{
-			_script2 = value;
-		}
-	}
+    public SchemaDbCompareResult() { }
+
+    #region Properties
+    private ISchemaItem _schemaItem;
+    public ISchemaItem SchemaItem
+    {
+        get { return _schemaItem; }
+        set { _schemaItem = value; }
+    }
+    private Type _schemaItemType;
+    public Type SchemaItemType
+    {
+        get { return _schemaItemType; }
+        set { _schemaItemType = value; }
+    }
+    private object _parentSchemaItem;
+    public object ParentSchemaItem
+    {
+        get { return _parentSchemaItem; }
+        set { _parentSchemaItem = value; }
+    }
+    private DbCompareResultType _resultType;
+    public DbCompareResultType ResultType
+    {
+        get { return _resultType; }
+        set { _resultType = value; }
+    }
+    private string _itemName;
+    public string ItemName
+    {
+        get { return _itemName; }
+        set { _itemName = value; }
+    }
+    private string _remark = "";
+    public string Remark
+    {
+        get { return _remark; }
+        set { _remark = value; }
+    }
+    private string _script = "";
+    public string Script
+    {
+        get { return _script; }
+        set { _script = value; }
+    }
+    private string _script2 = "";
+    public string Script2
+    {
+        get { return _script2; }
+        set { _script2 = value; }
+    }
     public Platform Platform { get; set; }
     #endregion
 }

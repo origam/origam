@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA.Service.CustomCommandParser;
+
 interface ICustomCommandParser
 {
     string[] Columns { get; }
