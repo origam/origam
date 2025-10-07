@@ -43,7 +43,7 @@
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</EnableStrictBuild> -->
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.FileService'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Windows.Editor'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.RuleTests'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GuiTest'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.CommonTests'">true</EnableStrictBuild> -->

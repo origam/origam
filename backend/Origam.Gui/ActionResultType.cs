@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui;
+
 public enum ActionResultType
 {
     UpdateData,
@@ -28,5 +29,5 @@ public enum ActionResultType
     OpenUrl,
     ChangeUI,
     DestroyForm,
-    Script
+    Script,
 }

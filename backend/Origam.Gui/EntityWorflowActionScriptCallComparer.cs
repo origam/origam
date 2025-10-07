@@ -46,19 +46,18 @@ using Origam.Schema;
 using Origam.Schema.MenuModel;
 
 namespace Origam.Gui;
+
 public class EntityWorkflowActionScriptCallComparer : IComparer<ISchemaItem>
 {
     public int Compare(ISchemaItem x, ISchemaItem y)
     {
-        EntityWorkflowActionScriptCall scriptX
-            = (EntityWorkflowActionScriptCall)x;
-        EntityWorkflowActionScriptCall scriptY
-            = (EntityWorkflowActionScriptCall)y;
-        if(scriptX.Order == scriptY.Order)
+        EntityWorkflowActionScriptCall scriptX = (EntityWorkflowActionScriptCall)x;
+        EntityWorkflowActionScriptCall scriptY = (EntityWorkflowActionScriptCall)y;
+        if (scriptX.Order == scriptY.Order)
         {
             return 0;
         }
-        else if(scriptX.Order > scriptY.Order)
+        else if (scriptX.Order > scriptY.Order)
         {
             return 1;
         }

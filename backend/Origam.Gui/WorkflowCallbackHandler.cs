@@ -42,21 +42,23 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System;
 using System.Threading;
-
 using Origam.Workflow;
 
 namespace Origam.Gui;
+
 public class WorkflowCallbackHandler
 {
     private Guid _workflowInstanceId;
     private WorkflowHost _host;
     private ManualResetEvent _manualEvent = new ManualResetEvent(false);
     private WorkflowHostEventArgs _result;
+
     public WorkflowCallbackHandler(WorkflowHost host, Guid workflowInstanceId)
     {
         _host = host;
         _workflowInstanceId = workflowInstanceId;
     }
+
     public Guid WorkflowInstanceId
     {
         get { return _workflowInstanceId; }
@@ -75,17 +77,19 @@ public class WorkflowCallbackHandler
         get { return _host; }
         set { _host = value; }
     }
+
     public void Subscribe()
     {
         this.Host.FormRequested += new WorkflowHostFormEvent(Host_FormRequested);
         this.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
         this.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
     }
+
     void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if(e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
+        if (e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
         {
-            if(e.Popup)
+            if (e.Popup)
             {
 #if DEBUG
                 System.Diagnostics.Debug.WriteLine("WorkflowMessage - Popup: " + e.Message);
@@ -102,11 +106,12 @@ public class WorkflowCallbackHandler
             }
         }
     }
+
     void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if(e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
+        if (e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
         {
-            if(e.Engine.CallingWorkflow == null)
+            if (e.Engine.CallingWorkflow == null)
             {
 #if DEBUG
                 System.Diagnostics.Debug.WriteLine("WorkflowFinished");
@@ -117,9 +122,10 @@ public class WorkflowCallbackHandler
             }
         }
     }
+
     void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)
     {
-        if(e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
+        if (e.Engine.WorkflowInstanceId == this.WorkflowInstanceId)
         {
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("FormRequested");

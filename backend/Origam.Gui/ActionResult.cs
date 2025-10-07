@@ -46,12 +46,14 @@ using System.Collections;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Gui;
+
 public class ActionResult
 {
     public ActionResult(ActionResultType type)
     {
         Type = type.ToString();
     }
+
     public string Type { get; set; }
     public string Url { get; set; }
     public string UrlOpenMethod { get; set; } = WebPageOpenMethod.OrigamTab.ToString();

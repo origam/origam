@@ -28,29 +28,38 @@ using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui;
+
 public class UIActionTools
 {
-    public static bool GetValidActions(Guid formId, Guid panelId, 
-        bool disableActionButtons, Guid entityId, List<EntityUIAction> validActions)
+    public static bool GetValidActions(
+        Guid formId,
+        Guid panelId,
+        bool disableActionButtons,
+        Guid entityId,
+        List<EntityUIAction> validActions
+    )
     {
         bool hasMultipleSelection = false;
         if (entityId != Guid.Empty)
         {
-            IPersistenceService ps = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            AbstractDataEntity entity 
-                = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
-                typeof(AbstractDataEntity), new ModelElementKey(entityId));
-            var actionsSorted = entity.ChildItemsByTypeRecursive(
-                EntityUIAction.CategoryConst);
+            IPersistenceService ps =
+                ServiceManager.Services.GetService(typeof(IPersistenceService))
+                as IPersistenceService;
+            AbstractDataEntity entity = (AbstractDataEntity)
+                ps.SchemaProvider.RetrieveInstance(
+                    typeof(AbstractDataEntity),
+                    new ModelElementKey(entityId)
+                );
+            var actionsSorted = entity.ChildItemsByTypeRecursive(EntityUIAction.CategoryConst);
             actionsSorted.Sort(new EntityUIActionOrderComparer());
             foreach (EntityUIAction action in actionsSorted)
             {
-                if (RenderTools.ShouldRenderAction(
-                    action, formId, panelId))
+                if (RenderTools.ShouldRenderAction(action, formId, panelId))
                 {
-                    if ((action.Mode != PanelActionMode.ActiveRecord)
-                    && (action.Mode != PanelActionMode.Always))
+                    if (
+                        (action.Mode != PanelActionMode.ActiveRecord)
+                        && (action.Mode != PanelActionMode.Always)
+                    )
                     {
                         hasMultipleSelection = true;
                     }
@@ -63,26 +72,30 @@ public class UIActionTools
         }
         return hasMultipleSelection;
     }
+
     public static List<string> GetOriginalParameters(EntityUIAction action)
     {
         var originalDataParameters = new List<string>();
-        foreach(var mapping 
-            in action.ChildItemsByType<EntityUIActionParameterMapping>(
-            EntityUIActionParameterMapping.CategoryConst))
+        foreach (
+            var mapping in action.ChildItemsByType<EntityUIActionParameterMapping>(
+                EntityUIActionParameterMapping.CategoryConst
+            )
+        )
         {
-            if(mapping.Type == EntityUIActionParameterMappingType.Original)
+            if (mapping.Type == EntityUIActionParameterMappingType.Original)
             {
                 originalDataParameters.Add(mapping.Name);
             }
         }
         return originalDataParameters;
     }
+
     public static EntityUIAction GetAction(string action)
     {
         return !Guid.TryParse(action, out Guid actionId)
             ? null
-            : ServiceManager.Services
-                .GetService<IPersistenceService>().SchemaProvider
-                .RetrieveInstance<EntityUIAction>(actionId);
+            : ServiceManager
+                .Services.GetService<IPersistenceService>()
+                .SchemaProvider.RetrieveInstance<EntityUIAction>(actionId);
     }
 }
