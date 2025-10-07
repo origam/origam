@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <project name="ORIGAM Mail WorkQueue Adapters" default="standard" basedir=".">
   <description>Build file for mail workqueue adapters.</description>
-  <property name="msbuild-exec" value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"/>
+  <property
+    name="msbuild-exec"
+    value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+  />
   <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.85/bin/NAnt.Contrib.Tasks.dll" />
   <target name="standard" description="Standard build" depends="build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-      <arg value="Origam.workflow.mail/Origam.workflow.mail.sln"/>
-      <arg value="/p:Configuration=Release"/>
+      <arg value="Origam.workflow.mail/Origam.workflow.mail.sln" />
+      <arg value="/p:Configuration=Release" />
     </exec>
   </target>
   <target name="build-number" description="Fills build number in AssemblyInfo files.">
-    <loadfile file="./Properties/AssemblyInfo.cs"
-              property="assemblyInfo">
+    <loadfile file="./Properties/AssemblyInfo.cs" property="assemblyInfo">
       <filterchain>
-        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+        <replacestring from="0.0.0.0" to="${buildNumber}" />
       </filterchain>
     </loadfile>
-    <echo file="./Properties/AssemblyInfo.cs"
-          message="${assemblyInfo}"/>
+    <echo file="./Properties/AssemblyInfo.cs" message="${assemblyInfo}" />
   </target>
 </project>
-

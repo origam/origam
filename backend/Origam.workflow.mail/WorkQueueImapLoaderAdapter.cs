@@ -28,22 +28,25 @@ using System.Text.RegularExpressions;
 using log4net;
 using MailKit;
 using MailKit.Net.Imap;
-using Origam.Mail;
-using Origam.Workflow.WorkQueue;
-using Origam.Workbench.Services;
 using MimeKit;
 using MimeTypes;
+using Origam.Mail;
+using Origam.Workbench.Services;
+using Origam.Workflow.WorkQueue;
 
 namespace Origam.workflow.mail;
+
 class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
 {
     private static readonly Regex InvalidXmlCharacterRegex = new(
         @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\uD800-\uDBFF\uDC00-\uDFFF]",
-        RegexOptions.Compiled);
-    
-    private static readonly ILog log = LogManager
-        .GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
-    
+        RegexOptions.Compiled
+    );
+
+    private static readonly ILog log = LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
+    );
+
     private ImapClient client;
     private IMailFolder inbox;
     private string dropbox = "DROPBOX";
@@ -52,14 +55,16 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
     private bool attachHtml = false;
     private string badMail = "BADMAIL";
     private bool sanitize = false;
+
     public override void Connect(
-        IWorkQueueService service, 
-        Guid queueId, 
-        string workQueueClass, 
-        string connection, 
-        string userName, 
-        string password, 
-        string transactionId)
+        IWorkQueueService service,
+        Guid queueId,
+        string workQueueClass,
+        string connection,
+        string userName,
+        string password,
+        string transactionId
+    )
     {
         string url = "";
         int port = 143;
@@ -118,10 +123,12 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         inbox.Open(FolderAccess.ReadWrite);
         totalMessages = inbox.Count;
     }
+
     public override void Disconnect()
     {
         client.Disconnect(quit: true);
     }
+
     public override WorkQueueAdapterResult GetItem(string lastState)
     {
         if (totalMessages == 0)
@@ -147,8 +154,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         try
         {
             mailRow.Sender = lastMessage.From.First().ToString();
-            mailRow.Recipient = lastMessage.To
-                .Select(x => x.ToString())
+            mailRow.Recipient = lastMessage
+                .To.Select(x => x.ToString())
                 .Aggregate((x, y) => x + ";" + y);
             mailRow.Subject = GetSubject(lastMessage, mailData);
             mailRow.DateSent = lastMessage.Date.DateTime;
@@ -162,13 +169,13 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
                 }
                 if (sanitize)
                 {
-                    mailRow.MessageBody
-                        = RemoveInvalidXmlCharacters(mailRow.MessageBody);
+                    mailRow.MessageBody = RemoveInvalidXmlCharacters(mailRow.MessageBody);
                 }
                 else
                 {
                     throw new Exception(
-                        "Message body contains invalid characters preventing XML serialization");
+                        "Message body contains invalid characters preventing XML serialization"
+                    );
                 }
             }
             byte[] htmlAttachment = GetHtmlAttachment(lastMessage);
@@ -182,14 +189,11 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             mailRow.MessageBody = ex.Message;
             finalFolder = badMail;
         }
-        UniqueId lastMessageId = inbox
-            .Fetch(0, -1, MessageSummaryItems.UniqueId)
-            .Last()
-            .UniqueId;
+        UniqueId lastMessageId = inbox.Fetch(0, -1, MessageSummaryItems.UniqueId).Last().UniqueId;
         FlagAsSeen(lastMessageId);
-        IMailFolder finalMailFolder 
-            = FindFolder(finalFolder) 
-              ?? throw new Exception($"Could not find folder called \"{finalFolder}\"");
+        IMailFolder finalMailFolder =
+            FindFolder(finalFolder)
+            ?? throw new Exception($"Could not find folder called \"{finalFolder}\"");
         inbox.MoveTo(lastMessageId, finalMailFolder);
         lastMessageIndex++;
         return adapterResult;
@@ -203,7 +207,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         return !InvalidXmlCharacterRegex.IsMatch(body);
     }
-    
+
     private static string GetMessageBody(MimeMessage lastMessage)
     {
         if (!string.IsNullOrEmpty(lastMessage.TextBody))
@@ -220,6 +224,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         return null;
     }
+
     private byte[] GetHtmlAttachment(MimeMessage lastMessage)
     {
         if (!string.IsNullOrEmpty(lastMessage.HtmlBody) && attachHtml)
@@ -228,21 +233,24 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         return null;
     }
+
     private void FlagAsSeen(UniqueId messageId)
     {
         inbox.AddFlags(
-            uids: new List<UniqueId> { messageId }, 
-            flags: MessageFlags.Seen, 
-            silent: true);
+            uids: new List<UniqueId> { messageId },
+            flags: MessageFlags.Seen,
+            silent: true
+        );
     }
+
     private static string GetSubject(MimeMessage lastMessage, MailData mailData)
     {
-        return lastMessage.Subject.Length > mailData.Mail.SubjectColumn.MaxLength 
-            ? $"{lastMessage.Subject.Substring(0, mailData.Mail.SubjectColumn.MaxLength - 4)} ..." 
+        return lastMessage.Subject.Length > mailData.Mail.SubjectColumn.MaxLength
+            ? $"{lastMessage.Subject.Substring(0, mailData.Mail.SubjectColumn.MaxLength - 4)} ..."
             : lastMessage.Subject;
     }
-    private List<WorkQueueAttachment> GetAttachments(
-        MimeMessage lastMessage, byte[] htmlAttachment)
+
+    private List<WorkQueueAttachment> GetAttachments(MimeMessage lastMessage, byte[] htmlAttachment)
     {
         var attachments = new List<WorkQueueAttachment>();
         int nonameCount = 1;
@@ -252,33 +260,29 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             if (fileName == null)
             {
                 fileName = "noname" + nonameCount++;
-                string extension = GetDefaultExtension(
-                    attachment.ContentType.MediaType);
+                string extension = GetDefaultExtension(attachment.ContentType.MediaType);
                 if (extension != "")
                 {
                     fileName += extension;
                 }
             }
-            attachments.Add(new WorkQueueAttachment
-            {
-                Data = GetAttachmentData(attachment),
-                Name = fileName
-            });
+            attachments.Add(
+                new WorkQueueAttachment { Data = GetAttachmentData(attachment), Name = fileName }
+            );
         }
         if (htmlAttachment != null)
         {
-            attachments.Add(new WorkQueueAttachment
-            {
-                Data = htmlAttachment,
-                Name = "original.html"
-            });
+            attachments.Add(
+                new WorkQueueAttachment { Data = htmlAttachment, Name = "original.html" }
+            );
         }
         return attachments;
     }
+
     private void DeleteAllMessages()
     {
-        List<UniqueId> messageIds = inbox.Fetch(
-                0, -1, MessageSummaryItems.UniqueId)
+        List<UniqueId> messageIds = inbox
+            .Fetch(0, -1, MessageSummaryItems.UniqueId)
             .Select(x => x.UniqueId)
             .ToList();
         if (messageIds.Count > 0)
@@ -286,12 +290,13 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             inbox.AddFlags(messageIds, MessageFlags.Deleted, silent: true);
         }
     }
+
     IMailFolder FindFolder(string name)
     {
-        IMailFolder topLevelFolder = client.GetFolder(
-            client.PersonalNamespaces[0]);
+        IMailFolder topLevelFolder = client.GetFolder(client.PersonalNamespaces[0]);
         return FindSubFolder(topLevelFolder, name);
     }
+
     IMailFolder FindSubFolder(IMailFolder toplevel, string name)
     {
         List<IMailFolder> subfolders = toplevel.GetSubfolders().ToList();
@@ -312,6 +317,7 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         return null;
     }
+
     private byte[] GetAttachmentData(MimeEntity attachment)
     {
         using var stream = new MemoryStream();
@@ -326,12 +332,14 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
         }
         return stream.ToArray();
     }
+
     private static string GetDefaultExtension(string mimeType)
     {
         string value = MimeTypeMap.GetExtension(mimeType);
         string result = value ?? string.Empty;
         return result;
     }
+
     private static string RemoveInvalidXmlCharacters(string input)
     {
         return InvalidXmlCharacterRegex.Replace(input, string.Empty);
