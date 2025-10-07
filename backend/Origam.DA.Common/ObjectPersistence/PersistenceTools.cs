@@ -23,6 +23,7 @@ using System;
 using System.Xml.Serialization;
 
 namespace Origam.DA.ObjectPersistence;
+
 //    public class PersistenceTools
 //    {
 //        public static XmlRootAttribute RootAttribute(Type type)

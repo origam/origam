@@ -20,11 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA.Common;
+
 public class Enums
 {
     public enum DatabaseType
     {
         MsSql,
-        PgSql
+        PgSql,
     }
 }

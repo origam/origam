@@ -22,10 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.DA.ObjectPersistence;
+
 public interface IPropertyContainer
 {
     object GetValue();
 }
+
 /// <summary>
 /// This class holds the information whether or not the property it represents was set to
 /// null by the user and combines it with lazy loading.
@@ -33,7 +35,7 @@ public interface IPropertyContainer
 /// actual value is retrieved.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class PropertyContainer<T>: IPropertyContainer
+public class PropertyContainer<T> : IPropertyContainer
 {
     private T value;
     private bool wasSetToNull;
@@ -41,26 +43,30 @@ public class PropertyContainer<T>: IPropertyContainer
     private readonly string containerName;
     private readonly Func<IPersistenceProvider> persistenceProviderGetter;
     private readonly Type containingObjectType;
+
     public PropertyContainer(string containerName, IFilePersistent containingObject)
     {
         this.containerName = containerName;
         id = (Guid)containingObject.PrimaryKey["Id"];
-        persistenceProviderGetter = ()=> containingObject.PersistenceProvider;
+        persistenceProviderGetter = () => containingObject.PersistenceProvider;
         containingObjectType = containingObject.GetType();
     }
+
     public object GetValue()
     {
         return Get();
     }
+
     public T Get()
     {
         if (value == null && !wasSetToNull)
         {
-            value = (T) persistenceProviderGetter()
-                .RetrieveValue(id, containingObjectType, containerName);
+            value = (T)
+                persistenceProviderGetter().RetrieveValue(id, containingObjectType, containerName);
         }
         return value;
     }
+
     public void Set(T value)
     {
         if (value == null)

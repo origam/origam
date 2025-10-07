@@ -24,62 +24,70 @@ using System.Data;
 using System.Data.SqlClient;
 
 namespace Origam.DA;
+
 /// <summary>
 /// Summary description for OrigamDbTransaction.
 /// </summary>
 public class OrigamDbTransaction : OrigamTransaction
 {
-	IDbTransaction _transaction;
+    IDbTransaction _transaction;
     IDbConnection _connection;
-	public OrigamDbTransaction(IDbTransaction transaction)
-	{
-		_transaction = transaction;
+
+    public OrigamDbTransaction(IDbTransaction transaction)
+    {
+        _transaction = transaction;
         _connection = transaction.Connection;
-	}
-	public override void Commit()
-	{
-		IDbConnection connection = _transaction.Connection;
-		_transaction.Commit();
-		_transaction.Dispose();
-		connection.Close();
-		connection.Dispose();
-	}
-	public override void Rollback()
-	{
-		_transaction.Rollback();
+    }
+
+    public override void Commit()
+    {
+        IDbConnection connection = _transaction.Connection;
+        _transaction.Commit();
+        _transaction.Dispose();
+        connection.Close();
+        connection.Dispose();
+    }
+
+    public override void Rollback()
+    {
+        _transaction.Rollback();
         _transaction.Dispose();
         _connection.Close();
         _connection.Dispose();
-	}
-	public override void Rollback(string savePointName)
-	{
-		SqlTransaction tran = _transaction as SqlTransaction;
-		if(tran == null)
-		{
-			throw new NotSupportedException(ResourceUtils.GetString("PartialRollbackNotSupported", _transaction.ToString()));
-		}
-		else
-		{
-			tran.Rollback(savePointName);
-		}
-	}
-	public override void Save(string savePointName)
-	{
-		SqlTransaction tran = _transaction as SqlTransaction;
-		if(tran == null)
-		{
-			throw new NotSupportedException(ResourceUtils.GetString("SavingNotSupported", _transaction.ToString()));
-		}
-		else
-		{
-			tran.Save(savePointName);
-		}
-	}
-	public IDbTransaction Transaction
-	{
-		get
-		{
-			return _transaction;
-		}
-	}
+    }
+
+    public override void Rollback(string savePointName)
+    {
+        SqlTransaction tran = _transaction as SqlTransaction;
+        if (tran == null)
+        {
+            throw new NotSupportedException(
+                ResourceUtils.GetString("PartialRollbackNotSupported", _transaction.ToString())
+            );
+        }
+        else
+        {
+            tran.Rollback(savePointName);
+        }
+    }
+
+    public override void Save(string savePointName)
+    {
+        SqlTransaction tran = _transaction as SqlTransaction;
+        if (tran == null)
+        {
+            throw new NotSupportedException(
+                ResourceUtils.GetString("SavingNotSupported", _transaction.ToString())
+            );
+        }
+        else
+        {
+            tran.Save(savePointName);
+        }
+    }
+
+    public IDbTransaction Transaction
+    {
+        get { return _transaction; }
+    }
 }
