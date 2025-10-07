@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.TestModel;
+
 /// <summary>
 /// Summary description for TestChecklistRule.
 /// </summary>
@@ -32,32 +33,30 @@ namespace Origam.Schema.TestModel;
 [ClassMetaVersion("6.0.0")]
 public class TestChecklistRule : AbstractSchemaItem
 {
-	public const string CategoryConst = "TestChecklistRule";
-	public TestChecklistRule() : base() {}
-	public TestChecklistRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public TestChecklistRule(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "16";
-		}
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
+    public const string CategoryConst = "TestChecklistRule";
+
+    public TestChecklistRule()
+        : base() { }
+
+    public TestChecklistRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public TestChecklistRule(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override string Icon
+    {
+        get { return "16"; }
+    }
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
 }
