@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for WorkflowCallTask.
 /// </summary>
@@ -34,34 +35,39 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class WaitTask : AbstractWorkflowStep
 {
-	public WaitTask() : base() {}
-	public WaitTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public WaitTask(Key primaryKey) : base(primaryKey)	{}
-	public override string Icon
-	{
-		get
-		{
-			return "16";
-		}
-	}
-	#region Properties
-	public Guid WaitTimeDataConstantId;
-	[Category("Reference")]
-	[TypeConverter(typeof(DataConstantConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[Description("Number of milliseconds to wait.")]
+    public WaitTask()
+        : base() { }
+
+    public WaitTask(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public WaitTask(Key primaryKey)
+        : base(primaryKey) { }
+
+    public override string Icon
+    {
+        get { return "16"; }
+    }
+    #region Properties
+    public Guid WaitTimeDataConstantId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(DataConstantConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
+    [Description("Number of milliseconds to wait.")]
     [XmlReference("waitTime", "WaitTimeDataConstantId")]
-	public DataConstant WaitTime
-	{
-		get
-		{
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WaitTimeDataConstantId)) as DataConstant;
-		}
-		set
-		{
-			this.WaitTimeDataConstantId = (Guid)value.PrimaryKey["Id"];
-		}
-	}
-	#endregion
+    public DataConstant WaitTime
+    {
+        get
+        {
+            return (ISchemaItem)
+                    this.PersistenceProvider.RetrieveInstance(
+                        typeof(ISchemaItem),
+                        new ModelElementKey(this.WaitTimeDataConstantId)
+                    ) as DataConstant;
+        }
+        set { this.WaitTimeDataConstantId = (Guid)value.PrimaryKey["Id"]; }
+    }
+    #endregion
 }

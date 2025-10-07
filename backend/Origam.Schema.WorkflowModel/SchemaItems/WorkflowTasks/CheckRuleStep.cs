@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for WorkflowCallTask.
 /// </summary>
@@ -32,7 +33,12 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class CheckRuleStep : AbstractWorkflowStep
 {
-	public CheckRuleStep() : base() {}
-	public CheckRuleStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public CheckRuleStep(Key primaryKey) : base(primaryKey)	{}
+    public CheckRuleStep()
+        : base() { }
+
+    public CheckRuleStep(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public CheckRuleStep(Key primaryKey)
+        : base(primaryKey) { }
 }

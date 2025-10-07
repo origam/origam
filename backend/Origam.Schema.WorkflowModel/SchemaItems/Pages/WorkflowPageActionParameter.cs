@@ -19,55 +19,62 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
+
 [SchemaItemDescription("Parameter", "Parameters", 17)]
 [HelpTopic("Action+Parameter")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class WorkflowPageActionParameter : AbstractSchemaItem
 {
-	public WorkflowPageActionParameter() : base() {Init();}
-	public WorkflowPageActionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public WorkflowPageActionParameter(Key primaryKey) : base(primaryKey) {Init();}
-	public const string CategoryConst = "WorkflowPageActionParameter";
-	private void Init()
-	{
-	}
-	#region Properties
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "17";
-		}
-	}
-	private string _xpath;
+    public WorkflowPageActionParameter()
+        : base()
+    {
+        Init();
+    }
+
+    public WorkflowPageActionParameter(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public WorkflowPageActionParameter(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    public const string CategoryConst = "WorkflowPageActionParameter";
+
+    private void Init() { }
+
+    #region Properties
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override string Icon
+    {
+        get { return "17"; }
+    }
+    private string _xpath;
+
     [Category("Result")]
-	[Description("An XPath expression from the context of the data returned by the workflow. The result will be used as the URL.")]
+    [Description(
+        "An XPath expression from the context of the data returned by the workflow. The result will be used as the URL."
+    )]
     [XmlAttribute("xPath")]
-	public string XPath
-	{
-		get
-		{
-			return _xpath;
-		}
-		set
-		{
-			_xpath = value;
-		}
-	}
-	#endregion			
+    public string XPath
+    {
+        get { return _xpath; }
+        set { _xpath = value; }
+    }
+    #endregion
 }

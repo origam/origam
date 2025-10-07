@@ -22,44 +22,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema.WorkflowModel;
+
 public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public ScheduleTimeSchemaItemProvider() {}
-	#region ISchemaItemProvider Members
-	public override string RootItemType => AbstractScheduleTime.CategoryConst;
-	public override string Group => "BL";
-	#endregion
-	#region IBrowserNode Members
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_28_schedule-times.png";
-	public override string NodeText
-	{
-		get => "Schedule Times";
-		set => base.NodeText = value;
-	}
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(SimpleScheduleTime), typeof(ScheduleGroup)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		string itemName = null;
-		if(typeof(T) == typeof(SimpleScheduleTime))
-		{
-			itemName = "NewSimpleScheduleTime";
-		}
-		else if(typeof(T) == typeof(ScheduleGroup))
-		{
-			itemName = "NewScheduleGroup";
-		}
-		return base.NewItem<T>(schemaExtensionId, group, itemName);
-	}
-	#endregion
+    public ScheduleTimeSchemaItemProvider() { }
+
+    #region ISchemaItemProvider Members
+    public override string RootItemType => AbstractScheduleTime.CategoryConst;
+    public override string Group => "BL";
+    #endregion
+    #region IBrowserNode Members
+    public override string Icon =>
+        // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+        "icon_28_schedule-times.png";
+    public override string NodeText
+    {
+        get => "Schedule Times";
+        set => base.NodeText = value;
+    }
+    public override string NodeToolTipText =>
+        // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+        null;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes =>
+        new[] { typeof(SimpleScheduleTime), typeof(ScheduleGroup) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        string itemName = null;
+        if (typeof(T) == typeof(SimpleScheduleTime))
+        {
+            itemName = "NewSimpleScheduleTime";
+        }
+        else if (typeof(T) == typeof(ScheduleGroup))
+        {
+            itemName = "NewScheduleGroup";
+        }
+        return base.NewItem<T>(schemaExtensionId, group, itemName);
+    }
+    #endregion
 }
