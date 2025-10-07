@@ -1,4 +1,5 @@
 ﻿# Origam.Composer
+This tool downloads the model, initializes a database (MS SQL/Postgres), and generates bash/cmd scripts for the ORIGAM project.
 
 ## Install database (optional)
 You can use docker to install `MS SQL` database:
@@ -10,6 +11,17 @@ or you can install `PostgreSQL` database:
 ```
 docker volume create postgress_volume
 docker run --name Postgres_DB -e POSTGRES_PASSWORD=3NHjcSMajQejgrpKGAD8egxNfEc7 -v postgress_volume:/var/lib/postgresql/data -p 5432:5432 -d postgres
+```
+
+## Build executable application (optional)
+Windows executable can be built by command:
+```
+dotnet publish ./Origam.Composer/Origam.Composer.csproj -c "Release Server" -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None
+```
+
+MacOS executable can be built by command:
+```
+dotnet publish ./Origam.Composer/Origam.Composer.csproj -c "Release Server" -r osx-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None
 ```
 
 ## Usage
