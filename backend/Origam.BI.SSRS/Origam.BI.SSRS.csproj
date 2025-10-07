@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
-
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
+      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
+    >
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
     <Version>0.0.0.0</Version>
   </PropertyGroup>
@@ -49,7 +49,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.3" />
@@ -57,7 +56,6 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.10.3" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.10.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Origam.BI\Origam.BI.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
@@ -65,9 +63,7 @@
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
-
 </Project>
