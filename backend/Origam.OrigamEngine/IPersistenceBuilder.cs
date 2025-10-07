@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Workbench.Services;
 
 namespace Origam.OrigamEngine;
+
 public interface IPersistenceBuilder
 {
     IPersistenceService GetPersistenceService();
