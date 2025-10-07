@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace OrigamScheduler;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {

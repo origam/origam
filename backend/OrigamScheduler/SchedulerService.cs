@@ -22,13 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using Origam;
 using Origam.Extensions;
-using Origam.Services;
-using Origam.Workbench.Services;
 using Origam.OrigamEngine;
+using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
+using Origam.Services;
+using Origam.Workbench.Services;
 using Origam.Workflow;
-using Origam.Rule;
 using Schedule;
 using ConfigurationManager = Origam.ConfigurationManager;
 
@@ -36,8 +36,7 @@ using ConfigurationManager = Origam.ConfigurationManager;
 
 namespace OrigamScheduler;
 
-public class SchedulerWorker(ILogger<SchedulerWorker> log)
-    : BackgroundService
+public class SchedulerWorker(ILogger<SchedulerWorker> log) : BackgroundService
 {
     private readonly ScheduleTimer timer = new();
     private ISchemaService schema;
@@ -52,8 +51,7 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
     {
         if (log.IsEnabled(LogLevel.Information))
         {
-            var version = Assembly.GetEntryAssembly()
-                ?.GetName().Version?.ToString();
+            var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
             log.LogInformation("Starting ORIGAM Scheduler version {0}", version);
         }
 
@@ -79,7 +77,7 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
         {
             if (log.IsEnabled(LogLevel.Critical))
             {
-                log.LogCritical(ex,"Scheduler failed to start");
+                log.LogCritical(ex, "Scheduler failed to start");
             }
 
             throw;
@@ -99,14 +97,16 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             log.LogInformation("Scheduler filter: {0}", settings.SchedulerFilter);
         }
         // Sort schedules alphabetically. If more schedules run at the same time, they will run in this order.
-        List<WorkflowSchedule> sortedSchedules = schedules.ChildItems
-            .OfType<WorkflowSchedule>()
+        List<WorkflowSchedule> sortedSchedules = schedules
+            .ChildItems.OfType<WorkflowSchedule>()
             .ToList();
         sortedSchedules.Sort();
         foreach (WorkflowSchedule schedule in sortedSchedules)
         {
-            if (string.IsNullOrEmpty(settings.SchedulerFilter)
-                || settings.SchedulerFilter == schedule?.Group?.RootGroup?.Name)
+            if (
+                string.IsNullOrEmpty(settings.SchedulerFilter)
+                || settings.SchedulerFilter == schedule?.Group?.RootGroup?.Name
+            )
             {
                 Delegate d = new RunWorkflowDelegate(RunWorkflow);
                 IScheduledItem item;
@@ -115,8 +115,10 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
                 {
                     log.LogInformation(
                         "Scheduling job: {0}, {1}, Next run time: {2}",
-                        schedule.Name, schedule.ScheduleTime.Name,
-                        item.NextRunTime(DateTime.Now, true));
+                        schedule.Name,
+                        schedule.ScheduleTime.Name,
+                        item.NextRunTime(DateTime.Now, true)
+                    );
                 }
 
                 try
@@ -128,9 +130,13 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
                     if (log.IsEnabled(LogLevel.Critical))
                     {
                         log.LogCritical(
-                            string.Format("Failed to schedule job: {0}, {1}",
-                                schedule.Name, schedule.ScheduleTime?.Name),
-                            ex);
+                            string.Format(
+                                "Failed to schedule job: {0}, {1}",
+                                schedule.Name,
+                                schedule.ScheduleTime?.Name
+                            ),
+                            ex
+                        );
                     }
                 }
             }
@@ -160,19 +166,22 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             {
                 if (parameter != null)
                 {
-                    ISchemaItem context =
-                        workflow.GetChildByName(parameter.Name,
-                            ContextStore.CategoryConst);
+                    ISchemaItem context = workflow.GetChildByName(
+                        parameter.Name,
+                        ContextStore.CategoryConst
+                    );
                     if (context == null)
                     {
-                        throw new ArgumentOutOfRangeException("name",
+                        throw new ArgumentOutOfRangeException(
+                            "name",
                             parameter.Name,
-                            "Workflow parameter not found for workflow schedule '" +
-                            schedule.Path + "'");
+                            "Workflow parameter not found for workflow schedule '"
+                                + schedule.Path
+                                + "'"
+                        );
                     }
 
-                    engine.InputContexts.Add(context.PrimaryKey,
-                        ruleEngine.Evaluate(parameter));
+                    engine.InputContexts.Add(context.PrimaryKey, ruleEngine.Evaluate(parameter));
                 }
             }
 
@@ -194,9 +203,8 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             {
                 log.LogOrigamError(
                     ex,
-                    string.Format(
-                        "Error occured while running the workflow {0}",
-                        workflow?.Name));
+                    string.Format("Error occured while running the workflow {0}", workflow?.Name)
+                );
             }
         }
         finally
@@ -211,7 +219,8 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
         {
             log.LogInformation(
                 "Stopping Scheduler. Number of workflows running: {0}",
-                numberOfWorkflowsRunning.ToString());
+                numberOfWorkflowsRunning.ToString()
+            );
         }
 
         timer.Stop();
@@ -237,10 +246,10 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
         }
     }
 
-    private void RestartTimer_Elapsed(object sender,
-        System.Timers.ElapsedEventArgs e)
+    private void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
-        if (restarting) return;
+        if (restarting)
+            return;
         try
         {
             if (OrigamEngine.IsRestartPending())
@@ -267,7 +276,8 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.LogInformation(
-                    "Schedules stopped, waiting to unload all the other services...");
+                    "Schedules stopped, waiting to unload all the other services..."
+                );
             }
 
             schema.UnloadSchema();
@@ -282,15 +292,13 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             }
 
             OrigamEngine.ConnectRuntime();
-            schema =
-                ServiceManager.Services.GetService(typeof(ISchemaService)) as
-                    ISchemaService;
+            schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
             persistence =
                 ServiceManager.Services.GetService(typeof(IPersistenceService))
-                    as IPersistenceService;
+                as IPersistenceService;
             schedules =
                 schema.GetProvider(typeof(WorkflowScheduleSchemaItemProvider))
-                    as WorkflowScheduleSchemaItemProvider;
+                as WorkflowScheduleSchemaItemProvider;
             InitSchedules();
             timer.Start();
             if (log.IsEnabled(LogLevel.Information))
@@ -307,7 +315,8 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log)
             {
                 log.LogCritical(
                     "Scheduler restart failed. Please restart the scheduler windows service. ({0})",
-                    ex);
+                    ex
+                );
             }
 
             throw;
