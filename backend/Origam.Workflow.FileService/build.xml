@@ -1,21 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="SIMPLICOR Net Membership Service" default="standard" basedir=".">
   <description>Build file for File Service.</description>
   <loadtasks assembly="d:/BuildServer/nantcontrib-0.85/bin/NAnt.Contrib.Tasks.dll" />
   <target name="standard" description="Standard build" depends="build-number">
     <msbuild project="Origam.Workflow.FileService.csproj">
-      <property name="Configuration" value="Release"/>
+      <property name="Configuration" value="Release" />
     </msbuild>
   </target>
   <target name="build-number" description="Fills build number in AssemblyInfo files.">
-    <loadfile file="./Properties/AssemblyInfo.cs"
-              property="assemblyInfo">
+    <loadfile file="./Properties/AssemblyInfo.cs" property="assemblyInfo">
       <filterchain>
-        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+        <replacestring from="0.0.0.0" to="${buildNumber}" />
       </filterchain>
     </loadfile>
-    <echo file="./Properties/AssemblyInfo.cs"
-          message="${assemblyInfo}"/>
+    <echo file="./Properties/AssemblyInfo.cs" message="${assemblyInfo}" />
   </target>
 </project>
-
