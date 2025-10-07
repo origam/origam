@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for PageParameterFileInfo.
 /// </summary>
 public enum PageParameterFileInfo
 {
-	FileContent,
-	FileName,
-	ContentType,
-	FileSize
+    FileContent,
+    FileName,
+    ContentType,
+    FileSize,
 }

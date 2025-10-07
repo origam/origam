@@ -19,33 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("SQL Server Report", "icon_sql-server-report.png")]
 [HelpTopic("SQL+Server+Report")]
 [ClassMetaVersion("6.0.0")]
 public class SSRSReport : AbstractReport
 {
-	public SSRSReport() : base() { }
-	public SSRSReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-	public SSRSReport(Key primaryKey) : base(primaryKey) { }
+    public SSRSReport()
+        : base() { }
+
+    public SSRSReport(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public SSRSReport(Key primaryKey)
+        : base(primaryKey) { }
+
     private string _reportPath;
-    [Description("Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter.")]
+
+    [Description(
+        "Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter."
+    )]
     [XmlAttribute("reportPath")]
-	public string ReportPath
-	{
-		get
-		{
-			return _reportPath;
-		}
-		set
-		{
-			_reportPath = value;
-		}
-	}
+    public string ReportPath
+    {
+        get { return _reportPath; }
+        set { _reportPath = value; }
+    }
 }

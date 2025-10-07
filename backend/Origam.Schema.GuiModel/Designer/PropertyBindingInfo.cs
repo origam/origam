@@ -19,61 +19,58 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-
-using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for PropertyValueItem.
 /// </summary>
-/// 
+///
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class PropertyBindingInfo : AbstractPropertyValueItem
 {
-	public const string CategoryConst = "PropertyBindingInfo";
-	public PropertyBindingInfo() : base(){}
-	
-	public PropertyBindingInfo(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public PropertyBindingInfo(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "PropertyBindingInfo";
+
+    public PropertyBindingInfo()
+        : base() { }
+
+    public PropertyBindingInfo(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public PropertyBindingInfo(Key primaryKey)
+        : base(primaryKey) { }
+
     private string _value;
+
     [Localizable(true)]
     [XmlAttribute("value")]
     public string Value
     {
         get
         {
-            if (_value == null) return null;
+            if (_value == null)
+                return null;
             return _value.Trim();
         }
-        set
-        {
-            _value = value;
-        }
+        set { _value = value; }
     }
     private string _designDataSetPath;
+
     [XmlAttribute("designDataSetPath")]
-	public string DesignDataSetPath
-	{
-		get
-		{
-			return _designDataSetPath;
-		}
-		set
-		{
-			_designDataSetPath=value;
-		}
-	}
-	public override string ItemType
-	{
-		get
-		{
-			return PropertyBindingInfo.CategoryConst;
-		}
-	}
+    public string DesignDataSetPath
+    {
+        get { return _designDataSetPath; }
+        set { _designDataSetPath = value; }
+    }
+    public override string ItemType
+    {
+        get { return PropertyBindingInfo.CategoryConst; }
+    }
 }

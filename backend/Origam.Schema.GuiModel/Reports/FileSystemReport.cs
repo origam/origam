@@ -19,33 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("File System Report", "icon_file-system-report.png")]
 [HelpTopic("File+System+Report")]
 [ClassMetaVersion("6.0.0")]
 public class FileSystemReport : AbstractReport
 {
-	public FileSystemReport() : base() { }
-	public FileSystemReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-	public FileSystemReport(Key primaryKey) : base(primaryKey) { }
+    public FileSystemReport()
+        : base() { }
+
+    public FileSystemReport(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public FileSystemReport(Key primaryKey)
+        : base(primaryKey) { }
+
     private string _reportPath;
-    [Description("Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters.")]
+
+    [Description(
+        "Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters."
+    )]
     [XmlAttribute("reportPath")]
     public string ReportPath
-	{
-		get
-		{
-			return _reportPath;
-		}
-		set
-		{
-			_reportPath = value;
-		}
-	}
+    {
+        get { return _reportPath; }
+        set { _reportPath = value; }
+    }
 }

@@ -20,11 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
-/// <summary>
-/// 
-/// </summary>
-public interface IControlSet : ISchemaItem, ISchemaItemFactory
-{ 
-	
-}
 
+/// <summary>
+///
+/// </summary>
+public interface IControlSet : ISchemaItem, ISchemaItemFactory { }

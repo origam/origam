@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for WebPageOpenMethod.
 /// </summary>
 public enum WebPageOpenMethod
 {
-	OrigamTab,
-	LaunchBrowserWindow,
-	NoUI
+    OrigamTab,
+    LaunchBrowserWindow,
+    NoUI,
 }

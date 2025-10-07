@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
@@ -38,14 +39,30 @@ namespace Origam.Schema.GuiModel;
 public class UIStyleProperty : AbstractSchemaItem
 {
     public const string CategoryConst = "StyleProperty";
-    public UIStyleProperty() : base() { Init(); }
-    public UIStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-    public UIStyleProperty(Key primaryKey) : base(primaryKey) { Init(); }
-    private void Init()
+
+    public UIStyleProperty()
+        : base()
     {
+        Init();
     }
+
+    public UIStyleProperty(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public UIStyleProperty(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
     #region Properties
     public Guid ControlStylePropertyId;
+
     [TypeConverter(typeof(ControlStylePropertyConverter))]
     [RefreshProperties(RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
@@ -54,8 +71,11 @@ public class UIStyleProperty : AbstractSchemaItem
     {
         get
         {
-            return (ControlStyleProperty)this.PersistenceProvider.RetrieveInstance(
-                typeof(ControlStyleProperty), new ModelElementKey(this.ControlStylePropertyId));
+            return (ControlStyleProperty)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ControlStyleProperty),
+                    new ModelElementKey(this.ControlStylePropertyId)
+                );
         }
         set
         {
@@ -64,6 +84,7 @@ public class UIStyleProperty : AbstractSchemaItem
         }
     }
     private string _value;
+
     [RefreshProperties(RefreshProperties.Repaint)]
     [NotNullModelElementRule()]
     [XmlAttribute("value")]
@@ -71,7 +92,8 @@ public class UIStyleProperty : AbstractSchemaItem
     {
         get
         {
-            if (_value == null) return null;
+            if (_value == null)
+                return null;
             return _value.Trim();
         }
         set
@@ -90,12 +112,10 @@ public class UIStyleProperty : AbstractSchemaItem
         }
         base.GetExtraDependencies(dependencies);
     }
+
     public override string ItemType
     {
-        get
-        {
-            return CategoryConst;
-        }
+        get { return CategoryConst; }
     }
     #endregion
     private void UpdateName()

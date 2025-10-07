@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for CrystalReport.
 /// </summary>
@@ -32,7 +33,12 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.0.0")]
 public class FastReport : AbstractDataReport, IDataStructureReference
 {
-    public FastReport() : base() { }
-    public FastReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-    public FastReport(Key primaryKey) : base(primaryKey) { }
+    public FastReport()
+        : base() { }
+
+    public FastReport(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public FastReport(Key primaryKey)
+        : base(primaryKey) { }
 }

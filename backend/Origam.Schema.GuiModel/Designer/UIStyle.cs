@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Text;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
@@ -37,26 +38,44 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.0.0")]
 public class UIStyle : AbstractSchemaItem
 {
-	public const string CategoryConst = "Style";
-    public UIStyle() : base() { Init(); }
-    public UIStyle(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-    public UIStyle(Key primaryKey) : base(primaryKey) { Init(); }
+    public const string CategoryConst = "Style";
+
+    public UIStyle()
+        : base()
+    {
+        Init();
+    }
+
+    public UIStyle(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public UIStyle(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
     private void Init()
     {
         this.ChildItemTypes.Add(typeof(UIStyleProperty));
     }
+
     public string StyleDefinition()
     {
         StringBuilder result = new StringBuilder();
-        foreach (var property in 
-            ChildItemsByType<UIStyleProperty>(UIStyleProperty.CategoryConst))
+        foreach (var property in ChildItemsByType<UIStyleProperty>(UIStyleProperty.CategoryConst))
         {
             result.AppendFormat("{0}:{1};", property.Property.Name, property.Value);
         }
         return result.ToString();
     }
+
     #region Properties
     public Guid ControlId;
+
     [TypeConverter(typeof(ControlConverter))]
     [NotNullModelElementRule()]
     [XmlReference("widget", "ControlId")]
@@ -64,12 +83,13 @@ public class UIStyle : AbstractSchemaItem
     {
         get
         {
-            return (ControlItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlItem), new ModelElementKey(this.ControlId));
+            return (ControlItem)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ControlItem),
+                    new ModelElementKey(this.ControlId)
+                );
         }
-        set
-        {
-            this.ControlId = (Guid)value.PrimaryKey["Id"];
-        }
+        set { this.ControlId = (Guid)value.PrimaryKey["Id"]; }
     }
     #endregion
     #region Overriden ISchemaItem Members
@@ -81,19 +101,14 @@ public class UIStyle : AbstractSchemaItem
         }
         base.GetExtraDependencies(dependencies);
     }
+
     public override bool UseFolders
     {
-        get
-        {
-            return false;
-        }
+        get { return false; }
     }
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }
