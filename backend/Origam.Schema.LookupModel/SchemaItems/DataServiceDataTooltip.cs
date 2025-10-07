@@ -19,20 +19,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using Origam.DA.Common;
 
 namespace Origam.Schema.LookupModel;
+
 /// <summary>
 /// Summary description for DataServiceDataLookup.
 /// </summary>
-[SchemaItemDescription("Data Service Tooltip", 
-    "icon_data-service-tooltip.png")]
+[SchemaItemDescription("Data Service Tooltip", "icon_data-service-tooltip.png")]
 [HelpTopic("Tooltips")]
 [ClassMetaVersion("6.0.0")]
 public class DataServiceDataTooltip : AbstractDataTooltip
 {
-	public DataServiceDataTooltip() : base() {}
-	public DataServiceDataTooltip(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataServiceDataTooltip(Key primaryKey) : base(primaryKey)	{}
+    public DataServiceDataTooltip()
+        : base() { }
+
+    public DataServiceDataTooltip(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataServiceDataTooltip(Key primaryKey)
+        : base(primaryKey) { }
 }

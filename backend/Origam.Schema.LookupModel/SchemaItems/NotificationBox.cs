@@ -19,58 +19,64 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.LookupModel;
+
 [SchemaItemDescription("Notification Box", "icon_notification-box.png")]
 [HelpTopic("Notification+Boxes+And+Tooltips")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class NotificationBox : AbstractSchemaItem
 {
-	public const string CategoryConst = "NotificationBox";
-	public NotificationBox() {}
-	public NotificationBox(Guid schemaExtensionId) 
-		: base(schemaExtensionId) {}
-	public NotificationBox(Key primaryKey) : base(primaryKey) {}
+    public const string CategoryConst = "NotificationBox";
 
-	#region Properties
-	private NotificationBoxType _type = NotificationBoxType.Logo;
-	[Description("One of the predefined notification box types.")]
+    public NotificationBox() { }
+
+    public NotificationBox(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public NotificationBox(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    private NotificationBoxType _type = NotificationBoxType.Logo;
+
+    [Description("One of the predefined notification box types.")]
     [XmlAttribute("type")]
-	public NotificationBoxType Type
-	{
-		get => _type;
-		set => _type = value;
-	}
-	private int _refreshInterval = 0;
-	[Description("Refresh interval in seconds.")]
+    public NotificationBoxType Type
+    {
+        get => _type;
+        set => _type = value;
+    }
+    private int _refreshInterval = 0;
+
+    [Description("Refresh interval in seconds.")]
     [XmlAttribute("refreshInterval")]
     public int RefreshInterval
-	{
-		get => _refreshInterval;
-		set => _refreshInterval = value;
-	}
-	#endregion
-	#region Overriden AbstractDataEntityColumn Members
-	public override string ItemType => CategoryConst;
-	public override bool UseFolders => false;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[] 
-	{
-		typeof(DataServiceDataTooltip)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(DataServiceDataTooltip) ?
-				"NewDataServiceDataTooltip" : null);
-	}
-	#endregion
+    {
+        get => _refreshInterval;
+        set => _refreshInterval = value;
+    }
+    #endregion
+    #region Overriden AbstractDataEntityColumn Members
+    public override string ItemType => CategoryConst;
+    public override bool UseFolders => false;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataServiceDataTooltip) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(DataServiceDataTooltip) ? "NewDataServiceDataTooltip" : null
+        );
+    }
+    #endregion
 }

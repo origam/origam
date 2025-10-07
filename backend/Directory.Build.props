@@ -12,7 +12,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamScheduler'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.TestModel'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'ScheduleTimer'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Win'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.Common'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI'">true</EnableStrictBuild> -->
@@ -82,6 +82,7 @@
                 <EnableNETAnalyzers>true</EnableNETAnalyzers>
                 <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+                <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
             </PropertyGroup>
 
             <ItemGroup>
@@ -100,6 +101,6 @@
     </Choose>
     <PropertyGroup>
         <!-- Disable CS1591: Missing XML comment for publicly visible type or member -->
-        <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075</NoWarn>
     </PropertyGroup>
 </Project>
