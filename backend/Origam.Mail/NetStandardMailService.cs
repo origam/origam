@@ -20,52 +20,61 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Xml;
-using System.Net.Mail;
 using System.Xml.XPath;
-using System.Net.Mime;
-using System.Net;
 using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Mail;
+
 public class NetStandardMailService : AbstractMailService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     private readonly string username;
     private readonly string password;
     private readonly bool useSsl;
     private readonly string defaultServer;
     private readonly int defaultPort;
     private readonly string pickupDirectoryLocation;
-    protected NetStandardMailService()
-    {
-    }
+
+    protected NetStandardMailService() { }
+
     public NetStandardMailService(
-        string server, int port, string pickupDirectoryLocation,
-        string username = null, string password = null, bool useSsl = true)
+        string server,
+        int port,
+        string pickupDirectoryLocation,
+        string username = null,
+        string password = null,
+        bool useSsl = true
+    )
     {
-        if(!string.IsNullOrWhiteSpace(pickupDirectoryLocation)
-        && !string.IsNullOrWhiteSpace(server))
+        if (
+            !string.IsNullOrWhiteSpace(pickupDirectoryLocation)
+            && !string.IsNullOrWhiteSpace(server)
+        )
         {
             throw new ArgumentException(
-                "It is not possible to specify both server and pickup directory.");
+                "It is not possible to specify both server and pickup directory."
+            );
         }
         if (string.IsNullOrWhiteSpace(pickupDirectoryLocation))
         {
-            if (string.IsNullOrWhiteSpace(password) 
-                && !string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(password) && !string.IsNullOrWhiteSpace(username))
             {
-                throw new ArgumentException(nameof(password) 
-                    + " cannot be empty if fromAddress is not empty");
+                throw new ArgumentException(
+                    nameof(password) + " cannot be empty if fromAddress is not empty"
+                );
             }
             if (string.IsNullOrWhiteSpace(server))
             {
-                throw new ArgumentException(nameof(server)
-                    + " cannot be empty");
+                throw new ArgumentException(nameof(server) + " cannot be empty");
             }
         }
         this.username = username;
@@ -75,6 +84,7 @@ public class NetStandardMailService : AbstractMailService
         defaultPort = port;
         this.pickupDirectoryLocation = pickupDirectoryLocation;
     }
+
     public override int SendMail1(IXmlContainer mailDocument, string server, int port)
     {
         //return Value positive number (include 0zero) indicates OK result, negative -1 means error
@@ -83,7 +93,9 @@ public class NetStandardMailService : AbstractMailService
         //get root (Mails) element
         XmlElement root = mailDocument.Xml.DocumentElement;
         //configure xsd namespace
-        XmlNamespaceManager nsmgr = new XmlNamespaceManager(((XPathNavigator)root.CreateNavigator()).NameTable);
+        XmlNamespaceManager nsmgr = new XmlNamespaceManager(
+            ((XPathNavigator)root.CreateNavigator()).NameTable
+        );
         //all tags have to begin with m: prefix
         nsmgr.AddNamespace("m", "http://schema.advantages.cz/AsMail.xsd"); //default namespace
         //get Mail nodes
@@ -92,20 +104,31 @@ public class NetStandardMailService : AbstractMailService
         //send one mail per Mail section
         foreach (XmlNode mailRoot in mailList)
         {
-            MailMessage m = new MailMessage();                
-                 
+            MailMessage m = new MailMessage();
+
             //put mail header info
             m.BodyEncoding = Encoding.UTF8;
             m.Subject = GetValue(mailRoot, nsmgr, "m:Subject");
-            m.From = new MailAddress(GetValue(mailRoot, nsmgr, "m:From/m:Address"), GetValue(mailRoot, nsmgr, "m:From/m:Name"));
-            m.Headers.Add("X-OrigamEmailIdentifier", GetValue(mailRoot, nsmgr, "m:MessageIdentifier"));
-            
+            m.From = new MailAddress(
+                GetValue(mailRoot, nsmgr, "m:From/m:Address"),
+                GetValue(mailRoot, nsmgr, "m:From/m:Name")
+            );
+            m.Headers.Add(
+                "X-OrigamEmailIdentifier",
+                GetValue(mailRoot, nsmgr, "m:MessageIdentifier")
+            );
+
             //load recipient list
             XmlNodeList recipientList;
             recipientList = mailRoot.SelectNodes("m:To/m:EmailAddress", nsmgr);
             foreach (XmlNode recipientRoot in recipientList)
             {
-                m.To.Add(new MailAddress(GetValue(recipientRoot, nsmgr, "m:Address"), GetValue(recipientRoot, nsmgr, "m:Name")));
+                m.To.Add(
+                    new MailAddress(
+                        GetValue(recipientRoot, nsmgr, "m:Address"),
+                        GetValue(recipientRoot, nsmgr, "m:Name")
+                    )
+                );
             }
             //put html body inside
             m.Body = GetValue(mailRoot, nsmgr, "m:Body");
@@ -115,7 +138,7 @@ public class NetStandardMailService : AbstractMailService
                 MailLogUtils.SendMessageAndLog(smtpClient, m);
                 retVal++;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.LogOrigamError(ex);
                 throw;
@@ -123,6 +146,7 @@ public class NetStandardMailService : AbstractMailService
         }
         return retVal;
     }
+
     public override int SendMail2(MailData mailData, string server, int port)
     {
         //return Value positive number (include 0zero) indicates OK result, negative -1 means error
@@ -137,7 +161,11 @@ public class NetStandardMailService : AbstractMailService
             m.BodyEncoding = Encoding.UTF8;
             string fromName = "";
             string fromAddress = "";
-            OpenPOP.MIMEParser.Utility.ParseEmailAddress(mailrow.Sender, ref fromName, ref fromAddress);
+            OpenPOP.MIMEParser.Utility.ParseEmailAddress(
+                mailrow.Sender,
+                ref fromName,
+                ref fromAddress
+            );
             m.From = new MailAddress(fromAddress, fromName);
             m.Headers.Add("X-OrigamEmailIdentifier", mailrow.Id.ToString());
             string[] to = mailrow.Recipient.Split(";".ToCharArray());
@@ -158,7 +186,11 @@ public class NetStandardMailService : AbstractMailService
                 {
                     string ccName = "";
                     string ccAddress = "";
-                    OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref ccName, ref ccAddress);
+                    OpenPOP.MIMEParser.Utility.ParseEmailAddress(
+                        recipient,
+                        ref ccName,
+                        ref ccAddress
+                    );
                     if (!string.IsNullOrEmpty(recipient))
                     {
                         m.CC.Add(new MailAddress(ccAddress, ccName));
@@ -172,7 +204,11 @@ public class NetStandardMailService : AbstractMailService
                 {
                     string bccName = "";
                     string bccAddress = "";
-                    OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref bccName, ref bccAddress);
+                    OpenPOP.MIMEParser.Utility.ParseEmailAddress(
+                        recipient,
+                        ref bccName,
+                        ref bccAddress
+                    );
                     if (!string.IsNullOrEmpty(recipient))
                     {
                         m.Bcc.Add(new MailAddress(bccAddress, bccName));
@@ -184,13 +220,18 @@ public class NetStandardMailService : AbstractMailService
                 //put html body inside
                 if (mailrow.MessageBody.StartsWith("<"))
                 {
-                    AlternateView plainTextView =
-                        AlternateView.CreateAlternateViewFromString(
-                            HtmlToText(mailrow.MessageBody), null, MediaTypeNames.Text.Plain);
+                    AlternateView plainTextView = AlternateView.CreateAlternateViewFromString(
+                        HtmlToText(mailrow.MessageBody),
+                        null,
+                        MediaTypeNames.Text.Plain
+                    );
                     m.AlternateViews.Add(plainTextView);
                     AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-                        WebUtility.HtmlDecode(mailrow.MessageBody), null, MediaTypeNames.Text.Html);
-                    m.AlternateViews.Add(htmlView);                    
+                        WebUtility.HtmlDecode(mailrow.MessageBody),
+                        null,
+                        MediaTypeNames.Text.Html
+                    );
+                    m.AlternateViews.Add(htmlView);
                 }
                 else
                 {
@@ -217,6 +258,7 @@ public class NetStandardMailService : AbstractMailService
         }
         return retVal;
     }
+
     private SmtpClient BuildSmtpClient(string server, int port)
     {
         var smtpClient = new SmtpClient();
@@ -238,6 +280,7 @@ public class NetStandardMailService : AbstractMailService
         }
         return smtpClient;
     }
+
     protected virtual void SetConfigValues(SmtpClient smtpClient)
     {
         smtpClient.Host = defaultServer;
