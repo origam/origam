@@ -65,7 +65,7 @@ public class Project
     /// ./model-root/root menu/.origamPackage
     /// </summary>
     public string BasePackageId { get; set; } = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
-    public string NewPackageId { get; init; }
+    public required string NewPackageId { get; init; }
 
     #endregion
 
@@ -96,7 +96,7 @@ public class Project
 
     #region Git
     public bool IsGitEnabled { get; init; }
-    public string GitUsername { get; init; }
-    public string GitEmail { get; init; }
+    public string? GitUsername { get; init; }
+    public string? GitEmail { get; init; }
     #endregion
 }

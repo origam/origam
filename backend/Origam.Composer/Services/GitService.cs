@@ -61,7 +61,7 @@ public class GitService : IGitService
         AnsiConsole.MarkupLine($"[orange1][bold]- repository created:[/][/] {path}");
     }
 
-    public void InitCommit(string username, string userEmail)
+    public void InitCommit(string? username, string? userEmail)
     {
         if (Repo == null)
         {
