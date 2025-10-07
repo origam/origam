@@ -36,7 +36,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Services'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.UI.Common'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel.UI'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel.UI'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel.UI'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel.UI'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.BaseComponents'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.PrintIt'">true</EnableStrictBuild> -->
