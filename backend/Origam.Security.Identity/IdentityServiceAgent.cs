@@ -22,28 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Threading.Tasks;
 using System.Xml;
-using Origam.Workflow;
-using Origam.Rule;
 using log4net;
-using Origam.Security.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Origam.Rule;
+using Origam.Security.Common;
 using Origam.Service.Core;
+using Origam.Workflow;
 
 namespace Origam.Security.Identity;
+
 // class is sealed because of a simplified IDisposable pattern implementation
 public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
 {
-    private static readonly ILog log
-		= LogManager.GetLogger(typeof(IdentityServiceAgent));
+    private static readonly ILog log = LogManager.GetLogger(typeof(IdentityServiceAgent));
     private IManager userManager;
     private IServiceScope serviceScope;
+
     public IdentityServiceAgent()
     {
         // according to
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
         // we can get scoped RequestServices collection from HttpContext
-        userManager = SecurityManager.DIServiceProvider
-            .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
+        userManager = SecurityManager
+            .DIServiceProvider.GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
             .HttpContext?.RequestServices?.GetService<IManager>();
         if (userManager == null)
         {
@@ -51,6 +52,7 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             userManager = serviceScope.ServiceProvider.GetService<IManager>();
         }
     }
+
     private object result;
     public override object Result
     {
@@ -61,6 +63,7 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             return temp;
         }
     }
+
     public override void Run()
     {
         switch (this.MethodName)
@@ -92,9 +95,9 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             case "CreateUser":
                 CreateUser();
                 break;
-			case "SendEmailConfirmationToken":
-				SendEmailConfirmationToken();
-				break;
+            case "SendEmailConfirmationToken":
+                SendEmailConfirmationToken();
+                break;
             case "ConfirmEmail":
                 ConfirmEmail();
                 break;
@@ -124,20 +127,23 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
                 break;
             default:
                 throw new ArgumentOutOfRangeException(
-                    "MethodName", this.MethodName,
-                    Origam.Workflow.ResourceUtils.GetString(
-                    "InvalidMethodName"));
+                    "MethodName",
+                    this.MethodName,
+                    Origam.Workflow.ResourceUtils.GetString("InvalidMethodName")
+                );
         }
     }
+
     private void GetUserData()
     {
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
         Task<IOrigamUser> task = userManager.FindByNameAsync(
-            Parameters["Username"].ToString(), TransactionId);
+            Parameters["Username"].ToString(),
+            TransactionId
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -147,33 +153,31 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = GetUserDataXml(task.Result);
         }
     }
+
     private void ChangeUserPasswordQuestionAndAnswer()
     {
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
         if (!(Parameters["Password"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorPasswordNotString);
+            throw new InvalidCastException(Resources.ErrorPasswordNotString);
         }
         if (!(Parameters["NewQuestion"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorNewQuestionNotString);
+            throw new InvalidCastException(Resources.ErrorNewQuestionNotString);
         }
         if (!(Parameters["NewAnswer"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorNewAnswerNotString);
+            throw new InvalidCastException(Resources.ErrorNewAnswerNotString);
         }
         Task<bool> task = userManager.ChangePasswordQuestionAndAnswerAsync(
             Parameters["Username"].ToString(),
             Parameters["Password"].ToString().TrimEnd(),
             Parameters["NewQuestion"].ToString(),
-            Parameters["NewAnswer"].ToString());
+            Parameters["NewAnswer"].ToString()
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -183,16 +187,14 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
-    
+
     private void IsLockedOut()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
-        Task<bool> task = userManager.IsLockedOutAsync(
-            Parameters["UserId"].ToString());
+        Task<bool> task = userManager.IsLockedOutAsync(Parameters["UserId"].ToString());
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -202,15 +204,14 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private void Is2FAEnforced()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
-        Task<bool> task = userManager.GetTwoFactorEnabledAsync(
-            Parameters["UserId"].ToString());
+        Task<bool> task = userManager.GetTwoFactorEnabledAsync(Parameters["UserId"].ToString());
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -220,20 +221,21 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private void Set2FAEnforcement()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
         if (!(Parameters["Enforce"] is Boolean))
         {
-            throw new InvalidCastException(
-                Resources.ErrorEnforceNotBool);
+            throw new InvalidCastException(Resources.ErrorEnforceNotBool);
         }
         Task<bool> task = userManager.SetTwoFactorEnabledAsync(
-           Parameters["UserId"].ToString(), (Boolean) Parameters["Enforce"]);
+            Parameters["UserId"].ToString(),
+            (Boolean)Parameters["Enforce"]
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -243,16 +245,14 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = true;
         }
     }
-    
+
     private void IsEmailConfirmed()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
-        Task<bool> task = userManager.IsEmailConfirmedAsync(
-            Parameters["UserId"].ToString());
+        Task<bool> task = userManager.IsEmailConfirmedAsync(Parameters["UserId"].ToString());
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -262,15 +262,14 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private void UnlockUser()
     {
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
-        Task<bool> task = userManager.UnlockUserAsync(
-            Parameters["Username"].ToString());
+        Task<bool> task = userManager.UnlockUserAsync(Parameters["Username"].ToString());
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -280,113 +279,112 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = true;
         }
     }
-    
+
     private void ForceConfirmEmail()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
         Task<InternalIdentityResult> task = userManager.ConfirmEmailAsync(
-            Parameters["UserId"].ToString());
-		RuleException ex = new RuleException();
+            Parameters["UserId"].ToString()
+        );
+        RuleException ex = new RuleException();
         if (task.IsFaulted)
         {
-			RuleExceptionData rd = new RuleExceptionData();                    
-			rd.Severity = RuleExceptionSeverity.High;
-			rd.EntityName = "";
-			rd.FieldName = "";
-			rd.Message = task.Exception.Message;
-			ex.RuleResult.Add(rd);       
+            RuleExceptionData rd = new RuleExceptionData();
+            rd.Severity = RuleExceptionSeverity.High;
+            rd.EntityName = "";
+            rd.FieldName = "";
+            rd.Message = task.Exception.Message;
+            ex.RuleResult.Add(rd);
             throw ex;
         }
         else if (!task.Result.Succeeded)
         {
-			RuleExceptionData rd2 = new RuleExceptionData();                    
-			foreach (object o in task.Result.Errors) {
-				RuleExceptionData rd = new RuleExceptionData();                    
-				rd2.Severity = RuleExceptionSeverity.High;
-				rd2.EntityName = "";
-				rd2.FieldName = "";
-				rd2.Message = (string) o;
-				ex.RuleResult.Add(rd2);
-			}
-			throw ex;
+            RuleExceptionData rd2 = new RuleExceptionData();
+            foreach (object o in task.Result.Errors)
+            {
+                RuleExceptionData rd = new RuleExceptionData();
+                rd2.Severity = RuleExceptionSeverity.High;
+                rd2.EntityName = "";
+                rd2.FieldName = "";
+                rd2.Message = (string)o;
+                ex.RuleResult.Add(rd2);
+            }
+            throw ex;
         }
         else
         {
             result = true;
         }
     }
-    
+
     private void ConfirmEmail()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
         if (!(Parameters["Token"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorTokenNotString);
+            throw new InvalidCastException(Resources.ErrorTokenNotString);
         }
         Task<InternalIdentityResult> task = userManager.ConfirmEmailAsync(
-            Parameters["UserId"].ToString()
-            , Parameters["Token"].ToString());
-		RuleException ex = new RuleException();
+            Parameters["UserId"].ToString(),
+            Parameters["Token"].ToString()
+        );
+        RuleException ex = new RuleException();
         if (task.IsFaulted)
         {
-			RuleExceptionData rd = new RuleExceptionData();                    
-			rd.Severity = RuleExceptionSeverity.High;
-			rd.EntityName = "";
-			rd.FieldName = "";
-			rd.Message = task.Exception.Message;
-			ex.RuleResult.Add(rd);       
+            RuleExceptionData rd = new RuleExceptionData();
+            rd.Severity = RuleExceptionSeverity.High;
+            rd.EntityName = "";
+            rd.FieldName = "";
+            rd.Message = task.Exception.Message;
+            ex.RuleResult.Add(rd);
             throw ex;
         }
         else if (!task.Result.Succeeded)
         {
-			RuleExceptionData rd2 = new RuleExceptionData();                    
-			foreach (object o in task.Result.Errors) {
-				
-				RuleExceptionData rd = new RuleExceptionData();                    
-				rd2.Severity = RuleExceptionSeverity.High;
-				rd2.EntityName = "";
-				rd2.FieldName = "";
-				rd2.Message = (string) o;
-				ex.RuleResult.Add(rd2);
-			}
-			throw ex;
+            RuleExceptionData rd2 = new RuleExceptionData();
+            foreach (object o in task.Result.Errors)
+            {
+                RuleExceptionData rd = new RuleExceptionData();
+                rd2.Severity = RuleExceptionSeverity.High;
+                rd2.EntityName = "";
+                rd2.FieldName = "";
+                rd2.Message = (string)o;
+                ex.RuleResult.Add(rd2);
+            }
+            throw ex;
         }
         else
         {
             result = true;
         }
     }
+
     private void ChangePassword()
     {
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
         if (!(Parameters["OldPassword"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorOldPasswordNotString);
+            throw new InvalidCastException(Resources.ErrorOldPasswordNotString);
         }
         if (!(Parameters["NewPassword"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorNewPasswordNotString);
+            throw new InvalidCastException(Resources.ErrorNewPasswordNotString);
         }
         IOrigamUser user = FindUser();
         Task<InternalIdentityResult> task = userManager.ChangePasswordAsync(
             user.BusinessPartnerId,
             Parameters["OldPassword"].ToString().TrimEnd(),
-            Parameters["NewPassword"].ToString().TrimEnd());
+            Parameters["NewPassword"].ToString().TrimEnd()
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -400,11 +398,14 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = true;
         }
     }
+
     private IOrigamUser FindUser()
     {
         IOrigamUser user = null;
         Task<IOrigamUser> taskFindUser = userManager.FindByNameAsync(
-            Parameters["Username"].ToString(),TransactionId);
+            Parameters["Username"].ToString(),
+            TransactionId
+        );
         if (taskFindUser.IsFaulted)
         {
             throw taskFindUser.Exception;
@@ -419,30 +420,28 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         }
         return user;
     }
+
     private void ResetPassword()
     {
         if (!(Parameters["UserName"] is String))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
         if (!(Parameters["Token"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorTokenNotString);
+            throw new InvalidCastException(Resources.ErrorTokenNotString);
         }
         if (!(Parameters["NewPassword"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorNewPasswordNotString);
+            throw new InvalidCastException(Resources.ErrorNewPasswordNotString);
         }
-        Task<InternalIdentityResult> resetPasswordTask
-            = userManager.ResetPasswordFromUsernameAsync(
+        Task<InternalIdentityResult> resetPasswordTask = userManager.ResetPasswordFromUsernameAsync(
             Parameters["UserName"].ToString(),
             Parameters["Token"].ToString(),
-            Parameters["NewPassword"].ToString().TrimEnd());
+            Parameters["NewPassword"].ToString().TrimEnd()
+        );
         if (resetPasswordTask.IsFaulted)
-        {                
+        {
             throw resetPasswordTask.Exception;
         }
         else if (!resetPasswordTask.Result.Succeeded)
@@ -460,12 +459,12 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = true;
         }
     }
+
     private void DeleteUser()
     {
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
         IOrigamUser user = FindUser();
         user.TransactionId = TransactionId;
@@ -480,31 +479,27 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             OrigamUserContext.Reset(user.UserName);
         }
     }
+
     private void UpdateUser()
     {
         // Check input parameters
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
-        if (Parameters.ContainsKey("Email")
-        && !(Parameters["Email"] is string))
+        if (Parameters.ContainsKey("Email") && !(Parameters["Email"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorEmailNotString);
+            throw new InvalidCastException(Resources.ErrorEmailNotString);
         }
-        if (Parameters.ContainsKey("IsApproved")
-        && !(Parameters["IsApproved"] is Boolean))
+        if (Parameters.ContainsKey("IsApproved") && !(Parameters["IsApproved"] is Boolean))
         {
-            throw new InvalidCastException(
-                Resources.ErrorIsApprovedNotBool);
+            throw new InvalidCastException(Resources.ErrorIsApprovedNotBool);
         }
         IOrigamUser user = FindUser();
-        user.Email = Parameters.ContainsKey("Email") 
-            ? Parameters["Email"].ToString() : null;
-        user.IsApproved = Parameters.ContainsKey("IsApproved") 
-            ? (Boolean)Parameters["IsApproved"] : false;
+        user.Email = Parameters.ContainsKey("Email") ? Parameters["Email"].ToString() : null;
+        user.IsApproved = Parameters.ContainsKey("IsApproved")
+            ? (Boolean)Parameters["IsApproved"]
+            : false;
         user.TransactionId = TransactionId;
         Task<InternalIdentityResult> task = userManager.UpdateAsync(user);
         if (task.IsFaulted)
@@ -516,91 +511,85 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result.Succeeded;
         }
     }
-	private void SendEmailConfirmationToken()
-	{
-		// Check input parameters
-		if (!(Parameters["Username"] is string))
-		{
-			throw new InvalidCastException(
-				Resources.ErrorUsernameNotString);
-		}
-		try {
-			userManager.SendNewUserToken(
-				(string)this.Parameters["Username"]);
-			
-		}
-		catch (Exception e)
-		{
-			if (log.IsErrorEnabled)
-			{
-				log.ErrorFormat("Can't send a confirmation email: {0}", e);
-			}
-			// convert to rule exception
-			RuleExceptionData red = new RuleExceptionData();
-			red.Message = e.Message;
-			red.Severity = RuleExceptionSeverity.High;
-			red.EntityName = "SendEmailConfirmationTokenError";
-			red.FieldName = "";
-			throw new RuleException(new RuleExceptionDataCollection() { red });
-		}
-		result = true;
-	}
-	private void CreateUser()
+
+    private void SendEmailConfirmationToken()
     {
         // Check input parameters
         if (!(Parameters["Username"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUsernameNotString);
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
         }
-        if (Parameters.ContainsKey("Password")
-        && !(Parameters["Password"] is string))
+        try
         {
-            throw new InvalidCastException(
-                Resources.ErrorPasswordNotString);
+            userManager.SendNewUserToken((string)this.Parameters["Username"]);
+        }
+        catch (Exception e)
+        {
+            if (log.IsErrorEnabled)
+            {
+                log.ErrorFormat("Can't send a confirmation email: {0}", e);
+            }
+            // convert to rule exception
+            RuleExceptionData red = new RuleExceptionData();
+            red.Message = e.Message;
+            red.Severity = RuleExceptionSeverity.High;
+            red.EntityName = "SendEmailConfirmationTokenError";
+            red.FieldName = "";
+            throw new RuleException(new RuleExceptionDataCollection() { red });
+        }
+        result = true;
+    }
+
+    private void CreateUser()
+    {
+        // Check input parameters
+        if (!(Parameters["Username"] is string))
+        {
+            throw new InvalidCastException(Resources.ErrorUsernameNotString);
+        }
+        if (Parameters.ContainsKey("Password") && !(Parameters["Password"] is string))
+        {
+            throw new InvalidCastException(Resources.ErrorPasswordNotString);
         }
         if (!(Parameters["Email"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorEmailNotString);
+            throw new InvalidCastException(Resources.ErrorEmailNotString);
         }
-        if (Parameters.ContainsKey("ProviderUserKey")
-        && !(Parameters["ProviderUserKey"] is System.Guid))
+        if (
+            Parameters.ContainsKey("ProviderUserKey")
+            && !(Parameters["ProviderUserKey"] is System.Guid)
+        )
         {
-            throw new InvalidCastException(
-                Resources.ErrorProviderUserKeyNotGuid);
+            throw new InvalidCastException(Resources.ErrorProviderUserKeyNotGuid);
         }
-        if (Parameters.ContainsKey("PasswordQuestion")
-        && !(Parameters["PasswordQuestion"] is string))
+        if (
+            Parameters.ContainsKey("PasswordQuestion")
+            && !(Parameters["PasswordQuestion"] is string)
+        )
         {
-            throw new InvalidCastException(
-                Resources.ErrorPasswordQuestionNotString);
+            throw new InvalidCastException(Resources.ErrorPasswordQuestionNotString);
         }
-        if (Parameters.ContainsKey("PasswordAnswer")
-        && !(Parameters["PasswordAnswer"] is string))
+        if (Parameters.ContainsKey("PasswordAnswer") && !(Parameters["PasswordAnswer"] is string))
         {
-            throw new InvalidCastException(
-                Resources.ErrorPasswordAnswerNotString);
+            throw new InvalidCastException(Resources.ErrorPasswordAnswerNotString);
         }
-		bool emailConfirmed = false;
-		if (Parameters.ContainsKey("EmailConfirmed"))
-		{
-			if (!(Parameters["EmailConfirmed"] is bool))
-			{
-				throw new InvalidCastException(
-					Resources.ErrorEmailConfirmedNotBool);
-			}
-			else
-			{
-				emailConfirmed = (bool)Parameters["EmailConfirmed"];
-			}
-		}
-        IOrigamUser user = userManager.CreateUserObject(
-            Parameters["Username"].ToString());
+        bool emailConfirmed = false;
+        if (Parameters.ContainsKey("EmailConfirmed"))
+        {
+            if (!(Parameters["EmailConfirmed"] is bool))
+            {
+                throw new InvalidCastException(Resources.ErrorEmailConfirmedNotBool);
+            }
+            else
+            {
+                emailConfirmed = (bool)Parameters["EmailConfirmed"];
+            }
+        }
+        IOrigamUser user = userManager.CreateUserObject(Parameters["Username"].ToString());
         user.Email = Parameters["Email"].ToString();
-        if (Parameters.ContainsKey("PasswordQuestion")) {
-            user.PasswordQuestion 
-                = Parameters["PasswordQuestion"].ToString();
+        if (Parameters.ContainsKey("PasswordQuestion"))
+        {
+            user.PasswordQuestion = Parameters["PasswordQuestion"].ToString();
         }
         if (Parameters.ContainsKey("PasswordAnswer"))
         {
@@ -610,31 +599,33 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             user.ProviderUserKey = (Guid)Parameters["ProviderUserKey"];
         }
-        user.EmailConfirmed = emailConfirmed;            
+        user.EmailConfirmed = emailConfirmed;
         user.TransactionId = TransactionId;
         Task<InternalIdentityResult> task = userManager.CreateAsync(
-            user, Parameters["Password"].ToString().TrimEnd());
-		if (task.IsFaulted)
-		{
-			throw task.Exception;
-		}
-		else if (!task.Result.Succeeded)
-		{
-			throw new OrigamValidationException(string.Join(" ", task.Result.Errors));
-		} 
+            user,
+            Parameters["Password"].ToString().TrimEnd()
+        );
+        if (task.IsFaulted)
+        {
+            throw task.Exception;
+        }
+        else if (!task.Result.Succeeded)
+        {
+            throw new OrigamValidationException(string.Join(" ", task.Result.Errors));
+        }
         OrigamUserContext.Reset(Parameters["Username"].ToString());
-		result = user.UserName;            
+        result = user.UserName;
     }
+
     private void GetEmailConfirmationToken()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
-        Task<string> task = userManager
-            .GenerateEmailConfirmationTokenAsync(
-            Parameters["UserId"].ToString());
+        Task<string> task = userManager.GenerateEmailConfirmationTokenAsync(
+            Parameters["UserId"].ToString()
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -644,16 +635,16 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private void GetPasswordResetTokenFromEmail()
     {
         if (!(Parameters["Email"] is System.String))
         {
-            throw new InvalidCastException(
-                Resources.ErrorEmailNotString);
+            throw new InvalidCastException(Resources.ErrorEmailNotString);
         }
-        Task<TokenResult> generateTask = 
-            userManager.GetPasswordResetTokenFromEmailAsync(
-                (string)Parameters["Email"]);
+        Task<TokenResult> generateTask = userManager.GetPasswordResetTokenFromEmailAsync(
+            (string)Parameters["Email"]
+        );
         if (generateTask.IsFaulted)
         {
             throw generateTask.Exception;
@@ -685,16 +676,16 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = new XmlContainer(xmlDoc);
         }
     }
+
     private void GetPasswordResetToken()
     {
         if (!(Parameters["UserId"] is System.Guid))
         {
-            throw new InvalidCastException(
-                Resources.ErrorUserIdNotGuid);
+            throw new InvalidCastException(Resources.ErrorUserIdNotGuid);
         }
-        Task<string> task = userManager
-            .GeneratePasswordResetTokenAsync(
-            Parameters["UserId"].ToString());
+        Task<string> task = userManager.GeneratePasswordResetTokenAsync(
+            Parameters["UserId"].ToString()
+        );
         if (task.IsFaulted)
         {
             throw task.Exception;
@@ -704,6 +695,7 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private void GetPasswordAttributes()
     {
         Task<XmlDocument> task = userManager.GetPasswordAttributesAsync();
@@ -716,6 +708,7 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             result = task.Result;
         }
     }
+
     private XmlDocument GetUserDataXml(IOrigamUser user)
     {
         XmlDocument xmlDoc = new System.Xml.XmlDocument();
@@ -733,29 +726,25 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         XmlAttribute isOnline = xmlDoc.CreateAttribute("IsOnline");
         userData.Attributes.Append(isOnline);
         isOnline.Value = user.IsOnline.ToString();
-        XmlAttribute lastActivityDate = xmlDoc.CreateAttribute(
-            "LastActivityDate");
+        XmlAttribute lastActivityDate = xmlDoc.CreateAttribute("LastActivityDate");
         lastActivityDate.Value = user.LastActivityDate.ToString();
         userData.Attributes.Append(lastActivityDate);
-        XmlAttribute lastLockoutDate = xmlDoc.CreateAttribute(
-            "LastLockoutDate");
+        XmlAttribute lastLockoutDate = xmlDoc.CreateAttribute("LastLockoutDate");
         lastLockoutDate.Value = user.LastLockoutDate.ToString();
         userData.Attributes.Append(lastLockoutDate);
-        XmlAttribute lastLoginDate = xmlDoc.CreateAttribute(
-            "LastLoginDate");
+        XmlAttribute lastLoginDate = xmlDoc.CreateAttribute("LastLoginDate");
         lastLoginDate.Value = user.LastLoginDate.ToString();
         userData.Attributes.Append(lastLoginDate);
-        XmlAttribute lastPasswordChangedDate = xmlDoc.CreateAttribute(
-            "LastPasswordChangedDate");
+        XmlAttribute lastPasswordChangedDate = xmlDoc.CreateAttribute("LastPasswordChangedDate");
         lastPasswordChangedDate.Value = user.LastPasswordChangedDate.ToString();
         userData.Attributes.Append(lastPasswordChangedDate);
-        XmlAttribute passwordQuestion = xmlDoc.CreateAttribute(
-            "PasswordQuestion");
+        XmlAttribute passwordQuestion = xmlDoc.CreateAttribute("PasswordQuestion");
         passwordQuestion.Value = user.PasswordQuestion;
         userData.Attributes.Append(passwordQuestion);
         root.AppendChild(userData);
         xmlDoc.AppendChild(root);
         return xmlDoc;
     }
-    public void Dispose() => serviceScope?.Dispose();        
+
+    public void Dispose() => serviceScope?.Dispose();
 }
