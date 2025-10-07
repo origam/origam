@@ -51,7 +51,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.ServicesTests'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.SchemaTests'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.TestCommon'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Git'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Git'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GitTests'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Excel'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common'">true</EnableStrictBuild> -->
