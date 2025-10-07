@@ -1,6 +1,5 @@
 ﻿<Project>
   <PropertyGroup>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'ScheduleTimer'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server.Common'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
@@ -18,6 +17,7 @@
                 <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
                 <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
+                <CSharpier_Check>false</CSharpier_Check>
             </PropertyGroup>
 
             <ItemGroup>
