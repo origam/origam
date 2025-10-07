@@ -25,69 +25,91 @@ using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 
 namespace Origam.BI.CrystalReports;
+
 public class CrystalReportService : IReportService
 {
-	private readonly CrystalReportHelper crystalReportHelper = new();
-	
-	#region IReportService Members
-	public void PrintReport(
-		Guid reportId, 
-		IXmlContainer data, 
-		string printerName, 
-		int copies, 
-		Hashtable parameters)
-	{
-		var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-		var xmlDataDoc = ReportHelper.LoadOrUseReportData(
-			report, data, parameters, dbTransaction: null);
-		using var langSwitcher = new LanguageSwitcher(
-			langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
-		ReportHelper.LogInfo(System.Reflection.MethodBase
-				.GetCurrentMethod()?.DeclaringType,
-			$"Printing report '{report.Name}' to {printerName}");
-		crystalReportHelper.PrintReport(report.Id, xmlDataDoc.DataSet,
-			parameters, printerName, copies);
-	}
-	public object GetReport(
-		Guid reportId, 
-		IXmlContainer data, 
-		string format, 
-		Hashtable parameters, 
-		string dbTransaction)
-	{
-		var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
-		var xmlDataDoc = ReportHelper.LoadOrUseReportData(
-			report, data, parameters, dbTransaction);
-		using var langSwitcher = new LanguageSwitcher(
-			langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
-		ReportHelper.LogInfo(System.Reflection.MethodBase
-				.GetCurrentMethod()?.DeclaringType,
-			$"Exporting report '{report.Name}' to {format}");
-		return crystalReportHelper.CreateReport(report.Id, xmlDataDoc.DataSet,
-			parameters, format);
-	}
+    private readonly CrystalReportHelper crystalReportHelper = new();
+
+    #region IReportService Members
+    public void PrintReport(
+        Guid reportId,
+        IXmlContainer data,
+        string printerName,
+        int copies,
+        Hashtable parameters
+    )
+    {
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+        var xmlDataDoc = ReportHelper.LoadOrUseReportData(
+            report,
+            data,
+            parameters,
+            dbTransaction: null
+        );
+        using var langSwitcher = new LanguageSwitcher(
+            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+        );
+        ReportHelper.LogInfo(
+            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            $"Printing report '{report.Name}' to {printerName}"
+        );
+        crystalReportHelper.PrintReport(
+            report.Id,
+            xmlDataDoc.DataSet,
+            parameters,
+            printerName,
+            copies
+        );
+    }
+
+    public object GetReport(
+        Guid reportId,
+        IXmlContainer data,
+        string format,
+        Hashtable parameters,
+        string dbTransaction
+    )
+    {
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+        var xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
+        using var langSwitcher = new LanguageSwitcher(
+            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+        );
+        ReportHelper.LogInfo(
+            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            $"Exporting report '{report.Name}' to {format}"
+        );
+        return crystalReportHelper.CreateReport(report.Id, xmlDataDoc.DataSet, parameters, format);
+    }
+
     public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
     {
         // do nothing unless we need to trace
     }
+
     public string PrepareExternalReportViewer(
-	    Guid reportId,
-		IXmlContainer data, 
-	    string format, 
-	    Hashtable parameters,
-		string dbTransaction)
+        Guid reportId,
+        IXmlContainer data,
+        string format,
+        Hashtable parameters,
+        string dbTransaction
+    )
     {
-        var report = ReportHelper.GetReportElement<CrystalReport>(
-			reportId);
-        var xmlDataDoc = ReportHelper
-            .LoadOrUseReportData(report, data, parameters, dbTransaction);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+        var xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
         using var langSwitcher = new LanguageSwitcher(
-	        langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
-        ReportHelper.LogInfo(System.Reflection.MethodBase
-		        .GetCurrentMethod()?.DeclaringType,
-	        $"Exporting report '{report.Name}' to {format}");
-        return crystalReportHelper.PrepareReport(report, xmlDataDoc.DataSet,
-	        parameters, DataReportExportFormatType.RPT.ToString());
+            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
+        );
+        ReportHelper.LogInfo(
+            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
+            $"Exporting report '{report.Name}' to {format}"
+        );
+        return crystalReportHelper.PrepareReport(
+            report,
+            xmlDataDoc.DataSet,
+            parameters,
+            DataReportExportFormatType.RPT.ToString()
+        );
     }
     #endregion
 }

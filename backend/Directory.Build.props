@@ -3,7 +3,6 @@
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports'">true</DisableStrictBuild>
   </PropertyGroup>
     <Choose>
         <When Condition="'$(DisableStrictBuild)' != 'true'">
