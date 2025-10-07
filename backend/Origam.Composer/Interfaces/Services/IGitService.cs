@@ -25,7 +25,7 @@ public interface IGitService
 {
     public void CreateRepository(string path);
 
-    public void InitCommit(string username, string userEmail);
+    public void InitCommit(string? username, string? userEmail);
 
     public string[]? FetchGitUserFromGlobalConfig();
 }
