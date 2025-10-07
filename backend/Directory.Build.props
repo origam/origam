@@ -7,7 +7,7 @@
         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.Diagram'">true</EnableStrictBuild> 
         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.MenuModel'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports.NetFx'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports.NetFx'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamScheduler'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.TestModel'">true</EnableStrictBuild> -->
