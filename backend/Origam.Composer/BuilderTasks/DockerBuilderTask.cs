@@ -193,13 +193,13 @@ public class DockerBuilderTask : IDockerBuilderTask
 
     private class DockerConfig
     {
-        public string EnvFilePath { get; init; }
-        public string CustomAssetsPath { get; init; }
-        public string ModelPath { get; init; }
-        public string ClientCmdFilePath { get; init; }
-        public string ArchitectCmdFilePath { get; init; }
-        public string ClientBaseImage { get; init; }
-        public string ArchitectBaseImage { get; init; }
-        public string CmdFileExtension { get; init; }
+        public required string EnvFilePath { get; init; }
+        public required string CustomAssetsPath { get; init; }
+        public required string ModelPath { get; init; }
+        public required string ClientCmdFilePath { get; init; }
+        public required string ArchitectCmdFilePath { get; init; }
+        public required string ClientBaseImage { get; init; }
+        public required string ArchitectBaseImage { get; init; }
+        public required string CmdFileExtension { get; init; }
     }
 }

@@ -70,33 +70,33 @@ public class Project
     #endregion
 
     #region Architect
-    public string ArchitectDockerImageLinux { get; set; }
-    public string ArchitectDockerImageWin { get; set; }
-    public int ArchitectPort { get; set; }
+    public required string ArchitectDockerImageLinux { get; init; }
+    public required string ArchitectDockerImageWin { get; init; }
+    public int ArchitectPort { get; init; }
     #endregion
 
     #region WebUser
-    public string WebAdminUsername { get; set; }
-    public string WebAdminPassword { get; set; }
-    public string WebAdminEmail { get; set; }
+    public required string WebAdminUsername { get; set; }
+    public required string WebAdminPassword { get; set; }
+    public required string WebAdminEmail { get; set; }
     #endregion
 
     #region Docker
-    public string ClientDockerImageLinux { get; set; }
-    public string ClientDockerImageWin { get; set; }
+    public required string ClientDockerImageLinux { get; init; }
+    public required string ClientDockerImageWin { get; init; }
     public int DockerPort { get; set; } = Common.Constants.DefaultHttpsPort;
-    public string DockerFolder { get; set; }
-    public string DockerEnvironmentsPathLinux { get; internal set; }
-    public string DockerClientPathLinux { get; set; }
-    public string DockerArchitectPathLinux { get; set; }
-    public string DockerArchitectPathWindows { get; set; }
-    public string DockerEnvironmentsPathWindows { get; internal set; }
-    public string DockerClientPathWindows { get; set; }
+    public required string DockerFolder { get; init; }
+    public required string DockerEnvironmentsPathLinux { get; init; }
+    public required string DockerClientPathLinux { get; init; }
+    public required string DockerArchitectPathLinux { get; init; }
+    public required string DockerArchitectPathWindows { get; init; }
+    public required string DockerEnvironmentsPathWindows { get; init; }
+    public required string DockerClientPathWindows { get; init; }
     #endregion
 
     #region Git
-    public bool IsGitEnabled { get; set; }
-    public string GitUsername { get; set; }
-    public string GitEmail { get; set; }
+    public bool IsGitEnabled { get; init; }
+    public string GitUsername { get; init; }
+    public string GitEmail { get; init; }
     #endregion
 }
