@@ -39,7 +39,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel.UI'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.LookupModel.UI'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.BaseComponents'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.PrintIt'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.PrintIt'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.FileService'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Windows.Editor'">true</EnableStrictBuild> -->
