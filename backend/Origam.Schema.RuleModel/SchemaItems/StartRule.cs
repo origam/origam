@@ -19,17 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
-using Origam.Schema.EntityModel;
 using System;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
+
 [SchemaItemDescription("Condition Rule", "condition-rule.png")]
 [HelpTopic("Condition+Rule")]
 public class StartRule : XPathRule, IStartRule
 {
-    public StartRule() : base() {}
-	public StartRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public StartRule(Key primaryKey) : base(primaryKey) { }
+    public StartRule()
+        : base() { }
+
+    public StartRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public StartRule(Key primaryKey)
+        : base(primaryKey) { }
 }

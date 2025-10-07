@@ -27,17 +27,25 @@ using System.Windows.Forms.Design;
 #endif
 
 namespace Origam.Schema.RuleModel;
+
 #if !NETSTANDARD
 class MultiLineTextEditor : UITypeEditor
 {
     private IWindowsFormsEditorService _editorService;
+
     public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
     {
         return UITypeEditorEditStyle.DropDown;
     }
-    public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+
+    public override object EditValue(
+        ITypeDescriptorContext context,
+        IServiceProvider provider,
+        object value
+    )
     {
-        _editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+        _editorService = (IWindowsFormsEditorService)
+            provider.GetService(typeof(IWindowsFormsEditorService));
         TextBox textEditorBox = new TextBox();
         textEditorBox.Multiline = true;
         textEditorBox.AcceptsTab = true;
@@ -49,9 +57,7 @@ class MultiLineTextEditor : UITypeEditor
         textEditorBox.AcceptsReturn = true;
         textEditorBox.Text = value as string;
         _editorService.DropDownControl(textEditorBox);
-        return textEditorBox.Text == (string)value
-            ? value 
-            : textEditorBox.Text;
+        return textEditorBox.Text == (string)value ? value : textEditorBox.Text;
     }
 }
 #endif
