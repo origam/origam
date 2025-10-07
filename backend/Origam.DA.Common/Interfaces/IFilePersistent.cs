@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Origam.DA.ObjectPersistence;
+
 public interface IFilePersistent : IPersistent
 {
     string RelativeFilePath { get; }

@@ -23,45 +23,36 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
+
 public enum ConstraintType
 {
-	PrimaryKey,
-	ForeignKey,
-	Unique
+    PrimaryKey,
+    ForeignKey,
+    Unique,
 }
+
 /// <summary>
 /// Summary description for DataEntityConstraint.
 /// </summary>
 public class DataEntityConstraint
 {
-	public DataEntityConstraint(ConstraintType type)
-	{
-		this.Type = type;
-	}
-	private ConstraintType _type;
-	public ConstraintType Type
-	{
-		get
-		{
-			return _type;
-		}
-		set
-		{
-			_type = value;
-		}
-	}
-	private IDataEntity _foreignEntity;
-	public IDataEntity ForeignEntity
-	{
-		get
-		{
-			return _foreignEntity;
-		}
-		set
-		{
-			_foreignEntity = value;
-		}
-	}
+    public DataEntityConstraint(ConstraintType type)
+    {
+        this.Type = type;
+    }
 
-	public List<IDataEntityColumn> Fields { get; } = new ();
+    private ConstraintType _type;
+    public ConstraintType Type
+    {
+        get { return _type; }
+        set { _type = value; }
+    }
+    private IDataEntity _foreignEntity;
+    public IDataEntity ForeignEntity
+    {
+        get { return _foreignEntity; }
+        set { _foreignEntity = value; }
+    }
+
+    public List<IDataEntityColumn> Fields { get; } = new();
 }

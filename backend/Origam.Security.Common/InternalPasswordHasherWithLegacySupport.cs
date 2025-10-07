@@ -25,10 +25,13 @@ using System.Text;
 using BrockAllen.IdentityReboot;
 
 namespace Origam.Security.Common;
-  public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
+
+public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
 {
     public override VerificationResult VerifyHashedPassword(
-        string hashedPassword, string providedPassword)
+        string hashedPassword,
+        string providedPassword
+    )
     {
         if (String.IsNullOrWhiteSpace(hashedPassword))
         {
@@ -38,8 +41,7 @@ namespace Origam.Security.Common;
         if (passwordProperties.Length != 2)
         {
             // use AdaptiveHasher
-            return base.VerifyHashedPassword(
-                hashedPassword, providedPassword);
+            return base.VerifyHashedPassword(hashedPassword, providedPassword);
         }
         else
         {
@@ -47,8 +49,13 @@ namespace Origam.Security.Common;
             // format hashedFormat|salt
             string passwordHash = passwordProperties[0];
             string salt = passwordProperties[1];
-            if (String.Equals(EncryptPassword(providedPassword, salt), 
-                passwordHash, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                String.Equals(
+                    EncryptPassword(providedPassword, salt),
+                    passwordHash,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
             {
                 return VerificationResult.SuccessRehashNeeded;
             }
@@ -58,6 +65,7 @@ namespace Origam.Security.Common;
             }
         }
     }
+
     private string EncryptPassword(string pass, string salt)
     {
         byte[] bIn = Encoding.Unicode.GetBytes(pass);

@@ -23,23 +23,24 @@ using System;
 using System.Diagnostics;
 
 namespace Origam;
+
 public class DebugTimer : IDisposable
 {
     private readonly LogType logType;
     private readonly Stopwatch watch;
     private readonly string message;
-    private static readonly log4net.ILog log =
-        log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
-    public DebugTimer(LogType logType = LogType.CONSOLE,
-        string message = "Elapsed time:")
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
+
+    public DebugTimer(LogType logType = LogType.CONSOLE, string message = "Elapsed time:")
     {
         this.message = message;
         this.logType = logType;
-        watch= new Stopwatch();
+        watch = new Stopwatch();
         watch.Start();
     }
+
     public void Dispose()
     {
         watch.Stop();
@@ -66,4 +67,11 @@ public class DebugTimer : IDisposable
     }
 }
 
-public enum LogType{CONSOLE, INFO, DEBUG, WARNING, ERROR}
+public enum LogType
+{
+    CONSOLE,
+    INFO,
+    DEBUG,
+    WARNING,
+    ERROR,
+}

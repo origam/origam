@@ -20,27 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Gui;
-using Origam.Schema.GuiModel;
-using Origam.Server;
-using System;
 
 namespace Origam.Server;
+
 public class ServerCoreEntityUIActionRunner : ServerEntityUIActionRunner
 {
     public ServerCoreEntityUIActionRunner(
-        IEntityUIActionRunnerClient actionRunnerClient, 
-        UIManager uiManager, 
-        SessionManager sessionManager, 
-        IBasicUIService basicUIService, 
-        IReportManager reportManager) 
-        : base(
-              actionRunnerClient, 
-              uiManager, sessionManager, 
-              basicUIService, 
-              reportManager)
-    {
-    }
-    override protected void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
+        IEntityUIActionRunnerClient actionRunnerClient,
+        UIManager uiManager,
+        SessionManager sessionManager,
+        IBasicUIService basicUIService,
+        IReportManager reportManager
+    )
+        : base(actionRunnerClient, uiManager, sessionManager, basicUIService, reportManager) { }
+
+    protected override void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
     {
         base.ExecuteSelectionDialogAction(processData);
         resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));

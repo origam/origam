@@ -27,20 +27,31 @@ using Origam.Services;
 using Origam.UI;
 
 namespace Origam.Workbench.Services;
+
 public interface IDataLookupService : IWorkbenchService
 {
-	object GetDisplayText(Guid lookupId, object lookupValue, string transactionId);
-	object GetDisplayText(Guid lookupId, object lookupValue, 
-        bool useCache, bool returnMessageIfNull, string transactionId);
-	object GetDisplayText(Guid lookupId, Dictionary<string, object> parameters, 
-        bool useCache, bool returnMessageIfNull, string transactionId);
+    object GetDisplayText(Guid lookupId, object lookupValue, string transactionId);
+    object GetDisplayText(
+        Guid lookupId,
+        object lookupValue,
+        bool useCache,
+        bool returnMessageIfNull,
+        string transactionId
+    );
+    object GetDisplayText(
+        Guid lookupId,
+        Dictionary<string, object> parameters,
+        bool useCache,
+        bool returnMessageIfNull,
+        string transactionId
+    );
     object CreateRecord(Guid lookupId, Dictionary<string, object> values, string transactionId);
-	DataTable GetList(LookupListRequest request);
-	DataView GetList(Guid lookupId, string transactionId);
-	DataView GetList(Guid lookupId, Dictionary<string, object> parameters, string transactionId);
-	object LinkTarget(ILookupControl lookupControl, object value);
-	Dictionary<string, object> LinkParameters(object linkTarget, object value);
-	IMenuBindingResult GetMenuBinding(Guid lookupId, object value);
-	bool HasMenuBindingWithSelection(Guid lookupId);
-	string ValueFromRow(DataRow row, string[] columns);
+    DataTable GetList(LookupListRequest request);
+    DataView GetList(Guid lookupId, string transactionId);
+    DataView GetList(Guid lookupId, Dictionary<string, object> parameters, string transactionId);
+    object LinkTarget(ILookupControl lookupControl, object value);
+    Dictionary<string, object> LinkParameters(object linkTarget, object value);
+    IMenuBindingResult GetMenuBinding(Guid lookupId, object value);
+    bool HasMenuBindingWithSelection(Guid lookupId);
+    string ValueFromRow(DataRow row, string[] columns);
 }

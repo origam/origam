@@ -20,31 +20,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
-
-using CoreServices = Origam.Workbench.Services.CoreServices;
-using Origam.Schema.EntityModel;
-using Origam.Schema;
-using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.Gui;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Server.Session_Stores;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public abstract class SaveableSessionStore : SessionStore
 {
-    private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
-           _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
+    private Dictionary<Guid, Dictionary<Guid, IList<Guid>>> _entityFieldDependencies =
+        new Dictionary<Guid, Dictionary<Guid, IList<Guid>>>();
     private bool _dependenciesInitialized = false;
     private DataSetBuilder datasetbuilder = new DataSetBuilder();
-    public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
-        : base(service, request, name, analytics)
-    {
-    }
+
+    public SaveableSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        string name,
+        Analytics analytics
+    )
+        : base(service, request, name, analytics) { }
+
     private Guid _dataStructureId;
     public Guid DataStructureId
     {
@@ -57,8 +62,14 @@ public abstract class SaveableSessionStore : SessionStore
             _dependenciesInitialized = false;
             if (_dataStructureId != Guid.Empty)
             {
-                IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                DataStructure ds = ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(this.DataStructureId)) as DataStructure;
+                IPersistenceService ps =
+                    ServiceManager.Services.GetService(typeof(IPersistenceService))
+                    as IPersistenceService;
+                DataStructure ds =
+                    ps.SchemaProvider.RetrieveInstance(
+                        typeof(DataStructure),
+                        new ModelElementKey(this.DataStructureId)
+                    ) as DataStructure;
                 foreach (DataStructureEntity entity in ds.Entities)
                 {
                     this.DirtyEnabledEntities.Add(entity.Name);
@@ -66,28 +77,34 @@ public abstract class SaveableSessionStore : SessionStore
             }
         }
     }
+
     public DataStructure DataStructure()
     {
         return DataStructure(DataStructureId);
     }
+
     internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
     {
-        return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet);// new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
+        return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet); // new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
     }
+
     internal DataSetBuilder GetDataSetBuilder()
     {
         return datasetbuilder;
     }
+
     public DataStructure DataStructure(Guid id)
     {
         return datasetbuilder.DataStructure(id);
     }
+
     private DataStructureTemplate _template;
     public DataStructureTemplate Template
     {
         get { return _template; }
         set { _template = value; }
     }
+
     internal virtual List<ChangeInfo> Save()
     {
         if (Data.HasErrors)
@@ -101,12 +118,10 @@ public abstract class SaveableSessionStore : SessionStore
         {
             foreach (DataRow r in t.Rows)
             {
-                if ((r.RowState == DataRowState.Modified) 
-                || (r.RowState == DataRowState.Added))
+                if ((r.RowState == DataRowState.Modified) || (r.RowState == DataRowState.Added))
                 {
                     changedRows.Add(r);
-                    if (!changedKeys.ContainsKey(
-                        DatasetTools.PrimaryKey(r)[0]))
+                    if (!changedKeys.ContainsKey(DatasetTools.PrimaryKey(r)[0]))
                     {
                         changedKeys.Add(DatasetTools.PrimaryKey(r)[0], null);
                     }
@@ -117,10 +132,11 @@ public abstract class SaveableSessionStore : SessionStore
         try
         {
             CoreServices.DataService.Instance.StoreData(
-                DataStructureId, Data, 
-                RefreshAfterSaveType 
-                == SaveRefreshType.RefreshChangedRecords, 
-                TransationId);
+                DataStructureId,
+                Data,
+                RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords,
+                TransationId
+            );
         }
         catch (DBConcurrencyException ex)
         {
@@ -130,11 +146,11 @@ public abstract class SaveableSessionStore : SessionStore
         {
             foreach (DataRow r in changedRows)
             {
-                listOfChanges.AddRange(GetChangesByRow(
-                    null, r, 0, changedKeys, true, false, false, false));
+                listOfChanges.AddRange(
+                    GetChangesByRow(null, r, 0, changedKeys, true, false, false, false)
+                );
                 // if there is a list, we update the list, so it has the actual changed data
-                if ((DataList != null) 
-                && DataList.Tables.Contains(r.Table.TableName))
+                if ((DataList != null) && DataList.Tables.Contains(r.Table.TableName))
                 {
                     UpdateListRow(r);
                 }
@@ -145,11 +161,16 @@ public abstract class SaveableSessionStore : SessionStore
         switch (RefreshAfterSaveType)
         {
             case SaveRefreshType.RefreshCompleteForm:
+            {
                 listOfChanges.Add(ChangeInfo.RefreshFormChangeInfo());
                 break;
+            }
+
             case SaveRefreshType.ReloadActualRecord:
+            {
                 listOfChanges.Add(ChangeInfo.ReloadCurrentRecordChangeInfo());
                 break;
+            }
         }
         if (RefreshPortalAfterSave)
         {
@@ -157,50 +178,78 @@ public abstract class SaveableSessionStore : SessionStore
         }
         return listOfChanges;
     }
-    public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
-        IDictionary<string, object> parameters, string requestingGrid)
+
+    public override List<ChangeInfo> CreateObject(
+        string entity,
+        IDictionary<string, object> values,
+        IDictionary<string, object> parameters,
+        string requestingGrid
+    )
     {
         if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
         {
             return base.CreateObject(entity, values, parameters, requestingGrid);
         }
+        DataTable table = GetDataTable(entity, this.Data);
+        object[] key;
+        if (parameters.Count == 0)
+        {
+            key = TemplateTools.AddTemplateRecord(
+                null,
+                this.Template,
+                entity,
+                this.DataStructureId,
+                this.Data
+            );
+        }
         else
         {
-            DataTable table = GetDataTable(entity, this.Data);
-            object[] key;
-            if (parameters.Count == 0)
-            {
-                key = TemplateTools.AddTemplateRecord(null, this.Template, entity, this.DataStructureId, this.Data);
-            }
-            else
-            {
-                object[] keys = new object[parameters.Count];
-                parameters.Values.CopyTo(keys, 0);
-                DataRelation relation = table.ParentRelations[0];
-                DataRow parentRow = relation.ParentTable.Rows.Find(keys);
-                key = TemplateTools.AddTemplateRecord(parentRow, this.Template, entity, this.DataStructureId, this.Data);
-            }
-            DataRow newRow = table.Rows.Find(key);
-            NewRowToDataList(newRow);
-            List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
-                newRow, Operation.Create, this.Data.HasErrors, 
-                this.Data.HasChanges(), true);
-            return listOfChanges;
+            object[] keys = new object[parameters.Count];
+            parameters.Values.CopyTo(keys, 0);
+            DataRelation relation = table.ParentRelations[0];
+            DataRow parentRow = relation.ParentTable.Rows.Find(keys);
+            key = TemplateTools.AddTemplateRecord(
+                parentRow,
+                this.Template,
+                entity,
+                this.DataStructureId,
+                this.Data
+            );
         }
+        DataRow newRow = table.Rows.Find(key);
+        NewRowToDataList(newRow);
+        List<ChangeInfo> listOfChanges = GetChangesByRow(
+            requestingGrid,
+            newRow,
+            Operation.Create,
+            this.Data.HasErrors,
+            this.Data.HasChanges(),
+            true
+        );
+
+        return listOfChanges;
     }
+
     public override IEnumerable<ChangeInfo> UpdateObject(
-        string entity, object id, string property, object newValue)
+        string entity,
+        object id,
+        string property,
+        object newValue
+    )
     {
         lock (_lock)
         {
-            return UpdateObjectWithDependenies(entity, id,
-                property, newValue, true);
+            return UpdateObjectWithDependenies(entity, id, property, newValue, true);
         }
     }
-    public IEnumerable<ChangeInfo>
-        UpdateObjectWithDependenies(
-        string entity, object id, string property, object newValue,
-        bool isTopLevel)
+
+    public IEnumerable<ChangeInfo> UpdateObjectWithDependenies(
+        string entity,
+        object id,
+        string property,
+        object newValue,
+        bool isTopLevel
+    )
     {
         InitializeFieldDependencies();
         DataTable table = GetDataTable(entity, this.Data);
@@ -210,19 +259,30 @@ public abstract class SaveableSessionStore : SessionStore
         {
             if (_entityFieldDependencies[dsEntityId].ContainsKey(fieldId))
             {
-                foreach(Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
+                foreach (Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
                 {
                     string dependentColumnName = ColumnNameById(table, dependentColumnId);
                     try
                     {
                         this.UpdateObjectWithDependenies(
-                            entity, id,	dependentColumnName, null, false);
+                            entity,
+                            id,
+                            dependentColumnName,
+                            null,
+                            false
+                        );
                     }
-                    catch (NullReferenceException e) 
+                    catch (NullReferenceException e)
                     {
                         throw new NullReferenceException(
-                            String.Format(Resources.ErrorDependentColumnNotFound,
-                            dependentColumnName, property, entity, e.Message));
+                            String.Format(
+                                Resources.ErrorDependentColumnNotFound,
+                                dependentColumnName,
+                                property,
+                                entity,
+                                e.Message
+                            )
+                        );
                     }
                 }
             }
@@ -231,15 +291,13 @@ public abstract class SaveableSessionStore : SessionStore
         // (last) update
         if (isTopLevel)
         {
-            return base.UpdateObject(entity, id,
-                property, newValue);
+            return base.UpdateObject(entity, id, property, newValue);
         }
-        else 
-        {
-            base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
-            return new List<ChangeInfo>();
-        }
+        base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
+
+        return new List<ChangeInfo>();
     }
+
     private static string ColumnNameById(DataTable table, Guid columnId)
     {
         foreach (DataColumn col in table.Columns)
@@ -249,8 +307,13 @@ public abstract class SaveableSessionStore : SessionStore
                 return col.ColumnName;
             }
         }
-        throw new ArgumentOutOfRangeException("columnId", columnId, "Column not found in entity " + table.TableName);
+        throw new ArgumentOutOfRangeException(
+            "columnId",
+            columnId,
+            "Column not found in entity " + table.TableName
+        );
     }
+
     public override string Title
     {
         get
@@ -259,32 +322,39 @@ public abstract class SaveableSessionStore : SessionStore
             {
                 return base.Title;
             }
-            else
-            {
-                return "";
-            }
+
+            return "";
         }
-        set
-        {
-            base.Title = value;
-        }
+        set { base.Title = value; }
     }
+
     private void InitializeFieldDependencies()
     {
-        if (_dependenciesInitialized) return;
+        if (_dependenciesInitialized)
+        {
+            return;
+        }
+
         IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
         foreach (DataTable table in this.Data.Tables)
         {
             // get entity definition
-            DataStructureEntity modelEntity = ps.SchemaProvider.RetrieveInstance(typeof(DataStructureEntity),
-                new ModelElementKey((Guid)table.ExtendedProperties["Id"])) as DataStructureEntity;
+            DataStructureEntity modelEntity =
+                ps.SchemaProvider.RetrieveInstance(
+                    typeof(DataStructureEntity),
+                    new ModelElementKey((Guid)table.ExtendedProperties["Id"])
+                ) as DataStructureEntity;
             Dictionary<Guid, IList<Guid>> entityDependency = new Dictionary<Guid, IList<Guid>>();
             _entityFieldDependencies.Add(modelEntity.Id, entityDependency);
             // browse all the entity fields
             foreach (DataStructureColumn column in modelEntity.Columns)
             {
                 // read the dependencies
-                foreach (var dep in column.Field.ChildItemsByType<EntityFieldDependency>(EntityFieldDependency.CategoryConst))
+                foreach (
+                    var dep in column.Field.ChildItemsByType<EntityFieldDependency>(
+                        EntityFieldDependency.CategoryConst
+                    )
+                )
                 {
                     IList<Guid> fieldDependencies;
                     Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];

@@ -19,19 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema.EntityModel;
 using System.Collections;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
+
 /// <summary>
 /// Summary description for RuleSchemaItemProvider.
 /// </summary>
-public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
+public class RuleSchemaItemProvider
+    : AbstractSchemaItemProvider,
+        ISchemaItemFactory,
+        IRuleSchemaItemProvider
 {
-	public RuleSchemaItemProvider()
-	{
+    public RuleSchemaItemProvider()
+    {
         this.ChildItemTypes.Add(typeof(StartRule));
         this.ChildItemTypes.Add(typeof(EndRule));
         this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
@@ -39,28 +43,20 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
         this.ChildItemTypes.Add(typeof(ComplexDataRule));
         this.ChildItemTypes.Add(typeof(SimpleDataRule));
     }
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
-		{
-			return AbstractRule.CategoryConst;
-		}
-	}
-	public override bool AutoCreateFolder
-	{
-		get
-		{
-			return true;
-		}
-	}
-	public override string Group
-	{
-		get
-		{
-			return "BL";
-		}
-	}
+
+    #region ISchemaItemProvider Members
+    public override string RootItemType
+    {
+        get { return AbstractRule.CategoryConst; }
+    }
+    public override bool AutoCreateFolder
+    {
+        get { return true; }
+    }
+    public override string Group
+    {
+        get { return "BL"; }
+    }
     public List<IStartRule> StartRules
     {
         get
@@ -68,7 +64,7 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
             var result = new List<IStartRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if(rule is StartRule startRule)
+                if (rule is StartRule startRule)
                 {
                     result.Add(startRule);
                 }
@@ -122,33 +118,27 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
         }
     }
     #endregion
-	#region IBrowserNode Members
-	public override string Icon
-	{
-		get
-		{
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			return "icon_27_rules.png";
-		}
-	}
-	public override string NodeText
-	{
-		get
-		{
-			return "Rules";
-		}
-		set
-		{
-			base.NodeText = value;
-		}
-	}
-	public override string NodeToolTipText
-	{
-		get
-		{
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			return null;
-		}
-	}
-	#endregion
+    #region IBrowserNode Members
+    public override string Icon
+    {
+        get
+        {
+            // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+            return "icon_27_rules.png";
+        }
+    }
+    public override string NodeText
+    {
+        get { return "Rules"; }
+        set { base.NodeText = value; }
+    }
+    public override string NodeToolTipText
+    {
+        get
+        {
+            // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+            return null;
+        }
+    }
+    #endregion
 }

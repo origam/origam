@@ -30,30 +30,29 @@ using Origam.Extensions;
 using ProtoBuf;
 
 namespace Origam.DA.Service;
+
 public class ItemTracker
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly FileHashIndex fileHashIndex =
-        new FileHashIndex();
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
+    private readonly FileHashIndex fileHashIndex = new FileHashIndex();
     private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex =
         new Dictionary<Guid, PersistedObjectInfo>();
-    private readonly ObjectInfoIndex<string> categoryIndex =
-        new ObjectInfoIndex<string>();
-    private readonly ObjectInfoIndex<Guid> treeIndex =
-        new ObjectInfoIndex<Guid>();
-    private readonly ObjectInfoIndex<string> folderIndex =
-        new ObjectInfoIndex<string>();
+    private readonly ObjectInfoIndex<string> categoryIndex = new ObjectInfoIndex<string>();
+    private readonly ObjectInfoIndex<Guid> treeIndex = new ObjectInfoIndex<Guid>();
+    private readonly ObjectInfoIndex<string> folderIndex = new ObjectInfoIndex<string>();
     private readonly OrigamPathFactory pathFactory;
     public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.OrigamFiles;
     public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.AllFiles;
     public IEnumerable<OrigamFile> PackegeFiles => fileHashIndex.PackageFiles;
     public bool IsEmpty => !OrigamFiles.Any();
+
     public ItemTracker(OrigamPathFactory pathFactory)
     {
         this.pathFactory = pathFactory;
     }
+
     internal void CleanUp()
     {
         LogTreeIndexState("Cleaning up");
@@ -62,6 +61,7 @@ public class ItemTracker
         folderIndex.CleanUp();
         LogTreeIndexState("Clean up finished");
     }
+
     public void ClearCache()
     {
         foreach (OrigamFile origamFile in OrigamFiles)
@@ -69,6 +69,7 @@ public class ItemTracker
             origamFile.ClearCache();
         }
     }
+
     public void Clear()
     {
         LogTreeIndexState("Clearing ItemTracker");
@@ -79,10 +80,12 @@ public class ItemTracker
         folderIndex.Clear();
         LogTreeIndexState("ItemTracker cleared");
     }
+
     public void AddOrReplaceHash(ITrackeableFile origamFile)
     {
         fileHashIndex.AddOrReplace(origamFile);
     }
+
     public void AddOrReplace(ITrackeableFile origamFile)
     {
         foreach (var entry in origamFile.ContainedObjects)
@@ -91,9 +94,12 @@ public class ItemTracker
             AddOrReplace(objectInfo);
         }
     }
+
     public void AddOrReplace(PersistedObjectInfo objectInfo)
     {
-        LogTreeIndexState("Adding: " + objectInfo.Id + "objectInfo.ParentId: " + objectInfo.ParentId);
+        LogTreeIndexState(
+            "Adding: " + objectInfo.Id + "objectInfo.ParentId: " + objectInfo.ParentId
+        );
         objectLocationIndex[objectInfo.Id] = objectInfo;
         treeIndex.AddOrReplace(objectInfo.ParentId, objectInfo);
         categoryIndex.AddOrReplace(objectInfo.Category, objectInfo);
@@ -107,6 +113,7 @@ public class ItemTracker
         }
         LogTreeIndexState("Added: " + objectInfo.Id);
     }
+
     public void Remove(PersistedObjectInfo objectInfo)
     {
         LogTreeIndexState("Removing: " + objectInfo.Id);
@@ -116,57 +123,68 @@ public class ItemTracker
         folderIndex.Remove(objectInfo.Id);
         LogTreeIndexState("Removed: " + objectInfo.Id);
     }
+
     private void LogTreeIndexState(string message)
     {
-        if (!log.IsDebugEnabled) return;
+        if (!log.IsDebugEnabled)
+            return;
         log.Debug(message + ", treeIndex.Count: " + treeIndex?.Count);
     }
-    public bool ContainsFile(FileInfo file) =>
-        fileHashIndex.ContainsFile(file);
+
+    public bool ContainsFile(FileInfo file) => fileHashIndex.ContainsFile(file);
+
     public PersistedObjectInfo GetById(Guid id)
     {
         return objectLocationIndex.ContainsKey(id) ? objectLocationIndex[id] : null;
     }
-    public IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId) =>
-        treeIndex[parentId];
-    public IEnumerable<PersistedObjectInfo> GetByParentFolder
-        (string category, Guid folderId)
+
+    public IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId) => treeIndex[parentId];
+
+    public IEnumerable<PersistedObjectInfo> GetByParentFolder(string category, Guid folderId)
     {
         string key = $"{category}{folderId}";
         return folderIndex[key];
     }
+
     internal IEnumerable<PersistedObjectInfo> GetByPackage(Guid packageId)
     {
         return OrigamFiles
             .Where(x => x.ParentFolderIds.PackageId == packageId)
             .SelectMany(x => x.ContainedObjects.Values);
     }
+
     public IEnumerable<PersistedObjectInfo> GetListByCategory(string category)
     {
         return categoryIndex[category];
     }
+
     public void KeepOnly(IEnumerable<FileInfo> filesToKeep)
     {
         LogTreeIndexState("KeepOnly method running");
-        HashSet<string> relativePathsToKeep = new HashSet<string>(filesToKeep
-            .Select(fileInfo => pathFactory.Create(fileInfo).Relative));
+        HashSet<string> relativePathsToKeep = new HashSet<string>(
+            filesToKeep.Select(fileInfo => pathFactory.Create(fileInfo).Relative)
+        );
         fileHashIndex.RemoveValuesWhere(origamFile =>
-            !relativePathsToKeep.Contains(origamFile.Path.Relative));
+            !relativePathsToKeep.Contains(origamFile.Path.Relative)
+        );
         objectLocationIndex.RemoveByValueSelector(objInfo =>
-            !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative));
+            !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative)
+        );
         categoryIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
         treeIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
         folderIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
         LogTreeIndexState("KeepOnly method finished");
     }
+
     public bool HasFile(string relativePath)
     {
-        return AllFiles
-            .Any(orFile => orFile.Path.Relative == relativePath);
+        return AllFiles.Any(orFile => orFile.Path.Relative == relativePath);
     }
+
     public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
     {
-        AllFiles.ToList()
+        AllFiles
+            .ToList()
             .Where(origamFile => dirToRename.IsOnPathOf(origamFile.Path.Directory))
             .ForEach(origamFile =>
             {
@@ -177,103 +195,112 @@ public class ItemTracker
                 AddOrReplaceHash(origamFile);
             });
     }
+
     public void RemoveHash(ITrackeableFile origamFile)
     {
         fileHashIndex.Remove(origamFile);
     }
+
     public void Remove(ITrackeableFile origamFile)
     {
         LogTreeIndexState("Removing file: " + origamFile.Path.Relative);
-        bool removeFilter(PersistedObjectInfo objInfo) =>
-            objInfo.OrigamFile == origamFile;
+        bool removeFilter(PersistedObjectInfo objInfo) => objInfo.OrigamFile == origamFile;
         objectLocationIndex.RemoveByValueSelector(removeFilter);
         categoryIndex.RemoveWhere(removeFilter);
         treeIndex.RemoveWhere(removeFilter);
         folderIndex.RemoveWhere(removeFilter);
         LogTreeIndexState("Removed file: " + origamFile.Path.Relative);
     }
+
     public Dictionary<string, int> GetStats()
     {
         return new Dictionary<string, int>
         {
-            {"fileHashIndex count", fileHashIndex.Count},
-            {"objectLocationIndex count", objectLocationIndex.Count},
-            {"elementNameIndex count", categoryIndex.Count},
-            {"treeIndex count", treeIndex.Count},
-            {"folderIndex count", folderIndex.Count}
+            { "fileHashIndex count", fileHashIndex.Count },
+            { "objectLocationIndex count", objectLocationIndex.Count },
+            { "elementNameIndex count", categoryIndex.Count },
+            { "treeIndex count", treeIndex.Count },
+            { "folderIndex count", folderIndex.Count },
         };
     }
+
     public string Print()
     {
         //return treeIndex.Print();
         return folderIndex.Print();
     }
+
     public OrigamFile GetByPath(string relativeFilePath)
     {
-        return OrigamFiles
-            .FirstOrDefault(file => file.Path.RelativeEquals(relativeFilePath));
+        return OrigamFiles.FirstOrDefault(file => file.Path.RelativeEquals(relativeFilePath));
     }
+
     public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)
     {
         return OrigamFiles
             .Select(x => x.GetExternalFile(externalFile))
             .FirstOrDefault(maybeFile => maybeFile.HasValue);
     }
+
     public string GetFileHash(FileInfo file)
     {
         return fileHashIndex.GetHash(file.FullName);
     }
+
     public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
     {
         return AllFiles
             //.Where(origamFile => new FileInfo(origamFile.Path.Absolute).IsOnPathOf(dir))
             .Where(origamFile => dir.IsOnPathOf(origamFile.Path.Absolute))
             .SelectMany(file =>
+            {
+                if (file is OrigamFile origamFile)
                 {
-                    if (file is OrigamFile origamFile)
-                    {
-                        return origamFile.ExternalFiles.Append(new FileInfo(origamFile.Path.Absolute));
-                    }
-                    return new[] {new FileInfo(file.Path.Absolute)};
+                    return origamFile.ExternalFiles.Append(new FileInfo(origamFile.Path.Absolute));
                 }
-            );
+                return new[] { new FileInfo(file.Path.Absolute) };
+            });
     }
 }
+
 internal class FileHashIndex
 {
-    private readonly IDictionary<string,string> hashFileDict =
-        new Dictionary<string, string>();
+    private readonly IDictionary<string, string> hashFileDict = new Dictionary<string, string>();
     private readonly IDictionary<string, ITrackeableFile> pathDict =
         new Dictionary<string, ITrackeableFile>();
-    private IDictionary<string, OrigamFile> packageFiles =
-        new Dictionary<string, OrigamFile>();
+    private IDictionary<string, OrigamFile> packageFiles = new Dictionary<string, OrigamFile>();
     public ICollection<ITrackeableFile> AllFiles => pathDict.Values;
     public IEnumerable<OrigamFile> OrigamFiles => AllFiles.OfType<OrigamFile>();
     public IEnumerable<OrigamFile> PackageFiles => packageFiles.Values;
     public int Count => hashFileDict.Count;
-   
+
     public void AddOrReplace(ITrackeableFile newTrackAble)
     {
-        if (newTrackAble.FileHash == null) return;
+        if (newTrackAble.FileHash == null)
+            return;
         pathDict[newTrackAble.Path.Relative] = newTrackAble;
-        hashFileDict[newTrackAble.Path.Absolute.ToLower()] =  newTrackAble.FileHash;
+        hashFileDict[newTrackAble.Path.Absolute.ToLower()] = newTrackAble.FileHash;
         if (OrigamFile.IsPackageFile(newTrackAble.Path))
         {
             packageFiles[newTrackAble.Path.Relative] = (OrigamFile)newTrackAble;
         }
         System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
     }
+
     public bool ContainsFile(FileInfo file)
     {
-        if (!hashFileDict.ContainsKey(file.FullName.ToLower())) return false;
+        if (!hashFileDict.ContainsKey(file.FullName.ToLower()))
+            return false;
         string registeredHash = hashFileDict[file.FullName.ToLower()];
         return registeredHash == file.GetFileBase64Hash();
     }
+
     internal void RemoveValuesWhere(Func<ITrackeableFile, bool> func)
     {
-        List<KeyValuePair<string, ITrackeableFile>> removedPairs =
-            pathDict.RemoveByValueSelector(func);
-        
+        List<KeyValuePair<string, ITrackeableFile>> removedPairs = pathDict.RemoveByValueSelector(
+            func
+        );
+
         foreach (KeyValuePair<string, ITrackeableFile> keyValuePair in removedPairs)
         {
             ITrackeableFile origamFileToRemove = keyValuePair.Value;
@@ -281,21 +308,24 @@ internal class FileHashIndex
             packageFiles.Remove(origamFileToRemove.Path.Relative);
         }
     }
+
     public void Clear()
     {
         hashFileDict.Clear();
         pathDict.Clear();
         packageFiles.Clear();
     }
+
     public void Remove(ITrackeableFile orFileToRemove)
     {
         hashFileDict.RemoveByKeySelector(fullPath =>
-            fullPath == orFileToRemove.Path.Absolute.ToLower());
-        pathDict.RemoveByKeySelector(relativePath =>
-            relativePath == orFileToRemove.Path.Relative);
+            fullPath == orFileToRemove.Path.Absolute.ToLower()
+        );
+        pathDict.RemoveByKeySelector(relativePath => relativePath == orFileToRemove.Path.Relative);
         packageFiles.Remove(orFileToRemove.Path.Relative);
         System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
     }
+
     public string GetHash(string pathAbsolute)
     {
         hashFileDict.TryGetValue(pathAbsolute.ToLower(), out string hash);
@@ -308,20 +338,19 @@ public class AutoIncrementedIntIndex<TValue>
 {
     [ProtoMember(2)]
     private int highestId;
+
     [ProtoMember(1)]
-    public IDictionary<int, TValue> IdToValue { get; } 
-        = new Dictionary<int, TValue>();
-    public IDictionary<TValue, int> ValueToId { get; } =
-        new Dictionary<TValue, int>();
-    public AutoIncrementedIntIndex()
-    {
-    }
+    public IDictionary<int, TValue> IdToValue { get; } = new Dictionary<int, TValue>();
+    public IDictionary<TValue, int> ValueToId { get; } = new Dictionary<TValue, int>();
+
+    public AutoIncrementedIntIndex() { }
+
     public int AddValueAndGetId(TValue category)
     {
         if (ValueToId.ContainsKey(category))
         {
             return ValueToId[category];
-        } 
+        }
         else
         {
             highestId++;
@@ -330,28 +359,35 @@ public class AutoIncrementedIntIndex<TValue>
             return highestId;
         }
     }
+
     public TValue this[int id] => IdToValue[id];
     public int this[TValue value] => ValueToId[value];
+
     public override string ToString()
     {
-       return "AutoIncrementedIntIndex:\n" +
-                  "highestId: " + highestId + "\n" +
-                  "IdToValue: " + IdToValue.Print()+
-                  "ValueToId: " + ValueToId.Print();
+        return "AutoIncrementedIntIndex:\n"
+            + "highestId: "
+            + highestId
+            + "\n"
+            + "IdToValue: "
+            + IdToValue.Print()
+            + "ValueToId: "
+            + ValueToId.Print();
     }
 }
+
 internal class ObjectInfoIndex<T>
 {
-    private readonly IDictionary<T, IDictionary<Guid, PersistedObjectInfo>>
-        objectInfoIndex = new Dictionary<T, IDictionary<Guid, PersistedObjectInfo>>();
-    private readonly IDictionary<Guid,T> guidIndex= new Dictionary<Guid, T>();
-    public IEnumerable<PersistedObjectInfo> this[T key]=>
-         objectInfoIndex.ContainsKey(key) ?
-                objectInfoIndex[key].Values :
-                new List<PersistedObjectInfo>();
-    
-    public int Count => objectInfoIndex.Count(x => x.Value.Count!=0);
-    
+    private readonly IDictionary<T, IDictionary<Guid, PersistedObjectInfo>> objectInfoIndex =
+        new Dictionary<T, IDictionary<Guid, PersistedObjectInfo>>();
+    private readonly IDictionary<Guid, T> guidIndex = new Dictionary<Guid, T>();
+    public IEnumerable<PersistedObjectInfo> this[T key] =>
+        objectInfoIndex.ContainsKey(key)
+            ? objectInfoIndex[key].Values
+            : new List<PersistedObjectInfo>();
+
+    public int Count => objectInfoIndex.Count(x => x.Value.Count != 0);
+
     public void AddOrReplace(T key, PersistedObjectInfo objInfo)
     {
         RemoveObjInfoIfPresent(objInfo.Id);
@@ -359,11 +395,13 @@ internal class ObjectInfoIndex<T>
         idToObjInfoDictionary[objInfo.Id] = objInfo;
         guidIndex[objInfo.Id] = key;
     }
+
     public void Remove(Guid id)
     {
         RemoveObjInfoIfPresent(id);
         guidIndex.Remove(id);
     }
+
     private void RemoveObjInfoIfPresent(Guid id)
     {
         if (guidIndex.ContainsKey(id))
@@ -372,13 +410,15 @@ internal class ObjectInfoIndex<T>
             objectInfoIndex[oldKey].Remove(id);
         }
     }
+
     public void CleanUp()
     {
         objectInfoIndex
-            .Where(x=> objectInfoIndex[x.Key].Count == 0)
+            .Where(x => objectInfoIndex[x.Key].Count == 0)
             .ToList()
-            .ForEach(x=>objectInfoIndex.Remove(x));
+            .ForEach(x => objectInfoIndex.Remove(x));
     }
+
     public void RemoveWhere(Func<PersistedObjectInfo, bool> removeFilter)
     {
         foreach (var tDictPair in objectInfoIndex)
@@ -388,20 +428,27 @@ internal class ObjectInfoIndex<T>
         }
         objectInfoIndex.RemoveByValueSelector(innerDict => innerDict.Count == 0);
     }
+
     public void KeepOnlyItemsOnPaths(IEnumerable<string> relativePathsToKeep)
     {
         foreach (var keyInnerDictPair in objectInfoIndex)
         {
             var innerDictionary = keyInnerDictPair.Value;
-            RemoveObjInfosWhere(innerDictionary, objInfo =>
-                !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative));
+            RemoveObjInfosWhere(
+                innerDictionary,
+                objInfo => !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative)
+            );
         }
     }
-    private void RemoveObjInfosWhere(IDictionary<Guid, PersistedObjectInfo> dict, 
-        Func<PersistedObjectInfo, bool> selectorFunc)
+
+    private void RemoveObjInfosWhere(
+        IDictionary<Guid, PersistedObjectInfo> dict,
+        Func<PersistedObjectInfo, bool> selectorFunc
+    )
     {
-        List<KeyValuePair<Guid, PersistedObjectInfo>> pairsToRemove = dict
-            .Where(entry => selectorFunc.Invoke(entry.Value))
+        List<KeyValuePair<Guid, PersistedObjectInfo>> pairsToRemove = dict.Where(entry =>
+                selectorFunc.Invoke(entry.Value)
+            )
             .ToList();
         foreach (var pair in pairsToRemove)
         {
@@ -410,6 +457,7 @@ internal class ObjectInfoIndex<T>
             guidIndex.Remove(objInfoId);
         }
     }
+
     private IDictionary<Guid, PersistedObjectInfo> GetIndexDict(T key)
     {
         if (!objectInfoIndex.ContainsKey(key))
@@ -418,13 +466,15 @@ internal class ObjectInfoIndex<T>
             objectInfoIndex.Add(key, list);
             return list;
         }
-        return objectInfoIndex[key]; 
+        return objectInfoIndex[key];
     }
+
     public void Clear()
     {
         objectInfoIndex.Clear();
         guidIndex.Clear();
     }
+
     public string Print()
     {
         string str = "";
@@ -436,7 +486,7 @@ internal class ObjectInfoIndex<T>
             {
                 continue;
             }
-            str += key + ": " + objectInfoIndex[key].Print(inLine:true)+"|\n";
+            str += key + ": " + objectInfoIndex[key].Print(inLine: true) + "|\n";
         }
         return str;
     }

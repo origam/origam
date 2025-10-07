@@ -25,30 +25,34 @@ using System.Linq;
 using Origam.DA.Service.FileSystemModeCheckers;
 
 namespace Origam.DA.Service;
+
 public class ModelStructureChecker : IFileSystemModelChecker
 {
     private readonly DirectoryInfo topDirectory;
+
     public ModelStructureChecker(DirectoryInfo topDirectory)
     {
         this.topDirectory = topDirectory;
     }
+
     public IEnumerable<ModelErrorSection> GetErrors()
     {
         List<ErrorMessage> errors = topDirectory
             .GetFiles(".origamPackage", SearchOption.AllDirectories)
             .Where(packageFile => !IsOneLevelBelowTopDirectory(packageFile))
-            .Select(packageFile => 
-                new ErrorMessage(
-                    text: packageFile.FullName, 
-                    link:packageFile.FullName)
-            )
+            .Select(packageFile => new ErrorMessage(
+                text: packageFile.FullName,
+                link: packageFile.FullName
+            ))
             .ToList();
-        
+
         yield return new ModelErrorSection(
-            "The following package files are not one level below the model directory. " +
-            "This indicates the model directory is wrong. Please adjust it to avoid damage to the model structure!",
-            errors);
+            "The following package files are not one level below the model directory. "
+                + "This indicates the model directory is wrong. Please adjust it to avoid damage to the model structure!",
+            errors
+        );
     }
+
     private bool IsOneLevelBelowTopDirectory(FileInfo file)
     {
         return file.Directory?.Parent?.FullName == topDirectory.FullName;

@@ -19,62 +19,67 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
-[SchemaItemDescription("Template Set", "Template Sets", 
-    "icon_template-set.png")]
+
+[SchemaItemDescription("Template Set", "Template Sets", "icon_template-set.png")]
 [HelpTopic("Template+Sets")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class DataStructureTemplateSet : AbstractSchemaItem
 {
-	public const string CategoryConst = "DataStructureTemplateSet";
-	public DataStructureTemplateSet() {}
-	public DataStructureTemplateSet(Key primaryKey) 
-		: base(primaryKey)	{}
-	public DataStructureTemplateSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+    public const string CategoryConst = "DataStructureTemplateSet";
 
-	#region Properties
-	[Browsable(false)]
-	public List<DataStructureTemplate> Templates => ChildItemsByType<DataStructureTemplate>(
-		DataStructureTemplate.CategoryConst);
-	#endregion
-	#region Public Methods
-	public List<DataStructureTemplate> TemplatesByDataMember(string dataMember)
-	{
-		var result = new List<DataStructureTemplate>();
-		foreach(DataStructureTemplate template in Templates)
-		{
-			if(template.Entity.Name == dataMember)
-			{
-				result.Add(template);
-			}
-		}
-		return result;
-	}
-	#endregion
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType => CategoryConst;
-	public override bool UseFolders => false;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructureTransformationTemplate)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(DataStructureTransformationTemplate) ?
-			"NewTransformationTemplate" : null);
-	}
-	#endregion
+    public DataStructureTemplateSet() { }
+
+    public DataStructureTemplateSet(Key primaryKey)
+        : base(primaryKey) { }
+
+    public DataStructureTemplateSet(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    #region Properties
+    [Browsable(false)]
+    public List<DataStructureTemplate> Templates =>
+        ChildItemsByType<DataStructureTemplate>(DataStructureTemplate.CategoryConst);
+    #endregion
+    #region Public Methods
+    public List<DataStructureTemplate> TemplatesByDataMember(string dataMember)
+    {
+        var result = new List<DataStructureTemplate>();
+        foreach (DataStructureTemplate template in Templates)
+        {
+            if (template.Entity.Name == dataMember)
+            {
+                result.Add(template);
+            }
+        }
+        return result;
+    }
+    #endregion
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType => CategoryConst;
+    public override bool UseFolders => false;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(DataStructureTransformationTemplate) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(DataStructureTransformationTemplate)
+                ? "NewTransformationTemplate"
+                : null
+        );
+    }
+    #endregion
 }

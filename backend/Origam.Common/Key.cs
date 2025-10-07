@@ -24,21 +24,22 @@ using System.Collections;
 using System.Diagnostics;
 
 namespace Origam;
+
 /// <summary>
 /// This class represents a collection of column names/values that make a unique key of an entity.
 /// </summary>
 public class Key : Hashtable
 {
-    public Key()
-    {
-    }
-    public Key(string id) : this(new Guid(id))
-    {
-    }
+    public Key() { }
+
+    public Key(string id)
+        : this(new Guid(id)) { }
+
     public Key(Guid id)
     {
         this["Id"] = id;
     }
+
     public override string ToString()
     {
         string keyString = "";
@@ -48,6 +49,7 @@ public class Key : Hashtable
         }
         return keyString;
     }
+
     public object[] ValueArray
     {
         get
@@ -66,27 +68,34 @@ public class Key : Hashtable
             return ret;
         }
     }
-     public override bool Equals(object obj)
-     {
-    	if (ReferenceEquals(null, obj)) return false;
-    	if (ReferenceEquals(this, obj)) return true;
-    	if (!(obj is Key)) return false;
-    	var refKey = obj as Key;
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (!(obj is Key))
+            return false;
+        var refKey = obj as Key;
         if (refKey.Count == 1 && Count == 1 && refKey.Contains("Id") && Contains("Id"))
-    	{
-    	    return refKey["Id"].Equals(this["Id"]);
-    	}
-        if (Count != refKey.Count) return false;
-    	foreach (object key in this.Keys)
-    	{
-    	    if (!(this[key].Equals(refKey[key])))
-    	        return false;
-    	}
-    	return true;
+        {
+            return refKey["Id"].Equals(this["Id"]);
+        }
+        if (Count != refKey.Count)
+            return false;
+        foreach (object key in this.Keys)
+        {
+            if (!(this[key].Equals(refKey[key])))
+                return false;
+        }
+        return true;
     }
+
     public override int GetHashCode()
     {
-        if (Count == 1 && Contains("Id")) return this["Id"].GetHashCode();
+        if (Count == 1 && Contains("Id"))
+            return this["Id"].GetHashCode();
         int hashCode = 0;
         foreach (object key in this.Keys)
         {

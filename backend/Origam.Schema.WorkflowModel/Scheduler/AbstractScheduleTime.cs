@@ -22,48 +22,50 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
-
 using Schedule;
 
 namespace Origam.Schema.WorkflowModel;
+
 public enum ScheduleIntervalType
 {
-	BySecond = 1,
-	ByMinute = 2,
-	Hourly = 3,
-	Daily = 4,
-	Weekly = 5,
-	Monthly = 6,
+    BySecond = 1,
+    ByMinute = 2,
+    Hourly = 3,
+    Daily = 4,
+    Weekly = 5,
+    Monthly = 6,
 }
+
 /// <summary>
 /// Summary description for AbstractScheduleTime.
 /// </summary>
 [XmlModelRoot(CategoryConst)]
 public abstract class AbstractScheduleTime : AbstractSchemaItem
 {
-	public const string CategoryConst = "ScheduleTime";
-	public AbstractScheduleTime() : base() {}
-	public AbstractScheduleTime(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public AbstractScheduleTime(Key primaryKey) : base(primaryKey)	{}
-	#region Abstract Members
-	public abstract IScheduledItem GetScheduledTime();
-	#endregion
-	#region Properties
-	public string NextScheduleTime
-	{
-		get
-		{
-			return GetScheduledTime().NextRunTime(DateTime.Now, true).ToString();
-		}
-	}
-	#endregion
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
+    public const string CategoryConst = "ScheduleTime";
+
+    public AbstractScheduleTime()
+        : base() { }
+
+    public AbstractScheduleTime(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public AbstractScheduleTime(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Abstract Members
+    public abstract IScheduledItem GetScheduledTime();
+    #endregion
+    #region Properties
+    public string NextScheduleTime
+    {
+        get { return GetScheduledTime().NextRunTime(DateTime.Now, true).ToString(); }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
 }

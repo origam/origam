@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -30,24 +29,29 @@ using Microsoft.Extensions.Logging;
 using Origam.Server.Model.About;
 
 namespace Origam.Server.Controller;
+
 [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class AboutController : AbstractController
 {
-    public AboutController(ILogger<AbstractController> log,
-        SessionObjects sessionObjects, IWebHostEnvironment environment)
-        : base(log, sessionObjects, environment)
-    {
-    }
+    public AboutController(
+        ILogger<AbstractController> log,
+        SessionObjects sessionObjects,
+        IWebHostEnvironment environment
+    )
+        : base(log, sessionObjects, environment) { }
+
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(new AboutInfo
-        {
-            ServerVersion = "ServerVersion Placeholder to be changed at build time",
-            LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
-            CommitId = "CommitId Placeholder to be changed at build time"
-        });
+        return Ok(
+            new AboutInfo
+            {
+                ServerVersion = "ServerVersion Placeholder to be changed at build time",
+                LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
+                CommitId = "CommitId Placeholder to be changed at build time",
+            }
+        );
     }
 }

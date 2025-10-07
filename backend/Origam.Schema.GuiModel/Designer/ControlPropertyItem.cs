@@ -19,105 +19,101 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for ControlPropertyItem.
 /// </summary>
-/// 
-public enum ControlPropertyValueType {Integer=0, Boolean, String, Xml, UniqueIdentifier}
+///
+public enum ControlPropertyValueType
+{
+    Integer = 0,
+    Boolean,
+    String,
+    Xml,
+    UniqueIdentifier,
+}
+
 [SchemaItemDescription("Property", "Properties", "icon_property.png")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
-public class ControlPropertyItem : AbstractSchemaItem 
+public class ControlPropertyItem : AbstractSchemaItem
 {
-	public const string CategoryConst = "ControlPropertyItem";
-	public ControlPropertyItem() : base(){}
-	
-	public ControlPropertyItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public ControlPropertyItem(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	private ControlPropertyValueType _propertyType;
-	
+    public const string CategoryConst = "ControlPropertyItem";
+
+    public ControlPropertyItem()
+        : base() { }
+
+    public ControlPropertyItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public ControlPropertyItem(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    private ControlPropertyValueType _propertyType;
+
     [XmlAttribute("propertyType")]
-	public ControlPropertyValueType PropertyType
-	{
-		get
-		{
-			return _propertyType;
-		}
-		set
-		{
-			_propertyType = value;
-		}
-	}
-	private bool _isBindOnly;
-	[XmlAttribute("bindOnly")]
-	public bool IsBindOnly
-	{
-		get
-		{
-			return _isBindOnly;
-		}
-		set
-		{
-			_isBindOnly = value;
-		}
-	}
-	private bool _isLocalizable;
-	[XmlAttribute("localizable")]
-	public bool IsLocalizable
-	{
-		get
-		{
-			return _isLocalizable;
-		}
-		set
-		{
-			_isLocalizable = value;
-		}
-	}
-	#endregion
-	
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return ControlPropertyItem.CategoryConst;
-		}
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	[Browsable(false)]
-	public Type SystemType {
-		get
-		{
-			switch(PropertyType) {
-				case ControlPropertyValueType.Integer:
-					return typeof(int);
-				case ControlPropertyValueType.Boolean:
-					return typeof(bool);
-				case ControlPropertyValueType.Xml:
-				case ControlPropertyValueType.String:
-					return typeof(string);
-				case ControlPropertyValueType.UniqueIdentifier:
-					return typeof(Guid);
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
-	}
-	#endregion
+    public ControlPropertyValueType PropertyType
+    {
+        get { return _propertyType; }
+        set { _propertyType = value; }
+    }
+    private bool _isBindOnly;
+
+    [XmlAttribute("bindOnly")]
+    public bool IsBindOnly
+    {
+        get { return _isBindOnly; }
+        set { _isBindOnly = value; }
+    }
+    private bool _isLocalizable;
+
+    [XmlAttribute("localizable")]
+    public bool IsLocalizable
+    {
+        get { return _isLocalizable; }
+        set { _isLocalizable = value; }
+    }
+    #endregion
+
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return ControlPropertyItem.CategoryConst; }
+    }
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+
+    [Browsable(false)]
+    public Type SystemType
+    {
+        get
+        {
+            switch (PropertyType)
+            {
+                case ControlPropertyValueType.Integer:
+                    return typeof(int);
+                case ControlPropertyValueType.Boolean:
+                    return typeof(bool);
+                case ControlPropertyValueType.Xml:
+                case ControlPropertyValueType.String:
+                    return typeof(string);
+                case ControlPropertyValueType.UniqueIdentifier:
+                    return typeof(Guid);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+    #endregion
 }

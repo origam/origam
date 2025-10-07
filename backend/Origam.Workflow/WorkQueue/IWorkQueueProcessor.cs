@@ -30,10 +30,17 @@ public interface IWorkQueueProcessor
 {
     void Run(IEnumerable<WorkQueueData.WorkQueueRow> queues, CancellationToken cancellationToken);
 
-    int ProcessAutoQueueCommands(WorkQueueData.WorkQueueRow queue,
-        CancellationToken cancellationToken, int? maxItemsToProcess = null,
-        int forceWaitMillis = 0);
+    int ProcessAutoQueueCommands(
+        WorkQueueData.WorkQueueRow queue,
+        CancellationToken cancellationToken,
+        int? maxItemsToProcess = null,
+        int forceWaitMillis = 0
+    );
 
-    public DataRow GetNextItem(WorkQueueData.WorkQueueRow queue, string transactionId,
-        bool processErrors, CancellationToken cancellationToken);
+    public DataRow GetNextItem(
+        WorkQueueData.WorkQueueRow queue,
+        string transactionId,
+        bool processErrors,
+        CancellationToken cancellationToken
+    );
 }

@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
+
 public class ExecuteActionQueryInput
 {
     public Guid SessionFormIdentifier { get; set; }

@@ -19,19 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #endregion
-using Origam.DA.ObjectPersistence;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(
-            ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
     }
+
     public override Exception CheckRule(object instance, string memberName)
     {
         if (string.IsNullOrEmpty(memberName))
@@ -42,13 +43,15 @@ internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttrib
         List<ISchemaItem> filters = filterSet.ChildItemsRecursive;
         foreach (DataStructureFilterSetFilter filter in filters)
         {
-            if (((filter.IgnoreFilterConstantId != Guid.Empty)
-                 || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName) 
-                 || filter.PassWhenParameterMatch) 
-                && !filterSet.IsDynamic)
+            if (
+                (
+                    (filter.IgnoreFilterConstantId != Guid.Empty)
+                    || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName)
+                    || filter.PassWhenParameterMatch
+                ) && !filterSet.IsDynamic
+            )
             {
-                return new Exception( ResourceUtils.GetString(
-                    "ErrorDynamicParameter", memberName));
+                return new Exception(ResourceUtils.GetString("ErrorDynamicParameter", memberName));
             }
         }
         return null;

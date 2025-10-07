@@ -23,16 +23,18 @@ using System.Collections;
 using System.Data;
 
 namespace Origam.DA;
+
 /// <summary>
 /// Summary description for DataMergeChange.
 /// </summary>
 public class DataMergeChange
 {
-	public Hashtable Columns;
-	public DataRowState State;
-	public DataMergeChange(Hashtable columns, DataRowState state)
-	{
-		this.Columns = columns;
-		this.State = state;
-	}
+    public Hashtable Columns;
+    public DataRowState State;
+
+    public DataMergeChange(Hashtable columns, DataRowState state)
+    {
+        this.Columns = columns;
+        this.State = state;
+    }
 }

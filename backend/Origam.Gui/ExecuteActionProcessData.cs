@@ -27,6 +27,7 @@ using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui;
+
 public class ExecuteActionProcessData
 {
     public string SessionFormIdentifier { get; set; }

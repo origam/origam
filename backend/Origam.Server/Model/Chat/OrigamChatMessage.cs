@@ -28,7 +28,15 @@ namespace Origam.Server.Model.Chat
 {
     public class OrigamChatMessage
     {
-        public OrigamChatMessage(Guid id, Guid authorId, string authorName, string authorAvatarUrl, DateTime dateCreated, string TextMessages, List<Guid> mentions)
+        public OrigamChatMessage(
+            Guid id,
+            Guid authorId,
+            string authorName,
+            string authorAvatarUrl,
+            DateTime dateCreated,
+            string TextMessages,
+            List<Guid> mentions
+        )
         {
             this.Id = id;
             this.AuthorId = authorId;
@@ -38,40 +46,58 @@ namespace Origam.Server.Model.Chat
             Text = TextMessages;
             this.Mentions = mentions;
         }
+
         public Guid Id { get; set; }
         public Guid AuthorId { get; set; }
         public string AuthorName { get; set; }
         public string AuthorAvatarUrl { get; set; }
-        public DateTime TimeSent 
-        { 
-            get 
-            {
-                return DateCreated;
-            } 
+        public DateTime TimeSent
+        {
+            get { return DateCreated; }
         }
         public DateTime DateCreated { get; set; }
         public string Text { get; set; }
         public List<Guid> Mentions { get; set; }
-        internal static List<OrigamChatMessage> CreateJson(DataSet MessagesDataSet, List<OrigamChatBusinessPartner> allusers)
+
+        internal static List<OrigamChatMessage> CreateJson(
+            DataSet MessagesDataSet,
+            List<OrigamChatBusinessPartner> allusers
+        )
         {
             List<OrigamChatMessage> messages = new List<OrigamChatMessage>();
             foreach (DataRow row in MessagesDataSet.Tables["OrigamChatMessage"].Rows)
             {
                 Guid userId = row.Field<Guid>("RecordCreatedBy");
                 var username = allusers
-                                    .Where(mention => mention.id.Equals(userId))
-                                    .Select(mention=> { return mention.name; })
-                                    .FirstOrDefault();
+                    .Where(mention => mention.id.Equals(userId))
+                    .Select(mention =>
+                    {
+                        return mention.name;
+                    })
+                    .FirstOrDefault();
                 List<Guid> listmention = new List<Guid>();
-                foreach (DataRow rowBpartner in MessagesDataSet.Tables["OrigamChatMessageBusinessPartner"].Rows)
+                foreach (
+                    DataRow rowBpartner in MessagesDataSet
+                        .Tables["OrigamChatMessageBusinessPartner"]
+                        .Rows
+                )
                 {
-                    if(rowBpartner.Field<Guid>("refOrigamChatMessageId") == row.Field<Guid>("Id"))
+                    if (rowBpartner.Field<Guid>("refOrigamChatMessageId") == row.Field<Guid>("Id"))
                     {
                         listmention.Add(rowBpartner.Field<Guid>("refBusinessPartnerId"));
                     }
                 }
-                messages.Add(new OrigamChatMessage(row.Field<Guid>("Id"), userId, username, userId.ToString(), row.Field<DateTime>("RecordCreated"),
-                    row.Field<string>("TextMessage"), listmention));
+                messages.Add(
+                    new OrigamChatMessage(
+                        row.Field<Guid>("Id"),
+                        userId,
+                        username,
+                        userId.ToString(),
+                        row.Field<DateTime>("RecordCreated"),
+                        row.Field<string>("TextMessage"),
+                        listmention
+                    )
+                );
             }
             return messages;
         }

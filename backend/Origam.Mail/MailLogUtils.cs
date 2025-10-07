@@ -26,11 +26,13 @@ using System.Text;
 using Origam.Extensions;
 
 namespace Origam.Mail;
+
 public static class MailLogUtils
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+    );
+
     public static void SendMessageAndLog(SmtpClient client, MailMessage message)
     {
         if (log.IsDebugEnabled)
@@ -45,6 +47,7 @@ public static class MailLogUtils
         client.Send(message);
         log.Debug("Mail sent");
     }
+
     public static string ToLogString(SmtpClient client)
     {
         StringBuilder builder = new StringBuilder();
@@ -65,7 +68,7 @@ public static class MailLogUtils
         builder.Append($"\tUseDefaultCredentials: {client.UseDefaultCredentials}\n");
         return builder.ToString();
     }
-    
+
     public static string ToLogString(MailMessage message)
     {
         StringBuilder builder = new StringBuilder();
@@ -90,16 +93,19 @@ public static class MailLogUtils
         builder.Append($"\tDeliveryNotificationOptions: {message.DeliveryNotificationOptions}\n");
         return builder.ToString();
     }
+
     private static string HeadersToString(NameValueCollection headers)
     {
-        return $"Headers: [{string.Join(", ", headers.AllKeys.Select(key=> key+": "+headers[key]))}]";
+        return $"Headers: [{string.Join(", ", headers.AllKeys.Select(key => key + ": " + headers[key]))}]";
     }
+
     private static string AddressesToString(MailAddressCollection mails)
     {
         return $"[{string.Join(", ", mails.Select(x => x.Address))}]";
     }
+
     private static string AddIndents(string message)
     {
-        return string.Join("\n", message.Split('\n').Select(x=>"\t\t"+x));
+        return string.Join("\n", message.Split('\n').Select(x => "\t\t" + x));
     }
 }

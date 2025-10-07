@@ -19,69 +19,68 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
-
 namespace Origam.Schema.GuiModel;
+
 [SchemaItemDescription("File Mapping", "Parameter Mappings", 29)]
 [HelpTopic("File+Mapping")]
 [ClassMetaVersion("6.0.0")]
 public class PageParameterFileMapping : PageParameterMapping
 {
-	public PageParameterFileMapping() : base() {Init();}
-	public PageParameterFileMapping(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public PageParameterFileMapping(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-	}
-	#region Properties
-	private PageParameterFileInfo _fileInfoType = PageParameterFileInfo.FileContent;
-	[Category("File Info")]
-	[XmlAttribute("fileInfoType")]
-	public PageParameterFileInfo FileInfoType
-	{
-		get
-		{
-			return _fileInfoType;
-		}
-		set
-		{
-			_fileInfoType = value;
-		}
-	}
-	private int _thumbnailWidth = 0;
-	[Category("File Info")]
-	[DefaultValue(0)]
+    public PageParameterFileMapping()
+        : base()
+    {
+        Init();
+    }
+
+    public PageParameterFileMapping(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public PageParameterFileMapping(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    #region Properties
+    private PageParameterFileInfo _fileInfoType = PageParameterFileInfo.FileContent;
+
+    [Category("File Info")]
+    [XmlAttribute("fileInfoType")]
+    public PageParameterFileInfo FileInfoType
+    {
+        get { return _fileInfoType; }
+        set { _fileInfoType = value; }
+    }
+    private int _thumbnailWidth = 0;
+
+    [Category("File Info")]
+    [DefaultValue(0)]
     [XmlAttribute("thumbnailWidth")]
     public int ThumbnailWidth
-	{
-		get
-		{
-			return _thumbnailWidth;
-		}
-		set
-		{
-			_thumbnailWidth = value;
-		}
-	}
-	private int _thumbnailHeight = 0;
-	[Category("File Info")]
-	[DefaultValue(0)]
+    {
+        get { return _thumbnailWidth; }
+        set { _thumbnailWidth = value; }
+    }
+    private int _thumbnailHeight = 0;
+
+    [Category("File Info")]
+    [DefaultValue(0)]
     [XmlAttribute("thumbnailHeight")]
     public int ThumbnailHeight
-	{
-		get
-		{
-			return _thumbnailHeight;
-		}
-		set
-		{
-			_thumbnailHeight = value;
-		}
-	}
-	#endregion			
+    {
+        get { return _thumbnailHeight; }
+        set { _thumbnailHeight = value; }
+    }
+    #endregion
 }

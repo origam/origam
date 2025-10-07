@@ -23,7 +23,8 @@ using System;
 using Origam.Security.Common;
 
 namespace Origam.Server.Authorization;
-public class User: IOrigamUser
+
+public class User : IOrigamUser
 {
     public string BusinessPartnerId { get; set; }
     public string UserName { get; set; }
@@ -41,8 +42,8 @@ public class User: IOrigamUser
     public string TransactionId { get; set; }
     public string SecurityStamp { get; set; }
     public bool Is2FAEnforced { get; set; }
-    
-    public string NormalizedUserName => UserName;//.ToUpper();
+
+    public string NormalizedUserName => UserName; //.ToUpper();
     public bool EmailConfirmed { get; set; }
     public string NormalizedEmail => Email.ToUpper();
     public string PasswordHash { get; set; }
@@ -56,13 +57,12 @@ public class User: IOrigamUser
     public string Name { get; set; }
     public int FailedPasswordAttemptCount { get; set; }
     public Guid LanguageId { get; set; }
+
     public User(string userName)
     {
         UserName = userName;
         IsApproved = true;
     }
-    public User()
-    {
-    }
-    
+
+    public User() { }
 }

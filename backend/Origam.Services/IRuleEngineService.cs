@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Workbench.Services;
+
 /// <summary>
 /// Summary description for IRuleEngineService.
 /// </summary>
 public interface IRuleEngineService
 {
-	string EvaluateExpression(string expression);
+    string EvaluateExpression(string expression);
 }

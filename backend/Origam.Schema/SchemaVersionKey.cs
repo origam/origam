@@ -22,29 +22,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema;
+
 /// <summary>
 /// Standard collection of primary key columns for any version related schema item.
 /// </summary>
 public class ModelElementKey : Key
 {
-	private const string PK1 = "Id";
-	public ModelElementKey()
-	{
-		this.Add(PK1, System.Guid.NewGuid());
-	}
-	public ModelElementKey(Guid id) : this()
-	{
-		this.Id = id;
-	}
-	public Guid Id
-	{
-		get
-		{
-			return (Guid)this[PK1];
-		}
-		set
-		{
-			this[PK1] = value;
-		}
-	}
+    private const string PK1 = "Id";
+
+    public ModelElementKey()
+    {
+        this.Add(PK1, System.Guid.NewGuid());
+    }
+
+    public ModelElementKey(Guid id)
+        : this()
+    {
+        this.Id = id;
+    }
+
+    public Guid Id
+    {
+        get { return (Guid)this[PK1]; }
+        set { this[PK1] = value; }
+    }
 }

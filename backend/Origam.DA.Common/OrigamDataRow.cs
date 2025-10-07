@@ -23,14 +23,15 @@ using System.Collections.Generic;
 using System.Data;
 
 namespace Origam.DA;
+
 public class OrigamDataRow : DataRow
 {
-    private List<DataColumn> _columnsWithValidChange 
-        = new List<DataColumn>();
+    private List<DataColumn> _columnsWithValidChange = new List<DataColumn>();
     private bool _hasChangedOnce = false;
-    protected internal OrigamDataRow(DataRowBuilder builder) : base(builder)
-    {
-    }
+
+    protected internal OrigamDataRow(DataRowBuilder builder)
+        : base(builder) { }
+
     public void AddColumnWithValidChange(DataColumn dataColumn)
     {
         if (!_columnsWithValidChange.Contains(dataColumn))
@@ -39,31 +40,29 @@ public class OrigamDataRow : DataRow
             _hasChangedOnce = true;
         }
     }
+
     public bool HasColumnWithValidChange()
     {
         return _columnsWithValidChange.Count > 0;
     }
+
     public bool IsColumnWithValidChange(DataColumn dataColumn)
     {
         return _columnsWithValidChange.Contains(dataColumn);
     }
+
     public void ResetColumnsWithValidChange()
     {
         _columnsWithValidChange = new List<DataColumn>();
-        if (! _hasChangedOnce && this.RowState == DataRowState.Modified)
+        if (!_hasChangedOnce && this.RowState == DataRowState.Modified)
         {
             this.RejectChanges();
         }
     }
+
     public bool HasChangedOnce
     {
-        get
-        {
-            return _hasChangedOnce;
-        }
-        set
-        {
-            _hasChangedOnce = value;
-        }
+        get { return _hasChangedOnce; }
+        set { _hasChangedOnce = value; }
     }
 }

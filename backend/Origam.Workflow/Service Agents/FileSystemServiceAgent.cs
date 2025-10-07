@@ -20,17 +20,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Text;
+using System.Data;
 using System.IO;
+using System.Text;
 using System.Xml;
-using Origam.Services;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
-using System.Data;
 using Origam.Service.Core;
+using Origam.Services;
 using Directory = System.IO.Directory;
 
 namespace Origam.Workflow;
+
 /// <summary>
 /// Summary description for FileSystemServiceAgent.
 /// </summary>
@@ -40,134 +41,150 @@ public class FileSystemServiceAgent : AbstractServiceAgent
     {
         _result = File.ReadAllBytes(path);
     }
-	public void LoadXml(string path)
-	{
-		var xmlDocument = new XmlDocument();
-		xmlDocument.Load(path);
-		_result = new XmlContainer(xmlDocument);
-	}
+
+    public void LoadXml(string path)
+    {
+        var xmlDocument = new XmlDocument();
+        xmlDocument.Load(path);
+        _result = new XmlContainer(xmlDocument);
+    }
+
     public void LoadText(string path, string encodingName)
     {
         _result = File.ReadAllText(path, GetEncoding(encodingName));
     }
-    
-    public void SaveXml(
-        string path, XmlDocument outXml, string encodingName, 
-        bool createDirectory)
-	{
+
+    public void SaveXml(string path, XmlDocument outXml, string encodingName, bool createDirectory)
+    {
         if (createDirectory)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
         }
-		Encoding encoding = GetEncoding(encodingName);
-		using (XmlWriter xw = new XmlTextWriter(path, encoding))
+        Encoding encoding = GetEncoding(encodingName);
+        using (XmlWriter xw = new XmlTextWriter(path, encoding))
         {
-			outXml.Save(xw);
+            outXml.Save(xw);
         }
-		_result = null;
-	}
-	public void SaveText(
-        string path, string output, string encodingName, 
-        bool createDirectory)
-	{
+        _result = null;
+    }
+
+    public void SaveText(string path, string output, string encodingName, bool createDirectory)
+    {
         if (createDirectory)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
         }
-		Encoding encoding = GetEncoding(encodingName);
-		using (StreamWriter outfile 
-            = new StreamWriter(path,  false, encoding))
+        Encoding encoding = GetEncoding(encodingName);
+        using (StreamWriter outfile = new StreamWriter(path, false, encoding))
         {
             outfile.Write(output);
         }
-		_result = null;
-	}
-	public void SaveBlob(string path, byte[] blob, bool createDirectory)
-	{
+        _result = null;
+    }
+
+    public void SaveBlob(string path, byte[] blob, bool createDirectory)
+    {
         if (createDirectory)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
         }
-		using (FileStream stream 
-            = new FileStream(path, FileMode.Create, FileAccess.Write, 
-                FileShare.Read))
-		{
-			stream.Write(blob, 0, blob.Length);
-		}
-		_result = null;
-	}
+        using (
+            FileStream stream = new FileStream(
+                path,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.Read
+            )
+        )
+        {
+            stream.Write(blob, 0, blob.Length);
+        }
+        _result = null;
+    }
+
     public void CopyFile(
-        string sourcePath, string destinationPath, 
-        bool createDirectory, bool overwrite)
+        string sourcePath,
+        string destinationPath,
+        bool createDirectory,
+        bool overwrite
+    )
     {
         if (createDirectory)
         {
-            Directory.CreateDirectory(
-                Path.GetDirectoryName(destinationPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
         }
         File.Copy(sourcePath, destinationPath, overwrite);
-		_result = null;
+        _result = null;
     }
+
     public void MoveFile(
-        string sourcePath, string destinationPath, 
-        bool createDirectory, bool overwrite)
+        string sourcePath,
+        string destinationPath,
+        bool createDirectory,
+        bool overwrite
+    )
     {
         if (createDirectory)
         {
-            Directory.CreateDirectory(
-                Path.GetDirectoryName(destinationPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
         }
         if (overwrite && File.Exists(destinationPath))
         {
             File.Delete(destinationPath);
         }
         File.Move(sourcePath, destinationPath);
-		_result = null;
+        _result = null;
     }
+
     public void DeleteFile(string path)
     {
         File.Delete(path);
-		_result = null;
+        _result = null;
     }
-    
+
     public void CreateDirectory(string path)
     {
         Directory.CreateDirectory(path);
         _result = null;
     }
-	public string[] GetFileList(string path, string searchPattern)
-	{
-		return Directory.GetFiles(path, searchPattern);
-	}
-	public static Encoding GetEncoding(string encoding)
-	{
-		if(encoding == null)
-		{
-			encoding = "utf-8";
-		}
-		return Encoding.GetEncoding(encoding);
-	}
-    private IDataDocument GetFileSystemInfo(
-        string path, string mask, bool recursive)
+
+    public string[] GetFileList(string path, string searchPattern)
     {
-        if (this.OutputStructure.PrimaryKey["Id"].ToString()
-        != "2aaaed07-bd5e-41d3-858e-288eca4bbcfc")
+        return Directory.GetFiles(path, searchPattern);
+    }
+
+    public static Encoding GetEncoding(string encoding)
+    {
+        if (encoding == null)
         {
-            throw new Exception(
-                ResourceUtils.GetString(
-                "ErrorNotFileSystemInfoDataStructure")); 
+            encoding = "utf-8";
+        }
+        return Encoding.GetEncoding(encoding);
+    }
+
+    private IDataDocument GetFileSystemInfo(string path, string mask, bool recursive)
+    {
+        if (
+            this.OutputStructure.PrimaryKey["Id"].ToString()
+            != "2aaaed07-bd5e-41d3-858e-288eca4bbcfc"
+        )
+        {
+            throw new Exception(ResourceUtils.GetString("ErrorNotFileSystemInfoDataStructure"));
         }
         DatasetGenerator generator = new DatasetGenerator(true);
-        DataSet dataSet = generator.CreateDataSet(
-            this.OutputStructure as DataStructure);
+        DataSet dataSet = generator.CreateDataSet(this.OutputStructure as DataStructure);
         DataTable table = dataSet.Tables["FileSystemInfo"];
-        ProcessFileSystemInfoForFolder(
-            new DirectoryInfo(path), mask, recursive, table, Guid.Empty);
+        ProcessFileSystemInfoForFolder(new DirectoryInfo(path), mask, recursive, table, Guid.Empty);
         return DataDocumentFactory.New(dataSet);
     }
+
     private void ProcessFileSystemInfoForFolder(
-        DirectoryInfo parentDirectoryInfo, string mask, bool recursive, 
-        DataTable table, Guid parentFolderId)
+        DirectoryInfo parentDirectoryInfo,
+        string mask,
+        bool recursive,
+        DataTable table,
+        Guid parentFolderId
+    )
     {
         DataRow row;
         var fileInfos = parentDirectoryInfo.EnumerateFiles(mask);
@@ -211,30 +228,33 @@ public class FileSystemServiceAgent : AbstractServiceAgent
             table.Rows.Add(row);
             if (recursive)
             {
-                ProcessFileSystemInfoForFolder(
-                    directoryInfo, mask, true, table, directoryId);
+                ProcessFileSystemInfoForFolder(directoryInfo, mask, true, table, directoryId);
             }
         }
     }
-	#region IServiceAgent Members
-	private object _result;
-	public override object Result
-	{
-		get
-		{
-			object temp = _result;
-			_result = null;
-			
-			return temp;
-		}
-	}
-	public override void Run()
-	{
-        string encoding, outPath, inPath;
+
+    #region IServiceAgent Members
+    private object _result;
+    public override object Result
+    {
+        get
+        {
+            object temp = _result;
+            _result = null;
+
+            return temp;
+        }
+    }
+
+    public override void Run()
+    {
+        string encoding,
+            outPath,
+            inPath;
         bool createDirectory = false;
         bool overwrite = false;
-		switch(MethodName)
-		{
+        switch (MethodName)
+        {
             case "GetFileSystemInfo":
                 string mask = "";
                 bool recursive = false;
@@ -248,121 +268,111 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 if (!(Parameters["Path"] is string))
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 if (Parameters.Contains("Recursive"))
                 {
                     recursive = (bool)Parameters["Recursive"];
                 }
-                _result = GetFileSystemInfo(
-                    Parameters["Path"] as string, mask, recursive);
+                _result = GetFileSystemInfo(Parameters["Path"] as string, mask, recursive);
                 break;
             case "LoadBlob":
                 if (!(Parameters["Path"] is string))
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 LoadBlob((string)Parameters["Path"]);
                 break;
             case "LoadXml":
                 if (!(Parameters["Path"] is string))
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 LoadXml((string)Parameters["Path"]);
                 break;
             case "LoadText":
-				if (!(Parameters["Path"] is string))
+                if (!(Parameters["Path"] is string))
                 {
-					throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
-				encoding = Parameters["Encoding"] as string;
+                encoding = Parameters["Encoding"] as string;
                 LoadText((string)Parameters["Path"], encoding);
-				break;
-			case "SaveXml":
-				outPath = Parameters["Path"] as string;
-				if (outPath == null)
+                break;
+            case "SaveXml":
+                outPath = Parameters["Path"] as string;
+                if (outPath == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
-				XmlContainer outXml = Parameters["Data"] as XmlContainer;
-				if (outXml == null)
+                XmlContainer outXml = Parameters["Data"] as XmlContainer;
+                if (outXml == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorNotXmlContainer"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlContainer"));
                 }
-				encoding = Parameters["Encoding"] as string;
+                encoding = Parameters["Encoding"] as string;
                 if (Parameters.Contains("CreateDirectory"))
                 {
                     createDirectory = (bool)Parameters["CreateDirectory"];
                 }
-				SaveXml(outPath, outXml.Xml, encoding, createDirectory);
-				break;
-			case "SaveText":
-				outPath = Parameters["Path"] as string;
+                SaveXml(outPath, outXml.Xml, encoding, createDirectory);
+                break;
+            case "SaveText":
+                outPath = Parameters["Path"] as string;
                 if (outPath == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
-				string output = Parameters["Data"] as string;
+                string output = Parameters["Data"] as string;
                 if (output == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotString"));
                 }
-				encoding = Parameters["Encoding"] as string;
+                encoding = Parameters["Encoding"] as string;
                 if (Parameters.Contains("CreateDirectory"))
                 {
                     createDirectory = (bool)Parameters["CreateDirectory"];
                 }
-				SaveText(outPath, output, encoding, createDirectory);
-				break;
-			case "SaveBlob":
-				outPath = Parameters["Path"] as string;
+                SaveText(outPath, output, encoding, createDirectory);
+                break;
+            case "SaveBlob":
+                outPath = Parameters["Path"] as string;
                 if (outPath == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
-				byte[] blob = Parameters["Data"] as byte[];
+                byte[] blob = Parameters["Data"] as byte[];
                 if (blob == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorNotBlob"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorNotBlob"));
                 }
                 if (Parameters.Contains("CreateDirectory"))
                 {
                     createDirectory = (bool)Parameters["CreateDirectory"];
                 }
-				SaveBlob(outPath, blob, createDirectory);
-				break;
-			case "DeleteFile":
-				string deletePath = Parameters["Path"] as string;
+                SaveBlob(outPath, blob, createDirectory);
+                break;
+            case "DeleteFile":
+                string deletePath = Parameters["Path"] as string;
                 if (deletePath == null)
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 DeleteFile(deletePath);
-				break;
+                break;
             case "CopyFile":
                 inPath = Parameters["SourcePath"] as string;
                 if (inPath == null)
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorSourcePathNotString"));
+                        ResourceUtils.GetString("ErrorSourcePathNotString")
+                    );
                 }
                 outPath = Parameters["DestinationPath"] as string;
                 if (outPath == null)
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorDestinationPathNotString"));
+                        ResourceUtils.GetString("ErrorDestinationPathNotString")
+                    );
                 }
                 if (Parameters.Contains("CreateDirectory"))
                 {
@@ -379,13 +389,15 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 if (inPath == null)
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorSourcePathNotString"));
+                        ResourceUtils.GetString("ErrorSourcePathNotString")
+                    );
                 }
                 outPath = Parameters["DestinationPath"] as string;
                 if (outPath == null)
                 {
                     throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorDestinationPathNotString"));
+                        ResourceUtils.GetString("ErrorDestinationPathNotString")
+                    );
                 }
                 if (Parameters.Contains("CreateDirectory"))
                 {
@@ -400,16 +412,17 @@ public class FileSystemServiceAgent : AbstractServiceAgent
             case "CreateDirectory":
                 if (!(Parameters["Path"] is string))
                 {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorPathNotString"));
+                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 CreateDirectory((string)Parameters["Path"]);
                 break;
             default:
-				throw new ArgumentOutOfRangeException(
-                    "MethodName", MethodName, 
-                    ResourceUtils.GetString("InvalidMethodName"));
-		}
-	}
-	#endregion
+                throw new ArgumentOutOfRangeException(
+                    "MethodName",
+                    MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
+        }
+    }
+    #endregion
 }

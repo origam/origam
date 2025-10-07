@@ -28,8 +28,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Origam.DA.Common;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
@@ -39,18 +39,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
         private PropertyToNamespaceMapping namespaceMapping;
-        public abstract string FullTypeName { get;}
-        public abstract List<string> OldFullTypeNames { get;}
+        public abstract string FullTypeName { get; }
+        public abstract List<string> OldFullTypeNames { get; }
         public abstract string[] OldPropertyXmlNames { get; }
 
-        Version LastVersionInContainer => upgradeScripts
-            .OrderBy(script => script.ToVersion)
-            .Last()
-            .ToVersion;        
-        Version FirstVersionInContainer => upgradeScripts
-            .OrderBy(script => script.FromVersion)
-            .First()
-            .FromVersion;
+        Version LastVersionInContainer =>
+            upgradeScripts.OrderBy(script => script.ToVersion).Last().ToVersion;
+        Version FirstVersionInContainer =>
+            upgradeScripts.OrderBy(script => script.FromVersion).First().FromVersion;
 
         private PropertyToNamespaceMapping NamespaceMapping
         {
@@ -65,37 +61,54 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        public bool Upgrade(DocumentContainer documentContainer, XElement classNode,
-            Version fromVersion, Version toVersion)
+        public bool Upgrade(
+            DocumentContainer documentContainer,
+            XElement classNode,
+            Version fromVersion,
+            Version toVersion
+        )
         {
-            Version endVersion = toVersion == Versions.Last 
-                ? LastVersionInContainer 
-                : toVersion;
+            Version endVersion = toVersion == Versions.Last ? LastVersionInContainer : toVersion;
             var scriptsToRun = upgradeScripts
-                .Where(script => script.FromVersion >= fromVersion && script.ToVersion <= endVersion)
+                .Where(script =>
+                    script.FromVersion >= fromVersion && script.ToVersion <= endVersion
+                )
                 .OrderBy(script => script.FromVersion)
                 .ToList();
 
             if (scriptsToRun.Count == 0)
             {
-                throw new Exception($"There is no script to upgrade class {FullTypeName} from version {fromVersion} to {endVersion}");
+                throw new Exception(
+                    $"There is no script to upgrade class {FullTypeName} from version {fromVersion} to {endVersion}"
+                );
             }
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
-                if (fromVersion == ClassMetaVersionAttribute.FirstVersion &&
-                    FirstVersionInContainer == ClassMetaVersionAttribute.FormerFirstVersion)
+                if (
+                    fromVersion == ClassMetaVersionAttribute.FirstVersion
+                    && FirstVersionInContainer == ClassMetaVersionAttribute.FormerFirstVersion
+                )
                 {
-                    // The first version used to be 6.0.0, the script container was probably created with that assumption. 
-                    return Upgrade(documentContainer, classNode, ClassMetaVersionAttribute.FormerFirstVersion, toVersion);
+                    // The first version used to be 6.0.0, the script container was probably created with that assumption.
+                    return Upgrade(
+                        documentContainer,
+                        classNode,
+                        ClassMetaVersionAttribute.FormerFirstVersion,
+                        toVersion
+                    );
                 }
                 else
                 {
-                    throw new Exception($"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found");
+                    throw new Exception(
+                        $"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found"
+                    );
                 }
             }
             if (scriptsToRun.Last().ToVersion != endVersion)
             {
-                throw new Exception($"Script to upgrade class {FullTypeName} to version {endVersion} was not found");
+                throw new Exception(
+                    $"Script to upgrade class {FullTypeName} to version {endVersion} was not found"
+                );
             }
 
             CheckScriptsFormContinuousSequence(scriptsToRun);
@@ -108,7 +121,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return true;
         }
 
-
         private void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
         {
             for (int i = 0; i < scriptsToRun.Count - 1; i++)
@@ -116,7 +128,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 if (scriptsToRun[i].ToVersion != scriptsToRun[i + 1].FromVersion)
                 {
                     throw new ClassUpgradeException(
-                        $"There is no script to upgrade class {FullTypeName} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
+                        $"There is no script to upgrade class {FullTypeName} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}"
+                    );
                 }
             }
         }
@@ -129,33 +142,37 @@ namespace Origam.DA.Service.MetaModelUpgrade
             XNamespace oldNamespace = GetThisClassNamespace(document.XDocument);
             if (oldNamespace == null)
             {
-                document.AddNamespace(  
-                    namespaceMapping.NodeNamespaceName, 
-                    namespaceMapping.NodeNamespace.ToString());
+                document.AddNamespace(
+                    namespaceMapping.NodeNamespaceName,
+                    namespaceMapping.NodeNamespace.ToString()
+                );
             }
             else
             {
                 document.RenameNamespace(oldNamespace, updatedNamespace);
             }
         }
-        
+
         protected void AddAttribute(XElement node, string attributeName, string attributeValue)
         {
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            XNamespace thisTypeNamespace = 
+            XNamespace thisTypeNamespace =
                 GetThisClassNamespace(node.Document)
                 ?? NamespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
 
             XName xName = thisTypeNamespace.GetName(attributeName);
             if (node.Attribute(xName) != null)
             {
-                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node}");
+                throw new ClassUpgradeException(
+                    $"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node}"
+                );
             }
             node.Add(new XAttribute(xName, attributeValue));
-        }        
+        }
+
         protected void RemoveAttribute(XElement node, string attributeName)
         {
             if (node == null)
@@ -165,37 +182,36 @@ namespace Origam.DA.Service.MetaModelUpgrade
             XNamespace thisTypeNamespace = GetThisClassNamespace(node.Document);
             node.Attribute(thisTypeNamespace + attributeName)?.Remove();
         }
-        
+
         protected XNamespace GetPersistenceNamespace(XElement element)
         {
-            return element 
-                .Attributes()
-                .First(attr => attr.Name.LocalName == "id").Name
-                .Namespace;
+            return element.Attributes().First(attr => attr.Name.LocalName == "id").Name.Namespace;
         }
+
         protected XNamespace GetAbstractSchemaItemNamespace(XElement element)
         {
-            return element 
-                .Attributes()
-                .First(attr => attr.Name.LocalName == "name").Name
-                .Namespace;
+            return element.Attributes().First(attr => attr.Name.LocalName == "name").Name.Namespace;
         }
 
         private XNamespace GetThisClassNamespace(XDocument document)
         {
-            return OrigamXDocument.GetNamespaces(document)
-                .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName 
-                || (OldFullTypeNames != null 
-                && OldFullTypeNames.Contains(nameSpace.FullTypeName)))
+            return OrigamXDocument
+                .GetNamespaces(document)
+                .FirstOrDefault(nameSpace =>
+                    nameSpace.FullTypeName == FullTypeName
+                    || (
+                        OldFullTypeNames != null
+                        && OldFullTypeNames.Contains(nameSpace.FullTypeName)
+                    )
+                )
                 ?.StringValue;
         }
 
         internal void AddEmptyUpgrade(string fromVersion, string toVersion)
         {
-            upgradeScripts.Add(new UpgradeScript(
-                new Version(fromVersion),
-                new Version(toVersion),
-                EmptyUpgrade()));
+            upgradeScripts.Add(
+                new UpgradeScript(new Version(fromVersion), new Version(toVersion), EmptyUpgrade())
+            );
         }
 
         internal static Action<XElement, OrigamXDocument> EmptyUpgrade()
@@ -208,12 +224,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
     public class UpgradeScript
     {
         public Version FromVersion { get; }
-        public Version ToVersion { get;}
+        public Version ToVersion { get; }
 
         private readonly Action<XElement, OrigamXDocument> transformation;
 
-        public UpgradeScript(Version fromVersion, Version toVersion,
-            Action<XElement, OrigamXDocument> transformation)
+        public UpgradeScript(
+            Version fromVersion,
+            Version toVersion,
+            Action<XElement, OrigamXDocument> transformation
+        )
         {
             this.transformation = transformation;
             FromVersion = fromVersion;
@@ -223,6 +242,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public void Upgrade(XElement classNode, OrigamXDocument doc)
         {
             transformation(classNode, doc);
-        } 
+        }
     }
 }

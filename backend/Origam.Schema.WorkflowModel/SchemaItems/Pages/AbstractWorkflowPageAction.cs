@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for ServiceMethod.
 /// </summary>
@@ -37,102 +37,105 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class AbstractWorkflowPageAction : AbstractSchemaItem
 {
-	public const string CategoryConst = "WorkflowPageAction";
-	public AbstractWorkflowPageAction() : base() {Init();}
-	public AbstractWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractWorkflowPageAction(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-		this.ChildItemTypes.Add(typeof(WorkflowPageActionParameter));
-	}
-	#region Properties
-	public Guid ConditionRuleId;
-	[Category("Conditions")]
-	[TypeConverter(typeof(StartRuleConverter))]
+    public const string CategoryConst = "WorkflowPageAction";
+
+    public AbstractWorkflowPageAction()
+        : base()
+    {
+        Init();
+    }
+
+    public AbstractWorkflowPageAction(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public AbstractWorkflowPageAction(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.Add(typeof(WorkflowPageActionParameter));
+    }
+
+    #region Properties
+    public Guid ConditionRuleId;
+
+    [Category("Conditions")]
+    [TypeConverter(typeof(StartRuleConverter))]
     [XmlReference("conditionRule", "ConditionRuleId")]
-	public IStartRule ConditionRule
-	{
-		get
-		{
-            return (IStartRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ConditionRuleId));
-		}
-		set
-		{
-			this.ConditionRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	private int _sortOrder = 100;
-	[DefaultValue(100)]
+    public IStartRule ConditionRule
+    {
+        get
+        {
+            return (IStartRule)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.ConditionRuleId)
+                );
+        }
+        set { this.ConditionRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+    private int _sortOrder = 100;
+
+    [DefaultValue(100)]
     [XmlAttribute("sortOrder")]
-	public int SortOrder
-	{
-		get
-		{
-			return _sortOrder;
-		}
-		set
-		{
-			_sortOrder = value;
-		}
-	}		
-	private string _roles = "*";
-	[Category("Conditions")]
-	[NotNullModelElementRule()]
+    public int SortOrder
+    {
+        get { return _sortOrder; }
+        set { _sortOrder = value; }
+    }
+    private string _roles = "*";
+
+    [Category("Conditions")]
+    [NotNullModelElementRule()]
     [DefaultValue("*")]
     [XmlAttribute("roles")]
     public string Roles
-	{
-		get
-		{
-			return _roles;
-		}
-		set
-		{
-			_roles = value;
-		}
-	}
-	private string _features;
-	[Category("Conditions")]
-	[XmlAttribute("features")]
-	public string Features
-	{
-		get
-		{
-			return _features;
-		}
-		set
-		{
-			_features = value;
-		}
-	}		
-	#endregion
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		base.GetExtraDependencies (dependencies);
-		if(this.ConditionRule != null) dependencies.Add(this.ConditionRule);
-	}
-	#endregion
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
-		AbstractWorkflowPageAction compareItem = obj as AbstractWorkflowPageAction;
-		if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareAbstractWorkflowPageAction"));
-		return this.SortOrder.CompareTo(compareItem.SortOrder);
-	}
-	#endregion
+    {
+        get { return _roles; }
+        set { _roles = value; }
+    }
+    private string _features;
+
+    [Category("Conditions")]
+    [XmlAttribute("features")]
+    public string Features
+    {
+        get { return _features; }
+        set { _features = value; }
+    }
+    #endregion
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        base.GetExtraDependencies(dependencies);
+        if (this.ConditionRule != null)
+            dependencies.Add(this.ConditionRule);
+    }
+    #endregion
+    #region IComparable Members
+    public override int CompareTo(object obj)
+    {
+        AbstractWorkflowPageAction compareItem = obj as AbstractWorkflowPageAction;
+        if (compareItem == null)
+            throw new InvalidCastException(
+                ResourceUtils.GetString("ErrorCompareAbstractWorkflowPageAction")
+            );
+        return this.SortOrder.CompareTo(compareItem.SortOrder);
+    }
+    #endregion
 }

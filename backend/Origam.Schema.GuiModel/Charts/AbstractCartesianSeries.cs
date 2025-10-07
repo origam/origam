@@ -25,32 +25,40 @@ using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
-
 namespace Origam.Schema.GuiModel;
+
 [ClassMetaVersion("6.0.0")]
 public abstract class AbstractCartesianSeries : AbstractSeries
 {
-	public AbstractCartesianSeries() : base() {Init();}
-	public AbstractCartesianSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractCartesianSeries(Key primaryKey) : base(primaryKey) {Init();}
-	private void Init()
-	{
-		
-	}
-	#region Properties
-	private string _zAxisField = "";
-	[Category("Series")]
-	[XmlAttribute("zAxisField")]
-	public string ZAxisField
-	{
-		get
-		{
-			return _zAxisField;
-		}
-		set
-		{
-			_zAxisField = value;
-		}
-	}
-	#endregion			
+    public AbstractCartesianSeries()
+        : base()
+    {
+        Init();
+    }
+
+    public AbstractCartesianSeries(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public AbstractCartesianSeries(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
+    #region Properties
+    private string _zAxisField = "";
+
+    [Category("Series")]
+    [XmlAttribute("zAxisField")]
+    public string ZAxisField
+    {
+        get { return _zAxisField; }
+        set { _zAxisField = value; }
+    }
+    #endregion
 }

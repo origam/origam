@@ -22,37 +22,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema.WorkflowModel;
+
 public class WorkflowScheduleSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public WorkflowScheduleSchemaItemProvider() {}
-	#region ISchemaItemProvider Members
-	public override string RootItemType => WorkflowSchedule.CategoryConst;
-	public override string Group => "BL";
-	#endregion
-	#region IBrowserNode Members
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_29_schedules.png";
-	public override string NodeText
-	{
-		get => "Schedules";
-		set => base.NodeText = value;
-	}
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(WorkflowSchedule)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(WorkflowSchedule) ?
-				"NewSchedule" : null);
-	}
-	#endregion
+    public WorkflowScheduleSchemaItemProvider() { }
+
+    #region ISchemaItemProvider Members
+    public override string RootItemType => WorkflowSchedule.CategoryConst;
+    public override string Group => "BL";
+    #endregion
+    #region IBrowserNode Members
+    public override string Icon =>
+        // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+        "icon_29_schedules.png";
+    public override string NodeText
+    {
+        get => "Schedules";
+        set => base.NodeText = value;
+    }
+    public override string NodeToolTipText =>
+        // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+        null;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(WorkflowSchedule) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(WorkflowSchedule) ? "NewSchedule" : null
+        );
+    }
+    #endregion
 }

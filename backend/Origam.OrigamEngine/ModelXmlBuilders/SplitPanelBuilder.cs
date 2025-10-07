@@ -23,23 +23,28 @@ using System.Xml;
 using Origam.Gui;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for SplitPanelBuilder.
 /// </summary>
 public class SplitPanelBuilder
 {
-	public static void Build(XmlElement parentNode, SplitPanelOrientation orientation, bool fixedSize)
-	{
-		string type;
-		if(orientation == SplitPanelOrientation.Horizontal)
-		{
-			type = (fixedSize ? "VBox" : "VSplit");
-		}
-		else
-		{
-			type = (fixedSize ? "HBox" : "HSplit");
-		}
-		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-		parentNode.SetAttribute("Type", type);
-	}
+    public static void Build(
+        XmlElement parentNode,
+        SplitPanelOrientation orientation,
+        bool fixedSize
+    )
+    {
+        string type;
+        if (orientation == SplitPanelOrientation.Horizontal)
+        {
+            type = (fixedSize ? "VBox" : "VSplit");
+        }
+        else
+        {
+            type = (fixedSize ? "HBox" : "HSplit");
+        }
+        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+        parentNode.SetAttribute("Type", type);
+    }
 }

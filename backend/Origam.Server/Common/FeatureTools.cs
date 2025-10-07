@@ -27,8 +27,6 @@ public class FeatureTools
 {
     public static bool IsFeatureOn(string featureCode)
     {
-        return ServiceManager.Services
-            .GetService<IParameterService>()
-            .IsFeatureOn(featureCode);
+        return ServiceManager.Services.GetService<IParameterService>().IsFeatureOn(featureCode);
     }
 }

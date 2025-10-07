@@ -21,16 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using log4net;
 using System.Reflection;
+using log4net;
 
 namespace Origam.DA.Service;
+
 public interface IFileChangesWatchDog
 {
     event EventHandler<FileSystemChangeEventArgs> FileChanged;
     void Start();
     void Stop();
 }
+
 public class NullWatchDog : IFileChangesWatchDog
 {
     public event EventHandler<FileSystemChangeEventArgs> FileChanged
@@ -38,35 +40,36 @@ public class NullWatchDog : IFileChangesWatchDog
         add { }
         remove { }
     }
-    public void Start()
-    {
-    }
-    public void Stop()
-    { 
-    }
+
+    public void Start() { }
+
+    public void Stop() { }
 }
+
 public class FileChangesWatchDog : IFileChangesWatchDog
 {
-    private static readonly ILog log 
-        = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType
+    );
     private readonly DirectoryInfo topDir;
     private readonly FileFilter ignoreFileFilter;
     private FileSystemWatcher watcher;
-    public FileChangesWatchDog(
-        DirectoryInfo topDir, FileFilter ignoreFileFilter)
+
+    public FileChangesWatchDog(DirectoryInfo topDir, FileFilter ignoreFileFilter)
     {
         this.topDir = topDir;
         this.ignoreFileFilter = ignoreFileFilter;
     }
+
     public event EventHandler<FileSystemChangeEventArgs> FileChanged;
-    
+
     public void Start()
     {
         watcher = new FileSystemWatcher
         {
             Path = topDir.FullName,
             IncludeSubdirectories = true,
-            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName 
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
         };
         watcher.Changed += OnChanged;
         watcher.Created += OnChanged;
@@ -74,24 +77,28 @@ public class FileChangesWatchDog : IFileChangesWatchDog
         watcher.Renamed += OnRenamed;
         watcher.EnableRaisingEvents = true;
     }
+
     private void OnChanged(object source, FileSystemEventArgs e)
     {
-        if (ShouldBeIgnored(e.FullPath)) return;
-        
-        FileChanged?.Invoke(
-            null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
+        if (ShouldBeIgnored(e.FullPath))
+            return;
+
+        FileChanged?.Invoke(null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
     }
-    private bool ShouldBeIgnored(string fullPath) =>
-        !ignoreFileFilter.ShouldPass(fullPath);
+
+    private bool ShouldBeIgnored(string fullPath) => !ignoreFileFilter.ShouldPass(fullPath);
+
     private void OnRenamed(object source, RenamedEventArgs e)
     {
-        if (ShouldBeIgnored(e.FullPath)) return;
-        
+        if (ShouldBeIgnored(e.FullPath))
+            return;
+
         FileChanged?.Invoke(
-            null, 
-            new FileSystemChangeEventArgs(
-                e.OldFullPath, e.FullPath, e.ChangeType));
+            null,
+            new FileSystemChangeEventArgs(e.OldFullPath, e.FullPath, e.ChangeType)
+        );
     }
+
     public void Stop()
     {
         watcher.EnableRaisingEvents = false;
@@ -101,20 +108,23 @@ public class FileChangesWatchDog : IFileChangesWatchDog
         watcher.Renamed -= OnRenamed;
     }
 }
+
 public class FileSystemChangeEventArgs : EventArgs
 {
     private readonly string path;
     public bool IsDirectoryChange =>
-        ChangeType == WatcherChangeTypes.Changed &&
-        Directory.Exists(path);
-    public DirectoryInfo Folder { get;}
+        ChangeType == WatcherChangeTypes.Changed && Directory.Exists(path);
+    public DirectoryInfo Folder { get; }
     public FileInfo File { get; }
     public string OldFilename { get; }
     public WatcherChangeTypes ChangeType { get; }
     public DateTime Timestamp { get; }
+
     internal FileSystemChangeEventArgs(
-        string path, string oldFilename, 
-        WatcherChangeTypes changeType)
+        string path,
+        string oldFilename,
+        WatcherChangeTypes changeType
+    )
     {
         this.path = path;
         Folder = new DirectoryInfo(path);
@@ -123,9 +133,9 @@ public class FileSystemChangeEventArgs : EventArgs
         ChangeType = changeType;
         Timestamp = DateTime.Now;
     }
+
     public override string ToString()
     {
-        return "File: " + File + Environment.NewLine 
-            + "Change Type: " + ChangeType;
+        return "File: " + File + Environment.NewLine + "Change Type: " + ChangeType;
     }
 }

@@ -21,28 +21,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml;
-
 using Origam.Schema.GuiModel;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for DashboardPanelBuilder.
 /// </summary>
 public class DashboardPanelBuilder
 {
-	public static void Build(PanelDashboardWidget panelWidget,
-		Guid menuId, Guid dashboardItemId, XmlElement itemChildren,
-		XmlElement dataSourcesElement)
-	{
-		XmlDocument panelDoc = FormXmlBuilder.GetXmlFromPanel(panelWidget.PanelId, panelWidget.Caption, menuId, dashboardItemId, false);
-		// clone panel definition
-		itemChildren.InnerXml = panelDoc["Window"]["UIRoot"].OuterXml.Replace("UIRoot", "UIElement");
-		XmlElement panelElement = itemChildren.FirstChild as XmlElement;
-		// clone data source
-		XmlElement originalDataSourceElement = panelDoc["Window"]["DataSources"].FirstChild as XmlElement;
-		string dataSourceName = originalDataSourceElement.GetAttribute("Entity");
-		string dataSourceIdentifier = originalDataSourceElement.GetAttribute("Identifier");
-		XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(dataSourcesElement, dataSourceName, dataSourceIdentifier, null, null);
-		newDataSourceElement.InnerXml = originalDataSourceElement.InnerXml;
-	}
+    public static void Build(
+        PanelDashboardWidget panelWidget,
+        Guid menuId,
+        Guid dashboardItemId,
+        XmlElement itemChildren,
+        XmlElement dataSourcesElement
+    )
+    {
+        XmlDocument panelDoc = FormXmlBuilder.GetXmlFromPanel(
+            panelWidget.PanelId,
+            panelWidget.Caption,
+            menuId,
+            dashboardItemId,
+            false
+        );
+        // clone panel definition
+        itemChildren.InnerXml = panelDoc["Window"]
+            ["UIRoot"]
+            .OuterXml.Replace("UIRoot", "UIElement");
+        XmlElement panelElement = itemChildren.FirstChild as XmlElement;
+        // clone data source
+        XmlElement originalDataSourceElement =
+            panelDoc["Window"]["DataSources"].FirstChild as XmlElement;
+        string dataSourceName = originalDataSourceElement.GetAttribute("Entity");
+        string dataSourceIdentifier = originalDataSourceElement.GetAttribute("Identifier");
+        XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(
+            dataSourcesElement,
+            dataSourceName,
+            dataSourceIdentifier,
+            null,
+            null
+        );
+        newDataSourceElement.InnerXml = originalDataSourceElement.InnerXml;
+    }
 }

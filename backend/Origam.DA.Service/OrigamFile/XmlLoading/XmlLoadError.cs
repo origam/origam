@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.DA.Service;
+
 public class XmlLoadError
 {
     public readonly string Message;
-    
+
     public XmlLoadError(string message)
     {
         Message = message;

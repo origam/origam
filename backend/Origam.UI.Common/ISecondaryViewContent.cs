@@ -20,16 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.UI;
+
 /// <summary>
 /// The base interface for secondary view contents
 /// (designer, doc viewer etc.)
 /// </summary>
 public interface ISecondaryViewContent : IBaseViewContent
 {
-	/// <summary>
-	/// Is called before the save operation of the main IViewContent
-	/// </summary>
-	void NotifyBeforeSave();
-	
-	void NotifyAfterSave(bool successful);
+    /// <summary>
+    /// Is called before the save operation of the main IViewContent
+    /// </summary>
+    void NotifyBeforeSave();
+
+    void NotifyAfterSave(bool successful);
 }

@@ -20,25 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
 
 namespace Origam.Server.Configuration;
+
 public class ChatConfig
 {
     public string PathToChatApp { get; set; }
     public int ChatRefreshInterval { get; set; }
 
-    public ChatConfig() {
-    }
+    public ChatConfig() { }
 
     public ChatConfig(IConfiguration configuration)
     {
-        var chatSection = configuration
-            .GetSection("ChatConfig");
+        var chatSection = configuration.GetSection("ChatConfig");
 
-        PathToChatApp = chatSection
-            .GetValue("PathToChatApp", "");
-        ChatRefreshInterval = chatSection
-            .GetValue("ChatRefreshInterval", 1000);
+        PathToChatApp = chatSection.GetValue("PathToChatApp", "");
+        ChatRefreshInterval = chatSection.GetValue("ChatRefreshInterval", 1000);
     }
 }

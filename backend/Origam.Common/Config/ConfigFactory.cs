@@ -26,7 +26,8 @@ public interface IConfig
     public long? GetValue(string[] appSettingsPath);
 }
 
-public static class ConfigFactory {
+public static class ConfigFactory
+{
     public static IConfig GetConfig()
     {
 #pragma warning disable CS0162

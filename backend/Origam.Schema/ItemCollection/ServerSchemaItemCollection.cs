@@ -25,19 +25,15 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.ItemCollection;
 
-class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>,
-    ISchemaItemCollection
+class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>, ISchemaItemCollection
 {
-    
-    public ServerSchemaItemCollection()
-    {
-    }
-    
+    public ServerSchemaItemCollection() { }
+
     public ServerSchemaItemCollection(ISchemaItem parentSchemaItem)
     {
         ParentSchemaItem = parentSchemaItem;
     }
-    
+
     public override void Add(ISchemaItem value)
     {
         base.Add(value);
@@ -54,10 +50,8 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>,
             Add(item);
         }
     }
-    
 
-    protected override void OnSet(int index, ISchemaItem oldItem,
-        ISchemaItem newItem)
+    protected override void OnSet(int index, ISchemaItem oldItem, ISchemaItem newItem)
     {
         if (UpdateParentItem)
         {
@@ -65,7 +59,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>,
             oldItem.ParentItem = null;
         }
     }
- 
+
     protected override void OnInsert(int index, ISchemaItem item)
     {
         if (item.IsAbstract)
@@ -101,5 +95,4 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>,
             item.ParentItem = null;
         }
     }
-    
 }

@@ -41,20 +41,22 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Origam.Schema.MenuModel;
 using Origam.Gui;
+using Origam.Schema.MenuModel;
 using Origam.Server.Common;
 
 namespace Origam.Server;
+
 public class SessionHelper
 {
     private readonly SessionManager sessionManager;
+
     public SessionHelper(SessionManager sessionManager)
     {
         this.sessionManager = sessionManager;
     }
+
     public void DeleteSession(Guid sessionFormIdentifier)
     {
         SessionStore ss = null;
@@ -66,23 +68,29 @@ public class SessionHelper
             // we do it here
             if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
             {
-                SessionStore parentSession = sessionManager.GetSession(new Guid(ss.Request.ParentSessionId));
+                SessionStore parentSession = sessionManager.GetSession(
+                    new Guid(ss.Request.ParentSessionId)
+                );
                 parentSession.PendingChanges = new List<ChangeInfo>();
-                EntityWorkflowAction ewa = UIActionTools.GetAction(
-                    ss.Request.SourceActionId) as EntityWorkflowAction;
+                EntityWorkflowAction ewa =
+                    UIActionTools.GetAction(ss.Request.SourceActionId) as EntityWorkflowAction;
                 var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-                    sessionManager, parentSession);
+                    sessionManager,
+                    parentSession
+                );
                 actionRunnerClient.ProcessWorkflowResults(
                     profile: SecurityTools.CurrentUserProfile(),
                     processData: null,
                     sourceData: ss.Data,
                     targetData: parentSession.Data,
                     entityWorkflowAction: ewa,
-                    changes: parentSession.PendingChanges);
+                    changes: parentSession.PendingChanges
+                );
                 actionRunnerClient.PostProcessWorkflowAction(
                     data: parentSession.Data,
                     entityWorkflowAction: ewa,
-                    changes: parentSession.PendingChanges);
+                    changes: parentSession.PendingChanges
+                );
             }
             ss.Dispose();
         }

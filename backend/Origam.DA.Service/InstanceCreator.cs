@@ -44,40 +44,65 @@ namespace Origam.DA.Service
             this.parentFolderIds = parentFolderIds;
         }
 
-        public IFilePersistent RetrieveInstance( Guid id,
-            IPersistenceProvider provider, Guid parentId)
+        public IFilePersistent RetrieveInstance(
+            Guid id,
+            IPersistenceProvider provider,
+            Guid parentId
+        )
         {
             IFilePersistent instance = Instantiate(id, provider, parentId);
-            
+
             var namespaceMapping = PropertyToNamespaceMapping.Get(instance.GetType());
-            SetXmlAttributes( instance, provider, namespaceMapping);
+            SetXmlAttributes(instance, provider, namespaceMapping);
             NoteExternalReferences(instance, namespaceMapping);
             SetParentAttributes(parentId, instance, provider);
             SetReferences(instance, namespaceMapping);
             instance.UseObjectCache = false;
             return instance;
         }
-        protected abstract void SetValue(IFilePersistent instance, MemberAttributeInfo mi, object value, IPersistenceProvider provider);
 
-        protected abstract void SetXmlAttributes(IFilePersistent instance, IPersistenceProvider provider,PropertyToNamespaceMapping namespaceMapping);
+        protected abstract void SetValue(
+            IFilePersistent instance,
+            MemberAttributeInfo mi,
+            object value,
+            IPersistenceProvider provider
+        );
 
-        protected abstract void NoteExternalReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
+        protected abstract void SetXmlAttributes(
+            IFilePersistent instance,
+            IPersistenceProvider provider,
+            PropertyToNamespaceMapping namespaceMapping
+        );
 
-        protected abstract void SetReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
+        protected abstract void NoteExternalReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        );
+
+        protected abstract void SetReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        );
 
         protected abstract string GetTypeName();
 
-        private void SetParentAttributes(Guid parentId, IFilePersistent instance,
-            IPersistenceProvider provider)
+        private void SetParentAttributes(
+            Guid parentId,
+            IFilePersistent instance,
+            IPersistenceProvider provider
+        )
         {
             List<MemberAttributeInfo> parentFolderReferences = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlParentAttribute));
+                instance.GetType(),
+                typeof(XmlParentAttribute)
+            );
             bool isTopFileElement = parentId == Guid.Empty;
             foreach (MemberAttributeInfo mi in parentFolderReferences)
             {
                 XmlParentAttribute attribute = mi.Attribute as XmlParentAttribute;
                 string folderUri = CategoryFactory.Create(attribute.Type);
-                if (folderUri == OrigamFile.GroupCategory && !isTopFileElement) continue;
+                if (folderUri == OrigamFile.GroupCategory && !isTopFileElement)
+                    continue;
                 if (parentFolderIds.ContainsKey(folderUri))
                 {
                     SetValue(instance, mi, parentFolderIds[folderUri], provider);
@@ -85,17 +110,17 @@ namespace Origam.DA.Service
             }
         }
 
-        private IFilePersistent Instantiate( Guid id,
-            IPersistenceProvider provider, Guid parentId)
+        private IFilePersistent Instantiate(Guid id, IPersistenceProvider provider, Guid parentId)
         {
-            if(provider == null) throw new ArgumentNullException("provider is null");
+            if (provider == null)
+                throw new ArgumentNullException("provider is null");
             string typeName = GetTypeName();
             string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
             Key key = new Key();
             key.Add("Id", id);
-            object[] constructorArray = {key};
-            IFilePersistent instance = Reflector.InvokeObject(assemblyName, typeName, constructorArray)
-                as IFilePersistent;
+            object[] constructorArray = { key };
+            IFilePersistent instance =
+                Reflector.InvokeObject(assemblyName, typeName, constructorArray) as IFilePersistent;
             // Set the persistence provider, so the object can persist itself later on
             instance.PersistenceProvider = provider;
             // Mark the object as persisted, because we have just read it from the data source
@@ -105,10 +130,9 @@ namespace Origam.DA.Service
             return instance;
         }
     }
-    
+
     class InstanceCloner : AbstractInstanceCreator
     {
-
         private readonly object source;
 
         public InstanceCloner(object source, ParentFolders parentFolders)
@@ -117,17 +141,26 @@ namespace Origam.DA.Service
             this.source = source;
         }
 
-        protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi, 
-            object value, IPersistenceProvider provider)
+        protected override void SetValue(
+            IFilePersistent instance,
+            MemberAttributeInfo mi,
+            object value,
+            IPersistenceProvider provider
+        )
         {
             Reflector.SetValue(mi.MemberInfo, instance, value);
         }
-        
-        protected override void SetXmlAttributes(IFilePersistent instance,
-            IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
+
+        protected override void SetXmlAttributes(
+            IFilePersistent instance,
+            IPersistenceProvider provider,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             List<MemberAttributeInfo> members = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlAttributeAttribute));
+                instance.GetType(),
+                typeof(XmlAttributeAttribute)
+            );
             foreach (MemberAttributeInfo mi in members)
             {
                 object value = mi.MemberInfo.GetValue(source);
@@ -135,41 +168,49 @@ namespace Origam.DA.Service
             }
         }
 
-        protected override void NoteExternalReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
+        protected override void NoteExternalReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             // was done when InstanceCreator created the source, no need to repeat it here
         }
 
-        protected override void SetReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
+        protected override void SetReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             List<MemberAttributeInfo> references = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlReferenceAttribute));
+                instance.GetType(),
+                typeof(XmlReferenceAttribute)
+            );
             foreach (MemberAttributeInfo mi in references)
             {
                 XmlReferenceAttribute attribute = mi.Attribute as XmlReferenceAttribute;
 
                 string attributeIdField = attribute.IdField;
-                Guid refId = (Guid)Reflector
-                    .GetValue(source.GetType(), source, attributeIdField);
+                Guid refId = (Guid)Reflector.GetValue(source.GetType(), source, attributeIdField);
 
-                Reflector.SetValue(instance, attribute.IdField,refId);
+                Reflector.SetValue(instance, attribute.IdField, refId);
             }
         }
 
-        protected override string GetTypeName() 
-            => source.GetType().ToString();
+        protected override string GetTypeName() => source.GetType().ToString();
     }
-    
-    class InstanceCreator: AbstractInstanceCreator
+
+    class InstanceCreator : AbstractInstanceCreator
     {
         private readonly ExternalFileManager externalFileManger;
         private readonly XmlReader reader;
         private OrigamNameSpace[] currentFileNamespaces;
 
-        public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
-            ExternalFileManager externalFileManger) : base(parentFolderIds)
+        public InstanceCreator(
+            XmlReader reader,
+            ParentFolders parentFolderIds,
+            ExternalFileManager externalFileManger
+        )
+            : base(parentFolderIds)
         {
             this.externalFileManger = externalFileManger;
             this.reader = reader;
@@ -177,54 +218,75 @@ namespace Origam.DA.Service
 
         public OrigamNameSpace[] CurrentXmlFileNamespaces
         {
-            get => currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
+            get =>
+                currentFileNamespaces
+                ?? throw new InvalidOperationException(
+                    "Trying to create instances before namespaces from the xml file were red."
+                );
             set => currentFileNamespaces = value;
         }
 
-        protected override void SetReferences(IFilePersistent instance, 
-            PropertyToNamespaceMapping namespaceMapping)
+        protected override void SetReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             List<MemberAttributeInfo> references = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlReferenceAttribute));
+                instance.GetType(),
+                typeof(XmlReferenceAttribute)
+            );
             foreach (MemberAttributeInfo mi in references)
             {
                 XmlReferenceAttribute attribute = mi.Attribute as XmlReferenceAttribute;
                 string value = reader.GetAttribute(
-                        attribute.AttributeName, 
-                        namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
+                    attribute.AttributeName,
+                    namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name)
+                );
                 // reference looks like "/package/folder/entity.xml/entity/field#GUID
                 // we only read the guid part
                 if (value != null)
                 {
-                    Reflector.SetValue(instance, attribute.IdField,
-                        new Guid(value.Substring(value.Length - 36)));
+                    Reflector.SetValue(
+                        instance,
+                        attribute.IdField,
+                        new Guid(value.Substring(value.Length - 36))
+                    );
                 }
             }
         }
 
-        protected override string GetTypeName() =>  XmlUtils.ReadType(reader);
+        protected override string GetTypeName() => XmlUtils.ReadType(reader);
 
-        protected override void NoteExternalReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
+        protected override void NoteExternalReferences(
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             List<MemberAttributeInfo> externalFileReferences = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlExternalFileReference));
+                instance.GetType(),
+                typeof(XmlExternalFileReference)
+            );
             foreach (MemberAttributeInfo mi in externalFileReferences)
             {
-                var attribute = (XmlExternalFileReference) mi.Attribute;
-                string externalLink =
-                    reader.GetAttribute(
-                        attribute.ContainerName,
-                        namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
+                var attribute = (XmlExternalFileReference)mi.Attribute;
+                string externalLink = reader.GetAttribute(
+                    attribute.ContainerName,
+                    namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name)
+                );
                 externalFileManger.AddFileLink(externalLink);
             }
         }
 
-        protected override void SetXmlAttributes( IFilePersistent instance,
-            IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
+        protected override void SetXmlAttributes(
+            IFilePersistent instance,
+            IPersistenceProvider provider,
+            PropertyToNamespaceMapping namespaceMapping
+        )
         {
             List<MemberAttributeInfo> members = Reflector.FindMembers(
-                instance.GetType(), typeof(XmlAttributeAttribute));
+                instance.GetType(),
+                typeof(XmlAttributeAttribute)
+            );
             foreach (MemberAttributeInfo mi in members)
             {
                 XmlAttributeAttribute attribute = mi.Attribute as XmlAttributeAttribute;
@@ -233,21 +295,24 @@ namespace Origam.DA.Service
                 {
                     string value = reader.GetAttribute(
                         attribute.AttributeName,
-                        currentPropertyNamespace);
+                        currentPropertyNamespace
+                    );
                     SetValue(instance, mi, value, provider);
                 }
             }
         }
 
         private OrigamNameSpace GetPropertyNamespace(
-            PropertyToNamespaceMapping namespaceMapping, MemberAttributeInfo mi)
+            PropertyToNamespaceMapping namespaceMapping,
+            MemberAttributeInfo mi
+        )
         {
-            var currentPropertyNamespace =
-                namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name);
-            var matchingXmlFileNamespace = CurrentXmlFileNamespaces
-                   .FirstOrDefault(xmlNamespace =>
-                       xmlNamespace.FullTypeName ==
-                       currentPropertyNamespace.FullTypeName);
+            var currentPropertyNamespace = namespaceMapping.GetNamespaceByPropertyName(
+                mi.MemberInfo.Name
+            );
+            var matchingXmlFileNamespace = CurrentXmlFileNamespaces.FirstOrDefault(xmlNamespace =>
+                xmlNamespace.FullTypeName == currentPropertyNamespace.FullTypeName
+            );
             if (matchingXmlFileNamespace == null)
             {
                 // namespace was not found in the file => all properties
@@ -261,22 +326,31 @@ namespace Origam.DA.Service
                         Strings.WrongMetaVersion,
                         currentPropertyNamespace.FullTypeName,
                         currentPropertyNamespace.Version,
-                        matchingXmlFileNamespace.Version));
+                        matchingXmlFileNamespace.Version
+                    )
+                );
             }
 
             return currentPropertyNamespace;
         }
 
-        protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi,
-            object value, IPersistenceProvider provider)
+        protected override void SetValue(
+            IFilePersistent instance,
+            MemberAttributeInfo mi,
+            object value,
+            IPersistenceProvider provider
+        )
         {
-            object correctlyTypedValue =  InstanceTools.GetCorrectlyTypedValue(mi.MemberInfo, value);
-            if ( correctlyTypedValue is string strValue)
+            object correctlyTypedValue = InstanceTools.GetCorrectlyTypedValue(mi.MemberInfo, value);
+            if (correctlyTypedValue is string strValue)
             {
-                correctlyTypedValue = provider.LocalizationCache
-                    .GetLocalizedString(instance.Id, mi.MemberInfo.Name, strValue);
+                correctlyTypedValue = provider.LocalizationCache.GetLocalizedString(
+                    instance.Id,
+                    mi.MemberInfo.Name,
+                    strValue
+                );
             }
             Reflector.SetValue(mi.MemberInfo, instance, correctlyTypedValue);
-        }       
+        }
     }
 }

@@ -24,4 +24,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 // https://stackoverflow.com/questions/64749385/predefined-type-system-runtime-compilerservices-isexternalinit-is-not-defined
 
 namespace System.Runtime.CompilerServices;
-public static class IsExternalInit {}
+
+public static class IsExternalInit { }

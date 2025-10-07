@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
@@ -34,54 +34,57 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.1")]
 public class XslTransformation : AbstractTransformation
 {
-    public XslTransformation() : base()
+    public XslTransformation()
+        : base()
     {
         InitializeProperyContainers();
     }
-	public XslTransformation(Guid schemaExtensionId) : base(schemaExtensionId)
+
+    public XslTransformation(Guid schemaExtensionId)
+        : base(schemaExtensionId)
     {
         InitializeProperyContainers();
     }
-    public XslTransformation(Key primaryKey) : base(primaryKey)
+
+    public XslTransformation(Key primaryKey)
+        : base(primaryKey)
     {
         InitializeProperyContainers();
     }
+
     private void InitializeProperyContainers()
     {
-        text = new PropertyContainer<string>(
-            containerName: nameof(text),
-            containingObject: this);
+        text = new PropertyContainer<string>(containerName: nameof(text), containingObject: this);
     }
+
     public override object Clone()
     {
         var clone = (XslTransformation)base.Clone();
         clone.TextStore = TextStore;
         return clone;
     }
+
     #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Properties
-	private PropertyContainer<string> text;
-	
-	[StringNotEmptyModelElementRule()]
-    [XmlExternalFileReference(containerName: nameof(text), 
-        extension: ExternalFileExtension.Xslt)]
+    {
+        XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Properties
+    private PropertyContainer<string> text;
+
+    [StringNotEmptyModelElementRule()]
+    [XmlExternalFileReference(containerName: nameof(text), extension: ExternalFileExtension.Xslt)]
     public string TextStore
-	{
+    {
         get => text.Get();
         set => text.Set(value);
     }
-	#endregion
+    #endregion
 }

@@ -24,13 +24,16 @@ using System.IO;
 
 namespace Origam.DA.ObjectPersistence;
 
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-public class XmlExternalFileReference: Attribute
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class XmlExternalFileReference : Attribute
 {
     public ExternalFileExtension Extension { get; }
     public string ContainerName { get; }
-    public XmlExternalFileReference( string containerName,
-        ExternalFileExtension extension = ExternalFileExtension.Xml)
+
+    public XmlExternalFileReference(
+        string containerName,
+        ExternalFileExtension extension = ExternalFileExtension.Xml
+    )
     {
         Extension = extension;
         ContainerName = containerName;
@@ -47,8 +50,9 @@ public enum ExternalFileExtension
     Png,
     Xslt,
     Bin,
-    Txt
+    Txt,
 }
+
 public static class ExternalFileExtensionTools
 {
     public static bool IsSearchable(this ExternalFileExtension extension)
@@ -69,13 +73,16 @@ public static class ExternalFileExtensionTools
                 return false;
         }
     }
-    public static bool TryParse(FileInfo fileinfo, out ExternalFileExtension value) => 
+
+    public static bool TryParse(FileInfo fileinfo, out ExternalFileExtension value) =>
         TryParsePrivate(fileinfo.Extension, out value);
+
     public static bool TryParse(string filePath, out ExternalFileExtension value)
     {
         string extension = Path.GetExtension(filePath);
         return TryParsePrivate(extension, out value);
     }
+
     private static bool TryParsePrivate(string extension, out ExternalFileExtension ext)
     {
         if (extension == "")
@@ -86,9 +93,10 @@ public static class ExternalFileExtensionTools
         string extensionWithoutDot = extension.Substring(1);
         bool parseSucess = Enum.TryParse(
             value: extensionWithoutDot,
-            ignoreCase: true, 
-            result: out ExternalFileExtension parsedExt);
+            ignoreCase: true,
+            result: out ExternalFileExtension parsedExt
+        );
         ext = parsedExt;
         return parseSucess;
     }
-}  
+}

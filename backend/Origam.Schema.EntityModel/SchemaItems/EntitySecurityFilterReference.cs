@@ -19,114 +19,125 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for EntitySecurityFilterReference.
 /// </summary>
-[SchemaItemDescription("Row Level Security Filter", "Row Level Security",
-    "icon_row-level-security-filter.png")]
+[SchemaItemDescription(
+    "Row Level Security Filter",
+    "Row Level Security",
+    "icon_row-level-security-filter.png"
+)]
 [HelpTopic("Row+Level+Security+Filters")]
 [XmlModelRoot(CategoryConst)]
 [DefaultProperty("Filter")]
 [ClassMetaVersion("6.0.0")]
 public class EntitySecurityFilterReference : AbstractSchemaItem
 {
-	public const string CategoryConst = "EntitySecurityFilterReference";
-	public EntitySecurityFilterReference() : base() {}
-	public EntitySecurityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public EntitySecurityFilterReference(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "EntitySecurityFilterReference";
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.Filter != null)
-			base.GetParameterReferences(Filter, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Filter);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override void UpdateReferences()
-	{
-		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-		{
-			if(item.OldPrimaryKey != null)
-			{
-				if(item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
-				{
-					this.Filter = item as EntityFilter;
-					break;
-				}
-			}
-		}
-		base.UpdateReferences ();
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Properties
-	private string _roles;
-	[Category("Security")]
-	[XmlAttribute("roles")]
-	public string Roles
-	{
-		get
-		{
-			return _roles;
-		}
-		set
-		{
-			_roles = value;
-		}
-	}
-	
-	public Guid FilterId;
-	[TypeConverter(typeof(EntityFilterConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRuleAttribute()]
-	[Category("Security")]
+    public EntitySecurityFilterReference()
+        : base() { }
+
+    public EntitySecurityFilterReference(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntitySecurityFilterReference(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.Filter != null)
+            base.GetParameterReferences(Filter, list);
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Filter);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override void UpdateReferences()
+    {
+        foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+        {
+            if (item.OldPrimaryKey != null)
+            {
+                if (item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
+                {
+                    this.Filter = item as EntityFilter;
+                    break;
+                }
+            }
+        }
+        base.UpdateReferences();
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Properties
+    private string _roles;
+
+    [Category("Security")]
+    [XmlAttribute("roles")]
+    public string Roles
+    {
+        get { return _roles; }
+        set { _roles = value; }
+    }
+
+    public Guid FilterId;
+
+    [TypeConverter(typeof(EntityFilterConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRuleAttribute()]
+    [Category("Security")]
     [XmlReference("filter", "FilterId")]
     public EntityFilter Filter
-	{
-		get
-		{
-			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FilterId));
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.FilterId = Guid.Empty;
-				this.Name = "";
-			}
-			else
-			{
-				this.FilterId = (Guid)value.PrimaryKey["Id"];
-				this.Name = this.Filter.Name;
-			}
-		}
-	}
-	#endregion
+    {
+        get
+        {
+            return (EntityFilter)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.FilterId)
+                );
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.FilterId = Guid.Empty;
+                this.Name = "";
+            }
+            else
+            {
+                this.FilterId = (Guid)value.PrimaryKey["Id"];
+                this.Name = this.Filter.Name;
+            }
+        }
+    }
+    #endregion
 }

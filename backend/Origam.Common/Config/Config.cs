@@ -32,7 +32,7 @@ using Newtonsoft.Json.Linq;
 
 public class Config : IConfig
 {
-    private static readonly Lazy<string> userSecretsId = new (ResolveUserSecretsId);
+    private static readonly Lazy<string> userSecretsId = new(ResolveUserSecretsId);
 
     private static string ResolveUserSecretsId()
     {
@@ -44,9 +44,15 @@ public class Config : IConfig
                 foreach (var attr in asm.GetCustomAttributes(false))
                 {
                     var type = attr.GetType();
-                    if (type.FullName == "Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute")
+                    if (
+                        type.FullName
+                        == "Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute"
+                    )
                     {
-                        var prop = type.GetProperty("UserSecretsId", BindingFlags.Public | BindingFlags.Instance);
+                        var prop = type.GetProperty(
+                            "UserSecretsId",
+                            BindingFlags.Public | BindingFlags.Instance
+                        );
                         return prop?.GetValue(attr) as string;
                     }
                 }
@@ -67,7 +73,8 @@ public class Config : IConfig
         value = null;
         try
         {
-            if (!File.Exists(filePath)) return false;
+            if (!File.Exists(filePath))
+                return false;
             var jsonText = File.ReadAllText(filePath);
             var token = JToken.Parse(jsonText);
             foreach (var segment in path)
@@ -75,7 +82,8 @@ public class Config : IConfig
                 if (token is JObject obj)
                 {
                     token = obj[segment];
-                    if (token == null) return false;
+                    if (token == null)
+                        return false;
                 }
                 else
                 {
@@ -115,24 +123,33 @@ public class Config : IConfig
         {
             return null;
         }
-        
+
         string basePath = AppContext.BaseDirectory;
-        string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-                             ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
-                             ?? "Production";
+        string environment =
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+            ?? "Production";
 
         string value;
-        
+
         var appsettingsPath = Path.Combine(basePath, "appsettings.json");
-        if (TryGetJsonValue(appsettingsPath, appSettingsPath, out value) && !string.IsNullOrWhiteSpace(value))
+        if (
+            TryGetJsonValue(appsettingsPath, appSettingsPath, out value)
+            && !string.IsNullOrWhiteSpace(value)
+        )
         {
-            if (long.TryParse(value, out long parsed) && parsed > 0) return parsed;
+            if (long.TryParse(value, out long parsed) && parsed > 0)
+                return parsed;
         }
-        
+
         var envAppsettingsPath = Path.Combine(basePath, $"appsettings.{environment}.json");
-        if (TryGetJsonValue(envAppsettingsPath, appSettingsPath, out value) && !string.IsNullOrWhiteSpace(value))
+        if (
+            TryGetJsonValue(envAppsettingsPath, appSettingsPath, out value)
+            && !string.IsNullOrWhiteSpace(value)
+        )
         {
-            if (long.TryParse(value, out long parsed) && parsed > 0) return parsed;
+            if (long.TryParse(value, out long parsed) && parsed > 0)
+                return parsed;
         }
 
         var secretsId = userSecretsId.Value;
@@ -140,11 +157,23 @@ public class Config : IConfig
         {
             try
             {
-                var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                var secretsPath = Path.Combine(userProfile, "Microsoft", "UserSecrets", secretsId, "secrets.json");
-                if (TryGetJsonValue(secretsPath, appSettingsPath, out value) && !string.IsNullOrWhiteSpace(value))
+                var userProfile = Environment.GetFolderPath(
+                    Environment.SpecialFolder.ApplicationData
+                );
+                var secretsPath = Path.Combine(
+                    userProfile,
+                    "Microsoft",
+                    "UserSecrets",
+                    secretsId,
+                    "secrets.json"
+                );
+                if (
+                    TryGetJsonValue(secretsPath, appSettingsPath, out value)
+                    && !string.IsNullOrWhiteSpace(value)
+                )
                 {
-                    if (long.TryParse(value, out long parsed) && parsed > 0) return parsed;
+                    if (long.TryParse(value, out long parsed) && parsed > 0)
+                        return parsed;
                 }
             }
             catch
@@ -169,7 +198,11 @@ public class Config : IConfig
             value = Environment.GetEnvironmentVariable(keyDouble);
         }
 
-        if (!string.IsNullOrWhiteSpace(value) && long.TryParse(value, out long parsedEnv) && parsedEnv > 0)
+        if (
+            !string.IsNullOrWhiteSpace(value)
+            && long.TryParse(value, out long parsedEnv)
+            && parsedEnv > 0
+        )
         {
             return parsedEnv;
         }

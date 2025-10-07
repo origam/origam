@@ -33,11 +33,12 @@ using Origam.Service.Core;
 
 namespace Origam.Server.ClientAuthentication;
 
-public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationProvider
+public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthenticationProvider
 {
     private ResourceOwnerPasswordAuthenticationProviderConfig providerConfig;
     private AccessToken accessToken;
     private readonly object lockObj = new();
+
     public bool TryAuthenticate(string url, Hashtable headers)
     {
         bool canHandle = providerConfig.UrlsToBeAuthenticated.Any(url.StartsWith);
@@ -69,21 +70,23 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
             throw new Exception(discovery.Error);
         }
 
-        var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
-        {
-            Address = discovery.TokenEndpoint,
-            ClientId = providerConfig.ClientId,
-            ClientSecret = providerConfig.ClientSecret,
-            UserName = providerConfig.UserName,
-            Password = providerConfig.Password,
-        });
+        var response = await client.RequestPasswordTokenAsync(
+            new PasswordTokenRequest
+            {
+                Address = discovery.TokenEndpoint,
+                ClientId = providerConfig.ClientId,
+                ClientSecret = providerConfig.ClientSecret,
+                UserName = providerConfig.UserName,
+                Password = providerConfig.Password,
+            }
+        );
 
         if (response.IsError)
         {
             throw new Exception(response.Error);
         }
 
-        var expiresIn =  GetValue("expires_in",response);
+        var expiresIn = GetValue("expires_in", response);
         if (!int.TryParse(expiresIn, out var expirationSeconds))
         {
             throw new Exception($"Cannot parse expires_in value \"{expiresIn}\" to integer");
@@ -91,7 +94,8 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
 
         return new AccessToken(
             value: GetValue("access_token", response),
-            lifeTime: TimeSpan.FromSeconds(expirationSeconds));
+            lifeTime: TimeSpan.FromSeconds(expirationSeconds)
+        );
     }
 
     private string GetValue(string key, TokenResponse response)
@@ -100,7 +104,8 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
         if (accessJToken == null)
         {
             throw new Exception(
-                $"{key} was not found in response from {providerConfig.AuthServerUrl}");
+                $"{key} was not found in response from {providerConfig.AuthServerUrl}"
+            );
         }
 
         return accessJToken.ToString();
@@ -115,7 +120,7 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
 class AccessToken
 {
     public string Value { get; }
-    public DateTime Expiration { get;}
+    public DateTime Expiration { get; }
     private readonly TimeSpan lifeTime;
 
     public AccessToken(string value, TimeSpan lifeTime)
@@ -124,8 +129,9 @@ class AccessToken
         Value = value;
         Expiration = DateTime.Now.Add(lifeTime);
     }
-    
-    public bool IsExpired => lifeTime < TimeSpan.FromMinutes(10)
-        ? DateTime.Now - Expiration < lifeTime.Divide(4)
-        : DateTime.Now - Expiration < TimeSpan.FromMinutes(10);
+
+    public bool IsExpired =>
+        lifeTime < TimeSpan.FromMinutes(10)
+            ? DateTime.Now - Expiration < lifeTime.Divide(4)
+            : DateTime.Now - Expiration < TimeSpan.FromMinutes(10);
 }

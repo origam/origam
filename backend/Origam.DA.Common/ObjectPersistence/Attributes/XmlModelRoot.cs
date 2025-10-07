@@ -23,9 +23,9 @@ using System.Xml.Serialization;
 using Origam.OrigamEngine;
 
 namespace Origam.DA.ObjectPersistence;
-public class XmlModelRoot: XmlRootAttribute
+
+public class XmlModelRoot : XmlRootAttribute
 {
-    public XmlModelRoot(string category) : base(category)
-    {
-    }
+    public XmlModelRoot(string category)
+        : base(category) { }
 }

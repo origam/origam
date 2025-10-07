@@ -31,64 +31,58 @@ public class AsPanelActionButtonBuilder
 {
     public static void Build(XmlElement actionsElement, ActionConfiguration config)
     {
-        XmlElement actionElement =
-            actionsElement.OwnerDocument.CreateElement("Action");
+        XmlElement actionElement = actionsElement.OwnerDocument.CreateElement("Action");
         actionsElement.AppendChild(actionElement);
 
-        actionElement.SetAttribute("ShowAlways",
-            XmlConvert.ToString(config.ShowAlways));
+        actionElement.SetAttribute("ShowAlways", XmlConvert.ToString(config.ShowAlways));
         actionElement.SetAttribute("Type", config.Type.ToString());
         actionElement.SetAttribute("Id", config.ActionId);
         actionElement.SetAttribute("GroupId", config.GroupId);
         actionElement.SetAttribute("Caption", config.Caption);
         actionElement.SetAttribute("IconUrl", config.IconUrl);
         actionElement.SetAttribute("Mode", config.Mode.ToString());
-        actionElement.SetAttribute("IsDefault",
-            XmlConvert.ToString(config.IsDefault));
+        actionElement.SetAttribute("IsDefault", XmlConvert.ToString(config.IsDefault));
         actionElement.SetAttribute("Placement", config.Placement.ToString());
 
         if (!string.IsNullOrEmpty(config.ConfirmationMessage))
         {
-            actionElement.SetAttribute("ConfirmationMessage",
-                config.ConfirmationMessage);
+            actionElement.SetAttribute("ConfirmationMessage", config.ConfirmationMessage);
         }
 
         if (config.Shortcut != null && config.Shortcut.KeyCode != 0)
         {
-            XmlElement shortcutElement =
-                actionElement.OwnerDocument.CreateElement("KeyboardShortcut");
+            XmlElement shortcutElement = actionElement.OwnerDocument.CreateElement(
+                "KeyboardShortcut"
+            );
             actionElement.AppendChild(shortcutElement);
-            shortcutElement.SetAttribute("Ctrl",
-                XmlConvert.ToString(config.Shortcut.IsControl));
-            shortcutElement.SetAttribute("Shift",
-                XmlConvert.ToString(config.Shortcut.IsShift));
-            shortcutElement.SetAttribute("Alt",
-                XmlConvert.ToString(config.Shortcut.IsAlt));
-            shortcutElement.SetAttribute("KeyCode",
-                XmlConvert.ToString(config.Shortcut.KeyCode));
+            shortcutElement.SetAttribute("Ctrl", XmlConvert.ToString(config.Shortcut.IsControl));
+            shortcutElement.SetAttribute("Shift", XmlConvert.ToString(config.Shortcut.IsShift));
+            shortcutElement.SetAttribute("Alt", XmlConvert.ToString(config.Shortcut.IsAlt));
+            shortcutElement.SetAttribute("KeyCode", XmlConvert.ToString(config.Shortcut.KeyCode));
         }
 
         if (config.Scanner != null && config.Scanner.TerminatorCharCode != 0)
         {
-            actionElement.SetAttribute("ScannerInputTerminator",
-                XmlConvert.ToString(config.Scanner.TerminatorCharCode));
+            actionElement.SetAttribute(
+                "ScannerInputTerminator",
+                XmlConvert.ToString(config.Scanner.TerminatorCharCode)
+            );
         }
 
         if (!string.IsNullOrEmpty(config.Scanner?.Parameter))
         {
-            actionElement.SetAttribute("ScannerInputParameterName",
-                config.Scanner.Parameter);
+            actionElement.SetAttribute("ScannerInputParameterName", config.Scanner.Parameter);
         }
 
         if (config.Parameters is { Count: > 0 })
         {
-            XmlElement parametersElement =
-                actionElement.OwnerDocument.CreateElement("Parameters");
+            XmlElement parametersElement = actionElement.OwnerDocument.CreateElement("Parameters");
             actionElement.AppendChild(parametersElement);
             foreach (DictionaryEntry entry in config.Parameters)
             {
-                XmlElement parameterElement =
-                    parametersElement.OwnerDocument.CreateElement("Parameter");
+                XmlElement parameterElement = parametersElement.OwnerDocument.CreateElement(
+                    "Parameter"
+                );
                 parametersElement.AppendChild(parameterElement);
                 parameterElement.SetAttribute("Name", (string)entry.Key);
                 parameterElement.SetAttribute("FieldName", (string)entry.Value);

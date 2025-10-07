@@ -44,28 +44,35 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Xml;
-using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.DA;
-using Origam.Rule;
+using Origam.Gui;
+using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Schema.RuleModel;
-using Origam.Workbench.Services;
-using Origam.Gui;
-using Origam.Schema.EntityModel.Interfaces;
-using Origam.Server;
 using Origam.Server.Common;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
 
 namespace Origam.Server;
+
 public class SelectionDialogSessionStore : SessionStore
 {
     private Guid _dataStructureId;
     private IEndRule _endRule;
-    public SelectionDialogSessionStore(IBasicUIService service, UIRequest request,
-        Guid dataSourceId, Guid beforeTransformationId, Guid afterTransformationId, 
-        Guid panelId, string name, IEndRule endRule, Analytics analytics)
+
+    public SelectionDialogSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        Guid dataSourceId,
+        Guid beforeTransformationId,
+        Guid afterTransformationId,
+        Guid panelId,
+        string name,
+        IEndRule endRule,
+        Analytics analytics
+    )
         : base(service, request, name, analytics)
     {
         this.DataStructureId = dataSourceId;
@@ -74,17 +81,26 @@ public class SelectionDialogSessionStore : SessionStore
         this.PanelId = panelId;
         this.EndRule = endRule;
     }
+
     #region Overriden SessionStore Methods
     public override void Init()
     {
         LoadData();
     }
+
     private void LoadData()
     {
         Hashtable parameters = new Hashtable(this.Request.Parameters);
-        DataSet data = FormTools.GetSelectionDialogData(this.DataStructureId, this.BeforeTransformationId, true, SecurityTools.CurrentUserProfile().Id, parameters);
+        DataSet data = FormTools.GetSelectionDialogData(
+            this.DataStructureId,
+            this.BeforeTransformationId,
+            true,
+            SecurityTools.CurrentUserProfile().Id,
+            parameters
+        );
         SetDataSource(data);
     }
+
     public override object ExecuteActionInternal(string actionId)
     {
         switch (actionId)
@@ -94,12 +110,21 @@ public class SelectionDialogSessionStore : SessionStore
             case ACTION_NEXT:
                 return Next();
             default:
-                throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                throw new ArgumentOutOfRangeException(
+                    "actionId",
+                    actionId,
+                    Resources.ErrorContextUnknownAction
+                );
         }
     }
+
     public override XmlDocument GetFormXml()
     {
-        XmlDocument formXml = FormXmlBuilder.GetXmlFromPanel(this.PanelId, "", new Guid(this.Request.ObjectId));
+        XmlDocument formXml = FormXmlBuilder.GetXmlFromPanel(
+            this.PanelId,
+            "",
+            new Guid(this.Request.ObjectId)
+        );
         XmlNodeList list = formXml.SelectNodes("/Window");
         XmlElement windowElement = list[0] as XmlElement;
         windowElement.SetAttribute("SuppressDirtyNotification", "true");
@@ -123,23 +148,21 @@ public class SelectionDialogSessionStore : SessionStore
         AsPanelActionButtonBuilder.Build(actionsElement, config);
         return formXml;
     }
+
     public override string Title
     {
-        get
-        {
-            return "";
-        }
-        set
-        {
-            base.Title = value;
-        }
+        get { return ""; }
+        set { base.Title = value; }
     }
+
     private object Next()
     {
         if (this.EndRule != null)
         {
-            RuleExceptionDataCollection ruleExceptions =
-                this.RuleEngine.EvaluateEndRule(this.EndRule, this.XmlData);
+            RuleExceptionDataCollection ruleExceptions = this.RuleEngine.EvaluateEndRule(
+                this.EndRule,
+                this.XmlData
+            );
             if (ruleExceptions != null && ruleExceptions.Count > 0)
             {
                 throw new RuleException(ruleExceptions);
@@ -155,23 +178,33 @@ public class SelectionDialogSessionStore : SessionStore
                 throw new Exception("Not supported by selection dialog: " + this.Request.Type);
         }
     }
+
     private object NextReport()
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
         PanelActionResult result = new PanelActionResult(ActionResultType.OpenUrl);
         result.Request = new UIRequest();
         result.Request.Caption = this.Request.Caption;
-        DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId, 
-            this.AfterTransformationId, this.XmlData, profile.Id);
-        IPersistenceService ps = ServiceManager.Services.GetService(
-            typeof(IPersistenceService)) as IPersistenceService;
-        ReportReferenceMenuItem item = ps.SchemaProvider.RetrieveInstance(
-            typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)))
-            as ReportReferenceMenuItem;
+        DataRow row = FormTools.GetSelectionDialogResultRow(
+            this.DataStructureId,
+            this.AfterTransformationId,
+            this.XmlData,
+            profile.Id
+        );
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ReportReferenceMenuItem item =
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(AbstractMenuItem),
+                new ModelElementKey(new Guid(this.Request.ObjectId))
+            ) as ReportReferenceMenuItem;
         Hashtable parameters = new Hashtable();
         SetParameters(parameters, row, item);
-        result.Url = this.Service.GetReportStandalone(item.ReportId.ToString(), parameters
-			, item.ExportFormatType);
+        result.Url = this.Service.GetReportStandalone(
+            item.ReportId.ToString(),
+            parameters,
+            item.ExportFormatType
+        );
         WebReport wr = item.Report as WebReport;
         if (wr != null)
         {
@@ -179,6 +212,7 @@ public class SelectionDialogSessionStore : SessionStore
         }
         return result;
     }
+
     private object NextForm()
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
@@ -189,11 +223,20 @@ public class SelectionDialogSessionStore : SessionStore
         request.Icon = this.Request.Icon;
         request.Caption = this.Request.Caption;
         request.IsStandalone = this.Request.IsStandalone;
-        request.ObjectId = this.Request.ObjectId;            
-        DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId,
-            this.AfterTransformationId, this.XmlData, profile.Id);
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        ISchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as ISchemaItem;
+        request.ObjectId = this.Request.ObjectId;
+        DataRow row = FormTools.GetSelectionDialogResultRow(
+            this.DataStructureId,
+            this.AfterTransformationId,
+            this.XmlData,
+            profile.Id
+        );
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        ISchemaItem item =
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(AbstractMenuItem),
+                new ModelElementKey(new Guid(this.Request.ObjectId))
+            ) as ISchemaItem;
         SetParameters(request.Parameters, row, item);
         FormReferenceMenuItem formRef = item as FormReferenceMenuItem;
         if (formRef != null)
@@ -204,19 +247,28 @@ public class SelectionDialogSessionStore : SessionStore
         result.Request = request;
         return result;
     }
+
     private void SetParameters(IDictionary parameters, DataRow row, ISchemaItem item)
     {
         // map the parameters from the selection dialog data row
-        foreach (var mapping in item.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
+        foreach (
+            var mapping in item.ChildItemsByType<SelectionDialogParameterMapping>(
+                SelectionDialogParameterMapping.CategoryConst
+            )
+        )
         {
             object value = row[mapping.SelectionDialogField.Name];
             DataColumn column = row.Table.Columns[mapping.SelectionDialogField.Name];
             if (column.ExtendedProperties.Contains(Const.ArrayRelation))
             {
-                string childColumnName = (string)column.ExtendedProperties[Const.ArrayRelationField];
+                string childColumnName = (string)
+                    column.ExtendedProperties[Const.ArrayRelationField];
                 var list = new ArrayList();
-                foreach (DataRow childRow in
-                    row.GetChildRows((string)column.ExtendedProperties[Const.ArrayRelation]))
+                foreach (
+                    DataRow childRow in row.GetChildRows(
+                        (string)column.ExtendedProperties[Const.ArrayRelation]
+                    )
+                )
                 {
                     list.Add(childRow[childColumnName]);
                 }
@@ -237,6 +289,7 @@ public class SelectionDialogSessionStore : SessionStore
             parameters.Add(entry.Key, entry.Value);
         }
     }
+
     private object Refresh()
     {
         this.Clear();

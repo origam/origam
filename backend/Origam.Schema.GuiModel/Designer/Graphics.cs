@@ -19,18 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
@@ -40,94 +41,102 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.0.0")]
 public class Graphics : AbstractSchemaItem
 {
-	public const string CategoryConst = "Graphics";
-	public Graphics() : base()
-	{
-		InitializeProperyContainers();
-	}
-	public Graphics(Guid schemaExtensionId) : base(schemaExtensionId)
-	{
-		InitializeProperyContainers();
-	}
-	public Graphics(Key primaryKey) : base(primaryKey)
-	{
-		InitializeProperyContainers();
-	}
-	
-	private void InitializeProperyContainers()
-	{
-		graphicsDataByte = new PropertyContainer<byte[]>(
-			containerName: nameof(graphicsDataByte),
-			containingObject: this);
-	}
-	
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	#endregion
-	#region Properties
-	private PropertyContainer<byte[]> graphicsDataByte;
-	
-	[Browsable(false)]
-	[XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
-	public byte[] GraphicsDataByte
-	{
-		get => graphicsDataByte.Get();
-		set => graphicsDataByte.Set(value);
-	}
-	[Category("Graphics")]
-	//[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
-	public Bitmap GraphicsData
-	{
-		get
-		{
-			if(GraphicsDataByte == null) return null;
-			Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
-			if (b.RawFormat == ImageFormat.Bmp)
-			{
-				b.MakeTransparent(Color.Magenta);
-			}
-			return b;
-		}
-		set
-		{
-			if (value == null)
-			{
-				GraphicsDataByte = null;
-				return;
-			}
-		    System.IO.MemoryStream stream = new System.IO.MemoryStream();
-			if (value.RawFormat == ImageFormat.Bmp)
-			{
-				SetTransparentColor(value);
-			    value.Save(stream, ImageFormat.Bmp);
-			} 
-			else
-			{
-			    value.Save(stream, ImageFormat.Png);
-			}
-			GraphicsDataByte = stream.ToArray();
-		}
-	}
-	private static void SetTransparentColor(Bitmap value)
-	{
-		for (int i = 0; i < value.Height; i++)
-		{
-			for (int j = 0; j < value.Width; j++)
-			{
-				if (value.GetPixel(j, i) == Color.Transparent)
-				{
-					value.SetPixel(j, i, Color.Magenta);
-				}
-			}
-		}
-	}
-	public override byte[] NodeImage => GraphicsData.ToByteArray();
-	#endregion
+    public const string CategoryConst = "Graphics";
+
+    public Graphics()
+        : base()
+    {
+        InitializeProperyContainers();
+    }
+
+    public Graphics(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        InitializeProperyContainers();
+    }
+
+    public Graphics(Key primaryKey)
+        : base(primaryKey)
+    {
+        InitializeProperyContainers();
+    }
+
+    private void InitializeProperyContainers()
+    {
+        graphicsDataByte = new PropertyContainer<byte[]>(
+            containerName: nameof(graphicsDataByte),
+            containingObject: this
+        );
+    }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    #endregion
+    #region Properties
+    private PropertyContainer<byte[]> graphicsDataByte;
+
+    [Browsable(false)]
+    [XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
+    public byte[] GraphicsDataByte
+    {
+        get => graphicsDataByte.Get();
+        set => graphicsDataByte.Set(value);
+    }
+
+    [Category("Graphics")]
+    //[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
+    public Bitmap GraphicsData
+    {
+        get
+        {
+            if (GraphicsDataByte == null)
+                return null;
+            Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
+            if (b.RawFormat == ImageFormat.Bmp)
+            {
+                b.MakeTransparent(Color.Magenta);
+            }
+            return b;
+        }
+        set
+        {
+            if (value == null)
+            {
+                GraphicsDataByte = null;
+                return;
+            }
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            if (value.RawFormat == ImageFormat.Bmp)
+            {
+                SetTransparentColor(value);
+                value.Save(stream, ImageFormat.Bmp);
+            }
+            else
+            {
+                value.Save(stream, ImageFormat.Png);
+            }
+            GraphicsDataByte = stream.ToArray();
+        }
+    }
+
+    private static void SetTransparentColor(Bitmap value)
+    {
+        for (int i = 0; i < value.Height; i++)
+        {
+            for (int j = 0; j < value.Width; j++)
+            {
+                if (value.GetPixel(j, i) == Color.Transparent)
+                {
+                    value.SetPixel(j, i, Color.Magenta);
+                }
+            }
+        }
+    }
+
+    public override byte[] NodeImage => GraphicsData.ToByteArray();
+    #endregion
 }

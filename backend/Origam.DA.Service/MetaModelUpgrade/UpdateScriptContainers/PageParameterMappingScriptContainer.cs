@@ -26,11 +26,13 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+
 class PageParameterMappingScriptContainer : UpgradeScriptContainer
 {
     public override string FullTypeName { get; } = "Origam.Schema.GuiModel.PageParameterMapping";
     public override List<string> OldFullTypeNames { get; }
     public override string[] OldPropertyXmlNames { get; }
+
     public PageParameterMappingScriptContainer()
     {
         AddEmptyUpgrade("6.0.0", "6.0.1");

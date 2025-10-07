@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Schema.WorkflowModel;
+
 /// <summary>
 /// Summary description for WorkQueueWorkflowCommand.
 /// </summary>
@@ -36,60 +36,78 @@ namespace Origam.Schema.WorkflowModel;
 [ClassMetaVersion("6.0.0")]
 public class WorkQueueWorkflowCommand : EntityUIAction
 {
-	public new const string CategoryConst = "WorkQueueCommand";
-	public WorkQueueWorkflowCommand() : base() {Init();}
-	public WorkQueueWorkflowCommand(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public WorkQueueWorkflowCommand(Key primaryKey) : base(primaryKey)	{Init();}
+    public new const string CategoryConst = "WorkQueueCommand";
 
-	private void Init()
-	{
-		this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
-		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
-	}
-	public new List<WorkQueueWorkflowCommandParameterMapping> ParameterMappings =>
-		ChildItemsByType<WorkQueueWorkflowCommandParameterMapping>(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
+    public WorkQueueWorkflowCommand()
+        : base()
+    {
+        Init();
+    }
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Workflow);
-		base.GetExtraDependencies (dependencies);
-	}
-	#endregion
-	#region Properties
-	public Guid WorkflowId;
-	[Category("References")]
-	[TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
+    public WorkQueueWorkflowCommand(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public WorkQueueWorkflowCommand(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
+        this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
+    }
+
+    public new List<WorkQueueWorkflowCommandParameterMapping> ParameterMappings =>
+        ChildItemsByType<WorkQueueWorkflowCommandParameterMapping>(
+            WorkQueueWorkflowCommandParameterMapping.CategoryConst
+        );
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Workflow);
+        base.GetExtraDependencies(dependencies);
+    }
+    #endregion
+    #region Properties
+    public Guid WorkflowId;
+
+    [Category("References")]
+    [TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
     [XmlReference("workflow", "WorkflowId")]
-	public IWorkflow Workflow
-	{
-		get
-		{
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
-		}
-		set
-		{
-			this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	#endregion
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
-		WorkQueueWorkflowCommand compared = obj as WorkQueueWorkflowCommand;
-		if(compared != null)
-		{
-			return this.Order.CompareTo(compared.Order);
-		}
+    public IWorkflow Workflow
+    {
+        get
+        {
+            return (IWorkflow)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.WorkflowId)
+                );
+        }
+        set { this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+    #endregion
+    #region IComparable Members
+    public override int CompareTo(object obj)
+    {
+        WorkQueueWorkflowCommand compared = obj as WorkQueueWorkflowCommand;
+        if (compared != null)
+        {
+            return this.Order.CompareTo(compared.Order);
+        }
         return base.CompareTo(obj);
-	}
-	#endregion
+    }
+    #endregion
 }

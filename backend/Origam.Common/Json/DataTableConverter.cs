@@ -19,36 +19,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using newton = Newtonsoft.Json.Converters;
 using System.Data;
+using System.Linq;
 using Newtonsoft.Json.Serialization;
 using Origam.Extensions;
-using System.Linq;
 using Origam.Service.Core;
+using newton = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
+
 class DataTableConverter : newton.DataTableConverter
 {
-    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-        Newtonsoft.Json.JsonSerializer serializer)
+    public override void WriteJson(
+        Newtonsoft.Json.JsonWriter writer,
+        object value,
+        Newtonsoft.Json.JsonSerializer serializer
+    )
     {
-        DataTable table = (DataTable)value;        
+        DataTable table = (DataTable)value;
         DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-        bool serializeAsSingleJsonObject = table.ExtendedProperties
-            .Contains(Constants.SerializeAsSingleJsonObject)
-            ? table.ExtendedProperties.Get<bool>
-                (Constants.SerializeAsSingleJsonObject)
+        bool serializeAsSingleJsonObject = table.ExtendedProperties.Contains(
+            Constants.SerializeAsSingleJsonObject
+        )
+            ? table.ExtendedProperties.Get<bool>(Constants.SerializeAsSingleJsonObject)
             : false;
         if (serializeAsSingleJsonObject && table.Rows.Count > 1)
         {
-            throw new OrigamException("JSON Serialization failed. "
-                + $"Table '{table.TableName}' is defined to serialize to a "
-                + $"single object, but multiple objects came ({table.Rows.Count}).");
+            throw new OrigamException(
+                "JSON Serialization failed. "
+                    + $"Table '{table.TableName}' is defined to serialize to a "
+                    + $"single object, but multiple objects came ({table.Rows.Count})."
+            );
         }
         if (!serializeAsSingleJsonObject)
         {
             writer.WriteStartArray();
-        } 
+        }
         foreach (DataRow row in table.Rows)
         {
             serializer.Serialize(writer, row);

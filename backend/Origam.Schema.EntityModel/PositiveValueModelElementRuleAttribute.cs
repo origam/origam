@@ -19,32 +19,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema;
-using Origam.Schema.EntityModel;
 using System;
 using System.Data;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.ObjectPersistence;
+
 /// <summary>
 /// Summary description for NotNullModelElementRuleAttribute.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+[AttributeUsage(
+    AttributeTargets.Property | AttributeTargets.Field,
+    AllowMultiple = false,
+    Inherited = true
+)]
+public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-	public PositiveValueModelElementRuleAttribute()
-	{
-	}
-	public override Exception CheckRule(object instance)
-	{
-		return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
-	}
-	public override Exception CheckRule(object instance, string memberName)
-	{
-		if(memberName == String.Empty | memberName == null) CheckRule(instance);
+    public PositiveValueModelElementRuleAttribute() { }
+
+    public override Exception CheckRule(object instance)
+    {
+        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (memberName == String.Empty | memberName == null)
+            CheckRule(instance);
         var dataStructure = (IDataEntityColumn)instance;
         OrigamDataType origamDataType = dataStructure.DataType;
-        
-        if(origamDataType is OrigamDataType.String)
+
+        if (origamDataType is OrigamDataType.String)
         {
             int value = (int)Reflector.GetValue(instance.GetType(), instance, memberName);
             if (value == 0)
@@ -53,5 +59,5 @@ public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAt
             }
         }
         return null;
-	}
+    }
 }

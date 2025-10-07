@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for RowSecurityState.
 /// </summary>
@@ -33,8 +34,8 @@ public class RowSecurityState
     public int ForegroundColor { get; set; }
     public bool AllowDelete { get; set; }
     public bool AllowCreate { get; set; }
-    public List<FieldSecurityState> Columns { get; } = new ();
-    public List<RelationSecurityState> Relations { get; } = new ();
+    public List<FieldSecurityState> Columns { get; } = new();
+    public List<RelationSecurityState> Relations { get; } = new();
     public List<string> DisabledActions { get; set; } = null;
     public bool NotFound { get; set; }
 }

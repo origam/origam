@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.MenuModel;
+
 /// <summary>
 /// Summary description for Menu.
 /// </summary>
@@ -35,35 +36,47 @@ namespace Origam.Schema.MenuModel;
 [ClassMetaVersion("1.0.0")]
 public class ContextMenu : AbstractSchemaItem, ISchemaItemFactory
 {
-	public const string CategoryConst = "Menu";
-	public ContextMenu() : base() { Init(); }
-	public ContextMenu(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-	public ContextMenu(Key primaryKey) : base(primaryKey) { Init(); }
-	private void Init()
+    public const string CategoryConst = "Menu";
+
+    public ContextMenu()
+        : base()
     {
-		ChildItemTypes.Add(typeof(Submenu));
-		ChildItemTypes.Add(typeof(FormReferenceMenuItem));
-		ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
-		ChildItemTypes.Add(typeof(WorkflowReferenceMenuItem));
-		ChildItemTypes.Add(typeof(ReportReferenceMenuItem));
-		ChildItemTypes.Add(typeof(DashboardMenuItem));
-		ChildItemTypes.Add(typeof(DynamicMenu));
-	}
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	[Browsable(false)]
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
-	#endregion
+        Init();
+    }
+
+    public ContextMenu(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public ContextMenu(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        ChildItemTypes.Add(typeof(Submenu));
+        ChildItemTypes.Add(typeof(FormReferenceMenuItem));
+        ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
+        ChildItemTypes.Add(typeof(WorkflowReferenceMenuItem));
+        ChildItemTypes.Add(typeof(ReportReferenceMenuItem));
+        ChildItemTypes.Add(typeof(DashboardMenuItem));
+        ChildItemTypes.Add(typeof(DynamicMenu));
+    }
+
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    [Browsable(false)]
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+    #endregion
 }

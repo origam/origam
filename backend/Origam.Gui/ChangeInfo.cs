@@ -23,6 +23,7 @@ using System;
 using Origam.Rule;
 
 namespace Origam.Gui;
+
 /// <summary>
 /// Wrapper class to be used as return object to inform client about changes in data.
 /// </summary>
@@ -71,34 +72,42 @@ public class ChangeInfo
         ci.Operation = Operation.FormSaved;
         return ci;
     }
+
     public static ChangeInfo RefreshFormChangeInfo()
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Operation = Operation.FormNeedsRefresh;
         return ci;
     }
+
     public static ChangeInfo ReloadCurrentRecordChangeInfo()
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Operation = Operation.CurrentRecordNeedsUpdate;
         return ci;
     }
+
     public static ChangeInfo RefreshPortalInfo()
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Operation = Operation.RefreshPortal;
         return ci;
     }
+
     public static ChangeInfo CleanDataChangeInfo()
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Operation = Operation.DeleteAllData;
         return ci;
     }
+
     protected bool Equals(ChangeInfo other)
     {
-        return Entity == other.Entity && Operation == other.Operation && Equals(ObjectId, other.ObjectId);
+        return Entity == other.Entity
+            && Operation == other.Operation
+            && Equals(ObjectId, other.ObjectId);
     }
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
@@ -115,6 +124,7 @@ public class ChangeInfo
         }
         return Equals((ChangeInfo)obj);
     }
+
     public override int GetHashCode()
     {
         return HashCode.Combine(Entity, (int)Operation, ObjectId);

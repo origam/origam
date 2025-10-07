@@ -22,46 +22,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Schema.EntityModel;
+
 public class DataStructureSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public DataStructureSchemaItemProvider() {}
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-		=> AbstractDataStructure.CategoryConst;
-	public override bool AutoCreateFolder => true;
-	public override string Group => "DATA";
-	#endregion
-	#region IBrowserNode Members
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_07_data-structures.png";
-	public override string NodeText
-	{
-		get => "Data Structures";
-		set => base.NodeText = value;
-	}
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[]
-	{
-		typeof(DataStructure), typeof(XsdDataStructure)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		string itemName = null;
-		if(typeof(T) == typeof(DataStructure))
-		{
-			itemName = "NewDataStructure";
-		}
-		else if(typeof(T) == typeof(XsdDataStructure))
-		{
-			itemName = "NewXsdDataStructure";
-		}
-		return base.NewItem<T>(schemaExtensionId, group, itemName);
-	}
-	#endregion
+    public DataStructureSchemaItemProvider() { }
+
+    #region ISchemaItemProvider Members
+    public override string RootItemType => AbstractDataStructure.CategoryConst;
+    public override bool AutoCreateFolder => true;
+    public override string Group => "DATA";
+    #endregion
+    #region IBrowserNode Members
+    public override string Icon =>
+        // TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+        "icon_07_data-structures.png";
+    public override string NodeText
+    {
+        get => "Data Structures";
+        set => base.NodeText = value;
+    }
+    public override string NodeToolTipText =>
+        // TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+        null;
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes =>
+        new[] { typeof(DataStructure), typeof(XsdDataStructure) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        string itemName = null;
+        if (typeof(T) == typeof(DataStructure))
+        {
+            itemName = "NewDataStructure";
+        }
+        else if (typeof(T) == typeof(XsdDataStructure))
+        {
+            itemName = "NewXsdDataStructure";
+        }
+        return base.NewItem<T>(schemaExtensionId, group, itemName);
+    }
+    #endregion
 }

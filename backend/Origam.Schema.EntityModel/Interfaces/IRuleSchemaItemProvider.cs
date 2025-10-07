@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for IRuleSchemaItemProvider.
 /// </summary>

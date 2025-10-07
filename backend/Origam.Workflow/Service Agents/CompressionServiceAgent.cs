@@ -32,27 +32,34 @@ public class CompressionServiceAgent : AbstractServiceAgent
 {
     private object result;
     public override object Result => result;
+
     public override void Run()
     {
-        switch(MethodName)
+        switch (MethodName)
         {
             case "CompressText":
             {
                 result = CompressText(
                     compressionAlgorithm: Parameters.Get<string>("CompressionAlgorithm"),
                     inputText: Parameters.Get<string>("InputText"),
-                    internalFileName: Parameters.TryGet<string>("InternalFileName"));
+                    internalFileName: Parameters.TryGet<string>("InternalFileName")
+                );
                 break;
             }
             default:
                 throw new ArgumentOutOfRangeException(
-                    nameof(MethodName), MethodName,
-                    ResourceUtils.GetString("InvalidMethodName"));
-        } 
+                    nameof(MethodName),
+                    MethodName,
+                    ResourceUtils.GetString("InvalidMethodName")
+                );
+        }
     }
 
-    private byte[] CompressText(string compressionAlgorithm, string inputText, 
-        string internalFileName)
+    private byte[] CompressText(
+        string compressionAlgorithm,
+        string inputText,
+        string internalFileName
+    )
     {
         byte[] inputBytes = Encoding.UTF8.GetBytes(inputText);
         using var outputStream = new MemoryStream();
@@ -78,7 +85,8 @@ public class CompressionServiceAgent : AbstractServiceAgent
         else
         {
             throw new NotSupportedException(
-                "Unsupported compression algorithm: " + compressionAlgorithm);
+                "Unsupported compression algorithm: " + compressionAlgorithm
+            );
         }
         return outputStream.ToArray();
     }

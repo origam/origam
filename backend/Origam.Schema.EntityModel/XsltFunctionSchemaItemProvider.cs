@@ -20,17 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema.EntityModel;
-public interface IXsltFunctionSchemaItemProvider : ISchemaItemProvider
-{
-}
-public class XsltFunctionSchemaItemProvider : AbstractSchemaItemProvider, IXsltFunctionSchemaItemProvider
+
+public interface IXsltFunctionSchemaItemProvider : ISchemaItemProvider { }
+
+public class XsltFunctionSchemaItemProvider
+    : AbstractSchemaItemProvider,
+        IXsltFunctionSchemaItemProvider
 {
     public const string CategoryConst = "XsltFunctionCollection";
-	
+
     public XsltFunctionSchemaItemProvider()
     {
         ChildItemTypes.Add(typeof(XsltFunctionCollection));
     }
+
     #region ISchemaItemProvider Members
     public override string RootItemType => CategoryConst;
     public override string Group => "BL";
@@ -45,6 +48,6 @@ public class XsltFunctionSchemaItemProvider : AbstractSchemaItemProvider, IXsltF
     public override string NodeToolTipText => null;
     #endregion
     #region ISchemaItemFactory Members
-    
+
     #endregion
 }

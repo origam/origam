@@ -23,27 +23,24 @@ using System.Xml;
 using Origam.Workbench.Services;
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for RuleEngineService.
 /// </summary>
 public class RuleEngineService : IWorkbenchService, IRuleEngineService
 {
-	public RuleEngineService()
-	{
-	}
-	#region IWorkbenchService Members
-	
-	public void UnloadService()
-	{
-	}
-	public void InitializeService()
-	{
-	}
-	#endregion
-	#region IRuleEngineService Members
-	public string EvaluateExpression(string expression)
-	{
-		return XpathEvaluator.Instance.Evaluate(new XmlDocument().CreateNavigator(), expression);
-	}
-	#endregion
+    public RuleEngineService() { }
+
+    #region IWorkbenchService Members
+
+    public void UnloadService() { }
+
+    public void InitializeService() { }
+    #endregion
+    #region IRuleEngineService Members
+    public string EvaluateExpression(string expression)
+    {
+        return XpathEvaluator.Instance.Evaluate(new XmlDocument().CreateNavigator(), expression);
+    }
+    #endregion
 }

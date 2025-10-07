@@ -26,10 +26,11 @@ using System.Diagnostics;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.Common;
-using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.RuleModel;
+
 /// <summary>
 /// Summary description for AbstractRule.
 /// </summary>
@@ -37,61 +38,70 @@ namespace Origam.Schema.RuleModel;
 [ClassMetaVersion("6.0.0")]
 public abstract class AbstractRule : AbstractSchemaItem, IRule
 {
-	public const string CategoryConst = "Rule";
-	public AbstractRule() : base() {}
-	public AbstractRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public AbstractRule(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		if(this.Structure != null) dependencies.Add(this.Structure);
-		base.GetExtraDependencies (dependencies);
-	}
-	#endregion
-	#region Properties
-	[Category("Rule")]
-	[XmlAttribute ("dataType")]
-	public OrigamDataType DataType { get; set; }
-	public Guid DataStructureId;
-	[Category("Rule")]
-	[TypeConverter(typeof(DataStructureConverter))]
+    public const string CategoryConst = "Rule";
+
+    public AbstractRule()
+        : base() { }
+
+    public AbstractRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public AbstractRule(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        if (this.Structure != null)
+            dependencies.Add(this.Structure);
+        base.GetExtraDependencies(dependencies);
+    }
+    #endregion
+    #region Properties
+    [Category("Rule")]
+    [XmlAttribute("dataType")]
+    public OrigamDataType DataType { get; set; }
+    public Guid DataStructureId;
+
+    [Category("Rule")]
+    [TypeConverter(typeof(DataStructureConverter))]
     [XmlReference("dataStructure", "DataStructureId")]
-	public IDataStructure Structure
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.DataStructureId;
-			return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
-		}
-		set
-		{
-			if(value == null)
-			{
-				this.DataStructureId = Guid.Empty;
-			}
-			else
-			{
-				this.DataStructureId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-	}
-	public abstract bool IsPathRelative{get;set;}
-	
-	[DefaultValue(Trace.InheritFromParent)]
-	[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-	[RuntimeConfigurable ("traceLevel")]
-	[DisplayName("Trace Level")]
-	public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
-	[Category("Tracing")]
-	public Trace Trace => TraceLevel;
-	#endregion
+    public IDataStructure Structure
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.DataStructureId;
+            return (IDataStructure)
+                this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
+        }
+        set
+        {
+            if (value == null)
+            {
+                this.DataStructureId = Guid.Empty;
+            }
+            else
+            {
+                this.DataStructureId = (Guid)value.PrimaryKey["Id"];
+            }
+        }
+    }
+    public abstract bool IsPathRelative { get; set; }
+
+    [DefaultValue(Trace.InheritFromParent)]
+    [Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
+    [RuntimeConfigurable("traceLevel")]
+    [DisplayName("Trace Level")]
+    public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
+
+    [Category("Tracing")]
+    public Trace Trace => TraceLevel;
+    #endregion
 }

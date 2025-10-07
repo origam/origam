@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Schema;
+
 using System;
 using System.Collections;
-
 
 /// <summary>
 ///     <para>
@@ -31,16 +31,15 @@ using System.Collections;
 /// </summary>
 /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection'/>
 [Serializable()]
-public class SchemaItemAncestorCollection : CollectionBase {
-    
+public class SchemaItemAncestorCollection : CollectionBase
+{
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.Schema.SchemaItemAncestorCollection'/>.
     ///    </para>
     /// </summary>
-    public SchemaItemAncestorCollection() {
-    }
-    
+    public SchemaItemAncestorCollection() { }
+
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.Schema.SchemaItemAncestorCollection'/> based on another <see cref='Origam.Schema.SchemaItemAncestorCollection'/>.
@@ -49,10 +48,11 @@ public class SchemaItemAncestorCollection : CollectionBase {
     /// <param name='value'>
     ///       A <see cref='Origam.Schema.SchemaItemAncestorCollection'/> from which the contents are copied
     /// </param>
-    public SchemaItemAncestorCollection(SchemaItemAncestorCollection value) {
+    public SchemaItemAncestorCollection(SchemaItemAncestorCollection value)
+    {
         this.AddRange(value);
     }
-    
+
     /// <summary>
     ///     <para>
     ///       Initializes a new instance of <see cref='Origam.Schema.SchemaItemAncestorCollection'/> containing any array of <see cref='Origam.Schema.SchemaItemAncestor'/> objects.
@@ -61,10 +61,11 @@ public class SchemaItemAncestorCollection : CollectionBase {
     /// <param name='value'>
     ///       A array of <see cref='Origam.Schema.SchemaItemAncestor'/> objects with which to intialize the collection
     /// </param>
-    public SchemaItemAncestorCollection(SchemaItemAncestor[] value) {
+    public SchemaItemAncestorCollection(SchemaItemAncestor[] value)
+    {
         this.AddRange(value);
     }
-    
+
     /// <summary>
     /// <para>Represents the entry at the specified index of the <see cref='Origam.Schema.SchemaItemAncestor'/>.</para>
     /// </summary>
@@ -73,17 +74,14 @@ public class SchemaItemAncestorCollection : CollectionBase {
     ///    <para> The entry at the specified index of the collection.</para>
     /// </value>
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
-    public SchemaItemAncestor this[int index] {
-        get {
-            return ((SchemaItemAncestor)(List[index]));
-        }
-        set {
-            List[index] = value;
-        }
+    public SchemaItemAncestor this[int index]
+    {
+        get { return ((SchemaItemAncestor)(List[index])); }
+        set { List[index] = value; }
     }
-    
+
     /// <summary>
-    ///    <para>Adds a <see cref='Origam.Schema.SchemaItemAncestor'/> with the specified value to the 
+    ///    <para>Adds a <see cref='Origam.Schema.SchemaItemAncestor'/> with the specified value to the
     ///    <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.Schema.SchemaItemAncestor'/> to add.</param>
@@ -91,10 +89,11 @@ public class SchemaItemAncestorCollection : CollectionBase {
     ///    <para>The index at which the new element was inserted.</para>
     /// </returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.AddRange'/>
-    public int Add(SchemaItemAncestor value) {
+    public int Add(SchemaItemAncestor value)
+    {
         return List.Add(value);
     }
-    
+
     /// <summary>
     /// <para>Copies the elements of an array to the end of the <see cref='Origam.Schema.SchemaItemAncestorCollection'/>.</para>
     /// </summary>
@@ -105,12 +104,14 @@ public class SchemaItemAncestorCollection : CollectionBase {
     ///   <para>None.</para>
     /// </returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.Add'/>
-    public void AddRange(SchemaItemAncestor[] value) {
-        for (int i = 0; (i < value.Length); i = (i + 1)) {
+    public void AddRange(SchemaItemAncestor[] value)
+    {
+        for (int i = 0; (i < value.Length); i = (i + 1))
+        {
             this.Add(value[i]);
         }
     }
-    
+
     /// <summary>
     ///     <para>
     ///       Adds the contents of another <see cref='Origam.Schema.SchemaItemAncestorCollection'/> to the end of the collection.
@@ -123,46 +124,54 @@ public class SchemaItemAncestorCollection : CollectionBase {
     ///   <para>None.</para>
     /// </returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.Add'/>
-    public void AddRange(SchemaItemAncestorCollection value) {
-        for (int i = 0; (i < value.Count); i = (i + 1)) {
+    public void AddRange(SchemaItemAncestorCollection value)
+    {
+        for (int i = 0; (i < value.Count); i = (i + 1))
+        {
             this.Add(value[i]);
         }
     }
-    
+
     /// <summary>
-    /// <para>Gets a value indicating whether the 
+    /// <para>Gets a value indicating whether the
     ///    <see cref='Origam.Schema.SchemaItemAncestorCollection'/> contains the specified <see cref='Origam.Schema.SchemaItemAncestor'/>.</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.Schema.SchemaItemAncestor'/> to locate.</param>
     /// <returns>
-    /// <para><see langword='true'/> if the <see cref='Origam.Schema.SchemaItemAncestor'/> is contained in the collection; 
+    /// <para><see langword='true'/> if the <see cref='Origam.Schema.SchemaItemAncestor'/> is contained in the collection;
     ///   otherwise, <see langword='false'/>.</para>
     /// </returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.IndexOf'/>
-    public bool Contains(SchemaItemAncestor item) {
-		if (item == null)
-		{
-			for (int i = 0; i < this.Count; i++)
-			{
-				if (this[i] == null)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		for (int j = 0; j < this.Count; j++)
-		{
-			if (item.Ancestor != null && item.Ancestor.PrimaryKey.Equals((this[j] as SchemaItemAncestor).Ancestor.PrimaryKey))
-			{
-				return true;
-			}
-		}
-		return false;
+    public bool Contains(SchemaItemAncestor item)
+    {
+        if (item == null)
+        {
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this[i] == null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        for (int j = 0; j < this.Count; j++)
+        {
+            if (
+                item.Ancestor != null
+                && item.Ancestor.PrimaryKey.Equals(
+                    (this[j] as SchemaItemAncestor).Ancestor.PrimaryKey
+                )
+            )
+            {
+                return true;
+            }
+        }
+        return false;
     }
-    
+
     /// <summary>
-    /// <para>Copies the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the 
+    /// <para>Copies the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the
     ///    specified index.</para>
     /// </summary>
     /// <param name='array'><para>The one-dimensional <see cref='System.Array'/> that is the destination of the values copied from <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</para></param>
@@ -174,24 +183,26 @@ public class SchemaItemAncestorCollection : CollectionBase {
     /// <exception cref='System.ArgumentNullException'><paramref name='array'/> is <see langword='null'/>. </exception>
     /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='arrayIndex'/> is less than <paramref name='array'/>'s lowbound. </exception>
     /// <seealso cref='System.Array'/>
-    public void CopyTo(SchemaItemAncestor[] array, int index) {
+    public void CopyTo(SchemaItemAncestor[] array, int index)
+    {
         List.CopyTo(array, index);
     }
-    
+
     /// <summary>
-    ///    <para>Returns the index of a <see cref='Origam.Schema.SchemaItemAncestor'/> in 
+    ///    <para>Returns the index of a <see cref='Origam.Schema.SchemaItemAncestor'/> in
     ///       the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.Schema.SchemaItemAncestor'/> to locate.</param>
     /// <returns>
-    /// <para>The index of the <see cref='Origam.Schema.SchemaItemAncestor'/> of <paramref name='value'/> in the 
+    /// <para>The index of the <see cref='Origam.Schema.SchemaItemAncestor'/> of <paramref name='value'/> in the
     /// <see cref='Origam.Schema.SchemaItemAncestorCollection'/>, if found; otherwise, -1.</para>
     /// </returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.Contains'/>
-    public int IndexOf(SchemaItemAncestor value) {
+    public int IndexOf(SchemaItemAncestor value)
+    {
         return List.IndexOf(value);
     }
-    
+
     /// <summary>
     /// <para>Inserts a <see cref='Origam.Schema.SchemaItemAncestor'/> into the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> at the specified index.</para>
     /// </summary>
@@ -199,85 +210,92 @@ public class SchemaItemAncestorCollection : CollectionBase {
     /// <param name=' value'>The <see cref='Origam.Schema.SchemaItemAncestor'/> to insert.</param>
     /// <returns><para>None.</para></returns>
     /// <seealso cref='Origam.Schema.SchemaItemAncestorCollection.Add'/>
-    public void Insert(int index, SchemaItemAncestor value) {
+    public void Insert(int index, SchemaItemAncestor value)
+    {
         List.Insert(index, value);
     }
-    
+
     /// <summary>
-    ///    <para>Returns an enumerator that can iterate through 
+    ///    <para>Returns an enumerator that can iterate through
     ///       the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</para>
     /// </summary>
     /// <returns><para>None.</para></returns>
     /// <seealso cref='System.Collections.IEnumerator'/>
-    public new SchemaItemAncestorEnumerator GetEnumerator() {
+    public new SchemaItemAncestorEnumerator GetEnumerator()
+    {
         return new SchemaItemAncestorEnumerator(this);
     }
-    
+
     /// <summary>
-    ///    <para> Removes a specific <see cref='Origam.Schema.SchemaItemAncestor'/> from the 
+    ///    <para> Removes a specific <see cref='Origam.Schema.SchemaItemAncestor'/> from the
     ///    <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</para>
     /// </summary>
     /// <param name='value'>The <see cref='Origam.Schema.SchemaItemAncestor'/> to remove from the <see cref='Origam.Schema.SchemaItemAncestorCollection'/> .</param>
     /// <returns><para>None.</para></returns>
     /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
-    public void Remove(SchemaItemAncestor value) {
+    public void Remove(SchemaItemAncestor value)
+    {
         List.Remove(value);
     }
-    
-	public override string ToString()
-	{
-		string result = "";
-		foreach(SchemaItemAncestor item in this)
-		{
-			if(result != "") result += ", ";
-			if(item.Ancestor == null)
-			{
-				result += "!!! Unspecified !!!";
-			}
-			else
-			{
-				result += item.Ancestor.Name;
-			}
-		}
-		return result;
-	}
-    public class SchemaItemAncestorEnumerator : object, IEnumerator 
-	{
-        
+
+    public override string ToString()
+    {
+        string result = "";
+        foreach (SchemaItemAncestor item in this)
+        {
+            if (result != "")
+                result += ", ";
+            if (item.Ancestor == null)
+            {
+                result += "!!! Unspecified !!!";
+            }
+            else
+            {
+                result += item.Ancestor.Name;
+            }
+        }
+        return result;
+    }
+
+    public class SchemaItemAncestorEnumerator : object, IEnumerator
+    {
         private IEnumerator baseEnumerator;
-        
+
         private IEnumerable temp;
-        
-        public SchemaItemAncestorEnumerator(SchemaItemAncestorCollection mappings) {
+
+        public SchemaItemAncestorEnumerator(SchemaItemAncestorCollection mappings)
+        {
             this.temp = ((IEnumerable)(mappings));
             this.baseEnumerator = temp.GetEnumerator();
         }
-        
-        public SchemaItemAncestor Current {
-            get {
-                return ((SchemaItemAncestor)(baseEnumerator.Current));
-            }
+
+        public SchemaItemAncestor Current
+        {
+            get { return ((SchemaItemAncestor)(baseEnumerator.Current)); }
         }
-        
-        object IEnumerator.Current {
-            get {
-                return baseEnumerator.Current;
-            }
+
+        object IEnumerator.Current
+        {
+            get { return baseEnumerator.Current; }
         }
-        
-        public bool MoveNext() {
+
+        public bool MoveNext()
+        {
             return baseEnumerator.MoveNext();
         }
-        
-        bool IEnumerator.MoveNext() {
+
+        bool IEnumerator.MoveNext()
+        {
             return baseEnumerator.MoveNext();
         }
-        
-        public void Reset() {
+
+        public void Reset()
+        {
             baseEnumerator.Reset();
         }
-        
-        void IEnumerator.Reset() {
+
+        void IEnumerator.Reset()
+        {
             baseEnumerator.Reset();
         }
     }

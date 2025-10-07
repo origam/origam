@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for EntityFilter.
 /// </summary>
@@ -38,56 +39,60 @@ namespace Origam.Schema.EntityModel;
 [ClassMetaVersion("6.0.0")]
 public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 {
-	public const string CategoryConst = "EntityFieldDependency";
-	public EntityFieldDependency() : base() {}
-	public EntityFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public EntityFieldDependency(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden ISchemaItem Members
-	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-	{
-		return newNode is IDataEntity;
-	}
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
+    public const string CategoryConst = "EntityFieldDependency";
+
+    public EntityFieldDependency()
+        : base() { }
+
+    public EntityFieldDependency(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntityFieldDependency(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden ISchemaItem Members
+    public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+    {
+        return newNode is IDataEntity;
+    }
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.Field);
         base.GetExtraDependencies(dependencies);
     }
-	#endregion
-	#region Properties
-	public Guid FieldId;
-	[Category("Reference")]
-	[TypeConverter(typeof(EntityColumnReferenceConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
+    #endregion
+    #region Properties
+    public Guid FieldId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(EntityColumnReferenceConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
     [XmlReference("field", "FieldId")]
     public IDataEntityColumn Field
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.FieldId;
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as IDataEntityColumn;
-		}
-		set
-		{
-			this.FieldId = (Guid)value.PrimaryKey["Id"];
-			this.Name = this.Field.Name;
-		}
-	}
-	#endregion
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.FieldId;
+            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
+                as IDataEntityColumn;
+        }
+        set
+        {
+            this.FieldId = (Guid)value.PrimaryKey["Id"];
+            this.Name = this.Field.Name;
+        }
+    }
+    #endregion
 }

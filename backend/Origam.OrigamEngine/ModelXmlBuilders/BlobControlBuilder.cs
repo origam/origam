@@ -21,54 +21,73 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml;
-
 using Origam.Schema.GuiModel;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;
+
 /// <summary>
 /// Summary description for DateBoxBuilder.
 /// </summary>
 public class BlobControlBuilder
 {
-	public static void Build(XmlElement propertyElement, ControlSetItem control)
-	{
-		propertyElement.SetAttribute("Entity", "String");
-		propertyElement.SetAttribute("Column", "Blob");
-		XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement("Parameters");
-		propertyElement.AppendChild(propertiesElement);
-		
-		foreach(var property in control.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
-		{
-			string name = property.ControlPropertyItem.Name;
-			if(name != "Caption" && name != "CaptionPosition" && name != "CaptionLength" && name != "Height" 
-				&& name != "Width" && name != "Left" && name != "Top" && name != "ReadOnly" && name != "TabIndex")
-			{
-				XmlElement blobPropertyElement = propertiesElement.OwnerDocument.CreateElement("Parameter");
-				propertiesElement.AppendChild(blobPropertyElement);
-				string value;
-				switch(property.ControlPropertyItem.PropertyType)
-				{
-					case ControlPropertyValueType.Boolean:
-						value = XmlConvert.ToString(property.BoolValue);
-						break;
-					case ControlPropertyValueType.Integer:
-						value = XmlConvert.ToString(property.IntValue);
-						break;
-					case ControlPropertyValueType.String:
-						value = property.Value;
-						break;
-					case ControlPropertyValueType.UniqueIdentifier:
-						value = property.GuidValue.ToString();
-						break;
-					case ControlPropertyValueType.Xml:
-						value = property.Value;
-						break;
-					default:
-						throw new ArgumentOutOfRangeException("PropertyType", property.ControlPropertyItem.PropertyType, "Unknown property type.");
-				}
-				blobPropertyElement.SetAttribute("Name", property.ControlPropertyItem.Name);
-				blobPropertyElement.SetAttribute("Value", value);
-			}
-		}
-	}
+    public static void Build(XmlElement propertyElement, ControlSetItem control)
+    {
+        propertyElement.SetAttribute("Entity", "String");
+        propertyElement.SetAttribute("Column", "Blob");
+        XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement("Parameters");
+        propertyElement.AppendChild(propertiesElement);
+
+        foreach (
+            var property in control.ChildItemsByType<PropertyValueItem>(
+                PropertyValueItem.CategoryConst
+            )
+        )
+        {
+            string name = property.ControlPropertyItem.Name;
+            if (
+                name != "Caption"
+                && name != "CaptionPosition"
+                && name != "CaptionLength"
+                && name != "Height"
+                && name != "Width"
+                && name != "Left"
+                && name != "Top"
+                && name != "ReadOnly"
+                && name != "TabIndex"
+            )
+            {
+                XmlElement blobPropertyElement = propertiesElement.OwnerDocument.CreateElement(
+                    "Parameter"
+                );
+                propertiesElement.AppendChild(blobPropertyElement);
+                string value;
+                switch (property.ControlPropertyItem.PropertyType)
+                {
+                    case ControlPropertyValueType.Boolean:
+                        value = XmlConvert.ToString(property.BoolValue);
+                        break;
+                    case ControlPropertyValueType.Integer:
+                        value = XmlConvert.ToString(property.IntValue);
+                        break;
+                    case ControlPropertyValueType.String:
+                        value = property.Value;
+                        break;
+                    case ControlPropertyValueType.UniqueIdentifier:
+                        value = property.GuidValue.ToString();
+                        break;
+                    case ControlPropertyValueType.Xml:
+                        value = property.Value;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            "PropertyType",
+                            property.ControlPropertyItem.PropertyType,
+                            "Unknown property type."
+                        );
+                }
+                blobPropertyElement.SetAttribute("Name", property.ControlPropertyItem.Name);
+                blobPropertyElement.SetAttribute("Value", value);
+            }
+        }
+    }
 }

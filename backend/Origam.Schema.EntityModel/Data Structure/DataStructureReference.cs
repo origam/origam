@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
+
 /// <summary>
 /// Summary description for EntityColumnReference.
 /// </summary>
@@ -36,95 +37,119 @@ namespace Origam.Schema.EntityModel;
 [XmlModelRoot(CategoryConst)]
 [DefaultProperty("DataStructure")]
 [ClassMetaVersion("6.0.0")]
-public  class DataStructureReference : AbstractSchemaItem, IDataStructureReference
+public class DataStructureReference : AbstractSchemaItem, IDataStructureReference
 {
-	public const string CategoryConst = "DataStructureReference";
-	public DataStructureReference() : base() {}
-	public DataStructureReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public DataStructureReference(Key primaryKey) : base(primaryKey)	{}
+    public const string CategoryConst = "DataStructureReference";
 
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
-	{
-		if(this.DataStructure != null)
-			base.GetParameterReferences(DataStructure, list);
-	}
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.DataStructure);
-		if(this.Method  != null) dependencies.Add(this.Method);
-		if(this.SortSet != null) dependencies.Add(this.SortSet);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override ISchemaItemCollection ChildItems
-	{
-		get
-		{
-			return SchemaItemCollection.Create();
-		}
-	}
-	#endregion
-	#region Properties
-	public Guid DataStructureId;
-	[Category("Reference")]
-	[TypeConverter(typeof(DataStructureConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
+    public DataStructureReference()
+        : base() { }
+
+    public DataStructureReference(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public DataStructureReference(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+
+    public override void GetParameterReferences(
+        ISchemaItem parentItem,
+        Dictionary<string, ParameterReference> list
+    )
+    {
+        if (this.DataStructure != null)
+            base.GetParameterReferences(DataStructure, list);
+    }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.DataStructure);
+        if (this.Method != null)
+            dependencies.Add(this.Method);
+        if (this.SortSet != null)
+            dependencies.Add(this.SortSet);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override ISchemaItemCollection ChildItems
+    {
+        get { return SchemaItemCollection.Create(); }
+    }
+    #endregion
+    #region Properties
+    public Guid DataStructureId;
+
+    [Category("Reference")]
+    [TypeConverter(typeof(DataStructureConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("dataStructure", "DataStructureId")]
     [NotNullModelElementRule()]
     public DataStructure DataStructure
-	{
-		get
-		{
-			ModelElementKey key = new ModelElementKey();
-			key.Id = this.DataStructureId;
-			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as DataStructure;
-		}
-		set
-		{
-			this.DataStructureId = (Guid)value.PrimaryKey["Id"];
-			this.Method = null;
-			this.SortSet = null;
-			this.Name = this.DataStructure.Name;
-		}
-	}
-	public Guid DataStructureMethodId;
-	[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-	[Category("Reference")]
+    {
+        get
+        {
+            ModelElementKey key = new ModelElementKey();
+            key.Id = this.DataStructureId;
+            return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key)
+                as DataStructure;
+        }
+        set
+        {
+            this.DataStructureId = (Guid)value.PrimaryKey["Id"];
+            this.Method = null;
+            this.SortSet = null;
+            this.Name = this.DataStructure.Name;
+        }
+    }
+    public Guid DataStructureMethodId;
+
+    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+    [Category("Reference")]
     [XmlReference("method", "DataStructureMethodId")]
     public DataStructureMethod Method
-	{
-		get
-		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(DataStructureMethodId));
-		}
-		set
-		{
-			this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-    
-	public Guid DataStructureSortSetId;
-	[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-	[Category("Reference")]
+    {
+        get
+        {
+            return (DataStructureMethod)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(DataStructureMethodId)
+                );
+        }
+        set
+        {
+            this.DataStructureMethodId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
+        }
+    }
+
+    public Guid DataStructureSortSetId;
+
+    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+    [Category("Reference")]
     [XmlReference("sortSet", "DataStructureSortSetId")]
     public DataStructureSortSet SortSet
-	{
-		get
-		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
-		}
-		set
-		{
-			this.DataStructureSortSetId = (value == null? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	#endregion
+    {
+        get
+        {
+            return (DataStructureSortSet)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.DataStructureSortSetId)
+                );
+        }
+        set
+        {
+            this.DataStructureSortSetId = (
+                value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]
+            );
+        }
+    }
+    #endregion
 }

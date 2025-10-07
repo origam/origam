@@ -20,26 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Text;
-using System.Data;
-using System.Xml;
-
-using Origam.Workflow;
-using Origam.Schema.EntityModel;
-using Origam.Schema.WorkflowModel;
-using Origam.Workbench.Services;
-using Origam.Schema;
 using System.Collections;
-using Origam.Schema.MenuModel;
+using System.Data;
+using System.Text;
+using System.Xml;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
+using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Server.Common;
-using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
+using Origam.Workflow;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
+
 public class WorkflowSessionStore : SaveableSessionStore
 {
     private bool _disposeAfterAction = false;
@@ -58,54 +58,94 @@ public class WorkflowSessionStore : SaveableSessionStore
     private bool _isFinalForm;
     private bool _isAutoNext;
     private bool _isFirstSaveDone = false;
-    public WorkflowSessionStore(IBasicUIService service, UIRequest request, Guid workflowId,
-        string name, Analytics analytics)
+
+    public WorkflowSessionStore(
+        IBasicUIService service,
+        UIRequest request,
+        Guid workflowId,
+        string name,
+        Analytics analytics
+    )
         : base(service, request, name, analytics)
     {
         this.WorkflowId = workflowId;
     }
-    
+
     #region Overriden SessionStore Methods
     public override bool HasChanges()
     {
         return AllowSave && Data != null && Data.HasChanges();
     }
+
     public override void Init()
     {
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IWorkflow workflow = ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId)) as IWorkflow;
-        WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(workflow, new Hashtable(this.Request.Parameters), false, this.Request.Caption);
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        IWorkflow workflow =
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(ISchemaItem),
+                new ModelElementKey(this.WorkflowId)
+            ) as IWorkflow;
+        WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
+            workflow,
+            new Hashtable(this.Request.Parameters),
+            false,
+            this.Request.Caption
+        );
         _host = new WorkflowHost();
         _host.SupportsUI = true;
-        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(_host, engine.WorkflowInstanceId);
+        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
+            _host,
+            engine.WorkflowInstanceId
+        );
         handler.Subscribe();
         _host.ExecuteWorkflow(engine);
         handler.Event.WaitOne();
         HandleWorkflow(handler);
     }
+
     public override object ExecuteActionInternal(string actionId)
     {
         object result;
         switch (actionId)
         {
             case ACTION_QUERYNEXT:
+            {
                 result = EvaluateEndRule();
                 break;
+            }
+
             case ACTION_NEXT:
+            {
                 result = HandleWorkflowNextAsync().Result;
                 break;
+            }
+
             case ACTION_ABORT:
+            {
                 result = HandleAbortAsync().Result;
                 break;
+            }
+
             case ACTION_SAVE:
+            {
                 result = this.Save();
                 this.IsFirstSaveDone = true;
                 break;
+            }
+
             case ACTION_REFRESH:
+            {
                 result = this.HandleRefresh();
                 break;
+            }
+
             default:
-                throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                throw new ArgumentOutOfRangeException(
+                    "actionId",
+                    actionId,
+                    Resources.ErrorContextUnknownAction
+                );
         }
         if (_disposeAfterAction)
         {
@@ -113,10 +153,20 @@ public class WorkflowSessionStore : SaveableSessionStore
         }
         return result;
     }
+
     public override XmlDocument GetFormXml()
     {
         XmlDocument formXml;
-        formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(this.FormId, this.Title, true, new Guid(this.Request.ObjectId), this.FinishMessage, (this.DataStructure == null ? Guid.Empty : this.DataStructure.Id), false, "");
+        formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(
+            this.FormId,
+            this.Title,
+            true,
+            new Guid(this.Request.ObjectId),
+            this.FinishMessage,
+            (this.DataStructure == null ? Guid.Empty : this.DataStructure.Id),
+            false,
+            ""
+        );
         XmlNodeList list = formXml.SelectNodes("/Window");
         XmlElement windowElement = list[0] as XmlElement;
         XmlElement uiRootElement = windowElement.SelectSingleNode("UIRoot") as XmlElement;
@@ -151,6 +201,7 @@ public class WorkflowSessionStore : SaveableSessionStore
         }
         return formXml;
     }
+
     private DataSet LoadData()
     {
         DataSet data;
@@ -160,12 +211,28 @@ public class WorkflowSessionStore : SaveableSessionStore
             qparams.Add(new QueryParameter((string)entry.Key, entry.Value));
         }
         Guid methodId = Guid.Empty;
-        if(_refreshMethod != null) methodId = _refreshMethod.Id;
+        if (_refreshMethod != null)
+        {
+            methodId = _refreshMethod.Id;
+        }
+
         Guid sortSetId = Guid.Empty;
-        if (this.SortSet != null) sortSetId = this.SortSet.Id;
-        data = CoreServices.DataService.Instance.LoadData(_dataStructure.Id, methodId, Guid.Empty, sortSetId, null, qparams);
+        if (this.SortSet != null)
+        {
+            sortSetId = this.SortSet.Id;
+        }
+
+        data = CoreServices.DataService.Instance.LoadData(
+            _dataStructure.Id,
+            methodId,
+            Guid.Empty,
+            sortSetId,
+            null,
+            qparams
+        );
         return data;
     }
+
     public override void OnDispose()
     {
         if (this.TaskId != Guid.Empty)
@@ -175,6 +242,7 @@ public class WorkflowSessionStore : SaveableSessionStore
         _host.Dispose();
         base.OnDispose();
     }
+
     public override string Title
     {
         get
@@ -183,15 +251,10 @@ public class WorkflowSessionStore : SaveableSessionStore
             {
                 return "";
             }
-            else
-            {
-                return base.Title;
-            }
+
+            return base.Title;
         }
-        set
-        {
-            base.Title = value;
-        }
+        set { base.Title = value; }
     }
     #endregion
     #region Properties
@@ -203,7 +266,7 @@ public class WorkflowSessionStore : SaveableSessionStore
     public string StepDescription
     {
         get { return _stepDescription; }
-        set 
+        set
         {
             _stepDescription = value;
             this.Title = value;
@@ -271,10 +334,7 @@ public class WorkflowSessionStore : SaveableSessionStore
     }
     public bool AskWorkflowClose
     {
-        get
-        {
-            return ! IsFinalForm;
-        }
+        get { return !IsFinalForm; }
     }
     #endregion
     #region Private Methods
@@ -285,7 +345,9 @@ public class WorkflowSessionStore : SaveableSessionStore
         if (handler.Result.Exception != null)
         {
             this.SetDataSource(null);
-            this.FormId = new Guid(Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID);
+            this.FormId = new Guid(
+                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+            );
             this.RuleSet = null;
             this.StepDescription = Resources.WorkflowErrorTitle;
             this.EndRule = null;
@@ -313,7 +375,7 @@ public class WorkflowSessionStore : SaveableSessionStore
                 message.Append(ex.Message);
                 message.Append("</DIV></FONT>");
                 message.Append("</HTML></BODY>");
-                this.FinishMessage = message.ToString() ;
+                this.FinishMessage = message.ToString();
             }
         }
         else if (formArgs != null)
@@ -326,7 +388,11 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.DataStructure = formArgs.DataStructure;
             this.SortSet = formArgs.RefreshSort;
             this.RefreshMethod = formArgs.RefreshMethod;
-            this.DataStructureId = (formArgs.SaveDataStructure == null ? formArgs.DataStructure.Id : formArgs.SaveDataStructure.Id);
+            this.DataStructureId = (
+                formArgs.SaveDataStructure == null
+                    ? formArgs.DataStructure.Id
+                    : formArgs.SaveDataStructure.Id
+            );
             this.Parameters = formArgs.Parameters;
             this.Host = formArgs.Engine.Host;
             this.TaskId = formArgs.TaskId;
@@ -347,7 +413,9 @@ public class WorkflowSessionStore : SaveableSessionStore
         {
             // not form, no exception - workflow is finished
             SetDataSource(null);
-            this.FormId = new Guid(Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID);
+            this.FormId = new Guid(
+                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+            );
             this.RuleSet = null;
             this.StepDescription = Resources.WorkflowFinishedTitle;
             this.EndRule = null;
@@ -359,7 +427,11 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.Host = handler.Result.Engine.Host;
             this.TaskId = Guid.Empty;
             this.WorkflowInstanceId = handler.Result.Engine.WorkflowInstanceId;
-            this.FinishMessage = (handler.Result.Engine.ResultMessage == "" ? Resources.WorkflowFinished : handler.Result.Engine.ResultMessage);
+            this.FinishMessage = (
+                handler.Result.Engine.ResultMessage == ""
+                    ? Resources.WorkflowFinished
+                    : handler.Result.Engine.ResultMessage
+            );
             this.IsFinalForm = true;
             this.AllowSave = false;
             this.IsAutoNext = false;
@@ -367,6 +439,7 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.Clear();
         }
     }
+
     private void ParseNotifications(string notifications)
     {
         foreach (string notification in notifications.Split("\n".ToCharArray()))
@@ -390,6 +463,7 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.Notifications.Add(fn);
         }
     }
+
     private RuleExceptionDataCollection EvaluateEndRule()
     {
         if (this.Data.HasErrors)
@@ -410,8 +484,9 @@ public class WorkflowSessionStore : SaveableSessionStore
             }
             return this.RuleEngine.EvaluateEndRule(this.EndRule, this.XmlData, this.Parameters);
         }
-        return new RuleExceptionDataCollection() ;
+        return new RuleExceptionDataCollection();
     }
+
     private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync()
     {
         XmlData.DataSet.ReEnableNullConstraints();
@@ -432,7 +507,10 @@ public class WorkflowSessionStore : SaveableSessionStore
                 throw new RuleException(results);
             }
         }
-        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(this.Host, this.WorkflowInstanceId);
+        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
+            this.Host,
+            this.WorkflowInstanceId
+        );
         handler.Subscribe();
         this.Host.FinishWorkflowForm(this.TaskId, this.XmlData);
         handler.Event.WaitOne();
@@ -443,24 +521,36 @@ public class WorkflowSessionStore : SaveableSessionStore
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
         return result;
     }
+
     private object HandleRefresh()
     {
-        if (! this.IsFirstSaveDone) throw new UserOrigamException(Resources.ErrorCannotRefreshFormNotSaved);
+        if (!this.IsFirstSaveDone)
+        {
+            throw new UserOrigamException(Resources.ErrorCannotRefreshFormNotSaved);
+        }
+
         DataSet data = LoadData();
         this.SetDataSource(data);
         return data;
     }
+
     private async System.Threading.Tasks.Task<UIResult> HandleAbortAsync()
     {
         UserProfile profile = SecurityTools.CurrentUserProfile();
-        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        AbstractMenuItem menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as AbstractMenuItem;
+        IPersistenceService ps =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        AbstractMenuItem menuItem =
+            ps.SchemaProvider.RetrieveInstance(
+                typeof(AbstractMenuItem),
+                new ModelElementKey(new Guid(this.Request.ObjectId))
+            ) as AbstractMenuItem;
         // abort workflow
-        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(this.Host, this.WorkflowInstanceId);
+        WorkflowCallbackHandler handler = new WorkflowCallbackHandler(
+            this.Host,
+            this.WorkflowInstanceId
+        );
         handler.Subscribe();
-        Host.AbortWorkflowForm(
-            taskId: TaskId, 
-            isDirty: HasChanges());
+        Host.AbortWorkflowForm(taskId: TaskId, isDirty: HasChanges());
         handler.Event.WaitOne();
         HandleWorkflow(handler);
         await System.Threading.Tasks.Task.CompletedTask; //CS1998
@@ -468,9 +558,15 @@ public class WorkflowSessionStore : SaveableSessionStore
         UIRequest request = GetRequest();
         return Service.InitUI(request);
     }
+
     private UIRequest GetRequest()
     {
-        bool die = (this.FormId == new Guid(Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID));
+        bool die = (
+            this.FormId
+            == new Guid(
+                Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID
+            )
+        );
         SessionStore ss;
         if (die && this.ParentSession != null)
         {

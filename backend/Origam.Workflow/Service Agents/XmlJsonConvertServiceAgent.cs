@@ -22,13 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Globalization;
 using System.IO;
-using Origam.Workflow;
-using Origam.Service.Core;
 using Origam.JSON;
+using Origam.Service.Core;
+using Origam.Workflow;
 
 namespace Origam.Workflow;
 
-public class XmlJsonConvertServiceAgent: AbstractServiceAgent
+public class XmlJsonConvertServiceAgent : AbstractServiceAgent
 {
     private object result;
     public override object Result => result;
@@ -41,12 +41,12 @@ public class XmlJsonConvertServiceAgent: AbstractServiceAgent
                 StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture);
                 JsonUtils.SerializeToJson(
                     textWriter: stringWriter,
-                    value: Parameters.Get<IDataDocument>("Data").DataSet, 
-                    omitRootElement: Parameters.TryGet<bool>("OmitRootElement"), 
-                    omitMainElement: Parameters.TryGet<bool>("OmitMainElement"));
+                    value: Parameters.Get<IDataDocument>("Data").DataSet,
+                    omitRootElement: Parameters.TryGet<bool>("OmitRootElement"),
+                    omitMainElement: Parameters.TryGet<bool>("OmitMainElement")
+                );
                 result = stringWriter.ToString();
                 break;
         }
     }
 }
-

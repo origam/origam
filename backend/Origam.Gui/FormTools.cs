@@ -39,6 +39,7 @@ using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui;
+
 public static class FormTools
 {
     public static bool IsFormMenuReadOnly(FormReferenceMenuItem formRef)
@@ -46,32 +47,29 @@ public static class FormTools
         bool result = formRef.ReadOnlyAccess;
         if (!result)
         {
-            string authContext = SecurityManager
-                .GetReadOnlyRoles(formRef.AuthorizationContext);
+            string authContext = SecurityManager.GetReadOnlyRoles(formRef.AuthorizationContext);
             result = SecurityManager
                 .GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, authContext);
         }
         return result;
-    }        
-    
+    }
+
     public static bool IsFormMenuInitialScreen(AbstractMenuItem menuItem)
     {
         if (menuItem.AuthorizationContext == "*")
         {
             return false;
         }
-        string authContext = SecurityManager
-            .GetInitialScreenRoles(menuItem.AuthorizationContext);
+        string authContext = SecurityManager.GetInitialScreenRoles(menuItem.AuthorizationContext);
         return SecurityManager
             .GetAuthorizationProvider()
             .Authorize(SecurityManager.CurrentPrincipal, authContext);
     }
+
     public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
     {
-        var children = controlSet.Alternatives
-            .Cast<ControlSetItem>()
-            .ToList();
+        var children = controlSet.Alternatives.Cast<ControlSetItem>().ToList();
         children.Sort(new AlternativeControlSetItemComparer());
         foreach (ControlSetItem item in children)
         {
@@ -82,30 +80,40 @@ public static class FormTools
         }
         return controlSet.MainItem;
     }
+
     public static bool IsValid(string features, string roles)
     {
         // if we're running architect in desconnected mode, we consider
         // everything valid
-        // there's even question, wheter this validation is necessary 
+        // there's even question, wheter this validation is necessary
         // when designing in architect
 #if !NETSTANDARD
-        if ((WorkbenchSingleton.Workbench != null) 
-        && WorkbenchSingleton.Workbench.ApplicationDataDisconnectedMode)
+        if (
+            (WorkbenchSingleton.Workbench != null)
+            && WorkbenchSingleton.Workbench.ApplicationDataDisconnectedMode
+        )
         {
             return true;
         }
 #endif
-        IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        if (!parameterService.IsFeatureOn(features)) return false;
+        IParameterService parameterService =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        if (!parameterService.IsFeatureOn(features))
+            return false;
         if (roles != null && roles != String.Empty)
         {
-            if (!SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, roles))
+            if (
+                !SecurityManager
+                    .GetAuthorizationProvider()
+                    .Authorize(SecurityManager.CurrentPrincipal, roles)
+            )
             {
                 return false;
             }
         }
         return true;
     }
+
     /// <summary>
     /// Get read only status.
     /// If parent was read only, it will be re-examined here. That means, that when there is a menu item with ReadOnly
@@ -122,15 +130,20 @@ public static class FormTools
             if (settings.ActivateReadOnlyRoles)
             {
                 string authContext = SecurityManager.GetReadOnlyRoles(cntrlSet.Roles);
-                return SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, authContext);
+                return SecurityManager
+                    .GetAuthorizationProvider()
+                    .Authorize(SecurityManager.CurrentPrincipal, authContext);
             }
         }
         return currentReadOnlyStatus;
     }
+
     public static string FindTableByDataMember(DataSet ds, string member)
     {
-        if (member == null) return "";
-        if (ds == null) return "";
+        if (member == null)
+            return "";
+        if (ds == null)
+            return "";
         string tableName = "";
         if (member.IndexOf(".") > 0)
         {
@@ -142,9 +155,11 @@ public static class FormTools
             }
             for (int i = 1; i < path.Length; i++)
             {
-                if (table.ChildRelations.Count > 0 &&
-                    table.ChildRelations[path[i]] != null &&
-                    table.ChildRelations[path[i]].ChildTable != null)
+                if (
+                    table.ChildRelations.Count > 0
+                    && table.ChildRelations[path[i]] != null
+                    && table.ChildRelations[path[i]].ChildTable != null
+                )
                 {
                     table = table.ChildRelations[path[i]].ChildTable;
                 }
@@ -154,7 +169,16 @@ public static class FormTools
                     // the column name so we try to find it in the last table
                     if (!table.Columns.Contains(path[i]))
                     {
-                        throw (new ArgumentOutOfRangeException("DataMember", String.Format("Could not find entity `{0}' in data structure id `{1}'.", path[i], ds.ExtendedProperties["Id"])));
+                        throw (
+                            new ArgumentOutOfRangeException(
+                                "DataMember",
+                                String.Format(
+                                    "Could not find entity `{0}' in data structure id `{1}'.",
+                                    path[i],
+                                    ds.ExtendedProperties["Id"]
+                                )
+                            )
+                        );
                     }
                 }
             }
@@ -164,14 +188,38 @@ public static class FormTools
             tableName = member;
         return tableName;
     }
-    public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId)
+
+    public static DataSet GetSelectionDialogData(
+        Guid entityId,
+        Guid transformationBeforeId,
+        bool createEmptyRow,
+        object profileId
+    )
     {
-        return GetSelectionDialogData(entityId, transformationBeforeId, createEmptyRow, profileId, new Hashtable());
+        return GetSelectionDialogData(
+            entityId,
+            transformationBeforeId,
+            createEmptyRow,
+            profileId,
+            new Hashtable()
+        );
     }
-    public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId, Hashtable parameters)
+
+    public static DataSet GetSelectionDialogData(
+        Guid entityId,
+        Guid transformationBeforeId,
+        bool createEmptyRow,
+        object profileId,
+        Hashtable parameters
+    )
     {
-        IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+        IPersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        IDataEntity entity =
+            persistence.SchemaProvider.RetrieveInstance(
+                typeof(ISchemaItem),
+                new ModelElementKey(entityId)
+            ) as IDataEntity;
         DatasetGenerator gen = new DatasetGenerator(true);
         DataSet sdData = gen.CreateDataSet(entity);
         sdData.RemoveNullConstraints();
@@ -180,7 +228,14 @@ public static class FormTools
             // we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
             IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
             IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
-            IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", RuleEngine.Create(new System.Collections.Hashtable(), null), null);
+            IServiceAgent transformer = (
+                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                as IBusinessServicesService
+            ).GetAgent(
+                "DataTransformationService",
+                RuleEngine.Create(new System.Collections.Hashtable(), null),
+                null
+            );
             transformer.MethodName = "Transform";
             transformer.Parameters.Add("XslScript", transformationBeforeId);
             transformer.Parameters.Add("Data", inputDoc);
@@ -200,15 +255,32 @@ public static class FormTools
         }
         return sdData;
     }
-    
-    public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
+
+    public static DataRow GetSelectionDialogResultRow(
+        Guid entityId,
+        Guid transformationAfterId,
+        IDataDocument dataDoc,
+        object profileId
+    )
     {
-        IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+        IPersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        IDataEntity entity =
+            persistence.SchemaProvider.RetrieveInstance(
+                typeof(ISchemaItem),
+                new ModelElementKey(entityId)
+            ) as IDataEntity;
         // TRANSFORMATION - AFTER
         if (transformationAfterId != Guid.Empty)
         {
-            IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", RuleEngine.Create(new System.Collections.Hashtable(), null), null);
+            IServiceAgent transformer = (
+                ServiceManager.Services.GetService(typeof(IBusinessServicesService))
+                as IBusinessServicesService
+            ).GetAgent(
+                "DataTransformationService",
+                RuleEngine.Create(new System.Collections.Hashtable(), null),
+                null
+            );
             transformer.MethodName = "Transform";
             transformer.Parameters.Add("XslScript", transformationAfterId);
             transformer.Parameters.Add("Data", dataDoc);
@@ -222,8 +294,11 @@ public static class FormTools
                 IDataDocument resultDoc = DataDocumentFactory.New(resultData);
                 resultDoc.Load(new XmlNodeReader(transformationResult.Xml));
                 DatasetTools.MergeDataSet(
-                    dataDoc.DataSet, resultDoc.DataSet, null,
-                    new MergeParams(profileId));
+                    dataDoc.DataSet,
+                    resultDoc.DataSet,
+                    null,
+                    new MergeParams(profileId)
+                );
             }
         }
         return dataDoc.DataSet.Tables[0].Rows[0];

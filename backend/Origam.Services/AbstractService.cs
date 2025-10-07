@@ -22,33 +22,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench.Services;
+
 public abstract class AbstractService : IWorkbenchService
 {
-	public virtual void InitializeService()
-	{
-		OnInitialize(EventArgs.Empty);
-	}
-	public virtual void UnloadService()
-	{
-		OnUnload(EventArgs.Empty);
-	}
-	
-	protected virtual void OnInitialize(EventArgs e)
-	{
-		if (Initialize != null) 
-		{
-			Initialize(this, e);
-		}
-	}
-	
-	protected virtual void OnUnload(EventArgs e)
-	{
-		if (Unload != null) 
-		{
-			Unload(this, e);
-		}
-	}
-	
-	public event EventHandler Initialize;
-	public event EventHandler Unload;
+    public virtual void InitializeService()
+    {
+        OnInitialize(EventArgs.Empty);
+    }
+
+    public virtual void UnloadService()
+    {
+        OnUnload(EventArgs.Empty);
+    }
+
+    protected virtual void OnInitialize(EventArgs e)
+    {
+        if (Initialize != null)
+        {
+            Initialize(this, e);
+        }
+    }
+
+    protected virtual void OnUnload(EventArgs e)
+    {
+        if (Unload != null)
+        {
+            Unload(this, e);
+        }
+    }
+
+    public event EventHandler Initialize;
+    public event EventHandler Unload;
 }

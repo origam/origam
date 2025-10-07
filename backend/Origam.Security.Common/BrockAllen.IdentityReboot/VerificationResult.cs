@@ -20,5 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace BrockAllen.IdentityReboot;
+
 public enum VerificationResult
-{Failed, SuccessRehashNeeded, Success }
+{
+    Failed,
+    SuccessRehashNeeded,
+    Success,
+}

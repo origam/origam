@@ -20,38 +20,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Rule;
+
 /// <summary>
 /// Summary description for RelationSecurityState.
 /// </summary>
 public class RelationSecurityState
 {
-	string _name;
-	bool _allowCreate;
-	public RelationSecurityState(string name, bool allowCreate)
-	{
-		_name = name;
-		_allowCreate = allowCreate;
-	}
-	public string Name 
-	{
-		get
-		{
-			return _name;
-		}
-		set
-		{
-			_name = value;
-		}
-	}
-	public bool AllowCreate
-	{
-		get
-		{
-			return _allowCreate;
-		}
-		set
-		{
-			_allowCreate = value;
-		}
-	}
+    string _name;
+    bool _allowCreate;
+
+    public RelationSecurityState(string name, bool allowCreate)
+    {
+        _name = name;
+        _allowCreate = allowCreate;
+    }
+
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    public bool AllowCreate
+    {
+        get { return _allowCreate; }
+        set { _allowCreate = value; }
+    }
 }

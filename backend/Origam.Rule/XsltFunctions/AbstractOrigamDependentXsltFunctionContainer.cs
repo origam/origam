@@ -28,8 +28,8 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule.XsltFunctions;
 
-public abstract class AbstractOrigamDependentXsltFunctionContainer:
-    IOrigamDependentXsltFunctionContainer
+public abstract class AbstractOrigamDependentXsltFunctionContainer
+    : IOrigamDependentXsltFunctionContainer
 {
     public IPersistenceService Persistence { get; set; }
     public IDataLookupService LookupService { get; set; }

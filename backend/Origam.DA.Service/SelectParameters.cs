@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service;
+
 public class SelectParameters
 {
     private CustomOrderings customOrderings = new CustomOrderings(null);

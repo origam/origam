@@ -19,60 +19,66 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel;
+
 /// <summary>
 /// Summary description for EntityFilter.
 /// </summary>
-[SchemaItemDescription("Tree Structure", "Tree Structures", 
-    "icon_tree-structures.png")]
+[SchemaItemDescription("Tree Structure", "Tree Structures", "icon_tree-structures.png")]
 [HelpTopic("Tree+Structures")]
 [XmlModelRoot(CategoryConst)]
 [ClassMetaVersion("6.0.0")]
 public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
 {
-	public const string CategoryConst = "TreeStructure";
-	public TreeStructure() : base() {Init();}
-	public TreeStructure(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public TreeStructure(Key primaryKey) : base(primaryKey)	{Init();}
-	private void Init()
-	{
-		this.ChildItemTypes.Add(typeof(TreeStructureNode));
-	}
-	#region Overriden ISchemaItem Members
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override bool UseFolders
-	{
-		get
-		{
-			return false;
-		}
-	}
-	#endregion
-	#region Properties
-	public string _rootNodeLabel;
-	[NotNullModelElementRule()]
+    public const string CategoryConst = "TreeStructure";
+
+    public TreeStructure()
+        : base()
+    {
+        Init();
+    }
+
+    public TreeStructure(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public TreeStructure(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        this.ChildItemTypes.Add(typeof(TreeStructureNode));
+    }
+
+    #region Overriden ISchemaItem Members
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override bool UseFolders
+    {
+        get { return false; }
+    }
+    #endregion
+    #region Properties
+    public string _rootNodeLabel;
+
+    [NotNullModelElementRule()]
     [XmlAttribute("rootNodeLabel")]
-	public string RootNodeLabel
-	{
-		get
-		{
-			return _rootNodeLabel;
-		}
-		set
-		{
-			_rootNodeLabel = value;
-		}
-	}
-	#endregion
+    public string RootNodeLabel
+    {
+        get { return _rootNodeLabel; }
+        set { _rootNodeLabel = value; }
+    }
+    #endregion
 }

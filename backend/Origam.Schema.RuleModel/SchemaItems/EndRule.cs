@@ -19,18 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
+
 [SchemaItemDescription("Validation Rule", "validation-rule.png")]
 [HelpTopic("Validation+Rule")]
 [ClassMetaVersion("6.0.0")]
 public class EndRule : XslRule, IEndRule
 {
-	public EndRule() : base() {}
-	public EndRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public EndRule(Key primaryKey) : base(primaryKey) { }
+    public EndRule()
+        : base() { }
+
+    public EndRule(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EndRule(Key primaryKey)
+        : base(primaryKey) { }
 }

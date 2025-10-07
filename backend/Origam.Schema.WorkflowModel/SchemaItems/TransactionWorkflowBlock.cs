@@ -19,18 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
+
 public enum TransactionTypes
 {
-	None = 0,
-	Atomic = 1
+    None = 0,
+    Atomic = 1,
 }
+
 /// <summary>
 /// Summary description for TransactionWorkflowBlock.
 /// </summary>
@@ -39,13 +41,18 @@ public enum TransactionTypes
 [ClassMetaVersion("6.0.0")]
 public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
 {
-	public TransactionWorkflowBlock() : base() {}
-	public TransactionWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public TransactionWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-	#region Properties
-	[Category("Transaction"), DefaultValue(TransactionTypes.None)]
-	[XmlAttribute ("transactionType")]
-	public TransactionTypes TransactionType { get; set; } 
-		= TransactionTypes.None;
-	#endregion
+    public TransactionWorkflowBlock()
+        : base() { }
+
+    public TransactionWorkflowBlock(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public TransactionWorkflowBlock(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Properties
+    [Category("Transaction"), DefaultValue(TransactionTypes.None)]
+    [XmlAttribute("transactionType")]
+    public TransactionTypes TransactionType { get; set; } = TransactionTypes.None;
+    #endregion
 }

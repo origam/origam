@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-
 using Origam.Schema;
 using Origam.Service.Core;
 
@@ -29,34 +28,69 @@ namespace Origam.Workbench.Services;
 
 public interface IWorkQueueService : IWorkbenchService
 {
-	DataSet UserQueueList();
-	ISchemaItem WQClass(string name);
-	ISchemaItem WQClass(Guid queueId);
-	DataSet LoadWorkQueueData(string workQueueClass, object queueId);
-	Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-        string condition, IXmlContainer data, WorkQueueAttachment[] attachments,
-        string transactionId);
-	Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-        string condition, IXmlContainer data, string transactionId);
-	Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId);
-    Guid WorkQueueAdd(string workQueueName, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId);
+    DataSet UserQueueList();
+    ISchemaItem WQClass(string name);
+    ISchemaItem WQClass(Guid queueId);
+    DataSet LoadWorkQueueData(string workQueueClass, object queueId);
+    Guid WorkQueueAdd(
+        string workQueueClass,
+        string workQueueName,
+        Guid workQueueId,
+        string condition,
+        IXmlContainer data,
+        WorkQueueAttachment[] attachments,
+        string transactionId
+    );
+    Guid WorkQueueAdd(
+        string workQueueClass,
+        string workQueueName,
+        Guid workQueueId,
+        string condition,
+        IXmlContainer data,
+        string transactionId
+    );
+    Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId);
+    Guid WorkQueueAdd(
+        string workQueueName,
+        IXmlContainer data,
+        WorkQueueAttachment[] attachments,
+        string transactionId
+    );
     DataRow GetNextItem(string workQueueName, string transactionId, bool processErrors);
-    void WorkQueueRemove(string workQueueClass, string workQueueName, Guid workQueueId, 
-        string condition, object rowKey, string transactionId);
+    void WorkQueueRemove(
+        string workQueueClass,
+        string workQueueName,
+        Guid workQueueId,
+        string condition,
+        object rowKey,
+        string transactionId
+    );
     void WorkQueueRemove(Guid workQueueId, object rowKey, string transactionId);
     IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId);
-	void WorkQueueUpdate(string workQueueClass, int relationNo, Guid workQueueId,
-        object rowKey, string transactionId);
-	void HandleAction(Guid queueId, string queueClass, DataTable selectedRows,
-        Guid commandType, string command, string param1, string param2, 
-        object errorQueueId);
-	void HandleAction(string workQueueCode, string commandText, Guid queueEntryId); 
+    void WorkQueueUpdate(
+        string workQueueClass,
+        int relationNo,
+        Guid workQueueId,
+        object rowKey,
+        string transactionId
+    );
+    void HandleAction(
+        Guid queueId,
+        string queueClass,
+        DataTable selectedRows,
+        Guid commandType,
+        string command,
+        string param1,
+        string param2,
+        object errorQueueId
+    );
+    void HandleAction(string workQueueCode, string commandText, Guid queueEntryId);
     IDataDocument GenerateNotificationMessage(
-            Guid notificationTemplateId
-            , IXmlContainer notificationSource
-            , DataRow recipient
-            , DataRow workQueueRow
-            , string transactionId
-        );
-	string CustomScreenName(Guid queueId);
+        Guid notificationTemplateId,
+        IXmlContainer notificationSource,
+        DataRow recipient,
+        DataRow workQueueRow,
+        string transactionId
+    );
+    string CustomScreenName(Guid queueId);
 }

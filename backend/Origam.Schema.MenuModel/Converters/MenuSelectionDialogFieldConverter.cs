@@ -19,79 +19,98 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
+
 public class MenuSelectionDialogFieldConverter : TypeConverter
 {
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-	{
-		//true means show a combobox
-		return true;
-	}
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-		//true will limit to list. false will show the list, 
-		//but allow free-form entry
-		return true;
-	}
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
-		Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-		ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
-		if(currentItem is FormReferenceMenuItem)
-		{
-			selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
-		}
-		else if (currentItem is ReportReferenceMenuItem)
-		{
-			selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
-		}
-		if(selectionDialogPanel == null) return new StandardValuesCollection(new List<object>());
-		List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
-		var array = new List<IDataEntityColumn>(fields.Count);
-		foreach(IDataEntityColumn item in fields)
-		{
-			array.Add(item);
-		}
-		array.Sort();
-		return new StandardValuesCollection(array);
-	}
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
-		if( sourceType == typeof(string) )
-			return true;
-		else 
-			return base.CanConvertFrom(context, sourceType);
-	}
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
-		if( value.GetType() == typeof(string) )
-		{
-			Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-			ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
-			if(currentItem is FormReferenceMenuItem)
-			{
-				selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
-			}
-			else if (currentItem is ReportReferenceMenuItem)
-			{
-				selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
-			}
-			if(selectionDialogPanel == null) return null;
-			List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
-			foreach(var item in fields)
-			{
-				if(item.Name == value.ToString())
-					return item;
-			}
-			return null;
-		}
-		else
-			return base.ConvertFrom(context, culture, value);
-	}
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    {
+        //true means show a combobox
+        return true;
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        //true will limit to list. false will show the list,
+        //but allow free-form entry
+        return true;
+    }
+
+    public override System.ComponentModel.TypeConverter.StandardValuesCollection GetStandardValues(
+        ITypeDescriptorContext context
+    )
+    {
+        Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
+        ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
+        if (currentItem is FormReferenceMenuItem)
+        {
+            selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
+        }
+        else if (currentItem is ReportReferenceMenuItem)
+        {
+            selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
+        }
+        if (selectionDialogPanel == null)
+            return new StandardValuesCollection(new List<object>());
+        List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+        var array = new List<IDataEntityColumn>(fields.Count);
+        foreach (IDataEntityColumn item in fields)
+        {
+            array.Add(item);
+        }
+        array.Sort();
+        return new StandardValuesCollection(array);
+    }
+
+    public override bool CanConvertFrom(
+        System.ComponentModel.ITypeDescriptorContext context,
+        System.Type sourceType
+    )
+    {
+        if (sourceType == typeof(string))
+            return true;
+        else
+            return base.CanConvertFrom(context, sourceType);
+    }
+
+    public override object ConvertFrom(
+        System.ComponentModel.ITypeDescriptorContext context,
+        System.Globalization.CultureInfo culture,
+        object value
+    )
+    {
+        if (value.GetType() == typeof(string))
+        {
+            Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
+            ISchemaItem currentItem = (
+                context.Instance as SelectionDialogParameterMapping
+            ).ParentItem;
+            if (currentItem is FormReferenceMenuItem)
+            {
+                selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
+            }
+            else if (currentItem is ReportReferenceMenuItem)
+            {
+                selectionDialogPanel = (
+                    currentItem as ReportReferenceMenuItem
+                ).SelectionDialogPanel;
+            }
+            if (selectionDialogPanel == null)
+                return null;
+            List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+            foreach (var item in fields)
+            {
+                if (item.Name == value.ToString())
+                    return item;
+            }
+            return null;
+        }
+        else
+            return base.ConvertFrom(context, culture, value);
+    }
 }

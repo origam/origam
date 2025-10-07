@@ -29,6 +29,7 @@ namespace Origam;
 public class ClientAuthenticationProviderContainer
 {
     private readonly List<IClientAuthenticationProvider> providers = new();
+
     public void Register(IClientAuthenticationProvider provider)
     {
         providers.Add(provider);

@@ -21,16 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using Origam.Server;
 
 namespace Origam.Server;
-public interface ILazyRowLoadInput: IEntityIdentification
+
+public interface ILazyRowLoadInput : IEntityIdentification
 {
     string Filter { get; set; }
     Dictionary<string, Guid> FilterLookups { get; set; }
     List<IRowOrdering> OrderingList { get; }
     Dictionary<string, string> Parameters { get; set; }
-    int RowLimit { get; set; }        
+    int RowLimit { get; set; }
     int RowOffset { get; set; }
     string[] ColumnNames { get; set; }
     Guid MasterRowId { get; set; }
