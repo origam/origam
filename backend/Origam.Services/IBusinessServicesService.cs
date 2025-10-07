@@ -22,11 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace Origam.Workbench.Services;
+
 /// <summary>
 /// Summary description for IBusinessServicesService.
 /// </summary>
 public interface IBusinessServicesService : IWorkbenchService
 {
-	IServiceAgent GetAgent(string serviceType, object ruleEngine, object workflowEngine); 
-	IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine);
+    IServiceAgent GetAgent(string serviceType, object ruleEngine, object workflowEngine);
+    IServiceAgent GetAgent(
+        string serviceType,
+        string instanceName,
+        object ruleEngine,
+        object workflowEngine
+    );
 }
