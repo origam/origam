@@ -19,162 +19,186 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-
-using Origam.Workbench.Services;
+using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
-using Origam.Schema.EntityModel;
-using System.Xml.Serialization;
-using System.Collections.Generic;
-using Origam.Schema.EntityModel.Interfaces;
+using Origam.Workbench.Services;
 
 namespace Origam.Schema.MenuModel;
+
 [SchemaItemDescription("Report Reference", "menu_report.png")]
 [HelpTopic("Report+Menu+Item")]
 [ClassMetaVersion("6.0.0")]
 public class ReportReferenceMenuItem : AbstractMenuItem
 {
-	public ReportReferenceMenuItem() {}
-	public ReportReferenceMenuItem(Guid schemaExtensionId) 
-		: base(schemaExtensionId) {}
-	public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey) {}
-	public override void GetExtraDependencies(
-		List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(Report);
-		if(SelectionDialogEndRule != null)
-		{
-			dependencies.Add(SelectionDialogEndRule);
-		}
-		if(SelectionDialogPanel != null)
-		{
-			dependencies.Add(SelectionDialogPanel);
-		}
-		if(TransformationBeforeSelection != null)
-		{
-			dependencies.Add(TransformationBeforeSelection);
-		}
-		if(TransformationAfterSelection != null)
-		{
-			dependencies.Add(TransformationAfterSelection);
-		}
-		base.GetExtraDependencies(dependencies);
-	}
-	public override UI.BrowserNodeCollection ChildNodes()
-	{
+    public ReportReferenceMenuItem() { }
+
+    public ReportReferenceMenuItem(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public ReportReferenceMenuItem(Key primaryKey)
+        : base(primaryKey) { }
+
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(Report);
+        if (SelectionDialogEndRule != null)
+        {
+            dependencies.Add(SelectionDialogEndRule);
+        }
+        if (SelectionDialogPanel != null)
+        {
+            dependencies.Add(SelectionDialogPanel);
+        }
+        if (TransformationBeforeSelection != null)
+        {
+            dependencies.Add(TransformationBeforeSelection);
+        }
+        if (TransformationAfterSelection != null)
+        {
+            dependencies.Add(TransformationAfterSelection);
+        }
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override UI.BrowserNodeCollection ChildNodes()
+    {
 #if ORIGAM_CLIENT
-		return new Origam.UI.BrowserNodeCollection();
+        return new Origam.UI.BrowserNodeCollection();
 #else
-		return base.ChildNodes ();
+        return base.ChildNodes();
 #endif
-	}
-	#region Properties
-	public Guid ReportId;
-	[Category("Report Reference")]
-	[TypeConverter(typeof(ReportConverter))]
+    }
+
+    #region Properties
+    public Guid ReportId;
+
+    [Category("Report Reference")]
+    [TypeConverter(typeof(ReportConverter))]
     [XmlReference("report", "ReportId")]
-	[NotNullModelElementRule]
-	public AbstractReport Report
-	{
-		get => (AbstractReport)PersistenceProvider.RetrieveInstance(
-			typeof(ISchemaItem), new ModelElementKey(ReportId));
-		set => ReportId = (value == null) 
-			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	public Guid SelectionPanelId;
-	[Category("Selection Dialog")]
-	[TypeConverter(typeof(PanelControlSetConverter))]
+    [NotNullModelElementRule]
+    public AbstractReport Report
+    {
+        get =>
+            (AbstractReport)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(ReportId)
+                );
+        set => ReportId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+    }
+    public Guid SelectionPanelId;
+
+    [Category("Selection Dialog")]
+    [TypeConverter(typeof(PanelControlSetConverter))]
     [XmlReference("selectionDialogScreenSection", "SelectionPanelId")]
-	public PanelControlSet SelectionDialogPanel
-	{
-		get => (PanelControlSet)PersistenceProvider.RetrieveInstance(
-			typeof(ISchemaItem), 
-			new ModelElementKey(SelectionPanelId));
-		set => SelectionPanelId = (value == null) 
-			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	public Guid SelectionPanelBeforeTransformationId;
-	[Category("Selection Dialog")]
-	[TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformationBeforeSelection", 
-        "SelectionPanelBeforeTransformationId")]
-	public AbstractTransformation TransformationBeforeSelection
-	{
-		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(ISchemaItem), 
-			new ModelElementKey(SelectionPanelBeforeTransformationId));
-		set => SelectionPanelBeforeTransformationId = (value == null) 
-			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	public Guid SelectionPanelAfterTransformationId;
-	[Category("Selection Dialog")]
-	[TypeConverter(typeof(TransformationConverter))]
-    [XmlReference("transformationAfterSelection",
-        "SelectionPanelAfterTransformationId")]
+    public PanelControlSet SelectionDialogPanel
+    {
+        get =>
+            (PanelControlSet)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(SelectionPanelId)
+                );
+        set => SelectionPanelId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+    }
+    public Guid SelectionPanelBeforeTransformationId;
+
+    [Category("Selection Dialog")]
+    [TypeConverter(typeof(TransformationConverter))]
+    [XmlReference("transformationBeforeSelection", "SelectionPanelBeforeTransformationId")]
+    public AbstractTransformation TransformationBeforeSelection
+    {
+        get =>
+            (AbstractTransformation)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(SelectionPanelBeforeTransformationId)
+                );
+        set =>
+            SelectionPanelBeforeTransformationId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+    }
+    public Guid SelectionPanelAfterTransformationId;
+
+    [Category("Selection Dialog")]
+    [TypeConverter(typeof(TransformationConverter))]
+    [XmlReference("transformationAfterSelection", "SelectionPanelAfterTransformationId")]
     public AbstractTransformation TransformationAfterSelection
-	{
-		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(ISchemaItem), 
-			new ModelElementKey(SelectionPanelAfterTransformationId));
-		set => SelectionPanelAfterTransformationId = (value == null) 
-			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	public Guid SelectionEndRuleId;
-	[Category("Selection Dialog")]
-	[TypeConverter(typeof(EndRuleConverter))]
+    {
+        get =>
+            (AbstractTransformation)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(SelectionPanelAfterTransformationId)
+                );
+        set =>
+            SelectionPanelAfterTransformationId =
+                (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+    }
+    public Guid SelectionEndRuleId;
+
+    [Category("Selection Dialog")]
+    [TypeConverter(typeof(EndRuleConverter))]
     [XmlReference("selectionDialogEndRule", "SelectionEndRuleId")]
-	public IEndRule SelectionDialogEndRule
-	{
-		get => (IEndRule)PersistenceProvider.RetrieveInstance(
-			typeof(ISchemaItem), 
-			new ModelElementKey(SelectionEndRuleId));
-		set => SelectionEndRuleId = (value == null) 
-			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	private DataReportExportFormatType _exportFormatType;
-	[Category("Data Report")]
-	[Description("Export Format Type")]
+    public IEndRule SelectionDialogEndRule
+    {
+        get =>
+            (IEndRule)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(SelectionEndRuleId)
+                );
+        set => SelectionEndRuleId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+    }
+    private DataReportExportFormatType _exportFormatType;
+
+    [Category("Data Report")]
+    [Description("Export Format Type")]
     [XmlAttribute("exportFormatType")]
-	public DataReportExportFormatType ExportFormatType
-	{
-		get => _exportFormatType;
-		set => _exportFormatType = value;
-	}
-	#endregion
-	#region ISchemaItemFactory Members
-	public override Type[] NewItemTypes => new[] 
-	{ 
-		typeof(SelectionDialogParameterMapping)
-	};
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
-		return base.NewItem<T>(schemaExtensionId, group, 
-			typeof(T) == typeof(SelectionDialogParameterMapping) ?
-				"NewSelectionDialogParameterMapping" : null);
-	}
-	public override IList<string> NewTypeNames
-	{
-		get
-		{
-			try
-			{
-				var businessServicesService = ServiceManager.Services
-					.GetService<IBusinessServicesService>();
-				var serviceAgent = businessServicesService.GetAgent(
-					"DataService", null, null);
-				return serviceAgent.ExpectedParameterNames(
-					Report, "LoadData", "Parameters");
-			}
-			catch
-			{
-				return new string[] {};
-			}
-		}
-	}
-	#endregion
+    public DataReportExportFormatType ExportFormatType
+    {
+        get => _exportFormatType;
+        set => _exportFormatType = value;
+    }
+    #endregion
+    #region ISchemaItemFactory Members
+    public override Type[] NewItemTypes => new[] { typeof(SelectionDialogParameterMapping) };
+
+    public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+    {
+        return base.NewItem<T>(
+            schemaExtensionId,
+            group,
+            typeof(T) == typeof(SelectionDialogParameterMapping)
+                ? "NewSelectionDialogParameterMapping"
+                : null
+        );
+    }
+
+    public override IList<string> NewTypeNames
+    {
+        get
+        {
+            try
+            {
+                var businessServicesService =
+                    ServiceManager.Services.GetService<IBusinessServicesService>();
+                var serviceAgent = businessServicesService.GetAgent("DataService", null, null);
+                return serviceAgent.ExpectedParameterNames(Report, "LoadData", "Parameters");
+            }
+            catch
+            {
+                return new string[] { };
+            }
+        }
+    }
+    #endregion
 }

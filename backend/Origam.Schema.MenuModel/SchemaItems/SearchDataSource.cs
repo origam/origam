@@ -19,17 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
-using System.ComponentModel;
-
-using Origam.DA.ObjectPersistence;
-using Origam.Schema.EntityModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
+
 /// <summary>
 /// Summary description for Graphics.
 /// </summary>
@@ -39,34 +39,53 @@ namespace Origam.Schema.MenuModel;
 [ClassMetaVersion("6.0.0")]
 public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
 {
-	public const string CategoryConst = "SearchDataSource";
-    public SearchDataSource() : base() { Init(); }
-    public SearchDataSource(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-    public SearchDataSource(Key primaryKey) : base(primaryKey) { Init(); }
-    private void Init()
+    public const string CategoryConst = "SearchDataSource";
+
+    public SearchDataSource()
+        : base()
     {
+        Init();
     }
+
+    public SearchDataSource(Guid schemaExtensionId)
+        : base(schemaExtensionId)
+    {
+        Init();
+    }
+
+    public SearchDataSource(Key primaryKey)
+        : base(primaryKey)
+    {
+        Init();
+    }
+
+    private void Init() { }
+
     #region Properties
     public Guid DataStructureId;
+
     [TypeConverter(typeof(DataStructureConverter))]
     [NotNullModelElementRule()]
     [Category("Data Source")]
     [DisplayName("Data Structure")]
-    [Description("Data structure that will be used to retrieve search results. Must contain columns: Name, ReferenceId; optional column: Description.")]
+    [Description(
+        "Data structure that will be used to retrieve search results. Must contain columns: Name, ReferenceId; optional column: Description."
+    )]
     [XmlReference("dataStructure", "DataStructureId")]
     public DataStructure DataStructure
     {
         get
         {
-            return (DataStructure)this.PersistenceProvider.RetrieveInstance(
-                typeof(DataStructure), new ModelElementKey(this.DataStructureId));
+            return (DataStructure)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(DataStructure),
+                    new ModelElementKey(this.DataStructureId)
+                );
         }
-        set
-        {
-            this.DataStructureId = (Guid)value.PrimaryKey["Id"];
-        }
+        set { this.DataStructureId = (Guid)value.PrimaryKey["Id"]; }
     }
     public Guid DataStructureMethodId;
+
     [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
     [Category("Data Source")]
     [DisplayName("Data Structure Method")]
@@ -77,17 +96,16 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     {
         get
         {
-            return (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-                typeof(ISchemaItem), 
-                new ModelElementKey(DataStructureMethodId));
+            return (DataStructureMethod)
+                PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(DataStructureMethodId)
+                );
         }
-        set
-        {
-            DataStructureMethodId = (value == null ? Guid.Empty : 
-                (Guid)value.PrimaryKey["Id"]);
-        }
+        set { DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
     }
     private string _groupLabel;
+
     [Category("Results")]
     [DisplayName("Group Label")]
     [Description("A text under which the search results will be grouped.")]
@@ -96,16 +114,11 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     [XmlAttribute("groupLabel")]
     public string GroupLabel
     {
-        get
-        {
-            return _groupLabel;
-        }
-        set
-        {
-            _groupLabel = value;
-        }
+        get { return _groupLabel; }
+        set { _groupLabel = value; }
     }
     private string _filterParameter;
+
     [Category("Data Source")]
     [DisplayName("Filter Parameter")]
     [Description("String parameter that will accept the searched text.")]
@@ -113,16 +126,11 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     [XmlAttribute("filterParameter")]
     public string FilterParameter
     {
-        get
-        {
-            return _filterParameter;
-        }
-        set
-        {
-            _filterParameter = value;
-        }
+        get { return _filterParameter; }
+        set { _filterParameter = value; }
     }
     public Guid LookupId;
+
     [Category("Reference")]
     [TypeConverter(typeof(DataLookupConverter))]
     [NotNullModelElementRule()]
@@ -131,29 +139,23 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     {
         get
         {
-            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                typeof(ISchemaItem), new ModelElementKey(this.LookupId));
+            return (IDataLookup)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.LookupId)
+                );
         }
-        set
-        {
-            this.LookupId = (value == null ? Guid.Empty 
-                : (Guid)value.PrimaryKey["Id"]);
-        }
+        set { this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
     }
     private string _roles = "*";
+
     [Category("Security")]
     [NotNullModelElementRule()]
     [XmlAttribute("roles")]
     public string Roles
     {
-        get
-        {
-            return _roles;
-        }
-        set
-        {
-            _roles = value;
-        }
+        get { return _roles; }
+        set { _roles = value; }
     }
     #endregion
     #region Overriden ISchemaItem Members
@@ -162,26 +164,18 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
         dependencies.Add(this.DataStructure);
         base.GetExtraDependencies(dependencies);
     }
+
     public override bool UseFolders
     {
-        get
-        {
-            return false;
-        }
+        get { return false; }
     }
-	public override string ItemType
-	{
-		get
-		{
-			return CategoryConst;
-		}
-	}
-	public override string Icon
-	{
-		get
-		{
-			return "9";
-		}
-	}
-	#endregion
+    public override string ItemType
+    {
+        get { return CategoryConst; }
+    }
+    public override string Icon
+    {
+        get { return "9"; }
+    }
+    #endregion
 }

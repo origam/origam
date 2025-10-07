@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Schema.MenuModel;
+
 /// <summary>
 /// Summary description for EntitySecurityRule.
 /// </summary>
@@ -36,46 +36,54 @@ namespace Origam.Schema.MenuModel;
 [ClassMetaVersion("6.0.0")]
 public class EntityMenuAction : EntityUIAction
 {
-	public EntityMenuAction() : base() {}
-	public EntityMenuAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public EntityMenuAction(Key primaryKey) : base(primaryKey)	{}
+    public EntityMenuAction()
+        : base() { }
 
-	#region Overriden AbstractDataEntityColumn Members
-	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
-	{
-		dependencies.Add(this.Menu);
-		base.GetExtraDependencies (dependencies);
-	}
-	public override IList<string> NewTypeNames
-	{
-		get
-		{
-			if(this.Menu == null)
-			{
-				return base.NewTypeNames;
-			}
-			else
-			{
-				return this.Menu.NewTypeNames;
-			}
-		}
-	}
-	#endregion
-	#region Properties
-	public Guid MenuId;
-	[Category("References")]
-	[TypeConverter(typeof(MenuModel.MenuItemConverter))]
+    public EntityMenuAction(Guid schemaExtensionId)
+        : base(schemaExtensionId) { }
+
+    public EntityMenuAction(Key primaryKey)
+        : base(primaryKey) { }
+
+    #region Overriden AbstractDataEntityColumn Members
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
+    {
+        dependencies.Add(this.Menu);
+        base.GetExtraDependencies(dependencies);
+    }
+
+    public override IList<string> NewTypeNames
+    {
+        get
+        {
+            if (this.Menu == null)
+            {
+                return base.NewTypeNames;
+            }
+            else
+            {
+                return this.Menu.NewTypeNames;
+            }
+        }
+    }
+    #endregion
+    #region Properties
+    public Guid MenuId;
+
+    [Category("References")]
+    [TypeConverter(typeof(MenuModel.MenuItemConverter))]
     [XmlReference("menu", "MenuId")]
-	public MenuModel.AbstractMenuItem Menu
-	{
-		get
-		{
-			return (MenuModel.AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.MenuId));
-		}
-		set
-		{
-			this.MenuId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
-	}
-	#endregion
+    public MenuModel.AbstractMenuItem Menu
+    {
+        get
+        {
+            return (MenuModel.AbstractMenuItem)
+                this.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(this.MenuId)
+                );
+        }
+        set { this.MenuId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]; }
+    }
+    #endregion
 }

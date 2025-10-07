@@ -19,84 +19,86 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
+
 public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
 {
-	public override bool GetStandardValuesSupported(
-        ITypeDescriptorContext context)
-	{
-		//true means show a combobox
-		return true;
-	}
-	public override bool GetStandardValuesExclusive(
-        ITypeDescriptorContext context)
-	{
-		//true will limit to list. false will show the list, 
-		//but allow free-form entry
-		return true;
-	}
-	public override TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
-		FormReferenceMenuItem currentItem 
-            = context.Instance as FormReferenceMenuItem;
-        if(currentItem.Screen == null)
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    {
+        //true means show a combobox
+        return true;
+    }
+
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+    {
+        //true will limit to list. false will show the list,
+        //but allow free-form entry
+        return true;
+    }
+
+    public override TypeConverter.StandardValuesCollection GetStandardValues(
+        ITypeDescriptorContext context
+    )
+    {
+        FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
+        if (currentItem.Screen == null)
         {
             return new StandardValuesCollection(new List<DataStructureEntity>());
         }
-		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
-		var entityArray = new List<DataStructureEntity>(entities.Count);
-		foreach(DataStructureEntity entity in entities)
-		{
-			entityArray.Add(entity);
-		}
+        List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
+        var entityArray = new List<DataStructureEntity>(entities.Count);
+        foreach (DataStructureEntity entity in entities)
+        {
+            entityArray.Add(entity);
+        }
         entityArray.Add(null);
-		entityArray.Sort();
-		return new StandardValuesCollection(entityArray);
-	}
-	public override bool CanConvertFrom(
-        ITypeDescriptorContext context, System.Type sourceType)
-	{
-		if(sourceType == typeof(string))
+        entityArray.Sort();
+        return new StandardValuesCollection(entityArray);
+    }
+
+    public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+    {
+        if (sourceType == typeof(string))
         {
-			return true;
+            return true;
         }
-		else
+        else
         {
-			return base.CanConvertFrom(context, sourceType);
+            return base.CanConvertFrom(context, sourceType);
         }
-	}
-	public override object ConvertFrom(
-        ITypeDescriptorContext context, 
-        System.Globalization.CultureInfo culture, 
-        object value)
-	{
-		if(value.GetType() == typeof(string))
-		{
-			FormReferenceMenuItem currentItem 
-                = context.Instance as FormReferenceMenuItem;
-            if(currentItem.Screen == null)
+    }
+
+    public override object ConvertFrom(
+        ITypeDescriptorContext context,
+        System.Globalization.CultureInfo culture,
+        object value
+    )
+    {
+        if (value.GetType() == typeof(string))
+        {
+            FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
+            if (currentItem.Screen == null)
             {
                 return null;
             }
-			List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
-			foreach(DataStructureEntity item in entities)
-			{
-				if(item.Name == value.ToString())
+            List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
+            foreach (DataStructureEntity item in entities)
+            {
+                if (item.Name == value.ToString())
                 {
-					return item as DataStructureEntity;
+                    return item as DataStructureEntity;
                 }
-			}
-			return null;
-		}
-		else
-        {
-			return base.ConvertFrom(context, culture, value);
+            }
+            return null;
         }
-	}
+        else
+        {
+            return base.ConvertFrom(context, culture, value);
+        }
+    }
 }
