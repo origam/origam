@@ -25,7 +25,12 @@ using Origam.Workflow.WorkQueue;
 
 namespace Origam.WorkflowTests;
 
-public record TestData(Guid RetryType, int RetryIntervalSeconds, int MaxRetries, DateTime ExpectedNextAttempt);
+public record TestData(
+    Guid RetryType,
+    int RetryIntervalSeconds,
+    int MaxRetries,
+    DateTime ExpectedNextAttempt
+);
 
 [TestFixture]
 public class RetryManagerTests
@@ -35,35 +40,33 @@ public class RetryManagerTests
         return new DateTime(2000, 1, 1, 0, 0, 0);
     }
 
-    
-    private static TestData[] testDataArray = new[]{
-        new TestData (WorkQueueRetryType.NoRetry, 0, 0,DateTime.MaxValue),
-        new TestData(WorkQueueRetryType.LinearRetry, 20, 1,GetTimeNow().AddSeconds(20)),
+    private static TestData[] testDataArray = new[]
+    {
+        new TestData(WorkQueueRetryType.NoRetry, 0, 0, DateTime.MaxValue),
+        new TestData(WorkQueueRetryType.LinearRetry, 20, 1, GetTimeNow().AddSeconds(20)),
     };
 
     [Test]
     public void ShouldAssignCorrectRetryTimeBasedOnRetryType(
-        [ValueSource(nameof(testDataArray))]TestData testData)
+        [ValueSource(nameof(testDataArray))] TestData testData
+    )
     {
-        var (retryType,
-            retryIntervalSeconds, 
-            maxRetries, 
-            expectedNextAttempt) = testData;
-        
+        var (retryType, retryIntervalSeconds, maxRetries, expectedNextAttempt) = testData;
+
         var queueRow = CreateEmptyQueueRow();
         queueRow.refWorkQueueRetryTypeId = retryType;
         queueRow.MaxRetries = maxRetries;
         queueRow.RetryIntervalSeconds = retryIntervalSeconds;
-        
+
         var queueEntryRow = CreateEmptyEntryRow();
-        
+
         var sut = new RetryManager(GetTimeNow);
         sut.SetEntryRetryData(queueEntryRow, queueRow, "Test");
 
         DateTime nextAttempt = (DateTime)queueEntryRow["NextAttemptTime"];
         Assert.That(nextAttempt, Is.EqualTo(expectedNextAttempt));
     }
-    
+
     [Test]
     public void ShouldAssignCorrectExponentialRetryTime()
     {
@@ -72,18 +75,18 @@ public class RetryManagerTests
         queueRow.MaxRetries = 5;
         queueRow.RetryIntervalSeconds = 35;
         queueRow.ExponentialRetryBase = 2.0m;
-        
+
         DataRow queueEntryRow = CreateEmptyEntryRow();
-        
+
         var sut = new RetryManager(GetTimeNow);
 
-        var expectedDelayLimits = new []
+        var expectedDelayLimits = new[]
         {
             (35, 70),
             (70, 140),
             (140, 280),
             (280, 560),
-            (560, 1120)
+            (560, 1120),
         };
 
         for (int i = 0; i < 5; i++)
@@ -97,7 +100,7 @@ public class RetryManagerTests
             Assert.That(nextAttempt, Is.GreaterThanOrEqualTo(expectedMin));
         }
     }
-    
+
     private static WorkQueueData.WorkQueueRow CreateEmptyQueueRow()
     {
         var workQueueTable = new WorkQueueData.WorkQueueDataTable();
@@ -111,16 +114,11 @@ public class RetryManagerTests
     private static DataRow CreateEmptyEntryRow()
     {
         var queueEntryTable = new DataTable();
-        queueEntryTable.Columns.Add(
-            new DataColumn("InRetry", typeof(bool)));
-        queueEntryTable.Columns.Add(
-            new DataColumn("ErrorText", typeof(string)));
-        queueEntryTable.Columns.Add(
-            new DataColumn("LastAttemptTime", typeof(DateTime)));
-        queueEntryTable.Columns.Add(
-            new DataColumn("AttemptCount", typeof(int)));
-        queueEntryTable.Columns.Add(
-            new DataColumn("NextAttemptTime", typeof(DateTime)));
+        queueEntryTable.Columns.Add(new DataColumn("InRetry", typeof(bool)));
+        queueEntryTable.Columns.Add(new DataColumn("ErrorText", typeof(string)));
+        queueEntryTable.Columns.Add(new DataColumn("LastAttemptTime", typeof(DateTime)));
+        queueEntryTable.Columns.Add(new DataColumn("AttemptCount", typeof(int)));
+        queueEntryTable.Columns.Add(new DataColumn("NextAttemptTime", typeof(DateTime)));
         var queueEntryRow = queueEntryTable.NewRow();
         return queueEntryRow;
     }

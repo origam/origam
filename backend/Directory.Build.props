@@ -44,15 +44,15 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow.FileService'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Windows.Editor'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.RuleTests'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GuiTest'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.CommonTests'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.ServiceTests'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.ServicesTests'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.SchemaTests'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.TestCommon'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.RuleTests'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GuiTest'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.CommonTests'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.DA.ServiceTests'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workbench.ServicesTests'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.SchemaTests'">true</EnableStrictBuild> 
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.TestCommon'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Git'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GitTests'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.GitTests'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Excel'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Common'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Security.Identity'">true</EnableStrictBuild> -->
@@ -69,7 +69,7 @@
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.SSRS.NetFx'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.Excel'">true</EnableStrictBuild> -->
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.WorkflowTests'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.WorkflowTests'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server.Common'">true</EnableStrictBuild> -->
     </PropertyGroup>
     <Choose>
