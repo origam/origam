@@ -19,7 +19,7 @@
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.GuiModel'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Gui.Designer'">true</EnableStrictBuild> 
          <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.EntityModel'">true</EnableStrictBuild> 
-        <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamArchitect'">true</EnableStrictBuild> -->
+         <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'OrigamArchitect'">true</EnableStrictBuild> 
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Schema.WorkflowModel'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Workflow'">true</EnableStrictBuild> -->
         <!-- <EnableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Rule'">true</EnableStrictBuild> -->
