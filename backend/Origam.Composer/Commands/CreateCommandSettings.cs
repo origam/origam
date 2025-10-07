@@ -31,67 +31,67 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--commands-only-linux")]
     public bool CommandsOnlyLinux { get; set; }
 
-    [CommandOption("--commands-platform <PLATFORM>")]
+    [CommandOption("--commands-platform <PLATFORM>", true)]
     [AllowedValues("windows", "linux")]
-    public string CommandsForPlatform { get; set; }
+    public required string CommandsForPlatform { get; set; }
 
     #endregion
 
     #region Database
 
-    [CommandOption("--db-type <TYPE>")]
+    [CommandOption("--db-type <TYPE>", true)]
     [AllowedValues("mssql", "postgres")]
-    public string DbType { get; set; }
+    public required string DbType { get; set; }
 
-    [CommandOption("--db-host <HOST>")]
-    public string DbHost { get; set; }
+    [CommandOption("--db-host <HOST>", true)]
+    public required string DbHost { get; set; }
 
-    [CommandOption("--db-port <PORT>")]
-    public int DbPort { get; set; }
+    [CommandOption("--db-port <PORT>", true)]
+    public required int DbPort { get; set; }
 
-    [CommandOption("--db-name <NAME>")]
-    public string DbName { get; set; }
+    [CommandOption("--db-name <NAME>", true)]
+    public required string DbName { get; set; }
 
-    [CommandOption("--db-username <USERNAME>")]
-    public string DbUsername { get; set; }
+    [CommandOption("--db-username <USERNAME>", true)]
+    public required string DbUsername { get; set; }
 
-    [CommandOption("--db-password <PASSWORD>")]
-    public string DbPassword { get; set; }
+    [CommandOption("--db-password <PASSWORD>", true)]
+    public required string DbPassword { get; set; }
 
     #endregion
 
     #region Project
 
-    [CommandOption("--p-docker-image-linux <IMAGE>")]
-    public string ProjectDockerImageLinux { get; set; }
+    [CommandOption("--p-docker-image-linux <IMAGE>", true)]
+    public required string ProjectDockerImageLinux { get; set; }
 
-    [CommandOption("--p-docker-image-win <IMAGE>")]
-    public string ProjectDockerImageWin { get; set; }
+    [CommandOption("--p-docker-image-win <IMAGE>", true)]
+    public required string ProjectDockerImageWin { get; set; }
 
-    [CommandOption("--p-name <NAME>")]
-    public string ProjectName { get; set; }
+    [CommandOption("--p-name <NAME>", true)]
+    public required string ProjectName { get; set; }
 
-    [CommandOption("--p-folder <FOLDER>")]
-    public string ProjectFolder { get; set; }
+    [CommandOption("--p-folder <FOLDER>", true)]
+    public required string ProjectFolder { get; set; }
 
-    [CommandOption("--p-admin-username <NAME>")]
-    public string ProjectWebAdminUsername { get; set; }
+    [CommandOption("--p-admin-username <NAME>", true)]
+    public required string ProjectWebAdminUsername { get; set; }
 
-    [CommandOption("--p-admin-password <PASSWORD>")]
-    public string ProjectWebAdminPassword { get; set; }
+    [CommandOption("--p-admin-password <PASSWORD>", true)]
+    public required string ProjectWebAdminPassword { get; set; }
 
-    [CommandOption("--p-admin-email <EMAIL>")]
-    public string ProjectWebAdminEmail { get; set; }
+    [CommandOption("--p-admin-email <EMAIL>", true)]
+    public required string ProjectWebAdminEmail { get; set; }
 
     #endregion
 
     #region Architect
 
-    [CommandOption("--arch-docker-image-linux <IMAGE>")]
-    public string ArchitectDockerImageLinux { get; set; }
+    [CommandOption("--arch-docker-image-linux <IMAGE>", true)]
+    public required string ArchitectDockerImageLinux { get; set; }
 
     [CommandOption("--arch-docker-image-win <IMAGE>")]
-    public string ArchitectDockerImageWin { get; set; }
+    public required string ArchitectDockerImageWin { get; set; }
 
     [CommandOption("--arch-port <PORT>")]
     public int ArchitectPort { get; set; }
