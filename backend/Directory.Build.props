@@ -1,37 +1,36 @@
 ﻿<Project>
-    <PropertyGroup>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
-        <AnalysisLevel>8.0</AnalysisLevel>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
-        <CSharpier_Check>false</CSharpier_Check>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
-                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-        <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
-                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-        <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
-                          PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
-    </ItemGroup>
-    
-    <PropertyGroup>
-        <!-- Make CSharpier skip these folders everywhere -->
-        <CSharpier_Ignore>**/packages/**;**/bin/**;**/obj/**</CSharpier_Ignore>
-    </PropertyGroup>
-    <ItemGroup>
-      <Compile Remove="packages\**\*.*" />
-      <None Include="packages\**\*.*" />
-    </ItemGroup>
-    
-    <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-        <CSharpier_Bypass>true</CSharpier_Bypass>
-    </PropertyGroup>
+  <PropertyGroup>
+    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</DisableStrictBuild>
+  </PropertyGroup>
+    <Choose>
+        <When Condition="'$(DisableStrictBuild)' != 'true'">
 
+            <PropertyGroup>
+                <GenerateDocumentationFile>true</GenerateDocumentationFile>
+                <MeziantouAnalysisMode>None</MeziantouAnalysisMode>
+                <AnalysisLevel>8.0</AnalysisLevel>
+                <EnableNETAnalyzers>true</EnableNETAnalyzers>
+                <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+                <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
+                <CSharpier_Check>false</CSharpier_Check>
+            </PropertyGroup>
+
+            <ItemGroup>
+                <PackageReference Include="Roslynator.Analyzers" Version="4.14.0"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+                <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
+                <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
+                                  PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive" />
+            </ItemGroup>
+
+          <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+            <CSharpier_Bypass>true</CSharpier_Bypass>
+          </PropertyGroup>
+
+        </When>
+    </Choose>
     <PropertyGroup>
         <NoWarn>$(NoWarn);CS1591;CS1573;RCS1075;RCS1102;CS1572;CS0419;CS1734;RCS1263;RCS1138;CS1587;CS1574;CS1570;RCS1139;CS1584;CS1658;   RCS1203;RCS1194;RCS1059;RCS1215;RCS1155;RCS1172;RCS1044;CA2200</NoWarn>
     </PropertyGroup>

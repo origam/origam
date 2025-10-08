@@ -1,13 +1,13 @@
 .vs/
 bin/
 obj/
-packages/
 .idea/
 *.user
 *.suo
 _Resharper*/
 /Origam.DA.Service-net2Tests/FilePersistenceProviderTests/TestFiles/index.bin
 /Origam.ServerCore/logs
+/packages
 *.pubxml
 /Origam.ServerCoreTests/appsettings.json
 /Origam.ServerCore/service-worker.js
@@ -29,4 +29,3 @@ _Resharper*/
 /Origam.Architect.Server/appsettings.Development.json
 /Origam.Architect.Server/log4net.config
 /Origam.Architect.Server/OrigamSettings.config
-#/OrigamArchitect/packages/
