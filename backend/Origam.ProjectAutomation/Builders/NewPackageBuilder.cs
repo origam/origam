@@ -19,24 +19,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Workbench.Services;
 using System;
+using Origam.Workbench.Services;
 
 namespace Origam.ProjectAutomation;
+
 public class NewPackageBuilder : AbstractBuilder
 {
     public override string Name => "Create New Package";
 
     public override void Execute(Project project)
     {
-        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
-            as SchemaService;
+        SchemaService schema =
+            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
         schema.UnloadSchema();
-        PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
-        new Guid(project.BasePackageId));
+        PackageHelper.CreatePackage(
+            project.Name,
+            new Guid(project.NewPackageId),
+            new Guid(project.BasePackageId)
+        );
         schema.UnloadSchema();
     }
-    public override void Rollback()
-    {
-    }
+
+    public override void Rollback() { }
 }

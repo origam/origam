@@ -23,25 +23,27 @@ using System;
 using Origam.Workbench.Services;
 
 namespace Origam.ProjectAutomation;
-public class FileModelInitBuilder:AbstractBuilder
+
+public class FileModelInitBuilder : AbstractBuilder
 {
     public override string Name => "Initialize model";
     private SchemaService schema = null;
+
     public override void Execute(Project project)
     {
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
         LoadBaseSchema(project);
     }
+
     private void LoadBaseSchema(Project project)
     {
-        schema =
-            ServiceManager.Services.GetService<SchemaService>();
+        schema = ServiceManager.Services.GetService<SchemaService>();
         try
         {
             schema.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
-        } catch
+        }
+        catch
         {
-            
             try
             {
                 // In case something went wrong AFTER the model was loaded
@@ -50,12 +52,12 @@ public class FileModelInitBuilder:AbstractBuilder
                 // possible exceptions.
                 schema.UnloadSchema();
                 Rollback();
-            } catch
-            {
             }
+            catch { }
             throw;
         }
     }
+
     public override void Rollback()
     {
         schema.UnloadSchema();

@@ -23,20 +23,23 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.ProjectAutomation;
+
 public class TaskListViewItem : ListViewItem
 {
     IProjectBuilder _builder;
     string _name;
-    
-    public TaskListViewItem(string name, IProjectBuilder builder) : base (name)
+
+    public TaskListViewItem(string name, IProjectBuilder builder)
+        : base(name)
     {
         _name = name;
         _builder = builder;
         _builder.StateChanged += _builder_StateChanged;
     }
+
     void _builder_StateChanged(object sender, EventArgs e)
     {
-        if(this.SubItems.Count < 2)
+        if (this.SubItems.Count < 2)
         {
             this.SubItems.Add("");
         }

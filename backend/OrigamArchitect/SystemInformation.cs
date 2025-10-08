@@ -23,30 +23,33 @@ using System;
 using System.IO;
 
 namespace OrigamArchitect;
+
 class SystemInformation : SplashScreenPopUp
 {
-	protected override void SystemInformation_Load(object sender, EventArgs e)
-	{
-		Origam.Workflow.DebugInfo di = new Origam.Workflow.DebugInfo();
-		SetText(di.GetInfo());
-	}
-	protected override string GetTitle()
-	{
-		return "System Information";
-	}
-}	
+    protected override void SystemInformation_Load(object sender, EventArgs e)
+    {
+        Origam.Workflow.DebugInfo di = new Origam.Workflow.DebugInfo();
+        SetText(di.GetInfo());
+    }
+
+    protected override string GetTitle()
+    {
+        return "System Information";
+    }
+}
 
 class Attributions : SplashScreenPopUp
 {
-	protected override void SystemInformation_Load(object sender, EventArgs e)
-	{
-		if (File.Exists("Attributions.txt"))
-		{
-			SetText(File.ReadAllText("Attributions.txt"));
-		}
-	}
-	protected override string GetTitle()
-	{
-		return "Attributions";
-	}
+    protected override void SystemInformation_Load(object sender, EventArgs e)
+    {
+        if (File.Exists("Attributions.txt"))
+        {
+            SetText(File.ReadAllText("Attributions.txt"));
+        }
+    }
+
+    protected override string GetTitle()
+    {
+        return "Attributions";
+    }
 }

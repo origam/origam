@@ -22,49 +22,59 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Origam.Workbench;
-using Origam.UI;
-using Origam.Workbench.Services;
-
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.UI;
+using Origam.Workbench;
+using Origam.Workbench.Services;
 
 namespace OrigamArchitect.Commands;
+
 public class GenerateXamlCommand : AbstractMenuCommand
 {
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-	public override bool IsEnabled
-	{
-		get
-		{
-			return _schema.ActiveNode is Origam.Schema.MenuModel.Menu;
-		}
-		set
-		{
-			throw new ArgumentException("Cannot set this property", "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
-		SaveFileDialog dialog = new SaveFileDialog();
-		dialog.DefaultExt = "xml";
-		dialog.FileName = "menu.xml";
-		if(dialog.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window) == DialogResult.OK)
-		{
-			Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
-			Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
-			string path = Path.GetDirectoryName(dialog.FileName);
-			foreach(ISchemaItem child in item.ChildItemsRecursive)
-			{
-				FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
-				if(formMenu != null)
-				{
-					FormControlSet form = formMenu.Screen;
-					string formPath = Path.Combine(path, formMenu.Name + "_" + formMenu.Id.ToString() + ".xml");
-					Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(form, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, form.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document.Save(formPath);
-				}
-			}
-		}
-	}
+    WorkbenchSchemaService _schema =
+        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        as WorkbenchSchemaService;
+    public override bool IsEnabled
+    {
+        get { return _schema.ActiveNode is Origam.Schema.MenuModel.Menu; }
+        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+    }
+
+    public override void Run()
+    {
+        SaveFileDialog dialog = new SaveFileDialog();
+        dialog.DefaultExt = "xml";
+        dialog.FileName = "menu.xml";
+        if (dialog.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window) == DialogResult.OK)
+        {
+            Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
+            Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
+            string path = Path.GetDirectoryName(dialog.FileName);
+            foreach (ISchemaItem child in item.ChildItemsRecursive)
+            {
+                FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
+                if (formMenu != null)
+                {
+                    FormControlSet form = formMenu.Screen;
+                    string formPath = Path.Combine(
+                        path,
+                        formMenu.Name + "_" + formMenu.Id.ToString() + ".xml"
+                    );
+                    Origam
+                        .OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(
+                            form,
+                            formMenu.DisplayName,
+                            formMenu.ListDataStructure == null,
+                            formMenu.Id,
+                            form.DataStructure,
+                            formMenu.ReadOnlyAccess,
+                            formMenu.SelectionChangeEntity
+                        )
+                        .Document.Save(formPath);
+                }
+            }
+        }
+    }
 }

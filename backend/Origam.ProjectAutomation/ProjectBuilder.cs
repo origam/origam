@@ -19,28 +19,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.ProjectAutomation.Builders;
 using System.Collections.Generic;
+using Origam.ProjectAutomation.Builders;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation;
+
 public class ProjectBuilder
 {
     private readonly List<IProjectBuilder> tasks = new();
     private readonly SettingsBuilder settingsBuilder = new();
     private readonly DataDatabaseBuilder dataDatabaseBuilder = new();
     private readonly DockerBuilder dockerBuilder = new();
-    public ProjectBuilder()
-    {           
-        
-    }
+
+    public ProjectBuilder() { }
+
     public void Create(Project project)
     {
         dataDatabaseBuilder.ResetDataservice();
-        project.DataConnectionString =
-        dataDatabaseBuilder.BuildConnectionString(project, true);
-        project.BuilderDataConnectionString =
-        dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
+        project.DataConnectionString = dataDatabaseBuilder.BuildConnectionString(project, true);
+        project.BuilderDataConnectionString = dataDatabaseBuilder.BuildConnectionStringArchitect(
+            project,
+            false
+        );
         project.BaseUrl = dockerBuilder.WebSiteUrl(project);
         IProjectBuilder activeTask = null;
         try
@@ -63,6 +64,7 @@ public class ProjectBuilder
             throw;
         }
     }
+
     public void CreateTasks(Project project)
     {
         tasks.Clear();
@@ -90,6 +92,7 @@ public class ProjectBuilder
         tasks.Add(new DockerBuilder());
         AddGitTasks(project);
     }
+
     private void AddGitTasks(Project project)
     {
         if (project.GitRepository)
@@ -106,7 +109,7 @@ public class ProjectBuilder
     {
         try
         {
-            if(builder.State == TaskState.Finished)
+            if (builder.State == TaskState.Finished)
             {
                 builder.State = TaskState.RollingBack;
                 builder.Rollback();
