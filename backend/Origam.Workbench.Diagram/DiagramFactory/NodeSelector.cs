@@ -25,11 +25,13 @@ using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Diagram.NodeDrawing;
 
 namespace Origam.Workbench.Diagram;
+
 public interface INodeSelector
 {
-    Node Selected { get; }  
+    Node Selected { get; }
 }
-public class NodeSelector: INodeSelector
+
+public class NodeSelector : INodeSelector
 {
     private Node selected;
     public Guid SelectedNodeId { get; private set; }
@@ -42,13 +44,15 @@ public class NodeSelector: INodeSelector
             selected = value;
         }
     }
+
     private Guid GetSelectedNodeId(Node node)
     {
         if (node is InfrastructureSubgraph infrastructureSubgraph)
         {
-           return infrastructureSubgraph.WorkflowItemId;
+            return infrastructureSubgraph.WorkflowItemId;
         }
         return IdTranslator.NodeToSchema(node?.Id);
     }
+
     public bool MarkedForExpansion { get; set; }
 }

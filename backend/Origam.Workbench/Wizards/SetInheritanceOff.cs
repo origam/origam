@@ -23,40 +23,43 @@ using System;
 using Origam.UI;
 
 namespace Origam.Schema.Wizards;
+
 /// <summary>
 /// Summary description for SetInheritanceOff.
 /// </summary>
 public class SetInheritanceOff : AbstractMenuCommand
 {
-	public override bool IsEnabled
-	{
-		get
-		{
+    public override bool IsEnabled
+    {
+        get
+        {
             ISchemaItem item = Owner as ISchemaItem;
             return item != null && item.Inheritable;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
-		ISchemaItem item = Owner as ISchemaItem;
-		SetInheritance(item, false);
-		item.ClearCacheOnPersist = false;
-		item.Persist();
-		item.ClearCacheOnPersist = true;
-	}
-	private static void SetInheritance(ISchemaItem item, bool value)
-	{
-		item.Inheritable = value;
-		foreach(ISchemaItem child in item.ChildItems)
-		{
-			if(child.DerivedFrom == null)
-			{
-				SetInheritance(child, value);
-			}
-		}
-	}
+        }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
+    public override void Run()
+    {
+        ISchemaItem item = Owner as ISchemaItem;
+        SetInheritance(item, false);
+        item.ClearCacheOnPersist = false;
+        item.Persist();
+        item.ClearCacheOnPersist = true;
+    }
+
+    private static void SetInheritance(ISchemaItem item, bool value)
+    {
+        item.Inheritable = value;
+        foreach (ISchemaItem child in item.ChildItems)
+        {
+            if (child.DerivedFrom == null)
+            {
+                SetInheritance(child, value);
+            }
+        }
+    }
 }

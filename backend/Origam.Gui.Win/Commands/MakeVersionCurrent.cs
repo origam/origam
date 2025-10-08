@@ -27,27 +27,28 @@ using Origam.UI;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Commands;
+
 public class MakeVersionCurrent : AbstractCommand
 {
-	public override void Run()
-	{
-		var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
-		DeploymentVersion version = (Owner as DeploymentVersion)!;
-		var originalVersion = schemaService.ActiveExtension.VersionString;
-		try
-		{
-			schemaService.ActiveExtension.VersionString = version.VersionString;
-			Origam.Workbench.Commands.DeployVersion cmd3 =
-				new Origam.Workbench.Commands.DeployVersion();
-			cmd3.Run();
-		}
-		catch
-		{
-			schemaService.ActiveExtension.VersionString = originalVersion;
-			throw;
-		}
-		schemaService.ActiveExtension.Persist();
-		schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
-		schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
-	}
+    public override void Run()
+    {
+        var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+        DeploymentVersion version = (Owner as DeploymentVersion)!;
+        var originalVersion = schemaService.ActiveExtension.VersionString;
+        try
+        {
+            schemaService.ActiveExtension.VersionString = version.VersionString;
+            Origam.Workbench.Commands.DeployVersion cmd3 =
+                new Origam.Workbench.Commands.DeployVersion();
+            cmd3.Run();
+        }
+        catch
+        {
+            schemaService.ActiveExtension.VersionString = originalVersion;
+            throw;
+        }
+        schemaService.ActiveExtension.Persist();
+        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
+        schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
+    }
 }

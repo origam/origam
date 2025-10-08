@@ -26,26 +26,25 @@ using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Commands;
+
 public class GenerateDataStructureEntityColumns : AbstractMenuCommand
 {
-    WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    WorkbenchSchemaService _schema =
+        ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+        as WorkbenchSchemaService;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
     {
-        get
-        {
-            return Owner is DataStructureEntity;
-        }
-        set
-        {
-            throw new ArgumentException("Cannot set this property", "IsEnabled");
-        }
+        get { return Owner is DataStructureEntity; }
+        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
     }
+
     public override void Run()
     {
         DataStructureEntity entity = Owner as DataStructureEntity;
         entity.AllFields = false;
-        foreach(DataStructureColumn col in entity.Columns)
+        foreach (DataStructureColumn col in entity.Columns)
         {
             // delete only columns that will be added later again
             if (col.Name == col.Field.Name)
@@ -54,21 +53,24 @@ public class GenerateDataStructureEntityColumns : AbstractMenuCommand
                 col.Persist();
             }
         }
-        foreach(IDataEntityColumn column in entity.EntityDefinition.EntityColumns)
+        foreach (IDataEntityColumn column in entity.EntityDefinition.EntityColumns)
         {
-            DataStructureColumn newColumn = entity
-                .NewItem<DataStructureColumn>(
-                    _schema.ActiveSchemaExtensionId, null);
+            DataStructureColumn newColumn = entity.NewItem<DataStructureColumn>(
+                _schema.ActiveSchemaExtensionId,
+                null
+            );
             newColumn.Field = column;
             newColumn.Name = column.Name;
             newColumn.Persist();
         }
         entity.Persist();
     }
+
     public override void Dispose()
     {
         _schema = null;
     }
+
     public override int GetImageIndex(string icon)
     {
         return _schemaBrowser.ImageIndex(icon);

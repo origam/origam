@@ -1,19 +1,22 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using System;
+﻿using System;
 using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace Origam.Windows.Editor;
+
 public partial class FindReplaceForm : Form
 {
     public TextEditor Editor { get; set; }
+
     public FindReplaceForm()
     {
         InitializeComponent();
         this.Shown += FindReplaceForm_Shown;
     }
+
     private void FindReplaceForm_Shown(object sender, EventArgs e)
     {
         if (!Editor.TextArea.Selection.IsMultiline)
@@ -22,11 +25,13 @@ public partial class FindReplaceForm : Form
             txtFind.SelectAll();
         }
     }
+
     private void btnFindNext_Click(object sender, EventArgs e)
     {
         if (!FindNext(txtFind.Text))
             SystemSounds.Beep.Play();
     }
+
     private void btnReplace_Click(object sender, EventArgs e)
     {
         Regex regex = GetRegEx(txtFind.Text);
@@ -35,19 +40,27 @@ public partial class FindReplaceForm : Form
         bool replaced = false;
         if (match.Success && match.Index == 0 && match.Length == input.Length)
         {
-            Editor.Document.Replace(Editor.SelectionStart, Editor.SelectionLength, 
-                txtReplace.Text);
+            Editor.Document.Replace(Editor.SelectionStart, Editor.SelectionLength, txtReplace.Text);
             replaced = true;
         }
         if (!FindNext(txtFind.Text) && !replaced)
             SystemSounds.Beep.Play();
     }
+
     private void btnReplaceAll_Click(object sender, EventArgs e)
     {
-        if (MessageBox.Show("Are you sure you want to Replace All occurences of \"" +
-        txtFind.Text + "\" with \"" + txtReplace.Text + "\"?",
-            "Replace All", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) 
-            ==  DialogResult.OK)
+        if (
+            MessageBox.Show(
+                "Are you sure you want to Replace All occurences of \""
+                    + txtFind.Text
+                    + "\" with \""
+                    + txtReplace.Text
+                    + "\"?",
+                "Replace All",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question
+            ) == DialogResult.OK
+        )
         {
             Regex regex = GetRegEx(txtFind.Text, true);
             int offset = 0;
@@ -60,13 +73,15 @@ public partial class FindReplaceForm : Form
             Editor.EndChange();
         }
     }
+
     private bool FindNext(string textToFind)
     {
         Regex regex = GetRegEx(textToFind);
-        int start = regex.Options.HasFlag(RegexOptions.RightToLeft) ?
-        Editor.SelectionStart : Editor.SelectionStart + Editor.SelectionLength;
+        int start = regex.Options.HasFlag(RegexOptions.RightToLeft)
+            ? Editor.SelectionStart
+            : Editor.SelectionStart + Editor.SelectionLength;
         Match match = regex.Match(Editor.Text, start);
-        if (!match.Success)  // start again from beginning or end
+        if (!match.Success) // start again from beginning or end
         {
             if (regex.Options.HasFlag(RegexOptions.RightToLeft))
                 match = regex.Match(Editor.Text, Editor.Text.Length);
@@ -81,12 +96,13 @@ public partial class FindReplaceForm : Form
         }
         return match.Success;
     }
+
     private Regex GetRegEx(string textToFind, bool leftToRight = false)
     {
         RegexOptions options = RegexOptions.None;
         if (cbSearchUp.Checked && !leftToRight)
             options |= RegexOptions.RightToLeft;
-        if (! cbCaseSensitive.Checked)
+        if (!cbCaseSensitive.Checked)
             options |= RegexOptions.IgnoreCase;
         if (cbRegex.Checked == true)
         {
@@ -102,6 +118,7 @@ public partial class FindReplaceForm : Form
             return new Regex(pattern, options);
         }
     }
+
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
         if (keyData == Keys.Escape)

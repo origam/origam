@@ -24,15 +24,12 @@ using System.Windows.Forms;
 using Origam.Schema;
 
 namespace Origam.Gui.Win;
-public class ScreenLevelPlugin : Label,
-    IOrigamMetadataConsumer, ISupportInitialize
+
+public class ScreenLevelPlugin : Label, IOrigamMetadataConsumer, ISupportInitialize
 {
     public ISchemaItem OrigamMetadata { get; set; }
-    public void BeginInit()
-    {
-    }
-    
-    public void EndInit()
-    {
-    }
+
+    public void BeginInit() { }
+
+    public void EndInit() { }
 }

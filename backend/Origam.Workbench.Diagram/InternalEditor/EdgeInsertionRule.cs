@@ -25,11 +25,13 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 
 namespace Origam.Workbench.Diagram.InternalEditor;
-class EdgeInsertionRule: IDisposable
+
+class EdgeInsertionRule : IDisposable
 {
     private readonly GViewer viewerToImposeOn;
     private readonly Func<Node, Node, bool> predicate;
     private Node nodeWhenMouseDown;
+
     public EdgeInsertionRule(GViewer viewerToImposeOn, Func<Node, Node, bool> predicate)
     {
         this.viewerToImposeOn = viewerToImposeOn;
@@ -37,6 +39,7 @@ class EdgeInsertionRule: IDisposable
         viewerToImposeOn.MouseDown += OnMouseDown;
         viewerToImposeOn.MouseUp += OnMouseUp;
     }
+
     private void OnMouseUp(object sender, MouseEventArgs args)
     {
         if (viewerToImposeOn.LayoutEditor.InsertingEdge)
@@ -49,10 +52,12 @@ class EdgeInsertionRule: IDisposable
             }
         }
     }
+
     private void OnMouseDown(object sender, MouseEventArgs args)
     {
         nodeWhenMouseDown = GetNodeUnderMouse(viewerToImposeOn, args);
     }
+
     private static void CancelEdgeInsertion(GViewer gViewer)
     {
         gViewer.StopDrawingRubberLine();
@@ -60,11 +65,13 @@ class EdgeInsertionRule: IDisposable
         gViewer.RemoveTargetPortEdgeRouting();
         gViewer.LayoutEditor.InsertingEdge = false;
     }
+
     private static Node GetNodeUnderMouse(GViewer gViewer, MouseEventArgs args)
     {
         var point = new System.Drawing.Point(args.X, args.Y);
         return (gViewer.GetObjectAt(point) as DNode)?.Node;
     }
+
     public void Dispose()
     {
         viewerToImposeOn.MouseDown -= OnMouseDown;

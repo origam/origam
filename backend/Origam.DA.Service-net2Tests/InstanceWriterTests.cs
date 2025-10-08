@@ -27,6 +27,7 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.ServiceTests;
+
 [TestFixture]
 public class InstanceWriterTests
 {
@@ -39,7 +40,7 @@ public class InstanceWriterTests
         OrigamXmlDocument document = new OrigamXmlDocument();
         InstanceWriter sut = new InstanceWriter(new NullExternalFileManager(), document);
         sut.Write(itemToWrite);
-        
+
         Assert.That(!document.IsEmpty);
     }
 }

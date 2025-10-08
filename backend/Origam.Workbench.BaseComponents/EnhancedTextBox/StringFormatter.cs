@@ -23,21 +23,19 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI;
+
 internal class StringFormatter : Formatter
 {
     public StringFormatter(TextBox textBox)
-        : base(textBox,"")
-    {
-         
-    }
-    public override void OnLeave(object sender, EventArgs e)
-    {
-        
-    }
+        : base(textBox, "") { }
+
+    public override void OnLeave(object sender, EventArgs e) { }
+
     public override object GetValue()
     {
         return Text;
     }
+
     protected override bool IsValidChar(char input)
     {
         return true;

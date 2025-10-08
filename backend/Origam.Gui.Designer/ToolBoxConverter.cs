@@ -23,6 +23,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Gui.Designer;
+
 public struct ToolBoxConverter
 {
     const string WIDGET_TEXTBOX = "Origam.Gui.Win.AsTextBox,Origam.Gui.Win";
@@ -31,10 +32,12 @@ public struct ToolBoxConverter
     const string WIDGET_IMAGEBOX = "Origam.Gui.Win.ImageBox,Origam.Gui.Win";
     const string WIDGET_CHECKBOX = "Origam.Gui.Win.AsCheckBox,Origam.Gui.Win";
     const string WIDGET_DATEBOX = "Origam.Gui.Win.AsDateBox,Origam.Gui.Win";
-    const string WIDGET_MULTICOLUMNWRAPPER = "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
+    const string WIDGET_MULTICOLUMNWRAPPER =
+        "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
+
     public static string Convert(IDataEntityColumn field)
-	{
-		string result;
+    {
+        string result;
         if (field.DefaultLookup != null)
         {
             result = WIDGET_DROPDOWN;
@@ -64,5 +67,5 @@ public struct ToolBoxConverter
             }
         }
         return result;
-	}
+    }
 }

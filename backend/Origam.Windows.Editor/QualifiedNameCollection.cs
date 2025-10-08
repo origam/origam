@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -21,20 +21,22 @@ using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Origam.Windows.Editor;
+
 [Serializable()]
 public class QualifiedNameCollection : Collection<QualifiedName>
 {
-    public QualifiedNameCollection()
-    {
-    }
+    public QualifiedNameCollection() { }
+
     public QualifiedNameCollection(QualifiedNameCollection names)
     {
         AddRange(names);
     }
+
     public QualifiedNameCollection(QualifiedName[] names)
     {
         AddRange(names);
     }
+
     public bool HasItems
     {
         get { return Count > 0; }
@@ -43,6 +45,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
     {
         get { return !HasItems; }
     }
+
     public override string ToString()
     {
         StringBuilder text = new StringBuilder();
@@ -56,6 +59,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         return text.ToString();
     }
+
     public void AddRange(QualifiedName[] names)
     {
         for (int i = 0; i < names.Length; i++)
@@ -63,6 +67,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             Add(names[i]);
         }
     }
+
     public void AddRange(QualifiedNameCollection names)
     {
         for (int i = 0; i < names.Count; i++)
@@ -70,6 +75,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             Add(names[i]);
         }
     }
+
     public void RemoveLast()
     {
         if (HasItems)
@@ -77,6 +83,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             RemoveAt(Count - 1);
         }
     }
+
     public void RemoveFirst()
     {
         if (HasItems)
@@ -84,6 +91,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             RemoveFirst(1);
         }
     }
+
     public void RemoveFirst(int howMany)
     {
         if (howMany > Count)
@@ -96,6 +104,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
             --howMany;
         }
     }
+
     public string GetLastPrefix()
     {
         if (HasItems)
@@ -105,6 +114,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         return String.Empty;
     }
+
     public string GetNamespaceForPrefix(string prefix)
     {
         foreach (QualifiedName name in this)
@@ -116,6 +126,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         return String.Empty;
     }
+
     public QualifiedName GetLast()
     {
         if (HasItems)
@@ -124,10 +135,12 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         return null;
     }
+
     public override int GetHashCode()
     {
         return base.GetHashCode();
     }
+
     public override bool Equals(object obj)
     {
         QualifiedNameCollection rhs = obj as QualifiedNameCollection;
@@ -149,6 +162,7 @@ public class QualifiedNameCollection : Collection<QualifiedName>
         }
         return false;
     }
+
     public string GetRootNamespace()
     {
         if (HasItems)

@@ -24,9 +24,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace Origam.Workbench.Diagram.Extensions;
+
 public static class GraphicsExtensions
 {
-    public static void DrawUpSideDown(this Graphics graphics, Action<Graphics> drawAction, float yAxisCoordinate)
+    public static void DrawUpSideDown(
+        this Graphics graphics,
+        Action<Graphics> drawAction,
+        float yAxisCoordinate
+    )
     {
         using (Matrix m = graphics.Transform)
         {
@@ -40,5 +45,5 @@ public static class GraphicsExtensions
                 graphics.ResetClip();
             }
         }
-    } 
+    }
 }

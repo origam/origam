@@ -22,29 +22,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
-using Origam.Workbench;
 using Origam.Gui.Win;
+using Origam.Workbench;
 
 namespace Origam.Workflow.Gui.Win;
+
 /// <summary>
 /// Summary description for WorkflowHelper.
 /// </summary>
 public class WorkflowHelper
 {
-	public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
-	{
-		// Initialize view for this workflow
-		WorkflowForm form = new WorkflowForm(host);
-		if(icon != null)
-		{
-			(form as Form).Icon = icon;
-		}
-		form.FormGenerator = new FormGenerator();
-		form.TitleName = titleName;
-		form.WorkflowId = workflowId;
-		WorkbenchSingleton.Workbench.ShowView(form);
-		Application.DoEvents();
-		return form;
-	}
+    public static WorkflowForm CreateWorkflowForm(
+        WorkflowHost host,
+        Icon icon,
+        string titleName,
+        Guid workflowId
+    )
+    {
+        // Initialize view for this workflow
+        WorkflowForm form = new WorkflowForm(host);
+        if (icon != null)
+        {
+            (form as Form).Icon = icon;
+        }
+        form.FormGenerator = new FormGenerator();
+        form.TitleName = titleName;
+        form.WorkflowId = workflowId;
+        WorkbenchSingleton.Workbench.ShowView(form);
+        Application.DoEvents();
+        return form;
+    }
 }

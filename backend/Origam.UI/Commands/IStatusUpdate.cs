@@ -20,7 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.UI;
+
 public interface IStatusUpdate
 {
-	void UpdateItemsToDisplay();
+    void UpdateItemsToDisplay();
 }

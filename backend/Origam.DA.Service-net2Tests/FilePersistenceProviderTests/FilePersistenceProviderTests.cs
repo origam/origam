@@ -30,20 +30,20 @@ using NUnit.Framework;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
-using Origam.DA.Service.NamespaceMapping;
 using Origam.DA.Service_net2Tests;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
-
 namespace Origam.DA.ServiceTests;
-public class FilePersistenceProviderTests: AbstractFileTestClass
-{     
-    protected override TestContext TestContext =>
-        TestContext.CurrentContext;
-    
+
+public class FilePersistenceProviderTests : AbstractFileTestClass
+{
+    protected override TestContext TestContext => TestContext.CurrentContext;
+
     protected override string DirName => "FilePersistenceProviderTests";
-   ///[Test]
+
+    ///[Test]
     public void ShouldUpdateItemInOrigamFile()
     {
         ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -51,37 +51,38 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         var persistor = new PersitHelper(TestFilesDir.FullName);
         var testObj1 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+            Id = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
             TestBool = true,
             TestInt = 5,
-            TestString="test1",
+            TestString = "test1",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
         var testObj2 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
+            Id = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
             TestBool = true,
             TestInt = 5,
-            TestString="test2",
+            TestString = "test2",
             FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.Persist(new List<IFilePersistent> {testObj1, testObj2});
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
         XmlNode rootNode = LoadXml(testObj2.RelativeFilePath).ChildNodes[1];
-        var persistedTestBool =
-            bool.Parse(rootNode.FirstChild.FirstChild.Attributes["ti:testBool"].Value);
+        var persistedTestBool = bool.Parse(
+            rootNode.FirstChild.FirstChild.Attributes["ti:testBool"].Value
+        );
         Assert.That(persistedTestBool, Is.EqualTo(true));
-        
+
         testObj1.TestBool = false;
         persistor.PersistSingle(testObj1);
-        
+
         rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
-        persistedTestBool =
-            bool.Parse(rootNode.FirstChild.Attributes["ti:testBool"].Value);
-         Assert.That(persistedTestBool, Is.EqualTo(false));
+        persistedTestBool = bool.Parse(rootNode.FirstChild.Attributes["ti:testBool"].Value);
+        Assert.That(persistedTestBool, Is.EqualTo(false));
     }
-   /// [Test]
+
+    /// [Test]
     public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
     {
         ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -89,24 +90,24 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         var persistor = new PersitHelper(TestFilesDir.FullName);
         var testObj1 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+            Id = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
             TestBool = true,
             TestInt = 5,
-            TestString="test1",
+            TestString = "test1",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
         var testObj2 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
+            Id = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
             TestBool = true,
             TestInt = 5,
-            TestString="test2",
+            TestString = "test2",
             FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
+
         XmlNode rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
         Guid firstNodeIdBefore = XmlUtils.ReadId(rootNode.FirstChild).Value;
         Guid firstNodeParentIdBefore = XmlUtils.ReadParenId(rootNode.FirstChild).Value;
@@ -117,10 +118,10 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         Assert.That(firstNodeChildIdBefore, Is.EqualTo(testObj2.Id));
         Assert.That(firstNodeChildParentIdBefore.HasValue == false);
         Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
-        
+
         testObj2.FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6");
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
+
         rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
         Guid firstNodeIdAfter = XmlUtils.ReadId(rootNode.FirstChild).Value;
         Guid firstNodeParentIdAfter = XmlUtils.ReadParenId(rootNode.FirstChild).Value;
@@ -132,6 +133,7 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         Assert.That(secondNodeParentIdAfter, Is.EqualTo(testObj2.FileParentId));
         Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(2));
     }
+
     [Test]
     public void ShouldMoveItemInFileWhenParentChangedToAnItemTheFile()
     {
@@ -147,19 +149,19 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
             TestInt = 5,
             TestString = "test1",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
         var testObj2 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
+            Id = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
             TestBool = true,
             TestInt = 5,
-            TestString="test2",
+            TestString = "test2",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
+
         XmlNode rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
         Guid firstNodeIdBefore = XmlUtils.ReadId(rootNode.FirstChild).Value;
         Guid firstNodeParentIdBefore = XmlUtils.ReadParenId(rootNode.FirstChild).Value;
@@ -170,10 +172,10 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         Assert.That(secondNodeIdBefore, Is.EqualTo(testObj2.Id));
         Assert.That(secondNodeParentIdBefore, Is.EqualTo(testObj2.FileParentId));
         Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(2));
- 
+
         testObj2.FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322");
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
+
         rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
         Guid firstNodeIdBeAfter = XmlUtils.ReadId(rootNode.FirstChild).Value;
         Guid firstNodeParentIdAfter = XmlUtils.ReadParenId(rootNode.FirstChild).Value;
@@ -185,8 +187,8 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         Assert.That(firstNodeChildParentIdAfter.HasValue == false);
         Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
     }
-    
-   /// [Test]
+
+    /// [Test]
     public void ShouldNotDeleteChildrenWhenUpdatingParentNode()
     {
         ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -194,40 +196,42 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         var persistor = new PersitHelper(TestFilesDir.FullName);
         var testObj1 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+            Id = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
             TestBool = true,
             TestInt = 5,
-            TestString="test1",
+            TestString = "test1",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
         var testObj2 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
+            Id = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
             TestBool = true,
             TestInt = 5,
-            TestString="test2",
+            TestString = "test2",
             FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
         var testObj3 = new TestItem(persistor.DefaultFolders)
         {
-            Id= new Guid("0c0cc916-5142-41ea-b3ca-a9916736157a"),
-            TestString="test3",
+            Id = new Guid("0c0cc916-5142-41ea-b3ca-a9916736157a"),
+            TestString = "test3",
             FileParentId = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2, testObj3});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2, testObj3 });
+
         testObj2.FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322");
-        persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
-        
+        persistor.Persist(new List<IFilePersistent> { testObj1, testObj2 });
+
         XmlNode rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
         Guid firstNodeId = XmlUtils.ReadId(rootNode.FirstChild).Value;
         Guid firstNodeParentId = XmlUtils.ReadParenId(rootNode.FirstChild).Value;
         Guid firstNodeChildId = XmlUtils.ReadId(rootNode.FirstChild.FirstChild).Value;
         Guid? firstNodeChildParentId = XmlUtils.ReadParenId(rootNode.FirstChild.FirstChild);
-        Guid firstNodeChildChildId = XmlUtils.ReadId(rootNode.FirstChild.FirstChild.FirstChild).Value;
+        Guid firstNodeChildChildId = XmlUtils
+            .ReadId(rootNode.FirstChild.FirstChild.FirstChild)
+            .Value;
         Assert.That(firstNodeId, Is.EqualTo(testObj1.Id));
         Assert.That(firstNodeParentId, Is.EqualTo(testObj1.FileParentId));
         Assert.That(firstNodeChildId, Is.EqualTo(testObj2.Id));
@@ -235,16 +239,16 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         Assert.That(firstNodeChildParentId.HasValue == false);
         Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
     }
-    
+
     private XmlDocument LoadXml(string fileName)
     {
-        var testFilePath =
-            Path.Combine(TestFilesDir.FullName, fileName);
+        var testFilePath = Path.Combine(TestFilesDir.FullName, fileName);
         XmlDocument document = new XmlDocument();
         document.LoadXml(File.ReadAllText(testFilePath));
         return document;
     }
-   ///[Test]
+
+    ///[Test]
     public void ShouldWriteAndReadTestItem()
     {
         ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -255,20 +259,21 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
             TestBool = true,
             TestInt = 5,
             TestString = "test1",
-            TestXml = "&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
+            TestXml =
+                "&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
             TestImage = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             NullImage = null,
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.PersistSingle(origTestObject);            
-        TestItem retrievedTestObject = (TestItem)persistor.RetrieveSingle(typeof(TestItem),
-            new Key
-            {
-                ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e")
-            });
+        persistor.PersistSingle(origTestObject);
+        TestItem retrievedTestObject = (TestItem)
+            persistor.RetrieveSingle(
+                typeof(TestItem),
+                new Key { ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e") }
+            );
         Assert.That(origTestObject, Is.EqualTo(retrievedTestObject));
     }
-    
+
     ///[Test]
     public void ShouldNotWriteFieldsWithDefaultValues()
     {
@@ -278,31 +283,34 @@ public class FilePersistenceProviderTests: AbstractFileTestClass
         {
             TestBool = true,
             TestInt = 5,
-            TestString="test1",
-            TestXml ="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
-            TestImage = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9},
+            TestString = "test1",
+            TestXml =
+                "&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
+            TestImage = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
             NullImage = null,
-            PersistenceProvider = persistor.GetPersistenceProvider()
+            PersistenceProvider = persistor.GetPersistenceProvider(),
         };
-        persistor.PersistSingle(origTestObject); 
-        
+        persistor.PersistSingle(origTestObject);
+
         XmlDocument doc = new XmlDocument();
         string pathToTestFile = Path.Combine(TestFilesDir.FullName, "testFile.origam");
         doc.Load(pathToTestFile);
-        HashSet<string> attributeNames = new HashSet<string>(doc.ChildNodes[1].FirstChild.Attributes
-            .Cast<XmlAttribute>()
-            .Select(attr => attr.Name));
-        
+        HashSet<string> attributeNames = new HashSet<string>(
+            doc.ChildNodes[1].FirstChild.Attributes.Cast<XmlAttribute>().Select(attr => attr.Name)
+        );
+
         Assert.That(attributeNames.Contains("ti:testEmptyBool"));
         Assert.That(!attributeNames.Contains("ti:testEmptyInt"));
         Assert.That(!attributeNames.Contains("ti:testEmptyString"));
     }
+
     private OrigamSettings GetTestOrigamSettings()
     {
         OrigamSettings settings = new OrigamSettings();
         return settings;
     }
 }
+
 [XmlRoot("test", Namespace = "http://schemas.origam.com/1.0.0/model-test")]
 [ClassMetaVersion("6.0.1")]
 internal class TestItem : IFilePersistent
@@ -310,79 +318,90 @@ internal class TestItem : IFilePersistent
     private readonly PropertyContainer<string> testXmlContainer;
     private readonly PropertyContainer<byte[]> testImageContainer;
     private readonly PropertyContainer<byte[]> nullImageContainer;
+
     public TestItem(Key primaryKey)
     {
         PrimaryKey = primaryKey;
         testXmlContainer = new PropertyContainer<string>(
-          containerName: nameof(testXmlContainer),
-          containingObject: this);
+            containerName: nameof(testXmlContainer),
+            containingObject: this
+        );
         testImageContainer = new PropertyContainer<byte[]>(
             containerName: nameof(testImageContainer),
-            containingObject: this);
+            containingObject: this
+        );
         nullImageContainer = new PropertyContainer<byte[]>(
             containerName: nameof(nullImageContainer),
-            containingObject: this);
+            containingObject: this
+        );
     }
+
     public TestItem(IList<string> persistorDefaultFolders)
     {
-        ParentFolderIds.Add(persistorDefaultFolders[0], new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e"));
-        ParentFolderIds.Add(persistorDefaultFolders[1], new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e"));
-        PrimaryKey = new Key
-        {
-            ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e")
-        };
+        ParentFolderIds.Add(
+            persistorDefaultFolders[0],
+            new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e")
+        );
+        ParentFolderIds.Add(
+            persistorDefaultFolders[1],
+            new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e")
+        );
+        PrimaryKey = new Key { ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e") };
         testXmlContainer = new PropertyContainer<string>(
-         containerName: nameof(testXmlContainer),
-         containingObject: this);
+            containerName: nameof(testXmlContainer),
+            containingObject: this
+        );
         testImageContainer = new PropertyContainer<byte[]>(
             containerName: nameof(testImageContainer),
-            containingObject: this);
+            containingObject: this
+        );
         nullImageContainer = new PropertyContainer<byte[]>(
             containerName: nameof(nullImageContainer),
-            containingObject: this);
+            containingObject: this
+        );
     }
-    
+
     [XmlAttribute("testEmptyBool")]
     public bool TestEmptyBool { get; set; }
-    
+
     [XmlAttribute("testEmptyInt")]
-    public int TestEmptyInt { get; set; } 
-    
+    public int TestEmptyInt { get; set; }
+
     [XmlAttribute("testEmptyString")]
     public string TestEmptyString { get; set; }
-    
+
     [XmlAttribute("testBool")]
     public bool TestBool { get; set; }
-    
+
     [XmlAttribute("testInt")]
-    public int TestInt { get; set; } 
+    public int TestInt { get; set; }
+
     [XmlAttribute("testString")]
     public string TestString { get; set; }
+
     [XmlExternalFileReference(containerName: nameof(testXmlContainer), extension: Xml)]
     public string TestXml
     {
         get => testXmlContainer.Get();
         set => testXmlContainer.Set(value);
     }
-    
+
     [XmlExternalFileReference(containerName: nameof(testImageContainer), extension: Png)]
     public byte[] TestImage
     {
         get => testImageContainer.Get();
         set => testImageContainer.Set(value);
     }
-    
+
     [XmlExternalFileReference(containerName: nameof(nullImageContainer), extension: Png)]
     public byte[] NullImage
     {
         get => nullImageContainer.Get();
         set => nullImageContainer.Set(value);
     }
-    
-    public void Dispose()
-    {
-        
-    }
+
+    public void Dispose() { }
+
     public event EventHandler Changed
     {
         add { }
@@ -397,22 +416,19 @@ internal class TestItem : IFilePersistent
     public Key PrimaryKey { get; set; }
     public Guid Id
     {
-        get => (Guid) PrimaryKey["Id"];
-        set =>  PrimaryKey =  new Key
-        {
-            ["Id"] = value
-        };
+        get => (Guid)PrimaryKey["Id"];
+        set => PrimaryKey = new Key { ["Id"] = value };
     }
-    public void Persist()
-    {
-    }
-    public void Refresh()
-    {
-    }
+
+    public void Persist() { }
+
+    public void Refresh() { }
+
     public IPersistent GetFreshItem()
     {
         throw new NotImplementedException();
     }
+
     public bool IsDeleted { get; set; }
     public bool IsPersisted { get; set; }
     public bool UseObjectCache { get; set; }
@@ -424,29 +440,35 @@ internal class TestItem : IFilePersistent
     public bool IsFileRootElement => FileParentId == Guid.Empty;
     public List<string> Files => throw new NotImplementedException();
     public bool? HasGitChange { get; set; }
+
     protected bool Equals(TestItem other) =>
-        TestBool == other.TestBool &&
-        TestInt == other.TestInt &&
-        string.Equals(TestString, other.TestString) &&
-        TestEmptyBool == other.TestEmptyBool &&
-        TestEmptyInt == other.TestEmptyInt &&
-        string.Equals(TestEmptyString, other.TestEmptyString) &&
-        string.Equals(TestXml, other.TestXml) &&
-        ByteArraysEqual(TestImage, other.TestImage);
+        TestBool == other.TestBool
+        && TestInt == other.TestInt
+        && string.Equals(TestString, other.TestString)
+        && TestEmptyBool == other.TestEmptyBool
+        && TestEmptyInt == other.TestEmptyInt
+        && string.Equals(TestEmptyString, other.TestEmptyString)
+        && string.Equals(TestXml, other.TestXml)
+        && ByteArraysEqual(TestImage, other.TestImage);
+
     private bool ByteArraysEqual(byte[] first, byte[] second)
     {
-        if (first.Length != second.Length) return false;
-        return !first
-            .Where((byte1, i) => byte1 != second[i])
-            .Any();
+        if (first.Length != second.Length)
+            return false;
+        return !first.Where((byte1, i) => byte1 != second[i]).Any();
     }
+
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((TestItem) obj);
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != this.GetType())
+            return false;
+        return Equals((TestItem)obj);
     }
+
     public override int GetHashCode()
     {
         throw new NotImplementedException();

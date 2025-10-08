@@ -1,6 +1,11 @@
 <DocumentationComplete>
   <Documentation>
-    <Data xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Updated text</Data>
+    <Data
+      xsi:type="xs:string"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      >Updated text</Data
+    >
     <Category>USER_LONG_HELP</Category>
     <refSchemaItemId>df7c2a53-c56a-426a-b748-08e656ae46db</refSchemaItemId>
     <Id>a5c564bb-134e-4377-ba14-43d816bb649f</Id>

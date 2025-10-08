@@ -31,28 +31,33 @@ using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor;
+
 class ContextStoreDependencyPainter
 {
     private readonly Func<ISchemaItem> graphParentItemGetter;
     private readonly GViewer gViewer;
     private readonly List<IArrowPainter> arrowPainters = new List<IArrowPainter>();
-    public ContextStoreDependencyPainter(GViewer gViewer,
-        Func<ISchemaItem> graphParentItemGetter)
+
+    public ContextStoreDependencyPainter(GViewer gViewer, Func<ISchemaItem> graphParentItemGetter)
     {
         this.gViewer = gViewer;
         this.graphParentItemGetter = graphParentItemGetter;
     }
+
     public IContextStore CurrentContextStore { get; private set; }
     public bool DidDrawSomeEdges => arrowPainters.Count > 0;
+
     public void DeActivate()
     {
         CurrentContextStore = null;
         RemoveEdges();
     }
+
     public void Activate(IContextStore contextStore)
     {
         CurrentContextStore = contextStore;
     }
+
     public List<string> GetNodesToExpand()
     {
         RemoveEdges();
@@ -63,6 +68,7 @@ class ContextStoreDependencyPainter
         }
         return new List<string>();
     }
+
     public void Draw()
     {
         if (CurrentContextStore != null)
@@ -70,42 +76,29 @@ class ContextStoreDependencyPainter
             DrawEdges(CurrentContextStore.NodeId);
         }
     }
+
     private void PreparePainters(IContextStore contextStore)
     {
-        var allChildren =
-            graphParentItemGetter.Invoke()
-                .ChildrenRecursive;
+        var allChildren = graphParentItemGetter.Invoke().ChildrenRecursive;
         foreach (var schemaItem in allChildren)
         {
-            bool isTargetOfFromArrow =
-                IsInputContextStore(schemaItem, contextStore);
+            bool isTargetOfFromArrow = IsInputContextStore(schemaItem, contextStore);
             bool isSourceOfToArrow = IsOutpuContextStore(schemaItem, contextStore);
             if (isTargetOfFromArrow && isSourceOfToArrow)
             {
-                arrowPainters.Add(
-                    new BidirectionalArrowPainter(
-                        gViewer,
-                        schemaItem)
-                );
+                arrowPainters.Add(new BidirectionalArrowPainter(gViewer, schemaItem));
             }
             else if (isTargetOfFromArrow)
             {
-                arrowPainters.Add(
-                    new FromArrowPainter(
-                        gViewer,
-                        schemaItem)
-                );
+                arrowPainters.Add(new FromArrowPainter(gViewer, schemaItem));
             }
             else if (isSourceOfToArrow)
             {
-                arrowPainters.Add(
-                    new ToArrowPainter(
-                        gViewer,
-                        schemaItem)
-                );
+                arrowPainters.Add(new ToArrowPainter(gViewer, schemaItem));
             }
         }
     }
+
     private List<string> FindTasksToExpand()
     {
         List<string> tasksToExpand = arrowPainters
@@ -117,15 +110,18 @@ class ContextStoreDependencyPainter
             .ToList();
         return tasksToExpand;
     }
+
     private void DrawEdges(string contextStoreId)
     {
-        Node contextStoreNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(contextStoreId));
+        Node contextStoreNode = gViewer.Graph.FindNodeOrSubgraph(
+            IdTranslator.SchemaToFirstNode(contextStoreId)
+        );
         foreach (IArrowPainter painter in arrowPainters)
         {
             painter.Draw(contextStoreNode);
         }
     }
-    
+
     private void RemoveEdges()
     {
         foreach (IArrowPainter painter in arrowPainters)
@@ -134,38 +130,46 @@ class ContextStoreDependencyPainter
         }
         arrowPainters.Clear();
     }
-    private bool IsOutpuContextStore(ISchemaItem item,  IContextStore contextStore)
+
+    private bool IsOutpuContextStore(ISchemaItem item, IContextStore contextStore)
     {
         if (item is WorkflowTask workflowTask)
         {
-           if (workflowTask.OutputMethod == ServiceOutputMethod.Ignore) return false;
-           if (workflowTask.OutputContextStore == contextStore) return true;
+            if (workflowTask.OutputMethod == ServiceOutputMethod.Ignore)
+                return false;
+            if (workflowTask.OutputContextStore == contextStore)
+                return true;
         }
         if (item is ContextStoreLink link)
         {
-            return  link.CallerContextStore == contextStore &&
-                    link.Direction == ContextStoreLinkDirection.Output;
+            return link.CallerContextStore == contextStore
+                && link.Direction == ContextStoreLinkDirection.Output;
         }
         return false;
     }
-    private bool IsInputContextStore(ISchemaItem item,  IContextStore contextStore)
+
+    private bool IsInputContextStore(ISchemaItem item, IContextStore contextStore)
     {
         if (item is WorkflowTask workflowTask)
         {
-            if (workflowTask.OutputContextStore == contextStore ||
-                workflowTask.OutputMethod == ServiceOutputMethod.Ignore)
+            if (
+                workflowTask.OutputContextStore == contextStore
+                || workflowTask.OutputMethod == ServiceOutputMethod.Ignore
+            )
             {
                 return false;
             }
         }
         if (item is ServiceMethodCallTask callTask)
         {
-            return callTask.ValidationRuleContextStore == contextStore ||
-                   callTask.StartConditionRuleContextStore == contextStore;
+            return callTask.ValidationRuleContextStore == contextStore
+                || callTask.StartConditionRuleContextStore == contextStore;
         }
-        if (item is ContextStoreLink link &&
-            link.CallerContextStore == contextStore &&
-            link.Direction == ContextStoreLinkDirection.Input)
+        if (
+            item is ContextStoreLink link
+            && link.CallerContextStore == contextStore
+            && link.Direction == ContextStoreLinkDirection.Input
+        )
         {
             return true;
         }
@@ -179,44 +183,50 @@ interface IArrowPainter
     Edge Edge { get; }
     ISchemaItem SchemaItem { get; }
 }
-abstract class ArrowPainter: IArrowPainter
+
+abstract class ArrowPainter : IArrowPainter
 {
     protected readonly GViewer gViewer;
     public Edge Edge { get; protected set; }
     public ISchemaItem SchemaItem { get; }
+
     public ArrowPainter(GViewer gViewer, ISchemaItem schemaItem)
     {
         this.gViewer = gViewer;
         SchemaItem = schemaItem;
     }
-    
+
     public abstract void Draw(Node contextStoreNode);
 }
-class ToArrowPainter: ArrowPainter
+
+class ToArrowPainter : ArrowPainter
 {
     public ToArrowPainter(GViewer gViewer, ISchemaItem sourceItem)
-        : base(gViewer, sourceItem)
-    {
-    }
+        : base(gViewer, sourceItem) { }
+
     public override void Draw(Node contextStoreNode)
     {
-        var sourceNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
+        var sourceNode = gViewer.Graph.FindNodeOrSubgraph(
+            IdTranslator.SchemaToFirstNode(SchemaItem.NodeId)
+        );
         if (sourceNode != null)
         {
             Edge = gViewer.AddEdge(sourceNode, contextStoreNode, false);
             Edge.Attr.Color = Color.Red;
-        } 
+        }
     }
 }
-class FromArrowPainter: ArrowPainter
+
+class FromArrowPainter : ArrowPainter
 {
-    public FromArrowPainter(GViewer gViewer,
-        ISchemaItem targetItem) : base(gViewer,  targetItem)
-    {
-    }
+    public FromArrowPainter(GViewer gViewer, ISchemaItem targetItem)
+        : base(gViewer, targetItem) { }
+
     public override void Draw(Node contextStoreNode)
     {
-        var targetNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
+        var targetNode = gViewer.Graph.FindNodeOrSubgraph(
+            IdTranslator.SchemaToFirstNode(SchemaItem.NodeId)
+        );
         if (targetNode != null)
         {
             Edge = gViewer.AddEdge(contextStoreNode, targetNode, false);
@@ -224,15 +234,17 @@ class FromArrowPainter: ArrowPainter
         }
     }
 }
-class BidirectionalArrowPainter: ArrowPainter
+
+class BidirectionalArrowPainter : ArrowPainter
 {
-    public BidirectionalArrowPainter(GViewer gViewer, 
-        ISchemaItem targetItem) : base(gViewer,  targetItem)
-    {
-    }
+    public BidirectionalArrowPainter(GViewer gViewer, ISchemaItem targetItem)
+        : base(gViewer, targetItem) { }
+
     public override void Draw(Node contextStoreNode)
     {
-        var sourceNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
+        var sourceNode = gViewer.Graph.FindNodeOrSubgraph(
+            IdTranslator.SchemaToFirstNode(SchemaItem.NodeId)
+        );
         if (sourceNode != null)
         {
             Edge = gViewer.AddEdge(sourceNode, contextStoreNode, false);

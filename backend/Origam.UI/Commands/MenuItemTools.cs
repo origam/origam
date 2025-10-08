@@ -25,25 +25,28 @@ using System.Linq;
 using System.Windows.Forms;
 
 namespace Origam.UI;
+
 internal static class MenuItemTools
 {
-    public static void UpdateMenuItems(ToolStripItemCollection itemsToUpdate,
+    public static void UpdateMenuItems(
+        ToolStripItemCollection itemsToUpdate,
         IEnumerable<ToolStripItem> itemsToAdd,
-        object caller)
+        object caller
+    )
     {
         itemsToUpdate.Clear();
-        foreach (ToolStripItem item in itemsToAdd) 
+        foreach (ToolStripItem item in itemsToAdd)
         {
-            if (item is ISubmenuBuilder) 
+            if (item is ISubmenuBuilder)
             {
                 ISubmenuBuilder submenuBuilder = (ISubmenuBuilder)item;
                 ToolStripItem[] submenu = submenuBuilder.BuildSubmenu(caller);
-                if(submenu.Length > 0)
+                if (submenu.Length > 0)
                     itemsToUpdate.AddRange(submenu);
-            } 
-            else 
+            }
+            else
             {
-                if (item is IStatusUpdate update) 
+                if (item is IStatusUpdate update)
                 {
                     update.UpdateItemsToDisplay();
                 }

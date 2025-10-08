@@ -20,30 +20,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Collections;
-using System.Data;
-using System.Windows.Forms;
+using System.Collections.Generic;
 using System.ComponentModel;
-
-using Origam.Gui.Win;
-using Origam.Workbench.Services;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
+using Origam;
 using Origam.DA;
 using Origam.DA.Service;
-
+using Origam.Extensions;
+using Origam.Gui.Win;
+using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
-using Origam.Rule;
-using System.Collections.Generic;
-using System.Linq;
-using Origam.Workflow;
-using Origam;
-using Origam.Extensions;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
+using Origam.Workflow;
 
 namespace Origam.Gui.Win;
+
 /// <summary>
 /// Summary description for ExecuteWorkflowButton.
 /// </summary>
@@ -64,7 +63,8 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     private string _dataMember;
     private ISchemaItem _origamMetadata;
     private Guid _workflowId;
-    private ColumnParameterMappingCollection _parameterMappingCollection = new ColumnParameterMappingCollection();
+    private ColumnParameterMappingCollection _parameterMappingCollection =
+        new ColumnParameterMappingCollection();
     private bool _fillingParameterCache = false;
     private Guid _iconId = Guid.Empty;
     private WorkflowHostEventArgs _resultEventArgs;
@@ -73,52 +73,65 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     #region Private Methods
     private void CreateMappingItemsCollection()
     {
-        if(this.Workflow == null) return;
+        if (this.Workflow == null)
+            return;
         // create any missing parameter mappings
-        foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+        foreach (var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
         {
             string parameterName = store.Name;
-            if(this._origamMetadata.GetChildByName(parameterName) == null)
+            if (this._origamMetadata.GetChildByName(parameterName) == null)
             {
-                ColumnParameterMapping mapping = _origamMetadata
-                    .NewItem<ColumnParameterMapping>(
-                        _origamMetadata.SchemaExtensionId, null);
+                ColumnParameterMapping mapping = _origamMetadata.NewItem<ColumnParameterMapping>(
+                    _origamMetadata.SchemaExtensionId,
+                    null
+                );
                 mapping.Name = parameterName;
             }
         }
         var toDelete = new List<ColumnParameterMapping>();
         // delete all parameter mappings whose's context stores do not exist anymore
-        foreach(var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
+        foreach (
+            var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(
+                ColumnParameterMapping.CategoryConst
+            )
+        )
         {
             bool found = false;
-            foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+            foreach (
+                var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst)
+            )
             {
-                if(store.Name == mapping.Name) found = true;
+                if (store.Name == mapping.Name)
+                    found = true;
             }
-            if(!found)
+            if (!found)
             {
                 toDelete.Add(mapping);
             }
         }
-        foreach(ISchemaItem mapping in toDelete)
+        foreach (ISchemaItem mapping in toDelete)
         {
             mapping.IsDeleted = true;
         }
         //Refill Parameter collection (and dictionary)
         FillParameterCache(this._origamMetadata as ControlSetItem);
     }
+
     private void ClearMappingItemsOnly()
     {
         try
         {
-            if(_origamMetadata == null) return;
-            var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
-            foreach(ColumnParameterMapping mapping in col)
+            if (_origamMetadata == null)
+                return;
+            var col = _origamMetadata
+                .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+                .ToList();
+            foreach (ColumnParameterMapping mapping in col)
             {
                 mapping.IsDeleted = true;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _ = ex.ToString();
 #if DEBUG
@@ -126,23 +139,30 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
 #endif
         }
     }
+
     private void FillParameterCache(ControlSetItem controlItem)
     {
-        if(controlItem == null) return;
+        if (controlItem == null)
+            return;
         _fillingParameterCache = true;
         ParameterMappings.Clear();
-        foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
+        foreach (
+            var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(
+                ColumnParameterMapping.CategoryConst
+            )
+        )
         {
-            if(!mapInfo.IsDeleted)	// skip any deleted mapping infos
+            if (!mapInfo.IsDeleted) // skip any deleted mapping infos
             {
                 ParameterMappings.Add(mapInfo);
             }
         }
         _fillingParameterCache = false;
     }
+
     private void SetIcon()
     {
-        if(this.Icon == null)
+        if (this.Icon == null)
         {
             this.Image = null;
         }
@@ -151,6 +171,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             this.Image = this.Icon.GraphicsData;
         }
     }
+
     private DataSet GetDataSlice(ContextStore store, DataRow row)
     {
         DataSet target = new DatasetGenerator(true).CreateDataSet(store.Structure as DataStructure);
@@ -163,74 +184,63 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     [DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
     public ServiceOutputMethod MergeType
     {
-        get
-        {
-            return _mergeType;
-        }
-        set
-        {
-            _mergeType = value;
-        }
+        get { return _mergeType; }
+        set { _mergeType = value; }
     }
+
     [Category("Data")]
     [RefreshProperties(RefreshProperties.Repaint)]
-    [TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [TypeConverter(
+        "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    )]
     public object DataSource
     {
-        get
-        {
-            return _dataSource;
-        }
-        set
-        {
-            _dataSource = value;
-        }
+        get { return _dataSource; }
+        set { _dataSource = value; }
     }
+
     [Category("Data")]
-    [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(System.Drawing.Design.UITypeEditor))]
+    [Editor(
+        "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        typeof(System.Drawing.Design.UITypeEditor)
+    )]
     public string DataMember
     {
-        get
-        {
-            return _dataMember;
-        }
-        set
-        {
-            _dataMember = value;
-        }
+        get { return _dataMember; }
+        set { _dataMember = value; }
     }
+
     [Browsable(false)]
     public Guid WorkflowId
     {
-        get
-        {
-            return _workflowId;
-        }
-        set
-        {
-            _workflowId = value;
-        }
+        get { return _workflowId; }
+        set { _workflowId = value; }
     }
+
     [RefreshProperties(RefreshProperties.Repaint)]
     [TypeConverter(typeof(WorkflowConverter))]
     public IWorkflow Workflow
     {
         get
         {
-            if(this._origamMetadata == null)
+            if (this._origamMetadata == null)
                 return null;
-            return (IWorkflow)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(_workflowId));
+            return (IWorkflow)
+                this._origamMetadata.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(_workflowId)
+                );
         }
         set
         {
-            if(value == null)
+            if (value == null)
             {
                 this.WorkflowId = Guid.Empty;
                 ClearMappingItemsOnly();
             }
             else
             {
-                if(this.WorkflowId == (Guid)value.PrimaryKey["Id"])
+                if (this.WorkflowId == (Guid)value.PrimaryKey["Id"])
                 {
                     return;
                 }
@@ -243,54 +253,52 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     private WorkflowExecutionType _actionType = WorkflowExecutionType.NoFormMerge;
     public WorkflowExecutionType ActionType
     {
-        get
-        {
-            return _actionType;
-        }
-        set
-        {
-            _actionType = value;
-        }
+        get { return _actionType; }
+        set { _actionType = value; }
     }
+
     [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
     public ColumnParameterMappingCollection ParameterMappings
     {
         get
         {
-            if(!_fillingParameterCache)
+            if (!_fillingParameterCache)
             {
                 CreateMappingItemsCollection();
             }
             return _parameterMappingCollection;
         }
     }
+
     [Browsable(false)]
     public Guid IconId
     {
-        get
-        {
-            return _iconId;
-        }
+        get { return _iconId; }
         set
         {
             _iconId = value;
             SetIcon();
         }
     }
+
     [TypeConverter(typeof(GraphicsConverter))]
     public Origam.Schema.GuiModel.Graphics Icon
     {
         get
         {
-            if(_origamMetadata == null)
+            if (_origamMetadata == null)
             {
                 return null;
             }
-            return (Origam.Schema.GuiModel.Graphics)_origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(IconId));
+            return (Origam.Schema.GuiModel.Graphics)
+                _origamMetadata.PersistenceProvider.RetrieveInstance(
+                    typeof(ISchemaItem),
+                    new ModelElementKey(IconId)
+                );
         }
         set
         {
-            if(value == null)
+            if (value == null)
             {
                 this.IconId = Guid.Empty;
             }
@@ -306,17 +314,25 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     protected override void OnClick(EventArgs e)
     {
         WorkflowHost host = WorkflowHost.DefaultHost;
-        if(this.BindingContext == null) return;
-        if(this.BindingContext[this.DataSource, this.DataMember] == null) return;
-        if(this.BindingContext[this.DataSource, this.DataMember].Position < 0) return;
-        if((this.DataSource as DataSet).HasErrors)
+        if (this.BindingContext == null)
+            return;
+        if (this.BindingContext[this.DataSource, this.DataMember] == null)
+            return;
+        if (this.BindingContext[this.DataSource, this.DataMember].Position < 0)
+            return;
+        if ((this.DataSource as DataSet).HasErrors)
         {
-            Origam.UI.AsMessageBox.ShowError(this.FindForm(), Origam.Workflow.ResourceUtils.GetString("ErrorsInForm"), Origam.Workflow.ResourceUtils.GetString("ExecuteActionTitle"), null);
+            Origam.UI.AsMessageBox.ShowError(
+                this.FindForm(),
+                Origam.Workflow.ResourceUtils.GetString("ErrorsInForm"),
+                Origam.Workflow.ResourceUtils.GetString("ExecuteActionTitle"),
+                null
+            );
             return;
         }
         try
         {
-            if(this.ActionType == WorkflowExecutionType.NoFormMerge)
+            if (this.ActionType == WorkflowExecutionType.NoFormMerge)
             {
                 try
                 {
@@ -327,24 +343,32 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                     _engine.PersistenceProvider = _origamMetadata.PersistenceProvider;
                     _engine.WorkflowBlock = this.Workflow;
                     Hashtable parameters = this.Parameters();
-                    foreach(DictionaryEntry entry in parameters)
+                    foreach (DictionaryEntry entry in parameters)
                     {
                         string name = (string)entry.Key;
                         ContextStore context = null;
                         Key contextKey = null;
-                        foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+                        foreach (
+                            var store in Workflow.ChildItemsByType<ContextStore>(
+                                ContextStore.CategoryConst
+                            )
+                        )
                         {
-                            if(store.Name == name)
+                            if (store.Name == name)
                             {
                                 contextKey = store.PrimaryKey;
                                 context = store;
                             }
                         }
-                        if(contextKey == null)
+                        if (contextKey == null)
                         {
-                            throw new ArgumentOutOfRangeException("mapping.Name", name, Origam.Workflow.ResourceUtils.GetString("ErrorContextStoreNotFound"));
+                            throw new ArgumentOutOfRangeException(
+                                "mapping.Name",
+                                name,
+                                Origam.Workflow.ResourceUtils.GetString("ErrorContextStoreNotFound")
+                            );
                         }
-                        if(entry.Value is XmlDocument)
+                        if (entry.Value is XmlDocument)
                         {
                             _mergeBackStore = context;
                         }
@@ -354,7 +378,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                     host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
                     host.ExecuteWorkflow(_engine);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     UnsubscribeEvents();
                     (this.FindForm() as AsForm).EndDisable();
@@ -362,35 +386,51 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                     return;
                 }
             }
-            else if(this.ActionType == WorkflowExecutionType.ShowNewFormNoMerge)
+            else if (this.ActionType == WorkflowExecutionType.ShowNewFormNoMerge)
             {
-                WorkflowForm form = Origam.Workflow.Gui.Win.WorkflowHelper.CreateWorkflowForm(host, null, this.Text, (Guid)this.Workflow.PrimaryKey["Id"]);
-                WorkflowEngine workflowEngine = WorkflowEngine.PrepareWorkflow(this.Workflow, this.Parameters(), false, this.Text);
+                WorkflowForm form = Origam.Workflow.Gui.Win.WorkflowHelper.CreateWorkflowForm(
+                    host,
+                    null,
+                    this.Text,
+                    (Guid)this.Workflow.PrimaryKey["Id"]
+                );
+                WorkflowEngine workflowEngine = WorkflowEngine.PrepareWorkflow(
+                    this.Workflow,
+                    this.Parameters(),
+                    false,
+                    this.Text
+                );
                 form.WorkflowEngine = workflowEngine;
                 host.ExecuteWorkflow(workflowEngine);
             }
             else
             {
-                throw new ArgumentOutOfRangeException("ActionType", this.ActionType, Origam.Workflow.ResourceUtils.GetString("ErrorUnsupportedActionType"));
+                throw new ArgumentOutOfRangeException(
+                    "ActionType",
+                    this.ActionType,
+                    Origam.Workflow.ResourceUtils.GetString("ErrorUnsupportedActionType")
+                );
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             HandleException(ex);
         }
     }
+
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
         _resultEventArgs = e;
         this.Invoke(new MethodInvoker(this.FinishWorkflow));
     }
+
     private void FinishWorkflow()
     {
         WorkflowHostEventArgs e = _resultEventArgs;
-        if(e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
         {
             UnsubscribeEvents();
-            if(e.Exception != null)
+            if (e.Exception != null)
             {
                 (this.FindForm() as AsForm).EndDisable();
                 HandleException(e.Exception);
@@ -398,27 +438,33 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             }
             try
             {
-                if(_mergeBackStore != null)
+                if (_mergeBackStore != null)
                 {
                     object profileId = SecurityManager.CurrentUserProfile().Id;
-                    DataRowView current = this.BindingContext[this.DataSource, this.DataMember].Current as DataRowView;
+                    DataRowView current =
+                        this.BindingContext[this.DataSource, this.DataMember].Current
+                        as DataRowView;
                     try
                     {
                         current.Row.Table.DataSet.EnforceConstraints = false;
-                        foreach(DataTable table in current.Row.Table.DataSet.Tables)
+                        foreach (DataTable table in current.Row.Table.DataSet.Tables)
                         {
                             table.BeginLoadData();
                         }
                         MergeParams mergeParams = new MergeParams(profileId);
-                        mergeParams.TrueDelete
-                            = MergeType == ServiceOutputMethod.FullMerge;
-                        DatasetTools.MergeDataSet(current.Row.Table.DataSet,
-                            (_engine.RuleEngine.GetContext(_mergeBackStore) as IDataDocument).DataSet,
-                            null, mergeParams);
+                        mergeParams.TrueDelete = MergeType == ServiceOutputMethod.FullMerge;
+                        DatasetTools.MergeDataSet(
+                            current.Row.Table.DataSet,
+                            (
+                                _engine.RuleEngine.GetContext(_mergeBackStore) as IDataDocument
+                            ).DataSet,
+                            null,
+                            mergeParams
+                        );
                     }
                     finally
                     {
-                        foreach(DataTable table in current.Row.Table.DataSet.Tables)
+                        foreach (DataTable table in current.Row.Table.DataSet.Tables)
                         {
                             table.EndLoadData();
                         }
@@ -426,18 +472,19 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleException(ex);
             }
             (this.FindForm() as AsForm).EndDisable();
         }
     }
+
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if(e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
+        if (e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
         {
-            if(e.Exception != null)
+            if (e.Exception != null)
             {
                 UnsubscribeEvents();
                 HandleException(e.Exception);
@@ -445,84 +492,113 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             }
         }
     }
+
     private void UnsubscribeEvents()
     {
-        if(_engine.Host != null)
+        if (_engine.Host != null)
         {
             _engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
             _engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
         }
     }
+
     private Hashtable Parameters()
     {
-        if(this.DataMember == null)
+        if (this.DataMember == null)
         {
-            throw new NullReferenceException(Origam.Workflow.ResourceUtils.GetString("ErrorNoDataMember"));
+            throw new NullReferenceException(
+                Origam.Workflow.ResourceUtils.GetString("ErrorNoDataMember")
+            );
         }
         Hashtable result = new Hashtable();
-        DataRowView current = this.BindingContext[this.DataSource, this.DataMember].Current as DataRowView;
-        foreach(ColumnParameterMapping mapping in this.ParameterMappings)
+        DataRowView current =
+            this.BindingContext[this.DataSource, this.DataMember].Current as DataRowView;
+        foreach (ColumnParameterMapping mapping in this.ParameterMappings)
         {
             ContextStore context = null;
             Key contextKey = null;
-            foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
+            foreach (
+                var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst)
+            )
             {
-                if(store.Name == mapping.Name)
+                if (store.Name == mapping.Name)
                 {
                     contextKey = store.PrimaryKey;
                     context = store;
                 }
             }
-            if(contextKey == null)
+            if (contextKey == null)
             {
-                throw new ArgumentOutOfRangeException("mapping.Name", mapping.Name, Origam.Workflow.ResourceUtils.GetString("ErrorContextStoreNotFound"));
+                throw new ArgumentOutOfRangeException(
+                    "mapping.Name",
+                    mapping.Name,
+                    Origam.Workflow.ResourceUtils.GetString("ErrorContextStoreNotFound")
+                );
             }
-            if(mapping.ColumnName == "/")
+            if (mapping.ColumnName == "/")
             {
                 result.Add(mapping.Name, DataDocumentFactory.New(current.Row.Table.DataSet.Copy()));
             }
-            else if(mapping.ColumnName == ".")
+            else if (mapping.ColumnName == ".")
             {
-                result.Add(mapping.Name, DataDocumentFactory.New(GetDataSlice(context, current.Row)));
+                result.Add(
+                    mapping.Name,
+                    DataDocumentFactory.New(GetDataSlice(context, current.Row))
+                );
             }
-            else if(mapping.ColumnName != null && mapping.ColumnName != "")
+            else if (mapping.ColumnName != null && mapping.ColumnName != "")
             {
                 bool found = false;
-                foreach(DataColumn column in current.Row.Table.Columns)
+                foreach (DataColumn column in current.Row.Table.Columns)
                 {
-                    if(column.ColumnName == mapping.ColumnName)
+                    if (column.ColumnName == mapping.ColumnName)
                     {
                         DataRowVersion version = DataRowVersion.Default;
                         result.Add(mapping.Name, current.Row[column, version]);
                         found = true;
                     }
                 }
-                if(!found)
+                if (!found)
                 {
-                    throw new ArgumentOutOfRangeException("Field", mapping.ColumnName, Origam.Workflow.ResourceUtils.GetString("ErrorFieldNotFound"));
+                    throw new ArgumentOutOfRangeException(
+                        "Field",
+                        mapping.ColumnName,
+                        Origam.Workflow.ResourceUtils.GetString("ErrorFieldNotFound")
+                    );
                 }
             }
         }
         return result;
     }
+
     private void HandleException(Exception ex)
     {
         string caption;
-        if(ex is RuleException)
+        if (ex is RuleException)
         {
-            MessageBox.Show(this.FindForm(), ex.Message, RuleEngine.ValidationNotMetMessage(),
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(
+                this.FindForm(),
+                ex.Message,
+                RuleEngine.ValidationNotMetMessage(),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
         }
         else
         {
-            caption = Origam.Workflow.ResourceUtils.GetString("ErrorMessage", this.Text, this.FindForm().Text);
+            caption = Origam.Workflow.ResourceUtils.GetString(
+                "ErrorMessage",
+                this.Text,
+                this.FindForm().Text
+            );
             Origam.UI.AsMessageBox.ShowError(this.FindForm(), ex.Message, caption, ex);
         }
         Cursor.Current = Cursors.Default;
     }
+
     protected override void Dispose(bool disposing)
     {
-        if(disposing)
+        if (disposing)
         {
             _origamMetadata = null;
             _dataSource = null;
@@ -533,10 +609,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     #region IOrigamMetadataConsumer Members
     public ISchemaItem OrigamMetadata
     {
-        get
-        {
-            return _origamMetadata;
-        }
+        get { return _origamMetadata; }
         set
         {
             _origamMetadata = value;

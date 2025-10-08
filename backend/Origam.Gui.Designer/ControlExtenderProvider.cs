@@ -19,13 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Windows.Forms;
 using System.ComponentModel;
-
+using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Gui.Designer;
+
 /// <summary>
 /// Summary description for ControlExtenderProvider.
 /// </summary>
@@ -35,94 +35,100 @@ namespace Origam.Gui.Designer;
 [ProvideProperty("SchemaItemId", typeof(Control))]
 public class ControlExtenderProvider : IExtenderProvider
 {
-	public ControlExtenderProvider()
-	{
-	}
-	[ExtenderProvidedProperty()]
-	[Category("(ORIGAM)")]
-	public string GetSchemaItemId(Control acontrol)
-	{
-		ISchemaItem si = acontrol.Tag as ISchemaItem;
-		if(si != null)
-		{
-			return si.PrimaryKey["Id"].ToString();
-		}
-		else
-		{
-			return null;
-		}
-	}
-	[ExtenderProvidedProperty()]
-	[Category("(ORIGAM)")]
-	public string GetSchemaItemName(Control acontrol)
-	{
-		ISchemaItem si = acontrol.Tag as ISchemaItem;
-		if(si != null)
-		{
-			return si.Name;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	public void SetSchemaItemName(Control acontrol, string value)
-	{
-		ISchemaItem si = acontrol.Tag as ISchemaItem;
-		if(si != null)
-		{
-			si.Name = value;
-		}
-	}
-	[Category("(ORIGAM)")]
-	public string GetRoles(Control acontrol)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			return csi.Roles;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	public void SetRoles(Control acontrol, string value)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			csi.Roles = value;
-		}
-	}
-	[Category("(ORIGAM)")]
-	public string GetFeatures(Control acontrol)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			return csi.Features;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	public void SetFeatures(Control acontrol, string value)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			csi.Features = value;
-		}
-	}
-	#region IExtenderProvider Members
-	public bool CanExtend(object extendee) 
-	{
-		if (extendee is Control && (extendee as Control).Tag is ISchemaItem)
-			return true;
-		else
-			return false;
-	}
-	#endregion
+    public ControlExtenderProvider() { }
+
+    [ExtenderProvidedProperty()]
+    [Category("(ORIGAM)")]
+    public string GetSchemaItemId(Control acontrol)
+    {
+        ISchemaItem si = acontrol.Tag as ISchemaItem;
+        if (si != null)
+        {
+            return si.PrimaryKey["Id"].ToString();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    [ExtenderProvidedProperty()]
+    [Category("(ORIGAM)")]
+    public string GetSchemaItemName(Control acontrol)
+    {
+        ISchemaItem si = acontrol.Tag as ISchemaItem;
+        if (si != null)
+        {
+            return si.Name;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public void SetSchemaItemName(Control acontrol, string value)
+    {
+        ISchemaItem si = acontrol.Tag as ISchemaItem;
+        if (si != null)
+        {
+            si.Name = value;
+        }
+    }
+
+    [Category("(ORIGAM)")]
+    public string GetRoles(Control acontrol)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            return csi.Roles;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public void SetRoles(Control acontrol, string value)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            csi.Roles = value;
+        }
+    }
+
+    [Category("(ORIGAM)")]
+    public string GetFeatures(Control acontrol)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            return csi.Features;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public void SetFeatures(Control acontrol, string value)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            csi.Features = value;
+        }
+    }
+
+    #region IExtenderProvider Members
+    public bool CanExtend(object extendee)
+    {
+        if (extendee is Control && (extendee as Control).Tag is ISchemaItem)
+            return true;
+        else
+            return false;
+    }
+    #endregion
 }

@@ -30,27 +30,24 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win.Commands;
+
 public class ShowDataStructureSortSetSql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(
-            typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
     public override bool IsEnabled
     {
-        get
-        {
-            return Owner is DataStructureSortSet;
-        }
-        set
-        {
-            base.IsEnabled = value;
-        }
+        get { return Owner is DataStructureSortSet; }
+        set { base.IsEnabled = value; }
     }
+
     public override void Run()
     {
         StringBuilder builder = new StringBuilder();
-        AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
-        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
+        AbstractSqlDataService abstractSqlDataService =
+            DataServiceFactory.GetDataService() as AbstractSqlDataService;
+        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)
+            abstractSqlDataService.DbDataAdapterFactory.Clone();
         generator.PrettyFormat = true;
         generator.GenerateConsoleUseSyntax = true;
         bool displayPagingParameters = true;
@@ -60,20 +57,29 @@ public class ShowDataStructureSortSetSql : AbstractMenuCommand
         // parameter declarations
         builder.AppendLine(
             generator.SelectParameterDeclarationsSql(
-                ds,  Owner as DataStructureSortSet,
-                displayPagingParameters, null));
+                ds,
+                Owner as DataStructureSortSet,
+                displayPagingParameters,
+                null
+            )
+        );
         foreach (DataStructureEntity entity in ds.Entities)
         {
             if (entity.Columns.Count > 0)
             {
-                builder.AppendLine("-----------------------------------------------------------------");
+                builder.AppendLine(
+                    "-----------------------------------------------------------------"
+                );
                 builder.AppendLine("-- " + entity.Name);
-                builder.AppendLine("-----------------------------------------------------------------");
+                builder.AppendLine(
+                    "-----------------------------------------------------------------"
+                );
                 string tmpTable = "tmptable" + System.Guid.NewGuid();
                 tmpTables.Add(tmpTable);
                 builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
                 builder.AppendLine(
-                    generator.SelectSql(ds,
+                    generator.SelectSql(
+                        ds,
                         entity,
                         null,
                         Owner as DataStructureSortSet,
@@ -81,7 +87,7 @@ public class ShowDataStructureSortSetSql : AbstractMenuCommand
                         new Hashtable(),
                         new Hashtable(),
                         displayPagingParameters
-                    )+ ";"
+                    ) + ";"
                 );
             }
         }

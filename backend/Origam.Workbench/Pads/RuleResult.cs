@@ -19,15 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema;
 using System;
+using Origam.Schema;
 
 namespace Origam.Workbench.Pads;
+
 public class RuleResult
 {
     public Key PrimaryKey { get; set; }
     public Type Type { get; set; }
     public Guid SchemaExtensionId { get; set; }
+
     public RuleResult(ISchemaItem item)
     {
         this.PrimaryKey = item.PrimaryKey;

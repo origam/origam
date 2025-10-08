@@ -29,7 +29,8 @@ using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory;
-class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
+
+class ContextStoreDiagramFactory : IDiagramFactory<IContextStore, Graph>
 {
     private Graph graph;
     private readonly IPersistenceProvider persistenceProvider;
@@ -37,35 +38,39 @@ class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
     private readonly GViewer gViewer;
     private readonly WorkbenchSchemaService schemaService;
     private NodeFactory nodeFactory;
+
     public ContextStoreDiagramFactory(
         IPersistenceProvider persistenceProvider,
-        INodeSelector nodeSelector, GViewer gViewer,
-        WorkbenchSchemaService schemaService)
+        INodeSelector nodeSelector,
+        GViewer gViewer,
+        WorkbenchSchemaService schemaService
+    )
     {
         this.persistenceProvider = persistenceProvider;
         this.nodeSelector = nodeSelector;
         this.gViewer = gViewer;
         this.schemaService = schemaService;
     }
+
     public Graph Draw(IContextStore contextStore)
     {
         graph = new Graph();
-        nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph );
-        
+        nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph);
+
         Node storeNode = nodeFactory.AddNode(contextStore);
-        List<IWorkflowStep> steps = persistenceProvider
-            .RetrieveList<IWorkflowStep>();
-        
+        List<IWorkflowStep> steps = persistenceProvider.RetrieveList<IWorkflowStep>();
+
         foreach (IWorkflowStep step in steps)
         {
-            if (step is WorkflowTask task &&
-                task.OutputContextStoreId == contextStore.Id)
+            if (step is WorkflowTask task && task.OutputContextStoreId == contextStore.Id)
             {
                 Node taskNode = nodeFactory.AddNode(task);
                 graph.AddEdge(storeNode.Id, taskNode.Id);
             }
-            else if (step is UpdateContextTask updateTask &&
-                      updateTask.XPathContextStore.Id == contextStore.Id)
+            else if (
+                step is UpdateContextTask updateTask
+                && updateTask.XPathContextStore.Id == contextStore.Id
+            )
             {
                 Node taskNode = nodeFactory.AddNode(updateTask);
                 graph.AddEdge(taskNode.Id, storeNode.Id);

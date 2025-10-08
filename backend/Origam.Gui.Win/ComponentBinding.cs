@@ -22,65 +22,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml.Serialization;
 
 namespace Origam.Gui.Win;
+
 /// <summary>
 /// Summary description for ComponentBinding.
 /// </summary>
 public class ComponentBinding
 {
-	public ComponentBinding()
-	{
-		
-	}
-	private string _parentComponent = "";
-	[XmlAttribute()]
-	public string ParentComponent
-	{
-		get
-		{
-			return _parentComponent;
-		}
-		set
-		{
-			_parentComponent = value;
-		}
-	}
-	private string _parentProperty = "";
-	[XmlAttribute()]
-	public string ParentProperty
-	{
-		get
-		{
-			return _parentProperty;
-		}
-		set
-		{
-			_parentProperty = value;
-		}
-	}
-	private string _childComponent = "";
-	[XmlAttribute()]
-	public string ChildComponent
-	{
-		get
-		{
-			return _childComponent;
-		}
-		set
-		{
-			_childComponent = value;
-		}
-	}
-	private string _childProperty = "";
-	[XmlAttribute()]
-	public string ChildProperty
-	{
-		get
-		{
-			return _childProperty;
-		}
-		set
-		{
-			_childProperty = value;
-		}
-	}
+    public ComponentBinding() { }
+
+    private string _parentComponent = "";
+
+    [XmlAttribute()]
+    public string ParentComponent
+    {
+        get { return _parentComponent; }
+        set { _parentComponent = value; }
+    }
+    private string _parentProperty = "";
+
+    [XmlAttribute()]
+    public string ParentProperty
+    {
+        get { return _parentProperty; }
+        set { _parentProperty = value; }
+    }
+    private string _childComponent = "";
+
+    [XmlAttribute()]
+    public string ChildComponent
+    {
+        get { return _childComponent; }
+        set { _childComponent = value; }
+    }
+    private string _childProperty = "";
+
+    [XmlAttribute()]
+    public string ChildProperty
+    {
+        get { return _childProperty; }
+        set { _childProperty = value; }
+    }
 }
