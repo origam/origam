@@ -2,8 +2,9 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
-import { fileURLToPath } from 'url';
+import reactHooks from 'eslint-plugin-react-hooks';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +23,6 @@ export default [
   ...compat.extends(
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ),
@@ -40,8 +40,11 @@ export default [
     },
     plugins: {
       import: importPlugin,
+      'react-hooks': reactHooks,
     },
     rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'prettier/prettier': ['error'],
       '@typescript-eslint/no-unused-vars': ['error'],
       '@typescript-eslint/no-explicit-any': 'off',
