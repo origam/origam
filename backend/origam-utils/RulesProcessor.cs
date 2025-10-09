@@ -18,37 +18,38 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.DA.ObjectPersistence;
-using Origam.Schema;
-using Origam.Workbench.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Origam.Rule;
+using Origam.DA.ObjectPersistence;
 using Origam.OrigamEngine;
+using Origam.Rule;
+using Origam.Schema;
+using Origam.Workbench.Services;
 
 namespace Origam.Utils;
+
 class RulesProcessor
 {
-            
-    public RulesProcessor()
-    {
-    }
+    public RulesProcessor() { }
+
     internal int Run()
     {
         RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
         OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
+        FilePersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(FilePersistenceService))
+            as FilePersistenceService;
         List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
             .SetSchemaProvider(persistence.SchemaProvider)
             .GetAll();
-        List<Dictionary<ISchemaItem, string>> errorFragments
-                = ModelRules.GetErrors(
-                    allproviders,
-                    persistence,
-                    new CancellationTokenSource().Token);
+        List<Dictionary<ISchemaItem, string>> errorFragments = ModelRules.GetErrors(
+            allproviders,
+            persistence,
+            new CancellationTokenSource().Token
+        );
         if (errorFragments.Count != 0)
         {
             StringBuilder sb = new StringBuilder("Rule violations in ");
@@ -57,9 +58,15 @@ class RulesProcessor
             foreach (Dictionary<ISchemaItem, string> dict in errorFragments)
             {
                 ISchemaItem retrievedObj = dict.First().Key;
-                sb.Append("Object with Id: \"" + retrievedObj.Id +
-                           "\" in file: \"" + retrievedObj.RelativeFilePath +
-                            "\" --> " + string.Join("\n", dict.First().Value) + "\n");
+                sb.Append(
+                    "Object with Id: \""
+                        + retrievedObj.Id
+                        + "\" in file: \""
+                        + retrievedObj.RelativeFilePath
+                        + "\" --> "
+                        + string.Join("\n", dict.First().Value)
+                        + "\n"
+                );
             }
             System.Console.Write(sb.ToString());
             return 1;
