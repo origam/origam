@@ -1,5 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
+    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
   </PropertyGroup>
     <Choose>

@@ -24,26 +24,22 @@ using Origam.OrigamEngine;
 using Origam.Workbench.Services;
 
 namespace Origam.Utils;
-
 class RuntimeServiceFactoryProcessor : IRuntimeServiceFactory
 {
     public IPersistenceService CreatePersistenceService()
     {
         return GetPersistenceBuilder().GetPersistenceService();
     }
-
     public IDocumentationService CreateDocumentationService()
     {
         return GetPersistenceBuilder().GetDocumentationService();
     }
-
     private static IPersistenceBuilder GetPersistenceBuilder()
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         string[] classpath = settings.ModelProvider.Split(',');
         return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
     }
-
     public void InitializeServices()
     {
         ServiceManager.Services.AddService(new MetaModelUpgradeService());
@@ -51,12 +47,10 @@ class RuntimeServiceFactoryProcessor : IRuntimeServiceFactory
         ServiceManager.Services.AddService(new SchemaService());
         ServiceManager.Services.AddService(new NullParameterService());
     }
-
     protected virtual IParameterService CreateParameterService()
     {
         return new ParameterService();
     }
-
     public void UnloadServices()
     {
         throw new System.NotImplementedException();
