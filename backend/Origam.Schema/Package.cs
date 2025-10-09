@@ -238,7 +238,8 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
     }
     public string NodeToolTipText => null;
     public string Icon => "09_packages-1.ico";
-    public string RelativeFilePath => this.Name + "\\" + PersistenceFiles.PackageFileName;
+    public string RelativeFilePath =>
+        System.IO.Path.Combine(Name, PersistenceFiles.PackageFileName);
     public Guid FileParentId
     {
         get => Guid.Empty;
