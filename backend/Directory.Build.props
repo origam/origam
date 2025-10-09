@@ -1,6 +1,15 @@
 ﻿<Project>
   <PropertyGroup>
+<!-- 
+      Enabiling origam-utils causes the tests on github to fail with 
+      System.PlatformNotSupportedException: System.Data.SqlClient is not supported on this platform.
+      Replacing the System.Data.SqlClient with its newer counter part does not fix the problem.
+-->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
+<!--      
+    Enabling Origam.Documentation causes this error during build:
+    43>Origam.Documentation.csproj: Error MSB4057 : The target "CSharpierFormatInner" does not exist in the project.
+-->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
   </PropertyGroup>
     <Choose>
