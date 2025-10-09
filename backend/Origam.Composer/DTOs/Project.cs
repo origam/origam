@@ -35,12 +35,12 @@ public class Project
     public DatabaseType DatabaseType { get; init; } = DatabaseType.MsSql;
     public required string DatabaseHost { get; init; }
     public int DatabasePort { get; init; }
-    public string DatabaseUserName { get; init; }
-    public string DatabasePassword { get; init; }
+    public required string DatabaseUserName { get; init; }
+    public required string DatabasePassword { get; init; }
     public bool DatabaseIntegratedAuthentication { get; init; }
     public required string DatabaseName { get; init; }
-    public string DatabaseInternalUserName { get; init; }
-    public string DatabaseInternalUserPassword { get; init; }
+    public required string DatabaseInternalUserName { get; init; }
+    public required string DatabaseInternalUserPassword { get; init; }
 
     public string GetDataDataService
     {

@@ -33,7 +33,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     public string Name => "Download ORIGAM model-root from repository";
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    private string RepositoryZipPath;
+    private string? RepositoryZipPath;
 
     public void Execute(Project project)
     {
@@ -57,6 +57,11 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
 
     private void DownloadModelFromRepository(string origamRepositoryUrl)
     {
+        if (RepositoryZipPath == null)
+        {
+            throw new Exception("RepositoryZipPath is not set.");
+        }
+
         using var client = new HttpClient();
         HttpResponseMessage response = client.GetAsync(origamRepositoryUrl).Result;
         response.EnsureSuccessStatusCode();
@@ -67,6 +72,11 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
 
     private void UnzipDefaultModelAndCopy(string projectFolder)
     {
+        if (RepositoryZipPath == null)
+        {
+            throw new Exception("RepositoryZipPath is not set.");
+        }
+
         var tempExtractPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         ZipFile.ExtractToDirectory(RepositoryZipPath, tempExtractPath);
 
