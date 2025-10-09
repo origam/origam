@@ -27,6 +27,7 @@ using Origam.Extensions;
 using Origam.TestCommon;
 
 namespace Origam.DA.Service_net2Tests;
+
 [TestFixture]
 class OrigamDocumentSorterTests : AbstractFileTestClass
 {
@@ -46,12 +47,12 @@ class OrigamDocumentSorterTests : AbstractFileTestClass
         string sortedXml = OrigamDocumentSorter
             .CopyAndSort(doc)
             .ToBeautifulString(xmlWriterSettings);
-        
+
         string sortedXmlPath = Path.Combine(TestFilesDir.FullName, "Sorted.origam");
         string expectedXml = File.ReadAllText(sortedXmlPath);
         Assert.That(sortedXml, Is.EqualTo(expectedXml));
-    } 
-    
+    }
+
     protected override TestContext TestContext => TestContext.CurrentContext;
     protected override string DirName => "OrigamDocumentSorter";
 }

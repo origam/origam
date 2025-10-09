@@ -25,22 +25,25 @@ using System.Windows.Forms;
 using Origam.Extensions;
 
 namespace Origam.Gui.UI;
-public class BigToolStripButton: ToolStripButton
+
+public class BigToolStripButton : ToolStripButton
 {
     public BigToolStripButton()
     {
-        Font = new Font(Font.Name,8);
+        Font = new Font(Font.Name, 8);
         ToolStripButtonTools.InitBigButton(this);
     }
+
     public override string Text
     {
         get => base.Text;
         set => SetTextWithCorrectWidth(value);
     }
+
     private void SetTextWithCorrectWidth(string value)
     {
-        string valueWithSpace = " " + (value.EndsWith("...") 
-            ? value.Substring(0, value.Length - 3) : value);
+        string valueWithSpace =
+            " " + (value.EndsWith("...") ? value.Substring(0, value.Length - 3) : value);
         base.Text = valueWithSpace.Wrap(Width, Font);
         if (!base.Text.Contains(Environment.NewLine))
         {
@@ -51,18 +54,17 @@ public class BigToolStripButton: ToolStripButton
             base.Text += " ";
         }
     }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         PaintButtonBackground(e);
         ToolStripButtonTools.PaintImage(this, e);
         this.PaintText(e);
     }
-    
+
     private void PaintButtonBackground(PaintEventArgs e)
     {
         var eventArgs = new ToolStripItemRenderEventArgs(e.Graphics, this);
-        Owner
-            .Renderer
-            .DrawButtonBackground(eventArgs);
-    } 
+        Owner.Renderer.DrawButtonBackground(eventArgs);
+    }
 }

@@ -23,6 +23,7 @@ using Origam.UI;
 using Origam.Workbench;
 
 namespace OrigamArchitect.Commands;
+
 /// <summary>
 /// Closes an active screen.
 /// </summary>
@@ -30,20 +31,16 @@ public class CloseWindow : AbstractMenuCommand
 {
     public override bool IsEnabled
     {
-        get
-        {
-            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-        }
-        set
-        {
-            base.IsEnabled = value;
-        }
+        get { return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0; }
+        set { base.IsEnabled = value; }
     }
+
     public override void Run()
     {
         WorkbenchSingleton.Workbench.CloseContent(WorkbenchSingleton.Workbench.ActiveDocument);
     }
 }
+
 /// <summary>
 /// Closes all open screens.
 /// </summary>
@@ -51,20 +48,16 @@ public class CloseAllWindows : AbstractMenuCommand
 {
     public override bool IsEnabled
     {
-        get
-        {
-            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-        }
-        set
-        {
-            base.IsEnabled = value;
-        }
+        get { return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0; }
+        set { base.IsEnabled = value; }
     }
+
     public override void Run()
     {
         WorkbenchSingleton.Workbench.CloseAllViews();
     }
 }
+
 /// <summary>
 /// Closes all open screens except of an active one.
 /// </summary>
@@ -72,15 +65,10 @@ public class CloseAllButThis : AbstractMenuCommand
 {
     public override bool IsEnabled
     {
-        get
-        {
-            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-        }
-        set
-        {
-            base.IsEnabled = value;
-        }
+        get { return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0; }
+        set { base.IsEnabled = value; }
     }
+
     public override void Run()
     {
         WorkbenchSingleton.Workbench.CloseAllViews(WorkbenchSingleton.Workbench.ActiveDocument);

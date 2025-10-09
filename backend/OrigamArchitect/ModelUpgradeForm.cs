@@ -32,11 +32,12 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
 namespace OrigamArchitect;
+
 public partial class ModelUpgradeForm : Form
 {
     private readonly IMetaModelUpgradeService metaModelUpgradeService;
-    public ModelUpgradeForm(
-        IMetaModelUpgradeService metaModelUpgradeService)
+
+    public ModelUpgradeForm(IMetaModelUpgradeService metaModelUpgradeService)
     {
         this.metaModelUpgradeService = metaModelUpgradeService;
         metaModelUpgradeService.UpgradeProgress += (sender, info) =>
@@ -49,7 +50,8 @@ public partial class ModelUpgradeForm : Form
                     progressBar.Maximum = info.TotalFiles;
                     progressBar.Step = 1;
                     progressBar.Value = info.FilesDone;
-                    currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                    currentFileLabel.Text =
+                        $"Files processed: {info.FilesDone} / {info.TotalFiles}";
                 }
             }
             this.RunWithInvoke(ProgressAction);
@@ -60,6 +62,7 @@ public partial class ModelUpgradeForm : Form
         };
         InitializeComponent();
     }
+
     private void cancelButton_Click(object sender, EventArgs e)
     {
         metaModelUpgradeService.Cancel();

@@ -31,27 +31,36 @@ using Origam.Services;
 using Origam.UI;
 
 namespace Origam.Workbench.Services;
-public class ControlsLookUpService: IControlsLookUpService
+
+public class ControlsLookUpService : IControlsLookUpService
 {
     private Hashtable _controls = new Hashtable();
     private readonly DataLookupService dataLookupService;
+
     public ControlsLookUpService()
     {
         this.dataLookupService = ServiceManager.Services.GetService<DataLookupService>();
     }
-    public void InitializeService()
-    {
-    }
+
+    public void InitializeService() { }
+
     public void UnloadService()
     {
         _controls.Clear();
     }
+
     public void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand)
     {
-        System.Diagnostics.Debug.Assert(form != null, ResourceUtils.GetString("ErrorFormLookupControlFail"));
+        System.Diagnostics.Debug.Assert(
+            form != null,
+            ResourceUtils.GetString("ErrorFormLookupControlFail")
+        );
         _controls.Add(lookupControl, form);
         AbstractDataLookup lookup = dataLookupService.GetLookup(lookupControl.LookupId);
-        if (lookup == null) throw new NullReferenceException("Lookup not specified in control: " + (lookupControl as Control).Name);
+        if (lookup == null)
+            throw new NullReferenceException(
+                "Lookup not specified in control: " + (lookupControl as Control).Name
+            );
         // set the EditMenu visibility, if user can or cannot run the Edit command
         lookupControl.LookupShowEditButton = (showEditCommand & HasEditListMenuBinding(lookup));
         lookupControl.LookupCanEditSourceRecord = HasEditRecordMenuBinding(lookup);
@@ -61,20 +70,24 @@ public class ControlsLookUpService: IControlsLookUpService
         lookupControl.SuppressEmptyColumns = lookup.SuppressEmptyColumns;
         lookupControl.LookupDisplayTextRequested += lookupControl_LookupDisplayTextRequested;
         lookupControl.LookupShowSourceListRequested += lookupControl_LookupShowSourceListRequested;
-        lookupControl.LookupEditSourceRecordRequested += lookupControl_LookupEditSourceRecordRequested;
+        lookupControl.LookupEditSourceRecordRequested +=
+            lookupControl_LookupEditSourceRecordRequested;
         lookupControl.LookupListRefreshRequested += lookupControl_LookupListRefreshRequested;
     }
+
     public void RemoveLookupControl(ILookupControl lookupControl)
     {
         lookupControl.LookupDisplayTextRequested -= lookupControl_LookupDisplayTextRequested;
         lookupControl.LookupShowSourceListRequested -= lookupControl_LookupShowSourceListRequested;
         lookupControl.LookupListRefreshRequested -= lookupControl_LookupListRefreshRequested;
-        lookupControl.LookupEditSourceRecordRequested -= lookupControl_LookupEditSourceRecordRequested;
+        lookupControl.LookupEditSourceRecordRequested -=
+            lookupControl_LookupEditSourceRecordRequested;
         _controls.Remove(lookupControl);
     }
+
     public void RemoveLookupControlsByForm(Form form)
     {
-        var controls =_controls.Keys.Cast<Control>().ToList();
+        var controls = _controls.Keys.Cast<Control>().ToList();
         foreach (Control control in controls)
         {
             if (_controls[control].Equals(form))
@@ -83,25 +96,34 @@ public class ControlsLookUpService: IControlsLookUpService
             }
         }
     }
+
     private void lookupControl_LookupShowSourceListRequested(object sender, EventArgs e)
     {
         ILookupControl control = sender as ILookupControl;
-        DataServiceDataLookup lookup = dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
+        DataServiceDataLookup lookup =
+            dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
         DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(lookup, null);
         if (binding != null)
         {
             OnLookupShowSourceListRequested(binding.MenuItem, EventArgs.Empty);
         }
     }
+
     private void lookupControl_LookupEditSourceRecordRequested(object sender, EventArgs e)
     {
         ILookupControl control = sender as ILookupControl;
-        DataServiceDataLookup lookup = dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
-        DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(lookup, control.LookupValue);
+        DataServiceDataLookup lookup =
+            dataLookupService.GetLookup(control.LookupId) as DataServiceDataLookup;
+        DataLookupMenuBinding binding = dataLookupService.GetMenuBindingElement(
+            lookup,
+            control.LookupValue
+        );
         if (binding != null)
         {
             ParameterizedEventArgs args = new ParameterizedEventArgs();
-            foreach (var entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue))
+            foreach (
+                var entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue)
+            )
             {
                 args.Parameters.Add(entry.Key, entry.Value);
             }
@@ -116,21 +138,30 @@ public class ControlsLookUpService: IControlsLookUpService
             OnLookupEditSourceRecordRequested(binding.MenuItem, args);
         }
     }
+
     protected virtual void OnLookupShowSourceListRequested(AbstractMenuItem menuItem, EventArgs e)
     {
-        OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
+        OrigamArchitect.Commands.ExecuteSchemaItem cmd =
+            new OrigamArchitect.Commands.ExecuteSchemaItem();
         cmd.Owner = menuItem;
         cmd.Run();
     }
-    protected virtual void OnLookupEditSourceRecordRequested(AbstractMenuItem menuItem, ParameterizedEventArgs e)
+
+    protected virtual void OnLookupEditSourceRecordRequested(
+        AbstractMenuItem menuItem,
+        ParameterizedEventArgs e
+    )
     {
         ParameterizedEventArgs args = e as ParameterizedEventArgs;
-        if (args == null) return;
+        if (args == null)
+            return;
         WorkbenchSingleton.Workbench.ProcessGuiLink(args.SourceForm, menuItem, args.Parameters);
     }
+
     private bool HasEditListMenuBinding(AbstractDataLookup lookup)
     {
-        IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
+        IOrigamAuthorizationProvider authorizationProvider =
+            SecurityManager.GetAuthorizationProvider();
         IPrincipal principal = SecurityManager.CurrentPrincipal;
         foreach (DataLookupMenuBinding binding in lookup.MenuBindings)
         {
@@ -144,18 +175,27 @@ public class ControlsLookUpService: IControlsLookUpService
         }
         return false;
     }
+
     private bool HasEditRecordMenuBinding(AbstractDataLookup lookup)
     {
-        IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
+        IOrigamAuthorizationProvider authorizationProvider =
+            SecurityManager.GetAuthorizationProvider();
         foreach (DataLookupMenuBinding binding in lookup.MenuBindings)
         {
-            if (dataLookupService.AuthorizeMenuBinding(authorizationProvider, SecurityManager.CurrentPrincipal, binding))
+            if (
+                dataLookupService.AuthorizeMenuBinding(
+                    authorizationProvider,
+                    SecurityManager.CurrentPrincipal,
+                    binding
+                )
+            )
             {
                 return true;
             }
         }
         return false;
     }
+
     private void lookupControl_LookupListRefreshRequested(object sender, EventArgs e)
     {
         ILookupControl control = sender as ILookupControl;
@@ -168,15 +208,20 @@ public class ControlsLookUpService: IControlsLookUpService
             lookupControl_LookupDisplayTextRequested(sender, e);
         }
         DataTable lookupTable = dataLookupService.GetList(
-            ILookupControlToLookupListRequest(control));
+            ILookupControlToLookupListRequest(control)
+        );
         DataView view = new DataView(lookupTable);
         control.LookupList = view;
     }
+
     private void lookupControl_LookupDisplayTextRequested(object sender, EventArgs e)
     {
         ILookupControl control = sender as ILookupControl;
-        control.LookupDisplayText = dataLookupService.GetDisplayText(control.LookupId, control.LookupValue, null).ToString();
+        control.LookupDisplayText = dataLookupService
+            .GetDisplayText(control.LookupId, control.LookupValue, null)
+            .ToString();
     }
+
     private LookupListRequest ILookupControlToLookupListRequest(ILookupControl control)
     {
         LookupListRequest request = new LookupListRequest();

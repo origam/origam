@@ -24,42 +24,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-
 using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
 namespace Origam.Schema.LookupModel.UI.Wizards;
+
 /// <summary>
 /// Summary description for CreateLookupFromEntityCommand.
 /// </summary>
 public class CreateLookupFromEntityCommand : AbstractMenuCommand
 {
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     LookupForm lookupForm;
     public override bool IsEnabled
-	{
-		get
-		{
-			return Owner is IDataEntity;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
+    {
+        get { return Owner is IDataEntity; }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
+    public override void Run()
+    {
         DataServiceDataLookup dd = new DataServiceDataLookup();
         var dataStructure = new DataStructure();
         var list = new List<ListViewItem>
         {
-	        new ListViewItem(dd.GetType().SchemaItemDescription().Name,
-		        dd.Icon),
-	        new ListViewItem(
-		        dataStructure.GetType().SchemaItemDescription().Name,
-		        dataStructure.Icon)
+            new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon),
+            new ListViewItem(
+                dataStructure.GetType().SchemaItemDescription().Name,
+                dataStructure.Icon
+            ),
         };
         Stack stackPage = new Stack();
         stackPage.Push(PagesList.Finish);
@@ -75,31 +74,41 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
             Entity = Owner as IDataEntity,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             ItemTypeList = list,
-            Command = this
+            Command = this,
         };
         Wizard wiz = new Wizard(lookupForm);
-         //CreateLookupFromEntityWizard wizz = new CreateLookupFromEntityWizard();
+        //CreateLookupFromEntityWizard wizz = new CreateLookupFromEntityWizard();
         //wiz.Entity = Owner as IDataEntity;
         if (wiz.ShowDialog() != DialogResult.OK)
-		{
+        {
             GeneratedModelElements.Clear();
         }
     }
+
     public override void Execute()
     {
         var result = LookupHelper.CreateDataServiceLookup(
-                lookupForm.LookupName, lookupForm.Entity, lookupForm.IdColumn, lookupForm.NameColumn,
-                null, lookupForm.IdFilter, lookupForm.ListFilter, null);
+            lookupForm.LookupName,
+            lookupForm.Entity,
+            lookupForm.IdColumn,
+            lookupForm.NameColumn,
+            null,
+            lookupForm.IdFilter,
+            lookupForm.ListFilter,
+            null
+        );
         //var result = LookupHelper.CreateDataServiceLookup(
         //    wiz.LookupName, wiz.Entity, wiz.IdColumn, wiz.NameColumn,
         //    null, wiz.IdFilter, wiz.ListFilter, null);
         GeneratedModelElements.Add(result.ListDataStructure);
         GeneratedModelElements.Add(result);
     }
+
     public override int GetImageIndex(string icon)
     {
         return _schemaBrowser.ImageIndex(icon);
     }
+
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
@@ -113,7 +122,9 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
         richTextBoxSummary.AppendText(lookupForm.NameColumn.Name);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("List Filter: \t");
-        richTextBoxSummary.AppendText(lookupForm.ListFilter==null?"none": lookupForm.ListFilter.Name);
+        richTextBoxSummary.AppendText(
+            lookupForm.ListFilter == null ? "none" : lookupForm.ListFilter.Name
+        );
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Id Filter: \t\t");
         richTextBoxSummary.AppendText(lookupForm.IdFilter.Name);

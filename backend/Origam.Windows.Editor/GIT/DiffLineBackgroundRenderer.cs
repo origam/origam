@@ -5,21 +5,26 @@ using ICSharpCode.AvalonEdit.Rendering;
 using Origam.UI;
 
 namespace Origam.Windows.Editor.GIT;
+
 public class DiffLineBackgroundRenderer : IBackgroundRenderer
 {
     static readonly Brush AddedBackground;
     static readonly Brush DeletedBackground;
     static readonly Brush BlankBackground;
     static readonly Pen BorderlessPen;
+
     static DiffLineBackgroundRenderer()
     {
         AddedBackground = new SolidColorBrush(Color.FromRgb(0x6e, 0xff, 0x6e));
         AddedBackground.Opacity = 0.5;
         AddedBackground.Freeze();
-        DeletedBackground = new SolidColorBrush(Color.FromRgb(
-            OrigamColorScheme.DirtyColor.R,
-            OrigamColorScheme.DirtyColor.G,
-            OrigamColorScheme.DirtyColor.B));
+        DeletedBackground = new SolidColorBrush(
+            Color.FromRgb(
+                OrigamColorScheme.DirtyColor.R,
+                OrigamColorScheme.DirtyColor.G,
+                OrigamColorScheme.DirtyColor.B
+            )
+        );
         DeletedBackground.Opacity = 0.3;
         DeletedBackground.Freeze();
         BlankBackground = new SolidColorBrush(Color.FromRgb(0xfa, 0xfa, 0xfa));
@@ -29,15 +34,19 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
         BorderlessPen = new Pen(transparentBrush, 0.0);
         BorderlessPen.Freeze();
     }
+
     public void Draw(TextView textView, System.Windows.Media.DrawingContext drawingContext)
     {
-        if (Lines == null) return;
+        if (Lines == null)
+            return;
         foreach (var v in textView.VisualLines)
         {
             var linenum = v.FirstDocumentLine.LineNumber - 1;
-            if (linenum >= Lines.Count) continue;
+            if (linenum >= Lines.Count)
+                continue;
             var diffLine = Lines[linenum];
-            if (diffLine.Style == DiffContext.Context) continue;
+            if (diffLine.Style == DiffContext.Context)
+                continue;
             var brush = default(Brush);
             switch (diffLine.Style)
             {
@@ -51,13 +60,22 @@ public class DiffLineBackgroundRenderer : IBackgroundRenderer
                     brush = BlankBackground;
                     break;
             }
-            foreach (var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000))
+            foreach (
+                var rc in BackgroundGeometryBuilder.GetRectsFromVisualSegment(textView, v, 0, 1000)
+            )
             {
-                drawingContext.DrawRectangle(brush, BorderlessPen,
-                    new Rect(0, rc.Top, textView.ActualWidth, rc.Height));
+                drawingContext.DrawRectangle(
+                    brush,
+                    BorderlessPen,
+                    new Rect(0, rc.Top, textView.ActualWidth, rc.Height)
+                );
             }
         }
     }
-    public KnownLayer Layer { get { return KnownLayer.Background; } }
+
+    public KnownLayer Layer
+    {
+        get { return KnownLayer.Background; }
+    }
     public List<DiffLineViewModel> Lines { get; set; }
 }

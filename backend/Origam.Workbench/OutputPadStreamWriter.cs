@@ -24,30 +24,34 @@ using System.IO;
 using System.Text;
 
 namespace Origam.Workbench;
+
 public class LogPadStreamWriter : TextWriter
 {
-	Pads.LogPad _output;
-	StringBuilder _buffer = new StringBuilder();
-	char[] _newLineTest = new char[2];
-	char[] _newLine = Environment.NewLine.ToCharArray();
-	public LogPadStreamWriter(Pads.LogPad output)
-	{
-		_output = output;
-	}
-	public override void Write(char value)
-	{
-		_newLineTest[0] = _newLineTest[1];
-		_newLineTest[1] = value;
-		_buffer.Append(value);
-		
-		if(_newLine[0].Equals(_newLineTest[0]) && _newLine[1].Equals(_newLineTest[1]))
-		{
-			_output.AddText(_buffer.ToString());
-			_buffer = new StringBuilder();
-		}
-	}
-	public override Encoding Encoding
-	{
-		get { return Encoding.UTF8; }
-	}
+    Pads.LogPad _output;
+    StringBuilder _buffer = new StringBuilder();
+    char[] _newLineTest = new char[2];
+    char[] _newLine = Environment.NewLine.ToCharArray();
+
+    public LogPadStreamWriter(Pads.LogPad output)
+    {
+        _output = output;
+    }
+
+    public override void Write(char value)
+    {
+        _newLineTest[0] = _newLineTest[1];
+        _newLineTest[1] = value;
+        _buffer.Append(value);
+
+        if (_newLine[0].Equals(_newLineTest[0]) && _newLine[1].Equals(_newLineTest[1]))
+        {
+            _output.AddText(_buffer.ToString());
+            _buffer = new StringBuilder();
+        }
+    }
+
+    public override Encoding Encoding
+    {
+        get { return Encoding.UTF8; }
+    }
 }

@@ -25,11 +25,13 @@ using System.Xml.Serialization;
 using Origam.DA.Common;
 
 namespace Origam.DA.ServiceTests;
+
 [ClassMetaVersion("6.0.1")]
 public class TestPersistedClass3
 {
     [XmlAttribute("name")]
     public string Name { get; set; }
+
     [XmlAttribute("NewProperty1")]
     public string NewProperty1 { get; set; }
 }

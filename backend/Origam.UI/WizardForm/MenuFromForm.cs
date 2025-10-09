@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema;
 
 namespace Origam.UI.WizardForm;
+
 public class MenuFromForm : AbstractWizardForm
 {
     public ISchemaItem Entity { get; set; }

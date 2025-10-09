@@ -1,21 +1,24 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <project name="SIMPLICOR Core" default="standard" basedir=".">
   <description>Build file for ORIGAM backend</description>
   <property name="nant.settings.currentframework" value="net-2.0" />
-  <property name="dist" value="../../dist/"/>
-  <property name="architect-dist" value="../../architect_dist/"/>
-  <property name="client-dist" value="../../client_dist/"/>
-  <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
-  <property name="git-exec" value="c:\Program Files\Git\bin\git"/>
-  <property name="msbuild-exec" value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"/>
+  <property name="dist" value="../../dist/" />
+  <property name="architect-dist" value="../../architect_dist/" />
+  <property name="client-dist" value="../../client_dist/" />
+  <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild" />
+  <property name="git-exec" value="c:\Program Files\Git\bin\git" />
+  <property
+    name="msbuild-exec"
+    value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+  />
   <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.92/bin/NAnt.Contrib.Tasks.dll" />
   <target name="server" description="Server build." depends="clean,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-      <arg value="Origam.sln"/>
-      <arg value="/p:Configuration=Release Server"/>
-      <arg value="/p:BaseOutputPath=${dist}"/>
-	  <arg value="/t:Clean;Restore;Build"/>
-	  <arg value="-v:m"/>
+      <arg value="Origam.sln" />
+      <arg value="/p:Configuration=Release Server" />
+      <arg value="/p:BaseOutputPath=${dist}" />
+      <arg value="/t:Clean;Restore;Build" />
+      <arg value="-v:m" />
     </exec>
     <copy todir="${dist}" overwrite="true">
       <fileset basedir="../EnterpriseLibrary/2.0/">
@@ -24,56 +27,56 @@
     </copy>
     <delete>
       <fileset basedir="${dist}">
-        <include name="CrystalDecisions*.*"/>
-        <include name="AeroWizard.dll"/>
-        <include name="NPOI.DLL"/>
-        <include name="HPSF.DLL"/>
-        <include name="HSSF.DLL"/>
-        <include name="DDF.DLL"/>
-        <include name="POIFS.DLL"/>
-        <include name="NullableTypes.DLL"/>
-        <include name="Util.dll"/>
-        <include name="Skybound.Rebar.dll"/>
-	<include name="C1.Win.C1Input.2.dll"/>
-	<include name="C1.Win.C1Command.2.dll"/>
+        <include name="CrystalDecisions*.*" />
+        <include name="AeroWizard.dll" />
+        <include name="NPOI.DLL" />
+        <include name="HPSF.DLL" />
+        <include name="HSSF.DLL" />
+        <include name="DDF.DLL" />
+        <include name="POIFS.DLL" />
+        <include name="NullableTypes.DLL" />
+        <include name="Util.dll" />
+        <include name="Skybound.Rebar.dll" />
+        <include name="C1.Win.C1Input.2.dll" />
+        <include name="C1.Win.C1Command.2.dll" />
       </fileset>
     </delete>
     <copy todir="${dist}" overwrite="true">
       <fileset basedir="../npoi-net2.0/">
-        <include name="*.dll"/>
+        <include name="*.dll" />
       </fileset>
     </copy>
   </target>
   <target name="architect" description="Architect Build" depends="clean-architect,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="Origam.sln"/>
-        <arg value="/p:Configuration=Release Architect"/>
-        <arg value="/p:BaseOutputPath=${architect-dist}"/>
-		<arg value="/t:Restore;Build"/>
-        <arg value="-v:m"/>
+      <arg value="Origam.sln" />
+      <arg value="/p:Configuration=Release Architect" />
+      <arg value="/p:BaseOutputPath=${architect-dist}" />
+      <arg value="/t:Restore;Build" />
+      <arg value="-v:m" />
     </exec>
     <copy todir="${architect-dist}">
       <fileset basedir="../EnterpriseLibrary/2.0">
-        <include name="*.dll"/>
+        <include name="*.dll" />
       </fileset>
     </copy>
   </target>
   <target name="client" description="Client Build" depends="clean-client,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="Origam.sln"/>
-        <arg value="/p:Configuration=Release Client"/>
-        <arg value="/p:BaseOutputPath=${client-dist}"/>
-		<arg value="/t:Restore;Build"/>
-        <arg value="-v:m"/>
+      <arg value="Origam.sln" />
+      <arg value="/p:Configuration=Release Client" />
+      <arg value="/p:BaseOutputPath=${client-dist}" />
+      <arg value="/t:Restore;Build" />
+      <arg value="-v:m" />
     </exec>
     <copy todir="${client-dist}">
       <fileset basedir="../EnterpriseLibrary/2.0">
-        <include name="*.dll"/>
+        <include name="*.dll" />
       </fileset>
     </copy>
     <delete>
       <fileset basedir="${client-dist}">
-        <include name="CrystalDecisions*.*"/>
+        <include name="CrystalDecisions*.*" />
       </fileset>
     </delete>
   </target>
@@ -87,37 +90,45 @@
     <delete dir="${client-dist}" if="${directory::exists(architect-dist)}" />
   </target>
   <target name="create-release-notes">
-    <delete dir="../rn" failonerror="false"/>
-    <mkdir dir="../rn"/>
+    <delete dir="../rn" failonerror="false" />
+    <mkdir dir="../rn" />
     <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" failonerror="false">
-        <arg value="fetch"/>
+      <arg value="fetch" />
     </exec>
-    <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" output="../rn/release-notes__Desktop_${projectSuffix}_${projectName}_${configurationSuffix}_${tc_buildNumber}_artifacts__backend__${branchMarker}.txt">
-        <arg value="log"/>
-        <arg value="^origin/${previousBranch}"/>
-        <arg value="origin/${currentBranch}"/>
-        <arg value="--oneline"/>
-        <arg value="--no-merges"/>
-        <arg value="--first-parent"/>
-        <arg value="--date=iso"/>
-        <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+    <exec
+      workingdir="c:/TeamCity/src/origam-source"
+      program="${git-exec}"
+      output="../rn/release-notes__Desktop_${projectSuffix}_${projectName}_${configurationSuffix}_${tc_buildNumber}_artifacts__backend__${branchMarker}.txt"
+    >
+      <arg value="log" />
+      <arg value="^origin/${previousBranch}" />
+      <arg value="origin/${currentBranch}" />
+      <arg value="--oneline" />
+      <arg value="--no-merges" />
+      <arg value="--first-parent" />
+      <arg value="--date=iso" />
+      <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;" />
     </exec>
   </target>
   <target name="create-release-notes-server">
-    <delete dir="../rn" failonerror="false"/>
-    <mkdir dir="../rn"/>
+    <delete dir="../rn" failonerror="false" />
+    <mkdir dir="../rn" />
     <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" failonerror="false">
-        <arg value="fetch"/>
+      <arg value="fetch" />
     </exec>
-    <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" output="../rn/release-notes-backend-${currentBranch}.txt">
-      <arg value="log"/>
-      <arg value="^origin/${previousBranch}"/>
-      <arg value="origin/${currentBranch}"/>
-      <arg value="--oneline"/>
-      <arg value="--no-merges"/>
-      <arg value="--first-parent"/>
-      <arg value="--date=iso"/>
-      <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+    <exec
+      workingdir="c:/TeamCity/src/origam-source"
+      program="${git-exec}"
+      output="../rn/release-notes-backend-${currentBranch}.txt"
+    >
+      <arg value="log" />
+      <arg value="^origin/${previousBranch}" />
+      <arg value="origin/${currentBranch}" />
+      <arg value="--oneline" />
+      <arg value="--no-merges" />
+      <arg value="--first-parent" />
+      <arg value="--date=iso" />
+      <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;" />
     </exec>
   </target>
   <target name="build-number" description="Fills build number in AssemblyInfo files.">
@@ -131,10 +142,10 @@
         <echo message="Setting build number for ${filename}" />
         <loadfile file="${filename}" property="assemblyInfo">
           <filterchain>
-            <replacestring from="0.0.0.0" to="${buildNumber}"/>
+            <replacestring from="0.0.0.0" to="${buildNumber}" />
           </filterchain>
         </loadfile>
-        <echo file="${filename}" message="${assemblyInfo}"/>
+        <echo file="${filename}" message="${assemblyInfo}" />
       </do>
     </foreach>
   </target>

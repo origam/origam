@@ -27,6 +27,7 @@ using LibGit2Sharp;
 using Origam.Extensions;
 
 namespace Origam.Git;
+
 public class GitFileComparer
 {
     private readonly Signature autor;
@@ -34,25 +35,25 @@ public class GitFileComparer
     private readonly string internalFileName;
     private Repository repo;
     private readonly DirectoryInfo repoDir;
+
     public GitFileComparer()
     {
-        autor = new Signature("GitFileComparer", "@GitFileComparer",
-            DateTime.Now);
+        autor = new Signature("GitFileComparer", "@GitFileComparer", DateTime.Now);
         committer = this.autor;
         internalFileName = "fileToCommit.txt";
         repoDir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "GitCompare"));
     }
+
     public GitDiff GetGitDiff(FileInfo oldFile, FileInfo newFile)
     {
         if (FilesAreIdentical(newFile, oldFile))
         {
             return new GitDiff(oldFile, newFile, "");
         }
-        
+
         InitRepo();
-        string internalFilePath = Path.Combine(repo.Info.WorkingDirectory,
-            internalFileName);
-        
+        string internalFilePath = Path.Combine(repo.Info.WorkingDirectory, internalFileName);
+
         File.Copy(oldFile.FullName, internalFilePath);
         Commit("Old");
         string fileSysXmlText = File.ReadAllText(newFile.FullName);
@@ -63,13 +64,16 @@ public class GitFileComparer
         repo.Dispose();
         return new GitDiff(oldFile, newFile, diff);
     }
+
     private bool FilesAreIdentical(FileInfo oldFile, FileInfo newFile)
     {
         return oldFile.GetFileBase64Hash() == newFile.GetFileBase64Hash();
     }
+
     private string GetDiff()
     {
-        List<Commit> CommitList = repo.Commits.QueryBy(internalFileName)
+        List<Commit> CommitList = repo
+            .Commits.QueryBy(internalFileName)
             .Select(entry => entry.Commit)
             .ToList();
         int ChangeDesired = 0; // Change difference desired
@@ -77,16 +81,17 @@ public class GitFileComparer
             (Equals(CommitList[ChangeDesired + 1], null))
                 ? null
                 : CommitList[ChangeDesired + 1].Tree,
-            (Equals(CommitList[ChangeDesired], null))
-                ? null
-                : CommitList[ChangeDesired].Tree);
+            (Equals(CommitList[ChangeDesired], null)) ? null : CommitList[ChangeDesired].Tree
+        );
         return repoDifferences.First(e => e.Path == internalFileName).Patch;
     }
+
     private void Commit(string message)
     {
         repo.Index.Add(internalFileName);
         repo.Commit(message, autor, committer);
     }
+
     private void InitRepo()
     {
         repoDir.DeleteAllIncludingReadOnly();
@@ -95,12 +100,14 @@ public class GitFileComparer
         repo = new Repository(repoDir.FullName);
     }
 }
+
 public class GitDiff
 {
     public FileInfo OldFile { get; }
-    public FileInfo NewFile { get;  }
+    public FileInfo NewFile { get; }
     public string Text { get; }
     public bool IsEmpty => string.IsNullOrEmpty(Text);
+
     public GitDiff(FileInfo oldFile, FileInfo newFile, string text)
     {
         OldFile = oldFile;

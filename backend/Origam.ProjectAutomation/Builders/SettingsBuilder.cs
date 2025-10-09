@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 namespace Origam.ProjectAutomation;
+
 public class SettingsBuilder : AbstractBuilder
 {
     private int _settingsIndex;
@@ -52,6 +53,7 @@ public class SettingsBuilder : AbstractBuilder
             throw;
         }
     }
+
     public override void Rollback()
     {
         _settings.RemoveAt(_settingsIndex);
@@ -59,7 +61,7 @@ public class SettingsBuilder : AbstractBuilder
         ConfigurationManager.SetActiveConfiguration(null);
     }
 
-    private static OrigamSettingsCollection GetSettings() => 
+    private static OrigamSettingsCollection GetSettings() =>
         ConfigurationManager.GetAllUserHomeConfigurations();
 
     private static void SaveSettings(OrigamSettingsCollection settings)

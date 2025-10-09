@@ -23,12 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Origam.Extensions;
-using Origam.Schema;
 using MoreLinq;
 using NUnit.Framework;
+using Origam.Extensions;
+using Origam.Schema;
 
 namespace Origam.Common_net2Tests;
+
 [TestFixture]
 public class DictionaryExtensionsTests
 {
@@ -37,40 +38,47 @@ public class DictionaryExtensionsTests
     {
         int distSize = 1000000;
         int itemsToKeep = 10000;
-        
+
         var testDictionary = GenerateRandomDictionary(distSize);
-        HashSet<ReferenceTypeInt> valuesToKeep = new HashSet<ReferenceTypeInt>(testDictionary.Values
-            .Take(itemsToKeep));   
-        testDictionary
-            .RemoveByValueSelector(value => !valuesToKeep.Contains(value));
-        
-        Assert.That(testDictionary,Has.Count.EqualTo(itemsToKeep));
+        HashSet<ReferenceTypeInt> valuesToKeep = new HashSet<ReferenceTypeInt>(
+            testDictionary.Values.Take(itemsToKeep)
+        );
+        testDictionary.RemoveByValueSelector(value => !valuesToKeep.Contains(value));
+
+        Assert.That(testDictionary, Has.Count.EqualTo(itemsToKeep));
     }
-    private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(
-        int numOfEntries)
+
+    private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(int numOfEntries)
     {
-        return Enumerable
-            .Range(1, numOfEntries)
-            .ToDictionary(x => x, x => new ReferenceTypeInt(x));
+        return Enumerable.Range(1, numOfEntries).ToDictionary(x => x, x => new ReferenceTypeInt(x));
     }
+
     class ReferenceTypeInt
     {
         private readonly int val;
+
         public ReferenceTypeInt(int val)
         {
             this.val = val;
         }
+
         protected bool Equals(ReferenceTypeInt other) => val == other.val;
+
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ReferenceTypeInt) obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
+            return Equals((ReferenceTypeInt)obj);
         }
+
         public override int GetHashCode() => val;
     }
 }
+
 [TestFixture]
 public class TypeExtensionsTests
 {
@@ -87,23 +95,34 @@ public class DirectoryInfoExtensionTests
     [Test]
     public void ShouldRecognizeDirectoryAsParent()
     {
-        var parent = new DirectoryInfo(@"Serialization\Root Menu".
-            Replace('\\', Path.DirectorySeparatorChar));
-        var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
-            Replace('\\', Path.DirectorySeparatorChar));
+        var parent = new DirectoryInfo(
+            @"Serialization\Root Menu".Replace('\\', Path.DirectorySeparatorChar)
+        );
+        var child = new DirectoryInfo(
+            @"Serialization\Root Menu\DeploymentVersion\Root Menu".Replace(
+                '\\',
+                Path.DirectorySeparatorChar
+            )
+        );
         Assert.That(parent.IsOnPathOf(child));
     }
-    
+
     [Test]
     public void ShouldRecognizeDirectoryIsNotParent()
     {
-        var notApatent = new DirectoryInfo(@"Serialization\Root".
-            Replace('\\', Path.DirectorySeparatorChar));
-        var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
-            Replace('\\', Path.DirectorySeparatorChar));
+        var notApatent = new DirectoryInfo(
+            @"Serialization\Root".Replace('\\', Path.DirectorySeparatorChar)
+        );
+        var child = new DirectoryInfo(
+            @"Serialization\Root Menu\DeploymentVersion\Root Menu".Replace(
+                '\\',
+                Path.DirectorySeparatorChar
+            )
+        );
         Assert.That(!notApatent.IsOnPathOf(child));
     }
 }
+
 [TestFixture]
 public class StringExtensionTests
 {

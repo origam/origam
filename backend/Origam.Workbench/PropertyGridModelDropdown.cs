@@ -23,29 +23,35 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
-using Origam.Schema;
-using System.Windows.Forms.Design;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
+using Origam.Schema;
 
 namespace Origam.Workbench;
+
 public partial class PropertyGridModelDropdown : UserControl
 {
     IDictionary<string, ISchemaItem> _list = new Dictionary<string, ISchemaItem>();
     IWindowsFormsEditorService _service;
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     bool _isStringList = false;
-    public PropertyGridModelDropdown(ISchemaItem value,
-        IWindowsFormsEditorService service, ITypeDescriptorContext context)
+
+    public PropertyGridModelDropdown(
+        ISchemaItem value,
+        IWindowsFormsEditorService service,
+        ITypeDescriptorContext context
+    )
     {
         InitializeComponent();
         _service = service;
         listBox1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
-        IEnumerable standardValues = 
+        IEnumerable standardValues =
             context.PropertyDescriptor.Converter.GetStandardValues(context)
             ?? new TypeConverter.StandardValuesCollection(new List<object>());
-        
+
         foreach (object item in standardValues)
         {
             if (item is string)
@@ -60,8 +66,14 @@ public partial class PropertyGridModelDropdown : UserControl
             }
             catch (System.ArgumentException e)
             {
-                throw new OrigamException(String.Format("Error while adding key to a dropdown '{0}': {1}",
-                    key, e.Message), e);
+                throw new OrigamException(
+                    String.Format(
+                        "Error while adding key to a dropdown '{0}': {1}",
+                        key,
+                        e.Message
+                    ),
+                    e
+                );
             }
         }
         Populate();
@@ -75,6 +87,7 @@ public partial class PropertyGridModelDropdown : UserControl
             }
         }
     }
+
     private string GetKey(object item)
     {
         ISchemaItem schemaItem = item as ISchemaItem;
@@ -89,12 +102,14 @@ public partial class PropertyGridModelDropdown : UserControl
         }
         return key;
     }
+
     private static void SelectItem(ListViewItem selectedItem)
     {
         selectedItem.Selected = true;
         selectedItem.EnsureVisible();
         selectedItem.Focused = true;
     }
+
     private void Populate()
     {
         string filter = textBox1.Text;
@@ -104,9 +119,17 @@ public partial class PropertyGridModelDropdown : UserControl
         foreach (var item in _list)
         {
             string value = item.Value != null ? item.Value.ToString() : item.Key;
-            if (value != null && (doFilter ||
-                CultureInfo.CurrentUICulture.CompareInfo.IndexOf(
-                   value, filter, CompareOptions.IgnoreCase) >= 0))
+            if (
+                value != null
+                && (
+                    doFilter
+                    || CultureInfo.CurrentUICulture.CompareInfo.IndexOf(
+                        value,
+                        filter,
+                        CompareOptions.IgnoreCase
+                    ) >= 0
+                )
+            )
             {
                 int icon = -1;
                 if (item.Value != null)
@@ -126,7 +149,9 @@ public partial class PropertyGridModelDropdown : UserControl
         listBox1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         listBox1.EndUpdate();
     }
+
     public object SelectedValue { get; set; }
+
     private void listBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
     {
         if (e.KeyCode == Keys.Enter)
@@ -138,6 +163,7 @@ public partial class PropertyGridModelDropdown : UserControl
             textBox1.Focus();
         }
     }
+
     private void Finish()
     {
         if (listBox1.SelectedItems.Count == 1)
@@ -145,6 +171,7 @@ public partial class PropertyGridModelDropdown : UserControl
             this.SelectedValue = listBox1.SelectedItems[0].Tag;
         }
     }
+
     private void textBox1_TextChanged(object sender, EventArgs e)
     {
         Populate();
@@ -154,6 +181,7 @@ public partial class PropertyGridModelDropdown : UserControl
             SelectItem(listBox1.Items[0]);
         }
     }
+
     private void textBox1_KeyDown(object sender, PreviewKeyDownEventArgs e)
     {
         switch (e.KeyCode)
@@ -167,11 +195,13 @@ public partial class PropertyGridModelDropdown : UserControl
                 break;
         }
     }
+
     private void listBox1_ItemActivate(object sender, EventArgs e)
     {
         Finish();
         _service.CloseDropDown();
     }
+
     private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
     {
         textBox1.Focus();

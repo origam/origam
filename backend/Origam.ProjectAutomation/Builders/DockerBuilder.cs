@@ -24,73 +24,81 @@ using System.IO;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation.Builders;
+
 public class DockerBuilder : AbstractBuilder
 {
     private static readonly string DockerFolderName = "Docker";
     public override string Name => "Create Docker run script";
     private string newProjectFolder;
-    
+
     public override void Execute(Project project)
     {
         newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
         project.DockerEnvPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.env");
         project.DockerCmdPathLinux = Path.Combine(newProjectFolder, project.Name + "_Linux.cmd");
-        project.DockerEnvPathWindows = Path.Combine(newProjectFolder, project.Name + "_Windows.env");
-        project.DockerCmdPathWindows = Path.Combine(newProjectFolder, project.Name + "_Windows.cmd");
+        project.DockerEnvPathWindows = Path.Combine(
+            newProjectFolder,
+            project.Name + "_Windows.env"
+        );
+        project.DockerCmdPathWindows = Path.Combine(
+            newProjectFolder,
+            project.Name + "_Windows.cmd"
+        );
         Directory.CreateDirectory(newProjectFolder);
         DockerConfig dockerConfigLinux = GetDockerConfig(Platform.Linux, project);
         CreateEnvFile(project, dockerConfigLinux);
-        CreateCmdFile(project, dockerConfigLinux);        
+        CreateCmdFile(project, dockerConfigLinux);
         DockerConfig dockerConfigWindows = GetDockerConfig(Platform.Windows, project);
         CreateEnvFile(project, dockerConfigWindows);
         CreateCmdFile(project, dockerConfigWindows);
     }
-    
+
     private void CreateEnvFile(Project project, DockerConfig config)
     {
-        string dbType = project.DatabaseType == DatabaseType.PgSql 
-            ? "postgresql" :
-            project.DatabaseType.ToString().ToLower();
-        string dbUserName =project.DatabaseType == DatabaseType.PgSql 
-            ? project.Name 
-            : project.DatabaseUserName; 
-        string dbPassword = project.DatabaseType == DatabaseType.PgSql
-            ? project.UserPassword
-            : project.DatabasePassword;
+        string dbType =
+            project.DatabaseType == DatabaseType.PgSql
+                ? "postgresql"
+                : project.DatabaseType.ToString().ToLower();
+        string dbUserName =
+            project.DatabaseType == DatabaseType.PgSql ? project.Name : project.DatabaseUserName;
+        string dbPassword =
+            project.DatabaseType == DatabaseType.PgSql
+                ? project.UserPassword
+                : project.DatabasePassword;
         string content =
-            $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}\n" +
-            $"OrigamSettings__DatabaseHost={GetDbHost(project)}\n" +
-            $"OrigamSettings__DatabasePort={project.DatabasePort}\n" +
-            $"OrigamSettings__DatabaseUsername={dbUserName}\n" +
-            $"OrigamSettings__DatabasePassword={dbPassword}\n" +
-            $"OrigamSettings__Name={project.Name}\n" +
-            $"OrigamSettings__DatabaseName={project.DataDatabaseName.ToLower()}\n" +
-            $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}\n" +
-            $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets\n" +
-            $"DatabaseType={dbType}\n" +
-            $"ExternalDomain_SetOnStart={WebSiteUrl(project)}\n" +
-            "TZ=Europe/Prague";
+            $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}\n"
+            + $"OrigamSettings__DatabaseHost={GetDbHost(project)}\n"
+            + $"OrigamSettings__DatabasePort={project.DatabasePort}\n"
+            + $"OrigamSettings__DatabaseUsername={dbUserName}\n"
+            + $"OrigamSettings__DatabasePassword={dbPassword}\n"
+            + $"OrigamSettings__Name={project.Name}\n"
+            + $"OrigamSettings__DatabaseName={project.DataDatabaseName.ToLower()}\n"
+            + $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}\n"
+            + $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets\n"
+            + $"DatabaseType={dbType}\n"
+            + $"ExternalDomain_SetOnStart={WebSiteUrl(project)}\n"
+            + "TZ=Europe/Prague";
         File.WriteAllText(config.EnvFilePath, content);
     }
-    
+
     private void CreateCmdFile(Project project, DockerConfig config)
     {
         string content =
-            $"docker run --env-file \"{config.EnvFilePath}\" ^\n" +
-            $"    -it --name {project.Name} ^\n" +
-            $"    -v \"{project.SourcesFolder}\\model\":{config.ModelPath} ^\n" +
-            $"    -v \"{project.SourcesFolder}\\customAssets\":{config.CustomAssetsPath} ^\n" +
-            $"    -p {project.DockerPort}:443 ^\n" +
-            $"    {config.BaseImage}\n" +
-            "\n" +
-            "REM After you run the above command go to https://localhost to open the client web application.\n" +
-            "\n" +
-            $"REM {config.BaseImage} is the latest version, that may not be what you want.\n" +
-            "REM Here you can find current releases and their docker images:\n" +
-            "REM https://github.com/origam/origam/releases";
+            $"docker run --env-file \"{config.EnvFilePath}\" ^\n"
+            + $"    -it --name {project.Name} ^\n"
+            + $"    -v \"{project.SourcesFolder}\\model\":{config.ModelPath} ^\n"
+            + $"    -v \"{project.SourcesFolder}\\customAssets\":{config.CustomAssetsPath} ^\n"
+            + $"    -p {project.DockerPort}:443 ^\n"
+            + $"    {config.BaseImage}\n"
+            + "\n"
+            + "REM After you run the above command go to https://localhost to open the client web application.\n"
+            + "\n"
+            + $"REM {config.BaseImage} is the latest version, that may not be what you want.\n"
+            + "REM Here you can find current releases and their docker images:\n"
+            + "REM https://github.com/origam/origam/releases";
         File.WriteAllText(config.CmdFilePath, content);
     }
-    
+
     private static DockerConfig GetDockerConfig(Platform platform, Project project)
     {
         return platform switch
@@ -101,7 +109,7 @@ public class DockerBuilder : AbstractBuilder
                 CustomAssetsPath = "/home/origam/projectData/customAssets",
                 ModelPath = "/home/origam/projectData/model",
                 CmdFilePath = project.DockerCmdPathLinux,
-                BaseImage = "origam/server:master-latest.linux"
+                BaseImage = "origam/server:master-latest.linux",
             },
             Platform.Windows => new DockerConfig
             {
@@ -109,28 +117,28 @@ public class DockerBuilder : AbstractBuilder
                 CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
                 ModelPath = @"C:\home\origam\projectData\model",
                 CmdFilePath = project.DockerCmdPathWindows,
-                BaseImage = "origam/server:master-latest.win"
+                BaseImage = "origam/server:master-latest.win",
             },
-            _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform")
+            _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform"),
         };
     }
-    
+
     private string GetDbHost(Project project)
     {
-        if (project.DatabaseServerName.Equals("localhost") ||
-            project.DatabaseServerName.Equals(".") ||
-            project.DatabaseServerName.Equals("127.0.0.1"))
+        if (
+            project.DatabaseServerName.Equals("localhost")
+            || project.DatabaseServerName.Equals(".")
+            || project.DatabaseServerName.Equals("127.0.0.1")
+        )
         {
             return "host.docker.internal";
         }
         return project.DatabaseServerName;
     }
-    
-    public override void Rollback()
-    {
-    }
-    
-    public string WebSiteUrl (Project project)
+
+    public override void Rollback() { }
+
+    public string WebSiteUrl(Project project)
     {
         if (project.DockerPort == Constants.DefaultHttpsPort)
         {
@@ -138,12 +146,13 @@ public class DockerBuilder : AbstractBuilder
         }
         return "https://localhost:" + project.DockerPort;
     }
-    
+
     enum Platform
     {
-        Windows, Linux
+        Windows,
+        Linux,
     }
-    
+
     class DockerConfig
     {
         public string EnvFilePath { get; init; }

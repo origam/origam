@@ -24,44 +24,50 @@ using System.Windows.Forms;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Gui.Designer;
+
 [ProvideProperty("RequestSaveAfterChange", typeof(Control))]
 public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
 {
-	[Category("Behavior")]
-    [Description("If set to true, client will attempt to send save request after each change, if there are no errors.")]
+    [Category("Behavior")]
+    [Description(
+        "If set to true, client will attempt to send save request after each change, if there are no errors."
+    )]
     [ExtenderProvidedProperty()]
-	public bool GetRequestSaveAfterChange(Control acontrol)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			return csi.RequestSaveAfterChange;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	public void SetRequestSaveAfterChange(Control acontrol, bool value)
-	{
-		ControlSetItem csi = acontrol.Tag as ControlSetItem;
-		if(csi != null)
-		{
-			csi.RequestSaveAfterChange = value;
-		}
-	}
-	#region IExtenderProvider Members
-	public bool CanExtend(object extendee) 
-	{
-        if (extendee is Control 
-        && (extendee as Control).Tag is ControlSetItem) {
-            return ((extendee as Control).Tag as ControlSetItem).ControlItem
+    public bool GetRequestSaveAfterChange(Control acontrol)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            return csi.RequestSaveAfterChange;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void SetRequestSaveAfterChange(Control acontrol, bool value)
+    {
+        ControlSetItem csi = acontrol.Tag as ControlSetItem;
+        if (csi != null)
+        {
+            csi.RequestSaveAfterChange = value;
+        }
+    }
+
+    #region IExtenderProvider Members
+    public bool CanExtend(object extendee)
+    {
+        if (extendee is Control && (extendee as Control).Tag is ControlSetItem)
+        {
+            return ((extendee as Control).Tag as ControlSetItem)
+                .ControlItem
                 .RequestSaveAfterChangeAllowed;
         }
         else
         {
             return false;
         }
-	}
-	#endregion
+    }
+    #endregion
 }

@@ -23,27 +23,31 @@ using System;
 using System.IO;
 
 namespace Origam.Workbench.Pads;
+
 /// <summary>
 /// Summary description for LogPad.
 /// </summary>
 public class LogPad : OutputPad
 {
-	public LogPad() : base()
-	{
-		// Instantiate the writer 
-		TextWriter _writer = new LogPadStreamWriter(this); 
-		// Redirect the out Console stream 
-		Console.SetOut(_writer);
-		this.TabText = "Log";
-		this.Text = "Log";
-	}
+    public LogPad()
+        : base()
+    {
+        // Instantiate the writer
+        TextWriter _writer = new LogPadStreamWriter(this);
+        // Redirect the out Console stream
+        Console.SetOut(_writer);
+        this.TabText = "Log";
+        this.Text = "Log";
+    }
+
     private void InitializeComponent()
     {
-        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
+        System.ComponentModel.ComponentResourceManager resources =
+            new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
         this.SuspendLayout();
-        // 
+        //
         // LogPad
-        // 
+        //
         this.ClientSize = new System.Drawing.Size(352, 271);
         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
         this.Name = "LogPad";

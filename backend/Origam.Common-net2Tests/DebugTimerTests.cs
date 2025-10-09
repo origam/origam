@@ -23,6 +23,7 @@ using System.Threading;
 using NUnit.Framework;
 
 namespace Origam.Common_net2Tests;
+
 [TestFixture]
 public class DebugTimerTests
 {

@@ -20,37 +20,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Commands;
+
 /// <summary>
 /// Connect to the workbench repository
 /// </summary>
 public class LoadSelectedPackage : AbstractMenuCommand
 {
-	public override bool IsEnabled
-	{
-		get
-		{
-			return (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension != null;
-		}
-		set
-		{
-			base.IsEnabled = value;
-		}
-	}
-	public override void Run()
-	{
-		Package extension = (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension;
-		
-		SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-		if(schema.LoadSchema((Guid)extension.PrimaryKey["Id"]))
-		{
-			Commands.ViewSchemaBrowserPad cmd = new Origam.Workbench.Commands.ViewSchemaBrowserPad();
-			cmd.Run();
-		}
-	}		
+    public override bool IsEnabled
+    {
+        get
+        {
+            return (
+                    WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad))
+                    as Pads.ExtensionPad
+                ).SelectedExtension != null;
+        }
+        set { base.IsEnabled = value; }
+    }
+
+    public override void Run()
+    {
+        Package extension = (
+            WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad
+        ).SelectedExtension;
+
+        SchemaService schema =
+            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        if (schema.LoadSchema((Guid)extension.PrimaryKey["Id"]))
+        {
+            Commands.ViewSchemaBrowserPad cmd =
+                new Origam.Workbench.Commands.ViewSchemaBrowserPad();
+            cmd.Run();
+        }
+    }
 }

@@ -22,7 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench.Diagram.Graphs;
+
 interface IWorkflowSubgraph
 {
-    Guid WorkflowItemId { get;}
+    Guid WorkflowItemId { get; }
 }

@@ -20,93 +20,84 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win;
+
 /// <summary>
 /// Summary description for AsTextBox.
 /// </summary>
 [ToolboxBitmap(typeof(AsTextBox))]
 public class AsTreeView2 : TextBox
 {
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	#region Handling base events
-	protected override void InitLayout()
-	{
-		if(this.Disposing) return;
-		this.BorderStyle = BorderStyle.Fixed3D;
-		this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-		this.AcceptsTab = true;
-		this.Multiline = true;
-		base.InitLayout ();
-	}
-	#endregion
-	private Guid _styleId;
-	[Browsable(false)]
-	public Guid StyleId
-	{
-		get
-		{
-			return _styleId;
-		}
-		set
-		{
-			_styleId = value;
-		}
-	}
-	private Guid _treeId;
-	[Browsable(false)]
-	public Guid TreeId
-	{
-		get
-		{
-			return _treeId;
-		}
-		set
-		{
-			_treeId = value;
-		}
-	}
-	[TypeConverter(typeof(TreeStructureConverter))]
-	public TreeStructure Tree
-	{
-		get
-		{
-			return (TreeStructure)_persistence.SchemaProvider.RetrieveInstance(typeof(TreeStructure), new ModelElementKey(this.TreeId));
-		}
-		set
-		{
-			this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	[TypeConverter(typeof(StylesConverter))]
-	public UIStyle Style
-	{
-		get
-		{
-			return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-		}
-		set
-		{
-			this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
-	private string _formParameterName;
-	public string FormParameterName
-	{
-		get
-		{
-			return _formParameterName;
-		}
-		set
-		{
-			_formParameterName = value;
-		}
-	}
+    private IPersistenceService _persistence =
+        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+    #region Handling base events
+    protected override void InitLayout()
+    {
+        if (this.Disposing)
+            return;
+        this.BorderStyle = BorderStyle.Fixed3D;
+        this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        this.AcceptsTab = true;
+        this.Multiline = true;
+        base.InitLayout();
+    }
+    #endregion
+    private Guid _styleId;
+
+    [Browsable(false)]
+    public Guid StyleId
+    {
+        get { return _styleId; }
+        set { _styleId = value; }
+    }
+    private Guid _treeId;
+
+    [Browsable(false)]
+    public Guid TreeId
+    {
+        get { return _treeId; }
+        set { _treeId = value; }
+    }
+
+    [TypeConverter(typeof(TreeStructureConverter))]
+    public TreeStructure Tree
+    {
+        get
+        {
+            return (TreeStructure)
+                _persistence.SchemaProvider.RetrieveInstance(
+                    typeof(TreeStructure),
+                    new ModelElementKey(this.TreeId)
+                );
+        }
+        set { this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+
+    [TypeConverter(typeof(StylesConverter))]
+    public UIStyle Style
+    {
+        get
+        {
+            return (UIStyle)
+                _persistence.SchemaProvider.RetrieveInstance(
+                    typeof(UIStyle),
+                    new ModelElementKey(this.StyleId)
+                );
+        }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
+    private string _formParameterName;
+    public string FormParameterName
+    {
+        get { return _formParameterName; }
+        set { _formParameterName = value; }
+    }
 }

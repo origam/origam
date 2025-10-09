@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -17,11 +17,12 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using Origam.Windows.Editor.CodeCompletion;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using Origam.Windows.Editor.CodeCompletion;
 
 namespace Origam.Windows.Editor;
+
 /// <summary>
 /// The type of text held in this object.
 /// </summary>
@@ -31,8 +32,9 @@ public enum XmlCompletionItemType
     XmlElement = 1,
     XmlAttribute = 2,
     NamespaceUri = 3,
-    XmlAttributeValue = 4
+    XmlAttributeValue = 4,
 }
+
 /// <summary>
 /// Holds the text for  namespace, child element or attribute
 /// autocomplete (intellisense).
@@ -41,24 +43,23 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
 {
     XmlCompletionItemType dataType = XmlCompletionItemType.XmlElement;
     string description = String.Empty;
+
     public XmlCompletionItem(string text)
-        : this(text, String.Empty, XmlCompletionItemType.XmlElement)
-    {
-    }
+        : this(text, String.Empty, XmlCompletionItemType.XmlElement) { }
+
     public XmlCompletionItem(string text, string description)
-        : this(text, description, XmlCompletionItemType.XmlElement)
-    {
-    }
+        : this(text, description, XmlCompletionItemType.XmlElement) { }
+
     public XmlCompletionItem(string text, XmlCompletionItemType dataType)
-        : this(text, String.Empty, dataType)
-    {
-    }
+        : this(text, String.Empty, dataType) { }
+
     public XmlCompletionItem(string text, string description, XmlCompletionItemType dataType)
         : base(text)
     {
         this.description = description;
         this.dataType = dataType;
     }
+
     /// <summary>
     /// Returns the xml item's documentation as retrieved from
     /// the xs:annotation/xs:documentation element.
@@ -71,6 +72,7 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
     {
         get { return dataType; }
     }
+
     public override void Complete(TextArea area, ISegment segment, EventArgs e)
     {
         base.Complete(area, segment, e);
@@ -84,14 +86,17 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
                 break;
         }
     }
+
     public override string ToString()
     {
         return "[" + Text + "]";
     }
+
     public override int GetHashCode()
     {
         return dataType.GetHashCode() ^ Text.GetHashCode();
     }
+
     public override bool Equals(object obj)
     {
         XmlCompletionItem item = obj as XmlCompletionItem;
@@ -101,6 +106,7 @@ public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletio
         }
         return false;
     }
+
     public int CompareTo(XmlCompletionItem other)
     {
         return Text.CompareTo(other.Text);

@@ -1,48 +1,48 @@
-﻿<UserControl x:Class="Origam.Windows.Editor.GIT.SingleColumnDiffWPF"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Origam.Windows.Editor.GIT"
-             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-
-        <ControlTemplate x:Key="TextEditorControlTemplate" TargetType="{x:Type avalonedit:TextEditor}">
-            <ContentControl
-                Focusable="False"
-                Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
-                VerticalContentAlignment="Top"
-                HorizontalContentAlignment="Left"
-                Background="{TemplateBinding Background}"
-                Padding="{TemplateBinding Padding}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}" />
-        </ControlTemplate>
-
-        <Style x:Key="ContextHeaderStyle" TargetType="TextBlock">
-            <Setter Property="Background" Value="#F8FAFD"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="10pt"/>
-            <Setter Property="Foreground" Value="#4C000000"/>
-        </Style>
-
-        <Style TargetType="avalonedit:TextEditor">
-            <Setter Property="FontFamily" Value="Consolas" />
-            <Setter Property="FontSize" Value="10pt"/>
-            <Setter Property="WordWrap" Value="True"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
-            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="FlowDirection" Value="LeftToRight"/>
-            <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
-            <Setter Property="Template" Value="{StaticResource TextEditorControlTemplate}" />
-        </Style>
-    </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <avalonedit:TextEditor  x:Name="Editor">
-        </avalonedit:TextEditor>
-    </ScrollViewer>
+﻿<UserControl
+  x:Class="Origam.Windows.Editor.GIT.SingleColumnDiffWPF"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:Origam.Windows.Editor.GIT"
+  xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+  mc:Ignorable="d"
+  d:DesignHeight="300"
+  d:DesignWidth="300"
+>
+  <UserControl.Resources>
+    <ControlTemplate x:Key="TextEditorControlTemplate" TargetType="{x:Type avalonedit:TextEditor}">
+      <ContentControl
+        Focusable="False"
+        Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TextArea}"
+        VerticalContentAlignment="Top"
+        HorizontalContentAlignment="Left"
+        Background="{TemplateBinding Background}"
+        Padding="{TemplateBinding Padding}"
+        BorderBrush="{TemplateBinding BorderBrush}"
+        BorderThickness="{TemplateBinding BorderThickness}"
+      />
+    </ControlTemplate>
+    <Style x:Key="ContextHeaderStyle" TargetType="TextBlock">
+      <Setter Property="Background" Value="#F8FAFD" />
+      <Setter Property="FontFamily" Value="Consolas" />
+      <Setter Property="FontSize" Value="10pt" />
+      <Setter Property="Foreground" Value="#4C000000" />
+    </Style>
+    <Style TargetType="avalonedit:TextEditor">
+      <Setter Property="FontFamily" Value="Consolas" />
+      <Setter Property="FontSize" Value="10pt" />
+      <Setter Property="WordWrap" Value="True" />
+      <Setter Property="IsReadOnly" Value="True" />
+      <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+      <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+      <Setter Property="FlowDirection" Value="LeftToRight" />
+      <!-- AvalonEdit does not support RTL, so ensure we use LTR by default -->
+      <Setter Property="Template" Value="{StaticResource TextEditorControlTemplate}" />
+    </Style>
+  </UserControl.Resources>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <avalonedit:TextEditor x:Name="Editor"></avalonedit:TextEditor>
+  </ScrollViewer>
 </UserControl>

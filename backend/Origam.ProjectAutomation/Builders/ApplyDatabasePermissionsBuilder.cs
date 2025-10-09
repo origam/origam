@@ -23,6 +23,7 @@ using System;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation;
+
 public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
 {
     string _loginName;
@@ -30,11 +31,9 @@ public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
     DatabaseType _databaseType;
     public override string Name
     {
-        get
-        {
-            return "Apply Database Permissions";
-        }
+        get { return "Apply Database Permissions"; }
     }
+
     public override void Execute(Project project)
     {
         _databaseType = project.DatabaseType;
@@ -50,12 +49,21 @@ public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
                 project.DatabaseIntegratedAuthentication
             );
     }
+
     private string BuildConnectionString(Project project)
     {
-        return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.DatabasePort,
-        project.DataDatabaseName, project.DatabaseUserName,
-        project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
+        return DataService(_databaseType)
+            .BuildConnectionString(
+                project.DatabaseServerName,
+                project.DatabasePort,
+                project.DataDatabaseName,
+                project.DatabaseUserName,
+                project.DatabasePassword,
+                project.DatabaseIntegratedAuthentication,
+                false
+            );
     }
+
     public override void Rollback()
     {
         DataService(_databaseType).DeleteUser(_loginName, _integratedAuthentication);

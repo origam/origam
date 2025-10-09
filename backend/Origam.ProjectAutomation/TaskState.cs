@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.ProjectAutomation;
+
 public enum TaskState
 {
     Prepared,
@@ -28,5 +29,5 @@ public enum TaskState
     RollingBack,
     RolledBack,
     RollbackFailed,
-    Failed
+    Failed,
 }

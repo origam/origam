@@ -30,45 +30,44 @@ using Origam.Workbench.Diagram.NodeDrawing;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.InternalEditor;
-public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
+
+public class GeneralDiagramEditor<T> : IDiagramEditor
+    where T : ISchemaItem
 {
     private readonly IPersistenceProvider persistenceProvider;
-    public GeneralDiagramEditor(GViewer gViewer, T schemaItem,
+
+    public GeneralDiagramEditor(
+        GViewer gViewer,
+        T schemaItem,
         IDiagramFactory<T, Graph> factory,
-        IPersistenceProvider persistenceProvider)
+        IPersistenceProvider persistenceProvider
+    )
     {
         this.persistenceProvider = persistenceProvider;
         gViewer.Graph = factory.Draw(schemaItem);
         gViewer.EdgeInsertButtonVisible = false;
         gViewer.DoubleClick += GViewerOnDoubleClick;
     }
+
     private void GViewerOnDoubleClick(object sender, EventArgs e)
     {
         GViewer viewer = sender as GViewer;
         if (viewer.SelectedObject is DrawingNode node)
         {
             Guid schemaId = IdTranslator.ToSchemaId(node);
-            if (schemaId == Guid.Empty) return;
-            ISchemaItem clickedItem = 
-                (ISchemaItem)persistenceProvider
-                    .RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
-            if(clickedItem != null)
+            if (schemaId == Guid.Empty)
+                return;
+            ISchemaItem clickedItem = (ISchemaItem)
+                persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
+            if (clickedItem != null)
             {
-                EditSchemaItem cmd = new EditSchemaItem
-                {
-                    ShowDialog = true,
-                    Owner = clickedItem
-                };
+                EditSchemaItem cmd = new EditSchemaItem { ShowDialog = true, Owner = clickedItem };
                 cmd.Run();
             }
         }
     }
-    
-    public void Dispose()
-    {
-    }
-    public void ReDrawAndKeepFocus()
-    {
-        
-    }
+
+    public void Dispose() { }
+
+    public void ReDrawAndKeepFocus() { }
 }
