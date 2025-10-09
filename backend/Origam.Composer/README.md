@@ -34,6 +34,8 @@ All docker images are available on ORIGAM Github: https://github.com/origam/orig
 
 You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Program arguments`.
 
+On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamProjects/MyOrigamApp"`
+
 Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
