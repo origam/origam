@@ -43,7 +43,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 
         OrigamEngine.OrigamEngine.InitializeRuntimeServices();
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
-        SchemaService.SchemaLoaded += EventHandler_SchemaLoaded;
+        SchemaService.SchemaLoaded += EventHandler_SchemaLoaded!;
 
         SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
     }
