@@ -45,7 +45,7 @@ public class ProjectBuilderService(
     {
         SecurityManager.SetServerIdentity();
 
-        IBuilderTask activeTask = null;
+        IBuilderTask? activeTask = null;
         try
         {
             foreach (IBuilderTask builder in Tasks)
@@ -59,7 +59,10 @@ public class ProjectBuilderService(
         }
         catch
         {
-            activeTask.State = BuilderTaskState.Failed;
+            if (activeTask != null)
+            {
+                activeTask.State = BuilderTaskState.Failed;
+            }
             for (var i = Tasks.Count - 1; i >= 0; i--)
             {
                 RollbackTask(Tasks[i], project);
