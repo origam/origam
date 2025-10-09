@@ -28,7 +28,7 @@ namespace Origam.Composer.Services;
 
 public class GitService : IGitService
 {
-    private Repository Repo;
+    private Repository? Repo;
     private readonly List<string> IgnoreRules = ["/index.bin", "scripts/"];
     private readonly string GitConfigPath;
 

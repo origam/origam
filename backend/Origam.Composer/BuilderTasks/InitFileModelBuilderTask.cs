@@ -29,7 +29,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 {
     public override string Name => "Initialize model (from files)";
 
-    private SchemaService SchemaService;
+    private SchemaService? SchemaService;
 
     public override void Execute(Project project)
     {
@@ -50,7 +50,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 
     public override void Rollback(Project project)
     {
-        SchemaService.UnloadSchema();
+        SchemaService?.UnloadSchema();
         OrigamEngine.OrigamEngine.UnloadConnectedServices();
     }
 
