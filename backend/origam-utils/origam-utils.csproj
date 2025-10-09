@@ -10,12 +10,12 @@
     <AssemblyName>origam-utils</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>net472;net8.0</TargetFrameworks>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
