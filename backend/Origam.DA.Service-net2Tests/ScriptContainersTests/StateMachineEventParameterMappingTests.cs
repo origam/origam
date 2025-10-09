@@ -24,12 +24,10 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.ServiceTests.MetaModelUpgraderTests;
 
 namespace Origam.DA.ServiceTests.ScriptContainersTests;
-
 [TestFixture]
-public class StateMachineEventParameterMappingTests : ClassUpgradeTestBase
+public class StateMachineEventParameterMappingTests: ClassUpgradeTestBase
 {
     protected override string DirName => "ScriptContainersTests";
-
     [Test]
     public void ShouldRenameTypeProperty()
     {

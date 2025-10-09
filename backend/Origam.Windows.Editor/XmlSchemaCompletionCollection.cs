@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -24,7 +24,9 @@ namespace Origam.Windows.Editor
     [Serializable()]
     public class XmlSchemaCompletionCollection : Collection<XmlSchemaCompletion>
     {
-        public XmlSchemaCompletionCollection() { }
+        public XmlSchemaCompletionCollection()
+        {
+        }
 
         public XmlSchemaCompletionCollection(XmlSchemaCompletionCollection schemas)
         {
@@ -38,10 +40,7 @@ namespace Origam.Windows.Editor
 
         public XmlCompletionItemCollection GetNamespaceCompletion(string textUpToCursor)
         {
-            string attrName = XmlParser.GetAttributeNameAtIndex(
-                textUpToCursor,
-                textUpToCursor.Length
-            );
+            string attrName = XmlParser.GetAttributeNameAtIndex(textUpToCursor, textUpToCursor.Length);
             if (attrName == "xmlns" || attrName.StartsWith("xmlns:"))
             {
                 return GetNamespaceCompletion();
@@ -55,10 +54,7 @@ namespace Origam.Windows.Editor
 
             foreach (XmlSchemaCompletion schema in this)
             {
-                XmlCompletionItem completionItem = new XmlCompletionItem(
-                    schema.NamespaceUri,
-                    XmlCompletionItemType.NamespaceUri
-                );
+                XmlCompletionItem completionItem = new XmlCompletionItem(schema.NamespaceUri, XmlCompletionItemType.NamespaceUri);
                 if (!completionItems.Contains(completionItem))
                 {
                     completionItems.Add(completionItem);
@@ -124,10 +120,7 @@ namespace Origam.Windows.Editor
             return schemas;
         }
 
-        public XmlSchemaCompletionCollection GetSchemas(
-            XmlElementPath path,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlSchemaCompletionCollection GetSchemas(XmlElementPath path, XmlSchemaCompletion defaultSchema)
         {
             string namespaceUri = path.GetRootNamespace();
             if (String.IsNullOrEmpty(namespaceUri))
@@ -137,10 +130,7 @@ namespace Origam.Windows.Editor
             return GetSchemas(namespaceUri);
         }
 
-        XmlSchemaCompletionCollection GetSchemaCollectionUsingDefaultSchema(
-            XmlElementPath path,
-            XmlSchemaCompletion defaultSchema
-        )
+        XmlSchemaCompletionCollection GetSchemaCollectionUsingDefaultSchema(XmlElementPath path, XmlSchemaCompletion defaultSchema)
         {
             XmlSchemaCompletionCollection schemas = new XmlSchemaCompletionCollection();
             if (defaultSchema != null)
@@ -151,10 +141,7 @@ namespace Origam.Windows.Editor
             return schemas;
         }
 
-        public XmlCompletionItemCollection GetChildElementCompletion(
-            XmlElementPath path,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetChildElementCompletion(XmlElementPath path, XmlSchemaCompletion defaultSchema)
         {
             XmlCompletionItemCollection items = new XmlCompletionItemCollection();
             foreach (XmlSchemaCompletion schema in GetSchemas(path, defaultSchema))
@@ -164,19 +151,13 @@ namespace Origam.Windows.Editor
             return items;
         }
 
-        public XmlCompletionItemCollection GetElementCompletionForAllNamespaces(
-            XmlElementPath path,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetElementCompletionForAllNamespaces(XmlElementPath path, XmlSchemaCompletion defaultSchema)
         {
             XmlElementPathsByNamespace pathsByNamespace = new XmlElementPathsByNamespace(path);
             return GetElementCompletion(pathsByNamespace, defaultSchema);
         }
 
-        public XmlCompletionItemCollection GetElementCompletion(
-            XmlElementPathsByNamespace pathsByNamespace,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetElementCompletion(XmlElementPathsByNamespace pathsByNamespace, XmlSchemaCompletion defaultSchema)
         {
             XmlCompletionItemCollection items = new XmlCompletionItemCollection();
             foreach (XmlElementPath path in pathsByNamespace)
@@ -187,12 +168,7 @@ namespace Origam.Windows.Editor
             XmlNamespaceCollection namespaceWithoutPaths = pathsByNamespace.NamespacesWithoutPaths;
             if (items.Count == 0)
             {
-                if (
-                    !IsDefaultSchemaNamespaceDefinedInPathsByNamespace(
-                        namespaceWithoutPaths,
-                        defaultSchema
-                    )
-                )
+                if (!IsDefaultSchemaNamespaceDefinedInPathsByNamespace(namespaceWithoutPaths, defaultSchema))
                 {
                     namespaceWithoutPaths.Add(defaultSchema.Namespace);
                 }
@@ -201,10 +177,7 @@ namespace Origam.Windows.Editor
             return items;
         }
 
-        bool IsDefaultSchemaNamespaceDefinedInPathsByNamespace(
-            XmlNamespaceCollection namespaces,
-            XmlSchemaCompletion defaultSchema
-        )
+        bool IsDefaultSchemaNamespaceDefinedInPathsByNamespace(XmlNamespaceCollection namespaces, XmlSchemaCompletion defaultSchema)
         {
             if (defaultSchema != null)
             {
@@ -213,9 +186,7 @@ namespace Origam.Windows.Editor
             return true;
         }
 
-        public XmlCompletionItemCollection GetRootElementCompletion(
-            XmlNamespaceCollection namespaces
-        )
+        public XmlCompletionItemCollection GetRootElementCompletion(XmlNamespaceCollection namespaces)
         {
             XmlCompletionItemCollection items = new XmlCompletionItemCollection();
             foreach (XmlNamespace ns in namespaces)
@@ -228,10 +199,7 @@ namespace Origam.Windows.Editor
             return items;
         }
 
-        public XmlCompletionItemCollection GetAttributeCompletion(
-            XmlElementPath path,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetAttributeCompletion(XmlElementPath path, XmlSchemaCompletion defaultSchema)
         {
             XmlCompletionItemCollection items = new XmlCompletionItemCollection();
             foreach (XmlSchemaCompletion schema in GetSchemas(path, defaultSchema))
@@ -241,26 +209,17 @@ namespace Origam.Windows.Editor
             return items;
         }
 
-        public XmlCompletionItemCollection GetElementCompletion(
-            string textUpToCursor,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetElementCompletion(string textUpToCursor, XmlSchemaCompletion defaultSchema)
         {
             XmlElementPath parentPath = XmlParser.GetParentElementPath(textUpToCursor);
             return GetElementCompletionForAllNamespaces(parentPath, defaultSchema);
         }
 
-        public XmlCompletionItemCollection GetAttributeCompletion(
-            string textUpToCursor,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetAttributeCompletion(string textUpToCursor, XmlSchemaCompletion defaultSchema)
         {
             if (!XmlParser.IsInsideAttributeValue(textUpToCursor, textUpToCursor.Length))
             {
-                XmlElementPath path = XmlParser.GetActiveElementStartPath(
-                    textUpToCursor,
-                    textUpToCursor.Length
-                );
+                XmlElementPath path = XmlParser.GetActiveElementStartPath(textUpToCursor, textUpToCursor.Length);
                 path.Compact();
                 if (path.Elements.HasItems)
                 {
@@ -270,35 +229,21 @@ namespace Origam.Windows.Editor
             return new XmlCompletionItemCollection();
         }
 
-        public XmlCompletionItemCollection GetAttributeValueCompletion(
-            char charTyped,
-            string textUpToCursor,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetAttributeValueCompletion(char charTyped, string textUpToCursor, XmlSchemaCompletion defaultSchema)
         {
             if (XmlParser.IsAttributeValueChar(charTyped))
             {
-                string attributeName = XmlParser.GetAttributeName(
-                    textUpToCursor,
-                    textUpToCursor.Length
-                );
+                string attributeName = XmlParser.GetAttributeName(textUpToCursor, textUpToCursor.Length);
                 if (attributeName.Length > 0)
                 {
-                    XmlElementPath elementPath = XmlParser.GetActiveElementStartPath(
-                        textUpToCursor,
-                        textUpToCursor.Length
-                    );
+                    XmlElementPath elementPath = XmlParser.GetActiveElementStartPath(textUpToCursor, textUpToCursor.Length);
                     return GetAttributeValueCompletion(elementPath, attributeName, defaultSchema);
                 }
             }
             return new XmlCompletionItemCollection();
         }
 
-        public XmlCompletionItemCollection GetAttributeValueCompletion(
-            string text,
-            int offset,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetAttributeValueCompletion(string text, int offset, XmlSchemaCompletion defaultSchema)
         {
             if (XmlParser.IsInsideAttributeValue(text, offset))
             {
@@ -309,11 +254,7 @@ namespace Origam.Windows.Editor
             return new XmlCompletionItemCollection();
         }
 
-        public XmlCompletionItemCollection GetAttributeValueCompletion(
-            XmlElementPath path,
-            string attributeName,
-            XmlSchemaCompletion defaultSchema
-        )
+        public XmlCompletionItemCollection GetAttributeValueCompletion(XmlElementPath path, string attributeName, XmlSchemaCompletion defaultSchema)
         {
             path.Compact();
             XmlCompletionItemCollection items = new XmlCompletionItemCollection();

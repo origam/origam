@@ -22,25 +22,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI;
 
-namespace Origam.Schema.WorkflowModel.UI;
 
+namespace Origam.Schema.WorkflowModel.UI;
 /// <summary>
 /// Summary description for CreateDataStructureFromEntityCommand.
 /// </summary>
 public class CreateLoadDataCommand : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return Owner is ContextStore; }
-        set
-        {
-            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-        }
-    }
-
-    public override void Run()
-    {
-        ContextStore context = Owner as ContextStore;
+	public override bool IsEnabled
+	{
+		get
+		{
+			return Owner is ContextStore;
+		}
+		set
+		{
+			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+		}
+	}
+	public override void Run()
+	{
+		ContextStore context = Owner as ContextStore;
         WorkflowHelper.CreateDataServiceLoadDataTask(context, true);
-    }
+	}
 }

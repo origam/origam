@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Drawing;
 
 namespace Origam.Git;
-
 public class WebGitData
 {
     public WebGitData(Image avatar, string name, string link, string readme)
@@ -31,9 +30,8 @@ public class WebGitData
         this.RepositoryLink = link;
         this.Readme = readme;
     }
-
-    public Image avatar { get; }
+    public Image avatar { get;  }
     public string RepositoryName { get; }
-    public string RepositoryLink { get; }
-    public string Readme { get; }
+    public string RepositoryLink { get;  }
+    public string Readme { get;  }
 }

@@ -1,13 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project
-  ToolsVersion="12.0"
-  DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
->
-  <Import
-    Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"
-  />
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -23,9 +16,7 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -148,8 +139,10 @@
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\SSRSWebReference\</RelPath>
       <UpdateFromURL>http://192.168.99.19/ReportServer_SQLEXPRESS/ReportExecution2005.asmx</UpdateFromURL>
-      <ServiceLocationURL></ServiceLocationURL>
-      <CachedDynamicPropName></CachedDynamicPropName>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Origam_BI_SSRS_SSRSWebReference_ReportExecutionService</CachedSettingsPropName>
     </WebReferenceUrl>

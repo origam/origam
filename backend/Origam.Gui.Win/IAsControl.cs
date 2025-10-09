@@ -20,11 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for IAsControl.
 /// </summary>
 public interface IAsControl
 {
-    string DefaultBindableProperty { get; }
+	string DefaultBindableProperty{get;}
 }

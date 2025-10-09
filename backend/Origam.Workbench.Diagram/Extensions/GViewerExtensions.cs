@@ -24,7 +24,6 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 
 namespace Origam.Workbench.Diagram.Extensions;
-
 public static class GViewerExtensions
 {
     public static IViewerNode FindViewerNode(this GViewer gViewer, Node node)
@@ -33,7 +32,7 @@ public static class GViewerExtensions
             .Entities.OfType<IViewerNode>()
             .SingleOrDefault(viewerNode => Equals(viewerNode.Node, node));
     }
-
+   
     public static void Redraw(this GViewer gViewer)
     {
         var graph = gViewer.Graph;

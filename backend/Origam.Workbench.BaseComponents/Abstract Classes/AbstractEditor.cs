@@ -28,18 +28,16 @@ using Origam.Extensions;
 using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Schema;
+using Origam.Workbench.Services;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
-using Origam.Workbench.Services;
 using Type = System.Type;
 
 namespace Origam.Workbench.Editors;
-
-public class AbstractEditor : AbstractViewContent, IToolStripContainer
+public class AbstractEditor : AbstractViewContent, IToolStripContainer	
 {
-    public event EventHandler ContentLoaded;
-    IDocumentationService _documentation =
-        ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
+	public event EventHandler ContentLoaded;
+	IDocumentationService _documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
     private Panel toolPanel;
     private ToolStrip toolStrip1;
     private ToolStripLabel actionsLabel;
@@ -54,14 +52,19 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     private ISubmenuBuilder _newElementsBuilder = null;
     protected bool showMenusInAppToolStrip = false;
     public override object Content { get; set; }
-    public ISchemaItem ModelContent
+	public ISchemaItem ModelContent
     {
-        get { return Content as ISchemaItem; }
-        set { Content = value; }
+        get
+        {
+            return Content as ISchemaItem;
+        }
+        set
+        {
+            Content = value;
+        }
     }
-
-    private void InitializeComponent()
-    {
+	private void InitializeComponent()
+	{
         this.toolPanel = new System.Windows.Forms.Panel();
         this.toolStrip1 = new System.Windows.Forms.ToolStrip();
         this.actionsLabel = new System.Windows.Forms.ToolStripLabel();
@@ -75,9 +78,9 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.headerPanel.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(this.elementPicture)).BeginInit();
         this.SuspendLayout();
-        //
+        // 
         // toolPanel
-        //
+        // 
         this.toolPanel.AutoSize = true;
         this.toolPanel.Controls.Add(this.toolStrip1);
         this.toolPanel.Dock = System.Windows.Forms.DockStyle.Right;
@@ -85,14 +88,14 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.toolPanel.Name = "toolPanel";
         this.toolPanel.Size = new System.Drawing.Size(79, 521);
         this.toolPanel.TabIndex = 2;
-        //
+        // 
         // toolStrip1
-        //
+        // 
         this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
         this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-        this.toolStrip1.Items.AddRange(
-            new System.Windows.Forms.ToolStripItem[] { this.actionsLabel, this.newElementsLabel }
-        );
+        this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+        this.actionsLabel,
+        this.newElementsLabel});
         this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
         this.toolStrip1.Location = new System.Drawing.Point(0, 0);
         this.toolStrip1.Name = "toolStrip1";
@@ -102,37 +105,25 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.toolStrip1.Stretch = true;
         this.toolStrip1.TabIndex = 2;
         this.toolStrip1.Text = "toolStrip1";
-        //
+        // 
         // actionsLabel
-        //
-        this.actionsLabel.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            9.75F,
-            System.Drawing.FontStyle.Bold,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
-        );
+        // 
+        this.actionsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
         this.actionsLabel.Name = "actionsLabel";
         this.actionsLabel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
         this.actionsLabel.Size = new System.Drawing.Size(59, 32);
         this.actionsLabel.Text = "Actions";
-        //
+        // 
         // newElementsLabel
-        //
-        this.newElementsLabel.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            9.75F,
-            System.Drawing.FontStyle.Bold,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
-        );
+        // 
+        this.newElementsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
         this.newElementsLabel.Name = "newElementsLabel";
         this.newElementsLabel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
         this.newElementsLabel.Size = new System.Drawing.Size(38, 32);
         this.newElementsLabel.Text = "New";
-        //
+        // 
         // headerPanel
-        //
+        // 
         this.headerPanel.Controls.Add(this.lblName);
         this.headerPanel.Controls.Add(this.lblType);
         this.headerPanel.Controls.Add(this.elementPicture);
@@ -141,18 +132,12 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.headerPanel.Name = "headerPanel";
         this.headerPanel.Size = new System.Drawing.Size(714, 40);
         this.headerPanel.TabIndex = 0;
-        //
+        // 
         // lblName
-        //
+        // 
         this.lblName.AutoSize = true;
         this.lblName.Dock = System.Windows.Forms.DockStyle.Left;
-        this.lblName.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            12F,
-            System.Drawing.FontStyle.Bold,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
-        );
+        this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
         this.lblName.Location = new System.Drawing.Point(74, 0);
         this.lblName.Name = "lblName";
         this.lblName.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
@@ -160,19 +145,13 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.lblName.TabIndex = 1;
         this.lblName.Text = "label1";
         this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        //
+        // 
         // lblType
-        //
+        // 
         this.lblType.AutoSize = true;
         this.lblType.BackColor = System.Drawing.Color.Transparent;
         this.lblType.Dock = System.Windows.Forms.DockStyle.Left;
-        this.lblType.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            12F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
-        );
+        this.lblType.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
         this.lblType.Location = new System.Drawing.Point(16, 0);
         this.lblType.Name = "lblType";
         this.lblType.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
@@ -180,9 +159,9 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.lblType.TabIndex = 1;
         this.lblType.Text = "lblType";
         this.lblType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        //
+        // 
         // elementPicture
-        //
+        // 
         this.elementPicture.Dock = System.Windows.Forms.DockStyle.Left;
         this.elementPicture.Location = new System.Drawing.Point(0, 0);
         this.elementPicture.Name = "elementPicture";
@@ -191,21 +170,15 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         this.elementPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
         this.elementPicture.TabIndex = 0;
         this.elementPicture.TabStop = false;
-        //
+        // 
         // AbstractEditor
-        //
+        // 
         this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
         this.ClientSize = new System.Drawing.Size(714, 561);
         this.Controls.Add(this.toolPanel);
         this.Controls.Add(this.headerPanel);
         this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
-        this.Font = new System.Drawing.Font(
-            "Microsoft Sans Serif",
-            7.875F,
-            System.Drawing.FontStyle.Regular,
-            System.Drawing.GraphicsUnit.Point,
-            ((byte)(238))
-        );
+        this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
         this.Name = "AbstractEditor";
         this.Closing += AbstractEditor_Closing;
         this.toolPanel.ResumeLayout(false);
@@ -217,23 +190,22 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         ((System.ComponentModel.ISupportInitialize)(this.elementPicture)).EndInit();
         this.ResumeLayout(false);
         this.PerformLayout();
-    }
+	}
 
-    public AbstractEditor()
-    {
-        InitializeComponent();
+	public AbstractEditor()
+	{
+		InitializeComponent();
         // show only vertical scrollbar
         toolPanel.HorizontalScroll.Maximum = 0;
         toolPanel.VerticalScroll.Visible = false;
         toolPanel.AutoScroll = true;
         toolPanel.Hide();
         _saveCmd.Click += SaveCmd_Click;
-        dockCmd.Click += DockCmd_Click;
-        LoadSettings();
-    }
-
-    private void LoadSettings()
-    {
+	    dockCmd.Click += DockCmd_Click;
+	    LoadSettings();
+	}
+	private void LoadSettings()
+	{
         if (ConfigurationManager.GetActiveConfiguration() != null)
         {
             showMenusInAppToolStrip = ConfigurationManager
@@ -241,17 +213,18 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 .ShowEditorMenusInAppToolStrip;
         }
     }
-
-    public override string TitleName
+	public override string TitleName
     {
-        get { return base.TitleName; }
+        get
+        {
+            return base.TitleName;
+        }
         set
         {
             base.TitleName = value;
             lblName.Text = TitleName;
         }
     }
-
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
         if (IsDialog())
@@ -269,22 +242,29 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         }
         return base.ProcessCmdKey(ref msg, keyData);
     }
-
     public ISubmenuBuilder ActionsBuilder
     {
-        get { return _actionsBuilder; }
-        set { _actionsBuilder = value; }
+        get
+        {
+            return _actionsBuilder;
+        }
+        set
+        {
+            _actionsBuilder = value;
+        }
     }
     public ISubmenuBuilder NewElementsBuilder
     {
-        get { return _newElementsBuilder; }
+        get
+        {
+            return _newElementsBuilder;
+        }
         set
         {
             _newElementsBuilder = value;
             RebuildActionsPane();
         }
     }
-
     private void RebuildActionsPane()
     {
         int width = toolPanel.Width;
@@ -295,12 +275,12 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         toolStrip1.Top = 0;
         // Actions
         toolStrip1.Items.Add(actionsLabel);
-        if (!IsDialog() && (ActionsBuilder == null || NewElementsBuilder == null))
+		if (!IsDialog() && (ActionsBuilder == null || NewElementsBuilder == null))
         {
             toolPanel.Hide();
             return;
         }
-        else if (IsDirty && !IsDialog())
+        else if (IsDirty && ! IsDialog())
         {
             toolPanel.Hide();
             return;
@@ -312,7 +292,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         }
         else if (!IsDialog() && !showMenusInAppToolStrip)
         {
-            var actions = this.ActionsBuilder.BuildSubmenu(this.Content);
+            var actions = this.ActionsBuilder.BuildSubmenu(this.Content);           
             var newItems = this.NewElementsBuilder.BuildSubmenu(this.Content);
             if (actions.Length != 0 || newItems.Length != 0)
             {
@@ -344,34 +324,31 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             toolPanel.AutoSize = true;
             toolStrip1.AutoSize = true;
         }
-        if (IsDialog())
-        {
-            toolStrip1.Items.Add(dockCmd);
-            toolPanel.Show();
-        }
-        if (!IsDialog() && toolStrip1.Items.Count == 1 && toolStrip1.Items.Contains(actionsLabel))
-        {
-            toolPanel.Hide();
-        }
-        toolPanel.BackColor = toolStrip1.BackColor;
+		if (IsDialog()){
+			toolStrip1.Items.Add(dockCmd);
+			toolPanel.Show();
+		}
+		if (!IsDialog() && 
+		    toolStrip1.Items.Count == 1 &&
+		    toolStrip1.Items.Contains(actionsLabel))
+		{
+			toolPanel.Hide();
+		}
+		toolPanel.BackColor = toolStrip1.BackColor;
     }
-
     private void DockCmd_Click(object sender, EventArgs e)
     {
-        AbstractEditor newEditor = (AbstractEditor)
-            Activator.CreateInstance(this.GetType(), new object[] { false });
+        AbstractEditor newEditor = (AbstractEditor)Activator.CreateInstance(this.GetType(), new object[] { false });
         newEditor.LoadObject(ModelContent);
         newEditor.TitleName = ModelContent.Name;
         WorkbenchSingleton.Workbench.ShowView(newEditor);
         this.Closing -= AbstractEditor_Closing;
         Close();
     }
-
     private void SaveCmd_Click(object sender, EventArgs e)
     {
         SaveCommand();
     }
-
     private void SaveCommand()
     {
         SaveObject();
@@ -381,33 +358,29 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             this.Close();
         }
     }
-
     public bool IsDialog()
     {
         return ParentForm == null;
     }
-
-    protected virtual void OnContentLoaded(EventArgs e)
-    {
-        if (ContentLoaded != null)
-        {
-            ContentLoaded(this, e);
-        }
+	protected virtual void OnContentLoaded(EventArgs e)
+	{
+		if (ContentLoaded != null) 
+		{
+			ContentLoaded(this, e);
+		}
         RebuildActionsPane();
-    }
-
+	}
     protected override void OnDirtyChanged(EventArgs e)
     {
         base.OnDirtyChanged(e);
         RebuildActionsPane();
         ToolStripsNeedUpdate?.Invoke(this, EventArgs.Empty);
     }
-
     protected override void ViewSpecificLoad(object objectToLoad)
-    {
+	{
         ISchemaItem schemaItem = objectToLoad as ISchemaItem;
         if (schemaItem != null)
-        {
+		{
             SchemaItemDescriptionAttribute attr = schemaItem.GetType().SchemaItemDescription();
             string type = schemaItem.GetType().Name;
             if (attr != null)
@@ -416,21 +389,17 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             }
             lblType.Text = type + ":";
             lblName.Text = schemaItem.Name;
-            var schemaBrowser =
-                WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+            var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
             var imageList = schemaBrowser.ImageList;
             elementPicture.Image = imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
             this.ModelContent = schemaItem;
-            OnContentLoaded(EventArgs.Empty);
-        }
-        else
-        {
-            throw new InvalidCastException(
-                Origam.Workbench.BaseComponents.ResourceUtils.GetString("ErrorISchemaItemOnly")
-            );
-        }
-    }
-
+			OnContentLoaded(EventArgs.Empty);
+		}
+		else
+		{
+			throw new InvalidCastException(Origam.Workbench.BaseComponents.ResourceUtils.GetString("ErrorISchemaItemOnly"));
+		}
+	}
     public override void SaveObject()
     {
         try
@@ -482,7 +451,6 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         }
         this.DialogResult = DialogResult.OK;
     }
-
     public override string HelpTopic
     {
         get
@@ -490,7 +458,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             if (ModelContent != null)
             {
                 HelpTopicAttribute topic = Help(ModelContent.GetType());
-                if (topic != null)
+                if(topic != null)
                 {
                     return topic.Topic;
                 }
@@ -498,7 +466,6 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             return "";
         }
     }
-
     private HelpTopicAttribute Help(Type type)
     {
         object[] attributes = type.GetCustomAttributes(typeof(HelpTopicAttribute), true);
@@ -507,96 +474,74 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         else
             return null;
     }
-
-    private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-    {
-        if (IsDirty)
-        {
-            DialogResult result = MessageBox.Show(
-                Origam.Workbench.BaseComponents.ResourceUtils.GetString(
-                    "DoYouWantSave",
-                    this.TitleName
-                ),
-                Origam.Workbench.BaseComponents.ResourceUtils.GetString("SaveTitle"),
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question
-            );
-
-            switch (result)
-            {
-                case DialogResult.Yes:
-                    try
-                    {
-                        SaveObject();
-                    }
-                    catch (Exception ex)
-                    {
-                        Origam.UI.AsMessageBox.ShowError(
-                            WorkbenchSingleton.Workbench as Form,
-                            ex.Message,
-                            "Error",
-                            ex
-                        );
-                        e.Cancel = true;
-                    }
-                    break;
-                case DialogResult.No:
-                    if (ModelContent.IsPersisted)
-                    // existing item
-                    {
-                        // in case we edited some of the children we invalidate their cache
-                        ModelContent.InvalidateChildrenPersistenceCache();
-                        ModelContent.ClearCache();
-                    }
-                    else
-                    // new item
-                    {
-                        // we have to remove ours object from the colection
-                        ISchemaItemProvider provider =
-                            ModelContent.ParentItem == null
-                                ? ModelContent.RootProvider
-                                : ModelContent.ParentItem as ISchemaItemProvider;
-                        if (provider == null)
-                        {
-                            System.Diagnostics.Debug.Fail(
-                                "Both ParentItem and RootProvider not specified"
-                            );
-                        }
-                        else
-                        {
-                            if (provider.ChildItems.Contains(ModelContent))
-                            {
-                                provider.ChildItems.Remove(ModelContent);
-                            }
-                        }
-                    }
-                    break;
-
-                case DialogResult.Cancel:
-                    e.Cancel = true;
-                    break;
-            }
-        }
-    }
-
-    public virtual List<ToolStrip> GetToolStrips(int maxWidth = -1)
-    {
-        if (!showMenusInAppToolStrip)
-            return new List<ToolStrip>();
-        var actions = ActionsBuilder.BuildSubmenu(Content);
-        var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth / 2);
+	private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+	{
+		if(IsDirty)
+		{
+			DialogResult result = MessageBox.Show(
+				Origam.Workbench.BaseComponents.ResourceUtils.GetString("DoYouWantSave", this.TitleName), 
+				Origam.Workbench.BaseComponents.ResourceUtils.GetString("SaveTitle"), 
+				MessageBoxButtons.YesNoCancel, 
+				MessageBoxIcon.Question);
+		
+			switch(result)
+			{
+				case DialogResult.Yes:
+					try
+					{
+						SaveObject();
+					}
+					catch(Exception ex)
+					{
+						Origam.UI.AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, "Error", ex);
+						e.Cancel = true;
+					}
+					break;
+				case DialogResult.No:
+					if(ModelContent.IsPersisted)
+					// existing item
+					{
+						// in case we edited some of the children we invalidate their cache
+						ModelContent.InvalidateChildrenPersistenceCache();
+						ModelContent.ClearCache();
+					}
+					else
+					// new item
+					{
+						// we have to remove ours object from the colection
+						ISchemaItemProvider provider = ModelContent.ParentItem == null ? ModelContent.RootProvider : ModelContent.ParentItem as ISchemaItemProvider;
+						if(provider == null)
+						{
+							System.Diagnostics.Debug.Fail("Both ParentItem and RootProvider not specified");
+						}
+						else
+						{
+							if(provider.ChildItems.Contains(ModelContent))
+							{
+								provider.ChildItems.Remove(ModelContent);
+							}
+						}								
+					}
+					break;
+		
+				case DialogResult.Cancel:
+					e.Cancel = true;
+					break;
+			}
+		}
+	}
+    public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
+	    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
+		var actions = ActionsBuilder.BuildSubmenu(Content);
+		var actionToolStrip = MakeLabeledToolStrip(actions, "Actions",maxWidth/2);
         var newItems = NewElementsBuilder.BuildSubmenu(Content);
-        var newToolStrip = MakeLabeledToolStrip(newItems, "New", maxWidth / 2);
-        return new List<ToolStrip> { actionToolStrip, newToolStrip };
+		var newToolStrip = MakeLabeledToolStrip(newItems, "New", maxWidth/2);
+		return new List<ToolStrip> {actionToolStrip, newToolStrip};			        
     }
-
-    protected ToolStrip MakeLabeledToolStrip(
-        ToolStripMenuItem[] items,
-        string toolStripName,
-        int maxWidth
-    )
+    protected ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
+        string toolStripName, int maxWidth)
     {
-        BigToolStripButton[] toolStripButtons = items
+	    BigToolStripButton[] toolStripButtons = items
             .Select(item =>
             {
                 BigToolStripButton button = new BigToolStripButton();
@@ -604,35 +549,27 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 button.Image = item.Image ?? ImageRes.UnknownIcon;
                 button.Click += (sender, args) => item.PerformClick();
                 button.Enabled = !IsDirty;
-                item.Enabled = !IsDirty;
+	            item.Enabled = !IsDirty;
                 return button;
-            })
-            .ToArray();
+            }).ToArray();
         LabeledToolStrip toolStrip = new LabeledToolStrip(this);
         toolStrip.Text = toolStripName;
         toolStrip.Items.AddRange(toolStripButtons);
         HideItemsToFitToMaxWidth(toolStrip, items, maxWidth);
         return toolStrip;
     }
-
-    private static void HideItemsToFitToMaxWidth(
-        ToolStrip toolStrip,
-        ToolStripMenuItem[] items,
-        int maxWidth
-    )
+    private static void HideItemsToFitToMaxWidth(ToolStrip toolStrip,
+        ToolStripMenuItem[] items, int maxWidth)
     {
         var itemsToHide = new List<ToolStripItem>();
         var dropDownButton = new BigArrowToolStripDropDownButton();
         for (int i = 0; i < 200; i++)
         {
-            if (itemsToHide.Count == items.Length - 1)
-                break;
-            int totalToolTipWidth =
-                itemsToHide.Count == 0
-                    ? toolStrip.PreferredSize.Width
-                    : toolStrip.PreferredSize.Width + dropDownButton.Width;
-            if (totalToolTipWidth < maxWidth)
-                break;
+            if (itemsToHide.Count == items.Length - 1) break;
+            int totalToolTipWidth = itemsToHide.Count == 0
+                ? toolStrip.PreferredSize.Width
+                : toolStrip.PreferredSize.Width + dropDownButton.Width;
+            if (totalToolTipWidth < maxWidth) break;
             int indexToMove = toolStrip.Items.Count - 1;
             if (indexToMove > -1)
             {
@@ -649,7 +586,6 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             toolStrip.Items.Add(dropDownButton);
         }
     }
-
     public event EventHandler ToolStripsLoaded
     {
         add { }

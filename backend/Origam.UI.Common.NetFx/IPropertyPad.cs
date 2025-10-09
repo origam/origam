@@ -22,12 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.UI;
-
 /// <summary>
 /// Summary description for IPropertyPad.
 /// </summary>
 public interface IPropertyPad
 {
-    System.Windows.Forms.PropertyGrid PropertyGrid { get; }
-    Func<bool> ReadOnlyGetter { get; set; }
+	System.Windows.Forms.PropertyGrid PropertyGrid{get;}
+	Func<bool> ReadOnlyGetter { get; set; }
 }

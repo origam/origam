@@ -23,7 +23,6 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI;
-
 internal interface IFormatter
 {
     void OnKeyDown(object sender, KeyEventArgs e);

@@ -19,13 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.UI.Commands;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Origam.UI.Commands;
 
 namespace Origam.UI.Interfaces;
-
 public interface IWizardForm
 {
     List<ListViewItem> ItemTypeList { get; set; }

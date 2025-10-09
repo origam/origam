@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -26,7 +26,6 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
 namespace Origam.Windows.Editor;
-
 /// <summary>
 /// This class currently inserts the closing tags to typed openening tags
 /// and does smart indentation for xml files.
@@ -41,10 +40,7 @@ public class XmlFormattingStrategy
             if (charTyped == '>')
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                int offset = Math.Min(
-                    editor.TextArea.Caret.Offset - 2,
-                    editor.Document.TextLength - 1
-                );
+                int offset = Math.Min(editor.TextArea.Caret.Offset - 2, editor.Document.TextLength - 1);
                 while (true)
                 {
                     if (offset < 0)
@@ -55,10 +51,7 @@ public class XmlFormattingStrategy
                     if (ch == '<')
                     {
                         string reversedTag = stringBuilder.ToString().Trim();
-                        if (
-                            !reversedTag.StartsWith("/", StringComparison.Ordinal)
-                            && !reversedTag.EndsWith("/", StringComparison.Ordinal)
-                        )
+                        if (!reversedTag.StartsWith("/", StringComparison.Ordinal) && !reversedTag.EndsWith("/", StringComparison.Ordinal))
                         {
                             bool validXml = true;
                             try
@@ -74,26 +67,15 @@ public class XmlFormattingStrategy
                             if (!validXml)
                             {
                                 StringBuilder tag = new StringBuilder();
-                                for (
-                                    int i = reversedTag.Length - 1;
-                                    i >= 0 && !Char.IsWhiteSpace(reversedTag[i]);
-                                    --i
-                                )
+                                for (int i = reversedTag.Length - 1; i >= 0 && !Char.IsWhiteSpace(reversedTag[i]); --i)
                                 {
                                     tag.Append(reversedTag[i]);
                                 }
                                 string tagString = tag.ToString();
-                                if (
-                                    tagString.Length > 0
-                                    && !tagString.StartsWith("!", StringComparison.Ordinal)
-                                    && !tagString.StartsWith("?", StringComparison.Ordinal)
-                                )
+                                if (tagString.Length > 0 && !tagString.StartsWith("!", StringComparison.Ordinal) && !tagString.StartsWith("?", StringComparison.Ordinal))
                                 {
                                     int caretOffset = editor.TextArea.Caret.Offset;
-                                    editor.Document.Insert(
-                                        editor.TextArea.Caret.Offset,
-                                        "</" + tagString + ">"
-                                    );
+                                    editor.Document.Insert(editor.TextArea.Caret.Offset, "</" + tagString + ">");
                                     editor.TextArea.Caret.Offset = caretOffset;
                                 }
                             }
@@ -115,7 +97,6 @@ public class XmlFormattingStrategy
         }
         //editor.Document.EndUndoableAction();
     }
-
     public void IndentLine(TextEditor editor, DocumentLine line)
     {
         //editor.Document.StartUndoableAction();
@@ -132,7 +113,6 @@ public class XmlFormattingStrategy
             //editor.Document.EndUndoableAction();
         }
     }
-
     /// <summary>
     /// This function sets the indentlevel in a range of lines.
     /// </summary>
@@ -152,12 +132,10 @@ public class XmlFormattingStrategy
             //editor.Document.EndUndoableAction();
         }
     }
-
     public void SurroundSelectionWithComment(TextEditor editor)
     {
         SurroundSelectionWithBlockComment(editor, "<!--", "-->");
     }
-
     static void TryIndent(TextEditor editor, int begin, int end)
     {
         string currentIndentation = "";
@@ -190,8 +168,7 @@ public class XmlFormattingStrategy
                 }
                 while (r.LineNumber >= nextLine)
                 {
-                    if (nextLine > end)
-                        break;
+                    if (nextLine > end) break;
                     if (lastType == XmlNodeType.CDATA || lastType == XmlNodeType.Comment)
                     {
                         nextLine++;
@@ -217,10 +194,7 @@ public class XmlFormattingStrategy
                 {
                     tagStack.Push(currentIndentation);
                     if (r.LineNumber < begin)
-                        currentIndentation = DocumentUtilities.GetIndentation(
-                            editor.Document,
-                            r.LineNumber
-                        );
+                        currentIndentation = DocumentUtilities.GetIndentation(editor.Document, r.LineNumber);
                     if (r.Name.Length < 16)
                         attribIndent = currentIndentation + new string(' ', 2 + r.Name.Length);
                     else
@@ -237,8 +211,7 @@ public class XmlFormattingStrategy
                     r.MoveToAttribute(r.AttributeCount - 1);
                     while (r.LineNumber >= nextLine)
                     {
-                        if (nextLine > end)
-                            break;
+                        if (nextLine > end) break;
                         // set indentation of 'nextLine'
                         IDocumentLine line = document.GetLineByNumber(nextLine);
                         string newText = attribIndent + document.GetText(line).Trim();
@@ -250,19 +223,13 @@ public class XmlFormattingStrategy
             r.Close();
         }
     }
-
     /// <summary>
     /// Default implementation for multiline comments.
     /// </summary>
-    protected void SurroundSelectionWithBlockComment(
-        TextEditor editor,
-        string blockStart,
-        string blockEnd
-    )
+    protected void SurroundSelectionWithBlockComment(TextEditor editor, string blockStart, string blockEnd)
     {
         editor.Document.UndoStack.StartUndoGroup();
-        try
-        {
+        try {
             int startOffset = editor.SelectionStart;
             int endOffset = editor.SelectionStart + editor.SelectionLength;
             if (editor.SelectionLength == 0)
@@ -279,8 +246,7 @@ public class XmlFormattingStrategy
                     editor.Document.Remove(region.EndOffset, region.CommentEnd.Length);
                     editor.Document.Remove(region.StartOffset, region.CommentStart.Length);
                     int selectionStart = region.EndOffset;
-                    int selectionLength =
-                        editor.SelectionLength - (region.EndOffset - editor.SelectionStart);
+                    int selectionLength = editor.SelectionLength - (region.EndOffset - editor.SelectionStart);
                     if (selectionLength > 0)
                     {
                         editor.Select(region.EndOffset, selectionLength);
@@ -300,15 +266,10 @@ public class XmlFormattingStrategy
         }
         finally
         {
-            editor.Document.UndoStack.EndUndoGroup();
+            editor.Document.UndoStack.EndUndoGroup();    
         }
     }
-
-    public static BlockCommentRegion FindSelectedCommentRegion(
-        TextEditor editor,
-        string commentStart,
-        string commentEnd
-    )
+    public static BlockCommentRegion FindSelectedCommentRegion(TextEditor editor, string commentStart, string commentEnd)
     {
         IDocument document = editor.Document;
         if (document.TextLength == 0)
@@ -326,18 +287,12 @@ public class XmlFormattingStrategy
         // Find end of comment in selected text.
         if (commentStartOffset >= 0)
         {
-            commentEndOffset = selectedText.IndexOf(
-                commentEnd,
-                commentStartOffset + commentStart.Length - editor.SelectionStart
-            );
+            commentEndOffset = selectedText.IndexOf(commentEnd, commentStartOffset + commentStart.Length - editor.SelectionStart);
         }
         // Try to search end of comment in whole selection
         bool startAfterEnd = false;
         int commentEndOffsetWholeText = selectedText.IndexOf(commentEnd);
-        if (
-            (commentEndOffsetWholeText >= 0)
-            && (commentEndOffsetWholeText < (commentStartOffset - editor.SelectionStart))
-        )
+        if ((commentEndOffsetWholeText >= 0) && (commentEndOffsetWholeText < (commentStartOffset - editor.SelectionStart)))
         {
             // There seems to be an end offset before the start offset in selection
             commentStartOffset = -1;
@@ -370,11 +325,7 @@ public class XmlFormattingStrategy
             if (commentStartOffset >= 0)
             {
                 // Find end of comment before comment start.
-                commentEndBeforeStartOffset = text.IndexOf(
-                    commentEnd,
-                    commentStartOffset,
-                    editor.SelectionStart - commentStartOffset
-                );
+                commentEndBeforeStartOffset = text.IndexOf(commentEnd, commentStartOffset, editor.SelectionStart - commentStartOffset);
                 if (commentEndBeforeStartOffset > commentStartOffset)
                 {
                     commentStartOffset = -1;
@@ -399,63 +350,46 @@ public class XmlFormattingStrategy
         }
         if (commentStartOffset != -1 && commentEndOffset != -1)
         {
-            return new BlockCommentRegion(
-                commentStart,
-                commentEnd,
-                commentStartOffset,
-                commentEndOffset
-            );
+            return new BlockCommentRegion(commentStart, commentEnd, commentStartOffset, commentEndOffset);
         }
         return null;
     }
 }
-
 public class BlockCommentRegion
 {
     public string CommentStart { get; private set; }
     public string CommentEnd { get; private set; }
     public int StartOffset { get; private set; }
     public int EndOffset { get; private set; }
-
     /// <summary>
     /// The end offset is the offset where the comment end string starts from.
     /// </summary>
-    public BlockCommentRegion(
-        string commentStart,
-        string commentEnd,
-        int startOffset,
-        int endOffset
-    )
+    public BlockCommentRegion(string commentStart, string commentEnd, int startOffset, int endOffset)
     {
         this.CommentStart = commentStart;
         this.CommentEnd = commentEnd;
         this.StartOffset = startOffset;
         this.EndOffset = endOffset;
     }
-
     public override int GetHashCode()
     {
         int hashCode = 0;
         unchecked
         {
-            if (CommentStart != null)
-                hashCode += 1000000007 * CommentStart.GetHashCode();
-            if (CommentEnd != null)
-                hashCode += 1000000009 * CommentEnd.GetHashCode();
+            if (CommentStart != null) hashCode += 1000000007 * CommentStart.GetHashCode();
+            if (CommentEnd != null) hashCode += 1000000009 * CommentEnd.GetHashCode();
             hashCode += 1000000021 * StartOffset.GetHashCode();
             hashCode += 1000000033 * EndOffset.GetHashCode();
         }
         return hashCode;
     }
-
     public override bool Equals(object obj)
     {
         BlockCommentRegion other = obj as BlockCommentRegion;
-        if (other == null)
-            return false;
-        return this.CommentStart == other.CommentStart
-            && this.CommentEnd == other.CommentEnd
-            && this.StartOffset == other.StartOffset
-            && this.EndOffset == other.EndOffset;
+        if (other == null) return false;
+        return this.CommentStart == other.CommentStart &&
+            this.CommentEnd == other.CommentEnd &&
+            this.StartOffset == other.StartOffset &&
+            this.EndOffset == other.EndOffset;
     }
 }

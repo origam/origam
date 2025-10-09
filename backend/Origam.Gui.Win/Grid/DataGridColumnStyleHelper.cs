@@ -20,43 +20,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Data;
 using System.Windows.Forms;
+using System.Data;
+
 using Origam.Schema.EntityModel;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for DataGridColumnStyleHelper.
 /// </summary>
 public class DataGridColumnStyleHelper
 {
-    private DataGridColumnStyleHelper() { }
-
-    public static EntityFormatting Formatting(
-        DataGridColumnStyle columnStyle,
-        CurrencyManager source,
-        int rowNum
-    )
-    {
-        try
-        {
-            if (columnStyle.DataGridTableStyle == null)
-                return null;
-            AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
-            if (panel != null)
-            {
-                DataRow row = (source.List[rowNum] as DataRowView).Row;
-                if (row.Table.Columns.Contains("Id"))
-                {
-                    if (row["id"] is Guid)
-                    {
-                        return panel.Formatting(row, (Guid)row["Id"]);
-                    }
-                }
-            }
-        }
-        catch { }
-        return null;
-    }
+	private DataGridColumnStyleHelper()
+	{
+	}
+	public static EntityFormatting Formatting(DataGridColumnStyle columnStyle, CurrencyManager source, int rowNum)
+	{
+		try
+		{
+			if(columnStyle.DataGridTableStyle == null) return null;
+			AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
+			if(panel != null)
+			{
+				DataRow row = (source.List[rowNum] as DataRowView).Row;
+				if(row.Table.Columns.Contains("Id"))
+				{
+					if(row["id"] is Guid)
+					{
+						return panel.Formatting(row, (Guid)row["Id"]);
+					}
+				}
+			}
+		}
+		catch{}
+		return null;
+	}
 }

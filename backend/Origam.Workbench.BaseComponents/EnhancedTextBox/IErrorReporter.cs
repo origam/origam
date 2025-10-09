@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.UI;
-
 public interface IErrorReporter
 {
     void NotifyInputError(string message);

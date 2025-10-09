@@ -23,163 +23,182 @@ using Origam.UI;
 using Origam.Workbench.Pads;
 
 namespace Origam.Workbench.Commands;
-
 /// <summary>
 /// Shows the Attachment pad
 /// </summary>
 public class ViewAttachmentPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        AttachmentPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(AttachmentPad)) as AttachmentPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		AttachmentPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(AttachmentPad)) as AttachmentPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Attachment pad
 /// </summary>
 public class ViewAuditLogPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        AuditLogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(AuditLogPad)) as AuditLogPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		AuditLogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(AuditLogPad)) as AuditLogPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Property pad
 /// </summary>
 public class ViewPropertyPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        PropertyPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(PropertyPad)) as PropertyPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		PropertyPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(PropertyPad)) as PropertyPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the DocumentationPad pad
 /// </summary>
 public class ViewDocumentationPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        DocumentationPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(DocumentationPad)) as DocumentationPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		DocumentationPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(DocumentationPad)) as DocumentationPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Extension pad
 /// </summary>
 public class ViewExtensionPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        ExtensionPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		ExtensionPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Schema Browser pad
 /// </summary>
 public class ViewSchemaBrowserPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        SchemaBrowser pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		SchemaBrowser pad = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Schema Output pad
 /// </summary>
 public class ViewOutputPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        OutputPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		OutputPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Log pad
 /// </summary>
 public class ViewLogPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        LogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(LogPad)) as LogPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		LogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(LogPad)) as LogPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Server Log pad
 /// </summary>
@@ -187,16 +206,19 @@ public class ViewServerLogPad : AbstractMenuCommand
 {
     public override bool IsEnabled
     {
-        get { return true; }
-        set { base.IsEnabled = value; }
+        get
+        {
+            return true;
+        }
+        set
+        {
+            base.IsEnabled = value;
+        }
     }
-
     public override void Run()
     {
-        ServerLogPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(ServerLogPad)) as ServerLogPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+        ServerLogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(ServerLogPad)) as ServerLogPad;
+        if (pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
     }
 }
 
@@ -205,22 +227,23 @@ public class ViewServerLogPad : AbstractMenuCommand
 /// </summary>
 public class ViewFindSchemaItemResultsPad : AbstractMenuCommand
 {
-    public override bool IsEnabled
-    {
-        get { return true; }
-        set { base.IsEnabled = value; }
-    }
-
-    public override void Run()
-    {
-        FindSchemaItemResultsPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad))
-            as FindSchemaItemResultsPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
-    }
+	public override bool IsEnabled
+	{
+		get
+		{
+			return true;
+		}
+		set
+		{
+			base.IsEnabled = value;
+		}
+	}
+	public override void Run()
+	{
+		FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad)) as FindSchemaItemResultsPad;
+		if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+	}		
 }
-
 /// <summary>
 /// Shows the Schema Result pad
 /// </summary>
@@ -228,15 +251,18 @@ public class ViewFindRuleResultsPad : AbstractMenuCommand
 {
     public override bool IsEnabled
     {
-        get { return true; }
-        set { base.IsEnabled = value; }
+        get
+        {
+            return true;
+        }
+        set
+        {
+            base.IsEnabled = value;
+        }
     }
-
     public override void Run()
     {
-        FindRulesPad pad =
-            WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
-        if (pad != null)
-            WorkbenchSingleton.Workbench.ShowPad(pad);
+        FindRulesPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+        if (pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
     }
 }

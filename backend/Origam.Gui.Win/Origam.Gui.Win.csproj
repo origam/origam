@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project
-  ToolsVersion="12.0"
-  DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
->
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>7.10.6030</ProductVersion>
@@ -23,7 +19,8 @@
     <RootNamespace>Origam.Gui.Win</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
-    <FileUpgradeFlags></FileUpgradeFlags>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <OldToolsVersion>0.0</OldToolsVersion>
     <UpgradeBackupLocation />
@@ -31,9 +28,7 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -550,29 +545,34 @@
     <Compile Include="Workflow\WorkflowWatchPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="AsCheckBox.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="AsCheckBox.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="AsCheckBox.resx">
       <DependentUpon>AsCheckBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AsDateBox.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="AsDateBox.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="AsDateBox.resx">
       <DependentUpon>AsDateBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AsDropDown.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="AsDropDown.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="AsForm.resx">
       <DependentUpon>AsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AsMonthCalendar.resx">
       <DependentUpon>AsMonthCalendar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AsPanel.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="AsPanel.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="AsPanel.resx">
       <DependentUpon>AsPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AsPanelTitle.resx">
       <DependentUpon>AsPanelTitle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AsTextBox.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="AsTextBox.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="AsTextBox.resx">
       <DependentUpon>AsTextBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -624,7 +624,8 @@
     <EmbeddedResource Include="Grid\DataGridDropdownColumn.resx">
       <DependentUpon>DataGridDropdownColumn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GroupBoxWithChamfer.bmp"></EmbeddedResource>
+    <EmbeddedResource Include="GroupBoxWithChamfer.bmp">
+    </EmbeddedResource>
     <EmbeddedResource Include="Groupbox\BaseContainer.resx">
       <DependentUpon>BaseContainer.cs</DependentUpon>
     </EmbeddedResource>
@@ -652,7 +653,8 @@
     <EmbeddedResource Include="Strings.cs-CZ.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strings.de.resx"></EmbeddedResource>
+    <EmbeddedResource Include="Strings.de.resx">
+    </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -674,7 +676,8 @@
     <EmbeddedResource Include="Workflow\WorkflowWatchPad.resx">
       <DependentUpon>WorkflowWatchPad.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="xp.style.glyphs.png"></EmbeddedResource>
+    <EmbeddedResource Include="xp.style.glyphs.png">
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -687,7 +690,8 @@
       <Version>2.3.3</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"></Import>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
+  </Import>
   <PropertyGroup>
     <PreBuildEvent />
     <PostBuildEvent />

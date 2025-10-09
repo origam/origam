@@ -24,11 +24,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using System.Drawing.Printing;
-using System.IO;
+using Origam.Schema.GuiModel;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
-using Origam.Schema.GuiModel;
+using System.Drawing.Printing;
+using System.IO;
 using Origam.Service.Core;
 
 namespace Origam.BI.CrystalReports;
@@ -42,17 +42,13 @@ public class CrystalReportService : IReportService
         IXmlContainer data,
         string printerName,
         int copies,
-        Hashtable parameters
-    )
+        Hashtable parameters)
     {
         var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
         if (data is not (IDataDocument or null))
         {
-            throw new ArgumentOutOfRangeException(
-                nameof(data),
-                data,
-                ResourceUtils.GetString("OnlyXmlDocSupported")
-            );
+            throw new ArgumentOutOfRangeException(nameof(data), data,
+                ResourceUtils.GetString("OnlyXmlDocSupported"));
         }
         DataSet dataset = null;
         if (data is IDataDocument dataDocument)
@@ -60,65 +56,47 @@ public class CrystalReportService : IReportService
             dataset = dataDocument.DataSet;
         }
         ReportDocument.EnableEventLog(EventLogLevel.LogEngineErrors);
-        System.Diagnostics.Debug.WriteLine(
-            ReportDocument.GetConcurrentUsage(),
-            category: "Crystal Reports Concurrent Usage"
-        );
+        System.Diagnostics.Debug.WriteLine(ReportDocument.GetConcurrentUsage(),
+            category: "Crystal Reports Concurrent Usage");
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(data, report)
-        );
+            langIetf:ReportHelper.ResolveLanguage(data, report));
         using ReportDocument reportDoc = crystalReportHelper.CreateReport(
-            report.Id,
-            dataset,
-            parameters
-        );
+            report.Id, dataset, parameters);
         printerName ??= new PrinterSettings().PrinterName;
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Printing report '{report.Name}' to printer '{printerName}'"
-        );
+            System.Reflection.MethodBase.GetCurrentMethod()
+                ?.DeclaringType,
+            $"Printing report '{report.Name}' to printer '{printerName}'");
         var printLayout = new PrintLayoutSettings();
         var printerSettings = new PrinterSettings
         {
             Copies = Convert.ToInt16(copies),
-            PrinterName = printerName,
+            PrinterName = printerName
         };
         reportDoc.PrintOptions.PrinterDuplex = PrinterDuplex.Simplex;
         var pageSettings = new PageSettings(printerSettings);
         reportDoc.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
-        reportDoc.PrintToPrinter(
-            printerSettings,
-            pageSettings,
-            reformatReportPageSettings: false,
-            printLayout
-        );
+        reportDoc.PrintToPrinter(printerSettings, pageSettings, 
+            reformatReportPageSettings: false, printLayout);
         reportDoc.Close();
     }
 
     public object GetReport(
-        Guid reportId,
-        IXmlContainer data,
+        Guid reportId, 
+        IXmlContainer data, 
         string format,
-        Hashtable parameters,
-        string dbTransaction
-    )
+        Hashtable parameters, 
+        string dbTransaction)
     {
-        var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
+        var report = ReportHelper.GetReportElement<AbstractDataReport>(
+            reportId);
         IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
-            report,
-            data,
-            parameters,
-            dbTransaction
-        );
+            report, data, parameters, dbTransaction);
         DataSet dataset = xmlDataDoc.DataSet;
         using var languageSwitcher = new LanguageSwitcher(
-            langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report)
-        );
+                langIetf: ReportHelper.ResolveLanguage(xmlDataDoc, report));
         using ReportDocument reportDoc = crystalReportHelper.CreateReport(
-            report.Id,
-            dataset,
-            parameters
-        );
+            report.Id, dataset, parameters);
         ExportFormatType type = format switch
         {
             "PDF" => ExportFormatType.PortableDocFormat,
@@ -129,16 +107,13 @@ public class CrystalReportService : IReportService
             "CSV" => ExportFormatType.CharacterSeparatedValues,
             "TEXT" => ExportFormatType.Text,
             "XML" => ExportFormatType.Xml,
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(format),
-                format,
-                ResourceUtils.GetString("FormatNotSupported")
-            ),
+            _ => throw new ArgumentOutOfRangeException(nameof(format), format,
+                ResourceUtils.GetString("FormatNotSupported"))
         };
         ReportHelper.LogInfo(
-            System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType,
-            $"Exporting report '{report.Name}' to {format}"
-        );
+            System.Reflection.MethodBase.GetCurrentMethod()
+                ?.DeclaringType,
+            $"Exporting report '{report.Name}' to {format}");
         Stream stream = reportDoc.ExportToStream(type);
         var result = new byte[stream.Length];
         stream.Read(result, offset: 0, count: Convert.ToInt32(stream.Length));
@@ -154,11 +129,10 @@ public class CrystalReportService : IReportService
 
     public string PrepareExternalReportViewer(
         Guid reportId,
-        IXmlContainer data,
-        string format,
+        IXmlContainer data, 
+        string format, 
         Hashtable parameters,
-        string dbTransaction
-    )
+        string dbTransaction)
     {
         throw new NotImplementedException();
     }

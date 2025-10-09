@@ -29,23 +29,26 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win.Commands;
-
 public class ShowDataStructureEntitySql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(
+            typeof(SchemaService)) as WorkbenchSchemaService;
     public override bool IsEnabled
     {
-        get { return Owner is DataStructureEntity; }
-        set { base.IsEnabled = value; }
+        get
+        {
+            return Owner is DataStructureEntity;
+        }
+        set
+        {
+            base.IsEnabled = value;
+        }
     }
-
     public override void Run()
     {
-        AbstractSqlDataService abstractSqlDataService =
-            DataServiceFactory.GetDataService() as AbstractSqlDataService;
-        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)
-            abstractSqlDataService.DbDataAdapterFactory.Clone();
+        AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
+        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory.Clone();
         DataStructureEntity entity = Owner as DataStructureEntity;
         StringBuilder builder = new StringBuilder();
         if (entity.Columns.Count > 0)
@@ -59,10 +62,7 @@ public class ShowDataStructureEntitySql : AbstractMenuCommand
                 generator.SelectParameterDeclarationsSql(
                     ds,
                     Owner as DataStructureEntity,
-                    (DataStructureFilterSet)null,
-                    false,
-                    null
-                )
+                    (DataStructureFilterSet)null, false, null)
             );
             builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine("-- " + (Owner as DataStructureEntity).Name);
@@ -96,17 +96,32 @@ public class ShowDataStructureEntitySql : AbstractMenuCommand
             builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine("-- INSERT SQL");
             builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.InsertSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                generator.InsertSql(
+                    ds,
+                    Owner as DataStructureEntity
+                )
+            );
             builder.AppendLine();
             builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine("-- UPDATE SQL");
             builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.UpdateSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                generator.UpdateSql(
+                    ds,
+                    Owner as DataStructureEntity
+                )
+            );
             builder.AppendLine();
             builder.AppendLine("-----------------------------------------------------------------");
             builder.AppendLine("-- DELETE SQL");
             builder.AppendLine("-----------------------------------------------------------------");
-            builder.AppendLine(generator.DeleteSql(ds, Owner as DataStructureEntity));
+            builder.AppendLine(
+                generator.DeleteSql(
+                    ds,
+                    Owner as DataStructureEntity
+                )
+            );
         }
         else
         {

@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -19,7 +19,6 @@
 using System;
 
 namespace Origam.Windows.Editor;
-
 /// <summary>
 /// A namespace Uri and a prefix.
 /// </summary>
@@ -29,15 +28,14 @@ public class XmlNamespace
     string name = String.Empty;
     const string prefixToStringStart = "Prefix [";
     const string uriToStringMiddle = "] Uri [";
-
-    public XmlNamespace() { }
-
+    public XmlNamespace()
+    {
+    }
     public XmlNamespace(string prefix, string name)
     {
         Prefix = prefix;
         Name = name;
     }
-
     public string Prefix
     {
         get { return prefix; }
@@ -66,12 +64,10 @@ public class XmlNamespace
     {
         get { return !String.IsNullOrEmpty(name); }
     }
-
     public override string ToString()
     {
         return String.Concat(prefixToStringStart, prefix, uriToStringMiddle, name, "]");
     }
-
     /// <summary>
     /// Creates an XmlNamespace instance from the given string that is in the
     /// format returned by ToString.
@@ -82,25 +78,17 @@ public class XmlNamespace
         if (prefixIndex >= 0)
         {
             prefixIndex += prefixToStringStart.Length;
-            int uriIndex = namespaceString.IndexOf(
-                uriToStringMiddle,
-                prefixIndex,
-                StringComparison.Ordinal
-            );
+            int uriIndex = namespaceString.IndexOf(uriToStringMiddle, prefixIndex, StringComparison.Ordinal);
             if (uriIndex >= 0)
             {
                 string prefix = namespaceString.Substring(prefixIndex, uriIndex - prefixIndex);
                 uriIndex += uriToStringMiddle.Length;
-                string uri = namespaceString.Substring(
-                    uriIndex,
-                    namespaceString.Length - (uriIndex + 1)
-                );
+                string uri = namespaceString.Substring(uriIndex, namespaceString.Length - (uriIndex + 1));
                 return new XmlNamespace(prefix, uri);
             }
         }
         return new XmlNamespace();
     }
-
     public override bool Equals(object obj)
     {
         XmlNamespace rhs = obj as XmlNamespace;
@@ -110,7 +98,6 @@ public class XmlNamespace
         }
         return false;
     }
-
     public override int GetHashCode()
     {
         return Name.GetHashCode() ^ Prefix.GetHashCode();

@@ -23,7 +23,6 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.Workbench.Editors;
-
 public class MemoryListBox : ListBox
 {
     private object previouslySelectedItem;
@@ -31,23 +30,20 @@ public class MemoryListBox : ListBox
     {
         get
         {
-            if (previouslySelectedItem == null)
-                return null;
+            if (previouslySelectedItem == null) return null;
             if (!Items.Contains(previouslySelectedItem))
             {
                 return null;
             }
-            return previouslySelectedItem;
+            return previouslySelectedItem; 
         }
         private set => previouslySelectedItem = value;
     }
-
     protected override void OnSelectedIndexChanged(EventArgs e)
     {
         base.OnSelectedIndexChanged(e);
         PreviouslySelectedItem = SelectedItem;
     }
-
     public void SelectFirstIfAny()
     {
         if (Items.Count > 0)
@@ -55,7 +51,6 @@ public class MemoryListBox : ListBox
             SelectedIndex = 0;
         }
     }
-
     public void RemoveAndKeepSomeSelected(object item)
     {
         Items.Remove(item);

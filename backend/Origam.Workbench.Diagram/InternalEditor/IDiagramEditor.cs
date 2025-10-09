@@ -22,8 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Workbench.Diagram.InternalEditor;
-
-interface IDiagramEditor : IDisposable
+interface IDiagramEditor: IDisposable
 {
     void ReDrawAndKeepFocus();
 }

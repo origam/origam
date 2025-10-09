@@ -23,7 +23,6 @@ using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
 namespace Origam.UI.WizardForm;
-
 public class ChildEntityForm : AbstractWizardForm
 {
     public IDataEntity Entity2 { get; set; }
@@ -31,16 +30,14 @@ public class ChildEntityForm : AbstractWizardForm
     public string EntityName { get; set; }
     public string EnterAllInfo { get; set; }
     public string ChildEntityWiz { get; set; }
-
-    internal void SetUpForm(TextBox txtchildEntityName, ComboBox cboEntity1, ComboBox cboEntity2)
+    internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
     {
         if (cboEntity1.Items.Count == 0)
         {
             txtchildEntityName.Text = "";
             cboEntity1.Items.Clear();
             cboEntity2.Items.Clear();
-            if (this.Entity1 == null)
-                return;
+            if (this.Entity1 == null) return;
             object selectedItem = null;
             foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
             {

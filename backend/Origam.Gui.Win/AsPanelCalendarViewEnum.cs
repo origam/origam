@@ -20,11 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for AsPanelCalendarViewEnum.
 /// </summary>
 public enum AsPanelCalendarViewEnum
 {
-    WeekWithResources = 0,
+	WeekWithResources = 0
 }

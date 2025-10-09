@@ -2,7 +2,6 @@
 using ICSharpCode.AvalonEdit;
 
 namespace Origam.Windows.Editor.GIT;
-
 /// <summary>
 /// Interaction logic for SingleColumnDiffWPF.xaml
 /// </summary>
@@ -12,6 +11,6 @@ public partial class SingleColumnDiffWPF : UserControl
     {
         InitializeComponent();
     }
-
+    
     public TextEditor TextEditor => Editor;
 }

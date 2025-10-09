@@ -29,14 +29,13 @@ using System.Windows.Forms;
 using Origam.DA.Service.FileSystemModeCheckers;
 
 namespace Origam.UI;
-
 public partial class ModelCheckResultWindow : Form
 {
     public ModelCheckResultWindow(List<ModelErrorSection> modelErrorSections)
     {
         InitializeComponent();
         ShowIcon = false;
-
+        
         errorListBox.DrawMode = DrawMode.OwnerDrawFixed;
         foreach (var section in modelErrorSections)
         {
@@ -48,42 +47,30 @@ public partial class ModelCheckResultWindow : Form
             errorListBox.Items.Add(ErrorMessage.Empty);
         }
     }
-
     private void okButton_Click(object sender, EventArgs e)
     {
         Close();
     }
-
     private void errorListBox_DrawItem(object sender, DrawItemEventArgs e)
     {
         if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-            e = new DrawItemEventArgs(
-                e.Graphics,
+            e = new DrawItemEventArgs(e.Graphics,
                 e.Font,
                 e.Bounds,
                 e.Index,
                 DrawItemState.Default,
                 e.ForeColor,
-                Color.Transparent
-            );
-
+                Color.Transparent);
+        
         ListBox listBox = sender as ListBox;
         var currentItem = listBox.Items[e.Index];
         string text = currentItem.ToString();
-
-        if (
-            currentItem is ModelErrorSection section
-            || currentItem is ErrorMessage message && message.Link == null
-        )
+        
+        if (currentItem is ModelErrorSection section || 
+            currentItem is ErrorMessage message && message.Link == null )
         {
             e.DrawBackground();
-            e.Graphics.DrawString(
-                text,
-                e.Font,
-                Brushes.Black,
-                e.Bounds,
-                StringFormat.GenericDefault
-            );
+            e.Graphics.DrawString(text, e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);
             return;
         }
         if (currentItem is ErrorMessage errorMessage)
@@ -91,51 +78,31 @@ public partial class ModelCheckResultWindow : Form
             e.DrawBackground();
             int indexOfLinkStart = errorMessage.Text.IndexOf(errorMessage.Link);
             string part1 = new string(errorMessage.Text.Take(indexOfLinkStart).ToArray());
-            e.Graphics.DrawString(
-                part1,
-                e.Font,
-                Brushes.Black,
-                e.Bounds,
-                StringFormat.GenericDefault
-            );
-
+            e.Graphics.DrawString(part1, e.Font, Brushes.Black, e.Bounds, StringFormat.GenericDefault);
+            
             var part1Size = e.Graphics.MeasureString(part1, e.Font);
             var linkBounds = new Rectangle(
-                e.Bounds.X + (int)part1Size.Width,
+                e.Bounds.X + (int)part1Size.Width, 
                 e.Bounds.Y,
                 e.Bounds.Width,
-                e.Bounds.Height
-            );
-            e.Graphics.DrawString(
-                errorMessage.Link,
-                e.Font,
-                Brushes.Blue,
-                linkBounds,
-                StringFormat.GenericDefault
-            );
-
+                e.Bounds.Height);
+            e.Graphics.DrawString(errorMessage.Link, e.Font, Brushes.Blue, linkBounds, StringFormat.GenericDefault);
+            
             var linkSize = e.Graphics.MeasureString(errorMessage.Link, e.Font);
             var part2Bounds = new Rectangle(
                 e.Bounds.X + (int)part1Size.Width + (int)linkSize.Width,
                 e.Bounds.Y,
                 e.Bounds.Width,
-                e.Bounds.Height
+                e.Bounds.Height);
+            string part2 = new string(errorMessage.Text
+                .Skip(indexOfLinkStart + errorMessage.Link.Length)
+                .ToArray()
             );
-            string part2 = new string(
-                errorMessage.Text.Skip(indexOfLinkStart + errorMessage.Link.Length).ToArray()
-            );
-            e.Graphics.DrawString(
-                part2,
-                e.Font,
-                Brushes.Black,
-                part2Bounds,
-                StringFormat.GenericDefault
-            );
+            e.Graphics.DrawString(part2, e.Font, Brushes.Black, part2Bounds, StringFormat.GenericDefault);
             return;
         }
         throw new NotImplementedException();
     }
-
     private void errorListBox_SelectedIndexChanged(object sender, EventArgs e)
     {
         ListBox listBox = sender as ListBox;

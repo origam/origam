@@ -22,22 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Wrapper for MultiColumnAdapterField.
 /// </summary>
 public class MultiColumnAdapterFieldWrapper : System.Windows.Forms.Panel, IAsControl
 {
-    private string _controlMember;
-
-    [Category("Multi Column Adapter Field")]
-    public string ControlMember
-    {
-        get { return _controlMember; }
-        set { _controlMember = value; }
-    }
-    public string DefaultBindableProperty
-    {
-        get { return "ControlMember"; }
-    }
+	private string _controlMember;
+	[Category("Multi Column Adapter Field")]
+	public string ControlMember
+	{
+		get
+		{
+			return _controlMember;
+		}
+		set
+		{
+			_controlMember = value;
+		}
+	}
+	public string DefaultBindableProperty
+	{
+		get
+		{
+			return "ControlMember";
+		}
+	}
 }

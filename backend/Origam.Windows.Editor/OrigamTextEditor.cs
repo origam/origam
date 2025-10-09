@@ -23,7 +23,6 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 
 namespace Origam.Windows.Editor;
-
 public class OrigamTextEditor : TextEditor
 {
     public CompletionWindow ActiveCompletionWindow { get; set; }

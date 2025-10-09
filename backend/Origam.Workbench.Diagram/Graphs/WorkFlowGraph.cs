@@ -25,8 +25,7 @@ using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
 
 namespace Origam.Workbench.Diagram.Graphs;
-
-public class WorkFlowGraph : Graph
+public class WorkFlowGraph: Graph
 {
     public BlockSubGraph TopSubgraph => (BlockSubGraph)RootSubgraph.Subgraphs.FirstOrDefault();
     public InfrastructureSubgraph MainDrawingSubgraf => TopSubgraph.MainDrawingSubgraf;
@@ -35,16 +34,14 @@ public class WorkFlowGraph : Graph
             .GetAllSubgraphs()
             .OfType<BlockSubGraph>()
             .Select(x => x.ContextStoreSubgraph)
-            .Where(x => x != null);
-
+            .Where(x => x!=null);
+    
+    
     public bool IsWorkFlowItemSubGraph(Node node)
     {
-        if (node == null)
-            return false;
-        if (!(node is Subgraph))
-            return false;
-        if (node is IWorkflowSubgraph)
-            return false;
+        if (node == null) return false;
+        if (!(node is Subgraph)) return false;
+        if (node is IWorkflowSubgraph) return false;
         return true;
     }
 }

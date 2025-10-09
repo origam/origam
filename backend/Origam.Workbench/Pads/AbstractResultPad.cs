@@ -18,31 +18,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
-using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
+using System;
+using System.Windows.Forms;
 
 namespace Origam.Workbench.Pads;
-
 public class AbstractResultPad : AbstractPadContent
 {
     public bool OpenParentPackage(Guid SchemaExtensionId)
     {
         Guid SchemaExtensionIdItem = SchemaExtensionId;
-        TreeNode treenode = (
-            WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser
-        ).EbrSchemaBrowser.GetFirstNode();
+        TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
         if (treenode != null)
         {
             if (!((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
             {
-                DialogResult dialogResult = MessageBox.Show(
-                    "Do you want to change the Package?",
-                    "Package change",
-                    MessageBoxButtons.YesNo
-                );
+                DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.No)
                 {
                     return false;
@@ -53,14 +46,12 @@ public class AbstractResultPad : AbstractPadContent
                 return true;
             }
         }
-        LoadSchema(treenode, SchemaExtensionIdItem);
+        LoadSchema(treenode,SchemaExtensionIdItem);
         return true;
     }
-
     private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
     {
-        SchemaService schema =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
         if (treenode != null)
         {
             schema.UnloadSchema();

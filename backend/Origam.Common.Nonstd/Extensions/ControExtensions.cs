@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Origam.Extensions;
-
 public static class ControlExtensions
 {
     public static T RunWithInvoke<T>(this Control control, Func<T> func)
@@ -43,7 +42,6 @@ public static class ControlExtensions
         }
         return result;
     }
-
     public static void RunWithInvoke(this Control control, Action action)
     {
         if (control.InvokeRequired)
@@ -55,13 +53,11 @@ public static class ControlExtensions
             action();
         }
     }
-
     public static void RunWithInvokeAsync(this Control control, Action action)
     {
         if (control.InvokeRequired)
         {
-            Task.Run(() =>
-            {
+            Task.Run(() => {
                 control.Invoke(action);
             });
         }

@@ -31,13 +31,12 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service_net2Tests;
-
 internal static class EqualityExtensions
 {
-    public static Dictionary<string, object> GetAllProperies(this object atype)
+    public static Dictionary<string, object> GetAllProperies(
+        this object atype)
     {
-        if (atype == null)
-            return new Dictionary<string, object>();
+        if (atype == null) return new Dictionary<string, object>();
         Type t = atype.GetType();
         PropertyInfo[] props = t.GetProperties();
         Dictionary<string, object> dict = new Dictionary<string, object>();
@@ -48,58 +47,50 @@ internal static class EqualityExtensions
         }
         return dict;
     }
-
-    private static bool ContainsEqualObject(this ICollection thisCollection, object testObject)
+    private static bool ContainsEqualObject(this ICollection thisCollection,
+        object testObject)
     {
-        return thisCollection.Cast<object>().Any(item => IsEqualTo(item, testObject));
+        return thisCollection
+            .Cast<object>()
+            .Any(item => IsEqualTo(item, testObject));
     }
-
-    private static bool IsEqualTo(this ICollection collection, object testObject)
+    private static bool IsEqualTo(this ICollection collection,
+        object testObject)
     {
-        if (!(testObject is ICollection testCollection))
-            return false;
+        if (!(testObject is ICollection testCollection)) return false;
         return collection
             .Cast<object>()
-            .All(itemFromDb => testCollection.ContainsEqualObject(itemFromDb));
+            .All(itemFromDb =>
+                testCollection.ContainsEqualObject(itemFromDb));
     }
-
-    private static bool IsEqualTo(this ISchemaItem item, object testObject)
+    private static bool IsEqualTo(this ISchemaItem item,
+        object testObject)
     {
-        if (!(testObject is ISchemaItem testItem))
-            return false;
+        if (!(testObject is ISchemaItem testItem)) return false;
         return item.Id == testItem.Id;
     }
-
-    private static bool IsEqualTo(this DataEntityConstraint dataConstraint, object testObject)
+    private static bool IsEqualTo(this DataEntityConstraint dataConstraint,
+        object testObject)
     {
-        if (!(testObject is DataEntityConstraint))
-            return false;
-        var testEntityConstraint = (DataEntityConstraint)testObject;
-        return testEntityConstraint.Fields.Any(field =>
-            dataConstraint.Fields.ContainsEqualObject(field)
-        );
+        if (!(testObject is DataEntityConstraint)) return false;
+        var testEntityConstraint = (DataEntityConstraint) testObject;
+        return testEntityConstraint.Fields
+            .Any(field =>
+                dataConstraint.Fields.ContainsEqualObject(field));
     }
-
     [DllImport("msvcrt.dll")]
     private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
-
     private static bool IsEqualTo(this Bitmap b1, object obj)
     {
         Bitmap b2 = obj as Bitmap;
-        if ((b1 == null) != (b2 == null))
-            return false;
-        if (b1.Size != b2.Size)
-            return false;
+        if ((b1 == null) != (b2 == null)) return false;
+        if (b1.Size != b2.Size) return false;
         BitmapData bd1 = b1.LockBits(
             new Rectangle(new Point(0, 0), b1.Size),
-            ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb
-        );
+            ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
         BitmapData bd2 = b2.LockBits(
             new Rectangle(new Point(0, 0), b2.Size),
-            ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb
-        );
+            ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
         try
         {
             IntPtr bd1scan0 = bd1.Scan0;
@@ -107,28 +98,26 @@ internal static class EqualityExtensions
             int stride = bd1.Stride;
             int len = stride * b1.Height;
             return memcmp(bd1scan0, bd2scan0, len) == 0;
-        }
-        finally
+        } finally
         {
             b1.UnlockBits(bd1);
             b2.UnlockBits(bd2);
         }
     }
-
-    private static bool IsEqualTo(this SchemaItemAncestor ancestor, object testObject)
+    private static bool IsEqualTo(this SchemaItemAncestor ancestor,
+        object testObject)
     {
-        if (!(testObject is SchemaItemAncestor testAncestor))
-            return false;
-        return ancestor.SchemaItem.Id == testAncestor.SchemaItem.Id;
+        if (!(testObject is SchemaItemAncestor testAncestor)) return false;
+        return ancestor.SchemaItem.Id ==
+               testAncestor.SchemaItem.Id;
     }
-
-    private static bool IsEqualTo(this DictionaryEntry entry, object testObject)
+    private static bool IsEqualTo(this DictionaryEntry entry,
+        object testObject)
     {
-        if (!(testObject is DictionaryEntry testEntry))
-            return false;
-        return IsEqualTo(entry.Key, testEntry.Key) && IsEqualTo(entry.Value, testEntry.Value);
+        if (!(testObject is DictionaryEntry testEntry)) return false;
+        return IsEqualTo(entry.Key, testEntry.Key) &&
+               IsEqualTo(entry.Value, testEntry.Value);
     }
-
     public static bool IsEqualTo(this object item, object testObject)
     {
         switch (item)

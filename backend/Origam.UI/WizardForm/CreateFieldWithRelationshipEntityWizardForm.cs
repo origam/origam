@@ -24,50 +24,77 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.UI.WizardForm;
-
 public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
 {
     private IDataEntity _entity;
     public IDataEntity Entity
     {
-        get { return _entity; }
-        set { _entity = value; }
+        get
+        {
+            return _entity;
+        }
+        set
+        {
+            _entity = value;
+        }
     }
     private ISchemaItem _relatedEntity = null;
     public ISchemaItem RelatedEntity
     {
-        get { return _relatedEntity; }
-        set { _relatedEntity = value; }
+        get
+        {
+            return _relatedEntity;
+        }
+        set
+        {
+            _relatedEntity = value;
+        }
     }
     private ISchemaItem _baseEntityField = null;
     public ISchemaItem BaseEntityFieldSelect
     {
-        get { return _baseEntityField; }
-        set { _baseEntityField = value; }
+        get
+        {
+            return _baseEntityField;
+        }
+        set
+        {
+            _baseEntityField = value;
+        }
     }
     private ISchemaItem _relatedEntityField = null;
     public ISchemaItem RelatedEntityFieldSelect
     {
-        get { return _relatedEntityField; }
-        set { _relatedEntityField = value; }
+        get
+        {
+            return _relatedEntityField;
+        }
+        set
+        {
+            _relatedEntityField = value;
+        }
     }
     private Boolean _isparentChild = false;
     public Boolean ParentChildCheckbox
     {
-        get { return _isparentChild; }
-        set { _isparentChild = value; }
+        get
+        {
+            return _isparentChild;
+        }
+        set
+        {
+            _isparentChild = value;
+        }
     }
     public string EnterAllInfo { get; set; }
     public string LookupWiz { get; set; }
     public string LookupName { get; internal set; }
     public string LookupKeyName { get; internal set; }
-
     internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
     {
         if (tableRelation.Items.Count == 0)
         {
-            if (this.Entity == null)
-                return;
+            if (this.Entity == null) return;
             txtRelationName.Text = this.Entity.Name;
             foreach (ISchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
             {
@@ -75,17 +102,11 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
             }
         }
     }
-
-    internal void SetUpFormKey(
-        ComboBox BaseEntityField,
-        ComboBox RelatedEntityField,
-        TextBox txtKeyName
-    )
+    internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
     {
         BaseEntityField.Items.Clear();
         RelatedEntityField.Items.Clear();
-        if (this.Entity == null)
-            return;
+        if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
         foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {

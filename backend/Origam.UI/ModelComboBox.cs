@@ -22,5 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 
 namespace Origam.UI;
-
-public class ModelComboBox : ComboBox { }
+public class ModelComboBox : ComboBox
+{
+}

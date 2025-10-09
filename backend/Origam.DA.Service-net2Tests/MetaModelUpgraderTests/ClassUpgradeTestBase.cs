@@ -27,7 +27,6 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.TestCommon;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests;
-
 public class ClassUpgradeTestBase : AbstractFileTestClass
 {
     protected XFileData LoadFile(string fileName)
@@ -36,6 +35,7 @@ public class ClassUpgradeTestBase : AbstractFileTestClass
         var document = new OrigamXDocument(file);
         return new XFileData(document, file);
     }
-
-    protected override TestContext TestContext => TestContext.CurrentContext;
+    
+    protected override TestContext TestContext =>
+        TestContext.CurrentContext;
 }

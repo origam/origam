@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Origam.UI.WizardForm;
-
 public class CreateFieldWithLookupEntityWizardForm : AbstractWizardForm
 {
     public bool AllowNulls { get; set; }
@@ -35,7 +34,10 @@ public class CreateFieldWithLookupEntityWizardForm : AbstractWizardForm
     private BindingList<InitialValue> _initialValues = new BindingList<InitialValue>();
     public IList<InitialValue> InitialValues
     {
-        get { return _initialValues; }
+        get
+        {
+            return _initialValues;
+        }
     }
     public string LookupCaption { get; set; }
     public string LookupName { get; set; }
@@ -57,7 +59,6 @@ public class CreateFieldWithLookupEntityWizardForm : AbstractWizardForm
     public string EnterAllInfo { get; set; }
     public string LookupWiz { get; set; }
     public string DefaultValueNotSet { get; set; }
-
     public class InitialValue
     {
         public string Code { get; set; }

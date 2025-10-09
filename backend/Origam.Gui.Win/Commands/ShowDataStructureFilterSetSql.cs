@@ -29,23 +29,26 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win.Commands;
-
 public class ShowDataStructureFilterSetSql : AbstractMenuCommand
 {
     private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
+        ServiceManager.Services.GetService(
+            typeof(SchemaService)) as WorkbenchSchemaService;
     public override bool IsEnabled
     {
-        get { return Owner is DataStructureFilterSet; }
-        set { base.IsEnabled = value; }
+        get
+        {
+            return Owner is DataStructureFilterSet;
+        }
+        set
+        {
+            base.IsEnabled = value;
+        }
     }
-
     public override void Run()
     {
-        AbstractSqlDataService abstractSqlDataService =
-            DataServiceFactory.GetDataService() as AbstractSqlDataService;
-        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)
-            abstractSqlDataService.DbDataAdapterFactory.Clone();
+        AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
+        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
         DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
         generator.PrettyFormat = true;
         generator.GenerateConsoleUseSyntax = true;
@@ -53,7 +56,9 @@ public class ShowDataStructureFilterSetSql : AbstractMenuCommand
         DataStructure ds = filterSet.RootItem as DataStructure;
         builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
         // parameter declarations
-        builder.AppendLine(generator.SelectParameterDeclarationsSql(filterSet, false, null));
+        builder.AppendLine(
+            generator.SelectParameterDeclarationsSql(
+                filterSet, false, null));
         List<string> tmpTables = new List<string>();
         foreach (DataStructureEntity entity in ds.Entities)
         {
@@ -62,16 +67,11 @@ public class ShowDataStructureFilterSetSql : AbstractMenuCommand
                 string tmpTable = "tmptable" + System.Guid.NewGuid();
                 tmpTables.Add(tmpTable);
                 builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
-                builder.AppendLine(
-                    "-----------------------------------------------------------------"
-                );
+                builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine("-- " + entity.Name);
+                builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine(
-                    "-----------------------------------------------------------------"
-                );
-                builder.AppendLine(
-                    generator.SelectSql(
-                        ds,
+                    generator.SelectSql(ds,
                         entity,
                         filterSet,
                         null,
@@ -79,7 +79,7 @@ public class ShowDataStructureFilterSetSql : AbstractMenuCommand
                         new Hashtable(),
                         null,
                         false
-                    ) + ";"
+                    )+ ";"
                 );
             }
         }

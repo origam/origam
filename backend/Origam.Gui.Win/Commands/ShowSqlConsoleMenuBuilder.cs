@@ -19,49 +19,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Origam.UI;
 using Origam.Workbench.Services.CoreServices;
+using System;
+using System.Collections.Generic;
 
 namespace Origam.Gui.Win.Commands;
-
 public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
 {
     public bool LateBound => true;
-
     public AsMenuCommand[] BuildSubmenu(object owner)
     {
-        var list = new List<AsMenuCommand>();
-        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+		var list = new List<AsMenuCommand>();
+		OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         if (settings != null)
         {
-            foreach (var platform in settings.GetAllPlatform())
-            {
-                CreateMenuItem(list, platform);
-            }
-        }
-        return list.ToArray();
-    }
-
+			foreach (var platform in settings.GetAllPlatform())
+			{
+				CreateMenuItem(list, platform);
+			}
+		}
+		return list.ToArray();
+	}
     public bool HasItems()
     {
-        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        return settings != null;
+		OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+		return settings != null;
     }
-
-    private void MenuItemClick(object sender, EventArgs e)
-    {
-        AsMenuCommand cmd = sender as AsMenuCommand;
-        cmd.Command.Run();
-    }
-
-    private void CreateMenuItem(List<AsMenuCommand> list, Platform platform)
-    {
-        SqlConsoleParameters parameters = new SqlConsoleParameters { Platform = platform };
-        ShowSqlConsole command = new ShowSqlConsole(parameters);
-        AsMenuCommand menuItem = new AsMenuCommand(platform.Name, command);
-        menuItem.Click += new EventHandler(MenuItemClick);
-        list.Add(menuItem);
-    }
+	private void MenuItemClick(object sender, EventArgs e)
+	{
+		AsMenuCommand cmd = sender as AsMenuCommand;
+		cmd.Command.Run();
+	}
+	private void CreateMenuItem(List<AsMenuCommand> list, Platform platform)
+	{
+		SqlConsoleParameters parameters = new SqlConsoleParameters
+		{
+			Platform = platform
+		};
+		ShowSqlConsole command = new ShowSqlConsole(parameters);
+		AsMenuCommand menuItem = new AsMenuCommand(platform.Name, command);
+		menuItem.Click += new EventHandler(MenuItemClick);
+		list.Add(menuItem);
+	}
 }

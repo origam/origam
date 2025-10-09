@@ -23,50 +23,61 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for DataGridColumnStyleHolder.
 /// </summary>
 public class DataGridColumnStyleHolder : IComparable
 {
-    public DataGridColumnStyleHolder(DataGridColumnStyle style, int index, bool hidden)
-    {
-        _index = index;
-        _style = style;
-        _hidden = hidden;
-    }
-
-    public override string ToString()
-    {
-        return this.Index.ToString();
-    }
-
-    private int _index;
-    public int Index
-    {
-        get { return _index; }
-        set { _index = value; }
-    }
-    private bool _hidden = false;
-    public bool Hidden
-    {
-        get { return _hidden; }
-        set { _hidden = value; }
-    }
-    private DataGridColumnStyle _style;
-    public DataGridColumnStyle Style
-    {
-        get { return _style; }
-    }
-
-    #region IComparable Members
-    public int CompareTo(object obj)
-    {
-        if (obj is DataGridColumnStyleHolder)
-        {
-            return _index.CompareTo((obj as DataGridColumnStyleHolder).Index);
-        }
-        throw new ArgumentException(ResourceUtils.GetString("ErrorNotColumnStyleHolder"));
-    }
-    #endregion
+	public DataGridColumnStyleHolder(DataGridColumnStyle style, int index, bool hidden)
+	{
+		_index = index;
+		_style = style;
+		_hidden = hidden;
+	}
+	public override string ToString()
+	{
+		return this.Index.ToString();
+	}
+	private int _index;
+	public int Index
+	{
+		get
+		{
+			return _index;
+		}
+		set
+		{
+			_index = value;
+		}
+	}
+	private bool _hidden = false;
+	public bool Hidden
+	{
+		get
+		{
+			return _hidden;
+		}
+		set
+		{
+			_hidden = value;
+		}
+	}
+	private DataGridColumnStyle _style;
+	public DataGridColumnStyle Style
+	{
+		get
+		{
+			return _style;
+		}
+	}
+	#region IComparable Members
+	public int CompareTo(object obj)
+	{
+		if(obj is DataGridColumnStyleHolder)
+		{
+			return _index.CompareTo((obj as DataGridColumnStyleHolder).Index) ;
+		}
+		throw new ArgumentException(ResourceUtils.GetString("ErrorNotColumnStyleHolder"));
+	}
+	#endregion
 }

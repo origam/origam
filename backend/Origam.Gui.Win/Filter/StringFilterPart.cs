@@ -22,46 +22,40 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for StringFilterPart.
 /// </summary>
 public class StringFilterPart : TextBoxFilterPart
 {
-    #region Constructor
-    public StringFilterPart(
-        AsTextBox filteredControl,
-        Type dataType,
-        string dataMember,
-        string gridColumnName,
-        string label,
-        FormGenerator formGenerator
-    )
-        : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator) { }
-    #endregion
-    #region Overriden Members
-    public override FilterOperator[] AllowedOperators
-    {
-        get
-        {
-            return new FilterOperator[]
-            {
-                FilterOperator.Equals,
-                FilterOperator.NotEquals,
-                FilterOperator.BeginsWith,
-                FilterOperator.NotBeginsWith,
-                FilterOperator.EndsWith,
-                FilterOperator.NotEndsWith,
-                FilterOperator.Contains,
-                FilterOperator.NotContains,
-                FilterOperator.IsNull,
-                FilterOperator.NotIsNull,
-            };
-        }
-    }
-    public override FilterOperator DefaultOperator
-    {
-        get { return FilterOperator.BeginsWith; }
-    }
-    #endregion
+	#region Constructor
+	public StringFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+	{
+	}
+	#endregion
+	#region Overriden Members
+	public override FilterOperator[] AllowedOperators
+	{
+		get
+		{
+			return new FilterOperator[] {
+											FilterOperator.Equals,
+											FilterOperator.NotEquals,
+											FilterOperator.BeginsWith, 
+											FilterOperator.NotBeginsWith, 
+											FilterOperator.EndsWith, 
+											FilterOperator.NotEndsWith, 
+											FilterOperator.Contains, 
+											FilterOperator.NotContains, 
+											FilterOperator.IsNull, 
+											FilterOperator.NotIsNull};
+		}
+	}
+	public override FilterOperator DefaultOperator
+	{
+		get
+		{
+			return FilterOperator.BeginsWith;
+		}
+	}
+	#endregion
 }

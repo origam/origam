@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-16"?>
-<Project
-  ToolsVersion="12.0"
-  DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
->
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>7.10.6030</ProductVersion>
@@ -23,7 +19,8 @@
     <RootNamespace>Origam.Schema.EntityModel.UI</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
-    <FileUpgradeFlags></FileUpgradeFlags>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <OldToolsVersion>0.0</OldToolsVersion>
     <UpgradeBackupLocation />
@@ -31,9 +28,7 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
-      >NETSTANDARD;NETSTANDARD2_0</DefineConstants
-    >
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
@@ -178,16 +173,20 @@
     <Compile Include="Wizards\CreateForeignKeyWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wizards\LocalizeDatastructureCommand.cs"></Compile>
+    <Compile Include="Wizards\LocalizeDatastructureCommand.cs">
+    </Compile>
     <EmbeddedResource Include="Editor\ParameterEditor.resx">
       <DependentUpon>ParameterEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\XsdEditor.resx">
       <DependentUpon>XsdEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strings.cs-CZ.resx"></EmbeddedResource>
-    <EmbeddedResource Include="Strings.de.resx"></EmbeddedResource>
-    <EmbeddedResource Include="Strings.resx"></EmbeddedResource>
+    <EmbeddedResource Include="Strings.cs-CZ.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.de.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizards\CreateChildEntityWizard.resx">
       <DependentUpon>CreateChildEntityWizard.cs</DependentUpon>
     </EmbeddedResource>
@@ -201,7 +200,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"></Import>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
+  </Import>
   <PropertyGroup>
     <PreBuildEvent />
     <PostBuildEvent />

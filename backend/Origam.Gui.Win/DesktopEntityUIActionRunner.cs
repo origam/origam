@@ -20,17 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Gui;
 using Origam.Schema.MenuModel;
 using Origam.Workbench;
+using Origam.Gui;
 
 namespace Origam.Gui.Win;
-
-public class DesktopEntityUIActionRunner : EntityUIActionRunner
+public class DesktopEntityUIActionRunner: EntityUIActionRunner
 {
-    public DesktopEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
-        : base(actionRunnerClient) { }
-
+    public DesktopEntityUIActionRunner(
+        IEntityUIActionRunnerClient actionRunnerClient) : base(actionRunnerClient)
+    {
+    }
     protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
     {
         object menuItem;
@@ -47,14 +47,13 @@ public class DesktopEntityUIActionRunner : EntityUIActionRunner
                 break;
             default:
                 throw new NotImplementedException(
-                    $"Cannot execule action type {processData.Action.GetType()}"
-                );
+                    $"Cannot execule action type {processData.Action.GetType()}");
         }
-        WorkbenchSingleton.Workbench.OpenForm(menuItem, processData.Parameters);
+        WorkbenchSingleton.Workbench.OpenForm(menuItem,processData.Parameters);
     }
-
-    protected override void SetTransactionId(
-        ExecuteActionProcessData processData,
-        string transactionId
-    ) { }
+    protected override void SetTransactionId(ExecuteActionProcessData processData,
+        string transactionId)
+    {
+       
+    }
 }

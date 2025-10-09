@@ -23,7 +23,6 @@ using System.Windows.Forms;
 using Origam.Workbench.BaseComponents;
 
 namespace Origam.Gui;
-
 public class BigArrowToolStripDropDownButton : ToolStripDropDownButton
 {
     public BigArrowToolStripDropDownButton()

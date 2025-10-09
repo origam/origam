@@ -20,25 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.Win;
-
 public static class CaptionDoc
 {
-    public const string GridColumnWidthDescription =
-        "Column Width (in pixels) to be used in grid-view. "
-        + "If the value is less than then zero, then the column is hidden by"
-        + " default. However, when it's enabled, the abs(configured value) "
-        + "is used.";
+	public const string GridColumnWidthDescription =
+		"Column Width (in pixels) to be used in grid-view. "
+		+ "If the value is less than then zero, then the column is hidden by"
+		+ " default. However, when it's enabled, the abs(configured value) "
+		+ "is used.";
 }
-
 /// <summary>
 /// Summary description for IAsCaptionControl.
 /// </summary>
 public interface IAsCaptionControl
 {
-    string Caption { get; set; }
-    string GridColumnCaption { get; set; }
-    int CaptionLength { get; set; }
-    CaptionPosition CaptionPosition { get; set; }
-    int GridColumnWidth { get; set; }
-    bool HideOnForm { get; set; }
+	string Caption{get; set;}
+	string GridColumnCaption {get; set;}
+	int CaptionLength {get; set;}
+	CaptionPosition CaptionPosition{get; set;}
+	int GridColumnWidth {get; set;}
+	bool HideOnForm {get; set;}
 }

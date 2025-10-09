@@ -36,7 +36,6 @@ using Origam.Workbench.Services;
 using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.NodeDrawing;
-
 class NodeFactory
 {
     private readonly InternalPainter internalPainter;
@@ -44,51 +43,47 @@ class NodeFactory
     private readonly Graph graph;
     private readonly IdTranslator idTranslator;
     private static int balloonNumber = 0;
-
-    public NodeFactory(
-        INodeSelector nodeSelector,
-        GViewer gViewer,
-        WorkbenchSchemaService schemaService,
-        Graph graph
-    )
+    
+    public NodeFactory(INodeSelector nodeSelector, GViewer gViewer,
+        WorkbenchSchemaService schemaService, Graph graph)
     {
         this.schemaService = schemaService;
         this.graph = graph;
         internalPainter = new InternalPainter(nodeSelector, gViewer);
         idTranslator = new IdTranslator();
     }
-
     public Node AddNode(ISchemaItem schemaItem)
     {
         INodeData nodeData = new NodeData(schemaItem, schemaService);
         Node node = graph.AddNode(idTranslator.MakeNodeId(schemaItem.Id));
         node.Attr.Shape = Shape.DrawFromGeometry;
-        var painter = new NodePainter(internalPainter);
+        var painter =  new NodePainter(internalPainter);
         node.DrawNodeDelegate = painter.Draw;
         node.NodeBoundaryDelegate = painter.GetBoundary;
         node.UserData = nodeData;
         node.LabelText = nodeData.Text;
         return node;
     }
-
     public Node AddNodeItem(INodeData nodeData)
     {
         Node node = graph.AddNode(idTranslator.MakeNodeId(nodeData.Id));
         node.Attr.Shape = Shape.DrawFromGeometry;
-        var painter = new NodeItemPainter(internalPainter);
+        var painter =
+            new NodeItemPainter(internalPainter);
         node.DrawNodeDelegate = painter.Draw;
         node.NodeBoundaryDelegate = painter.GetBoundary;
         node.UserData = nodeData;
         node.LabelText = nodeData.Text;
         return node;
     }
-
-    public Subgraph AddSubgraphNode(Subgraph parentSbubgraph, ISchemaItem schemaItem)
+    public Subgraph AddSubgraphNode(Subgraph parentSbubgraph,
+        ISchemaItem schemaItem)
     {
         INodeData nodeData = new NodeData(schemaItem, schemaService);
         Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(schemaItem.Id));
         subgraph.Attr.Shape = Shape.DrawFromGeometry;
-        var painter = new SubgraphNodePainter(internalPainter);
+        var painter =
+            new SubgraphNodePainter(internalPainter);
         subgraph.DrawNodeDelegate = painter.Draw;
         subgraph.NodeBoundaryDelegate = painter.GetBoundary;
         subgraph.UserData = nodeData;
@@ -103,8 +98,9 @@ class NodeFactory
         }
         return subgraph;
     }
-
-    public BlockSubGraph AddSubgraph(Subgraph parentSbubgraph, IWorkflowBlock schemaItem)
+    
+    public BlockSubGraph AddSubgraph(Subgraph parentSbubgraph,
+        IWorkflowBlock schemaItem)
     {
         INodeData nodeData = new NodeData(schemaItem, schemaService);
         BlockSubGraph subgraph = new BlockSubGraph(idTranslator.MakeNodeId(schemaItem.Id));
@@ -124,13 +120,13 @@ class NodeFactory
         }
         return subgraph;
     }
-
     public Subgraph AddActionSubgraph(Subgraph parentSbubgraph, ISchemaItem schemaItem)
     {
         INodeData nodeData = new NodeItemLabel(schemaItem.Name);
         Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(schemaItem.Id));
         subgraph.Attr.Shape = Shape.DrawFromGeometry;
-        var painter = new ActionSubgraphPainter(internalPainter);
+        var painter =
+            new ActionSubgraphPainter(internalPainter);
         subgraph.DrawNodeDelegate = painter.Draw;
         subgraph.NodeBoundaryDelegate = painter.GetBoundary;
         subgraph.UserData = nodeData;
@@ -139,35 +135,36 @@ class NodeFactory
             PackingMethod = PackingMethod.Compact,
             PackingAspectRatio = 1000,
             AdditionalClusterTopMargin = 20,
-            ClusterMargin = 10,
+            ClusterMargin = 10
         };
-
+        
         parentSbubgraph.AddSubgraph(subgraph);
         return subgraph;
     }
-
+    
+    
     public void AddActionNode(Subgraph actionSubgraph, EntityUIAction action)
     {
         INodeData nodeData = new NodeData(action, schemaService);
         Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(nodeData.Id));
         subgraph.Attr.Shape = Shape.DrawFromGeometry;
-        var painter = new ActionNodePainter(internalPainter);
+        var painter =
+            new ActionNodePainter(internalPainter);
         subgraph.DrawNodeDelegate = painter.Draw;
         subgraph.NodeBoundaryDelegate = painter.GetBoundary;
         subgraph.UserData = nodeData;
         actionSubgraph.AddSubgraph(subgraph);
     }
-
+    
     public Node AddStarBalloon()
     {
         return AddBalloon(graph, internalPainter.GreenBrush, "Start");
     }
-
+    
     public Node AddEndBalloon()
     {
         return AddBalloon(graph, internalPainter.RedBrush, "End");
     }
-
     private Node AddBalloon(Graph graph, SolidBrush balloonBrush, string label)
     {
         Node node = graph.AddNode($"{label} balloon {balloonNumber++}");
@@ -178,13 +175,14 @@ class NodeFactory
         node.LabelText = label;
         return node;
     }
+    
+  
 }
-
 class IdTranslator
 {
     private static Regex idRegex;
     private readonly HashSet<string> createdNodeIds = new HashSet<string>();
-
+    
     public string MakeNodeId(string strId)
     {
         if (Guid.TryParse(strId, out Guid id))
@@ -193,7 +191,6 @@ class IdTranslator
         }
         return strId;
     }
-
     public string MakeNodeId(Guid schemaItemId)
     {
         for (int i = 0; i < 100; i++)
@@ -205,16 +202,14 @@ class IdTranslator
                 return nodeId;
             }
         }
-        throw new Exception(
-            "There are too many nodes referencing the same schema item in this diagram"
-        );
+        throw new Exception("There are too many nodes referencing the same schema item in this diagram");
     }
-
+    
     public static Guid ToSchemaId(Node node)
     {
         return NodeToSchema(node.Id);
     }
-
+    
     public static Guid NodeToSchema(string nodeId)
     {
         if (nodeId == null)
@@ -229,33 +224,30 @@ class IdTranslator
         }
         return Guid.Parse(match.Groups[1].Value);
     }
-
     public static string SchemaToFirstNode(Guid schemaItemId)
     {
         return SchemaToFirstNode(schemaItemId.ToString());
     }
-
+    
     public static string SchemaToFirstNode(string schemaItemId)
     {
         return schemaItemId + "_Instance_" + 0;
     }
 }
-
 internal interface INodeData
 {
     ISchemaItem SchemaItem { get; }
     string Text { get; }
-    Image PrimaryImage { get; }
-    Image SecondaryImage { get; }
+    Image PrimaryImage { get;}
+    Image SecondaryImage { get;}
     bool IsFromActivePackage { get; }
     string Id { get; }
     int LeftMargin { get; }
 }
-
-class NodeItemLabel : INodeData
+class NodeItemLabel: INodeData
 {
     private static int lastId;
-
+    
     public ISchemaItem SchemaItem { get; }
     public string Text { get; }
     public Image PrimaryImage { get; }
@@ -263,39 +255,30 @@ class NodeItemLabel : INodeData
     public bool IsFromActivePackage { get; } = true;
     public string Id { get; }
     public int LeftMargin { get; }
-
     public NodeItemLabel(string text)
     {
         Text = text;
         Id = "NodeItemLabel_" + lastId++;
     }
-
-    public NodeItemLabel(string text, int leftMargin)
-        : this(text)
+    public NodeItemLabel(string text, int leftMargin):this(text)
     {
         LeftMargin = leftMargin;
     }
 }
-
-class NodeItemData : NodeData
+class NodeItemData: NodeData
 {
-    public NodeItemData(
-        ISchemaItem schemaItem,
-        int leftMargin,
-        WorkbenchSchemaService schemaService
-    )
+    public NodeItemData(ISchemaItem schemaItem, int leftMargin, WorkbenchSchemaService schemaService)
         : base(schemaItem, schemaService)
     {
         LeftMargin = leftMargin;
     }
 }
-
 class NodeData : INodeData
 {
     private readonly WorkbenchSchemaService schemaService;
     private Image primaryImage;
     private Image secondaryImage;
-
+    
     public virtual Image PrimaryImage
     {
         get
@@ -312,15 +295,12 @@ class NodeData : INodeData
             return primaryImage;
         }
     }
-    public Image SecondaryImage
-    {
+    public Image SecondaryImage {
         get
         {
-            if (
-                secondaryImage == null
-                && SchemaItem is AbstractWorkflowStep workflowStep
-                && workflowStep.StartConditionRule != null
-            )
+            if (secondaryImage  == null &&
+                SchemaItem is AbstractWorkflowStep workflowStep &&
+                workflowStep.StartConditionRule != null)
             {
                 secondaryImage = GetImage(workflowStep.StartConditionRule.Icon);
             }
@@ -333,24 +313,25 @@ class NodeData : INodeData
         SchemaItem.Package.Id == schemaService.ActiveSchemaExtensionId;
     public string Id => SchemaItem.Id.ToString();
     public int LeftMargin { get; protected set; } = 0;
-
     public NodeData(ISchemaItem schemaItem, WorkbenchSchemaService schemaService)
     {
         this.schemaService = schemaService;
         SchemaItem = schemaItem;
         Text = SchemaItem.Name;
     }
-
+    
     public NodeData(EntityUIAction action, WorkbenchSchemaService schemaService)
     {
         this.schemaService = schemaService;
         SchemaItem = action;
         Text = action.Caption;
     }
-
+    
     private Image GetImage(string iconId)
     {
-        var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+        var schemaBrowser =
+            WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as
+                IBrowserPad;
         var imageList = schemaBrowser.ImageList;
         return imageList.Images[schemaBrowser.ImageIndex(iconId)];
     }

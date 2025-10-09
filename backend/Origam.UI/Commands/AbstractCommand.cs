@@ -19,24 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections.Generic;
 using Origam.Schema;
+using System.Collections.Generic;
 
 namespace Origam.UI;
-
 /// <summary>
 /// Abstract implementation of the <see cref="ICommand"/> interface.
 /// </summary>
 public abstract class AbstractCommand : ICommand
 {
-    /// <summary>
+	/// <summary>
     /// Returns the owner of the command.
     /// </summary>
     public virtual object Owner { get; set; } = null;
-
-    /// <summary>
-    /// Invokes the command.
-    /// </summary>
-    public abstract void Run();
-    public List<ISchemaItem> GeneratedModelElements { get; } = new List<ISchemaItem>();
+	/// <summary>
+	/// Invokes the command.
+	/// </summary>
+	public abstract void Run();
+    public List<ISchemaItem> GeneratedModelElements { get; } 
+        = new List<ISchemaItem>();
 }

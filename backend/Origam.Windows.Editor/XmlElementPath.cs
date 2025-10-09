@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -17,7 +17,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 namespace Origam.Windows.Editor;
-
 /// <summary>
 /// Represents the path to an xml element starting from the root of the
 /// document.
@@ -26,9 +25,9 @@ public class XmlElementPath
 {
     QualifiedNameCollection elements = new QualifiedNameCollection();
     XmlNamespaceCollection namespacesInScope = new XmlNamespaceCollection();
-
-    public XmlElementPath() { }
-
+    public XmlElementPath()
+    {
+    }
     /// <summary>
     /// Gets the elements specifying the path.
     /// </summary>
@@ -37,20 +36,17 @@ public class XmlElementPath
     {
         get { return elements; }
     }
-
     public void AddElement(QualifiedName category)
     {
         elements.Add(category);
     }
-
     public bool IsEmpty
     {
         get { return elements.IsEmpty; }
     }
-
     /// <summary>
-    /// Compacts the path so it only contains the elements that are from
-    /// the namespace of the last element in the path.
+    /// Compacts the path so it only contains the elements that are from 
+    /// the namespace of the last element in the path. 
     /// </summary>
     /// <remarks>This method is used when we need to know the path for a
     /// particular namespace and do not care about the complete path.
@@ -71,19 +67,16 @@ public class XmlElementPath
             }
         }
     }
-
     public XmlNamespaceCollection NamespacesInScope
     {
         get { return namespacesInScope; }
     }
-
     public string GetNamespaceForPrefix(string prefix)
     {
         return namespacesInScope.GetNamespaceForPrefix(prefix);
     }
-
     /// <summary>
-    /// An xml element path is considered to be equal if
+    /// An xml element path is considered to be equal if 
     /// each path item has the same name and namespace.
     /// </summary>
     public override bool Equals(object obj)
@@ -95,22 +88,18 @@ public class XmlElementPath
         }
         return elements.Equals(rhsPath.elements);
     }
-
     public override int GetHashCode()
     {
         return elements.GetHashCode();
     }
-
     public override string ToString()
     {
         return elements.ToString();
     }
-
     public string GetRootNamespace()
     {
         return elements.GetRootNamespace();
     }
-
     /// <summary>
     /// Only updates those names without a namespace.
     /// </summary>
@@ -124,7 +113,6 @@ public class XmlElementPath
             }
         }
     }
-
     int LastIndexNotMatchingNamespace(string namespaceUri)
     {
         if (elements.Count > 1)

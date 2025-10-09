@@ -20,11 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Globalization;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Origam.Gui.UI;
-
 public class EnhancedTextBox : TextBox
 {
     private Type dataType = typeof(string);
@@ -32,7 +31,7 @@ public class EnhancedTextBox : TextBox
     private string customFormat;
     private static readonly object ValueChangedEventKey = new object();
     private readonly Func<DateTime> timeNowFunc;
-
+    
     public EnhancedTextBox(Func<DateTime> timeNowFunc = null)
     {
         KeyDown += OnKeyDown;
@@ -42,7 +41,6 @@ public class EnhancedTextBox : TextBox
         formatter = new StringFormatter(this);
         this.timeNowFunc = timeNowFunc ?? (() => DateTime.Now);
     }
-
     public Type DataType
     {
         get => dataType;
@@ -50,7 +48,7 @@ public class EnhancedTextBox : TextBox
         {
             if (value == typeof(DateTime))
             {
-                formatter = new DatetimeFormatter(this, customFormat, timeNowFunc);
+                formatter = new DatetimeFormatter(this,customFormat,timeNowFunc);
             }
             else if (value == typeof(string))
             {
@@ -61,8 +59,10 @@ public class EnhancedTextBox : TextBox
                 formatter = new WholeNumberFormattrer(
                     textBox: this,
                     customFormat: customFormat,
-                    textParseFunc: text =>
-                        long.Parse(text, Formatter.WholeNumberStyle, CurrentNumFormat)
+                    textParseFunc: text => long.Parse(
+                        text,
+                        Formatter.WholeNumberStyle,
+                        CurrentNumFormat)
                 );
             }
             else if (value == typeof(int))
@@ -70,8 +70,10 @@ public class EnhancedTextBox : TextBox
                 formatter = new WholeNumberFormattrer(
                     textBox: this,
                     customFormat: customFormat,
-                    textParseFunc: text =>
-                        int.Parse(text, Formatter.WholeNumberStyle, CurrentNumFormat)
+                    textParseFunc: text => int.Parse(
+                        text, 
+                        Formatter.WholeNumberStyle,
+                        CurrentNumFormat)
                 );
             }
             else if (value == typeof(decimal))
@@ -79,8 +81,10 @@ public class EnhancedTextBox : TextBox
                 formatter = new RealNumberFormatter(
                     textBox: this,
                     format: customFormat,
-                    textParseFunc: text =>
-                        decimal.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                    textParseFunc: text => decimal.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
                 );
             }
             else if (value == typeof(float))
@@ -88,8 +92,10 @@ public class EnhancedTextBox : TextBox
                 formatter = new RealNumberFormatter(
                     textBox: this,
                     format: customFormat,
-                    textParseFunc: text =>
-                        float.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                    textParseFunc: text => float.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
                 );
             }
             else if (value == typeof(double))
@@ -97,8 +103,10 @@ public class EnhancedTextBox : TextBox
                 formatter = new RealNumberFormatter(
                     textBox: this,
                     format: customFormat,
-                    textParseFunc: text =>
-                        double.Parse(text, Formatter.RealNumberStyle, CurrentNumFormat)
+                    textParseFunc: text => double.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
                 );
             }
             else
@@ -108,7 +116,8 @@ public class EnhancedTextBox : TextBox
             dataType = value;
         }
     }
-    private NumberFormatInfo CurrentNumFormat => CultureInfo.CurrentCulture.NumberFormat;
+    private  NumberFormatInfo CurrentNumFormat 
+        => CultureInfo.CurrentCulture.NumberFormat;
     public object Value
     {
         get => formatter.GetValue();
@@ -120,7 +129,7 @@ public class EnhancedTextBox : TextBox
                 return;
             }
             Text = value.ToString();
-
+            
             formatter.OnLeave(null, EventArgs.Empty);
             OnValueChanged(EventArgs.Empty);
         }
@@ -139,7 +148,6 @@ public class EnhancedTextBox : TextBox
         add => Events.AddHandler(ValueChangedEventKey, value);
         remove => Events.RemoveHandler(ValueChangedEventKey, value);
     }
-
     private void OnValueChanged(EventArgs e)
     {
         if (!(Events[ValueChangedEventKey] is EventHandler eventHandler))
@@ -148,17 +156,14 @@ public class EnhancedTextBox : TextBox
         }
         eventHandler(this, e);
     }
-
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         formatter.OnKeyDown(sender, e);
     }
-
     private void OnKeyPress(object sender, KeyPressEventArgs e)
     {
         formatter.OnKeyPress(sender, e);
     }
-
     private void OnLeave(object sender, EventArgs e)
     {
         formatter.OnLeave(sender, e);

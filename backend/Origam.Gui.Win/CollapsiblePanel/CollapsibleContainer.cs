@@ -22,13 +22,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for CollapsibleContainer.
 /// </summary>
 [Designer(typeof(CollapsibleContainerDesigner))]
 public class CollapsibleContainer : AsTabControl
 {
-    public CollapsibleContainer()
-        : base() { }
+	public CollapsibleContainer() : base()
+	{
+	}
+	
 }

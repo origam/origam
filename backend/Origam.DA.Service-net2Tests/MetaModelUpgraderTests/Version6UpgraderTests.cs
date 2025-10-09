@@ -30,97 +30,52 @@ using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests;
-
 [TestFixture]
-public class Version6UpgraderTests : ClassUpgradeTestBase
+public class Version6UpgraderTests: ClassUpgradeTestBase
 {
     protected override string DirName { get; } = "MetaModelUpgraderTests";
-
+    
     [Test]
     public void ShouldUpgradeToVersion6()
     {
         XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
-        var sut = new Version6Upgrader(
-            new ScriptContainerLocator(GetType().Assembly),
-            xFileData.Document
-        );
+        var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
         sut.Run();
         XElement fileElement = xFileData.Document.FileElement;
         Assert.That(fileElement.Attributes().ToList(), Has.Count.EqualTo(2));
-        XNamespace testClassNamespace =
-            "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0";
-        Assert.That(
-            fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value,
-            Is.EqualTo(testClassNamespace.ToString())
-        );
+        XNamespace testClassNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0";
+        Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(testClassNamespace.ToString()));
         XNamespace persistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
-        Assert.That(
-            fileElement.Attribute(XNamespace.Xmlns.GetName("x"))?.Value,
-            Is.EqualTo(persistenceNamespace.ToString())
-        );
+        Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("x"))?.Value, Is.EqualTo(persistenceNamespace.ToString())); 
         XElement classNode = fileElement.Descendants().First();
-        Assert.That(classNode.GetPrefixOfNamespace(classNode.Name.Namespace), Is.EqualTo("tpc"));
-        Assert.That(
-            classNode.Attribute(persistenceNamespace.GetName("id"))?.Value,
-            Is.EqualTo("0000-0000")
-        );
-        Assert.That(
-            classNode.Attribute(persistenceNamespace.GetName("id"))?.Name.Namespace,
-            Is.EqualTo(persistenceNamespace)
-        );
+        Assert.That(classNode.GetPrefixOfNamespace(classNode.Name.Namespace), Is.EqualTo("tpc")); 
+        Assert.That(classNode.Attribute(persistenceNamespace.GetName("id"))?.Value, Is.EqualTo("0000-0000")); 
+        Assert.That(classNode.Attribute(persistenceNamespace.GetName("id"))?.Name.Namespace, Is.EqualTo(persistenceNamespace)); 
         Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Value, Is.Not.Null);
-        Assert.That(
-            classNode.Attribute(testClassNamespace.GetName("name"))?.Name.Namespace,
-            Is.EqualTo(testClassNamespace)
-        );
-    }
-
+        Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Name.Namespace, Is.EqualTo(testClassNamespace));
+    }            
     [Test]
     public void ShouldUpgradeGroupReferenceFileToVersion6()
     {
         XFileData xFileData = LoadFile("TestOrigamGroupReferenceV5.0.0.origam");
-        var sut = new Version6Upgrader(
-            new ScriptContainerLocator(GetType().Assembly),
-            xFileData.Document
-        );
+        var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
         sut.Run();
-
+        
         XNamespace persistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
         XElement fileElement = xFileData.Document.FileElement;
-        Assert.That(fileElement.Attributes().ToList(), Has.Count.EqualTo(1));
-        Assert.That(
-            fileElement.Attribute(XNamespace.Xmlns.GetName("x"))?.Value,
-            Is.EqualTo(persistenceNamespace.ToString())
-        );
-
+        Assert.That(fileElement.Attributes().ToList(), Has.Count.EqualTo(1)); 
+        Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("x"))?.Value, Is.EqualTo(persistenceNamespace.ToString())); 
+        
         XElement firstGroupReferenceNode = fileElement.Descendants().First();
         Assert.That(firstGroupReferenceNode.Name.Namespace, Is.EqualTo(persistenceNamespace));
-        Assert.That(
-            firstGroupReferenceNode.GetPrefixOfNamespace(firstGroupReferenceNode.Name.Namespace),
-            Is.EqualTo("x")
-        );
-        Assert.That(
-            firstGroupReferenceNode.Attribute(persistenceNamespace.GetName("type"))?.Value,
-            Is.EqualTo("package")
-        );
-        Assert.That(
-            firstGroupReferenceNode.Attribute(persistenceNamespace.GetName("refId"))?.Value,
-            Is.EqualTo("951f2cda-2867-4b99-8824-071fa8749ead")
-        );
-
+        Assert.That(firstGroupReferenceNode.GetPrefixOfNamespace(firstGroupReferenceNode.Name.Namespace), Is.EqualTo("x"));
+        Assert.That(firstGroupReferenceNode.Attribute(persistenceNamespace.GetName("type"))?.Value, Is.EqualTo("package")); 
+        Assert.That(firstGroupReferenceNode.Attribute(persistenceNamespace.GetName("refId"))?.Value, Is.EqualTo("951f2cda-2867-4b99-8824-071fa8749ead"));        
+        
         XElement secondGroupReferenceNode = fileElement.Descendants().Skip(1).First();
         Assert.That(secondGroupReferenceNode.Name.Namespace, Is.EqualTo(persistenceNamespace));
-        Assert.That(
-            secondGroupReferenceNode.GetPrefixOfNamespace(secondGroupReferenceNode.Name.Namespace),
-            Is.EqualTo("x")
-        );
-        Assert.That(
-            secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("type"))?.Value,
-            Is.EqualTo("group")
-        );
-        Assert.That(
-            secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("refId"))?.Value,
-            Is.EqualTo("d266feb3-ff9e-4ac2-8386-517a31519d06")
-        );
-    }
+        Assert.That(secondGroupReferenceNode.GetPrefixOfNamespace(secondGroupReferenceNode.Name.Namespace), Is.EqualTo("x"));
+        Assert.That(secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("type"))?.Value, Is.EqualTo("group")); 
+        Assert.That(secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("refId"))?.Value, Is.EqualTo("d266feb3-ff9e-4ac2-8386-517a31519d06")); 
+    }             
 }

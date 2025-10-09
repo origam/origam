@@ -23,7 +23,6 @@ using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
 namespace Origam.UI.WizardForm;
-
 public class ForeignKeyForm : AbstractWizardForm
 {
     public IDataEntity MasterEntity;
@@ -37,14 +36,7 @@ public class ForeignKeyForm : AbstractWizardForm
     public string ForeignKeyWiz { get; set; }
     public string SelectForeignField { get; set; }
     public string EnterKeyName { get; set; }
-
-    internal void SetUpForm(
-        TextBox txtFieldName,
-        ComboBox cboEntity,
-        ComboBox cboLookup,
-        ComboBox cboField,
-        CheckBox chkAllowNulls
-    )
+    internal void SetUpForm(TextBox txtFieldName, ComboBox cboEntity, ComboBox cboLookup, ComboBox cboField, CheckBox chkAllowNulls)
     {
         if (cboEntity.Items.Count == 0)
         {
@@ -61,13 +53,8 @@ public class ForeignKeyForm : AbstractWizardForm
                 {
                     cboEntity.Items.Add(entity);
                 }
-                Workbench.Services.SchemaService schema =
-                    Workbench.Services.ServiceManager.Services.GetService(
-                        typeof(Workbench.Services.SchemaService)
-                    ) as Workbench.Services.SchemaService;
-                IDataLookupSchemaItemProvider lookups =
-                    schema.GetProvider(typeof(IDataLookupSchemaItemProvider))
-                    as IDataLookupSchemaItemProvider;
+                Workbench.Services.SchemaService schema = Workbench.Services.ServiceManager.Services.GetService(typeof(Workbench.Services.SchemaService)) as Workbench.Services.SchemaService;
+                IDataLookupSchemaItemProvider lookups = schema.GetProvider(typeof(IDataLookupSchemaItemProvider)) as IDataLookupSchemaItemProvider;
                 foreach (object lookup in lookups.ChildItems)
                 {
                     cboLookup.Items.Add(lookup);

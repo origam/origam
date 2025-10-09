@@ -24,13 +24,11 @@ using System.Windows.Forms;
 using Origam.Extensions;
 
 namespace Origam.Gui.UI;
-
 public class LabeledToolStrip : ToolStrip
 {
     private const int BottomTextMarin = 3;
     private readonly SolidBrush foreColorBrush;
     public IToolStripContainer Owner { get; }
-
     public LabeledToolStrip(IToolStripContainer owner)
     {
         MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
@@ -39,13 +37,11 @@ public class LabeledToolStrip : ToolStrip
         Visible = false;
         Owner = owner;
     }
-
     protected override void OnItemAdded(ToolStripItemEventArgs e)
     {
         base.OnItemAdded(e);
         Visible = true;
     }
-
     protected override void OnItemRemoved(ToolStripItemEventArgs e)
     {
         base.OnItemRemoved(e);
@@ -54,7 +50,6 @@ public class LabeledToolStrip : ToolStrip
             Visible = false;
         }
     }
-
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
@@ -64,20 +59,18 @@ public class LabeledToolStrip : ToolStrip
         e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
     }
 }
-
-internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer
+internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer 
 {
-    protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+    protected override void OnRenderToolStripBorder(
+        ToolStripRenderEventArgs e)
     {
         base.OnRenderToolStripBorder(e);
         var rectangle = new Rectangle(
-            e.AffectedBounds.Location.X - 5,
+            e.AffectedBounds.Location.X-5,
             e.AffectedBounds.Location.Y - 5,
             e.AffectedBounds.Width + 5,
-            e.AffectedBounds.Height + 10
-        );
-        ControlPaint.DrawBorder(
-            e.Graphics,
+            e.AffectedBounds.Height + 10);
+        ControlPaint.DrawBorder(e.Graphics,
             bounds: rectangle,
             leftColor: SystemColors.ControlDarkDark,
             leftWidth: 2,
@@ -90,10 +83,9 @@ internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer
             rightStyle: ButtonBorderStyle.Solid,
             bottomColor: SystemColors.ControlDarkDark,
             bottomWidth: 2,
-            bottomStyle: ButtonBorderStyle.Solid
-        );
+            bottomStyle: ButtonBorderStyle.Solid);
+       
     }
-
     protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
     {
         // we want no grip

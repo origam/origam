@@ -22,20 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 
 namespace Origam.Gui.Win;
-
 /// <summary>
 /// Summary description for AsMonthCalendar.
 /// </summary>
 public class AsMonthCalendar : MonthCalendar
 {
-    public AsMonthCalendar() { }
-
-    protected override void WndProc(ref Message m)
-    {
-        try
-        {
-            base.WndProc(ref m);
-        }
-        catch { }
-    }
+	public AsMonthCalendar()
+	{
+	}
+	protected override void WndProc(ref Message m)
+	{
+		try
+		{
+			base.WndProc (ref m);
+		}
+		catch
+		{}
+	}
 }

@@ -22,11 +22,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.UI;
-
 /// <summary>
 /// Summary description for IMenuCommand.
 /// </summary>
 public interface IMenuCommand : ICommand, IDisposable
 {
-    bool IsEnabled { get; set; }
+	bool IsEnabled 
+	{
+		get;
+		set;
+	}
 }

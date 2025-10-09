@@ -23,42 +23,34 @@ using System;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI;
-
-class WholeNumberFormattrer : Formatter
+class WholeNumberFormattrer: Formatter
 {
     private readonly NumberParser numberParser;
-
-    public WholeNumberFormattrer(
-        TextBox textBox,
-        string customFormat,
-        Func<string, object> textParseFunc
-    )
-        : base(textBox, customFormat)
+    public WholeNumberFormattrer(TextBox textBox, string customFormat,
+        Func<string,object> textParseFunc) 
+        : base(textBox,customFormat)
     {
-        numberParser = new NumberParser(textParseFunc, errorReporter);
+        numberParser= new NumberParser(textParseFunc,errorReporter);
     }
-
-    private string Format =>
+    private string Format => 
         string.IsNullOrEmpty(customFormat) ? "###,###,###,###,###" : customFormat;
-
+    
     public override void OnLeave(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(Text))
-            return;
-
+        if (string.IsNullOrEmpty(Text)) return;
+        
         var value = numberParser.Parse(Text);
-        Text = string.Format(Culture, "{0:" + Format + "}", value);
+        Text = string.Format(Culture, "{0:"+Format+"}", value);
     }
-
     public override object GetValue()
     {
         return numberParser.Parse(Text);
     }
-
     protected override bool IsValidChar(char input)
     {
-        if (base.IsValidChar(input))
-            return true;
-        return char.IsDigit(input) || input == ThousandsSeparator || input == Minus;
+        if (base.IsValidChar(input)) return true;
+        return char.IsDigit(input) ||
+               input == ThousandsSeparator ||
+               input == Minus;
     }
 }

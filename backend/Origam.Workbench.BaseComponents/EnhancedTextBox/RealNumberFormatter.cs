@@ -24,43 +24,36 @@ using System.Globalization;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI;
-
-class RealNumberFormatter : Formatter
+class RealNumberFormatter: Formatter
 {
     private readonly NumberParser numberParser;
-
-    public RealNumberFormatter(TextBox textBox, string format, Func<string, object> textParseFunc)
-        : base(textBox, format)
+    public RealNumberFormatter(TextBox textBox, string format,
+        Func<string,object> textParseFunc)
+        : base(textBox,format)
     {
-        numberParser = new NumberParser(textParseFunc, errorReporter);
+        numberParser = new NumberParser(textParseFunc,errorReporter);
     }
-
-    private string Format =>
+    private string Format => 
         string.IsNullOrEmpty(customFormat) ? "###,###,###.######" : customFormat;
-    private char DecimalSeparator =>
-        CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
-
+    private char DecimalSeparator 
+        => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
     public override void OnLeave(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(Text))
-            return;
+        if (string.IsNullOrEmpty(Text)) return;
         var value = numberParser.Parse(Text);
-        Text = string.Format(Culture, "{0:" + Format + "}", value);
+        Text = string.Format(Culture, "{0:"+Format+"}", value);
     }
-
     public override object GetValue()
     {
         return numberParser.Parse(Text);
     }
-
     protected override bool IsValidChar(char input)
     {
-        if (base.IsValidChar(input))
-            return true;
-
-        return char.IsDigit(input)
-            || input == Minus
-            || input == ThousandsSeparator
-            || input == DecimalSeparator;
+        if (base.IsValidChar(input)) return true;
+        
+        return char.IsDigit(input) ||
+               input == Minus ||
+               input == ThousandsSeparator ||
+               input == DecimalSeparator;
     }
 }

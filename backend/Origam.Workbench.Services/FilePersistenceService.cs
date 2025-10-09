@@ -37,6 +37,7 @@ using Origam.Schema;
 using Origam.Git;
 #endif
 
+
 namespace Origam.Workbench.Services;
 
 public class FilePersistenceService : IPersistenceService

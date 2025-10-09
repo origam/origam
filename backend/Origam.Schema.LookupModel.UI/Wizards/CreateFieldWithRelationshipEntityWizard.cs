@@ -25,7 +25,6 @@ using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel.UI.Wizards;
-
 /// <summary>
 /// Summary description for CreateFieldWithRelationshipEntityWizard.
 /// </summary>
@@ -37,11 +36,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         public string Name { get; set; }
         public bool IsDefault { get; set; }
     }
-
-    private System.Windows.Forms.TextBox txtName;
-    private System.Windows.Forms.Label lblName;
-    private System.Windows.Forms.Button btnOK;
-    private System.Windows.Forms.Button btnCancel;
+	private System.Windows.Forms.TextBox txtName;
+	private System.Windows.Forms.Label lblName;
+	private System.Windows.Forms.Button btnOK;
+	private System.Windows.Forms.Button btnCancel;
     private BindingList<InitialValue> _initialValues = new BindingList<InitialValue>();
     private DataGridViewTextBoxColumn colCode;
     private GroupBox groupBoxKey;
@@ -55,44 +53,40 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     private ComboBox tableRelation;
     private Label label4;
     private CheckBox checkParentChild;
-
     /// <summary>
     /// Required designer variable.
     /// </summary>
     private System.ComponentModel.Container components = null;
-
-    public CreateFieldWithRelationshipEntityWizard()
-    {
-        //
-        // Required for Windows Form Designer support
-        //
-        InitializeComponent();
+	public CreateFieldWithRelationshipEntityWizard()
+	{
+		//
+		// Required for Windows Form Designer support
+		//
+		InitializeComponent();
         //grdInitialValues.DataSource = _initialValues;
         //UpdateScreen();
     }
-
     /// <summary>
     /// Clean up any resources being used.
     /// </summary>
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            if (components != null)
-            {
-                components.Dispose();
-            }
-        }
-        base.Dispose(disposing);
-    }
-
-    #region Windows Form Designer generated code
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
-    private void InitializeComponent()
-    {
+    protected override void Dispose( bool disposing )
+	{
+		if( disposing )
+		{
+			if(components != null)
+			{
+				components.Dispose();
+			}
+		}
+		base.Dispose( disposing );
+	}
+	#region Windows Form Designer generated code
+	/// <summary>
+	/// Required method for Designer support - do not modify
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
         this.txtName = new System.Windows.Forms.TextBox();
         this.lblName = new System.Windows.Forms.Label();
         this.btnOK = new System.Windows.Forms.Button();
@@ -112,37 +106,27 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.groupBoxKey.SuspendLayout();
         this.groupBox2.SuspendLayout();
         this.SuspendLayout();
-        //
+        // 
         // txtName
-        //
-        this.txtName.Anchor = (
-            (System.Windows.Forms.AnchorStyles)(
-                (
-                    (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                    | System.Windows.Forms.AnchorStyles.Right
-                )
-            )
-        );
+        // 
+        this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        | System.Windows.Forms.AnchorStyles.Right)));
         this.txtName.Location = new System.Drawing.Point(140, 16);
         this.txtName.Name = "txtName";
         this.txtName.Size = new System.Drawing.Size(292, 20);
         this.txtName.TabIndex = 1;
-        //
+        // 
         // lblName
-        //
+        // 
         this.lblName.Location = new System.Drawing.Point(8, 19);
         this.lblName.Name = "lblName";
         this.lblName.Size = new System.Drawing.Size(116, 20);
         this.lblName.TabIndex = 0;
         this.lblName.Text = "Relation \"Name\"";
-        //
+        // 
         // btnOK
-        //
-        this.btnOK.Anchor = (
-            (System.Windows.Forms.AnchorStyles)(
-                (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)
-            )
-        );
+        // 
+        this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
         this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
         this.btnOK.Location = new System.Drawing.Point(234, 326);
         this.btnOK.Name = "btnOK";
@@ -150,14 +134,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.btnOK.TabIndex = 16;
         this.btnOK.Text = "&OK";
         this.btnOK.Click += new System.EventHandler(this.BtnOK_Click);
-        //
+        // 
         // btnCancel
-        //
-        this.btnCancel.Anchor = (
-            (System.Windows.Forms.AnchorStyles)(
-                (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)
-            )
-        );
+        // 
+        this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
         this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
         this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
         this.btnCancel.Location = new System.Drawing.Point(336, 326);
@@ -166,15 +146,15 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.btnCancel.TabIndex = 17;
         this.btnCancel.Text = "&Cancel";
         this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-        //
+        // 
         // colCode
-        //
+        // 
         this.colCode.DataPropertyName = "Code";
         this.colCode.HeaderText = "Code";
         this.colCode.Name = "colCode";
-        //
+        // 
         // groupBoxKey
-        //
+        // 
         this.groupBoxKey.AutoSize = true;
         this.groupBoxKey.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
         this.groupBoxKey.Controls.Add(this.groupBox2);
@@ -187,9 +167,9 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.groupBoxKey.TabIndex = 21;
         this.groupBoxKey.TabStop = false;
         this.groupBoxKey.Text = "Key";
-        //
+        // 
         // groupBox2
-        //
+        // 
         this.groupBox2.Controls.Add(this.RelatedEntityField);
         this.groupBox2.Controls.Add(this.BaseEntityField);
         this.groupBox2.Controls.Add(this.label3);
@@ -200,95 +180,83 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.groupBox2.TabIndex = 23;
         this.groupBox2.TabStop = false;
         this.groupBox2.Text = "Misc";
-        //
+        // 
         // RelatedEntityField
-        //
+        // 
         this.RelatedEntityField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.RelatedEntityField.Location = new System.Drawing.Point(107, 43);
         this.RelatedEntityField.Name = "RelatedEntityField";
         this.RelatedEntityField.Size = new System.Drawing.Size(292, 21);
         this.RelatedEntityField.Sorted = true;
         this.RelatedEntityField.TabIndex = 5;
-        this.RelatedEntityField.SelectedIndexChanged += new System.EventHandler(
-            this.RelatedEntityField_SelectedIndexChanged
-        );
-        //
+        this.RelatedEntityField.SelectedIndexChanged += new System.EventHandler(this.RelatedEntityField_SelectedIndexChanged);
+        // 
         // BaseEntityField
-        //
+        // 
         this.BaseEntityField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.BaseEntityField.Location = new System.Drawing.Point(107, 15);
         this.BaseEntityField.Name = "BaseEntityField";
         this.BaseEntityField.Size = new System.Drawing.Size(292, 21);
         this.BaseEntityField.Sorted = true;
         this.BaseEntityField.TabIndex = 4;
-        this.BaseEntityField.SelectedIndexChanged += new System.EventHandler(
-            this.BaseEntityField_SelectedIndexChanged
-        );
-        //
+        this.BaseEntityField.SelectedIndexChanged += new System.EventHandler(this.BaseEntityField_SelectedIndexChanged);
+        // 
         // label3
-        //
+        // 
         this.label3.AutoSize = true;
         this.label3.Location = new System.Drawing.Point(6, 46);
         this.label3.Name = "label3";
         this.label3.Size = new System.Drawing.Size(92, 13);
         this.label3.TabIndex = 3;
         this.label3.Text = "RelatedEntityFiled";
-        //
+        // 
         // label2
-        //
+        // 
         this.label2.AutoSize = true;
         this.label2.Location = new System.Drawing.Point(6, 23);
         this.label2.Name = "label2";
         this.label2.Size = new System.Drawing.Size(79, 13);
         this.label2.TabIndex = 2;
         this.label2.Text = "BaseEntityField";
-        //
+        // 
         // txtKeyName
-        //
-        this.txtKeyName.Anchor = (
-            (System.Windows.Forms.AnchorStyles)(
-                (
-                    (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                    | System.Windows.Forms.AnchorStyles.Right
-                )
-            )
-        );
+        // 
+        this.txtKeyName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        | System.Windows.Forms.AnchorStyles.Right)));
         this.txtKeyName.Location = new System.Drawing.Point(128, 28);
         this.txtKeyName.Name = "txtKeyName";
         this.txtKeyName.Size = new System.Drawing.Size(292, 20);
         this.txtKeyName.TabIndex = 22;
-        //
+        // 
         // label1
-        //
+        // 
         this.label1.Location = new System.Drawing.Point(25, 28);
         this.label1.Name = "label1";
         this.label1.Size = new System.Drawing.Size(97, 20);
         this.label1.TabIndex = 22;
         this.label1.Text = "\"Name\"";
-        //
+        // 
         // tableRelation
-        //
+        // 
         this.tableRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.tableRelation.Location = new System.Drawing.Point(139, 77);
         this.tableRelation.Name = "tableRelation";
         this.tableRelation.Size = new System.Drawing.Size(298, 21);
         this.tableRelation.Sorted = true;
         this.tableRelation.TabIndex = 6;
-        this.tableRelation.SelectedIndexChanged += new System.EventHandler(
-            this.TableRelation_SelectedIndexChanged
-        );
-        //
+        this.tableRelation.SelectedIndexChanged += new System.EventHandler(this.TableRelation_SelectedIndexChanged);
+        // 
         // label4
-        //
+        // 
         this.label4.AutoSize = true;
         this.label4.Location = new System.Drawing.Point(12, 77);
         this.label4.Name = "label4";
         this.label4.Size = new System.Drawing.Size(34, 13);
         this.label4.TabIndex = 22;
         this.label4.Text = "Table";
-        //
+        // 
         // checkParentChild
-        //
+        // 
         this.checkParentChild.AutoSize = true;
         this.checkParentChild.Location = new System.Drawing.Point(139, 42);
         this.checkParentChild.Name = "checkParentChild";
@@ -296,12 +264,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.checkParentChild.TabIndex = 23;
         this.checkParentChild.Text = "isParentChild";
         this.checkParentChild.UseVisualStyleBackColor = true;
-        this.checkParentChild.CheckedChanged += new System.EventHandler(
-            this.IsParentChild_CheckedChanged
-        );
-        //
+        this.checkParentChild.CheckedChanged += new System.EventHandler(this.IsParentChild_CheckedChanged);
+        // 
         // CreateFieldWithRelationshipEntityWizard
-        //
+        // 
         this.AcceptButton = this.btnOK;
         this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
         this.CancelButton = this.btnCancel;
@@ -325,8 +291,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         this.groupBox2.PerformLayout();
         this.ResumeLayout(false);
         this.PerformLayout();
-    }
-
+	}
     private void IsParentChild_CheckedChanged(object sender, EventArgs e)
     {
         ParentChildCheckbox = this.checkParentChild.Checked;
@@ -334,41 +299,40 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     #endregion
     #region Event Handlers
     private void BtnOK_Click(object sender, System.EventArgs e)
-    {
-        if (
-            LookupName == ""
+	{
+		if(LookupName == "" 
             || RelatedEntity == null
-            || BaseEntityFieldSelect == null
+            || BaseEntityFieldSelect == null 
             || RelatedEntityFieldSelect == null
-            || txtKeyName.Text == ""
-        )
-        {
-            MessageBox.Show(
-                ResourceUtils.GetString("EnterAllInfo"),
-                ResourceUtils.GetString("LookupWiz"),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Asterisk
-            );
-            return;
-        }
+            || txtKeyName.Text == "")
+		{
+			MessageBox.Show(ResourceUtils.GetString("EnterAllInfo"), 
+                ResourceUtils.GetString("LookupWiz"), MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			return;
+		}
         this.DialogResult = DialogResult.OK;
-        this.Close();
-    }
-
-    private void btnCancel_Click(object sender, System.EventArgs e)
-    {
-        this.Close();
-    }
-    #endregion
-    #region Public Properties
-    public string LookupName
-    {
-        get { return txtName.Text; }
-    }
+		this.Close();
+	}
+	private void btnCancel_Click(object sender, System.EventArgs e)
+	{
+		this.Close();
+	}
+	#endregion
+	#region Public Properties
+	public string LookupName
+	{
+		get
+		{
+			return txtName.Text;
+		}
+	}
     private IDataEntity _entity;
     public IDataEntity Entity
     {
-        get { return _entity; }
+        get
+        {
+            return _entity;
+        }
         set
         {
             _entity = value;
@@ -378,52 +342,71 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     private ISchemaItem _relatedEntity = null;
     public ISchemaItem RelatedEntity
     {
-        get { return _relatedEntity; }
-        set { _relatedEntity = value; }
+        get
+        {
+            return _relatedEntity;
+        }
+        set
+        {
+            _relatedEntity = value;
+        }
     }
     private ISchemaItem _baseEntityField = null;
     public ISchemaItem BaseEntityFieldSelect
     {
-        get { return _baseEntityField; }
-        set { _baseEntityField = value; }
+        get
+        {
+            return _baseEntityField;
+        }
+        set
+        {
+            _baseEntityField = value;
+        }
     }
     private ISchemaItem _relatedEntityField = null;
     public ISchemaItem RelatedEntityFieldSelect
     {
-        get { return _relatedEntityField; }
-        set { _relatedEntityField = value; }
+        get
+        {
+            return _relatedEntityField;
+        }
+        set
+        {
+            _relatedEntityField = value;
+        }
     }
     private Boolean _isparentChild = false;
     public Boolean ParentChildCheckbox
     {
-        get { return _isparentChild; }
-        set { _isparentChild = value; }
+        get
+        {
+            return _isparentChild;
+        }
+        set
+        {
+            _isparentChild = value;
+        }
     }
-
-    #endregion
-    #region Private Methods
-    private void SetUpForm()
-    {
+    
+	#endregion
+	#region Private Methods
+	private void SetUpForm()
+	{
         tableRelation.Items.Clear();
-        if (this.Entity == null)
-            return;
+        if (this.Entity == null) return;
         txtName.Text = "Transaction " + this.Entity.Name;
         foreach (ISchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
         {
             tableRelation.Items.Add(abstractSchemaItem);
         }
     }
-
     private void SetUpFormKey()
     {
         BaseEntityField.Items.Clear();
         RelatedEntityField.Items.Clear();
-        if (this.Entity == null)
-            return;
+        if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
-        foreach (
-            ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn")
-        )
+        foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {
             RelatedEntityField.Items.Add(filter);
         }
@@ -442,12 +425,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
             SetUpFormKey();
         }
     }
-
     private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
         BaseEntityFieldSelect = (ISchemaItem)BaseEntityField.SelectedItem;
     }
-
     private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
         RelatedEntityFieldSelect = (ISchemaItem)RelatedEntityField.SelectedItem;

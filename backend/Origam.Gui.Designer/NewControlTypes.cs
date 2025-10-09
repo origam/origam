@@ -19,9 +19,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-public enum NewControlTypes
-{
-    Form,
-    UserControl,
-    AsPanel,
-}
+public enum NewControlTypes {Form, UserControl, AsPanel}

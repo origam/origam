@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 
 namespace Origam.Workbench;
-
 public interface IBrowserPad
 {
     ImageList ImageList { get; }
