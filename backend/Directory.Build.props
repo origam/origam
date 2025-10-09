@@ -28,6 +28,10 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
             </ItemGroup>
 
+            <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server'">
+                <CSharpier_Check>true</CSharpier_Check>
+            </PropertyGroup>
+            
         </When>
     </Choose>
     <PropertyGroup>
