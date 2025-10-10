@@ -1,0 +1,23 @@
+﻿DROP PROCEDURE IF EXISTS "OrigamIdentityGrantCleanup";
+
+CREATE PROCEDURE "OrigamIdentityGrantCleanup"()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    current_datetime TIMESTAMP := (now() AT TIME ZONE 'UTC');
+BEGIN
+    LOOP
+        WITH rows AS (
+            SELECT ctid FROM "OrigamIdentityGrant"
+            WHERE "Expiration" < current_datetime
+            LIMIT 1000
+        )
+        DELETE FROM "OrigamIdentityGrant"
+        WHERE ctid IN (SELECT ctid FROM rows);
+
+        IF NOT FOUND THEN
+            EXIT;
+        END IF;
+    END LOOP;
+END;
+$$;
