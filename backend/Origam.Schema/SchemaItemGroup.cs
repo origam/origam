@@ -365,13 +365,13 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     public virtual Type[] NameableTypes => NewItemTypes;
     public event Action<ISchemaItem> ItemCreated;
     public string RelativeFilePath =>
-        Package.Name
-        + "\\"
-        + RootItemType
-        + "\\"
-        + Path.Replace("/", "\\")
-        + "\\"
-        + PersistenceFiles.GroupFileName;
+        System.IO.Path.Combine(
+            Package.Name,
+            RootItemType,
+            Path.Replace('/', System.IO.Path.DirectorySeparatorChar)
+                .Replace('\\', System.IO.Path.DirectorySeparatorChar),
+            PersistenceFiles.GroupFileName
+        );
     public bool IsFolder => true;
     public Guid FileParentId
     {
