@@ -254,6 +254,9 @@ Global
 		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Release|Any CPU.Build.0 = Release Server|Any CPU
+		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Release Architect Server|Any CPU.Build.0 = Release Architect|Any CPU
+		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect|Any CPU
+		{93B972C4-D58D-4681-A8B8-95A34C7C2980}.Debug Architect Server|Any CPU.Build.0 = Debug Architect|Any CPU
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Debug Architect Server|Any CPU.ActiveCfg = Debug Architect Server|Any CPU
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Debug Architect Server|Any CPU.Build.0 = Debug Architect Server|Any CPU
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
