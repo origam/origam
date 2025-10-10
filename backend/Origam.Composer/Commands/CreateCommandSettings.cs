@@ -90,10 +90,10 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--arch-docker-image-linux <IMAGE>", true)]
     public required string ArchitectDockerImageLinux { get; set; }
 
-    [CommandOption("--arch-docker-image-win <IMAGE>")]
+    [CommandOption("--arch-docker-image-win <IMAGE>", true)]
     public required string ArchitectDockerImageWin { get; set; }
 
-    [CommandOption("--arch-port <PORT>")]
+    [CommandOption("--arch-port <PORT>", true)]
     public int ArchitectPort { get; set; }
 
     #endregion
