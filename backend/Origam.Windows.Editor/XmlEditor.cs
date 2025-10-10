@@ -19,22 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Folding;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Search;
 using System;
 using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Folding;
+using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
-using UserControl = System.Windows.Forms.UserControl;
+using ICSharpCode.AvalonEdit.Search;
 using Origam.UI;
+using UserControl = System.Windows.Forms.UserControl;
 
 namespace Origam.Windows.Editor;
+
 public partial class XmlEditor : UserControl
 {
     XmlFormattingStrategy _formattingStrategy = new XmlFormattingStrategy();
@@ -56,6 +57,7 @@ public partial class XmlEditor : UserControl
     {
         set => editor.TextArea.TextView.BackgroundRenderers.Add(value);
     }
+
     public XmlEditor()
     {
         _codeCompletion = new XmlCodeCompletionBinding(_schemas);
@@ -74,22 +76,26 @@ public partial class XmlEditor : UserControl
         editor.ShowLineNumbers = true;
         editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
         var valueBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(18, 53, 182));
+            System.Windows.Media.Color.FromRgb(18, 53, 182)
+        );
         var elementBrush = new SimpleHighlightingBrush(
             System.Windows.Media.Color.FromRgb(
-            OrigamColorScheme.TabActiveStartColor.R,
-            OrigamColorScheme.TabActiveStartColor.G,
-            OrigamColorScheme.TabActiveStartColor.B));
-//            System.Windows.Media.Color.FromRgb(161, 19, 0));
+                OrigamColorScheme.TabActiveStartColor.R,
+                OrigamColorScheme.TabActiveStartColor.G,
+                OrigamColorScheme.TabActiveStartColor.B
+            )
+        );
+        //            System.Windows.Media.Color.FromRgb(161, 19, 0));
         var attributeBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(255, 73, 61));
-        var docBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(0, 154, 41));
+            System.Windows.Media.Color.FromRgb(255, 73, 61)
+        );
+        var docBrush = new SimpleHighlightingBrush(System.Windows.Media.Color.FromRgb(0, 154, 41));
         var declarationBrush = new SimpleHighlightingBrush(
-            System.Windows.Media.Color.FromRgb(100,100,100));
-        editor.TextArea.TextView.LinkTextForegroundBrush =
-            new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(161, 112, 0));
+            System.Windows.Media.Color.FromRgb(100, 100, 100)
+        );
+        editor.TextArea.TextView.LinkTextForegroundBrush = new System.Windows.Media.SolidColorBrush(
+            System.Windows.Media.Color.FromRgb(161, 112, 0)
+        );
         foreach (var color in editor.SyntaxHighlighting.NamedHighlightingColors)
         {
             switch (color.Name)
@@ -112,16 +118,19 @@ public partial class XmlEditor : UserControl
             }
         }
         SearchPanel.Install(editor);
-        
+
         _foldingManager = FoldingManager.Install(editor.TextArea);
         _foldingStrategy = new XmlFoldingStrategy();
         _foldingStrategy.ShowAttributesWhenFolded = true;
-        this.editor.TextArea.IndentationStrategy = new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
+        this.editor.TextArea.IndentationStrategy =
+            new ICSharpCode.AvalonEdit.Indentation.DefaultIndentationStrategy();
         this.editor.TextArea.TextEntered += TextArea_TextEntered;
         AddInternalSchema("xslt.xsd");
         editor.TextArea.Document.TextChanged += Document_TextChanged;
     }
+
     public event ChangedEventHandler ContentChanged;
+
     // Invoke the Changed event; called whenever list changes
     protected virtual void OnContentChanged(EventArgs e)
     {
@@ -130,29 +139,22 @@ public partial class XmlEditor : UserControl
             ContentChanged(this, e);
         }
     }
+
     private void Document_TextChanged(object sender, System.EventArgs e)
     {
         foldingTimer.Enabled = false;
         foldingTimer.Enabled = true;
         OnContentChanged(EventArgs.Empty);
     }
+
     public string ResultSchema
     {
-        get
-        {
-            return _codeCompletion.DefaultSchema;
-        }
-        set
-        {
-            _codeCompletion.DefaultSchema = value;
-        }
+        get { return _codeCompletion.DefaultSchema; }
+        set { _codeCompletion.DefaultSchema = value; }
     }
     public new string Text
     {
-        get
-        {
-            return editor.Document.Text;
-        }
+        get { return editor.Document.Text; }
         set
         {
             editor.Document.Text = value ?? "";
@@ -161,20 +163,16 @@ public partial class XmlEditor : UserControl
     }
     public bool IsReadOnly
     {
-        get
-        {
-            return editor.IsReadOnly;
-        }
-        set
-        {
-            editor.IsReadOnly = value;
-        }
+        get { return editor.IsReadOnly; }
+        set { editor.IsReadOnly = value; }
     }
-    public void DisableScrolling() 
+
+    public void DisableScrolling()
     {
         editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-        editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;     
+        editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
     }
+
     private void AddInternalSchema(string schemaName)
     {
         var assembly = Assembly.GetExecutingAssembly();
@@ -185,7 +183,11 @@ public partial class XmlEditor : UserControl
             _schemas.Add(new XmlSchemaCompletion(reader));
         }
     }
-    private void TextArea_TextEntered(object sender, System.Windows.Input.TextCompositionEventArgs e)
+
+    private void TextArea_TextEntered(
+        object sender,
+        System.Windows.Input.TextCompositionEventArgs e
+    )
     {
         if (e.Text.Length > 0 && !e.Handled)
         {
@@ -212,6 +214,7 @@ public partial class XmlEditor : UserControl
             }
         }
     }
+
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
         if (keyData == (Keys.H | Keys.Control))
@@ -225,6 +228,7 @@ public partial class XmlEditor : UserControl
         }
         return base.ProcessCmdKey(ref msg, keyData);
     }
+
     private void foldingTimer_Tick(object sender, System.EventArgs e)
     {
         _foldingStrategy.UpdateFoldings(_foldingManager, editor.Document);

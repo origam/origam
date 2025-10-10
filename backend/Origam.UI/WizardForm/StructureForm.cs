@@ -19,7 +19,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 namespace Origam.UI.WizardForm;
-public class StructureForm : AbstractWizardForm
-{
-   
-}
+
+public class StructureForm : AbstractWizardForm { }

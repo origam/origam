@@ -26,24 +26,27 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
 namespace Origam.Gui.Win;
-public class SectionLevelPlugin : Label,
-    IOrigamMetadataConsumer, ISupportInitialize, IAsDataConsumer
+
+public class SectionLevelPlugin
+    : Label,
+        IOrigamMetadataConsumer,
+        ISupportInitialize,
+        IAsDataConsumer
 {
     public ISchemaItem OrigamMetadata { get; set; }
-    public void BeginInit()
-    {
-    }
-    
-    public void EndInit()
-    {
-    }
-    
+
+    public void BeginInit() { }
+
+    public void EndInit() { }
+
     private string dataMember;
     private object dataSource;
-    
+
     [
-        DefaultValue((string) null),
-        TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"),
+        DefaultValue((string)null),
+        TypeConverter(
+            "System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+        ),
         RefreshProperties(RefreshProperties.Repaint),
         Category("Data"),
         Description("Data source of the tree.")
@@ -59,10 +62,13 @@ public class SectionLevelPlugin : Label,
             }
         }
     }
-    
+
     [
         DefaultValue(""),
-        Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor)),
+        Editor(
+            "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+            typeof(UITypeEditor)
+        ),
         RefreshProperties(RefreshProperties.Repaint),
         Category("Data"),
         Description("Data member of the tree.")
@@ -79,8 +85,13 @@ public class SectionLevelPlugin : Label,
             }
         }
     }
-    
-    [DefaultValue(false), Category("Data"), 
-     Description("Must be set for exactly one plugin per screen to true if there is no master grid present.")]
+
+    [
+        DefaultValue(false),
+        Category("Data"),
+        Description(
+            "Must be set for exactly one plugin per screen to true if there is no master grid present."
+        )
+    ]
     public bool AllowNavigation { get; set; } = true;
 }

@@ -22,39 +22,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace Origam.UI;
+
 public class RecordReference
 {
-	public RecordReference(Guid entityId, Guid recordId)
-	{
-		EntityId = entityId;
-		RecordId = recordId;
-	}
-	private Guid _entityId;
-	public Guid EntityId
-	{
-		get
-		{
-			return _entityId;
-		}
-		set
-		{
-			_entityId = value;
-		}
-	}
-	private Guid _recordId;
-	public Guid RecordId
-	{
-		get
-		{
-			return _recordId;
-		}
-		set
-		{
-			_recordId = value;
-		}
-	}
-	public override int GetHashCode()
-	{
-		return _entityId.GetHashCode() ^ _recordId.GetHashCode();
-	}
+    public RecordReference(Guid entityId, Guid recordId)
+    {
+        EntityId = entityId;
+        RecordId = recordId;
+    }
+
+    private Guid _entityId;
+    public Guid EntityId
+    {
+        get { return _entityId; }
+        set { _entityId = value; }
+    }
+    private Guid _recordId;
+    public Guid RecordId
+    {
+        get { return _recordId; }
+        set { _recordId = value; }
+    }
+
+    public override int GetHashCode()
+    {
+        return _entityId.GetHashCode() ^ _recordId.GetHashCode();
+    }
 }

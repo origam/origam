@@ -29,27 +29,23 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 
 namespace Origam.Schema.LookupModel.UI.Wizards;
+
 /// <summary>
 /// Summary description for CreateFieldWithLookupRelationshipEntityCommand.
 /// </summary>
 public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
 {
     CreateFieldWithRelationshipEntityWizardForm wizardForm;
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     public override bool IsEnabled
-	{
-		get
-		{
-            return Owner is IDataEntity
-                || Owner is IDataEntityColumn;
-		}
-		set
-		{
-			throw new ArgumentException("Cannot set this property", "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
+    {
+        get { return Owner is IDataEntity || Owner is IDataEntityColumn; }
+        set { throw new ArgumentException("Cannot set this property", "IsEnabled"); }
+    }
+
+    public override void Run()
+    {
         FieldMappingItem baseField = Owner as FieldMappingItem;
         IDataEntity baseEntity = Owner as IDataEntity;
         if (baseField != null)
@@ -64,8 +60,13 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
         TableMappingItem table1 = new TableMappingItem();
         EntityRelationItem entityRelation = new EntityRelationItem();
         list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
-        list.Add(new ListViewItem(entityRelation.GetType().SchemaItemDescription().Name, entityRelation.Icon));
-        
+        list.Add(
+            new ListViewItem(
+                entityRelation.GetType().SchemaItemDescription().Name,
+                entityRelation.Icon
+            )
+        );
+
         Stack stackPage = new Stack();
         stackPage.Push(PagesList.Finish);
         stackPage.Push(PagesList.SummaryPage);
@@ -75,14 +76,16 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
         {
             Title = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardTitle"),
             PageTitle = "",
-            Description = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardDescription"),
+            Description = ResourceUtils.GetString(
+                "CreateFieldWithRelationshipEntityWizardDescription"
+            ),
             Entity = baseEntity,
             ItemTypeList = list,
             Pages = stackPage,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
             Command = this,
             EnterAllInfo = ResourceUtils.GetString("EnterAllInfo"),
-            LookupWiz = ResourceUtils.GetString("LookupWiz")
+            LookupWiz = ResourceUtils.GetString("LookupWiz"),
         };
         Wizard wiz = new Wizard(wizardForm);
         if (wiz.ShowDialog() != DialogResult.OK)
@@ -90,18 +93,29 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
             GeneratedModelElements.Clear();
         }
     }
+
     public override void Execute()
     {
         IDataEntity baseEntity = GetIDataEntity();
         // 1. entity
         TableMappingItem table = (TableMappingItem)baseEntity;
         GeneratedModelElements.Add(table);
-        EntityRelationItem relation = EntityHelper.CreateRelation(table, (IDataEntity)wizardForm.RelatedEntity, wizardForm.ParentChildCheckbox, true);
-        EntityHelper.CreateRelationKey(relation,
+        EntityRelationItem relation = EntityHelper.CreateRelation(
+            table,
+            (IDataEntity)wizardForm.RelatedEntity,
+            wizardForm.ParentChildCheckbox,
+            true
+        );
+        EntityHelper.CreateRelationKey(
+            relation,
             (AbstractDataEntityColumn)wizardForm.BaseEntityFieldSelect,
-            (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect, true,wizardForm.LookupKeyName);
+            (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect,
+            true,
+            wizardForm.LookupKeyName
+        );
         GeneratedModelElements.Add(relation);
     }
+
     private IDataEntity GetIDataEntity()
     {
         FieldMappingItem baseField = Owner as FieldMappingItem;
@@ -112,14 +126,17 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
         }
         return baseEntity;
     }
+
     public override int GetImageIndex(string icon)
     {
         return _schemaBrowser.ImageIndex(icon);
     }
+
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = "This Wizard will create a Field With a Relationship Entity with these parameters:";
+        richTextBoxSummary.Text =
+            "This Wizard will create a Field With a Relationship Entity with these parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Table: \t\t\t");

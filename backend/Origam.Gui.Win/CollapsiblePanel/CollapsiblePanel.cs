@@ -20,82 +20,63 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Windows.Forms;
 using System.ComponentModel;
-
-using Origam.Workbench.Services;
+using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win;
+
 /// <summary>
 /// Summary description for CollapsiblePanel.
 /// </summary>
 public class CollapsiblePanel : TabPage
 {
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	private int _indentLevel = 0;
-	private bool _isHeightFixed = false;
-	private bool _isOpen = false;
-	public CollapsiblePanel() : base()
-	{
-	}
-	public int IndentLevel
-	{
-		get
-		{
-			return _indentLevel;
-		}
-		set
-		{
-			_indentLevel = value;
-		}
-	}
-	public bool IsHeightFixed
-	{
-		get
-		{
-			return _isHeightFixed;
-		}
-		set
-		{
-			_isHeightFixed = value;
-		}
-	}
-	public bool IsOpen
-	{
-		get
-		{
-			return _isOpen;
-		}
-		set
-		{
-			_isOpen = value;
-		}
-	}
-	private Guid _styleId;
-	[Browsable(false)]
-	public Guid StyleId
-	{
-		get
-		{
-			return _styleId;
-		}
-		set
-		{
-			_styleId = value;
-		}
-	}
-	[TypeConverter(typeof(StylesConverter))]
-	public UIStyle Style
-	{
-		get
-		{
-			return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-		}
-		set
-		{
-			this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-		}
-	}
+    private IPersistenceService _persistence =
+        ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+    private int _indentLevel = 0;
+    private bool _isHeightFixed = false;
+    private bool _isOpen = false;
+
+    public CollapsiblePanel()
+        : base() { }
+
+    public int IndentLevel
+    {
+        get { return _indentLevel; }
+        set { _indentLevel = value; }
+    }
+    public bool IsHeightFixed
+    {
+        get { return _isHeightFixed; }
+        set { _isHeightFixed = value; }
+    }
+    public bool IsOpen
+    {
+        get { return _isOpen; }
+        set { _isOpen = value; }
+    }
+    private Guid _styleId;
+
+    [Browsable(false)]
+    public Guid StyleId
+    {
+        get { return _styleId; }
+        set { _styleId = value; }
+    }
+
+    [TypeConverter(typeof(StylesConverter))]
+    public UIStyle Style
+    {
+        get
+        {
+            return (UIStyle)
+                _persistence.SchemaProvider.RetrieveInstance(
+                    typeof(UIStyle),
+                    new ModelElementKey(this.StyleId)
+                );
+        }
+        set { this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]); }
+    }
 }

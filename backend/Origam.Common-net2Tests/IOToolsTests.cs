@@ -24,7 +24,6 @@ using NUnit.Framework;
 
 namespace Origam.Common_net2Tests;
 
-
 [TestFixture]
 public class IOToolsTests
 {
@@ -64,8 +63,8 @@ public class IOToolsTests
     public bool IsSubPathOfTest(string path, string baseDirPath)
     {
         return IOTools.IsSubPathOf(
-            path.Replace('\\', Path.DirectorySeparatorChar), 
+            path.Replace('\\', Path.DirectorySeparatorChar),
             baseDirPath.Replace('\\', Path.DirectorySeparatorChar)
-            );
+        );
     }
 }

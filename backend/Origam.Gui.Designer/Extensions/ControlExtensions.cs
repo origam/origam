@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Origam.Gui.Designer.Extensions;
+
 public static class ControlExtensions
 {
     public static IEnumerable<Control> GetAllControls(this Control control)

@@ -33,17 +33,18 @@ using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.Service_net2Tests;
+
 internal static class TypeTools
 {
     public static IEnumerable<Type> AllProviderTypes =>
-        ((SchemaService) ServiceManager.Services
-            .GetService(typeof(SchemaService)))
-        .Providers
-        .Select(provider => provider.GetType());
+        ((SchemaService)ServiceManager.Services.GetService(typeof(SchemaService))).Providers.Select(
+            provider => provider.GetType()
+        );
+
     public static ISchemaItemCollection GetAllItems(Type providerType)
     {
-        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
-            as SchemaService;
+        SchemaService schema =
+            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
         ISchemaItemProvider provider = schema.GetProvider(providerType);
         return provider.ChildItems;
     }

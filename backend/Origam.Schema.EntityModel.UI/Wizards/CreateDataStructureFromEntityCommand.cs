@@ -33,25 +33,25 @@ using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.UI.Wizards;
+
 /// <summary>
 /// Summary description for CreateDataStructureFromEntityCommand.
 /// </summary>
 public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 {
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     StructureForm structureForm;
-   
+
     public override bool IsEnabled
-	{
-		get
-		{
-			return Owner is IDataEntity;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
+    {
+        get { return Owner is IDataEntity; }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
     public override void Run()
     {
         List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
@@ -76,23 +76,30 @@ public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
             StructureList = listdsName,
             NameOfEntity = entity.Name,
             ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-            Command = this
+            Command = this,
         };
         Wizard wizardscreen = new Wizard(structureForm);
         if (wizardscreen.ShowDialog() != DialogResult.OK)
-        { 
+        {
             GeneratedModelElements.Clear();
         }
-	}
+    }
+
     public override void Execute()
     {
-        DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
+        DataStructure ds = EntityHelper.CreateDataStructure(
+            Owner as IDataEntity,
+            structureForm.NameOfEntity,
+            true
+        );
         GeneratedModelElements.Add(ds);
     }
+
     public override int GetImageIndex(string icon)
     {
         return _schemaBrowser.ImageIndex(icon);
     }
+
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;

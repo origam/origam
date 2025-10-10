@@ -20,45 +20,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using Origam.Services;
 using Origam.UI;
 using Origam.Workbench.Services;
-using Origam.Services;
 
 namespace Origam.Schema.EntityModel.UI.Wizards;
+
 public class LocalizeDatastructureCommand : AbstractMenuCommand
 {
-	public override bool IsEnabled
-	{
-		get
-		{
+    public override bool IsEnabled
+    {
+        get
+        {
             DataStructure ds = Owner as DataStructure;
-			return ds != null && !ds.IsLocalized && ds.LocalizableEntities.Count > 0;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
-		DataStructure ds = Owner as DataStructure;
-		ds.IsLocalized = true;
-		// find all entities in datastructure and create language relations for them if they are localized
-		// (all fields = true)
-		foreach (DataStructureEntity dsEntity in ds.LocalizableEntities)
-		{
-			TableMappingItem table = dsEntity.Entity as TableMappingItem;
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			// create new datastructure entity using localization relation
-			DataStructureEntity localizationDSEntity 
-				= dsEntity.NewItem<DataStructureEntity>(
-					schema.ActiveSchemaExtensionId, null);
-			localizationDSEntity.RelationType = RelationType.LeftJoin;
-			localizationDSEntity.AllFields = false;
-			localizationDSEntity.Entity = table.LocalizationRelation;
-			localizationDSEntity.Persist();
+            return ds != null && !ds.IsLocalized && ds.LocalizableEntities.Count > 0;
+        }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
+    public override void Run()
+    {
+        DataStructure ds = Owner as DataStructure;
+        ds.IsLocalized = true;
+        // find all entities in datastructure and create language relations for them if they are localized
+        // (all fields = true)
+        foreach (DataStructureEntity dsEntity in ds.LocalizableEntities)
+        {
+            TableMappingItem table = dsEntity.Entity as TableMappingItem;
+            ISchemaService schema =
+                ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+            // create new datastructure entity using localization relation
+            DataStructureEntity localizationDSEntity = dsEntity.NewItem<DataStructureEntity>(
+                schema.ActiveSchemaExtensionId,
+                null
+            );
+            localizationDSEntity.RelationType = RelationType.LeftJoin;
+            localizationDSEntity.AllFields = false;
+            localizationDSEntity.Entity = table.LocalizationRelation;
+            localizationDSEntity.Persist();
             GeneratedModelElements.Add(localizationDSEntity);
-		}
-		ds.Persist();
-	}		
+        }
+        ds.Persist();
+    }
 }

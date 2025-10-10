@@ -23,6 +23,7 @@ using System;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation;
+
 public class Project
 {
     public string GitUsername { get; set; }
@@ -30,6 +31,7 @@ public class Project
     public DatabaseType DatabaseType { get; set; } = DatabaseType.MsSql;
     public int DatabasePort { get; set; }
     public string UserPassword { get; } = CreatePassword();
+
     public static string CreatePassword()
     {
         return Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
@@ -41,11 +43,9 @@ public class Project
         {
             return DatabaseType switch
             {
-                DatabaseType.MsSql =>
-                    "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
-                DatabaseType.PgSql =>
-                    "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
-                _ => throw new ArgumentOutOfRangeException("DatabaseType")
+                DatabaseType.MsSql => "Origam.DA.Service.MsSqlDataService, Origam.DA.Service",
+                DatabaseType.PgSql => "Origam.DA.Service.PgSqlDataService, Origam.DA.Service",
+                _ => throw new ArgumentOutOfRangeException("DatabaseType"),
             };
         }
     }
@@ -72,9 +72,9 @@ public class Project
     public int DockerPort { get; set; } = Constants.DefaultHttpsPort;
     public string WebUserName { get; set; }
     public string WebUserPassword { get; set; }
-    public string WebFirstName { get;  set; }
-    public string WebSurname { get;  set; }
-    public string WebEmail { get;  set; }
+    public string WebFirstName { get; set; }
+    public string WebSurname { get; set; }
+    public string WebEmail { get; set; }
     public int ActiveConfigurationIndex { get; set; }
     public string DockerEnvPathLinux { get; internal set; }
     public string DockerCmdPathLinux { get; set; }

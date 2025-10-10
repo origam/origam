@@ -30,28 +30,28 @@ using Origam.Workbench;
 using Origam.Workbench.Commands;
 
 namespace Origam.Schema.EntityModel.UI.Wizards;
+
 /// <summary>
 /// Summary description for CreateNtoNEntityCommand.
 /// </summary>
 public class CreateForeignKeyCommand : AbstractMenuCommand
 {
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    SchemaBrowser _schemaBrowser =
+        WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
     ForeignKeyForm keyForm;
     FieldMappingItem fk;
     public override bool IsEnabled
-	{
-		get
-		{
-			return Owner is IDataEntity;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
-		IDataEntity entity = Owner as IDataEntity;
+    {
+        get { return Owner is IDataEntity; }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
+    public override void Run()
+    {
+        IDataEntity entity = Owner as IDataEntity;
         var list = new List<ListViewItem>();
         FieldMappingItem fmItem = new FieldMappingItem();
         list.Add(new ListViewItem(fmItem.GetType().SchemaItemDescription().Name, fmItem.Icon));
@@ -71,13 +71,13 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
             Command = this,
             SelectForeignEntity = ResourceUtils.GetString("SelectForeignEntity"),
             ForeignKeyWiz = ResourceUtils.GetString("ForeignKeyWiz"),
-            SelectForeignField=ResourceUtils.GetString("SelectForeignField"),
+            SelectForeignField = ResourceUtils.GetString("SelectForeignField"),
             EnterKeyName = ResourceUtils.GetString("EnterKeyName"),
-            MasterEntity = entity
+            MasterEntity = entity,
         };
         Wizard wiz = new Wizard(keyForm);
-		if(wiz.ShowDialog() == DialogResult.OK)
-		{
+        if (wiz.ShowDialog() == DialogResult.OK)
+        {
             EditSchemaItem cmd = new EditSchemaItem();
             cmd.Owner = fk;
             cmd.Run();
@@ -86,22 +86,33 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
         {
             GeneratedModelElements.Clear();
         }
-	}
+    }
+
     public override void Execute()
     {
         fk = EntityHelper.CreateForeignKey(
-                keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
-                keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, true);
+            keyForm.ForeignKeyName,
+            keyForm.Caption,
+            keyForm.AllowNulls,
+            keyForm.MasterEntity,
+            keyForm.ForeignEntity,
+            keyForm.ForeignField,
+            keyForm.Lookup,
+            true
+        );
         GeneratedModelElements.Add(fk);
     }
+
     public override int GetImageIndex(string icon)
     {
         return _schemaBrowser.ImageIndex(icon);
     }
+
     public override void SetSummaryText(object summary)
     {
         RichTextBox richTextBoxSummary = (RichTextBox)summary;
-        richTextBoxSummary.Text = ResourceUtils.GetString("CreateForeignKeyWizardDescription") + " with this parameters:";
+        richTextBoxSummary.Text =
+            ResourceUtils.GetString("CreateForeignKeyWizardDescription") + " with this parameters:";
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Master Entity: \t");
@@ -117,7 +128,7 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
         richTextBoxSummary.AppendText(keyForm.ForeignKeyName);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Lookup: \t\t");
-        richTextBoxSummary.AppendText(keyForm.Lookup == null? "": keyForm.Lookup.Name);
+        richTextBoxSummary.AppendText(keyForm.Lookup == null ? "" : keyForm.Lookup.Name);
         richTextBoxSummary.AppendText(Environment.NewLine);
         richTextBoxSummary.AppendText("Caption : \t");
         richTextBoxSummary.AppendText(keyForm.Caption);

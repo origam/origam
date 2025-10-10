@@ -19,19 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Git;
 using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using Origam.Git;
 using Origam.ProjectAutomation.Builders;
 
 namespace Origam.ProjectAutomation;
-public class FileModelImportBuilder: AbstractBuilder
+
+public class FileModelImportBuilder : AbstractBuilder
 {
     private string sourcesFolder;
     public override string Name => "Import Model";
+
     public override void Execute(Project project)
     {
         sourcesFolder = project.SourcesFolder;
@@ -39,10 +41,12 @@ public class FileModelImportBuilder: AbstractBuilder
         UnzipDefaultModel(project);
         CreateCustomAssetsFolder(project.SourcesFolder);
     }
+
     private void UnzipDefaultModel(Project project)
     {
         ZipFile.ExtractToDirectory(project.DefaultModelPath, sourcesFolder);
     }
+
     private void CreateSourceFolder()
     {
         DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
@@ -52,6 +56,7 @@ public class FileModelImportBuilder: AbstractBuilder
         }
         dir.Create();
     }
+
     private void CreateCustomAssetsFolder(string sourcesFolder)
     {
         DirectoryInfo dir = new DirectoryInfo(Path.Combine(sourcesFolder, "customAssets"));
@@ -60,6 +65,7 @@ public class FileModelImportBuilder: AbstractBuilder
             dir.Create();
         }
     }
+
     public override void Rollback()
     {
         if (Directory.Exists(sourcesFolder))

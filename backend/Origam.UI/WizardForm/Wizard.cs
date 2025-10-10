@@ -19,38 +19,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using AeroWizard;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using Origam.UI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using AeroWizard;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.UI.Interfaces;
 
 namespace Origam.UI.WizardForm;
+
 public partial class Wizard : Form
 {
     IWizardForm iwizard;
+
     public Wizard(IWizardForm objectForm)
     {
         InitializeComponent();
         iwizard = objectForm;
         StartPage.Text = "What will happen...";
-        if(iwizard.Title!=null) aerowizard1.Title =  iwizard.Title;
+        if (iwizard.Title != null)
+            aerowizard1.Title = iwizard.Title;
         InitData();
     }
+
     private void InitData()
     {
-        lbTitle.Text = "The Wizard will create following elements necessary for the function of the menu:";
+        lbTitle.Text =
+            "The Wizard will create following elements necessary for the function of the menu:";
         listView1.View = View.List;
         listView1.SmallImageList = iwizard.ImageList;
         listView1.StateImageList = iwizard.ImageList;
         progresslistview.SmallImageList = iwizard.ImageList;
         progresslistview.StateImageList = iwizard.ImageList;
     }
+
     #region Inicialize&Commit
     private void PageStart_Initialize(object sender, WizardPageInitEventArgs e)
     {
@@ -59,17 +65,20 @@ public partial class Wizard : Form
         iwizard.ListView(listView1);
         GetNextPage(PagesList.StartPage, sender);
     }
+
     private void PageStart_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         IsFinish(sender, e);
     }
+
     private void StructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
         tbDataStructureName.Text = iwizard.NameOfEntity;
         GetNextPage(PagesList.StructureNamePage, sender);
     }
-       private void StructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
+
+    private void StructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
         {
@@ -80,6 +89,7 @@ public partial class Wizard : Form
         iwizard.NameOfEntity = tbDataStructureName.Text;
         IsFinish(sender, e);
     }
+
     private void ScreenFormPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -91,6 +101,7 @@ public partial class Wizard : Form
         txtRole.Visible = screenWizard.IsRoleVisible;
         txtRole.Text = screenWizard.Role;
     }
+
     private void ScreenFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
@@ -99,6 +110,7 @@ public partial class Wizard : Form
         screenWizard.Caption = txtScreenCaption.Text;
         IsFinish(sender, e);
     }
+
     private void LookupFormPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -110,6 +122,7 @@ public partial class Wizard : Form
         cboListFilter.SelectedItem = form.ListFilter;
         GetNextPage(PagesList.LookupForm, sender);
     }
+
     private void LookupFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         LookupForm form = (LookupForm)iwizard;
@@ -117,18 +130,26 @@ public partial class Wizard : Form
         form.NameColumn = cboDisplayField.SelectedItem as IDataEntityColumn;
         form.IdFilter = cboIdFilter.SelectedItem as EntityFilter;
         form.ListFilter = cboListFilter.SelectedItem as EntityFilter;
-        if (form.LookupName == ""
+        if (
+            form.LookupName == ""
             | form.Entity == null
             | form.NameColumn == null
             | form.IdColumn == null
-            | form.IdFilter == null)
+            | form.IdFilter == null
+        )
         {
-            MessageBox.Show(ResourceUtils.GetString("EnterAllInfo"), ResourceUtils.GetString("LookupWiz"), MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                ResourceUtils.GetString("EnterAllInfo"),
+                ResourceUtils.GetString("LookupWiz"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         IsFinish(sender, e);
     }
+
     private void FieldLookupEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -138,7 +159,7 @@ public partial class Wizard : Form
         txtNameFieldName.Text = form.NameFieldName;
         txtNameFieldCaption.Text = form.NameFieldCaption;
         txtKeyFieldName.Text = form.KeyFieldName;
-        txtKeyFieldCaption.Text= form.KeyFieldCaption;
+        txtKeyFieldCaption.Text = form.KeyFieldCaption;
         UpdateScreen();
         if (form.ForceTwoColumns)
         {
@@ -150,44 +171,53 @@ public partial class Wizard : Form
         }
         GetNextPage(PagesList.FieldLookup, sender);
     }
+
     private void FieldLookupEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        
         CreateFieldWithLookupEntityWizardForm form = (CreateFieldWithLookupEntityWizardForm)iwizard;
         form.LookupName = lookupname.Text;
         form.LookupCaption = txtCaption.Text;
         form.AllowNulls = chkAllowNulls.Checked;
         form.NameFieldName = txtNameFieldName.Text;
-        form.NameFieldCaption = txtNameFieldCaption.Text; 
+        form.NameFieldCaption = txtNameFieldCaption.Text;
         form.KeyFieldName = txtKeyFieldName.Text;
         form.KeyFieldCaption = txtKeyFieldCaption.Text;
         form.TwoColumns = chkTwoColumn.Checked;
         form.ForceTwoColumns = !chkTwoColumn.Enabled;
-        if (form.LookupName == ""
-            || (txtCaption.Visible && form.LookupCaption == ""))
+        if (form.LookupName == "" || (txtCaption.Visible && form.LookupCaption == ""))
         {
-            MessageBox.Show(form.EnterAllInfo,
-                form.LookupWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                form.EnterAllInfo,
+                form.LookupWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         if (!form.AllowNulls && form.InitialValues.Count > 0 && form.DefaultInitialValue == null)
         {
-            if (MessageBox.Show(form.DefaultValueNotSet,
-                form.LookupWiz, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
-                == DialogResult.Cancel)
+            if (
+                MessageBox.Show(
+                    form.DefaultValueNotSet,
+                    form.LookupWiz,
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning
+                ) == DialogResult.Cancel
+            )
             {
-                e.Cancel=true;
+                e.Cancel = true;
                 return;
             }
         }
         IsFinish(sender, e);
     }
+
     private void FinishPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
         GetNextPage(PagesList.Finish, sender);
-        ISchemaItem[] results = new ISchemaItem[0] ;
+        ISchemaItem[] results = new ISchemaItem[0];
         try
         {
             iwizard.Command.Execute();
@@ -202,45 +232,58 @@ public partial class Wizard : Form
         for (int i = 0; i < results.LongLength; i++)
         {
             ISchemaItem item = results[i];
-            ListViewItem newItem = new ListViewItem(new string[] { item.Path, item.ModelDescription() })
+            ListViewItem newItem = new ListViewItem(
+                new string[] { item.Path, item.ModelDescription() }
+            )
             {
-                ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon)
+                ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon),
             };
             progresslistview.Items.Add(newItem);
         }
         this.aerowizard1.FinishButtonText = "Show Result";
         this.aerowizard1.CancelButtonText = "Close";
     }
- 
+
     private void FinishPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         IsFinish(sender, e);
     }
+
     private void RelationShipEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
         GetNextPage(PagesList.FieldEntity, sender);
-        CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
-        wizardForm.SetUpForm(tableRelation,txtRelationName);
+        CreateFieldWithRelationshipEntityWizardForm wizardForm =
+            (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+        wizardForm.SetUpForm(tableRelation, txtRelationName);
     }
+
     private void RelationShipEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+        CreateFieldWithRelationshipEntityWizardForm wizardForm =
+            (CreateFieldWithRelationshipEntityWizardForm)iwizard;
         wizardForm.LookupName = txtRelationName.Text;
         wizardForm.LookupKeyName = txtKeyName.Text;
-        if (wizardForm.LookupName == ""
+        if (
+            wizardForm.LookupName == ""
             || wizardForm.RelatedEntity == null
             || wizardForm.BaseEntityFieldSelect == null
             || wizardForm.RelatedEntityFieldSelect == null
-            || txtKeyName.Text == "")
+            || txtKeyName.Text == ""
+        )
         {
-            MessageBox.Show(wizardForm.EnterAllInfo,
-                wizardForm.LookupWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                wizardForm.EnterAllInfo,
+                wizardForm.LookupWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         IsFinish(sender, e);
     }
+
     private void ChildEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -249,21 +292,26 @@ public partial class Wizard : Form
         EntityForm.EntityName = txtchildEntityName.Text;
         EntityForm.SetUpForm(txtchildEntityName, cboEntity1, cboEntity2);
     }
+
     private void ChildEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         ChildEntityForm EntityForm = (ChildEntityForm)iwizard;
         EntityForm.Entity2 = cboEntity2.SelectedItem as IDataEntity;
         EntityForm.EntityName = txtchildEntityName.Text;
-        if (txtchildEntityName.Text == ""
-            | EntityForm.Entity1 == null
-            )
+        if (txtchildEntityName.Text == "" | EntityForm.Entity1 == null)
         {
-            MessageBox.Show(EntityForm.EnterAllInfo, EntityForm.ChildEntityWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                EntityForm.EnterAllInfo,
+                EntityForm.ChildEntityWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         IsFinish(sender, e);
     }
+
     private void ForeignKeyPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -271,9 +319,10 @@ public partial class Wizard : Form
         ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
         foreignKey.SetUpForm(txtFkFieldName, cboEntity, cboLookup, cboField, chkAllowNulls);
     }
+
     private void ForeignKeyPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
-        ForeignKeyForm foreignKey= (ForeignKeyForm)iwizard;
+        ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
         foreignKey.ForeignKeyName = txtFkFieldName.Text;
         foreignKey.Caption = txtfkCaptionName.Text;
         foreignKey.ForeignEntity = cboEntity.SelectedItem as IDataEntity;
@@ -282,24 +331,40 @@ public partial class Wizard : Form
         foreignKey.AllowNulls = checkBoxAllowNulls.Checked;
         if (foreignKey.ForeignEntity == null)
         {
-            MessageBox.Show(foreignKey.SelectForeignEntity, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                foreignKey.SelectForeignEntity,
+                foreignKey.ForeignKeyWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         if (foreignKey.ForeignField == null)
         {
-            MessageBox.Show(foreignKey.SelectForeignField, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                foreignKey.SelectForeignField,
+                foreignKey.ForeignKeyWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         if (txtFkFieldName.Text == "")
         {
-            MessageBox.Show(foreignKey.EnterKeyName, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            MessageBox.Show(
+                foreignKey.EnterKeyName,
+                foreignKey.ForeignKeyWiz,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Asterisk
+            );
             e.Cancel = true;
             return;
         }
         IsFinish(sender, e);
     }
+
     private void MenuFromPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -307,13 +372,15 @@ public partial class Wizard : Form
         txtMenuRole.Text = menufrom.Role;
         GetNextPage(PagesList.MenuPage, sender);
     }
+
     private void MenuFromPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         MenuFromForm menufrom = (MenuFromForm)iwizard;
-        menufrom.Role = string.IsNullOrEmpty(txtMenuRole.Text)?"*": txtMenuRole.Text;
+        menufrom.Role = string.IsNullOrEmpty(txtMenuRole.Text) ? "*" : txtMenuRole.Text;
         menufrom.Caption = txtMenuCaption.Text;
         IsFinish(sender, e);
     }
+
     private void SummaryPage_Initialize(object sender, WizardPageInitEventArgs e)
     {
         SetPageTitle(sender);
@@ -322,6 +389,7 @@ public partial class Wizard : Form
         GetNextPage(PagesList.SummaryPage, sender);
         this.aerowizard1.NextButtonText = "Start";
     }
+
     private void SummaryPage_Commit(object sender, WizardPageConfirmEventArgs e)
     {
         IsFinish(sender, e);
@@ -338,33 +406,32 @@ public partial class Wizard : Form
             txtchildEntityName.Text = EntityForm.Entity1.Name + EntityForm.Entity2.Name;
         }
     }
+
     private void UpdateScreen()
     {
-        lblKeyFieldName.Visible = lblKeyFieldCaption.Visible
-            = txtKeyFieldName.Visible = txtKeyFieldCaption.Visible
-            = chkTwoColumn.Checked;
+        lblKeyFieldName.Visible =
+            lblKeyFieldCaption.Visible =
+            txtKeyFieldName.Visible =
+            txtKeyFieldCaption.Visible =
+                chkTwoColumn.Checked;
         grdInitialValues.Columns.Clear();
         if (chkTwoColumn.Checked)
         {
-            grdInitialValues.Columns.AddRange(new DataGridViewColumn[] {
-                colDefault,
-                colCode,
-                colName
-                });
+            grdInitialValues.Columns.AddRange(
+                new DataGridViewColumn[] { colDefault, colCode, colName }
+            );
             colCode.DisplayIndex = 0;
             colName.DisplayIndex = 1;
             colDefault.DisplayIndex = 2;
         }
         else
         {
-            grdInitialValues.Columns.AddRange(new DataGridViewColumn[] {
-                colDefault,
-                colName
-                });
+            grdInitialValues.Columns.AddRange(new DataGridViewColumn[] { colDefault, colName });
             colName.DisplayIndex = 0;
             colDefault.DisplayIndex = 1;
         }
     }
+
     private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cboDisplayField.SelectedItem != null)
@@ -372,6 +439,7 @@ public partial class Wizard : Form
             UpdateLookupName();
         }
     }
+
     private void cboIdFilter_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (cboIdFilter.SelectedItem != null)
@@ -379,13 +447,12 @@ public partial class Wizard : Form
             UpdateLookupName();
         }
     }
+
     private void UpdateLookupName()
     {
         var form = (LookupForm)iwizard;
-        var fieldSegment 
-            = (cboDisplayField.SelectedItem as IDataEntityColumn)?.Name ?? "";
-        var filterSegment 
-            = (cboIdFilter.SelectedItem as ISchemaItem)?.Name ?? "";
+        var fieldSegment = (cboDisplayField.SelectedItem as IDataEntityColumn)?.Name ?? "";
+        var filterSegment = (cboIdFilter.SelectedItem as ISchemaItem)?.Name ?? "";
         var lookupName = form.Entity.Name;
         if (fieldSegment != "")
         {
@@ -397,6 +464,7 @@ public partial class Wizard : Form
         }
         txtName.Text = lookupName;
     }
+
     private void IsFinish(object sender, WizardPageConfirmEventArgs e)
     {
         if (((WizardPage)sender).IsFinishPage && !e.Cancel)
@@ -404,6 +472,7 @@ public partial class Wizard : Form
             DialogResult = DialogResult.OK;
         }
     }
+
     private void GetNextPage(PagesList actualPage, object sender)
     {
         this.aerowizard1.NextButtonText = "Next";
@@ -423,6 +492,7 @@ public partial class Wizard : Form
         }
         wizardPage.IsFinishPage = true;
     }
+
     private WizardPage getWizardPage(PagesList nextPage)
     {
         switch (nextPage)
@@ -448,31 +518,42 @@ public partial class Wizard : Form
             case PagesList.MenuPage:
                 return menuFromPage;
             default:
-                MessageBox.Show("Not Set WizardPage","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Not Set WizardPage",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
                 break;
         }
         return null;
     }
+
     private void TxtNameFieldCaption_TextChanged(object sender, EventArgs e)
     {
         colName.HeaderText = txtNameFieldCaption.Text;
     }
+
     private void TxtKeyFieldCaption_TextChanged(object sender, EventArgs e)
     {
         colCode.HeaderText = txtKeyFieldCaption.Text;
     }
+
     private void ChkTwoColumn_CheckedChanged(object sender, EventArgs e)
     {
         UpdateScreen();
     }
+
     private void CheckParentChild_CheckedChanged(object sender, EventArgs e)
     {
-        ((CreateFieldWithRelationshipEntityWizardForm)iwizard)
-            .ParentChildCheckbox = this.checkParentChild.Checked;
+        ((CreateFieldWithRelationshipEntityWizardForm)iwizard).ParentChildCheckbox =
+            this.checkParentChild.Checked;
     }
+
     private void TableRelation_SelectedIndexChanged(object sender, EventArgs e)
     {
-        CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+        CreateFieldWithRelationshipEntityWizardForm relations =
+            (CreateFieldWithRelationshipEntityWizardForm)iwizard;
         relations.RelatedEntity = (ISchemaItem)tableRelation.SelectedItem;
         if (this.tableRelation.Name != "")
         {
@@ -480,24 +561,31 @@ public partial class Wizard : Form
             relations.SetUpFormKey(BaseEntityField, RelatedEntityField, txtKeyName);
         }
     }
+
     private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
-        CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+        CreateFieldWithRelationshipEntityWizardForm relations =
+            (CreateFieldWithRelationshipEntityWizardForm)iwizard;
         relations.BaseEntityFieldSelect = (ISchemaItem)BaseEntityField.SelectedItem;
     }
+
     private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
-        CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+        CreateFieldWithRelationshipEntityWizardForm relations =
+            (CreateFieldWithRelationshipEntityWizardForm)iwizard;
         relations.RelatedEntityFieldSelect = (ISchemaItem)RelatedEntityField.SelectedItem;
     }
+
     private void CboEntity1_SelectedIndexChanged(object sender, EventArgs e)
     {
         RefreshName();
     }
+
     private void CboEntity2_SelectedIndexChanged(object sender, EventArgs e)
     {
         RefreshName();
     }
+
     private void CboField_SelectedIndexChanged(object sender, EventArgs e)
     {
         ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
@@ -505,9 +593,11 @@ public partial class Wizard : Form
         foreignKey.ForeignField = cboField.SelectedItem as IDataEntityColumn;
         if (foreignKey.ForeignEntity != null && foreignKey.ForeignField != null)
         {
-            txtFkFieldName.Text = "ref" + foreignKey.ForeignEntity.Name + foreignKey.ForeignField.Name;
+            txtFkFieldName.Text =
+                "ref" + foreignKey.ForeignEntity.Name + foreignKey.ForeignField.Name;
         }
     }
+
     private void CboEntity_SelectedIndexChanged(object sender, EventArgs e)
     {
         ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
@@ -529,11 +619,13 @@ public partial class Wizard : Form
             cboField.EndUpdate();
         }
     }
+
     private void SetPageTitle(object sender)
     {
-        if(iwizard.PageTitle!=null)
+        if (iwizard.PageTitle != null)
             ((WizardPage)sender).Text = iwizard.PageTitle;
     }
+
     private void tbDataStructureName_TextChanged(object sender, EventArgs e)
     {
         if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
@@ -546,4 +638,4 @@ public partial class Wizard : Form
         }
     }
 }
-#endregion
+    #endregion

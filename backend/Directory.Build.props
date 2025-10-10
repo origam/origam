@@ -1,11 +1,16 @@
 ﻿<Project>
   <PropertyGroup>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'ScheduleTimer'">true</DisableStrictBuild>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.ProjectAutomation'">true</DisableStrictBuild>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Server.Common'">true</DisableStrictBuild>
+<!-- 
+      Enabiling origam-utils causes the tests on github to fail with 
+      System.PlatformNotSupportedException: System.Data.SqlClient is not supported on this platform.
+      Replacing the System.Data.SqlClient with its newer counter part does not fix the problem.
+-->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'origam-utils'">true</DisableStrictBuild>
+<!--      
+    Enabling Origam.Documentation causes this error during build:
+    43>Origam.Documentation.csproj: Error MSB4057 : The target "CSharpierFormatInner" does not exist in the project.
+-->
     <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.Documentation'">true</DisableStrictBuild>
-    <DisableStrictBuild Condition="'$(MSBuildProjectName)' == 'Origam.BI.CrystalReports'">true</DisableStrictBuild>
   </PropertyGroup>
     <Choose>
         <When Condition="'$(DisableStrictBuild)' != 'true'">
@@ -18,6 +23,7 @@
                 <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
                 <CSharpier_FrameworkVersion>net8.0</CSharpier_FrameworkVersion>
+                <CSharpier_Check>false</CSharpier_Check>
             </PropertyGroup>
 
             <ItemGroup>
@@ -25,13 +31,14 @@
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
                 <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.14.0"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
-            </ItemGroup>
-
-            <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
                 <PackageReference Include="CSharpier.MsBuild" Version="1.1.2"
                                   PrivateAssets="all" IncludeAssets="build;analyzers;buildtransitive"/>
             </ItemGroup>
 
+            <PropertyGroup Condition="'$(Configuration)' == 'Release Server' or '$(Configuration)' == 'Release Architect Server' or '$(Configuration)' == 'Release Architect'">
+                <CSharpier_Check>true</CSharpier_Check>
+            </PropertyGroup>
+            
         </When>
     </Choose>
     <PropertyGroup>

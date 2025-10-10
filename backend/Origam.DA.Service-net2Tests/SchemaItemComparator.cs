@@ -21,23 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using Origam.Schema;
 using NUnit.Framework;
+using Origam.Schema;
 
 namespace Origam.DA.Service_net2Tests;
+
 internal class SchemaItemComparator
 {
-    public Dictionary<Type, List<ISchemaItem>> ItemsFromDataBaseDict
-    {
-        private get;
-        set;
-    }
-    public Dictionary<Type, List<ISchemaItem>> ItemsFromXmlDict
-    {
-        private get;
-        set;
-    }
+    public Dictionary<Type, List<ISchemaItem>> ItemsFromDataBaseDict { private get; set; }
+    public Dictionary<Type, List<ISchemaItem>> ItemsFromXmlDict { private get; set; }
     private SchemaItemsToCompare nowComparing;
+
     public void CompareSchemaItems()
     {
         foreach (var itemsToCompare in FindMatchingIdItems())
@@ -46,6 +40,7 @@ internal class SchemaItemComparator
             bool areItemsIdentical = AreItemsIdentical(itemsToCompare);
         }
     }
+
     private IEnumerable<SchemaItemsToCompare> FindMatchingIdItems()
     {
         foreach (var typeItemsPair in ItemsFromDataBaseDict)
@@ -54,41 +49,42 @@ internal class SchemaItemComparator
             var itemList = typeItemsPair.Value;
             foreach (ISchemaItem itemFromDb in itemList)
             {
-                var itemFromXml = ItemsFromXmlDict[type].Find(x =>
-                    x.Id == itemFromDb.Id);
-                yield return
-                    new SchemaItemsToCompare(fromDb: itemFromDb,
-                        fromXml: itemFromXml);
+                var itemFromXml = ItemsFromXmlDict[type].Find(x => x.Id == itemFromDb.Id);
+                yield return new SchemaItemsToCompare(fromDb: itemFromDb, fromXml: itemFromXml);
             }
         }
     }
+
     private bool AreItemsIdentical(SchemaItemsToCompare items)
     {
-        Dictionary<string, object> dbItemProperties
-            = items.FromDb.GetAllProperies();
-        Dictionary<string, object> xmlItemProperties 
-            = items.FromXml.GetAllProperies();
-        
+        Dictionary<string, object> dbItemProperties = items.FromDb.GetAllProperies();
+        Dictionary<string, object> xmlItemProperties = items.FromXml.GetAllProperies();
+
         foreach (var dbItemPropery in dbItemProperties)
         {
             string propertyName = dbItemPropery.Key;
             var dbValue = dbItemPropery.Value;
             var xmlValue = xmlItemProperties[propertyName];
-            
+
             if (!dbValue.IsEqualTo(xmlValue))
             {
-                FailTest(propertyName,dbValue.GetType());
+                FailTest(propertyName, dbValue.GetType());
                 return false;
-            } 
+            }
         }
         return true;
     }
+
     private void FailTest(string propertyName, Type propertryType)
     {
         Console.WriteLine(Environment.NewLine);
         Console.WriteLine($"Comparing objects of type: \"{nowComparing.Type}\"");
-        Console.WriteLine($"propertyName \"{propertyName}\" of type {propertryType} is not equal in objects retrieved form db and xml.");
-        Console.WriteLine($"Before you draw any conclusions make sure that method IsEqualTo for {propertryType} is implemented in EqualityExtensions");
+        Console.WriteLine(
+            $"propertyName \"{propertyName}\" of type {propertryType} is not equal in objects retrieved form db and xml."
+        );
+        Console.WriteLine(
+            $"Before you draw any conclusions make sure that method IsEqualTo for {propertryType} is implemented in EqualityExtensions"
+        );
         Console.WriteLine(nowComparing);
         Assert.Fail();
     }

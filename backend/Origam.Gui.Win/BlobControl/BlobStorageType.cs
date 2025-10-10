@@ -20,13 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.Win;
+
 /// <summary>
 /// Summary description for BlobStorageType.
 /// </summary>
 public enum BlobStorageType
 {
-	BlobThumbnailPath,
-	BlobPath,
-	ThumbnailPath,
-	Path
+    BlobThumbnailPath,
+    BlobPath,
+    ThumbnailPath,
+    Path,
 }

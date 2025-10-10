@@ -20,8 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 namespace Origam.Gui.Win;
+
 public interface IAsDataConsumer
 {
-	object DataSource								{get;set;}
-	string DataMember								{get;set;}
+    object DataSource { get; set; }
+    string DataMember { get; set; }
 }

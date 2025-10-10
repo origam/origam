@@ -24,117 +24,106 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.UI;
+
 /// <summary>
 /// This is the basic interface to the workspace.
 /// </summary>
 public interface IWorkbench
 {
-	/// <summary>
-	/// The title shown in the title bar.
-	/// </summary>
-	string Title 
-	{
-		get;
-		set;
-	}
+    /// <summary>
+    /// The title shown in the title bar.
+    /// </summary>
+    string Title { get; set; }
+
     /// <summary>
     /// If false it's possible to connect to data database.
     /// </summary>
-    bool ApplicationDataDisconnectedMode
-    {
-        get;
-        set;
-    }
+    bool ApplicationDataDisconnectedMode { get; set; }
+
     /// <summary>
     /// A collection in which all active workspace windows are saved.
     /// </summary>
-    ViewContentCollection ViewContentCollection 
-	{
-		get;
-	}
-	
-	/// <summary>
-	/// A collection in which all active workspace windows are saved.
-	/// </summary>
-	PadContentCollection PadContentCollection 
-	{
-		get;
-	}
-	
-	/// <summary>
-	/// The active workbench window.
-	/// </summary>
-	IViewContent ActiveViewContent
-	{
-		get;
-	}
-	
-	IViewContent ActiveDocument
-	{
-		get;
-	}
-	
-	/// <summary>
-	/// Inserts a new <see cref="IViewContent"/> object in the workspace.
-	/// </summary>
-	void ShowView(IViewContent content);
-	
-	/// <summary>
-	/// Inserts a new <see cref="IPadContent"/> object in the workspace.
-	/// </summary>
-	void ShowPad(IPadContent content);
-	
-	/// <summary>
-	/// Returns a pad from a specific type.
-	/// </summary>
-	IPadContent GetPad(Type type);
-	
-	/// <summary>
-	/// Closes the IViewContent content when content is open.
-	/// </summary>
-	void CloseContent(IViewContent content);
-	
-	/// <summary>
-	/// Closes all views inside the workbench.
-	/// </summary>
-	void CloseAllViews();
+    ViewContentCollection ViewContentCollection { get; }
+
+    /// <summary>
+    /// A collection in which all active workspace windows are saved.
+    /// </summary>
+    PadContentCollection PadContentCollection { get; }
+
+    /// <summary>
+    /// The active workbench window.
+    /// </summary>
+    IViewContent ActiveViewContent { get; }
+
+    IViewContent ActiveDocument { get; }
+
+    /// <summary>
+    /// Inserts a new <see cref="IViewContent"/> object in the workspace.
+    /// </summary>
+    void ShowView(IViewContent content);
+
+    /// <summary>
+    /// Inserts a new <see cref="IPadContent"/> object in the workspace.
+    /// </summary>
+    void ShowPad(IPadContent content);
+
+    /// <summary>
+    /// Returns a pad from a specific type.
+    /// </summary>
+    IPadContent GetPad(Type type);
+
+    /// <summary>
+    /// Closes the IViewContent content when content is open.
+    /// </summary>
+    void CloseContent(IViewContent content);
+
+    /// <summary>
+    /// Closes all views inside the workbench.
+    /// </summary>
+    void CloseAllViews();
+
     /// <summary>
     /// Closes all views inside the workbench except of a specific one.
     /// </summary>
     /// <param name="except">View which should remain.</param>
     void CloseAllViews(IViewContent except);
+
     /// <summary>
     /// Re-initializes all components of the workbench, should be called
     /// when a special property is changed that affects layout stuff.
-    /// (like language change) 
+    /// (like language change)
     /// </summary>
     void RedrawAllComponents();
-	
-	/// <summary>
-	/// Is called, when a workbench view was opened
-	/// </summary>
-	event ViewContentEventHandler ViewOpened;
-	
-	/// <summary>
-	/// Is called, when a workbench view was closed
-	/// </summary>
-	event ViewContentEventHandler ViewClosed;
-	
-	/// <summary>
-	/// Is called, when the workbench window which the user has into
-	/// the foreground (e.g. editable) changed to a new one.
-	/// </summary>
-	event EventHandler ActiveWorkbenchWindowChanged;
-	void UpdateToolbar();
-	void ExitWorkbench();
-	void Connect();
+
+    /// <summary>
+    /// Is called, when a workbench view was opened
+    /// </summary>
+    event ViewContentEventHandler ViewOpened;
+
+    /// <summary>
+    /// Is called, when a workbench view was closed
+    /// </summary>
+    event ViewContentEventHandler ViewClosed;
+
+    /// <summary>
+    /// Is called, when the workbench window which the user has into
+    /// the foreground (e.g. editable) changed to a new one.
+    /// </summary>
+    event EventHandler ActiveWorkbenchWindowChanged;
+    void UpdateToolbar();
+    void ExitWorkbench();
+    void Connect();
     void Connect(string configurationName);
     bool Disconnect();
-	bool UnloadSchema();
-	bool IsConnected{get;}
-	int WorkflowFormsCount{get;}
-	void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Dictionary<string, object> parameters);
+    bool UnloadSchema();
+    bool IsConnected { get; }
+    int WorkflowFormsCount { get; }
+    void ProcessGuiLink(
+        IOrigamForm sourceForm,
+        object linkTarget,
+        Dictionary<string, object> parameters
+    );
     bool PopulateEmptyDatabaseOnLoad { get; set; }
-	void OpenForm(object owner,Hashtable parameters);
+    void OpenForm(object owner, Hashtable parameters);
     void UpdateTitle();
 }

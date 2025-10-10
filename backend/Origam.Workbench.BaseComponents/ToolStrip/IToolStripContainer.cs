@@ -24,9 +24,10 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI;
+
 public interface IToolStripContainer
 {
-    List<ToolStrip> GetToolStrips(int maxWidth=-1);
+    List<ToolStrip> GetToolStrips(int maxWidth = -1);
     event EventHandler ToolStripsLoaded;
     event EventHandler AllToolStripsRemoved;
     event EventHandler ToolStripsNeedUpdate;

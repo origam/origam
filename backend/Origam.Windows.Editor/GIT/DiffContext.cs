@@ -5,6 +5,6 @@
         Added,
         Deleted,
         Context,
-        Blank
+        Blank,
     }
 }

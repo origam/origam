@@ -22,84 +22,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Configuration;
 
 namespace OrigamArchitect;
+
 public class NewProjectWizardSettings : ApplicationSettingsBase
 {
     [UserScopedSetting()]
     [DefaultSettingValue(@"localhost")]
     public string DatabaseServerName
     {
-        get
-        {
-            return (string)this["DatabaseServerName"];
-        }
-        set
-        {
-            this["DatabaseServerName"] = value;
-        }
+        get { return (string)this["DatabaseServerName"]; }
+        set { this["DatabaseServerName"] = value; }
     }
+
     [UserScopedSetting()]
-	[DefaultSettingValue("c:\\OrigamProjects")]
+    [DefaultSettingValue("c:\\OrigamProjects")]
     public string SourcesFolder
     {
-        get
-        {
-            return (string)this["SourcesFolder"];
-        }
-        set
-        {
-            this["SourcesFolder"] = value;
-        }
+        get { return (string)this["SourcesFolder"]; }
+        set { this["SourcesFolder"] = value; }
     }
+
     [UserScopedSetting()]
     [DefaultSettingValue(@"C:\inetpub")]
     public string BinFolder
     {
-        get
-        {
-            return (string)this["BinFolder"];
-        }
-        set
-        {
-            this["BinFolder"] = value;
-        }
+        get { return (string)this["BinFolder"]; }
+        set { this["BinFolder"] = value; }
     }
+
     [UserScopedSetting()]
     [DefaultSettingValue("Microsoft Sql Server")]
     public string DatabaseTypeText
     {
-        get
-        {
-            return (string)this["DatabaseTypeText"];
-        }
-        set
-        {
-            this["DatabaseTypeText"] = value;
-        }
+        get { return (string)this["DatabaseTypeText"]; }
+        set { this["DatabaseTypeText"] = value; }
     }
+
     [UserScopedSetting()]
     [DefaultSettingValue("http://localhost:2375")]
     public string DockerApiAdress
     {
-        get
-        {
-            return (string)this["DockerApiAdress"];
-        }
-        set
-        {
-            this["DockerApiAdress"] = value;
-        }
+        get { return (string)this["DockerApiAdress"]; }
+        set { this["DockerApiAdress"] = value; }
     }
+
     [UserScopedSetting()]
     [DefaultSettingValue("")]
     public string DockerSourceFolder
     {
-        get
-        {
-            return (string)this["DockerSourceFolder"];
-        }
-        set
-        {
-            this["DockerSourceFolder"] = value;
-        }
+        get { return (string)this["DockerSourceFolder"]; }
+        set { this["DockerSourceFolder"] = value; }
     }
 }

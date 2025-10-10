@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -19,46 +19,50 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Origam.Windows.Editor.CodeCompletion;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using Origam.Windows.Editor.CodeCompletion;
 
 namespace Origam.Windows.Editor;
+
 [Serializable()]
 public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompletionItemList
 {
     List<char> normalKeys = new List<char>();
+
     public XmlCompletionItemCollection()
     {
         normalKeys.AddRange(new char[] { ':', '.', '_' });
     }
+
     public XmlCompletionItemCollection(XmlCompletionItemCollection items)
         : this()
     {
         AddRange(items);
     }
+
     public XmlCompletionItemCollection(XmlCompletionItem[] items)
         : this()
     {
         AddRange(items);
     }
+
     public bool HasItems
     {
         get { return Count > 0; }
     }
     public bool ContainsAllAvailableItems
     {
-        get
-        {
-            return true;
-        }
+        get { return true; }
     }
+
     public void Sort()
     {
         List<XmlCompletionItem> items = base.Items as List<XmlCompletionItem>;
         items.Sort();
     }
+
     public void AddRange(XmlCompletionItem[] items)
     {
         for (int i = 0; i < items.Length; i++)
@@ -69,6 +73,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
             }
         }
     }
+
     public void AddRange(XmlCompletionItemCollection item)
     {
         for (int i = 0; i < item.Count; i++)
@@ -79,6 +84,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
             }
         }
     }
+
     public bool Contains(string name)
     {
         foreach (XmlCompletionItem data in this)
@@ -96,6 +102,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
         }
         return false;
     }
+
     /// <summary>
     /// Gets a count of the number of occurrences of a particular name
     /// in the completion data.
@@ -112,6 +119,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
         }
         return count;
     }
+
     /// <summary>
     /// Checks whether the completion item specified by name has
     /// the correct description.
@@ -130,12 +138,14 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
         }
         return false;
     }
+
     public XmlCompletionItem[] ToArray()
     {
         XmlCompletionItem[] data = new XmlCompletionItem[Count];
         CopyTo(data, 0);
         return data;
     }
+
     public CompletionItemListKeyResult ProcessInput(char key)
     {
         if (key == '!' || key == '?')
@@ -146,6 +156,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
             return CompletionItemListKeyResult.NormalKey;
         return CompletionItemListKeyResult.InsertionKey;
     }
+
     IEnumerable<ICompletionData> ICompletionItemList.Items
     {
         get { return this; }
@@ -163,6 +174,7 @@ public class XmlCompletionItemCollection : Collection<XmlCompletionItem>, ICompl
     }
     public int PreselectionLength { get; set; }
     public int PostselectionLength { get; set; }
+
     public void Complete(TextArea area, ISegment segment, EventArgs e, ICompletionData item)
     {
         item.Complete(area, segment, e);

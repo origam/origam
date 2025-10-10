@@ -19,6 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
@@ -26,27 +31,24 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Workbench.Services;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Origam.Workbench;
 
 public partial class MoveToPackageForm : Form
 {
-    private readonly WorkbenchSchemaService schema = ServiceManager.Services
-        .GetService<WorkbenchSchemaService>();
+    private readonly WorkbenchSchemaService schema =
+        ServiceManager.Services.GetService<WorkbenchSchemaService>();
 
-    private readonly IPersistenceProvider persistenceProvider = 
-        ServiceManager.Services.GetService<IPersistenceService>().SchemaProvider;
+    private readonly IPersistenceProvider persistenceProvider = ServiceManager
+        .Services.GetService<IPersistenceService>()
+        .SchemaProvider;
+
     public MoveToPackageForm()
     {
         InitializeComponent();
-        schema.ActiveExtension.IncludedPackages
-            .Concat(new [] { schema.ActiveExtension })
+        schema
+            .ActiveExtension.IncludedPackages.Concat(new[] { schema.ActiveExtension })
             .OrderBy(package => package.Name)
             .ForEach(package => packageComboBox.Items.Add(package));
         packageComboBox.DisplayMember = "Name";
@@ -59,8 +61,7 @@ public partial class MoveToPackageForm : Form
         {
             ISchemaItem schemaItem => schemaItem.RootProvider,
             SchemaItemGroup group => group.RootProvider,
-            _ => throw new Exception("Cannot process " +
-                                     schema.ActiveNode.GetType())
+            _ => throw new Exception("Cannot process " + schema.ActiveNode.GetType()),
         };
     }
 
@@ -103,8 +104,11 @@ public partial class MoveToPackageForm : Form
         Close();
     }
 
-    private void MoveSchemaItem(Package targetPackage, 
-        SchemaItemGroup targetGroup, ISchemaItem item)
+    private void MoveSchemaItem(
+        Package targetPackage,
+        SchemaItemGroup targetGroup,
+        ISchemaItem item
+    )
     {
         item.Group = targetGroup;
         MoveSchemaItem(item, targetPackage);
@@ -114,15 +118,19 @@ public partial class MoveToPackageForm : Form
     {
         CheckCanBeMovedOrThrow(item, targetPackage);
         item.SetExtensionRecursive(targetPackage);
-        if (item is PanelControlSet panelControlSet) {
+        if (item is PanelControlSet panelControlSet)
+        {
             panelControlSet.PanelControl.SetExtensionRecursive(targetPackage);
             panelControlSet.PanelControl.Persist();
         }
         item.Persist();
     }
 
-    private void MoveGroupRecursive(Package targetPackage, 
-        SchemaItemGroup targetGroup, SchemaItemGroup group)
+    private void MoveGroupRecursive(
+        Package targetPackage,
+        SchemaItemGroup targetGroup,
+        SchemaItemGroup group
+    )
     {
         group.ParentGroup = targetGroup;
         foreach (var childGroup in group.ChildGroupsRecursive)
@@ -132,8 +140,7 @@ public partial class MoveToPackageForm : Form
         MoveGroupAndTopLevelItems(group, targetPackage);
     }
 
-    private void MoveGroupAndTopLevelItems(SchemaItemGroup group,
-        Package targetPackage)
+    private void MoveGroupAndTopLevelItems(SchemaItemGroup group, Package targetPackage)
     {
         foreach (var child in group.ChildItems)
         {
@@ -157,52 +164,58 @@ public partial class MoveToPackageForm : Form
         }
         groupComboBox.Items.Clear();
         GetActiveItemRootProvider()
-            .ChildGroups
-            .OrderBy(group => group.Name)
+            .ChildGroups.OrderBy(group => group.Name)
             .Where(group => group.Package.Id == package.Id)
-            .ForEach(group => {
-                    var containers = 
-                        GroupContainer.Create(group).ToArray<object>();
-                    groupComboBox.Items.AddRange(containers);
-                });
+            .ForEach(group =>
+            {
+                var containers = GroupContainer.Create(group).ToArray<object>();
+                groupComboBox.Items.AddRange(containers);
+            });
         if (groupComboBox.Items.Count > 0)
         {
             groupComboBox.SelectedIndex = 0;
         }
     }
 
-    private static void CheckCanBeMovedOrThrow(ISchemaItem activeItem,
-            Package targetPackage)
+    private static void CheckCanBeMovedOrThrow(ISchemaItem activeItem, Package targetPackage)
     {
-        List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
-            = activeItem.GetDependencies(true)
-                .Cast<object>()
-                .OfType<ISchemaItem>()
-                .Where(item =>
-                    !targetPackage.IncludedPackages.Contains(item.Package)
-                    && item.Package != targetPackage)
-                .ToList();
+        List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage = activeItem
+            .GetDependencies(true)
+            .Cast<object>()
+            .OfType<ISchemaItem>()
+            .Where(item =>
+                !targetPackage.IncludedPackages.Contains(item.Package)
+                && item.Package != targetPackage
+            )
+            .ToList();
         if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
         {
-            throw new Exception(string.Format(
-                Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
-                targetPackage.Name,
-                FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)));
+            throw new Exception(
+                string.Format(
+                    Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
+                    targetPackage.Name,
+                    FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)
+                )
+            );
         }
 
-        List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage
-            = activeItem.GetUsage()
-                .Where(item =>
-                    !item.Package.IncludedPackages.Contains(targetPackage)
-                    && item.Package != targetPackage)
-                .ToList();
+        List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage = activeItem
+            .GetUsage()
+            .Where(item =>
+                !item.Package.IncludedPackages.Contains(targetPackage)
+                && item.Package != targetPackage
+            )
+            .ToList();
 
         if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
         {
-            throw new Exception(String.Format(
-                Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
-                targetPackage.Name,
-                FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)));
+            throw new Exception(
+                String.Format(
+                    Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
+                    targetPackage.Name,
+                    FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)
+                )
+            );
         }
     }
 
@@ -221,8 +234,11 @@ internal class GroupContainer
         return containers;
     }
 
-    private static void CreateGroupContainers(SchemaItemGroup group,
-        List<GroupContainer> containers, int level)
+    private static void CreateGroupContainers(
+        SchemaItemGroup group,
+        List<GroupContainer> containers,
+        int level
+    )
     {
         containers.Add(new GroupContainer(group, level));
         foreach (SchemaItemGroup childGroup in group.ChildGroups)
@@ -230,6 +246,7 @@ internal class GroupContainer
             CreateGroupContainers(childGroup, containers, level + 1);
         }
     }
+
     public string Name { get; }
     public SchemaItemGroup Group { get; }
 

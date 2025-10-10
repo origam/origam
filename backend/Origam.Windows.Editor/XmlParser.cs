@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2014 AlphaSierraPapa for the SharpDevelop Team
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
 // without restriction, including without limitation the rights to use, copy, modify, merge,
 // publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 // to whom the Software is furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 // PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -126,7 +126,6 @@ namespace Origam.Windows.Editor
             int currentIndex = index;
             for (int i = 0; i < index; ++i)
             {
-
                 char currentChar = xml[currentIndex];
 
                 if (Char.IsWhiteSpace(currentChar))
@@ -155,7 +154,10 @@ namespace Origam.Windows.Editor
 
             bool isNamespace = false;
 
-            if ((reversedAttributeName.ToString() == "snlmx") || (reversedAttributeName.ToString().EndsWith(":snlmx")))
+            if (
+                (reversedAttributeName.ToString() == "snlmx")
+                || (reversedAttributeName.ToString().EndsWith(":snlmx"))
+            )
             {
                 isNamespace = true;
             }
@@ -194,7 +196,11 @@ namespace Origam.Windows.Editor
         /// The namespace for the element containing the attribute will also be determined
         /// if the includeNamespace flag is set to true.
         /// </summary>
-        public static QualifiedName GetQualifiedAttributeNameAtIndex(string xml, int index, bool includeNamespace)
+        public static QualifiedName GetQualifiedAttributeNameAtIndex(
+            string xml,
+            int index,
+            bool includeNamespace
+        )
         {
             string name = GetAttributeNameAtIndex(xml, index);
             QualifiedName qualifiedName = QualifiedName.FromString(name);
@@ -304,8 +310,7 @@ namespace Origam.Windows.Editor
         /// </summary>
         public static bool IsAttributeValueChar(char ch)
         {
-            if ((ch == '<') ||
-                (ch == '>'))
+            if ((ch == '<') || (ch == '>'))
             {
                 return false;
             }
@@ -318,12 +323,14 @@ namespace Origam.Windows.Editor
         /// </summary>
         public static bool IsXmlNameChar(char ch)
         {
-            if (Char.IsLetterOrDigit(ch) ||
-                (ch == ':') ||
-                (ch == '/') ||
-                (ch == '_') ||
-                (ch == '.') ||
-                (ch == '-'))
+            if (
+                Char.IsLetterOrDigit(ch)
+                || (ch == ':')
+                || (ch == '/')
+                || (ch == '_')
+                || (ch == '.')
+                || (ch == '-')
+            )
             {
                 return true;
             }
@@ -480,7 +487,10 @@ namespace Origam.Windows.Editor
                     int elementEndIndex = GetActiveElementEndIndex(xml, index);
                     if (elementEndIndex >= index)
                     {
-                        return xml.Substring(elementStartIndex, elementEndIndex - elementStartIndex);
+                        return xml.Substring(
+                            elementStartIndex,
+                            elementEndIndex - elementStartIndex
+                        );
                     }
                 }
             }
@@ -533,7 +543,6 @@ namespace Origam.Windows.Editor
 
             for (int i = index; i < xml.Length; ++i)
             {
-
                 char currentChar = xml[i];
                 if (currentChar == '>')
                 {
@@ -658,10 +667,10 @@ namespace Origam.Windows.Editor
             {
                 if (path.Elements.Count > 0)
                 {
-                    for (int i = path.Elements.Count-1; i >= 0; i--)
+                    for (int i = path.Elements.Count - 1; i >= 0; i--)
                     {
                         QualifiedName parentName = path.Elements[i];
-                        if (! parentName.HasPrefix && parentName.HasNamespace)
+                        if (!parentName.HasPrefix && parentName.HasNamespace)
                         {
                             elementNamespace.Name = parentName.Namespace;
                             elementNamespace.Prefix = parentName.Prefix;
@@ -674,7 +683,13 @@ namespace Origam.Windows.Editor
             return path;
         }
 
-        static string GetAttributeName(string xml, int index, bool ignoreWhitespace, bool ignoreQuote, bool ignoreEqualsSign)
+        static string GetAttributeName(
+            string xml,
+            int index,
+            bool ignoreWhitespace,
+            bool ignoreQuote,
+            bool ignoreEqualsSign
+        )
         {
             string name = String.Empty;
 
@@ -687,7 +702,6 @@ namespace Origam.Windows.Editor
 
             for (int i = 0; i <= index; ++i)
             {
-
                 char currentChar = xml[currentIndex];
 
                 if (IsXmlNameChar(currentChar))
@@ -796,7 +810,11 @@ namespace Origam.Windows.Editor
                                 case XmlNodeType.Element:
                                     if (!xmlReader.IsEmptyElement)
                                     {
-                                        QualifiedName category = new QualifiedName(xmlReader.LocalName, xmlReader.NamespaceURI, xmlReader.Prefix);
+                                        QualifiedName category = new QualifiedName(
+                                            xmlReader.LocalName,
+                                            xmlReader.NamespaceURI,
+                                            xmlReader.Prefix
+                                        );
                                         path.AddElement(category);
                                     }
                                     break;
@@ -835,7 +853,11 @@ namespace Origam.Windows.Editor
             if (document == null)
                 throw new ArgumentNullException("document");
             if (index < 0 || index > document.TextLength)
-                throw new ArgumentOutOfRangeException("index", index, "Value must be between 0 and " + document.TextLength);
+                throw new ArgumentOutOfRangeException(
+                    "index",
+                    index,
+                    "Value must be between 0 and " + document.TextLength
+                );
             int i = index - 1;
             while (i >= 0 && IsXmlNameChar(document.GetCharAt(i)) && document.GetCharAt(i) != '/')
                 i--;

@@ -23,25 +23,24 @@ using System;
 using Origam.UI;
 
 namespace Origam.Schema.WorkflowModel.UI;
+
 /// <summary>
 /// Summary description for CreateDataStructureFromEntityCommand.
 /// </summary>
 public class CreateStoreDataCommand : AbstractMenuCommand
 {
-	public override bool IsEnabled
-	{
-		get
-		{
-			return Owner is ContextStore;
-		}
-		set
-		{
-			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-	}
-	public override void Run()
-	{
-		ContextStore context = Owner as ContextStore;
-		WorkflowHelper.CreateDataServiceStoreDataTask(context, true);
-	}
+    public override bool IsEnabled
+    {
+        get { return Owner is ContextStore; }
+        set
+        {
+            throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+        }
+    }
+
+    public override void Run()
+    {
+        ContextStore context = Owner as ContextStore;
+        WorkflowHelper.CreateDataServiceStoreDataTask(context, true);
+    }
 }

@@ -20,20 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
-using System.Xml.XPath;
-using System.Xml.Serialization;
 using System.Configuration;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace Origam.Gui.Designer;
+
 public class XmlSerializerSectionHandler : IConfigurationSectionHandler
 {
-	object IConfigurationSectionHandler.Create(object parent, object configContext, XmlNode section)
-	{
-		XPathNavigator navigator1 = section.CreateNavigator();
-		string text1 = (string) navigator1.Evaluate("string(@type)");
-		Type type1 = Type.GetType(text1);
-		XmlSerializer serializer1 = new XmlSerializer(type1);
-		return serializer1.Deserialize(new XmlNodeReader(section));
-	}
+    object IConfigurationSectionHandler.Create(object parent, object configContext, XmlNode section)
+    {
+        XPathNavigator navigator1 = section.CreateNavigator();
+        string text1 = (string)navigator1.Evaluate("string(@type)");
+        Type type1 = Type.GetType(text1);
+        XmlSerializer serializer1 = new XmlSerializer(type1);
+        return serializer1.Deserialize(new XmlNodeReader(section));
+    }
 }

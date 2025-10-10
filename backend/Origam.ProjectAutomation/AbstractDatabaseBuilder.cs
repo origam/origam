@@ -19,29 +19,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Service;
 using System;
+using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation;
+
 public abstract class AbstractDatabaseBuilder : AbstractBuilder
 {
     AbstractSqlDataService _dataService = null;
+
     internal AbstractSqlDataService DataService()
     {
         _dataService = null;
         return _dataService;
     }
+
     internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
     {
-       
-            if (_dataService == null)
-            {
-                _dataService = CreateService(DatabaseType);
-            }
-            return _dataService;
-        
+        if (_dataService == null)
+        {
+            _dataService = CreateService(DatabaseType);
+        }
+        return _dataService;
     }
+
     internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
     {
         if (DatabaseType == DatabaseType.MsSql)
@@ -52,7 +54,6 @@ public abstract class AbstractDatabaseBuilder : AbstractBuilder
         {
             return new PgSqlDataService();
         }
-        throw new ArgumentOutOfRangeException("DatabaseType is wrong ",
-                        DatabaseType.ToString());
+        throw new ArgumentOutOfRangeException("DatabaseType is wrong ", DatabaseType.ToString());
     }
 }
