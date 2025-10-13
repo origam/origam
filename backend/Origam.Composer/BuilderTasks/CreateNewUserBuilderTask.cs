@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.DA;
-using Origam.Security.Common;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -32,7 +31,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
     public override void Execute(Project project)
     {
-        var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
+        var adaptivePassword = new Origam.Security.Common.InternalPasswordHasherWithLegacySupport();
 
         DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
         DataService(project.DatabaseType).ConnectionString = BuildConnectionStringArchitect(
