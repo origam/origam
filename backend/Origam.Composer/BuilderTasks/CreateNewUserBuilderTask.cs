@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using BrockAllen.IdentityReboot;
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.DA;
@@ -31,7 +32,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
     public override void Execute(Project project)
     {
-        // var adaptivePassword = new AdaptivePasswordHasher(); // TODO: Temporary disabled password hashing
+        var adaptivePassword = new AdaptivePasswordHasher();
 
         DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
         DataService(project.DatabaseType).ConnectionString = BuildConnectionStringArchitect(
@@ -42,7 +43,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
         {
             new QueryParameter("Id", Guid.NewGuid().ToString()),
             new QueryParameter("UserName", project.WebAdminUsername),
-            // new QueryParameter("Password", adaptivePassword.HashPassword(project.WebAdminPassword)),  // TODO: Temporary disabled password hashing
+            new QueryParameter("Password", adaptivePassword.HashPassword(project.WebAdminPassword)),
             new QueryParameter("FirstName", project.WebAdminUsername),
             new QueryParameter("Name", project.WebAdminUsername),
             new QueryParameter("Email", project.WebAdminEmail),
