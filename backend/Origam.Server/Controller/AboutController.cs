@@ -49,7 +49,8 @@ public class AboutController : AbstractController
             new AboutInfo
             {
                 ServerVersion = "ServerVersion Placeholder to be changed at build time",
-                LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
+                LinkToCommit =
+                    "LinkToCommit Placeholder to be changed at build time and needs to be very long",
                 CommitId = "CommitId Placeholder to be changed at build time",
             }
         );
