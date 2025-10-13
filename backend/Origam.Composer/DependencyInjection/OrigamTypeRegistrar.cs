@@ -19,14 +19,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
-namespace Origam.Composer.DI;
+namespace Origam.Composer.DependencyInjection;
 
-public class OrigamTypeResolver(IServiceProvider provider) : ITypeResolver
+public class OrigamTypeRegistrar(IServiceCollection services) : ITypeRegistrar
 {
-    public object? Resolve(Type? type)
+    public void Register(Type service, Type implementation)
     {
-        return type == null ? null : provider.GetService(type);
+        services.AddSingleton(service, implementation);
+    }
+
+    public void RegisterInstance(Type service, object implementation)
+    {
+        services.AddSingleton(service, implementation);
+    }
+
+    public void RegisterLazy(Type service, Func<object> factory)
+    {
+        services.AddSingleton(service, provider => factory());
+    }
+
+    public ITypeResolver Build()
+    {
+        var provider = services.BuildServiceProvider();
+        return new OrigamTypeResolver(provider);
     }
 }

@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Extensions.DependencyInjection;
 using Origam.Composer.BuilderTasks;
 using Origam.Composer.Commands;
-using Origam.Composer.DI;
+using Origam.Composer.DependencyInjection;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
 using Origam.Composer.Services;
