@@ -1,4 +1,4 @@
-﻿# Origam.Composer
+# Origam.Composer
 This tool downloads the model, initializes a database (MS SQL/Postgres), and generates bash/cmd scripts for the ORIGAM project.
 
 ## Install database (optional)
@@ -54,11 +54,11 @@ Origam.Composer.exe create
 --p-admin-username admin
 --p-admin-password 5axg1zr8
 --p-admin-email "john.doe@example.com"
---p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
---p-docker-image-win "origam/server:2025.9.alpha.3984.win"
+--p-docker-image-linux "origam/server:2025.10.alpha.4022.linux"
+--p-docker-image-win "origam/server:2025.10.alpha.4022.win"
 
---arch-docker-image-linux "origam/architect:2025.9.alpha.3984.linux"
---arch-docker-image-win "origam/architect:2025.9.alpha.3984.win"
+--arch-docker-image-linux "origam/architect:2025.10.alpha.4022.linux"
+--arch-docker-image-win "origam/architect:2025.10.alpha.4022.win"
 --arch-port 8081
 
 --git-enabled
