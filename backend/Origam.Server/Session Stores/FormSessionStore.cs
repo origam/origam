@@ -426,42 +426,7 @@ public class FormSessionStore : SaveableSessionStore
         object rootRecordId
     )
     {
-        // check validity of the request
-        if (!rootRecordId.Equals(this.CurrentRecordId))
-        {
-            // we do not hold the data anymore, we throw-out the request
-            return new List<List<object>>();
-        }
-        DataTable childTable = GetDataTable(childEntity);
-        var result = new List<List<object>>();
-        if (childTable.ParentRelations.Count == 0)
-        {
-            throw new Exception(
-                "Requested entity "
-                    + childEntity
-                    + " has no parent relations. Cannot load child records."
-            );
-        }
-        DataRelation parentRelation = childTable.ParentRelations[0];
-        // get parent row again (the one before was most probably loaded from the list
-        // now we have it in the cache
-        DataRow parentRow = GetSessionRow(parentRelation.ParentTable.TableName, parentRecordId);
-        if (parentRow == null)
-        {
-            throw new ArgumentOutOfRangeException(
-                $"Parent record id "
-                    + $"{parentRecordId} not found in "
-                    + $"{parentRelation.ParentTable.TableName} - "
-                    + $"parent of {childEntity}."
-            );
-        }
-        // get the requested entity data
-        string[] columns = GetColumnNames(childTable);
-        foreach (DataRow r in parentRow.GetChildRows(parentRelation.RelationName))
-        {
-            result.Add(GetRowData(r, columns));
-        }
-        return result;
+        return GetDataImplementation(childEntity, parentRecordId, rootRecordId);
     }
 
     internal override void OnNewRecord(string entity, object id)

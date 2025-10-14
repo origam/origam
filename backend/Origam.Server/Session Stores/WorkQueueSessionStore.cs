@@ -177,6 +177,15 @@ public class WorkQueueSessionStore : SessionStore
         return result;
     }
 
+    public override List<List<object>> GetData(
+        string childEntity,
+        object parentRecordId,
+        object rootRecordId
+    )
+    {
+        return GetDataImplementation(childEntity, parentRecordId, rootRecordId);
+    }
+
     public override void Init()
     {
         PrepareData();
