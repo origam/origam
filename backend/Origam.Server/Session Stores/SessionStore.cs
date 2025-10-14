@@ -2250,4 +2250,51 @@ public abstract class SessionStore : IDisposable
     {
         throw new Exception("RevertChanges not available for " + GetType().Name);
     }
+
+    // The default implementation of GetData. The function itself is used only in FormSessionStore
+    // and WorkQueueSessionStore. The introduction of a complex hierarchy isn't worth it, because
+    // the session stores don't have too much in common. So we opted for protected implementation.
+    protected List<List<object>> GetDataImplementation(
+        string childEntity,
+        object parentRecordId,
+        object rootRecordId
+    )
+    {
+        // check validity of the request
+        if (!rootRecordId.Equals(CurrentRecordId))
+        {
+            // we do not hold the data anymore, we throw-out the request
+            return new List<List<object>>();
+        }
+        DataTable childTable = GetDataTable(childEntity);
+        var result = new List<List<object>>();
+        if (childTable.ParentRelations.Count == 0)
+        {
+            throw new Exception(
+                "Requested entity "
+                    + childEntity
+                    + " has no parent relations. Cannot load child records."
+            );
+        }
+        DataRelation parentRelation = childTable.ParentRelations[0];
+        // get parent row again (the one before was most probably loaded from the list
+        // now we have it in the cache
+        DataRow parentRow = GetSessionRow(parentRelation.ParentTable.TableName, parentRecordId);
+        if (parentRow == null)
+        {
+            throw new ArgumentOutOfRangeException(
+                $"Parent record id "
+                    + $"{parentRecordId} not found in "
+                    + $"{parentRelation.ParentTable.TableName} - "
+                    + $"parent of {childEntity}."
+            );
+        }
+        // get the requested entity data
+        string[] columns = GetColumnNames(childTable);
+        foreach (DataRow dataRow in parentRow.GetChildRows(parentRelation.RelationName))
+        {
+            result.Add(GetRowData(dataRow, columns));
+        }
+        return result;
+    }
 }
