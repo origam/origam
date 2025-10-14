@@ -45,7 +45,7 @@ public class GitService : IGitService
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException("Path cannot be null or empty", nameof(path));
+            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(path));
         }
         if (!Directory.Exists(path))
         {
@@ -53,27 +53,29 @@ public class GitService : IGitService
         }
         if (Repository.IsValid(path))
         {
-            throw new InvalidOperationException($"Repository already exists at '{path}'");
+            throw new InvalidOperationException(
+                string.Format(Strings.Repository_already_exists, path)
+            );
         }
 
         Repo?.Dispose();
         Repo = new Repository(Repository.Init(path));
-        AnsiConsole.MarkupLine($"[orange1][bold]- repository created:[/][/] {path}");
+        AnsiConsole.MarkupLine(string.Format(Strings.Repository_created, path));
     }
 
     public void InitCommit(string? username, string? userEmail)
     {
         if (Repo == null)
         {
-            throw new InvalidOperationException("Repository is not initialized");
+            throw new InvalidOperationException(Strings.Repository_not_initialized);
         }
         if (string.IsNullOrWhiteSpace(username))
         {
-            throw new ArgumentException("Username cannot be null or empty", nameof(username));
+            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(username));
         }
         if (string.IsNullOrWhiteSpace(userEmail))
         {
-            throw new ArgumentException("Email cannot be null or empty", nameof(userEmail));
+            throw new ArgumentException(Strings.Cannot_be_null_or_empty, nameof(userEmail));
         }
 
         Repo.Ignore.AddTemporaryRules(IgnoreRules);
@@ -81,13 +83,13 @@ public class GitService : IGitService
         LibGit2Sharp.Commands.Stage(Repo, "*");
 
         var signature = new Signature(username, userEmail, DateTime.Now);
-        Repo.Commit("Initial commit", signature, signature);
-        AnsiConsole.MarkupLine($"[orange1][bold]- init commit:[/][/] {DateTime.Now}");
+        Repo.Commit(Strings.Initial_commit, signature, signature);
+        AnsiConsole.MarkupLine(string.Format(Strings.Init_commit_message, DateTime.Now));
 
         Configuration config = Repo.Config;
         config.Set("user.name", username);
         config.Set("user.email", userEmail);
-        AnsiConsole.MarkupLine($"[orange1][bold]- git config set:[/][/] {username}, {userEmail}");
+        AnsiConsole.MarkupLine(string.Format(Strings.Git_config_set, username, userEmail));
     }
 
     public string[]? FetchGitUserFromGlobalConfig()

@@ -26,7 +26,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateDatabaseBuilderTask : AbstractDatabaseBuilderTask, ICreateDatabaseBuilderTask
 {
-    public override string Name => "Create database (new empty)";
+    public override string Name => Strings.BuilderTask_Create_database_new_empty;
 
     public override void Execute(Project project)
     {

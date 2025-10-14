@@ -29,7 +29,7 @@ namespace Origam.Composer.BuilderTasks;
 public class CreateGitRepositoryBuilderTask(IGitService gitService)
     : ICreateGitRepositoryBuilderTask
 {
-    public string Name => "Initialize Git";
+    public string Name => Strings.BuilderTask_Initialize_Git;
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
     public void Execute(Project project)

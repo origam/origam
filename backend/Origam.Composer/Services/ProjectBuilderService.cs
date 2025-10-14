@@ -52,7 +52,7 @@ public class ProjectBuilderService(
             {
                 activeTask = builder;
                 builder.State = BuilderTaskState.Running;
-                AnsiConsole.MarkupLine($"[orange1][bold]Executing:[/][/] {builder.Name}");
+                AnsiConsole.MarkupLine(string.Format(Strings.Executing_task, builder.Name));
                 builder.Execute(project);
                 builder.State = BuilderTaskState.Finished;
             }

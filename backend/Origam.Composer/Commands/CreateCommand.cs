@@ -139,7 +139,7 @@ public class CreateCommand(
 
     private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
     {
-        visualService.PrintHeader("Create New Project");
+        visualService.PrintHeader(Strings.Create_New_Project);
         visualService.PrintDatabaseValues(
             settings.DbType,
             settings.DbHost,

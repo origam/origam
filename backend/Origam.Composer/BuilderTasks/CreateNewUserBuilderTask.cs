@@ -28,7 +28,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewUserBuilderTask
 {
-    public override string Name => "Create new Admin user (Client web application)";
+    public override string Name => Strings.BuilderTask_Create_new_Admin_user;
 
     public override void Execute(Project project)
     {

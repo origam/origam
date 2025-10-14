@@ -50,7 +50,9 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
         var dir = new DirectoryInfo(projectFolder);
         if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
         {
-            throw new Exception($"Sources folder {projectFolder} already exists and is not empty.");
+            throw new Exception(
+                string.Format(Strings.Sources_folder_already_exists, projectFolder)
+            );
         }
         dir.Create();
     }
@@ -59,7 +61,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     {
         if (RepositoryZipPath == null)
         {
-            throw new Exception("RepositoryZipPath is not set.");
+            throw new Exception(Strings.RepositoryZipPath_not_set);
         }
 
         using var client = new HttpClient();
@@ -89,7 +91,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
         else
         {
             throw new DirectoryNotFoundException(
-                $"Model root directory not found at: {modelRootPath}"
+                string.Format(Strings.Model_root_directory_not_found, modelRootPath)
             );
         }
 
@@ -118,7 +120,9 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
 
         if (!dir.Exists)
         {
-            throw new DirectoryNotFoundException($"Source directory not found: {sourceDir}");
+            throw new DirectoryNotFoundException(
+                string.Format(Strings.Source_directory_not_found, sourceDir)
+            );
         }
 
         DirectoryInfo[] dirs = dir.GetDirectories();

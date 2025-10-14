@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Origam.Composer.BuilderTasks;
 using Origam.Composer.Commands;
@@ -34,6 +35,10 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        CultureInfo culture = CultureInfo.CurrentCulture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+
         var services = new ServiceCollection();
         services.AddSingleton<IVisualService, VisualService>();
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();

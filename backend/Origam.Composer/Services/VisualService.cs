@@ -62,7 +62,7 @@ public class VisualService : IVisualService
         table.AddRow("Docker image (win)", dockerImageWindows);
 
         var panel = new Panel(table)
-            .Header("[green]Project Configuration[/]")
+            .Header(Strings.Project_Configuration_Header)
             .BorderColor(Color.Green);
 
         AnsiConsole.Write(panel);
@@ -91,7 +91,7 @@ public class VisualService : IVisualService
         table.AddRow("Password", "[dim]-- masked --[/]");
 
         var panel = new Panel(table)
-            .Header("[blue]Database Configuration[/]")
+            .Header(Strings.Database_Configuration_Header)
             .BorderColor(Color.Blue);
 
         AnsiConsole.Write(panel);
@@ -111,7 +111,7 @@ public class VisualService : IVisualService
         table.AddRow("Docker port", port.ToString());
 
         var panel = new Panel(table)
-            .Header("[purple]Architect Configuration[/]")
+            .Header(Strings.Architect_Configuration_Header)
             .BorderColor(Color.Purple);
 
         AnsiConsole.Write(panel);
@@ -130,7 +130,9 @@ public class VisualService : IVisualService
         table.AddRow("Git user", user);
         table.AddRow("Git email", email);
 
-        var panel = new Panel(table).Header("[cyan1]Git Configuration[/]").BorderColor(Color.Cyan1);
+        var panel = new Panel(table)
+            .Header(Strings.Git_Configuration_Header)
+            .BorderColor(Color.Cyan1);
 
         AnsiConsole.Write(panel);
         AnsiConsole.WriteLine();
@@ -147,7 +149,7 @@ public class VisualService : IVisualService
         var table = new Table()
             .Border(TableBorder.Rounded)
             .BorderColor(Color.Orange1)
-            .AddColumn("[bold]Actions to be performed[/]");
+            .AddColumn(Strings.Actions_to_be_performed);
 
         foreach (var action in actionsList)
         {
@@ -155,7 +157,7 @@ public class VisualService : IVisualService
         }
 
         var panel = new Panel(table)
-            .Header("[orange1]Project Creation Tasks[/]")
+            .Header(Strings.Project_Creation_Tasks_Header)
             .BorderColor(Color.Orange1);
 
         AnsiConsole.Write(panel);
@@ -165,6 +167,6 @@ public class VisualService : IVisualService
     public void PrintBye()
     {
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine("[orange1]All steps completed. Bye![/]");
+        AnsiConsole.MarkupLine(Strings.All_steps_completed);
     }
 }

@@ -29,7 +29,7 @@ public class CreateDatabaseStructureBuilderTask
     : AbstractDatabaseBuilderTask,
         ICreateDatabaseStructureBuilderTask
 {
-    public override string Name => "Create database structure (from model)";
+    public override string Name => Strings.BuilderTask_Create_database_structure_from_model;
 
     public override void Execute(Project project)
     {

@@ -28,7 +28,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class CreateNewPackageBuilderTask : ICreateNewPackageBuilderTask
 {
-    public string Name => "Create new Package";
+    public string Name => Strings.BuilderTask_Create_new_Package;
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
     public void Execute(Project project)

@@ -29,7 +29,7 @@ namespace Origam.Composer.BuilderTasks;
 
 public class DockerBuilderTask : IDockerBuilderTask
 {
-    public string Name => "Create Docker run scripts";
+    public string Name => Strings.BuilderTask_Create_Docker_run_scripts;
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
     public void Execute(Project project)
