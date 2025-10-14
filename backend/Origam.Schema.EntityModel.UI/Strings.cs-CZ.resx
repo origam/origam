@@ -72,9 +72,6 @@
     <data name="ErrorLookupNotFound">
         <value>Lookup '{0}' referenced by {1} '{2}' not found in the model.</value>
     </data>
-    <data name="ErrorDataStructureUnknownType">
-        <value>This type is not supported by DataStructure</value>
-    </data>
     <data name="ErrorColumnNotFound">
         <value>Entity column not found ({0}).</value>
     </data>

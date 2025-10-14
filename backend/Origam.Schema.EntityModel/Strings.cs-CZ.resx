@@ -48,9 +48,6 @@
     <data name="ErrorDataConstantUnknownType">
         <value>This type is not supported by DataConstant Model</value>
     </data>
-    <data name="ErrorDataStructureUnknownType">
-        <value>This type is not supported by DataStructure</value>
-    </data>
     <data name="ErrorIOrigamEntity2NotFound">
         <value>Could not find IOrigamEntity2 in the model.</value>
     </data>
