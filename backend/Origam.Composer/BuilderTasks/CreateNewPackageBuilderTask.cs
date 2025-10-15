@@ -36,9 +36,9 @@ public class CreateNewPackageBuilderTask : ICreateNewPackageBuilderTask
         var schema = ServiceManager.Services.GetService<SchemaService>();
         schema.UnloadSchema();
         PackageHelper.CreatePackage(
-            project.Name,
-            new Guid(project.NewPackageId),
-            new Guid(project.BasePackageId)
+            packageName: project.Name,
+            packageId: new Guid(project.NewPackageId),
+            referencePackageId: new Guid(project.BasePackageId)
         );
         schema.UnloadSchema();
     }

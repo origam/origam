@@ -36,7 +36,7 @@ public class CreateCommand(
     public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
         GitIdentity gitIdentity = GitIdentityResolver(settings);
-        ShowVisualBanner(settings, gitIdentity);
+        ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
 
         var dockerFolder = Path.Combine(settings.ProjectFolder, "docker");
         var project = new Project
@@ -65,7 +65,7 @@ public class CreateCommand(
             DatabaseIntegratedAuthentication = false,
             DatabaseName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
             DatabaseInternalUserName = StringHelper.RemoveAllWhitespace(settings.DbName).ToLower(),
-            DatabaseInternalUserPassword = passwordGeneratorService.Generate(24),
+            DatabaseInternalUserPassword = passwordGeneratorService.Generate(length: 24),
             #endregion
 
             #region Project and client web app
@@ -127,11 +127,11 @@ public class CreateCommand(
         };
 
         // Prepare tasks
-        projectBuilderService.PrepareTasks(project);
-        visualService.PrintProjectCreateTasks(projectBuilderService.GetTasks());
+        projectBuilderService.PrepareTasks(project: project);
+        visualService.PrintProjectCreateTasks(tasks: projectBuilderService.GetTasks());
 
         // Execute
-        projectBuilderService.Create(project);
+        projectBuilderService.Create(project: project);
         visualService.PrintBye();
 
         return 0;
@@ -139,28 +139,32 @@ public class CreateCommand(
 
     private void ShowVisualBanner(CreateCommandSettings settings, GitIdentity gitIdentity)
     {
-        visualService.PrintHeader(Strings.Create_New_Project);
+        visualService.PrintHeader(title: Strings.Create_New_Project);
         visualService.PrintDatabaseValues(
-            settings.DbType,
-            settings.DbHost,
-            settings.DbPort,
-            settings.DbName,
-            settings.DbUsername
+            type: settings.DbType,
+            host: settings.DbHost,
+            port: settings.DbPort,
+            name: settings.DbName,
+            username: settings.DbUsername
         );
         visualService.PrintProjectValues(
-            settings.ProjectName,
-            settings.ProjectFolder,
-            settings.ProjectDockerImageLinux,
-            settings.ProjectDockerImageWin,
-            settings.ProjectWebAdminUsername,
-            settings.ProjectWebAdminEmail
+            name: settings.ProjectName,
+            folder: settings.ProjectFolder,
+            dockerImageLinux: settings.ProjectDockerImageLinux,
+            dockerImageWindows: settings.ProjectDockerImageWin,
+            adminName: settings.ProjectWebAdminUsername,
+            adminEmail: settings.ProjectWebAdminEmail
         );
         visualService.PrintArchitectValues(
-            settings.ArchitectDockerImageLinux,
-            settings.ArchitectDockerImageWin,
-            settings.ArchitectPort
+            dockerImageLinux: settings.ArchitectDockerImageLinux,
+            dockerImageWindows: settings.ArchitectDockerImageWin,
+            port: settings.ArchitectPort
         );
-        visualService.PrintGitValues(settings.GitEnabled, gitIdentity.User, gitIdentity.Email);
+        visualService.PrintGitValues(
+            isEnabled: settings.GitEnabled,
+            user: gitIdentity.User,
+            email: gitIdentity.Email
+        );
     }
 
     private GitIdentity GitIdentityResolver(CreateCommandSettings settings)

@@ -36,7 +36,7 @@ public class GitService : IGitService
     {
         GitConfigPath = Path.Combine(
             Environment.GetEnvironmentVariable("HOMEDRIVE")
-                + FixSlash(Environment.GetEnvironmentVariable("HOMEPATH")),
+                + FixSlash(file: Environment.GetEnvironmentVariable("HOMEPATH")),
             ".gitconfig"
         );
     }

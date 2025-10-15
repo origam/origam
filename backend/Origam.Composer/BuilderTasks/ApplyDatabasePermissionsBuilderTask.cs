@@ -34,7 +34,7 @@ public class ApplyDatabasePermissionsBuilderTask
     {
         DataService(project.DatabaseType).DbUser = project.DatabaseInternalUserName;
         DataService(project.DatabaseType).ConnectionString = BuildSuperAdminConnectionString(
-            project
+            project: project
         );
 
         // MSSQL: User will be created only if project.DatabaseIntegratedAuthentication == true
@@ -51,19 +51,22 @@ public class ApplyDatabasePermissionsBuilderTask
     {
         return DataService(project.DatabaseType)
             .BuildConnectionString(
-                project.DatabaseHost,
-                project.DatabasePort,
-                project.DatabaseName,
-                project.DatabaseUserName,
-                project.DatabasePassword,
-                project.DatabaseIntegratedAuthentication,
-                false
+                serverName: project.DatabaseHost,
+                port: project.DatabasePort,
+                databaseName: project.DatabaseName,
+                userName: project.DatabaseUserName,
+                password: project.DatabasePassword,
+                integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                pooling: false
             );
     }
 
     public override void Rollback(Project project)
     {
-        DataService(project.DatabaseType)
-            .DeleteUser(project.DatabaseInternalUserName, project.DatabaseIntegratedAuthentication);
+        DataService(databaseType: project.DatabaseType)
+            .DeleteUser(
+                user: project.DatabaseInternalUserName,
+                _integratedAuthentication: project.DatabaseIntegratedAuthentication
+            );
     }
 }

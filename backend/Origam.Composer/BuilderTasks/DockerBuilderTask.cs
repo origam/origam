@@ -37,16 +37,16 @@ public class DockerBuilderTask : IDockerBuilderTask
         Directory.CreateDirectory(project.DockerFolder);
 
         DockerConfig dockerConfigLinux = GetDockerConfigLinux(project);
-        CreateEnvFile(project, dockerConfigLinux);
-        CreateCmdFile(project, dockerConfigLinux);
-        CreateCmdFileArchitect(project, dockerConfigLinux);
+        CreateEnvFile(project: project, config: dockerConfigLinux);
+        CreateCmdFile(project: project, config: dockerConfigLinux);
+        CreateCmdFileArchitect(project: project, config: dockerConfigLinux);
 
         if (!project.CommandsOnlyLinux)
         {
             DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
-            CreateEnvFile(project, dockerConfigWin);
-            CreateCmdFile(project, dockerConfigWin);
-            CreateCmdFileArchitect(project, dockerConfigWin);
+            CreateEnvFile(project: project, config: dockerConfigWin);
+            CreateCmdFile(project: project, config: dockerConfigWin);
+            CreateCmdFileArchitect(project: project, config: dockerConfigWin);
         }
     }
 

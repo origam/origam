@@ -45,7 +45,10 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
         SchemaService = ServiceManager.Services.GetService<SchemaService>();
         SchemaService.SchemaLoaded += EventHandler_SchemaLoaded!;
 
-        SchemaService.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
+        SchemaService.LoadSchema(
+            schemaExtensionId: new Guid(project.BasePackageId),
+            isInteractive: true
+        );
     }
 
     public override void Rollback(Project project)
@@ -75,13 +78,13 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
         {
             return DataService(project.DatabaseType)
                 .BuildConnectionString(
-                    project.DatabaseHost,
-                    project.DatabasePort,
-                    project.DatabaseName,
-                    project.DatabaseUserName,
-                    project.DatabasePassword,
-                    project.DatabaseIntegratedAuthentication,
-                    false
+                    serverName: project.DatabaseHost,
+                    port: project.DatabasePort,
+                    databaseName: project.DatabaseName,
+                    userName: project.DatabaseUserName,
+                    password: project.DatabasePassword,
+                    integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                    pooling: false
                 );
         }
 
@@ -89,13 +92,13 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
         {
             return DataService(project.DatabaseType)
                 .BuildConnectionString(
-                    project.DatabaseHost,
-                    project.DatabasePort,
-                    project.DatabaseName,
-                    project.DatabaseInternalUserName,
-                    project.DatabaseInternalUserPassword,
-                    project.DatabaseIntegratedAuthentication,
-                    false
+                    serverName: project.DatabaseHost,
+                    port: project.DatabasePort,
+                    databaseName: project.DatabaseName,
+                    userName: project.DatabaseInternalUserName,
+                    password: project.DatabaseInternalUserPassword,
+                    integratedAuthentication: project.DatabaseIntegratedAuthentication,
+                    pooling: false
                 );
         }
 

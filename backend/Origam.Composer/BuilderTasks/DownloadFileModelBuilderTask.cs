@@ -39,10 +39,10 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     {
         RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
 
-        CreateSourceFolder(project.ProjectFolder);
-        DownloadModelFromRepository(project.OrigamRepositoryUrl);
-        UnzipDefaultModelAndCopy(project.ProjectFolder);
-        CreateCustomAssetsFolder(project.ProjectFolder);
+        CreateSourceFolder(projectFolder: project.ProjectFolder);
+        DownloadModelFromRepository(origamRepositoryUrl: project.OrigamRepositoryUrl);
+        UnzipDefaultModelAndCopy(projectFolder: project.ProjectFolder);
+        CreateCustomAssetsFolder(projectFolder: project.ProjectFolder);
     }
 
     private void CreateSourceFolder(string projectFolder)
@@ -146,7 +146,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     {
         if (Directory.Exists(project.ProjectFolder))
         {
-            fileSystemService.DeleteDirectory(project.ProjectFolder);
+            fileSystemService.DeleteDirectory(directoryPath: project.ProjectFolder);
         }
     }
 }

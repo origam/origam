@@ -34,8 +34,8 @@ public class CreateGitRepositoryBuilderTask(IGitService gitService)
 
     public void Execute(Project project)
     {
-        gitService.CreateRepository(project.ProjectFolder);
-        gitService.InitCommit(project.GitUsername, project.GitEmail);
+        gitService.CreateRepository(path: project.ProjectFolder);
+        gitService.InitCommit(username: project.GitUsername, userEmail: project.GitEmail);
     }
 
     public void Rollback(Project project) { }
