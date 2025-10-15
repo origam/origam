@@ -45,7 +45,7 @@ public class ProjectBuilderService(
     {
         SecurityManager.SetServerIdentity();
 
-        IBuilderTask? activeTask = null;
+        IBuilderTask activeTask = null;
         try
         {
             foreach (IBuilderTask builder in Tasks)

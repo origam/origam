@@ -55,7 +55,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
     public override void Rollback(Project project) { }
 
-    private string? BuildConnectionStringArchitect(Project project)
+    private string BuildConnectionStringArchitect(Project project)
     {
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
         {

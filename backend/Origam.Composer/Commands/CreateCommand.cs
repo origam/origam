@@ -167,7 +167,7 @@ public class CreateCommand(
     {
         var gitUser = "";
         var gitEmail = "";
-        string[]? gitCredentials = gitService.FetchGitUserFromGlobalConfig();
+        string[] gitCredentials = gitService.FetchGitUserFromGlobalConfig();
         if (gitCredentials != null)
         {
             gitUser = gitCredentials[0];

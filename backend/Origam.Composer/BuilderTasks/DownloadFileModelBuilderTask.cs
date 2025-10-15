@@ -33,7 +33,7 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
     public string Name => "Download ORIGAM model-root from repository";
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    private string? RepositoryZipPath;
+    private string RepositoryZipPath;
 
     public void Execute(Project project)
     {

@@ -32,7 +32,7 @@ public abstract class AbstractDatabaseBuilderTask : IBuilderTask
     public abstract string Name { get; }
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    private AbstractSqlDataService? DataServicePointer;
+    private AbstractSqlDataService DataServicePointer;
 
     public abstract void Execute(Project project);
 

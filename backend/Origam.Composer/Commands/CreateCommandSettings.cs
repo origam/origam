@@ -104,10 +104,10 @@ public class CreateCommandSettings : CommandSettings
     public bool GitEnabled { get; set; }
 
     [CommandOption("--git-user <USER>")]
-    public string? GitUser { get; set; }
+    public string GitUser { get; set; }
 
     [CommandOption("--git-email <EMAIL>")]
-    public string? GitEmail { get; set; }
+    public string GitEmail { get; set; }
 
     #endregion
 }

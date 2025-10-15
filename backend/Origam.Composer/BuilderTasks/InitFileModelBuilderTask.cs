@@ -29,7 +29,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
 {
     public override string Name => "Initialize model (from files)";
 
-    private SchemaService? SchemaService;
+    private SchemaService SchemaService;
 
     public override void Execute(Project project)
     {
@@ -69,7 +69,7 @@ public class InitFileModelBuilderTask : AbstractDatabaseBuilderTask, IInitFileMo
         parameterService.RefreshParameters();
     }
 
-    private string? BuildConnectionStringArchitect(Project project)
+    private string BuildConnectionStringArchitect(Project project)
     {
         if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
         {

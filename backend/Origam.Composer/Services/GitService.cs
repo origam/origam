@@ -28,7 +28,7 @@ namespace Origam.Composer.Services;
 
 public class GitService : IGitService
 {
-    private Repository? Repo;
+    private Repository Repo;
     private readonly List<string> IgnoreRules = ["/index.bin", "scripts/"];
     private readonly string GitConfigPath;
 
@@ -63,7 +63,7 @@ public class GitService : IGitService
         AnsiConsole.MarkupLine(string.Format(Strings.Repository_created, path));
     }
 
-    public void InitCommit(string? username, string? userEmail)
+    public void InitCommit(string username, string userEmail)
     {
         if (Repo == null)
         {
@@ -92,7 +92,7 @@ public class GitService : IGitService
         AnsiConsole.MarkupLine(string.Format(Strings.Git_config_set, username, userEmail));
     }
 
-    public string[]? FetchGitUserFromGlobalConfig()
+    public string[] FetchGitUserFromGlobalConfig()
     {
         if (!File.Exists(GitConfigPath))
         {
@@ -119,7 +119,7 @@ public class GitService : IGitService
         return null;
     }
 
-    private string FixSlash(string? file)
+    private string FixSlash(string file)
     {
         return file == null ? "" : file.Replace("\\", "/");
     }
