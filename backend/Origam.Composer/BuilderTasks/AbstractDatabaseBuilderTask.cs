@@ -38,11 +38,11 @@ public abstract class AbstractDatabaseBuilderTask : IBuilderTask
 
     public abstract void Rollback(Project project);
 
-    internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
+    internal AbstractSqlDataService DataService(DatabaseType databaseType)
     {
         if (DataServicePointer == null)
         {
-            DataServicePointer = CreateService(DatabaseType);
+            DataServicePointer = CreateService(databaseType);
         }
         return DataServicePointer;
     }
