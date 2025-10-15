@@ -61,9 +61,7 @@ public class Project
     public required string ProjectFolder { get; init; }
     public required string ModelFolder { get; init; }
 
-    /// <summary>
-    /// ./model-root/root menu/.origamPackage
-    /// </summary>
+    // ./model-root/root menu/.origamPackage
     public string BasePackageId { get; set; } = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
     public required string NewPackageId { get; init; }
 

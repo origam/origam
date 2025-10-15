@@ -25,8 +25,6 @@ public static class Constants
 {
     public const int DefaultHttpsPort = 443;
 
-    /// <summary>
-    /// Super User (Built-in)
-    /// </summary>
+    // Super User (Built-in)
     public const string OrigamRoleSuperUserId = "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2";
 }
