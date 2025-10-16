@@ -31,9 +31,9 @@ public class CreateCommandSettings : CommandSettings
     [CommandOption("--commands-only-linux")]
     public bool CommandsOnlyLinux { get; set; }
 
-    [CommandOption("--commands-platform <PLATFORM>", true)]
-    [AllowedValues("windows", "linux")]
-    public required string CommandsForPlatform { get; set; }
+    [CommandOption("--commands-output-format <FORMAT>", true)]
+    [AllowedValues("cmd", "sh")]
+    public required string CommandsOutputFormat { get; set; }
 
     #endregion
 

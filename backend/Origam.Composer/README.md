@@ -26,7 +26,7 @@ dotnet publish ./Origam.Composer/Origam.Composer.csproj -c "Release Server" -r o
 
 ## Usage
 
-Parameter `--commands-platform` specifies the platform for which the commands are generated. It can be either `linux` (bash scripts) or `windows` (cmd scripts).
+Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux + MacOS) or `cmd` (PowerShell scripts for Windows).
 
 Both docker containers for Linux and Windows will always be generated, but you can disable Windows version by parameter `--commands-only-linux`.
 
@@ -40,7 +40,7 @@ Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
 --commands-only-linux
---commands-platform linux
+--commands-output-format sh
 
 --db-type mssql
 --db-host localhost
@@ -70,7 +70,7 @@ Example for `PostgreSQL`:
 ```
 Origam.Composer.exe create
 --commands-only-linux
---commands-platform linux
+--commands-output-format sh
 
 --db-type postgres
 --db-host localhost

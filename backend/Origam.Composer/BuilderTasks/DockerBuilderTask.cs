@@ -86,9 +86,9 @@ public class DockerBuilderTask : IDockerBuilderTask
 
     private void CreateCmdFile(Project project, DockerConfig config)
     {
-        var endChar = project.CommandsForPlatform == Enums.Platform.Windows ? '^' : '\\';
+        var endChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? '^' : '\\';
         var sb = new StringBuilder();
-        if (project.CommandsForPlatform == Enums.Platform.Linux)
+        if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
             sb.AppendLine("#!/bin/bash");
             sb.AppendLine();
@@ -112,9 +112,9 @@ public class DockerBuilderTask : IDockerBuilderTask
 
     private void CreateCmdFileArchitect(Project project, DockerConfig config)
     {
-        var endChar = project.CommandsForPlatform == Enums.Platform.Windows ? '^' : '\\';
+        var endChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? '^' : '\\';
         var sb = new StringBuilder();
-        if (project.CommandsForPlatform == Enums.Platform.Linux)
+        if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
             sb.AppendLine("#!/bin/bash");
             sb.AppendLine();
@@ -146,7 +146,8 @@ public class DockerBuilderTask : IDockerBuilderTask
             ArchitectCmdFilePath = project.DockerArchitectPathLinux,
             ClientBaseImage = project.ClientDockerImageLinux,
             ArchitectBaseImage = project.ArchitectDockerImageLinux,
-            CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
+            CmdFileExtension =
+                project.CommandsOutputFormat == CommandOutputFormat.Cmd ? "cmd" : "sh",
         };
         return dockerConfig;
     }
@@ -162,7 +163,8 @@ public class DockerBuilderTask : IDockerBuilderTask
             ArchitectCmdFilePath = project.DockerArchitectPathWindows,
             ClientBaseImage = project.ClientDockerImageWin,
             ArchitectBaseImage = project.ArchitectDockerImageWin,
-            CmdFileExtension = project.CommandsForPlatform == Enums.Platform.Windows ? "cmd" : "sh",
+            CmdFileExtension =
+                project.CommandsOutputFormat == CommandOutputFormat.Cmd ? "cmd" : "sh",
         };
         return dockerConfig;
     }

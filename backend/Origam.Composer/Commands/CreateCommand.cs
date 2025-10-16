@@ -43,12 +43,12 @@ public class CreateCommand(
         {
             #region General
             CommandsOnlyLinux = settings.CommandsOnlyLinux,
-            CommandsForPlatform = settings.CommandsForPlatform.Equals(
-                "windows",
+            CommandsOutputFormat = settings.CommandsOutputFormat.Equals(
+                "cmd",
                 StringComparison.CurrentCultureIgnoreCase
             )
-                ? Enums.Platform.Windows
-                : Enums.Platform.Linux,
+                ? Enums.CommandOutputFormat.Cmd
+                : Enums.CommandOutputFormat.Sh,
             #endregion
 
             #region DB

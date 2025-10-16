@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Composer.Enums;
 
-public enum Platform
+public enum CommandOutputFormat
 {
-    Windows,
-    Linux,
+    Cmd,
+    Sh,
 }

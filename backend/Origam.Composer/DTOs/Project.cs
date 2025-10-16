@@ -27,7 +27,7 @@ public class Project
 {
     #region General
     public bool CommandsOnlyLinux { get; set; }
-    public Enums.Platform CommandsForPlatform { get; set; }
+    public Enums.CommandOutputFormat CommandsOutputFormat { get; set; }
     public string OrigamRepositoryUrl => "https://github.com/origam/origam/archive/master.zip";
     #endregion
 
