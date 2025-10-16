@@ -28,8 +28,8 @@ public class CreateCommandSettings : CommandSettings
 {
     #region General
 
-    [CommandOption("--commands-only-linux")]
-    public bool CommandsOnlyLinux { get; set; }
+    [CommandOption("--commands-add-windows-containers")]
+    public bool CommandsAddWindowsContainers { get; set; }
 
     [CommandOption("--commands-output-format <FORMAT>", true)]
     [AllowedValues("cmd", "sh")]

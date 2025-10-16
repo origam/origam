@@ -28,7 +28,7 @@ dotnet publish ./Origam.Composer/Origam.Composer.csproj -c "Release Server" -r o
 
 Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux + MacOS) or `cmd` (PowerShell scripts for Windows).
 
-Both docker containers for Linux and Windows will always be generated, but you can disable Windows version by parameter `--commands-only-linux`.
+If add parameter `--commands-add-windows-containers`, the generated scripts will contain commands for both Linux and Windows docker containers.
 
 All docker images are available on ORIGAM Github: https://github.com/origam/origam/releases
 
@@ -39,7 +39,6 @@ On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamPr
 Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
---commands-only-linux
 --commands-output-format sh
 
 --db-type mssql
@@ -69,7 +68,6 @@ Origam.Composer.exe create
 Example for `PostgreSQL`:
 ```
 Origam.Composer.exe create
---commands-only-linux
 --commands-output-format sh
 
 --db-type postgres

@@ -41,7 +41,7 @@ public class DockerBuilderTask : IDockerBuilderTask
         CreateCmdFile(project: project, config: dockerConfigLinux);
         CreateCmdFileArchitect(project: project, config: dockerConfigLinux);
 
-        if (!project.CommandsOnlyLinux)
+        if (project.CommandsAddWindowsContainers)
         {
             DockerConfig dockerConfigWin = GetDockerConfigWindows(project);
             CreateEnvFile(project: project, config: dockerConfigWin);

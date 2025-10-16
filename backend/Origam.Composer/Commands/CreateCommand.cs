@@ -42,7 +42,7 @@ public class CreateCommand(
         var project = new Project
         {
             #region General
-            CommandsOnlyLinux = settings.CommandsOnlyLinux,
+            CommandsAddWindowsContainers = settings.CommandsAddWindowsContainers,
             CommandsOutputFormat = settings.CommandsOutputFormat.Equals(
                 "cmd",
                 StringComparison.CurrentCultureIgnoreCase
