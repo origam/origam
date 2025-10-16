@@ -87,6 +87,8 @@ public class DockerBuilderTask : IDockerBuilderTask
     private void CreateCmdFile(Project project, DockerConfig config)
     {
         var endChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? '^' : '\\';
+        var commentChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? "REM" : "#";
+
         var sb = new StringBuilder();
         if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
@@ -102,10 +104,10 @@ public class DockerBuilderTask : IDockerBuilderTask
         sb.AppendLine($"  -p {project.DockerPort}:443 {endChar}");
         sb.AppendLine($"  {config.ClientBaseImage}");
         sb.AppendLine();
-        sb.AppendLine("REM Open Client web application: https://localhost");
+        sb.AppendLine($"{commentChar} Open Client web application: https://localhost");
         sb.AppendLine();
-        sb.AppendLine("REM Official releases:");
-        sb.Append("REM https://github.com/origam/origam/releases");
+        sb.AppendLine($"{commentChar} Official releases:");
+        sb.Append($"{commentChar} https://github.com/origam/origam/releases");
 
         File.WriteAllText(config.ClientCmdFilePath + config.CmdFileExtension, sb.ToString());
     }
@@ -113,6 +115,8 @@ public class DockerBuilderTask : IDockerBuilderTask
     private void CreateCmdFileArchitect(Project project, DockerConfig config)
     {
         var endChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? '^' : '\\';
+        var commentChar = project.CommandsOutputFormat == CommandOutputFormat.Cmd ? "REM" : "#";
+
         var sb = new StringBuilder();
         if (project.CommandsOutputFormat == CommandOutputFormat.Sh)
         {
@@ -126,11 +130,11 @@ public class DockerBuilderTask : IDockerBuilderTask
         sb.AppendLine($"  {config.ArchitectBaseImage}");
         sb.AppendLine();
         sb.AppendLine(
-            $"REM Open Architect web application: https://localhost:{project.ArchitectPort}"
+            $"{commentChar} Open Architect web application: https://localhost:{project.ArchitectPort}"
         );
         sb.AppendLine();
-        sb.AppendLine("REM Official releases:");
-        sb.Append("REM https://github.com/origam/origam/releases");
+        sb.AppendLine($"{commentChar} Official releases:");
+        sb.Append($"{commentChar} https://github.com/origam/origam/releases");
 
         File.WriteAllText(config.ArchitectCmdFilePath + config.CmdFileExtension, sb.ToString());
     }
