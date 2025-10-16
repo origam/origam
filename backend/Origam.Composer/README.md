@@ -26,7 +26,7 @@ dotnet publish ./Origam.Composer/Origam.Composer.csproj -c "Release Server" -r o
 
 ## Usage
 
-Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux + MacOS) or `cmd` (PowerShell scripts for Windows).
+Parameter `--commands-output-format` can be either `sh` (bash scripts for Linux + MacOS) or `cmd` (scripts for Windows).
 
 If add parameter `--commands-add-windows-containers`, the generated scripts will contain commands for both Linux and Windows docker containers.
 
