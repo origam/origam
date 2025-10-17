@@ -1139,15 +1139,15 @@ public abstract class AbstractSchemaItem
             string groupPath = "";
             if (group != null)
             {
-                groupPath = group.Path.Replace("/", "\\") + "\\";
+                groupPath = group.Path;
             }
-            return Package.Name
-                + "\\"
-                + RootItem.ItemType
-                + "\\"
-                + groupPath
-                + RemoveIllegalCharactersFromPath(RootItem.Name)
-                + PersistenceFiles.Extension;
+            return System.IO.Path.Combine(
+                Package.Name,
+                RootItem.ItemType,
+                groupPath,
+                RemoveIllegalCharactersFromPath(RootItem.Name),
+                PersistenceFiles.Extension
+            );
         }
     }
 

@@ -1,0 +1,62 @@
+﻿#region license
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using Origam.Composer.DTOs;
+using Origam.Composer.Enums;
+using Origam.Composer.Interfaces.BuilderTasks;
+using Origam.DA.Service;
+using static Origam.DA.Common.Enums;
+
+namespace Origam.Composer.BuilderTasks;
+
+public abstract class AbstractDatabaseBuilderTask : IBuilderTask
+{
+    public abstract string Name { get; }
+    public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
+
+    private AbstractSqlDataService DataServicePointer;
+
+    public abstract void Execute(Project project);
+
+    public abstract void Rollback(Project project);
+
+    internal AbstractSqlDataService DataService(DatabaseType databaseType)
+    {
+        if (DataServicePointer == null)
+        {
+            DataServicePointer = CreateService(databaseType);
+        }
+        return DataServicePointer;
+    }
+
+    private AbstractSqlDataService CreateService(DatabaseType DatabaseType)
+    {
+        if (DatabaseType == DatabaseType.MsSql)
+        {
+            return new MsSqlDataService();
+        }
+        if (DatabaseType == DatabaseType.PgSql)
+        {
+            return new PgSqlDataService();
+        }
+        throw new ArgumentOutOfRangeException(nameof(DatabaseType), DatabaseType.ToString());
+    }
+}
