@@ -12,8 +12,8 @@ variables:
   value: 25.10.0.$(Build.BuildId)
 - name: TAG # tag to be used
   value: 2025.10.0
-- name: 2025.10.0 # tag to be used
-  value: master-latest
+- name: TAG_LATEST # tag to be used
+  value: 2025.10.0
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2025.9.0
 - name: IS_PRERELASE
