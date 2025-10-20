@@ -72,7 +72,7 @@ RUN mv /home/origam/HTML5/log4net.server.config /home/origam/HTML5/log4net.confi
 COPY --chown=origam:origam server/linux/cleanUpEnvironment.sh \
 server/linux/cleanUpEnvironmentRoot.sh \
 /home/origam/Setup/
-WORKDIR /home/origam/Scheduler \
+WORKDIR /home/origam/Scheduler
 RUN chmod +x configureScheduler.sh \
 && chmod +x fill_origam_settings_config.sh
 WORKDIR /home/origam/Setup/
