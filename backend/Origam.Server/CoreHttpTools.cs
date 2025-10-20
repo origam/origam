@@ -61,6 +61,6 @@ public class CoreHttpTools : IHttpTools
     {
         fileName = fileName.Replace(",", "");
         var encodedFileName = Uri.EscapeDataString(fileName);
-        return $"filename=\"{fileName}\"; filename*=UTF-8''{encodedFileName}";
+        return $"filename=\"{encodedFileName}\"";
     }
 }
