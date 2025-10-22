@@ -48,7 +48,7 @@ public class CheckRuleEngineTask : AbstractWorkflowEngineTask
         {
             if (ruleException.IsSeverityHigh)
             {
-                throw ruleException;
+                throw;
             }
         }
     }
