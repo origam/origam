@@ -22,14 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using System.Diagnostics;
-using System.Windows.Input;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.XPath;
-using Origam.Rule;
 using Origam.Rule.Xslt;
-using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;

@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MoreLinq;
 using NUnit.Framework;
 using Origam.Extensions;
 using Origam.Schema;

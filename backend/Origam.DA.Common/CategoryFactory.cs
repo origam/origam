@@ -20,15 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
-using Origam.DA.Common;
-using Origam.Extensions;
-using Origam.OrigamEngine;
-using ProtoBuf;
 
 namespace Origam.DA;
 

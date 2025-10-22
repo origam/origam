@@ -25,7 +25,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 *******************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;

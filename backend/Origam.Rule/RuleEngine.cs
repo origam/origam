@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Drawing;
 using System.Linq;
 using System.Xml;
@@ -40,10 +39,11 @@ using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.UI.Common;
+#pragma warning disable IDE0005
 using Origam.Workbench;
+#pragma warning restore IDE0005
 using Origam.Workbench.Services;
 using StackExchange.Profiling;
-using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule;
 

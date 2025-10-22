@@ -27,9 +27,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Xml;
 using log4net;
-using Origam.Config;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;

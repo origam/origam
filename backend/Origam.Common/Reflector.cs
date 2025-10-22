@@ -26,7 +26,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+#pragma warning disable IDE0005
 using Origam.Extensions;
+#pragma warning restore IDE0005
 
 namespace Origam;
 

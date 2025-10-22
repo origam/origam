@@ -23,15 +23,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
-using MoreLinq;
 using Origam.DA.Common;
 using Origam.DA.Service.NamespaceMapping;
-using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {

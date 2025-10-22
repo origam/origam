@@ -19,9 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+#pragma warning disable IDE0005
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
+#pragma warning restore IDE0005
 
 namespace Origam.Mail;
 

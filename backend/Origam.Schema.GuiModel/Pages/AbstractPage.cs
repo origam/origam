@@ -27,7 +27,6 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
-using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel;
 

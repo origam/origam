@@ -21,12 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-using System.Xml;
 using Origam.DA;
 using Origam.Gui.Win;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 

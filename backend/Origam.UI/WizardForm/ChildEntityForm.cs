@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
+
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 

@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using CSharpFunctionalExtensions;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;

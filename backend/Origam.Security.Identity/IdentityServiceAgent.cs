@@ -24,7 +24,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using log4net;
 using Microsoft.Extensions.DependencyInjection;
-using Origam.Rule;
 using Origam.Security.Common;
 using Origam.Service.Core;
 using Origam.Workflow;

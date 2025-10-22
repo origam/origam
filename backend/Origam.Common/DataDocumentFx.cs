@@ -19,9 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+#pragma warning disable IDE0005
 using System.Data;
 using System.Xml;
 using Origam.Service.Core;
+#pragma warning restore IDE0005
 
 namespace Origam;
 

@@ -19,9 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Origam.UI;

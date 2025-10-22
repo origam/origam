@@ -29,7 +29,6 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Mvp.Xml.Exslt;
 using Origam.Rule.XsltFunctions;
-using Origam.Workbench.Services;
 
 namespace Origam.Rule.Xslt;
 

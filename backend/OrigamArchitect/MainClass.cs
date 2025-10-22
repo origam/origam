@@ -20,8 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+#pragma warning disable IDE0005
 using System.Globalization;
 using System.Threading;
+#pragma warning restore IDE0005
 using System.Windows.Forms;
 using Origam.UI;
 using Origam.Workbench;

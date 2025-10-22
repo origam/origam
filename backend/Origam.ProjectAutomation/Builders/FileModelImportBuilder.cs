@@ -23,9 +23,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using Origam.Git;
-using Origam.ProjectAutomation.Builders;
 
 namespace Origam.ProjectAutomation;
 

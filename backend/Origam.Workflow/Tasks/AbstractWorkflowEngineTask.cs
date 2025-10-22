@@ -20,9 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Security.Policy;
-using log4net;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 

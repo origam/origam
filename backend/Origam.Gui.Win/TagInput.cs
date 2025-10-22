@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using Origam.Schema;
 using Origam.Schema.EntityModel;

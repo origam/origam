@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using MailKit.Net.Pop3;
 using Origam.Mail;
 using Origam.Workbench.Services;

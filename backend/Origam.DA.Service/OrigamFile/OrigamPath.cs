@@ -21,11 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.Service;
 using Origam.Extensions;
-using ProtoBuf;
 
 namespace Origam.DA.Service;
 

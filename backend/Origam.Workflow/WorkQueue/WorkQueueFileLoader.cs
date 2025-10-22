@@ -25,7 +25,6 @@ using System.Data;
 using System.IO;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
-using Origam.Config;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;

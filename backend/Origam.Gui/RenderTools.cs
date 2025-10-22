@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
-using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 

@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Xml.Serialization;
-using Origam.OrigamEngine;
 
 namespace Origam.DA.ObjectPersistence;
 

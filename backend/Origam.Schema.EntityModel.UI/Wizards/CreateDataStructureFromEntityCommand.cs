@@ -25,12 +25,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Origam.Services;
 using Origam.UI;
-using Origam.UI.Interfaces;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
-using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.UI.Wizards;
 

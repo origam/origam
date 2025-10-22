@@ -25,11 +25,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 using Origam.DA;
 using Origam.Gui.UI;
 using Origam.Rule;
-using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 using Origam.Service.Core;
 

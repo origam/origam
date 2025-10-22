@@ -20,15 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Origam.Git;
-using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.UI;
-using Origam.Workbench.Editors;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Commands;

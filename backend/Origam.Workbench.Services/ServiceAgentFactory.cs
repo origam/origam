@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
-using Origam.Services;
-using Origam.Workflow;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace Origam.Workbench.Services;

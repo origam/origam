@@ -21,12 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
-using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests;

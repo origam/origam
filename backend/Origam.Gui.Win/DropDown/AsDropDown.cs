@@ -27,14 +27,12 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.DA;
-using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
 using Origam.UI;
 using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win
 {

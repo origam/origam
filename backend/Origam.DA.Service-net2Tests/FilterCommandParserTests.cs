@@ -27,7 +27,6 @@ using NUnit.Framework;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 
 namespace Origam.DA.ServiceTests;
 

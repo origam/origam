@@ -44,7 +44,6 @@ using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
 using Origam.Schema.ItemCollection;
 using Origam.Schema.MenuModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.UI;
