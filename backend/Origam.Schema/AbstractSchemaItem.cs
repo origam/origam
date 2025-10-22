@@ -141,7 +141,14 @@ public abstract class AbstractSchemaItem
     [Browsable(false)]
     public string Path
     {
-        get { return GetPath(this); }
+        get
+        {
+            if (ParentItem == null)
+            {
+                return Name;
+            }
+            return System.IO.Path.Combine(ParentItem.Path, Name);
+        }
     }
 
     [Browsable(false)]
@@ -1187,18 +1194,6 @@ public abstract class AbstractSchemaItem
             items.AddRange(GetChildItemsRecursive(childItem));
         }
         return items;
-    }
-
-    private string GetPath(ISchemaItem item)
-    {
-        if (ParentItem == null)
-        {
-            return Name;
-        }
-        else
-        {
-            return System.IO.Path.Combine(ParentItem.Path, Name);
-        }
     }
 
     private ISchemaItemCollection GetChildItems(ISchemaItem parentItem)
