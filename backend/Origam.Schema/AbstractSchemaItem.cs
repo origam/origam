@@ -1135,19 +1135,15 @@ public abstract class AbstractSchemaItem
     {
         get
         {
-            SchemaItemGroup group = this.RootItem.Group;
+            SchemaItemGroup group = RootItem.Group;
+            string fileName =
+                RemoveIllegalCharactersFromPath(RootItem.Name) + PersistenceFiles.Extension;
             string groupPath = "";
             if (group != null)
             {
                 groupPath = group.Path;
             }
-            return System.IO.Path.Combine(
-                Package.Name,
-                RootItem.ItemType,
-                groupPath,
-                RemoveIllegalCharactersFromPath(RootItem.Name),
-                PersistenceFiles.Extension
-            );
+            return System.IO.Path.Combine(Package.Name, RootItem.ItemType, groupPath, fileName);
         }
     }
 
@@ -1195,13 +1191,13 @@ public abstract class AbstractSchemaItem
 
     private string GetPath(ISchemaItem item)
     {
-        if (this.ParentItem == null)
+        if (ParentItem == null)
         {
-            return this.Name;
+            return Name;
         }
         else
         {
-            return this.ParentItem.Path + "/" + this.Name;
+            return System.IO.Path.Combine(ParentItem.Path, Name);
         }
     }
 

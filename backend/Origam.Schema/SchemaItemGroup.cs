@@ -116,7 +116,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
         {
             return Name;
         }
-        return ParentGroup.Path + "/" + Name;
+        return System.IO.Path.Combine(ParentGroup.Path, Name);
     }
 
     [Browsable(false)]
