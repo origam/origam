@@ -111,7 +111,10 @@ public class Submenu : AbstractMenuItem
             foreach (string feature in features)
             {
                 if (stringBuilder.Length > 0)
+                {
                     stringBuilder.Append(";");
+                }
+
                 stringBuilder.Append(feature);
             }
             return stringBuilder.ToString();

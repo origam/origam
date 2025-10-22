@@ -84,7 +84,9 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
         finally
         {
             if (dialog != null)
+            {
                 dialog.Dispose();
+            }
         }
     }
 

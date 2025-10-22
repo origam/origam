@@ -74,7 +74,9 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     private void CreateMappingItemsCollection()
     {
         if (this.Workflow == null)
+        {
             return;
+        }
         // create any missing parameter mappings
         foreach (var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
         {
@@ -102,7 +104,9 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             )
             {
                 if (store.Name == mapping.Name)
+                {
                     found = true;
+                }
             }
             if (!found)
             {
@@ -122,7 +126,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         try
         {
             if (_origamMetadata == null)
+            {
                 return;
+            }
+
             var col = _origamMetadata
                 .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
                 .ToList();
@@ -143,7 +150,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     private void FillParameterCache(ControlSetItem controlItem)
     {
         if (controlItem == null)
+        {
             return;
+        }
+
         _fillingParameterCache = true;
         ParameterMappings.Clear();
         foreach (
@@ -224,7 +234,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         get
         {
             if (this._origamMetadata == null)
+            {
                 return null;
+            }
+
             return (IWorkflow)
                 this._origamMetadata.PersistenceProvider.RetrieveInstance(
                     typeof(ISchemaItem),
@@ -315,11 +328,20 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     {
         WorkflowHost host = WorkflowHost.DefaultHost;
         if (this.BindingContext == null)
+        {
             return;
+        }
+
         if (this.BindingContext[this.DataSource, this.DataMember] == null)
+        {
             return;
+        }
+
         if (this.BindingContext[this.DataSource, this.DataMember].Position < 0)
+        {
             return;
+        }
+
         if ((this.DataSource as DataSet).HasErrors)
         {
             Origam.UI.AsMessageBox.ShowError(

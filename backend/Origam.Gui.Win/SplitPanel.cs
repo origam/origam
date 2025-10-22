@@ -77,7 +77,9 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
     protected override void OnControlAdded(ControlEventArgs e)
     {
         if (_addingSplitter)
+        {
             return;
+        }
         //			if(this.Controls.Count > 2)
         //			{
         //				this.Controls.Remove(e.Control);
@@ -110,7 +112,10 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
     private void _splitter_SplitterMoved(object sender, SplitterEventArgs e)
     {
         if (this.DesignMode | _settingSplitter | _saveSplitterPosition == false)
+        {
             return;
+        }
+
         try
         {
             UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -178,11 +183,16 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
         switch (this.Orientation)
         {
             case SplitPanelOrientation.Horizontal:
+            {
                 _splitter.Dock = DockStyle.Top;
                 break;
+            }
+
             case SplitPanelOrientation.Vertical:
+            {
                 _splitter.Dock = DockStyle.Left;
                 break;
+            }
         }
         if (FixedSize)
         {
@@ -203,7 +213,10 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
     private void RefreshDocking()
     {
         if (DesignMode)
+        {
             this.DockPadding.All = 10;
+        }
+
         Control control1 = null;
         Control control2 = null;
         foreach (Control control in this.Controls)
@@ -214,11 +227,16 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
                 switch (control.TabIndex)
                 {
                     case 0:
+                    {
                         control1 = control;
                         break;
+                    }
+
                     case 1:
+                    {
                         control2 = control;
                         break;
+                    }
                 }
             }
         }
@@ -234,13 +252,17 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
             switch (this.Orientation)
             {
                 case SplitPanelOrientation.Horizontal:
+                {
                     control1.Dock = DockStyle.Top;
                     control2.Dock = DockStyle.Fill;
                     control1.BringToFront();
                     _splitter.BringToFront();
                     control2.BringToFront();
                     break;
+                }
+
                 case SplitPanelOrientation.Vertical:
+                {
                     control1.Dock = DockStyle.Left;
                     control2.Dock = DockStyle.Fill;
 
@@ -248,6 +270,7 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
                     _splitter.BringToFront();
                     control2.BringToFront();
                     break;
+                }
             }
             _splitter.ControlToHide = control1;
         }
@@ -256,7 +279,10 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
     private void LoadUserConfig()
     {
         if (DesignMode | _splitterSizeChangedByUser | _saveSplitterPosition == false)
+        {
             return;
+        }
+
         _settingSplitter = true;
         try
         {
@@ -290,10 +316,8 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
             var height = storedValue * Screen.FromControl(this).Bounds.Height / 1000_000;
             return Convert.ToInt32(height);
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
     #endregion
     #region Component Designer generated code

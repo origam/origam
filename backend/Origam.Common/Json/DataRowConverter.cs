@@ -49,7 +49,10 @@ class DataRowConverter : JsonConverter
                 serializer.NullValueHandling == NullValueHandling.Ignore
                 && (row[column] == null || row[column] == DBNull.Value)
             )
+            {
                 continue;
+            }
+
             writer.WritePropertyName(
                 (resolver != null)
                     ? resolver.GetResolvedPropertyName(column.ColumnName)

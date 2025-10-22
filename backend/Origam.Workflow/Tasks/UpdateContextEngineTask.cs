@@ -93,7 +93,9 @@ public class UpdateContextEngineTask : AbstractWorkflowEngineTask
                     ref valueToContext
                 );
                 if (valueToContext == null)
+                {
                     valueToContext = DBNull.Value;
+                }
                 // update fields in dataset table's rows
                 foreach (DataRow row in table.Rows)
                 {

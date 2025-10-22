@@ -61,7 +61,8 @@ public class ModelUIEditor : UITypeEditor
             {
                 return null;
             }
-            else if (selectionControl.SelectedValue is ISchemaItem)
+
+            if (selectionControl.SelectedValue is ISchemaItem)
             {
                 value = selectionControl.SelectedValue;
             }

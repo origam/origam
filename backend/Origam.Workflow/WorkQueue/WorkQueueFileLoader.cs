@@ -123,7 +123,10 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 throw new InvalidOperationException("Stream exceeds allowed size.");
             }
             if (toRead > remaining)
+            {
                 toRead = (int)remaining;
+            }
+
             int read = _inner.Read(buffer, offset, toRead);
             _readTotal += read;
             return read;
@@ -193,36 +196,62 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                         switch (pair[0])
                         {
                             case "path":
+                            {
                                 path = pair[1];
                                 break;
+                            }
+
                             case "searchPattern":
+                            {
                                 searchPattern = pair[1];
                                 break;
+                            }
+
                             case "mode":
+                            {
                                 _mode = (FileType)Enum.Parse(typeof(FileType), pair[1]);
                                 break;
+                            }
+
                             case "encoding":
+                            {
                                 _encoding = pair[1];
                                 break;
+                            }
+
                             case "compression":
+                            {
                                 _compression = (CompressionType)
                                     Enum.Parse(typeof(CompressionType), pair[1]);
                                 break;
+                            }
+
                             case "readType":
+                            {
                                 _readType = (ReadType)Enum.Parse(typeof(ReadType), pair[1]);
                                 break;
+                            }
+
                             case "splitFileByRows":
+                            {
                                 _splitFileByRows = Convert.ToInt32(pair[1]);
                                 break;
+                            }
+
                             case "keepHeader":
+                            {
                                 _splitFileAndKeepHeader = Convert.ToBoolean(pair[1]);
                                 break;
+                            }
+
                             default:
+                            {
                                 throw new ArgumentOutOfRangeException(
                                     "connectionParameterName",
                                     pair[0],
                                     Strings.ErrorInvalidConnectionString
                                 );
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -307,21 +336,33 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         switch (_readType)
         {
             case ReadType.SingleFiles:
+            {
                 result = RetrieveNextFile(dataTable, false);
                 break;
+            }
+
             case ReadType.AggregateCompressedFiles:
+            {
                 return RetrieveAggregate(dataTable, true);
+            }
             case ReadType.AggregateAllFiles:
+            {
                 return RetrieveAggregate(dataTable, false);
+            }
             case ReadType.SplitByRows:
+            {
                 result = RetrieveNextSegment(dataTable);
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "readType",
                     _readType,
                     Strings.UnknownReadType
                 );
+            }
         }
         return result
             ? new WorkQueueAdapterResult(DataDocumentFactory.New(dataTable.DataSet))
@@ -402,10 +443,8 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
                 {
                     return (null, null, null);
                 }
-                else
-                {
-                    goto start;
-                }
+
+                goto start;
             }
             finalStream = zipStream;
             title += " " + zipEntry.Name;
@@ -529,11 +568,16 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         switch (mode)
         {
             case FileType.TEXT:
+            {
                 dataTable.Columns.Add("Data", typeof(string));
                 break;
+            }
+
             case FileType.BINARY:
+            {
                 dataTable.Columns.Add("Data", typeof(byte[]));
                 break;
+            }
         }
         // Add file metadata (times)
         dataTable.Columns.Add("CreationTime", typeof(DateTime));
@@ -579,11 +623,16 @@ public class WorkQueueFileLoader : WorkQueueLoaderAdapter
         switch (mode)
         {
             case FileType.TEXT:
+            {
                 ReadTextStream(stream, encoding, dataRow);
                 break;
+            }
+
             case FileType.BINARY:
+            {
                 ReadBinaryStream(stream, dataRow);
                 break;
+            }
         }
         dataTable.Rows.Add(dataRow);
     }

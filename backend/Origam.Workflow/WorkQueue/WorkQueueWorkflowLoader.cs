@@ -79,11 +79,16 @@ public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "name":
+                    {
                         name = pair[1];
                         break;
+                    }
+
                     default:
+                    {
                         inputParameters[pair[0]] = pair[1];
                         break;
+                    }
                 }
             }
         }

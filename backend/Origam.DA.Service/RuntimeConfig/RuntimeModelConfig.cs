@@ -219,7 +219,7 @@ public class RuntimeModelConfig : IRuntimeModelConfig
                 as DefaultValueAttribute;
 
             if (
-                defaultValueAttribute != null && Equals(defaultValueAttribute.Value, value)
+                (defaultValueAttribute != null && Equals(defaultValueAttribute.Value, value))
                 || instance.IsDeleted
             )
             {

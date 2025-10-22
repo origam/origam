@@ -189,31 +189,51 @@ public class DataConstant : AbstractSchemaItem
                 switch (DataType)
                 {
                     case OrigamDataType.Boolean:
+                    {
                         Value = XmlConvert.ToBoolean(value);
                         break;
+                    }
+
                     case OrigamDataType.Float:
                     case OrigamDataType.Currency:
+                    {
                         Value = XmlConvert.ToDecimal(value);
                         break;
+                    }
+
                     case OrigamDataType.Date:
+                    {
                         Value = XmlConvert.ToDateTime(
                             value,
                             XmlDateTimeSerializationMode.Unspecified
                         );
                         break;
+                    }
+
                     case OrigamDataType.Integer:
+                    {
                         Value = XmlConvert.ToInt32(value);
                         break;
+                    }
+
                     case OrigamDataType.Memo:
                     case OrigamDataType.Xml:
                     case OrigamDataType.String:
+                    {
                         Value = value;
                         break;
+                    }
+
                     case OrigamDataType.UniqueIdentifier:
+                    {
                         Value = new Guid(value);
                         break;
+                    }
+
                     default:
+                    {
                         throw new NotSupportedException(DataType.ToString());
+                    }
                 }
             }
         }
@@ -244,26 +264,42 @@ public class DataConstant : AbstractSchemaItem
                 case OrigamDataType.Xml:
                 case OrigamDataType.Memo:
                 case OrigamDataType.String:
+                {
                     string stringValue = Convert.ToString(value);
                     this.StringValue = stringValue;
                     break;
+                }
+
                 case OrigamDataType.Integer:
+                {
                     int intValue = Convert.ToInt32(value);
                     this.IntValue = intValue;
                     break;
+                }
+
                 case OrigamDataType.Currency:
+                {
                     decimal currencyValue = Convert.ToDecimal(value);
                     this.CurrencyValue = currencyValue;
                     break;
+                }
+
                 case OrigamDataType.Float:
+                {
                     decimal floatValue = Convert.ToDecimal(value);
                     this.FloatValue = floatValue;
                     break;
+                }
+
                 case OrigamDataType.Boolean:
+                {
                     bool booleanValue = Convert.ToBoolean(value);
                     this.BooleanValue = booleanValue;
                     break;
+                }
+
                 case OrigamDataType.Date:
+                {
                     if (string.IsNullOrEmpty(Convert.ToString(value)))
                     {
                         this.DateValue = null;
@@ -274,7 +310,10 @@ public class DataConstant : AbstractSchemaItem
                         this.DateValue = dateValue;
                     }
                     break;
+                }
+
                 case OrigamDataType.UniqueIdentifier:
+                {
                     Guid guidValue;
                     if (value == null)
                     {
@@ -285,21 +324,28 @@ public class DataConstant : AbstractSchemaItem
                         switch (value.GetType().ToString())
                         {
                             case "System.String":
+                            {
                                 guidValue = new Guid((string)value);
                                 break;
+                            }
                             case "System.Guid":
+                            {
                                 guidValue = (Guid)value;
                                 break;
+                            }
                             default:
+                            {
                                 throw new ArgumentOutOfRangeException(
                                     "value",
                                     value,
                                     ResourceUtils.GetString("ErrorConvertToGuid")
                                 );
+                            }
                         }
                     }
                     this.GuidValue = guidValue;
                     break;
+                }
             }
             //
             //				switch(value.GetType().ToString())
@@ -333,20 +379,34 @@ public class DataConstant : AbstractSchemaItem
             case OrigamDataType.Xml:
             case OrigamDataType.Memo:
             case OrigamDataType.String:
+            {
                 return stringValue;
+            }
             case OrigamDataType.Integer:
+            {
                 return intValue;
+            }
             case OrigamDataType.UniqueIdentifier:
+            {
                 return guidValue;
+            }
             case OrigamDataType.Currency:
+            {
                 return currencyValue;
+            }
 
             case OrigamDataType.Float:
+            {
                 return floatValue;
+            }
             case OrigamDataType.Boolean:
+            {
                 return booleanValue;
+            }
             case OrigamDataType.Date:
+            {
                 return dateValue;
+            }
         }
         return null;
     }
@@ -401,7 +461,10 @@ public class DataConstant : AbstractSchemaItem
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.DataLookup != null)
+        {
             dependencies.Add(this.DataLookup);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

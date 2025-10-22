@@ -59,7 +59,10 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Structure != null)
+        {
             dependencies.Add(this.Structure);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
     #endregion

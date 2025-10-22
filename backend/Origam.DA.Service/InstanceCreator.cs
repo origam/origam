@@ -102,7 +102,10 @@ namespace Origam.DA.Service
                 XmlParentAttribute attribute = mi.Attribute as XmlParentAttribute;
                 string folderUri = CategoryFactory.Create(attribute.Type);
                 if (folderUri == OrigamFile.GroupCategory && !isTopFileElement)
+                {
                     continue;
+                }
+
                 if (parentFolderIds.ContainsKey(folderUri))
                 {
                     SetValue(instance, mi, parentFolderIds[folderUri], provider);
@@ -113,7 +116,10 @@ namespace Origam.DA.Service
         private IFilePersistent Instantiate(Guid id, IPersistenceProvider provider, Guid parentId)
         {
             if (provider == null)
+            {
                 throw new ArgumentNullException("provider is null");
+            }
+
             string typeName = GetTypeName();
             string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
             Key key = new Key();

@@ -81,7 +81,9 @@ public class FileChangesWatchDog : IFileChangesWatchDog
     private void OnChanged(object source, FileSystemEventArgs e)
     {
         if (ShouldBeIgnored(e.FullPath))
+        {
             return;
+        }
 
         FileChanged?.Invoke(null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
     }
@@ -91,7 +93,9 @@ public class FileChangesWatchDog : IFileChangesWatchDog
     private void OnRenamed(object source, RenamedEventArgs e)
     {
         if (ShouldBeIgnored(e.FullPath))
+        {
             return;
+        }
 
         FileChanged?.Invoke(
             null,

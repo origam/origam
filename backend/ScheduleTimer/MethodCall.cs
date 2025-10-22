@@ -67,7 +67,10 @@ public class OrderParameterSetter : IParameterSetter
     public bool GetParameterValue(ParameterInfo pi, int ParameterLoc, ref object parameter)
     {
         if (_counter >= _ParamList.Length)
+        {
             return false;
+        }
+
         parameter = _ParamList[_counter++];
         return true;
     }
@@ -94,7 +97,10 @@ public class NamedParameterSetter : IParameterSetter
     {
         string ParamName = pi.Name;
         if (!_Params.ContainsKey(ParamName))
+        {
             return false;
+        }
+
         parameter = _Params[ParamName];
         return true;
     }
@@ -122,7 +128,9 @@ public class ParameterSetterList
     public void reset()
     {
         foreach (IParameterSetter Setter in _List)
+        {
             Setter.reset();
+        }
     }
 
     public object[] GetParameters(MethodInfo Method)
@@ -131,7 +139,10 @@ public class ParameterSetterList
         object[] Values = new object[Params.Length];
         //TODO: Update to iterate backwards
         for (int i = 0; i < Params.Length; ++i)
+        {
             SetValue(Params[i], i, ref Values[i]);
+        }
+
         return Values;
     }
 
@@ -143,7 +154,9 @@ public class ParameterSetterList
         for (int i = 0; i < Params.Length; ++i)
         {
             if (!SetValue(Params[i], i, ref Values[i]))
+            {
                 LastSetter.GetParameterValue(Params[i], i, ref Values[i]);
+            }
         }
         return Values;
     }
@@ -153,7 +166,9 @@ public class ParameterSetterList
         foreach (IParameterSetter Setter in _List)
         {
             if (Setter.GetParameterValue(Info, i, ref Value))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -191,7 +206,10 @@ public class DelegateMethodCall : MethodCallBase, IMethodCall
     public DelegateMethodCall(Delegate f, params object[] Params)
     {
         if (f.Method.GetParameters().Length < Params.Length)
+        {
             throw new ArgumentException("Too many parameters specified for delegate", "f");
+        }
+
         _f = f;
         ParamList.Add(new OrderParameterSetter(Params));
     }

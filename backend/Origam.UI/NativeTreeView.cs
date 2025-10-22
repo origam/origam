@@ -48,7 +48,10 @@ public class NativeTreeView : System.Windows.Forms.TreeView
         get
         {
             if (TopNode == null)
+            {
                 return null;
+            }
+
             TreeNode node = TopNode;
             while (node.Parent != null)
             {

@@ -71,9 +71,11 @@ public class StringItemConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -89,12 +91,14 @@ public class StringItemConverter : TypeConverter
             foreach (ISchemaItem item in strings.ChildItems)
             {
                 if (item.ToString() == value.ToString())
+                {
                     return item as StringItem;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -139,9 +143,11 @@ public class EntityConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -158,12 +164,14 @@ public class EntityConverter : System.ComponentModel.TypeConverter
             foreach (ISchemaItem item in entities.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as IDataEntity;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -206,9 +214,11 @@ public class FunctionConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -225,12 +235,14 @@ public class FunctionConverter : TypeConverter
             foreach (ISchemaItem item in functions.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as Function;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -294,9 +306,11 @@ public class DataStructureEntityConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -319,29 +333,37 @@ public class DataStructureEntityConverter : TypeConverter
             {
                 // Sub-entity (relation), we return only available relations
                 if (parentEntity.Entity is IDataEntity)
+                {
                     // Parent is root entity
                     entities = (parentEntity.Entity as IDataEntity).EntityRelations;
+                }
                 else if (parentEntity.Entity is IAssociation)
+                {
                     // Parent is relation
                     entities = (parentEntity.Entity as IAssociation)
                         .AssociatedEntity
                         .EntityRelations;
+                }
                 else
+                {
                     throw new ArgumentOutOfRangeException(
                         "ParentItem",
                         parentEntity,
                         ResourceUtils.GetString("ErrorParentNotIDataEntity")
                     );
+                }
             }
             foreach (EntityRelationItem entity in entities)
             {
                 if (entity.Name == value.ToString())
+                {
                     return entity;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -383,9 +405,11 @@ public class RelationPrimaryKeyColumnConverter : System.ComponentModel.TypeConve
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -405,12 +429,14 @@ public class RelationPrimaryKeyColumnConverter : System.ComponentModel.TypeConve
             )
             {
                 if (item.Name == value.ToString())
+                {
                     return item as IDataEntityColumn;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -452,9 +478,11 @@ public class RelationForeignKeyColumnConverter : System.ComponentModel.TypeConve
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -474,12 +502,14 @@ public class RelationForeignKeyColumnConverter : System.ComponentModel.TypeConve
             )
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -521,9 +551,11 @@ public class RelationFilterConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -542,12 +574,14 @@ public class RelationFilterConverter : System.ComponentModel.TypeConverter
             )
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -589,9 +623,11 @@ public class EntityFilterConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -610,12 +646,14 @@ public class EntityFilterConverter : System.ComponentModel.TypeConverter
             )
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -658,9 +696,11 @@ public class DataStructureColumnConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -682,12 +722,14 @@ public class DataStructureColumnConverter : System.ComponentModel.TypeConverter
             foreach (IDataEntityColumn item in columns)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -734,9 +776,11 @@ public class DataStructureColumnStringConverter : System.ComponentModel.TypeConv
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -766,8 +810,8 @@ public class DataStructureColumnStringConverter : System.ComponentModel.TypeConv
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -873,9 +917,11 @@ public class EntityColumnReferenceConverter : System.ComponentModel.TypeConverte
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -892,12 +938,14 @@ public class EntityColumnReferenceConverter : System.ComponentModel.TypeConverte
             foreach (IDataEntityColumn item in columns)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -923,7 +971,10 @@ public class EntityForeignColumnConverter : System.ComponentModel.TypeConverter
         IDataEntity entity =
             (context.Instance as IDataEntityColumn).ForeignKeyEntity as IDataEntity;
         if (entity == null)
+        {
             return null;
+        }
+
         List<IDataEntityColumn> columns = entity.EntityColumns;
         var columnArray = new List<IDataEntityColumn>(columns.Count);
         foreach (IDataEntityColumn column in columns)
@@ -942,9 +993,11 @@ public class EntityForeignColumnConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -958,17 +1011,22 @@ public class EntityForeignColumnConverter : System.ComponentModel.TypeConverter
             IDataEntity entity =
                 (context.Instance as IDataEntityColumn).ForeignKeyEntity as IDataEntity;
             if (entity == null)
+            {
                 return null;
+            }
+
             List<IDataEntityColumn> columns = entity.EntityColumns;
             foreach (IDataEntityColumn item in columns)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1010,9 +1068,11 @@ public class EntityRelationConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1029,12 +1089,14 @@ public class EntityRelationConverter : System.ComponentModel.TypeConverter
             foreach (IAssociation item in relations)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1059,7 +1121,10 @@ public class EntityRelationColumnsConverter : System.ComponentModel.TypeConverte
     {
         IRelationReference reference = context.Instance as IRelationReference;
         if (reference.Relation == null)
+        {
             return null;
+        }
+
         IDataEntity entity = reference.Relation.AssociatedEntity as IDataEntity;
         List<IDataEntityColumn> columns = entity.EntityColumns;
         var columnArray = new List<IDataEntityColumn>(columns.Count);
@@ -1078,9 +1143,11 @@ public class EntityRelationColumnsConverter : System.ComponentModel.TypeConverte
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1097,12 +1164,14 @@ public class EntityRelationColumnsConverter : System.ComponentModel.TypeConverte
             foreach (IDataEntityColumn item in columns)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1147,9 +1216,11 @@ public class DataStructureConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1166,12 +1237,14 @@ public class DataStructureConverter : TypeConverter
             foreach (ISchemaItem item in dataStructures.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as AbstractDataStructure;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1216,9 +1289,11 @@ public class DataConstantConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1235,12 +1310,14 @@ public class DataConstantConverter : TypeConverter
             foreach (ISchemaItem item in dataConstants.ChildItems)
             {
                 if (item.ToString() == value.ToString())
+                {
                     return item as DataConstant;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1285,9 +1362,11 @@ public class TransformationConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1304,12 +1383,14 @@ public class TransformationConverter : TypeConverter
             foreach (ISchemaItem item in transformations.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as ITransformation;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1334,11 +1415,14 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
     {
         ISchemaItem currentItem = context.Instance as ISchemaItem;
         if (!(currentItem.RootItem is DataStructure))
+        {
             throw new ArgumentOutOfRangeException(
                 "Instance",
                 context.Instance,
                 "Root item of current context must be DataStructure"
             );
+        }
+
         List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
         var entityArray = new List<DataStructureEntity>(entities.Count);
         foreach (DataStructureEntity entity in entities)
@@ -1355,9 +1439,11 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1370,21 +1456,26 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
         {
             ISchemaItem currentItem = context.Instance as ISchemaItem;
             if (!(currentItem.RootItem is DataStructure))
+            {
                 throw new ArgumentOutOfRangeException(
                     "Instance",
                     context.Instance,
                     "Root item of current context must be DataStructure"
                 );
+            }
+
             List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
             foreach (ISchemaItem item in entities)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as DataStructureEntity;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1422,9 +1513,11 @@ public class TransformOutputScalarOrigamDataTypeConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1437,11 +1530,14 @@ public class TransformOutputScalarOrigamDataTypeConverter : TypeConverter
         {
             XsltInitialValueParameter currentItem = (XsltInitialValueParameter)context.Instance;
             if (currentItem == null)
+            {
                 throw new ArgumentOutOfRangeException(
                     "Instance",
                     context.Instance,
                     "Current context must be XsltInitialValueParameter"
                 );
+            }
+
             foreach (OrigamDataType item in currentItem.getOrigamDataType())
             {
                 if (item.ToString() == value.ToString())
@@ -1451,8 +1547,8 @@ public class TransformOutputScalarOrigamDataTypeConverter : TypeConverter
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1477,11 +1573,14 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
     {
         ISchemaItem currentItem = context.Instance as ISchemaItem;
         if (!(currentItem.RootItem is DataStructure))
+        {
             throw new ArgumentOutOfRangeException(
                 "Instance",
                 context.Instance,
                 "Root item of current context must be DataStructure"
             );
+        }
+
         List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
         var entityArray = new List<DataStructureEntity>(entities.Count);
         foreach (DataStructureEntity entity in entities)
@@ -1501,9 +1600,11 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1516,21 +1617,26 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
         {
             ISchemaItem currentItem = context.Instance as ISchemaItem;
             if (!(currentItem.RootItem is DataStructure))
+            {
                 throw new ArgumentOutOfRangeException(
                     "Instance",
                     context.Instance,
                     "Root item of current context must be DataStructure"
                 );
+            }
+
             List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
             foreach (ISchemaItem item in entities)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as DataStructureEntity;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1558,7 +1664,10 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
         if (context.Instance is DataStructureDefaultSetDefault)
         {
             if (((context.Instance as DataStructureDefaultSetDefault).Entity) == null)
+            {
                 return new StandardValuesCollection(null);
+            }
+
             fields = (context.Instance as DataStructureDefaultSetDefault)
                 .Entity
                 .EntityDefinition
@@ -1567,13 +1676,19 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
         else if (context.Instance is DataStructureRule)
         {
             if (((context.Instance as DataStructureRule).Entity) == null)
+            {
                 return new StandardValuesCollection(null);
+            }
+
             fields = (context.Instance as DataStructureRule).Entity.EntityDefinition.EntityColumns;
         }
         else if (context.Instance is DataStructureRuleDependency)
         {
             if (((context.Instance as DataStructureRuleDependency).Entity) == null)
+            {
                 return new StandardValuesCollection(null);
+            }
+
             fields = (context.Instance as DataStructureRuleDependency)
                 .Entity
                 .EntityDefinition
@@ -1603,9 +1718,11 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1650,12 +1767,14 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
             foreach (ISchemaItem item in fields)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as IDataEntityColumn;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1681,7 +1800,10 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
         DataStructureFilterSetFilter queryFilter = context.Instance as DataStructureFilterSetFilter;
 
         if (queryFilter.Entity == null)
+        {
             return null;
+        }
+
         List<EntityFilter> filters =
             queryFilter.Entity.EntityDefinition.ChildItemsByType<EntityFilter>(
                 EntityFilter.CategoryConst
@@ -1701,9 +1823,11 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1717,7 +1841,10 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
             DataStructureFilterSetFilter filter = context.Instance as DataStructureFilterSetFilter;
 
             if (filter.Entity == null)
+            {
                 return null;
+            }
+
             List<EntityFilter> filters =
                 filter.Entity.EntityDefinition.ChildItemsByType<EntityFilter>(
                     EntityFilter.CategoryConst
@@ -1725,12 +1852,14 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
             foreach (EntityFilter item in filters)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1756,7 +1885,10 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
         IDataStructureReference reference = context.Instance as IDataStructureReference;
 
         if (reference.DataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureMethod> methods = reference.DataStructure.Methods;
         var methodArray = new List<DataStructureMethod>(methods.Count);
         foreach (DataStructureMethod method in methods)
@@ -1774,9 +1906,11 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1790,17 +1924,22 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
             IDataStructureReference reference = context.Instance as IDataStructureReference;
 
             if (reference.DataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureMethod> methods = reference.DataStructure.Methods;
             foreach (DataStructureMethod item in methods)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1825,7 +1964,10 @@ public class DataStructureReferenceDefaultSetConverter : System.ComponentModel.T
     {
         IDataStructureReference reference = context.Instance as IDataStructureReference;
         if (reference.DataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureDefaultSet> defaultSets = reference.DataStructure.DefaultSets;
         var array = new List<DataStructureDefaultSet>(defaultSets.Count);
         foreach (DataStructureDefaultSet item in defaultSets)
@@ -1843,9 +1985,11 @@ public class DataStructureReferenceDefaultSetConverter : System.ComponentModel.T
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1858,17 +2002,22 @@ public class DataStructureReferenceDefaultSetConverter : System.ComponentModel.T
         {
             IDataStructureReference reference = context.Instance as IDataStructureReference;
             if (reference.DataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureDefaultSet> defaultSets = reference.DataStructure.DefaultSets;
             foreach (DataStructureDefaultSet item in defaultSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1894,7 +2043,10 @@ public class DataStructureReferenceSortSetConverter : System.ComponentModel.Type
         IDataStructureReference reference = context.Instance as IDataStructureReference;
 
         if (reference.DataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureSortSet> sortSets = reference.DataStructure.SortSets;
         var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
         foreach (DataStructureSortSet sortSet in sortSets)
@@ -1912,9 +2064,11 @@ public class DataStructureReferenceSortSetConverter : System.ComponentModel.Type
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -1928,17 +2082,22 @@ public class DataStructureReferenceSortSetConverter : System.ComponentModel.Type
             IDataStructureReference reference = context.Instance as IDataStructureReference;
 
             if (reference.DataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureSortSet> sortSets = reference.DataStructure.SortSets;
             foreach (DataStructureSortSet item in sortSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -1983,9 +2142,11 @@ public class DataLookupConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2002,12 +2163,14 @@ public class DataLookupConverter : TypeConverter
             foreach (ISchemaItem item in lookups.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2071,7 +2234,10 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
             return new StandardValuesCollection(list);
         }
         if (lookup == null)
+        {
             return null;
+        }
+
         try
         {
             InitList(
@@ -2093,9 +2259,11 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2114,24 +2282,22 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
         {
             return value;
         }
-        else
+        InitLookup(lookup);
+        if (_currentList == null)
         {
-            InitLookup(lookup);
-            if (_currentList == null)
-                InitList(
-                    (Guid)lookup.PrimaryKey["Id"],
-                    lookup.ListValueMember,
-                    lookup.ListDisplayMember
-                );
-            if (_currentList.ContainsKey(value))
-            {
-                return _currentList[value];
-            }
-            else
-            {
-                return null;
-            }
+            InitList(
+                (Guid)lookup.PrimaryKey["Id"],
+                lookup.ListValueMember,
+                lookup.ListDisplayMember
+            );
         }
+
+        if (_currentList.ContainsKey(value))
+        {
+            return _currentList[value];
+        }
+
+        return null;
     }
 
     public override object ConvertTo(
@@ -2142,26 +2308,33 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
     )
     {
         if (value == null)
+        {
             return null;
+        }
+
         if (context == null)
+        {
             return value.ToString();
+        }
+
         if (value is bool)
         {
             if ((bool)value)
             {
                 return ResourceUtils.GetString("Yes");
             }
-            else
-            {
-                return ResourceUtils.GetString("No");
-            }
+
+            return ResourceUtils.GetString("No");
         }
         if (destinationType == typeof(string))
         {
             IDataLookup lookup = (context.Instance as DataConstant).DataLookup;
             InitLookup(lookup);
             if (lookup == null)
+            {
                 return value.ToString();
+            }
+
             if (_currentList == null)
             {
                 try
@@ -2183,15 +2356,11 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
                 int pos = _currentList.IndexOfValue(value);
                 return _currentList.GetKey(pos);
             }
-            else
-            {
-                return value.ToString();
-            }
+
+            return value.ToString();
         }
-        else
-        {
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+
+        return base.ConvertTo(context, culture, value, destinationType);
     }
 }
 
@@ -2236,9 +2405,11 @@ public class DataRuleConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2254,12 +2425,14 @@ public class DataRuleConverter : TypeConverter
             foreach (IDataRule item in rules.DataRules)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2303,9 +2476,11 @@ public class EndRuleConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2321,12 +2496,14 @@ public class EndRuleConverter : TypeConverter
             foreach (IEndRule item in rules.EndRules)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2370,9 +2547,11 @@ public class StartRuleConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2388,12 +2567,14 @@ public class StartRuleConverter : TypeConverter
             foreach (IStartRule item in rules.StartRules)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2437,9 +2618,11 @@ public class EntityRuleConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2455,12 +2638,14 @@ public class EntityRuleConverter : TypeConverter
             foreach (IEntityRule item in rules.EntityRules)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2504,9 +2689,11 @@ public class DataStructureRuleSetConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2525,12 +2712,14 @@ public class DataStructureRuleSetConverter : TypeConverter
             foreach (DataStructureRuleSet item in ruleSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -2579,9 +2768,11 @@ public class DataTypeMappingConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -2598,12 +2789,14 @@ public class DataTypeMappingConverter : TypeConverter
             foreach (ISchemaItem mapping in mappings.ChildItems)
             {
                 if (mapping.Name == value.ToString())
+                {
                     return mapping;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 

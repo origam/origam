@@ -60,18 +60,23 @@ public class AbstractPersistent : IPersistent
         foreach (string key in correctKeys)
         {
             if (!primaryKey.ContainsKey(key))
+            {
                 throw new ArgumentOutOfRangeException(
                     "primaryKey",
                     primaryKey,
                     ResourceUtils.GetString("NoKeyInPrimaryKey", key)
                 );
+            }
         }
         if (primaryKey.Count != correctKeys.GetLength(0))
+        {
             throw new ArgumentOutOfRangeException(
                 "primaryKey",
                 primaryKey,
                 ResourceUtils.GetString("InvalidNumberKeys")
             );
+        }
+
         _primaryKey = primaryKey;
     }
 
@@ -107,7 +112,9 @@ public class AbstractPersistent : IPersistent
         GitManager.PersistPath(Files);
 #endif
         if (isNew)
+        {
             OnChanged(EventArgs.Empty);
+        }
     }
 
     private bool _isPersisted = false;

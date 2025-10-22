@@ -46,6 +46,7 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "StartProcess":
+            {
                 // Check input parameters
                 if (!(Parameters["FileName"] is string))
                 {
@@ -101,12 +102,16 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
                 }
                 _result = true;
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
     #endregion

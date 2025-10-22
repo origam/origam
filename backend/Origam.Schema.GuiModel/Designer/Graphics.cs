@@ -94,7 +94,10 @@ public class Graphics : AbstractSchemaItem
         get
         {
             if (GraphicsDataByte == null)
+            {
                 return null;
+            }
+
             Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
             if (b.RawFormat == ImageFormat.Bmp)
             {

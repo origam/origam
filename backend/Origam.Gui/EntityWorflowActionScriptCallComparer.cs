@@ -57,13 +57,12 @@ public class EntityWorkflowActionScriptCallComparer : IComparer<ISchemaItem>
         {
             return 0;
         }
-        else if (scriptX.Order > scriptY.Order)
+
+        if (scriptX.Order > scriptY.Order)
         {
             return 1;
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 }

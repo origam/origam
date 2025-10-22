@@ -45,14 +45,20 @@ public class TimerJob
     public DateTime NextRunTime(DateTime time, bool IncludeStartTime)
     {
         if (Enabled == false)
+        {
             return DateTime.MaxValue;
+        }
+
         return Schedule.NextRunTime(time, IncludeStartTime);
     }
 
     public void Execute(object sender, DateTime Begin, DateTime End, ExceptionEventHandler Error)
     {
         if (Enabled == false)
+        {
             return;
+        }
+
         var EventList = new List<DateTime>();
         //			Schedule.AddEventsInInterval(Begin, End, EventList);
         Schedule.AddEventsInInterval(LastTime, End, EventList);
@@ -91,11 +97,13 @@ public class TimerJob
         catch (Exception ex)
         {
             if (Error != null)
+            {
                 try
                 {
                     Error(this, new ExceptionEventArgs(EventTime, ex));
                 }
                 catch { }
+            }
         }
     }
 
@@ -120,19 +128,25 @@ public class TimerJobList
     public void Add(TimerJob Event)
     {
         lock (_List)
+        {
             _List.Add(Event);
+        }
     }
 
     public void Clear()
     {
         lock (_List)
+        {
             _List.Clear();
+        }
     }
 
     public void RemoveJob(TimerJob job)
     {
         lock (_List)
+        {
             _List.Remove(job);
+        }
     }
 
     /// <summary>
@@ -152,7 +166,10 @@ public class TimerJobList
             lock (_List)
             {
                 if (i >= _List.Count)
+                {
                     break;
+                }
+
                 job = _List[i] as TimerJob;
                 if (job == null)
                 {
@@ -187,7 +204,9 @@ public class TimerJobList
         get
         {
             lock (_List)
+            {
                 return _List.ToArray();
+            }
         }
     }
     private List<TimerJob> _List;
@@ -217,17 +236,28 @@ public class TimerParameterSetter : IParameterSetter
         switch (pi.ParameterType.Name.ToLower())
         {
             case "datetime":
+            {
                 parameter = _time;
                 return true;
+            }
+
             case "object":
+            {
                 parameter = _sender;
                 return true;
+            }
+
             case "scheduledeventargs":
+            {
                 parameter = new ScheduledEventArgs(_time);
                 return true;
+            }
+
             case "eventargs":
+            {
                 parameter = new ScheduledEventArgs(_time);
                 return true;
+            }
         }
         return false;
     }

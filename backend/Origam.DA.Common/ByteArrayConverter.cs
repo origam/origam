@@ -39,7 +39,10 @@ public class ByteArrayConverter
     )
     {
         if (table == null || table.Rows.Count < 1 || (table.Rows.Count + 1) < RowIndex)
+        {
             return false;
+        }
+
         return SaveToDataSet(fullFileName, table.Rows[RowIndex], columnName);
     }
 
@@ -69,26 +72,21 @@ public class ByteArrayConverter
             {
                 return Zip(fs, Path.GetFileName(filePath), File.GetCreationTimeUtc(filePath));
             }
-            else
+            BinaryReader br = new BinaryReader(fs);
+
+            try
             {
-                BinaryReader br = new BinaryReader(fs);
-                try
+                if (fs.Length > MaxByteFileLenghtToStore)
                 {
-                    if (fs.Length > MaxByteFileLenghtToStore)
-                    {
-                        throw new Exception(
-                            ResourceUtils.GetString(
-                                "FileTooBig",
-                                MaxByteFileLenghtToStore.ToString()
-                            )
-                        );
-                    }
-                    return br.ReadBytes((int)fs.Length);
+                    throw new Exception(
+                        ResourceUtils.GetString("FileTooBig", MaxByteFileLenghtToStore.ToString())
+                    );
                 }
-                finally
-                {
-                    br.Close();
-                }
+                return br.ReadBytes((int)fs.Length);
+            }
+            finally
+            {
+                br.Close();
             }
         }
         catch (Exception ex)
@@ -104,7 +102,9 @@ public class ByteArrayConverter
         finally
         {
             if (fs != null)
+            {
                 fs.Close();
+            }
         }
     }
 
@@ -117,7 +117,10 @@ public class ByteArrayConverter
     {
         byte[] bytes = (byte[])dataRow[columnName];
         if (bytes == null)
+        {
             return;
+        }
+
         if (File.Exists(fullFileName))
         {
             File.Delete(fullFileName);
@@ -170,9 +173,12 @@ public class ByteArrayConverter
             zipStream.Write(buffer, 0, buffer.Length);
             zipStream.Finish();
             if (stream.Length > MaxByteFileLenghtToStore)
+            {
                 throw new Exception(
                     ResourceUtils.GetString("FileTooBig", MaxByteFileLenghtToStore.ToString())
                 );
+            }
+
             stream.Position = 0;
             byteArray = br.ReadBytes((int)stream.Length);
         }
@@ -207,11 +213,19 @@ public class ByteArrayConverter
         finally
         {
             if (s != null)
+            {
                 s.Close();
+            }
+
             if (file != null)
+            {
                 file.Close();
+            }
+
             if (ms != null)
+            {
                 ms.Close();
+            }
         }
         File.SetCreationTime(fileName, entry.DateTime);
     }

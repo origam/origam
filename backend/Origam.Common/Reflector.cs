@@ -52,7 +52,9 @@ public class Reflector
         {
             // exclude abstract constructors (weird concept anyway)
             if (!constructorInfo.IsAbstract)
+            {
                 result.Add(constructorInfo);
+            }
         }
         return result;
     }

@@ -124,7 +124,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
             }
             // if workflow finished with an exception, we don't proceed
             if (this.Engine == null)
+            {
                 return;
+            }
+
             if (log.IsInfoEnabled)
             {
                 log.Info("Starting iteration no. " + _iter.CurrentPosition);
@@ -207,7 +210,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
         if (this.Engine == null)
+        {
             return; // finished already
+        }
+
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
         {

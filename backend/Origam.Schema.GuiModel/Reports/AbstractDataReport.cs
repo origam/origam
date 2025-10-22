@@ -164,11 +164,20 @@ public abstract class AbstractDataReport : AbstractReport
     {
         dependencies.Add(this.DataStructure);
         if (this.Method != null)
+        {
             dependencies.Add(this.Method);
+        }
+
         if (this.SortSet != null)
+        {
             dependencies.Add(this.SortSet);
+        }
+
         if (this.Transformation != null)
+        {
             dependencies.Add(this.Transformation);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 }

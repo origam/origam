@@ -73,7 +73,10 @@ public class LoopBlockEngineTask : BlockEngineTask
             i++;
             // if workflow finished with an exception, we don't proceed
             if (this.Engine == null)
+            {
                 return;
+            }
+
             if (log.IsInfoEnabled)
             {
                 log.Info("Starting loop iteration no. " + i.ToString());
@@ -106,7 +109,10 @@ public class LoopBlockEngineTask : BlockEngineTask
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
         if (this.Engine == null)
+        {
             return; // finished already
+        }
+
         LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
         {

@@ -67,7 +67,9 @@ public class TransformationReference : AbstractSchemaItem
     )
     {
         if (this.Transformation != null)
+        {
             base.GetParameterReferences(Transformation, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

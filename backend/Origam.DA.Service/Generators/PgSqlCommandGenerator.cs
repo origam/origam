@@ -103,11 +103,14 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         NpgsqlDataAdapter newa = GetAdapter() as NpgsqlDataAdapter;
         NpgsqlDataAdapter sqla = adapter as NpgsqlDataAdapter;
         if (sqla == null)
+        {
             throw new ArgumentOutOfRangeException(
                 "adapter",
                 adapter,
                 ResourceUtils.GetString("InvalidAdapterType")
             );
+        }
+
         newa.AcceptChangesDuringFill = adapter.AcceptChangesDuringFill;
         newa.ContinueUpdateOnError = adapter.ContinueUpdateOnError;
         newa.DeleteCommand = (NpgsqlCommand)CloneCommand(sqla.DeleteCommand);
@@ -132,7 +135,10 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
     public override IDbCommand CloneCommand(IDbCommand command)
     {
         if (command == null)
+        {
             return null;
+        }
+
         NpgsqlCommand newc = GetCommand(command.CommandText) as NpgsqlCommand;
         newc.CommandTimeout = command.CommandTimeout;
         newc.CommandType = command.CommandType;
@@ -164,34 +170,60 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (ddlType.ToUpper())
         {
             case "IMAGE":
+            {
                 return OrigamDataType.Blob;
+            }
             case "BIT":
+            {
                 return OrigamDataType.Boolean;
+            }
             case "TINYINT":
+            {
                 return OrigamDataType.Byte;
+            }
             case "MONEY":
+            {
                 return OrigamDataType.Currency;
+            }
             case "DATETIME":
+            {
                 return OrigamDataType.Date;
+            }
             case "BIGINT":
+            {
                 return OrigamDataType.Long;
+            }
             case "NTEXT":
+            {
                 return OrigamDataType.Memo;
+            }
             case "SMALLINT":
             case "INT":
+            {
                 return OrigamDataType.Integer;
+            }
             case "FLOAT":
             case "DECIMAL":
+            {
                 return OrigamDataType.Float;
+            }
             case "VARCHAR":
             case "NVARCHAR":
+            {
                 return OrigamDataType.String;
+            }
             case "UNIQUEIDENTIFIER":
+            {
                 return OrigamDataType.UniqueIdentifier;
+            }
             case "GEOGRAPHY":
+            {
                 return OrigamDataType.Geography;
+            }
             default:
+            {
                 return OrigamDataType.String;
+            }
         }
     }
 
@@ -220,11 +252,17 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (dataType)
         {
             case OrigamDataType.UniqueIdentifier:
+            {
                 return " CAST (" + expression + " AS VARCHAR (36))";
+            }
             case OrigamDataType.Boolean:
+            {
                 return " CAST (" + expression + "  AS INTEGER)";
+            }
             default:
+            {
                 return expression;
+            }
         }
     }
 
@@ -316,7 +354,10 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             foreach (FunctionParameter parameter in function.ChildItems)
             {
                 if (i > 0)
+                {
                     builder.Append(", ");
+                }
+
                 builder.Append(ParameterDeclarationChar + parameter.Name + " ?");
                 i++;
             }
@@ -338,10 +379,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             builder.Append("$$ LANGUAGE plpgsql;");
             return builder.ToString();
         }
-        else
-        {
-            throw new InvalidOperationException(ResourceUtils.GetString("DDLForFunctionsOnly"));
-        }
+
+        throw new InvalidOperationException(ResourceUtils.GetString("DDLForFunctionsOnly"));
     }
 
     public override string DefaultDdlDataType(OrigamDataType columnType)
@@ -349,9 +388,13 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (columnType)
         {
             case OrigamDataType.Date:
+            {
                 return string.Format("{0}(3)", ConvertDataType(columnType, null).ToString());
+            }
             default:
+            {
                 return ConvertDataType(columnType, null).ToString();
+            }
         }
     }
 
@@ -400,35 +443,61 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (columnType)
         {
             case OrigamDataType.Blob:
+            {
                 return NpgsqlDbType.Bytea;
+            }
             case OrigamDataType.Boolean:
+            {
                 return NpgsqlDbType.Boolean;
+            }
             case OrigamDataType.Byte:
+            {
                 //TODO: check right
                 return NpgsqlDbType.Smallint;
+            }
             case OrigamDataType.Currency:
+            {
                 return NpgsqlDbType.Money;
+            }
             case OrigamDataType.Date:
+            {
                 return NpgsqlDbType.Timestamp;
+            }
             case OrigamDataType.Long:
+            {
                 return NpgsqlDbType.Bigint;
+            }
             case OrigamDataType.Xml:
             case OrigamDataType.Geography:
             case OrigamDataType.Memo:
+            {
                 return NpgsqlDbType.Text;
+            }
             case OrigamDataType.Array:
+            {
                 return NpgsqlDbType.Array;
+            }
             case OrigamDataType.Integer:
+            {
                 return NpgsqlDbType.Integer;
+            }
             case OrigamDataType.Float:
+            {
                 return NpgsqlDbType.Numeric;
+            }
             case OrigamDataType.Object:
             case OrigamDataType.String:
+            {
                 return NpgsqlDbType.Varchar;
+            }
             case OrigamDataType.UniqueIdentifier:
+            {
                 return NpgsqlDbType.Uuid;
+            }
             default:
+            {
                 throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
+            }
         }
     }
 

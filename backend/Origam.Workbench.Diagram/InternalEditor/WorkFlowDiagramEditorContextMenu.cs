@@ -59,7 +59,9 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private ContextMenuStrip CreateContextMenuForEdge(DEdge edge)
     {
         if (edge.Edge.UserData == null)
+        {
             return new ContextMenuStrip();
+        }
 
         var deleteMenuItem = new ToolStripMenuItem();
         deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuEdge_Delete;
@@ -174,20 +176,35 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse, ISchemaItem schemaItemUnderMouse)
     {
         if (objectUnderMouse == null)
+        {
             return false;
+        }
+
         if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf))
+        {
             return false;
+        }
+
         if (schemaItemUnderMouse?.Package?.Id != schemaService.ActiveSchemaExtensionId)
+        {
             return false;
+        }
+
         return Equals(objectUnderMouse.Node, nodeSelector.Selected);
     }
 
     private bool IsAddAfterMenuItemAvailable(DNode objectUnderMouse)
     {
         if (objectUnderMouse == null)
+        {
             return false;
+        }
+
         if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf))
+        {
             return false;
+        }
+
         return Equals(objectUnderMouse.Node, nodeSelector.Selected);
     }
 
@@ -203,12 +220,18 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             return true;
         }
         if (dNodeUnderMouse == null)
+        {
             return false;
+        }
+
         var schemaItem = dNodeUnderMouse.Node is InfrastructureSubgraph infrastructureGraph
             ? RetrieveItem(infrastructureGraph.WorkflowItemId)
             : RetrieveItem(dNodeUnderMouse.Node);
         if (!(dNodeUnderMouse.Node is Subgraph) && !(schemaItem is ServiceMethodCallParameter))
+        {
             return false;
+        }
+
         Guid nodeId = IdTranslator.ToSchemaId(dNodeUnderMouse.Node);
         return nodeId == nodeSelector.SelectedNodeId;
     }
@@ -367,11 +390,17 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             foreach (string sourceId in sourceIds)
             {
                 if (IdTranslator.NodeToSchema(sourceId) == Guid.Empty)
+                {
                     continue;
+                }
+
                 foreach (string targetId in targetIds)
                 {
                     if (IdTranslator.NodeToSchema(targetId) == Guid.Empty)
+                    {
                         continue;
+                    }
+
                     AddDependency(sourceId, targetId);
                 }
             }

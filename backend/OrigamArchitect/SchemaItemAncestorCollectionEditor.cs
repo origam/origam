@@ -35,11 +35,14 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
     protected override object CreateInstance(Type itemType)
     {
         if (itemType != typeof(SchemaItemAncestor))
+        {
             throw new ArgumentOutOfRangeException(
                 "itemType",
                 itemType,
                 ResourceUtils.GetString("ErrorSchemaItemAncestorOnly")
             );
+        }
+
         ISchemaItem parentItem = (this.Context.Instance as ISchemaItem);
 
         SchemaItemAncestor ancestor = new SchemaItemAncestor();
@@ -51,13 +54,18 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
     protected override void DestroyInstance(object instance)
     {
         if (!(instance is SchemaItemAncestor))
+        {
             throw new ArgumentOutOfRangeException(
                 "instance",
                 instance,
                 ResourceUtils.GetString("ErrorSchemaItemAncestorOnly")
             );
+        }
+
         if (!(instance as SchemaItemAncestor).IsPersisted)
+        {
             throw new Exception(ResourceUtils.GetString("ErrorSchemaItemAncestorPersistOnly"));
+        }
         (instance as SchemaItemAncestor).IsDeleted = true;
         (instance as SchemaItemAncestor).Persist();
         //base.DestroyInstance (instance);
@@ -72,7 +80,9 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
         foreach (SchemaItemAncestor item in (editValue as SchemaItemAncestorCollection))
         {
             if (!item.IsDeleted)
+            {
                 result[i] = item;
+            }
 
             i++;
         }

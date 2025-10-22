@@ -38,7 +38,10 @@ public class XsltDependencyHelper
     )
     {
         if (text == null)
+        {
             return;
+        }
+
         IPersistenceProvider persistenceprovider = item.PersistenceProvider;
         // references
         int found = 0;
@@ -64,7 +67,9 @@ public class XsltDependencyHelper
                 i = found;
             }
             else
+            {
                 break;
+            }
         }
         // constants
         found = 0;
@@ -80,7 +85,9 @@ public class XsltDependencyHelper
                 i = found;
             }
             else
+            {
                 break;
+            }
         }
         List<DataConstant> listDataconstant =
             persistenceprovider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst);
@@ -95,9 +102,11 @@ public class XsltDependencyHelper
                 }
             }
             if (dependencies.Count == 0)
+            {
                 throw new ArgumentOutOfRangeException(
                     ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name)
                 );
+            }
         }
 
         // strings
@@ -112,7 +121,9 @@ public class XsltDependencyHelper
                 i = found;
             }
             else
+            {
                 break;
+            }
         }
         List<StringItem> listStringItem = persistenceprovider.RetrieveListByCategory<StringItem>(
             StringItem.CategoryConst
@@ -128,9 +139,11 @@ public class XsltDependencyHelper
                 }
             }
             if (dependencies.Count == 0)
+            {
                 throw new ArgumentOutOfRangeException(
                     ResourceUtils.GetString("ErrorStringNotFound", s, item.ItemType, item.Name)
                 );
+            }
         }
         // lookups
         found = 0;
@@ -156,7 +169,9 @@ public class XsltDependencyHelper
                 i = found;
             }
             else
+            {
                 break;
+            }
         }
         for (int i = 0; i < text.Length; i++)
         {
@@ -175,7 +190,9 @@ public class XsltDependencyHelper
                 i = found;
             }
             else
+            {
                 break;
+            }
         }
         foreach (Guid l in lookups)
         {
@@ -187,9 +204,11 @@ public class XsltDependencyHelper
                 dependencies.Add(lookup);
             }
             if (dependencies.Count == 0)
+            {
                 throw new ArgumentOutOfRangeException(
                     ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name)
                 );
+            }
         }
     }
 }

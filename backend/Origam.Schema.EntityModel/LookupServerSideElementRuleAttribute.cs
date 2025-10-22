@@ -35,7 +35,10 @@ public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttr
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var iDataLookup = ((ILookupReference)instance).Lookup;
         if (iDataLookup == null || iDataLookup.IsFilteredServerside)
         {

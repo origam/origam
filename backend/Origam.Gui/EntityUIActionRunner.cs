@@ -79,20 +79,35 @@ public abstract class EntityUIActionRunner
         switch (processData.Type)
         {
             case PanelActionType.Workflow:
+            {
                 ExecuteWorkflowAction(processData);
                 break;
+            }
+
             case PanelActionType.Report:
+            {
                 ExecuteOpenFormAction(processData);
                 break;
+            }
+
             case PanelActionType.ChangeUI:
+            {
                 throw new NotImplementedException();
+            }
             case PanelActionType.OpenForm:
+            {
                 ExecuteOpenFormAction(processData);
                 break;
+            }
+
             case PanelActionType.SelectionDialogAction:
+            {
                 throw new NotImplementedException();
+            }
             default:
+            {
                 throw new NotImplementedException();
+            }
         }
     }
 
@@ -288,12 +303,10 @@ public abstract class EntityUIActionRunner
             {
                 return (bool)result;
             }
-            else
-            {
-                throw new ArgumentException(
-                    Origam.Workflow.ResourceUtils.GetString("ErrorResultNotBool", scriptCall.Path)
-                );
-            }
+
+            throw new ArgumentException(
+                Origam.Workflow.ResourceUtils.GetString("ErrorResultNotBool", scriptCall.Path)
+            );
         }
         return true;
     }

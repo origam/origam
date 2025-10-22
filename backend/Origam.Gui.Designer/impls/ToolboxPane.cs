@@ -111,10 +111,16 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         get
         {
             if (this.tabControl.SelectedTab.Controls.Count == 0)
+            {
                 return null;
+            }
+
             ListBox list = this.tabControl.SelectedTab.Controls[0] as ListBox;
             if (list.Items.Count == 0)
+            {
                 return null;
+            }
+
             return list.Items[selectedIndex] as ToolboxItem;
         }
     }
@@ -467,9 +473,14 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         finally
         {
             if (backgroundBrush != null)
+            {
                 backgroundBrush.Dispose();
+            }
+
             if (foregroundBrush != null)
+            {
                 foregroundBrush.Dispose();
+            }
         }
     }
 
@@ -604,6 +615,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
         switch (e.KeyCode)
         {
             case Keys.Up:
+            {
                 if (selectedIndex > 0)
                 {
                     selectedIndex--; // change selection
@@ -612,7 +624,10 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                     lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
                 }
                 break;
+            }
+
             case Keys.Down:
+            {
                 if (selectedIndex + 1 < lbSender.Items.Count)
                 {
                     selectedIndex++; // change selection
@@ -621,7 +636,10 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                     lbSender.Invalidate(lbSender.GetItemRectangle(selectedIndex)); // add new one
                 }
                 break;
+            }
+
             case Keys.Enter:
+            {
                 IToolboxUser tbu = host.GetDesigner(host.RootComponent) as IToolboxUser;
                 if (tbu != null)
                 {
@@ -629,6 +647,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
                     tbu.ToolPicked((ToolboxItem)(lbSender.Items[selectedIndex]));
                 }
                 break;
+            }
         }
     }
 }

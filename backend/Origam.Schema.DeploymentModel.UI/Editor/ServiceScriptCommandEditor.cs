@@ -361,7 +361,9 @@ public class ServiceScriptCommandEditor : AbstractEditor
     private void cboService_SelectedIndexChanged(object sender, System.EventArgs e)
     {
         if (!_isLoading & !this.IsViewOnly)
+        {
             this.IsDirty = true;
+        }
     }
 
     private void txtName_TextChanged(object sender, System.EventArgs e)
@@ -377,18 +379,24 @@ public class ServiceScriptCommandEditor : AbstractEditor
     private void txtOrder_TextChanged(object sender, System.EventArgs e)
     {
         if (!_isLoading & !this.IsViewOnly)
+        {
             this.IsDirty = true;
+        }
     }
 
     private void TextArea_KeyDown(object sender, EventArgs e)
     {
         if (!_isLoading & !this.IsViewOnly)
+        {
             this.IsDirty = true;
+        }
     }
 
     private void CboPlatform_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (!_isLoading & !this.IsViewOnly)
+        {
             this.IsDirty = true;
+        }
     }
 }

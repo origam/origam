@@ -34,6 +34,7 @@ public class SmsServiceAdapter : AbstractServiceAgent
         switch (MethodName)
         {
             case "SendSms":
+            {
                 CreateSmsService()
                     .SendSms(
                         Parameters.Get<string>("from"),
@@ -41,12 +42,16 @@ public class SmsServiceAdapter : AbstractServiceAgent
                         Parameters.Get<string>("body")
                     );
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 

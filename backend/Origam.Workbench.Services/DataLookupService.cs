@@ -129,26 +129,18 @@ public class DataLookupService : IDataLookupService
         {
             return "";
         }
-        else
+        var parameters = new Dictionary<string, object>();
+        DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
+        if (lookup.ValueMethod != null)
         {
-            var parameters = new Dictionary<string, object>();
-            DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-            if (lookup.ValueMethod != null)
+            var keys = lookup.ValueMethod.ParameterReferences.Keys;
+            foreach (string parameterName in keys)
             {
-                var keys = lookup.ValueMethod.ParameterReferences.Keys;
-                foreach (string parameterName in keys)
-                {
-                    parameters.Add(parameterName, lookupValue);
-                }
+                parameters.Add(parameterName, lookupValue);
             }
-            return GetDisplayText(
-                lookupId,
-                parameters,
-                useCache,
-                returnMessageIfNull,
-                transactionId
-            );
         }
+
+        return GetDisplayText(lookupId, parameters, useCache, returnMessageIfNull, transactionId);
     }
 
     public object GetDisplayText(
@@ -161,7 +153,10 @@ public class DataLookupService : IDataLookupService
     {
         string internalTransactionId = transactionId;
         if (parameters == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorParametersNull"));
+        }
+
         bool canUseCache = (parameters.Count == 1 & useCache);
         object cachableValue = null;
         object val = null;
@@ -210,13 +205,18 @@ public class DataLookupService : IDataLookupService
                             }
                         }
                         if (val != null)
+                        {
                             return val;
+                        }
                     }
                 }
             }
         }
         if (lookup.ValueDisplayMember.IndexOf(".") > -1)
+        {
             return "wrong display member";
+        }
+
         DataStructureQuery query = GetQuery(lookup, QueryType.Value);
         //if(lookup.ValueFilterSet == null) throw new NullReferenceException("ValueFilterSet cannot be null. Cannot get display text for lookup '" + lookup.Name + "'");
         foreach (var parameter in parameters)
@@ -291,7 +291,10 @@ public class DataLookupService : IDataLookupService
             foreach (var parameter in parameters)
             {
                 if (parameterString != "")
+                {
                     parameterString += ", ";
+                }
+
                 parameterString += parameter.Key + ": " + parameter.Value;
             }
             val = "Záznam nedostupný (" + parameterString + ")";
@@ -326,7 +329,10 @@ public class DataLookupService : IDataLookupService
                 }
                 DateTime dateValue = DateTime.MinValue;
                 if (columnValue is DateTime)
+                {
                     dateValue = (DateTime)columnValue;
+                }
+
                 if (
                     columnValue is DateTime
                     && (dateValue.Hour == 0 & dateValue.Minute == 0 & dateValue.Second == 0)
@@ -353,10 +359,8 @@ public class DataLookupService : IDataLookupService
         {
             return binding.MenuItem;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public Dictionary<string, object> LinkParameters(object linkTarget, object value)
@@ -427,13 +431,16 @@ public class DataLookupService : IDataLookupService
             switch (queryType)
             {
                 case QueryType.List:
+                {
                     return new DataStructureQuery(
                         dataLookup.ListDataStructureId,
                         dataLookup.ListDataStructureMethodId,
                         Guid.Empty,
                         dataLookup.ListDataStructureSortSetId
                     );
+                }
                 case QueryType.Value:
+                {
                     if (dataLookup.ValueDataStructureMethodId == null)
                     {
                         log.Warn("DataLookup has no ValueDataStructureMethodId !!");
@@ -444,8 +451,12 @@ public class DataLookupService : IDataLookupService
                         Guid.Empty,
                         dataLookup.ValueDataStructureSortSetId
                     );
+                }
+
                 case QueryType.ValueCacheList:
+                {
                     return new DataStructureQuery(dataLookup.ValueDataStructureId);
+                }
             }
         }
         throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorUnknownLookupType"));
@@ -535,10 +546,8 @@ public class DataLookupService : IDataLookupService
         {
             return new MenuBindingResult();
         }
-        else
-        {
-            return new MenuBindingResult(binding.MenuItemId.ToString(), binding.SelectionPanelId);
-        }
+
+        return new MenuBindingResult(binding.MenuItemId.ToString(), binding.SelectionPanelId);
     }
 
     public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
@@ -569,7 +578,8 @@ public class DataLookupService : IDataLookupService
                 return binding;
             }
             // get record - without selection
-            else if (
+
+            if (
                 HasMenuBindingWithSelection(lookup) == false
                 && binding.SelectionLookup == null
                 && AuthorizeMenuBinding(authorizationProvider, principal, binding)
@@ -578,7 +588,8 @@ public class DataLookupService : IDataLookupService
                 return binding;
             }
             // get record - with selection
-            else if (
+
+            if (
                 value != null
                 && binding.SelectionLookup != null
                 && AuthorizeMenuBinding(authorizationProvider, principal, binding)
@@ -708,15 +719,24 @@ public class DataLookupService : IDataLookupService
             switch (request.CurrentRow.RowState)
             {
                 case DataRowState.Detached:
+                {
                     break;
+                }
                 case DataRowState.Added:
+                {
                     break;
+                }
                 case DataRowState.Modified:
+                {
                     originalValue = request.CurrentRow[request.FieldName, DataRowVersion.Original];
                     break;
+                }
+
                 default:
+                {
                     originalValue = request.CurrentRow[request.FieldName, DataRowVersion.Current];
                     break;
+                }
             }
             object[] allowedStates = stateMachine.AllowedStateValues(
                 entityId,

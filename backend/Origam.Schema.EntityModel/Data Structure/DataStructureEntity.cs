@@ -108,9 +108,13 @@ public class DataStructureEntity : AbstractSchemaItem
             switch (Entity)
             {
                 case IDataEntity _:
+                {
                     return Entity as IDataEntity;
+                }
                 case IAssociation _:
+                {
                     return ((IAssociation)Entity).AssociatedEntity;
+                }
                 default:
                 {
                     if (Entity != null)

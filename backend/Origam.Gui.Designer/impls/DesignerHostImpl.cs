@@ -344,25 +344,33 @@ public class DesignerHostImpl
     internal void OnTransactionOpened(EventArgs e)
     {
         if (TransactionOpened != null)
+        {
             TransactionOpened(this, e);
+        }
     }
 
     internal void OnTransactionOpening(EventArgs e)
     {
         if (TransactionOpening != null)
+        {
             TransactionOpening(this, e);
+        }
     }
 
     internal void OnTransactionClosed(DesignerTransactionCloseEventArgs e)
     {
         if (TransactionClosed != null)
+        {
             TransactionClosed(this, e);
+        }
     }
 
     internal void OnTransactionClosing(DesignerTransactionCloseEventArgs e)
     {
         if (TransactionClosing != null)
+        {
             TransactionClosing(this, e);
+        }
     }
 
     public void DestroyComponent(IComponent component)
@@ -816,42 +824,60 @@ public class DesignerHostImpl
         {
             IDisposable d = menuEditorService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             menuEditorService = null;
         }
         if (selectionService != null)
         {
             IDisposable d = selectionService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             selectionService = null;
         }
         if (menuCommandService != null)
         {
             IDisposable d = menuCommandService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             menuCommandService = null;
         }
         if (toolboxService != null)
         {
             IDisposable d = toolboxService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             toolboxService = null;
         }
         if (helpService != null)
         {
             IDisposable d = helpService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             helpService = null;
         }
         if (referenceService != null)
         {
             IDisposable d = referenceService as IDisposable;
             if (d != null)
+            {
                 d.Dispose();
+            }
+
             referenceService = null;
         }
         this.Generator.Dispose();
@@ -1145,15 +1171,23 @@ public class DesignerHostImpl
         switch (pageName)
         {
             case @"WindowsFormsDesigner\General":
+            {
                 switch (valueName)
                 {
                     case "GridSize":
+                    {
                         return new Size(9, 9);
+                    }
                     default:
+                    {
                         return null;
+                    }
                 }
+            }
             default:
+            {
                 return null;
+            }
         }
     }
     #endregion

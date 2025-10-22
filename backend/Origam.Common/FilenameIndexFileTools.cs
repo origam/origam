@@ -47,9 +47,7 @@ public class FilenameIndexFileTools : AbstractIndexFileTools<FilenameIndexFileTo
         {
             return File.ReadAllLines(indexFile).ToList();
         }
-        else
-        {
-            return new List<string>();
-        }
+
+        return new List<string>();
     }
 }

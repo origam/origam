@@ -95,9 +95,12 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             resultDoc = new XmlContainer();
         }
         else
+        {
             throw new InvalidOperationException(
                 ResourceUtils.GetString("ErrorTransformationSupport")
             );
+        }
+
         try
         {
             StringBuilder traceParameters = new StringBuilder();
@@ -154,7 +157,10 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                             traceValue = XmlTools.ConvertToString(val);
                         }
                         if (traceParameters.Length > 0)
+                        {
                             traceParameters.Append(Environment.NewLine);
+                        }
+
                         if (traceValue == "")
                         {
                             traceParameters.AppendFormat(
@@ -447,7 +453,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                         null
                     );
                 }
-                else if (
+
+                if (
                     ex.Message.Length >= terminateStringEnglish.Length
                     && ex.Message.Substring(0, terminateStringEnglish.Length)
                         == terminateStringEnglish
@@ -462,10 +469,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                         null
                     );
                 }
-                else
-                {
-                    throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
-                }
+
+                throw new Exception(ResourceUtils.GetString("ErrorResultInvalid"), ex);
             }
             catch (OrigamRuleException)
             {

@@ -72,22 +72,36 @@ public class Key : Hashtable
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, obj))
+        {
             return true;
+        }
+
         if (!(obj is Key))
+        {
             return false;
+        }
+
         var refKey = obj as Key;
         if (refKey.Count == 1 && Count == 1 && refKey.Contains("Id") && Contains("Id"))
         {
             return refKey["Id"].Equals(this["Id"]);
         }
         if (Count != refKey.Count)
+        {
             return false;
+        }
+
         foreach (object key in this.Keys)
         {
             if (!(this[key].Equals(refKey[key])))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -95,7 +109,10 @@ public class Key : Hashtable
     public override int GetHashCode()
     {
         if (Count == 1 && Contains("Id"))
+        {
             return this["Id"].GetHashCode();
+        }
+
         int hashCode = 0;
         foreach (object key in this.Keys)
         {

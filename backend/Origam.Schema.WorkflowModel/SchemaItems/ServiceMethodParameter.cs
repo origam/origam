@@ -64,7 +64,10 @@ public class ServiceMethodParameter : SchemaItemParameter
     {
         bool current = Resolve(element);
         if (current == value)
+        {
             return;
+        }
+
         if (value)
         {
             CallElements += (int)element;

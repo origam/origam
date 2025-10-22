@@ -112,7 +112,10 @@ public class ExcelAgent : AbstractServiceAgent
                 foreach (IRow xlRow in sheet)
                 {
                     if (xlRow.RowNum >= (sheet.PhysicalNumberOfRows - options.IgnoreLast))
+                    {
                         break;
+                    }
+
                     if (xlRow.RowNum != 0 && xlRow.RowNum > options.IgnoreFirst) // skip header row
                     {
                         DataRow row = table.NewRow();
@@ -171,7 +174,9 @@ public class ExcelAgent : AbstractServiceAgent
         foreach (DataColumn col in table.Columns)
         {
             if (col.Caption == caption)
+            {
                 return col;
+            }
         }
         return null;
     }
@@ -237,14 +242,21 @@ public class ExcelAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "ReadSheet":
+            {
                 byte[] file = null;
                 // Check input parameters
                 if (this.Parameters.Contains("File") && this.Parameters["File"] is byte[])
+                {
                     file = (byte[])this.Parameters["File"];
+                }
+
                 if (!(this.Parameters["Entity"] is string | this.Parameters["Entity"] == null))
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorViewNameNotString")
                     );
+                }
+
                 _result = this.ReadSheet(
                     this.Parameters["Format"] is String
                         ? ExcelTools.StringToExcelFormat(this.Parameters["Format"] as String)
@@ -256,24 +268,39 @@ public class ExcelAgent : AbstractServiceAgent
                     file
                 );
                 break;
+            }
+
             case "WriteSheet":
+            {
                 // Check input parameters
                 if (!(this.Parameters["FileName"] is string))
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorListNameNotString")
                     );
+                }
+
                 if (
                     !(this.Parameters["SheetName"] is string | this.Parameters["SheetName"] == null)
                 )
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorViewNameNotString")
                     );
+                }
+
                 if (!(this.Parameters["Entity"] is string | this.Parameters["Entity"] == null))
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorViewNameNotString")
                     );
+                }
+
                 if (!(this.Parameters["Data"] is IDataDocument))
+                {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorDataNotXml"));
+                }
+
                 this.UpdateSheet(
                     this.Parameters["Format"] is String
                         ? ExcelTools.StringToExcelFormat(this.Parameters["Format"] as String)
@@ -286,6 +313,7 @@ public class ExcelAgent : AbstractServiceAgent
                 );
                 _result = null;
                 break;
+            }
         }
     }
     #endregion

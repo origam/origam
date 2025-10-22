@@ -50,7 +50,10 @@ public class SimpleInterval : IScheduledItem
     public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
     {
         if (End <= _StartTime)
+        {
             return;
+        }
+
         DateTime Next = NextRunTime(Begin, true);
         while (Next < End)
         {
@@ -72,9 +75,15 @@ public class SimpleInterval : IScheduledItem
     {
         TimeSpan Span = time - _StartTime;
         if (Span < TimeSpan.Zero)
+        {
             return _StartTime;
+        }
+
         if (ExactMatch(time))
+        {
             return AllowExact ? time : time + _Interval;
+        }
+
         ulong msRemaining = (ulong)(
             _Interval.TotalMilliseconds
             - ((ulong)Span.TotalMilliseconds % (ulong)_Interval.TotalMilliseconds)
@@ -86,7 +95,10 @@ public class SimpleInterval : IScheduledItem
     {
         TimeSpan Span = time - _StartTime;
         if (Span < TimeSpan.Zero)
+        {
             return false;
+        }
+
         return (Span.TotalMilliseconds % _Interval.TotalMilliseconds) == 0;
     }
 

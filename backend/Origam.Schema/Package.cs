@@ -257,10 +257,8 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         {
             return this.NodeText.CompareTo(bn.NodeText);
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
 }

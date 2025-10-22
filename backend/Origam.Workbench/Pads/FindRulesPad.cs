@@ -273,9 +273,15 @@ public class FindRulesPad : AbstractResultPad
         string name = item.ModelDescription();
         string rootName = item.RootItem.ModelDescription();
         if (name == null)
+        {
             name = item.ItemType;
+        }
+
         if (rootName == null)
+        {
             rootName = item.RootItem.ItemType;
+        }
+
         string message = string.IsNullOrEmpty(text) ? "" : text;
         ListViewItem newItem = new ListViewItem(
             new string[]

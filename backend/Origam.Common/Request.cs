@@ -124,8 +124,10 @@ public class Request
             && ContentType == request.ContentType
             && (
                 EqualityComparer<Hashtable>.Default.Equals(Headers, request.Headers)
-                || (Headers != null && Headers.Count == 0)
+                || (
+                    (Headers != null && Headers.Count == 0)
                     && (request.Headers != null && request.Headers.Count == 0)
+                )
             )
             && ReturnAsStream == request.ReturnAsStream
             && Timeout == request.Timeout
@@ -140,29 +142,31 @@ public class Request
     public override int GetHashCode()
     {
         int hashCode = 612240280;
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Url);
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Method);
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Content);
+        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Url);
+        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Method);
+        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Content);
         hashCode =
-            hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ContentType);
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(ContentType);
         hashCode =
-            hashCode * -1521134295
+            (hashCode * -1521134295)
             + (
                 Headers is { Count: 0 }
                     ? emptyHashTableHash
                     : EqualityComparer<Hashtable>.Default.GetHashCode(Headers)
             );
-        hashCode = hashCode * -1521134295 + ReturnAsStream.GetHashCode();
-        hashCode = hashCode * -1521134295 + Timeout.GetHashCode();
-        hashCode = hashCode * -1521134295 + ThrowExceptionOnError.GetHashCode();
+        hashCode = (hashCode * -1521134295) + ReturnAsStream.GetHashCode();
+        hashCode = (hashCode * -1521134295) + Timeout.GetHashCode();
+        hashCode = (hashCode * -1521134295) + ThrowExceptionOnError.GetHashCode();
         hashCode =
-            hashCode * -1521134295
+            (hashCode * -1521134295)
             + EqualityComparer<CookieCollection>.Default.GetHashCode(Cookies);
-        hashCode = hashCode * -1521134295 + IgnoreHttpsErrors.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserName);
+        hashCode = (hashCode * -1521134295) + IgnoreHttpsErrors.GetHashCode();
         hashCode =
-            hashCode * -1521134295
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Password);
+        hashCode =
+            (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(UserName);
+        hashCode =
+            (hashCode * -1521134295)
             + EqualityComparer<string>.Default.GetHashCode(AuthenticationType);
         return hashCode;
     }

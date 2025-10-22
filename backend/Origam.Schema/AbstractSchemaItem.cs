@@ -189,12 +189,20 @@ public abstract class AbstractSchemaItem
     )
     {
         if (parentItem == null)
+        {
             return;
+        }
+
         foreach (ISchemaItem item in parentItem.ChildItems)
         {
             if (item is ParameterReference parameterReference && item.IsDeleted == false)
+            {
                 if (!list.ContainsKey(parameterReference.Parameter.Name))
+                {
                     list.Add(parameterReference.Parameter.Name, parameterReference);
+                }
+            }
+
             item.GetParameterReferences(item, list);
         }
     }
@@ -290,7 +298,10 @@ public abstract class AbstractSchemaItem
             throw new InvalidOperationException(ResourceUtils.GetString("ErrorInheritable"));
         }
         if (IsPersistable == false)
+        {
             return;
+        }
+
         ISchemaItem _rootItemForRefresh = GetRootItem(this);
         var ISchemaItemCollection = ChildItems;
         if (!IsDeleted)
@@ -309,9 +320,15 @@ public abstract class AbstractSchemaItem
                 {
                     // make sure that all child items are marked abstract if this one is
                     if (IsAbstract)
+                    {
                         item.IsAbstract = true;
+                    }
+
                     if (IsDeleted)
+                    {
                         item.IsDeleted = true;
+                    }
+
                     ChildItems.RemoveDeletedItems = false;
                     item.ClearCacheOnPersist = this.ClearCacheOnPersist;
                     item.ThrowEventOnPersist = false;
@@ -319,7 +336,9 @@ public abstract class AbstractSchemaItem
                     item.ThrowEventOnPersist = true;
                     ChildItems.RemoveDeletedItems = true;
                     if (item.IsDeleted)
+                    {
                         deletedItems.Add(item);
+                    }
                 }
             }
 
@@ -435,7 +454,10 @@ public abstract class AbstractSchemaItem
         set
         {
             if (this.DerivedFrom != null)
+            {
                 throw new InvalidOperationException(ResourceUtils.GetString("ErrorModifyDerived"));
+            }
+
             if (this.DeleteChildItems)
             {
                 // We delete all the kids (except of derived ones)
@@ -467,9 +489,11 @@ public abstract class AbstractSchemaItem
         {
             // We cannot cache derived items, because they have multiple instances
             if (this.IsAbstract)
+            {
                 return false;
-            else
-                return base.UseObjectCache;
+            }
+
+            return base.UseObjectCache;
         }
         set { base.UseObjectCache = value; }
     }
@@ -489,7 +513,10 @@ public abstract class AbstractSchemaItem
         get
         {
             if (_name == null)
+            {
                 return null;
+            }
+
             return _name.Trim();
         }
         set
@@ -531,7 +558,10 @@ public abstract class AbstractSchemaItem
         get
         {
             if (_parentItem != null)
+            {
                 return _parentItem;
+            }
+
             ModelElementKey key = new ModelElementKey();
             key.Id = this.ParentItemId;
             return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
@@ -559,9 +589,11 @@ public abstract class AbstractSchemaItem
     private ISchemaItem GetRootItem(ISchemaItem parentItem)
     {
         if (parentItem.ParentItem == null)
+        {
             return parentItem;
-        else
-            return GetRootItem(parentItem.ParentItem);
+        }
+
+        return GetRootItem(parentItem.ParentItem);
     }
 
     [Browsable(false)]
@@ -791,7 +823,9 @@ public abstract class AbstractSchemaItem
             {
                 result = child.GetChildByIdRecursive(id);
                 if (result != null)
+                {
                     break;
+                }
             }
         }
         return result;
@@ -877,10 +911,8 @@ public abstract class AbstractSchemaItem
         {
             return _childItemsByName[name] as ISchemaItem;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     private ISchemaItem GetItemFromCache(Guid id)
@@ -891,10 +923,8 @@ public abstract class AbstractSchemaItem
         {
             return _childItemsById[id] as ISchemaItem;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     private List<T> GetItemsFromCache<T>(string itemType)
@@ -908,10 +938,8 @@ public abstract class AbstractSchemaItem
             // another thread is running)
             return new List<T>(value.Cast<T>());
         }
-        else
-        {
-            return new List<T>();
-        }
+
+        return new List<T>();
     }
 
     [Browsable(false)]
@@ -995,7 +1023,9 @@ public abstract class AbstractSchemaItem
         foreach (var item in ChildItems)
         {
             if (item.ItemType == itemType)
+            {
                 list.Add((T)item);
+            }
         }
 
         return list;
@@ -1007,7 +1037,9 @@ public abstract class AbstractSchemaItem
         foreach (ISchemaItem item in ChildItemsRecursive)
         {
             if (item.ItemType == itemType)
+            {
                 list.Add(item);
+            }
         }
 
         return list;
@@ -1022,7 +1054,9 @@ public abstract class AbstractSchemaItem
                 (item.Group == null && group == null)
                 || item.Group.PrimaryKey.Equals(group.PrimaryKey)
             )
+            {
                 list.Add(item);
+            }
         }
 
         return list;
@@ -1077,7 +1111,10 @@ public abstract class AbstractSchemaItem
         set
         {
             if (_derivedFrom != null & value == null)
+            {
                 throw new InvalidOperationException(ResourceUtils.GetString("ErrorRevertDerived"));
+            }
+
             _derivedFrom = value;
         }
     }
@@ -1105,7 +1142,9 @@ public abstract class AbstractSchemaItem
         catch
         {
             if (!ignoreErrors)
+            {
                 throw;
+            }
         }
         return dependencies;
     }
@@ -1199,10 +1238,8 @@ public abstract class AbstractSchemaItem
         {
             return this.Name;
         }
-        else
-        {
-            return this.ParentItem.Path + "/" + this.Name;
-        }
+
+        return this.ParentItem.Path + "/" + this.Name;
     }
 
     private ISchemaItemCollection GetChildItems(ISchemaItem parentItem)
@@ -1321,7 +1358,10 @@ public abstract class AbstractSchemaItem
                     SchemaItemDescriptionAttribute attr = item.GetType().SchemaItemDescription();
                     string description = attr == null ? item.ItemType : attr.FolderName;
                     if (description == null)
+                    {
                         description = item.ItemType;
+                    }
+
                     if (!folders.Contains(description))
                     {
                         NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
@@ -1580,14 +1620,13 @@ public abstract class AbstractSchemaItem
         {
             return name.CompareTo(item.Name);
         }
-        else if (group != null)
+
+        if (group != null)
         {
             return 1;
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
     #region ISchemaItemConvertible Members
@@ -1628,9 +1667,15 @@ public abstract class AbstractSchemaItem
         for (int i = 0; i < 1000; i++)
         {
             if (parent is T typedParent)
+            {
                 return typedParent;
+            }
+
             if (parent == null)
+            {
                 return null;
+            }
+
             parent = parent.ParentItem;
         }
         return null;

@@ -66,12 +66,18 @@ public class TestCaseStep : AbstractSchemaItem
             switch (this.StepType)
             {
                 case TestCaseStepType.InitialCheck:
+                {
                     return "23";
+                }
                 case TestCaseStepType.Step:
+                {
                     return "24";
+                }
 
                 case TestCaseStepType.FinalCheck:
+                {
                     return "25";
+                }
             }
             return "0";
         }

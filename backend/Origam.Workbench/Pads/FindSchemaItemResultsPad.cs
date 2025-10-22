@@ -276,9 +276,15 @@ public class FindSchemaItemResultsPad : AbstractResultPad
         item.PersistenceProvider.RestrictToLoadedPackage(false);
         string rootName = item.RootItem.ModelDescription();
         if (name == null)
+        {
             name = item.ItemType;
+        }
+
         if (rootName == null)
+        {
             rootName = item.RootItem.ItemType;
+        }
+
         ListViewItem newItem = new ListViewItem(
             new string[]
             {

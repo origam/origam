@@ -71,30 +71,39 @@ public abstract class AbstractFilterRenderer
         switch (operatorName)
         {
             case "Between":
+            {
                 CheckArgumentLength("Between", rightValues, 2);
                 return $"{leftValue} BETWEEN {rightValues[0]} AND {rightValues[1]}";
+            }
+
             case "NotBetween":
+            {
                 CheckArgumentLength("NotBetween", rightValues, 2);
                 return $"{leftValue} NOT BETWEEN {rightValues[0]} AND {rightValues[1]}";
+            }
+
             case "In":
+            {
                 if (isColumnArray)
                 {
                     return ColumnArray(columnName, "IN", rightValues);
                 }
-                else
-                {
-                    return leftValue + " IN (" + string.Join(", ", rightValues) + ")";
-                }
+
+                return leftValue + " IN (" + string.Join(", ", rightValues) + ")";
+            }
+
             case "NotIn":
+            {
                 if (isColumnArray)
                 {
                     return ColumnArray(columnName, "NOT IN", rightValues);
                 }
-                else
-                {
-                    return leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")";
-                }
+
+                return leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")";
+            }
+
             default:
+            {
                 if (rightValues.Length == 1)
                 {
                     return BinaryOperator(leftValue, rightValues[0], operatorName);
@@ -102,6 +111,7 @@ public abstract class AbstractFilterRenderer
                 throw new ArgumentException(
                     $"Cannot process operator {operatorName} with {rightValues.Length} arguments"
                 );
+            }
         }
     }
 
@@ -112,10 +122,15 @@ public abstract class AbstractFilterRenderer
         switch (operatorName)
         {
             case "Equal":
+            {
                 return Equal(leftValue, rightValue);
+            }
             case "NotEqual":
+            {
                 return NotEqual(leftValue, rightValue);
+            }
             default:
+            {
                 CheckArgumentEmpty("leftValue", leftValue);
                 CheckArgumentEmpty("rightValue", rightValue);
                 return string.Format(
@@ -124,6 +139,7 @@ public abstract class AbstractFilterRenderer
                     GetOperator(operatorName),
                     rightValue
                 );
+            }
         }
     }
 
@@ -134,10 +150,8 @@ public abstract class AbstractFilterRenderer
         {
             return string.Format("{0} IS NOT NULL", leftValue);
         }
-        else
-        {
-            return string.Format("{0} <> {1}", leftValue, rightValue);
-        }
+
+        return string.Format("{0} <> {1}", leftValue, rightValue);
     }
 
     public string Equal(string leftValue, string rightValue)
@@ -147,10 +161,8 @@ public abstract class AbstractFilterRenderer
         {
             return string.Format("{0} IS NULL", leftValue);
         }
-        else
-        {
-            return string.Format("{0} = {1}", leftValue, rightValue);
-        }
+
+        return string.Format("{0} = {1}", leftValue, rightValue);
     }
 
     public string Not(string argument)
@@ -164,41 +176,71 @@ public abstract class AbstractFilterRenderer
         switch (functionName)
         {
             case "NotEqual":
+            {
                 return "<>";
+            }
             case "Equal":
+            {
                 return "=";
+            }
             case "Like":
+            {
                 return LikeOperator();
+            }
             case "NotLike":
+            {
                 return "NOT " + LikeOperator();
+            }
             case "Add":
+            {
                 return "+";
+            }
             case "Deduct":
+            {
                 return "-";
+            }
             case "Multiply":
+            {
                 return "*";
+            }
             case "Divide":
+            {
                 return "/";
+            }
             case "LessThan":
+            {
                 return "<";
+            }
             case "LessThanOrEqual":
+            {
                 return "<=";
+            }
             case "GreaterThan":
+            {
                 return ">";
+            }
             case "GreaterThanOrEqual":
+            {
                 return ">=";
+            }
             case "OR":
             case "LogicalOr":
+            {
                 return "OR";
+            }
             case "AND":
             case "LogicalAnd":
+            {
                 return "AND";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "functionName",
                     functionName,
                     ResourceUtils.GetString("UnsupportedOperator")
                 );
+            }
         }
     }
 

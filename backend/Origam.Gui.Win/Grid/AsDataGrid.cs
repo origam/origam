@@ -107,7 +107,10 @@ public class AsDataGrid : DataGrid
         try
         {
             if (FilterKeyData(keyData))
+            {
                 return false;
+            }
+
             return base.ProcessDialogKey(keyData);
         }
         catch
@@ -119,7 +122,10 @@ public class AsDataGrid : DataGrid
     protected override void OnKeyDown(KeyEventArgs e)
     {
         if (FilterKeyData(e.KeyData))
+        {
             return;
+        }
+
         base.OnKeyDown(e);
     }
 
@@ -129,7 +135,9 @@ public class AsDataGrid : DataGrid
         {
             KeyEventArgs ke = new KeyEventArgs(((Keys)((int)m.WParam)) | ModifierKeys);
             if (FilterKeyData(ke.KeyData))
+            {
                 return false;
+            }
         }
         return base.ProcessKeyPreview(ref m);
     }
@@ -163,12 +171,17 @@ public class AsDataGrid : DataGrid
                     parentControl = parentControl.Parent;
                 }
                 if (!found)
+                {
                     doEnter = false;
+                }
             }
             if (doEnter)
             {
                 if (this.ListManager == null)
+                {
                     return;
+                }
+
                 if (this.CurrentCell.RowNumber >= this.ListManager.Count)
                 {
                     if (this.ListManager.Count > 0)
@@ -177,7 +190,10 @@ public class AsDataGrid : DataGrid
                     }
                 }
                 if (!EnhancedFocusControl)
+                {
                     return;
+                }
+
                 try
                 {
                     base.OnEnter(e);

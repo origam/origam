@@ -36,7 +36,10 @@ public class RequiredNonDefaultAttribute : ValidationAttribute
     public override bool IsValid(object value)
     {
         if (value is null)
+        {
             return false;
+        }
+
         var type = value.GetType();
         return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
     }

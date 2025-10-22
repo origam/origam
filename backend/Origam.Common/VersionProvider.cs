@@ -37,7 +37,10 @@ public static class VersionProvider
     public static bool IsCurrentMeta(string versionString)
     {
         if (string.IsNullOrEmpty(versionString))
+        {
             return false;
+        }
+
         Version version = new Version(versionString);
         if (version.Build == -1)
         {

@@ -377,21 +377,34 @@ public class AttachmentPad : AbstractPadContent
         switch (toolBar.Buttons.IndexOf(e.Button))
         {
             case 0:
+            {
                 this.AttLoad();
                 break;
+            }
+
             case 1:
+            {
                 this.AttSave();
                 break;
+            }
+
             case 2:
+            {
                 this.AttShow();
                 break;
+            }
             //case 3 - SEPARATOR
             case 4:
+            {
                 this.AttUpdate();
                 break;
+            }
+
             case 5: // delete
+            {
                 this.AttDelete();
                 break;
+            }
         }
     }
 
@@ -586,7 +599,10 @@ public class AttachmentPad : AbstractPadContent
     {
         IServiceAgent dataServiceAgent = GetDataServiceAgent();
         if (dataServiceAgent == null || _dataset == null)
+        {
             return;
+        }
+
         dataServiceAgent.MethodName = "StoreDataByQuery";
         dataServiceAgent.Parameters.Clear();
         dataServiceAgent.Parameters.Add("Query", _query);
@@ -644,13 +660,17 @@ public class AttachmentPad : AbstractPadContent
         this.ParentEntityId = mainEntityId;
         this.ChildReferences = childReferences;
         if (GetDataServiceAgent() != null)
+        {
             GetAttachments();
+        }
     }
 
     public void GetAttachments()
     {
         if (!_supportAttachments)
+        {
             return;
+        }
         //			try
         //			{
         RetrieveAttachments(this.ParentEntityId, this.ParentId, false);

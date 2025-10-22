@@ -70,7 +70,10 @@ class XmlReferencePropertyChecker : IFileSystemModelChecker
             {
                 Guid refId = (Guid)info.GetValue(instance);
                 if (refId == Guid.Empty)
+                {
                     return null;
+                }
+
                 var referencedObject = filePersistenceProvider.RetrieveInstance<IFilePersistent>(
                     refId
                 );
@@ -118,10 +121,16 @@ class XmlReferencePropertyChecker : IFileSystemModelChecker
     {
         FieldInfo filedInfo = type.GetField(fieldName);
         if (filedInfo != null)
+        {
             return filedInfo;
+        }
+
         PropertyInfo propertyInfo = type.GetProperty(fieldName);
         if (propertyInfo != null)
+        {
             return propertyInfo;
+        }
+
         throw new Exception(
             "Type: " + type + " does not have property or field named: " + fieldName
         );

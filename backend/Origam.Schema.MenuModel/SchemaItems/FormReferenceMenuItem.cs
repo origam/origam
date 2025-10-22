@@ -558,15 +558,27 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
     public override Exception CheckRule(object instance, string memberName)
     {
         if (string.IsNullOrEmpty(memberName))
+        {
             CheckRule(instance);
+        }
+
         if (memberName != "ListEntity")
+        {
             throw new Exception(
                 $"{nameof(MergeIgnoreEntityActionsOnlyRule)} can be only applied to ListEntity property"
             );
+        }
+
         if (instance is not FormReferenceMenuItem menuItem)
+        {
             return null;
+        }
+
         if (menuItem.ListEntity == null)
+        {
             return null;
+        }
+
         string errorMessages = string.Join(
             "\n",
             menuItem

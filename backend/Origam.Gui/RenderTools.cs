@@ -46,12 +46,10 @@ public class RenderTools
             }
             return false;
         }
-        else
-        {
-            return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
-                && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
-                && ShouldRender(action.Features, action.Roles);
-        }
+
+        return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
+            && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
+            && ShouldRender(action.Features, action.Roles);
     }
 
     public static bool ShouldRender(ControlSetItem control)

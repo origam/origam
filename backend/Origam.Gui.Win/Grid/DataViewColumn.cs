@@ -52,7 +52,9 @@ public class AsDataViewColumn : DataGridTextBoxColumn
     {
         // dataSource is null if this method gets called vefore Commit method
         if (dataSource == null)
+        {
             return;
+        }
 
         // Workaround to write chages made in textBox to dataSource
         // and redraw when Tab is pressed.
@@ -98,7 +100,10 @@ public class AsDataViewColumn : DataGridTextBoxColumn
     protected override void Abort(int rowNum)
     {
         if (_isDisposed)
+        {
             return;
+        }
+
         _isEditing = false;
         AsDateBox.dateValueChanged -= new EventHandler(AsDateBox_dateValueChanged);
         Invalidate();
@@ -244,9 +249,14 @@ public class AsDataViewColumn : DataGridTextBoxColumn
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
+            {
                 myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
             if (!formatting.UseDefaultForeColor)
+            {
                 myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
         }
         base.Paint(g, bounds, source, rowNum, myBackBrush, myForeBrush, alignToRight);
     }

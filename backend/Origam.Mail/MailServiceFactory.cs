@@ -50,8 +50,8 @@ public class MailServiceFactory
         return new NetStandardMailService(
             server: server,
             port: port,
-            username: username,
             pickupDirectoryLocation: pickupDirectoryLocation,
+            username: username,
             password: password,
             useSsl: useSsl
         );

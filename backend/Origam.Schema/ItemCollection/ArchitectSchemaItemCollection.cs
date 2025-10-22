@@ -157,10 +157,8 @@ class ArchitectISchemaItemCollection : SchemaItemCollectionBase<Key>, ISchemaIte
                     {
                         throw;
                     }
-                    else
-                    {
-                        continue;
-                    }
+
+                    continue;
                 }
                 if (DeleteItemsOnClear)
                 {

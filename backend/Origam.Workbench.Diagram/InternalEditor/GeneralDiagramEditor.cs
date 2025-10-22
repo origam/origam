@@ -56,7 +56,10 @@ public class GeneralDiagramEditor<T> : IDiagramEditor
         {
             Guid schemaId = IdTranslator.ToSchemaId(node);
             if (schemaId == Guid.Empty)
+            {
                 return;
+            }
+
             ISchemaItem clickedItem = (ISchemaItem)
                 persistenceProvider.RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
             if (clickedItem != null)

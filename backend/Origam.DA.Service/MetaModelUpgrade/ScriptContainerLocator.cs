@@ -44,8 +44,10 @@ public class ScriptContainerLocator
         var containers = scriptContainers
             .Where(container =>
                 container.FullTypeName == className
-                || container.OldFullTypeNames != null
+                || (
+                    container.OldFullTypeNames != null
                     && container.OldFullTypeNames.Contains(className)
+                )
             )
             .ToArray();
         if (containers.Length == 1)

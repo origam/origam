@@ -40,7 +40,10 @@ public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribut
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {

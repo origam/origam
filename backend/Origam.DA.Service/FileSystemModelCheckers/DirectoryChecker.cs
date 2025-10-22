@@ -164,10 +164,16 @@ class DirectoryChecker : IFileSystemModelChecker
                 {
                     var xmlAttribute = node.Attributes?[$"x:{OrigamFile.ParentIdAttribute}"];
                     if (xmlAttribute == null)
+                    {
                         return true;
+                    }
+
                     bool parseSuccess = Guid.TryParse(xmlAttribute.Value, out Guid parentId);
                     if (!parseSuccess)
+                    {
                         return true;
+                    }
+
                     return parentId == Guid.Empty;
                 }) ?? false;
     }

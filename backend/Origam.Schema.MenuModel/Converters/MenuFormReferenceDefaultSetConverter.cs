@@ -63,9 +63,11 @@ public class MenuFormReferenceDefaultSetConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -84,11 +86,13 @@ public class MenuFormReferenceDefaultSetConverter : TypeConverter
             foreach (DataStructureDefaultSet item in defaultSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

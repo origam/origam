@@ -72,18 +72,18 @@ public static class CoordinateConverter
         double k = 1.003419163966575;
 
         // Step 1: Convert planar to geographic coordinates
-        double ro = Math.Sqrt(x * x + y * y);
+        double ro = Math.Sqrt((x * x) + (y * y));
         double epsilon = 2 * Math.Atan2(y, ro + x);
         double d = epsilon / n;
-        double s = 2 * Math.Atan(Math.Exp(1 / n * Math.Log(constURo / ro))) - Math.PI / 2;
+        double s = (2 * Math.Atan(Math.Exp(1 / n * Math.Log(constURo / ro)))) - (Math.PI / 2);
         double sinS = Math.Sin(s);
         double cosS = Math.Cos(s);
-        double sinU = sinUq * sinS - cosUq * cosS * Math.Cos(d);
-        double cosU = Math.Sqrt(1 - sinU * sinU);
+        double sinU = (sinUq * sinS) - (cosUq * cosS * Math.Cos(d));
+        double cosU = Math.Sqrt(1 - (sinU * sinU));
         double sinDv = Math.Sin(d) * cosS / cosU;
-        double cosDv = Math.Sqrt(1 - sinDv * sinDv);
-        double sinV = sinVq * cosDv - cosVq * sinDv;
-        double cosV = cosVq * cosDv + sinVq * sinDv;
+        double cosDv = Math.Sqrt(1 - (sinDv * sinDv));
+        double sinV = (sinVq * cosDv) - (cosVq * sinDv);
+        double cosV = (cosVq * cosDv) + (sinVq * sinDv);
         double ljtsk = 2 * Math.Atan2(sinV, 1 + cosV) / alfa;
         double t = Math.Exp(2 / alfa * Math.Log((1 + sinU) / (cosU * k)));
         double pom = (t - 1) / (t + 1);
@@ -92,19 +92,19 @@ public static class CoordinateConverter
         do
         {
             sinB = pom;
-            pom = t * Math.Exp(e * Math.Log((1 + e * sinB) / (1 - e * sinB)));
+            pom = t * Math.Exp(e * Math.Log((1 + (e * sinB)) / (1 - (e * sinB))));
             pom = (pom - 1) / (pom + 1);
         } while (Math.Abs(pom - sinB) > 1e-14);
 
-        double bjtsk = Math.Atan(pom / Math.Sqrt(1 - pom * pom));
+        double bjtsk = Math.Atan(pom / Math.Sqrt(1 - (pom * pom)));
 
         // Step 2: Cartesian coordinates in S-JTSK
         double f1 = 299.152812853;
-        double e2 = 1 - Math.Pow(1 - 1 / f1, 2);
-        ro = a / Math.Sqrt(1 - e2 * Math.Sin(bjtsk) * Math.Sin(bjtsk));
+        double e2 = 1 - Math.Pow(1 - (1 / f1), 2);
+        ro = a / Math.Sqrt(1 - (e2 * Math.Sin(bjtsk) * Math.Sin(bjtsk)));
         double xCartesian = (ro + h) * Math.Cos(bjtsk) * Math.Cos(ljtsk);
         double yCartesian = (ro + h) * Math.Cos(bjtsk) * Math.Sin(ljtsk);
-        double zCartesian = ((1 - e2) * ro + h) * Math.Sin(bjtsk);
+        double zCartesian = (((1 - e2) * ro) + h) * Math.Sin(bjtsk);
 
         // Step 3: Transform to WGS-84 Cartesian coordinates
         double dx = 570.69,
@@ -115,24 +115,24 @@ public static class CoordinateConverter
         double wx = -4.99821 / 3600 * Math.PI / 180;
         double m = 3.543e-6;
 
-        double xn = dx + (1 + m) * (xCartesian + wz * yCartesian - wy * zCartesian);
-        double yn = dy + (1 + m) * (-wz * xCartesian + yCartesian + wx * zCartesian);
-        double zn = dz + (1 + m) * (wy * xCartesian - wx * yCartesian + zCartesian);
+        double xn = dx + ((1 + m) * (xCartesian + (wz * yCartesian) - (wy * zCartesian)));
+        double yn = dy + ((1 + m) * ((-wz * xCartesian) + yCartesian + (wx * zCartesian)));
+        double zn = dz + ((1 + m) * ((wy * xCartesian) - (wx * yCartesian) + zCartesian));
 
         // Step 4: Convert to geodetic coordinates in WGS-84
         a = 6378137.0;
         f1 = 298.257223563;
         double aB = f1 / (f1 - 1);
-        double p = Math.Sqrt(xn * xn + yn * yn);
-        e2 = 1 - Math.Pow(1 - 1 / f1, 2);
+        double p = Math.Sqrt((xn * xn) + (yn * yn));
+        e2 = 1 - Math.Pow(1 - (1 / f1), 2);
 
         double theta = Math.Atan(zn * aB / p);
         double sinTheta = Math.Sin(theta);
         double cosTheta = Math.Cos(theta);
-        t = (zn + e2 * aB * a * Math.Pow(sinTheta, 3)) / (p - e2 * a * Math.Pow(cosTheta, 3));
+        t = (zn + (e2 * aB * a * Math.Pow(sinTheta, 3))) / (p - (e2 * a * Math.Pow(cosTheta, 3)));
         double b = Math.Atan(t);
         double l = 2 * Math.Atan2(yn, p + xn);
-        h = Math.Sqrt(1 + t * t) * (p - a / Math.Sqrt(1 + (1 - e2) * t * t));
+        h = Math.Sqrt(1 + (t * t)) * (p - (a / Math.Sqrt(1 + ((1 - e2) * t * t))));
 
         // Final formatting
         b = b * 180 / Math.PI;

@@ -84,7 +84,10 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     )
     {
         if (this.Lookup != null)
+        {
             base.GetParameterReferences(Lookup, list);
+        }
+
         base.GetParameterReferences(this, list);
     }
 

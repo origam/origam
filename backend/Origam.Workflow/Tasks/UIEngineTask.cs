@@ -129,11 +129,14 @@ public class UIEngineTask : AbstractWorkflowEngineTask
     public void Finish()
     {
         if (this.Result == null)
+        {
             OnFinished(
                 new WorkflowEngineTaskEventArgs(
                     new NullReferenceException(ResourceUtils.GetString("ErrorNoResultData"))
                 )
             );
+        }
+
         OnFinished(new WorkflowEngineTaskEventArgs());
     }
 

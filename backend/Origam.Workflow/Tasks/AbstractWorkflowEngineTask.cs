@@ -123,10 +123,8 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
                     null
                 );
             }
-            else
-            {
-                return this.Engine.RuleEngine.Evaluate(item);
-            }
+
+            return this.Engine.RuleEngine.Evaluate(item);
         }
         catch (Exception ex)
         {

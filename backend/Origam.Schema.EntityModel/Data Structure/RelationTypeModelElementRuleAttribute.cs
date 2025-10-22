@@ -40,7 +40,10 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var dataStructure = (DataStructureEntity)instance;
         bool allFields = dataStructure.AllFields;
         RelationType relation = dataStructure.RelationType;

@@ -29,7 +29,9 @@ public partial class FindReplaceForm : Form
     private void btnFindNext_Click(object sender, EventArgs e)
     {
         if (!FindNext(txtFind.Text))
+        {
             SystemSounds.Beep.Play();
+        }
     }
 
     private void btnReplace_Click(object sender, EventArgs e)
@@ -44,7 +46,9 @@ public partial class FindReplaceForm : Form
             replaced = true;
         }
         if (!FindNext(txtFind.Text) && !replaced)
+        {
             SystemSounds.Beep.Play();
+        }
     }
 
     private void btnReplaceAll_Click(object sender, EventArgs e)
@@ -84,9 +88,13 @@ public partial class FindReplaceForm : Form
         if (!match.Success) // start again from beginning or end
         {
             if (regex.Options.HasFlag(RegexOptions.RightToLeft))
+            {
                 match = regex.Match(Editor.Text, Editor.Text.Length);
+            }
             else
+            {
                 match = regex.Match(Editor.Text, 0);
+            }
         }
         if (match.Success)
         {
@@ -101,22 +109,31 @@ public partial class FindReplaceForm : Form
     {
         RegexOptions options = RegexOptions.None;
         if (cbSearchUp.Checked && !leftToRight)
+        {
             options |= RegexOptions.RightToLeft;
+        }
+
         if (!cbCaseSensitive.Checked)
+        {
             options |= RegexOptions.IgnoreCase;
+        }
+
         if (cbRegex.Checked == true)
         {
             return new Regex(textToFind, options);
         }
-        else
+        string pattern = Regex.Escape(textToFind);
+        if (cbWildcards.Checked)
         {
-            string pattern = Regex.Escape(textToFind);
-            if (cbWildcards.Checked)
-                pattern = pattern.Replace("\\*", ".*").Replace("\\?", ".");
-            if (cbWholeWord.Checked)
-                pattern = "\\b" + pattern + "\\b";
-            return new Regex(pattern, options);
+            pattern = pattern.Replace("\\*", ".*").Replace("\\?", ".");
         }
+
+        if (cbWholeWord.Checked)
+        {
+            pattern = "\\b" + pattern + "\\b";
+        }
+
+        return new Regex(pattern, options);
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

@@ -39,10 +39,8 @@ public class ExcelTools
         {
             return ExcelFormat.XLSX;
         }
-        else
-        {
-            return ExcelFormat.XLS;
-        }
+
+        return ExcelFormat.XLS;
     }
 
     public static IWorkbook GetWorkbook(ExcelFormat excelFormat)
@@ -51,10 +49,8 @@ public class ExcelTools
         {
             return new XSSFWorkbook();
         }
-        else
-        {
-            return new HSSFWorkbook();
-        }
+
+        return new HSSFWorkbook();
     }
 
     public static IWorkbook GetWorkbook(ExcelFormat excelFormat, Stream stream)
@@ -63,10 +59,8 @@ public class ExcelTools
         {
             return new XSSFWorkbook(stream);
         }
-        else
-        {
-            return new HSSFWorkbook(stream);
-        }
+
+        return new HSSFWorkbook(stream);
     }
 
     public static void SetWorkbookSubject(IWorkbook workbook, string subject)

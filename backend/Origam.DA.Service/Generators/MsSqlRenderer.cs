@@ -109,19 +109,33 @@ public class MsSqlRenderer : SqlRenderer
         switch (datepart)
         {
             case DateTypeSql.Second:
+            {
                 return "s";
+            }
             case DateTypeSql.Minute:
+            {
                 return "mi";
+            }
             case DateTypeSql.Hour:
+            {
                 return "hh";
+            }
             case DateTypeSql.Day:
+            {
                 return "dd";
+            }
             case DateTypeSql.Month:
+            {
                 return "m";
+            }
             case DateTypeSql.Year:
+            {
                 return "yy";
+            }
             default:
+            {
                 throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
+            }
         }
     }
 
@@ -186,13 +200,19 @@ public class MsSqlRenderer : SqlRenderer
         switch (latLon)
         {
             case geoLatLonSql.Lat:
+            {
                 return string.Format("{0}.Lat", expresion);
+            }
             case geoLatLonSql.Lon:
+            {
                 return string.Format("{0}.Long", expresion);
+            }
             default:
+            {
                 throw new NotSupportedException(
                     "Unsuported in Latitude or Longtitude " + latLon.ToString()
                 );
+            }
         }
     }
 

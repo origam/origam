@@ -342,7 +342,9 @@ public class SessionManager
                 }
 
                 case UIRequestType.ReportReferenceMenuItem:
+                {
                     break;
+                }
                 case UIRequestType.ReportReferenceMenuItem_WithSelection:
                 {
                     menuItem =

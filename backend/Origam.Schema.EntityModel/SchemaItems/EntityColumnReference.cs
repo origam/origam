@@ -76,7 +76,9 @@ public class EntityColumnReference : AbstractSchemaItem
     )
     {
         if (this.Field != null)
+        {
             base.GetParameterReferences(Field, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

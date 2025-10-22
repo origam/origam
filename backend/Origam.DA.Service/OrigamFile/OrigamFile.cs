@@ -186,7 +186,10 @@ public class OrigamFile : ITrackeableFile
     private void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
     {
         if (!IsInAGroup)
+        {
             return;
+        }
+
         bool referenceFileIsMissing = !directory
             .GetFiles()
             .Any(file => file.Name == GroupFileName || file.Name == ReferenceFileName);

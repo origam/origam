@@ -285,10 +285,8 @@ public abstract class EntityUIAction : AbstractSchemaItem
         {
             return this.Name.CompareTo(compared.Name);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

@@ -101,7 +101,10 @@ public class SchemaCompareEditor : AbstractViewContent
             if (version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
             {
                 if (version.IsCurrentVersion)
+                {
                     currentVersion = version;
+                }
+
                 cboDeploymentVersion.Items.Add(version);
             }
         }

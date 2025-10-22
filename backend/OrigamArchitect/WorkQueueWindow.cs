@@ -267,7 +267,7 @@ public class WorkQueueWindow : AsForm
                     case OrigamDataType.Currency:
                     case OrigamDataType.Memo:
                     case OrigamDataType.String:
-
+                    {
                         AsTextBox tb = new AsTextBox();
                         tb.ReadOnly = true;
                         tb.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
@@ -305,7 +305,10 @@ public class WorkQueueWindow : AsForm
                         this.FormGenerator.ControlBindings.Add(tb, binding);
                         tb.BindingContext = FormGenerator.BindingContext;
                         break;
+                    }
+
                     case OrigamDataType.UniqueIdentifier:
+                    {
                         if (col.FinalLookup != null)
                         {
                             AsDropDown dd = new AsDropDown();
@@ -317,7 +320,7 @@ public class WorkQueueWindow : AsForm
                             dd.Location = new System.Drawing.Point(110, lastPos);
                             dd.LookupId = (Guid)col.FinalLookup.PrimaryKey["Id"];
                             panel.Controls.Add(dd);
-                            binding = new Binding(
+                            Binding binding = new Binding(
                                 dd.DefaultBindableProperty,
                                 data,
                                 panel.DataMember + "." + col.Name
@@ -329,7 +332,9 @@ public class WorkQueueWindow : AsForm
                                 .AddLookupControl(dd, this, true);
                         }
                         break;
+                    }
                     case OrigamDataType.Date:
+                    {
                         AsDateBox db = new AsDateBox();
                         db.ReadOnly = true;
                         db.Caption = col.Caption == "" ? col.Field.Caption : col.Caption;
@@ -339,7 +344,7 @@ public class WorkQueueWindow : AsForm
                         db.Location = new System.Drawing.Point(110, lastPos);
 
                         panel.Controls.Add(db);
-                        binding = new Binding(
+                        Binding binding = new Binding(
                             db.DefaultBindableProperty,
                             data,
                             panel.DataMember + "." + col.Name
@@ -347,6 +352,7 @@ public class WorkQueueWindow : AsForm
                         //this.FormGenerator.SetTooltip(db, "", db.Caption);
                         this.FormGenerator.ControlBindings.Add(db, binding);
                         break;
+                    }
                 }
             }
         }

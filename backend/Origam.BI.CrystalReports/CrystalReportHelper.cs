@@ -143,7 +143,10 @@ public class CrystalReportHelper
     private Hashtable PrepareParameters(DataSet data, Hashtable parameters, CrystalReport report)
     {
         if (parameters == null)
+        {
             parameters = new Hashtable();
+        }
+
         TraceReportData(data, report.Name);
         ReportHelper.PopulateDefaultValues(report, parameters);
         ReportHelper.ComputeXsltValueParameters(report, parameters);
@@ -164,9 +167,12 @@ public class CrystalReportHelper
             WriteInfoLog(reportElement, "Generating report started");
         }
         if (parameters == null)
+        {
             throw new NullReferenceException(
                 ResourceUtils.GetString("CreateReport: Parameters cannot be null.")
             );
+        }
+
         var settings = ConfigurationManager.GetActiveConfiguration();
         string baseUrl = ParseConnectionString(settings.ReportConnectionString, out int? timeout);
         var request = new ReportRequest { Dataset = data };
@@ -252,9 +258,13 @@ public class CrystalReportHelper
             switch (identifier)
             {
                 case "url":
+                {
                     url = pair[1];
                     break;
+                }
+
                 case "timeout":
+                {
                     int timeoutInternal;
                     if (int.TryParse(pair[1], out timeoutInternal))
                     {
@@ -271,13 +281,17 @@ public class CrystalReportHelper
                         );
                     }
                     break;
+                }
+
                 default:
+                {
                     throw new ArgumentOutOfRangeException(
                         "Unknown Crystal"
                             + " Reports connection string identifier '"
                             + identifier
                             + "'"
                     );
+                }
             }
             if (string.IsNullOrEmpty(url))
             {

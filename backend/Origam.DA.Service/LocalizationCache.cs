@@ -69,14 +69,10 @@ public class LocalizationCache : ILocalizationCache, IDisposable
             }
             return;
         }
-        else
+
+        if (log.IsInfoEnabled)
         {
-            if (log.IsInfoEnabled)
-            {
-                log.Info(
-                    "Loading localization strings from folder: " + settings.LocalizationFolder
-                );
-            }
+            log.Info("Loading localization strings from folder: " + settings.LocalizationFolder);
         }
         DirectoryInfo di = new DirectoryInfo(settings.LocalizationFolder);
         if (di.Exists)
@@ -221,28 +217,22 @@ public class LocalizationCache : ILocalizationCache, IDisposable
                 {
                     return members[memberName] as string;
                 }
-                else
-                {
-                    return defaultString;
-                }
-            }
-            else
-            {
+
                 return defaultString;
             }
-        }
-        else
-        {
-            if (log.IsDebugEnabled)
-            {
-                log.DebugFormat(
-                    "Locale {0} not available, returning default string \"{1}\"",
-                    locale,
-                    defaultString
-                );
-            }
+
             return defaultString;
         }
+
+        if (log.IsDebugEnabled)
+        {
+            log.DebugFormat(
+                "Locale {0} not available, returning default string \"{1}\"",
+                locale,
+                defaultString
+            );
+        }
+        return defaultString;
     }
 
     private void Dispose(bool disposing)

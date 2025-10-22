@@ -63,7 +63,9 @@ public class ReportReference : AbstractSchemaItem
     )
     {
         if (this.Report != null)
+        {
             base.GetParameterReferences(Report, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

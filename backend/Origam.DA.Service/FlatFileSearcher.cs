@@ -172,10 +172,16 @@ internal class PlainTextFileSearcher : FileSearcher
     public override IEnumerable<Guid> FindObjectsContainingKeyWord()
     {
         if (!FileContainsKeyword())
+        {
             yield break;
+        }
+
         Guid? id = ExternalFilePath.ParseOwnerId(FileInfo.FullName);
         if (!id.HasValue)
+        {
             yield break;
+        }
+
         yield return id.Value;
     }
 

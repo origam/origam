@@ -89,10 +89,8 @@ public class ContextStore : AbstractSchemaItem, IContextStore
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
     #endregion
     #region IContextStore Members

@@ -56,12 +56,21 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
             ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
         if (!(sch.IsSchemaLoaded && sch.ActiveNode is ISchemaItemFactory))
+        {
             return false;
+        }
+
         ISchemaItemFactory factory = sch.ActiveNode as ISchemaItemFactory;
         if (factory.NewItemTypes == null)
+        {
             return false;
+        }
+
         if (factory.NewItemTypes.Length == 0)
+        {
             return false;
+        }
+
         return true;
     }
 
@@ -72,7 +81,10 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
             as WorkbenchSchemaService;
         object activeNode = owner ?? sch.ActiveNode;
         if (activeNode == null)
+        {
             return new AsMenuCommand[0];
+        }
+
         ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
         NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
         ISchemaItem activeItem = activeNode as ISchemaItem;
@@ -219,12 +231,21 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
             ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
             as WorkbenchSchemaService;
         if (!sch.CanEditItem(sch.ActiveNode))
+        {
             return false;
+        }
+
         ISchemaItemFactory factory = ParentFactory(sch.ActiveNode);
         if (factory == null)
+        {
             return false;
+        }
+
         if (factory.NewItemTypes == null)
+        {
             return false;
+        }
+
         return true;
     }
 
@@ -283,10 +304,8 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
             {
                 return schemaItem.RootProvider;
             }
-            else
-            {
-                return schemaItem.ParentItem;
-            }
+
+            return schemaItem.ParentItem;
         }
         return null;
     }

@@ -197,7 +197,10 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
     private void PaintCaption()
     {
         if (_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing)
+        {
             return;
+        }
+
         this._captionLabel.Width = this.CaptionLength;
         this._captionLabel.BackColor = Color.Transparent;
         this._captionLabel.AutoSize = true;
@@ -205,31 +208,42 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
         switch (this.CaptionPosition)
         {
             case CaptionPosition.Left:
+            {
                 this._captionLabel.Visible = true;
                 this._captionLabel.Top = this.Top + 2;
                 this._captionLabel.Left = this.Left - this.CaptionLength;
                 break;
+            }
+
             case CaptionPosition.Right:
+            {
                 this._captionLabel.Visible = true;
                 this._captionLabel.Top = this.Top + 2;
                 this._captionLabel.Left = this.Right;
                 break;
+            }
 
             case CaptionPosition.Top:
+            {
                 this._captionLabel.Visible = true;
                 this._captionLabel.Top = this.Top - this._captionLabel.Height;
                 this._captionLabel.Left = this.Left;
                 break;
+            }
 
             case CaptionPosition.Bottom:
+            {
                 this._captionLabel.Visible = true;
                 this._captionLabel.Top = this.Top + this.Height;
                 this._captionLabel.Left = this.Left;
                 break;
+            }
 
             case CaptionPosition.None:
+            {
                 this._captionLabel.Visible = false;
                 break;
+            }
         }
     }
 
@@ -271,6 +285,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
             foreach (Binding binding in this.DataBindings)
             {
                 if (binding.PropertyName == this.DefaultBindableProperty)
+                {
                     try
                     {
                         this._captionLabel.Text = ColumnCaption(binding);
@@ -279,6 +294,7 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
                     {
                         this._captionLabel.Text = "????";
                     }
+                }
             }
         }
     }
@@ -302,7 +318,10 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
             }
         }
         else
+        {
             tableName = dataMember;
+        }
+
         return tableName;
     }
 
@@ -319,7 +338,9 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
             if (table != null)
             {
                 if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                {
                     return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                }
             }
         }
         return binding.BindingMemberInfo.BindingField;

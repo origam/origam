@@ -158,11 +158,20 @@ public sealed class FileEventQueue : IDisposable
     private bool IsDirectoryChangeAndNeedsUpdate(FileSystemChangeEventArgs eventArgs)
     {
         if (!eventArgs.IsDirectoryChange)
+        {
             return false;
+        }
+
         if (FilesInIndexNeedUpdate(eventArgs))
+        {
             return true;
+        }
+
         if (ExistingFilesNeedUpdate(eventArgs))
+        {
             return true;
+        }
+
         return false;
     }
 
@@ -193,14 +202,20 @@ public sealed class FileEventQueue : IDisposable
         if (file.Exists)
         {
             if (maybeHash.HasNoValue)
+            {
                 return true;
+            }
+
             if (maybeHash.Value != file.GetFileBase64Hash())
             {
                 return true;
             }
         }
         if (!file.Exists && maybeHash.HasValue)
+        {
             return true;
+        }
+
         return false;
     }
 
@@ -212,7 +227,10 @@ public sealed class FileEventQueue : IDisposable
         }
         Maybe<ExternalFile> mayBeExtFile = index.GetExternalFile(file);
         if (mayBeExtFile.HasValue)
+        {
             return mayBeExtFile.Value?.FileHash;
+        }
+
         IFileStorageDocumentationService documentationService = (IFileStorageDocumentationService)
             ServiceManager.Services.GetService<IDocumentationService>();
         return documentationService.GetDocumentationFileHash(file);

@@ -121,11 +121,17 @@ public class TableMappingItem : AbstractDataEntity
             switch (DatabaseObjectType)
             {
                 case DatabaseMappingObjectType.Table:
+                {
                     return "icon_database-entity.png";
+                }
                 case DatabaseMappingObjectType.View:
+                {
                     return "54";
+                }
                 default:
+                {
                     return "0";
+                }
             }
         }
     }
@@ -147,7 +153,9 @@ public class TableMappingItem : AbstractDataEntity
             foreach (IDataEntityColumn column in this.EntityColumns)
             {
                 if (column.IsPrimaryKey && column is FieldMappingItem)
+                {
                     list.Add(column);
+                }
             }
             return list;
         }

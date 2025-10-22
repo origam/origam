@@ -50,132 +50,126 @@ public class OrigamTenantProfileProvider : AbstractProfileProvider
         {
             return profileCacheByIdentity[userName];
         }
-        else
+
+        try
         {
-            try
+            UserProfile profile = new UserProfile();
+            lock (profileCacheByIdentity)
             {
-                UserProfile profile = new UserProfile();
-                lock (profileCacheByIdentity)
+                DataStructureQuery query = new DataStructureQuery(
+                    new Guid("c1b5852d-9c79-408f-84d1-71cf5f8a899a"),
+                    new Guid("42160561-5c04-4a97-b836-53e2d6fe9d97"),
+                    Guid.Empty,
+                    new Guid("fbbcda00-5df4-425c-8d2e-d3b6ae73caa0")
+                );
+                query.Parameters.Add(new QueryParameter("BusinessPartner_parUserName", userName));
+                // if data service would try to get identity,
+                //we would get into recursion
+                query.LoadByIdentity = false;
+                IServiceAgent dataServiceAgent = GetAgent();
+                dataServiceAgent.MethodName = "LoadDataByQuery";
+                dataServiceAgent.Parameters.Clear();
+                dataServiceAgent.Parameters.Add("Query", query);
+                dataServiceAgent.Run();
+                DataSet result = (DataSet)dataServiceAgent.Result;
+                if (result.Tables["BusinessPartner"].Rows.Count == 0)
                 {
-                    DataStructureQuery query = new DataStructureQuery(
-                        new Guid("c1b5852d-9c79-408f-84d1-71cf5f8a899a"),
-                        new Guid("42160561-5c04-4a97-b836-53e2d6fe9d97"),
-                        Guid.Empty,
-                        new Guid("fbbcda00-5df4-425c-8d2e-d3b6ae73caa0")
+                    throw new ProfileNotFoundException(
+                        ResourceUtils.GetString("ErrorProfileUnavailable", userName)
                     );
-                    query.Parameters.Add(
-                        new QueryParameter("BusinessPartner_parUserName", userName)
-                    );
-                    // if data service would try to get identity,
-                    //we would get into recursion
-                    query.LoadByIdentity = false;
-                    IServiceAgent dataServiceAgent = GetAgent();
-                    dataServiceAgent.MethodName = "LoadDataByQuery";
-                    dataServiceAgent.Parameters.Clear();
-                    dataServiceAgent.Parameters.Add("Query", query);
-                    dataServiceAgent.Run();
-                    DataSet result = (DataSet)dataServiceAgent.Result;
-                    if (result.Tables["BusinessPartner"].Rows.Count == 0)
-                    {
-                        throw new ProfileNotFoundException(
-                            ResourceUtils.GetString("ErrorProfileUnavailable", userName)
-                        );
-                    }
-                    DataRow row = result.Tables["BusinessPartner"].Rows[0];
-                    profile.Id = (Guid)row["Id"];
-                    // find out about current switch obp
-                    IParameterService _parameterService =
-                        ServiceManager.Services.GetService(typeof(IParameterService))
-                        as IParameterService;
-                    Guid? switchBusinessPartnerId =
-                        _parameterService.GetParameterValue(
-                            CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID,
-                            profile.Id
-                        ) as Guid?;
-                    DataRow obpRow = null;
-                    if (
-                        result.Tables["OrganizationBusinessPartner"].Rows.Count > 0
-                        && CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
-                            switchBusinessPartnerId
-                        )
+                }
+                DataRow row = result.Tables["BusinessPartner"].Rows[0];
+                profile.Id = (Guid)row["Id"];
+                // find out about current switch obp
+                IParameterService _parameterService =
+                    ServiceManager.Services.GetService(typeof(IParameterService))
+                    as IParameterService;
+                Guid? switchBusinessPartnerId =
+                    _parameterService.GetParameterValue(
+                        CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID,
+                        profile.Id
+                    ) as Guid?;
+                DataRow obpRow = null;
+                if (
+                    result.Tables["OrganizationBusinessPartner"].Rows.Count > 0
+                    && CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
+                        switchBusinessPartnerId
                     )
-                    {
-                        obpRow = result.Tables["OrganizationBusinessPartner"].Rows[0];
-                    }
-                    // switched to some particular organization business partner?
-                    if (
-                        switchBusinessPartnerId != null
-                        && !Guid.Empty.Equals(switchBusinessPartnerId.Value)
-                        && !CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
-                            switchBusinessPartnerId
-                        )
+                )
+                {
+                    obpRow = result.Tables["OrganizationBusinessPartner"].Rows[0];
+                }
+                // switched to some particular organization business partner?
+                if (
+                    switchBusinessPartnerId != null
+                    && !Guid.Empty.Equals(switchBusinessPartnerId.Value)
+                    && !CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET.Equals(
+                        switchBusinessPartnerId
                     )
+                )
+                {
+                    foreach (DataRow iObpRow in result.Tables["OrganizationBusinessPartner"].Rows)
                     {
-                        foreach (
-                            DataRow iObpRow in result.Tables["OrganizationBusinessPartner"].Rows
-                        )
+                        if (switchBusinessPartnerId.Equals((Guid)iObpRow["Id"]))
                         {
-                            if (switchBusinessPartnerId.Equals((Guid)iObpRow["Id"]))
+                            // we found the organization business partner
+                            // switch must be valid - must not to other's obp profile
+                            if ((Guid)iObpRow["refSwitchUserBusinessPartnerId"] == profile.Id)
                             {
-                                // we found the organization business partner
-                                // switch must be valid - must not to other's obp profile
-                                if ((Guid)iObpRow["refSwitchUserBusinessPartnerId"] == profile.Id)
-                                {
-                                    obpRow = iObpRow;
-                                    break;
-                                }
+                                obpRow = iObpRow;
+                                break;
                             }
                         }
                     }
-                    // set organization specific parameters
-                    if (obpRow != null)
-                    {
-                        // we switch to a particular organization
-                        // profile.FullName = (string)obpRow["SwitchFullName"];
-                        profile.OrganizationId = (Guid)obpRow["refSwitchOrganizationId"];
-                    }
-
-                    profile.FullName = (string)row["FullName"] + " (" + userName + ")";
-
-                    if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
-                    {
-                        profile.ResourceId = (Guid)row["Resource_Id"];
-                    }
-                    if (
-                        row.Table.Columns.Contains("BusinessUnit_Id")
-                        && (!row.IsNull("BusinessUnit_Id"))
-                    )
-                    {
-                        profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
-                    }
-                    profileCacheByIdentity[userName] = profile;
                 }
-                return profile;
-            }
-            catch (ProfileNotFoundException ex)
-            {
-                if (log.IsErrorEnabled)
+                // set organization specific parameters
+                if (obpRow != null)
                 {
-                    log.LogOrigamError(ex.Message, ex);
+                    // we switch to a particular organization
+                    // profile.FullName = (string)obpRow["SwitchFullName"];
+                    profile.OrganizationId = (Guid)obpRow["refSwitchOrganizationId"];
                 }
-                throw;
-            }
-            catch (Exception ex)
-            {
-                if (log.IsErrorEnabled)
+
+                profile.FullName = (string)row["FullName"] + " (" + userName + ")";
+
+                if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
                 {
-                    log.LogOrigamError(ex.Message, ex);
+                    profile.ResourceId = (Guid)row["Resource_Id"];
                 }
-                throw new Exception(
-                    ResourceUtils.GetString("ErrorUnableToLoadProfile0")
-                        + Environment.NewLine
-                        + Environment.NewLine
-                        + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
-                        + Environment.NewLine
-                        + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
-                    ex
-                );
+                if (
+                    row.Table.Columns.Contains("BusinessUnit_Id")
+                    && (!row.IsNull("BusinessUnit_Id"))
+                )
+                {
+                    profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
+                }
+                profileCacheByIdentity[userName] = profile;
             }
+            return profile;
+        }
+        catch (ProfileNotFoundException ex)
+        {
+            if (log.IsErrorEnabled)
+            {
+                log.LogOrigamError(ex.Message, ex);
+            }
+            throw;
+        }
+        catch (Exception ex)
+        {
+            if (log.IsErrorEnabled)
+            {
+                log.LogOrigamError(ex.Message, ex);
+            }
+            throw new Exception(
+                ResourceUtils.GetString("ErrorUnableToLoadProfile0")
+                    + Environment.NewLine
+                    + Environment.NewLine
+                    + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
+                    + Environment.NewLine
+                    + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
+                ex
+            );
         }
     }
     #endregion

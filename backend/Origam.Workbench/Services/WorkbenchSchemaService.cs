@@ -81,9 +81,11 @@ public class WorkbenchSchemaService : SchemaService
         get
         {
             if (_schemaBrowser?.EbrSchemaBrowser?.ActiveNode is ISchemaItem)
+            {
                 return _schemaBrowser.EbrSchemaBrowser.ActiveNode as ISchemaItem;
-            else
-                return null;
+            }
+
+            return null;
         }
     }
     public IBrowserNode2 ActiveNode
@@ -96,10 +98,8 @@ public class WorkbenchSchemaService : SchemaService
             {
                 return viewContent.Content as IBrowserNode2;
             }
-            else
-            {
-                return _schemaBrowser?.EbrSchemaBrowser?.ActiveNode;
-            }
+
+            return _schemaBrowser?.EbrSchemaBrowser?.ActiveNode;
         }
     }
 
@@ -124,10 +124,8 @@ public class WorkbenchSchemaService : SchemaService
             OrigamUserContext.Reset();
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     private void ebrSchemaBrowser_NodeClick(object sender, EventArgs e)

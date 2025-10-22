@@ -253,7 +253,9 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
             a.CreateInstance("Origam.Workbench.Editors.DiagramEditor") as IViewContent;
         // Set editor to dirty, if object has not been persisted, yet (new item)
         if (!item.IsPersisted)
+        {
             editor.IsDirty = true;
+        }
         else
         {
             // Get a copy of the item to edit (no cache usage => we get a fresh copy)
@@ -288,10 +290,8 @@ public class EditActiveSchemaItem : AbstractMenuCommand
             {
                 return _schema.CanEditItem(_schema.ActiveNode);
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         set
         {
@@ -403,7 +403,9 @@ public class EditSchemaItem : AbstractCommand
             System.Reflection.Assembly a = Assembly.Load("Origam.Gui.Designer");
             editor = a.CreateInstance("Origam.Gui.Designer.ControlSetEditor") as IViewContent;
             if (editor == null)
+            {
                 throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+            }
         }
         else if (
             itemType == "Origam.Schema.EntityModel.XslTransformation"
@@ -415,14 +417,18 @@ public class EditSchemaItem : AbstractCommand
             System.Reflection.Assembly a = Assembly.Load("Origam.Workbench");
             editor = a.CreateInstance("Origam.Workbench.Editors.XslEditor") as IViewContent;
             if (editor == null)
+            {
                 throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+            }
         }
         else if (itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
             System.Reflection.Assembly a = Assembly.Load("Origam.Schema.EntityModel.UI");
             editor = a.CreateInstance("Origam.Schema.EntityModel.UI.XsdEditor") as IViewContent;
             if (editor == null)
+            {
                 throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+            }
         }
         else if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
         {
@@ -431,7 +437,9 @@ public class EditSchemaItem : AbstractCommand
                 a.CreateInstance("Origam.Schema.DeploymentModel.ServiceScriptCommandEditor")
                 as IViewContent;
             if (editor == null)
+            {
                 throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
+            }
         }
         else if (item is EntityUIAction)
         {
@@ -446,12 +454,10 @@ public class EditSchemaItem : AbstractCommand
                 diagramAction.Run();
                 return;
             }
-            else
-            {
-                this.ShowDialog = true;
-                editor = new PropertyGridEditor(ShowDialog);
-                this.ShowDiagramEditorAfterSave = true;
-            }
+            this.ShowDialog = true;
+            editor = new PropertyGridEditor(ShowDialog);
+
+            this.ShowDiagramEditorAfterSave = true;
         }
         else
         {

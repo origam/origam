@@ -67,9 +67,11 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -86,11 +88,13 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
             foreach (ISchemaItem item in rules.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as TestChecklistRule;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

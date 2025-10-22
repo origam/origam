@@ -59,7 +59,6 @@ public class OrigamEngine
     internal OrigamEngine() { }
     #endregion
 
-
     #region Public Static Methods
     public static void InitializeSchemaItemProviders(SchemaService service)
     {
@@ -234,10 +233,8 @@ public class OrigamEngine
         {
             return DateTime.MinValue;
         }
-        else
-        {
-            return (DateTime)value;
-        }
+
+        return (DateTime)value;
     }
     #endregion
     public static bool IsRestartPending()
@@ -267,7 +264,7 @@ public class OrigamEngine
             {
                 log.LogOrigamError(
                     "Could not get restart status. Will retry in "
-                        + RestartTimer.Interval / 1000
+                        + (RestartTimer.Interval / 1000)
                         + "seconds.",
                     ex
                 );

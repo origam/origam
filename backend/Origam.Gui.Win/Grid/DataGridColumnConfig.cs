@@ -192,7 +192,10 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
         {
             ListViewItem item = listView1.SelectedItems[0];
             if (item.Index == 0)
+            {
                 return;
+            }
+
             listView1.BeginUpdate();
             try
             {
@@ -217,7 +220,10 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
         {
             ListViewItem item = listView1.SelectedItems[0];
             if (item.Index == listView1.Items.Count - 1)
+            {
                 return;
+            }
+
             listView1.BeginUpdate();
             try
             {

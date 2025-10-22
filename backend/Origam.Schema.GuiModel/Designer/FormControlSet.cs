@@ -74,10 +74,8 @@ public class FormControlSet : AbstractControlSet
         {
             return new UI.BrowserNodeCollection();
         }
-        else
-        {
-            return base.Alternatives;
-        }
+
+        return base.Alternatives;
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

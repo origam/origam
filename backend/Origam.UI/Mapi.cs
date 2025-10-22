@@ -43,7 +43,10 @@ public class Mapi
         winhandle = hwnd;
         error = MAPILogon(hwnd, null, null, 0, 0, ref session);
         if (error != 0)
+        {
             error = MAPILogon(hwnd, null, null, MapiLogonUI, 0, ref session);
+        }
+
         return error == 0;
     }
 
@@ -107,9 +110,14 @@ public class Mapi
     {
         MapiRecipDesc dest = new MapiRecipDesc();
         if (cc)
+        {
             dest.recipClass = MapiCC;
+        }
         else
+        {
             dest.recipClass = MapiTO;
+        }
+
         dest.name = name;
         dest.address = addr;
         recpts.Add(dest);
@@ -140,7 +148,10 @@ public class Mapi
     {
         recipCount = 0;
         if (recpts.Count == 0)
+        {
             return IntPtr.Zero;
+        }
+
         Type rtype = typeof(MapiRecipDesc);
         int rsize = Marshal.SizeOf(rtype);
         IntPtr ptrr = Marshal.AllocHGlobal(recpts.Count * rsize);
@@ -158,9 +169,15 @@ public class Mapi
     {
         fileCount = 0;
         if (attachs == null)
+        {
             return IntPtr.Zero;
+        }
+
         if ((attachs.Count <= 0) || (attachs.Count > 100))
+        {
             return IntPtr.Zero;
+        }
+
         Type atype = typeof(MapiFileDesc);
         int asize = Marshal.SizeOf(atype);
         IntPtr ptra = Marshal.AllocHGlobal(attachs.Count * asize);
@@ -236,7 +253,10 @@ public class Mapi
     {
         error = MAPIFindNext(session, winhandle, null, findseed, MapiLongMsgID, 0, lastMsgID);
         if (error != 0)
+        {
             return false;
+        }
+
         findseed = lastMsgID.ToString();
         IntPtr ptrmsg = IntPtr.Zero;
         error = MAPIReadMail(
@@ -248,12 +268,18 @@ public class Mapi
             ref ptrmsg
         );
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
+        {
             return false;
+        }
+
         lastMsg = new MapiMessage();
         Marshal.PtrToStructure(ptrmsg, lastMsg);
         MapiRecipDesc orig = new MapiRecipDesc();
         if (lastMsg.originator != IntPtr.Zero)
+        {
             Marshal.PtrToStructure(lastMsg.originator, orig);
+        }
+
         env.id = findseed;
         env.date = DateTime.ParseExact(
             lastMsg.dateReceived,
@@ -293,11 +319,17 @@ public class Mapi
         IntPtr ptrmsg = IntPtr.Zero;
         error = MAPIReadMail(session, winhandle, id, MapiPeek | MapiSuprAttach, 0, ref ptrmsg);
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
+        {
             return null;
+        }
+
         lastMsg = new MapiMessage();
         Marshal.PtrToStructure(ptrmsg, lastMsg);
         if ((lastMsg.fileCount > 0) && (lastMsg.fileCount < 100) && (lastMsg.files != IntPtr.Zero))
+        {
             GetAttachNames(out aat);
+        }
+
         MAPIFreeBuffer(ptrmsg);
         return lastMsg.noteText;
     }
@@ -313,12 +345,18 @@ public class Mapi
         IntPtr ptrmsg = IntPtr.Zero;
         error = MAPIReadMail(session, winhandle, id, MapiPeek, 0, ref ptrmsg);
         if ((error != 0) || (ptrmsg == IntPtr.Zero))
+        {
             return false;
+        }
+
         lastMsg = new MapiMessage();
         Marshal.PtrToStructure(ptrmsg, lastMsg);
         bool f = false;
         if ((lastMsg.fileCount > 0) && (lastMsg.fileCount < 100) && (lastMsg.files != IntPtr.Zero))
+        {
             f = SaveAttachByName(name, savepath);
+        }
+
         MAPIFreeBuffer(ptrmsg);
         return f;
     }
@@ -356,15 +394,24 @@ public class Mapi
             Marshal.PtrToStructure((IntPtr)runptr, fdtmp);
             runptr += fdsize;
             if (fdtmp.flags != 0)
+            {
                 continue;
+            }
+
             if (fdtmp.name == null)
+            {
                 continue;
+            }
+
             try
             {
                 if (name == fdtmp.name)
                 {
                     if (File.Exists(savepath))
+                    {
                         File.Delete(savepath);
+                    }
+
                     File.Move(fdtmp.path, savepath);
                 }
             }
@@ -428,7 +475,10 @@ public class Mapi
             ref ptrnew
         );
         if ((error != 0) || (newrec < 1) || (ptrnew == IntPtr.Zero))
+        {
             return false;
+        }
+
         MapiRecipDesc recip = new MapiRecipDesc();
         Marshal.PtrToStructure(ptrnew, recip);
         name = recip.name;
@@ -457,7 +507,10 @@ public class Mapi
     public string Error()
     {
         if (error <= 26)
+        {
             return errors[error];
+        }
+
         return "?unknown? [" + error.ToString() + "]";
     }
 

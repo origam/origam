@@ -63,16 +63,24 @@ public class DataStructureReference : AbstractSchemaItem, IDataStructureReferenc
     )
     {
         if (this.DataStructure != null)
+        {
             base.GetParameterReferences(DataStructure, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.DataStructure);
         if (this.Method != null)
+        {
             dependencies.Add(this.Method);
+        }
+
         if (this.SortSet != null)
+        {
             dependencies.Add(this.SortSet);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

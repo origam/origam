@@ -39,14 +39,13 @@ public class XpathEvaluator : IXpathEvaluator
         {
             return Evaluate(nodeset as XPathNodeIterator, xpath);
         }
-        else if (nodeset is XPathNavigator)
+
+        if (nodeset is XPathNavigator)
         {
             return Evaluate(nodeset as XPathNavigator, xpath);
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException("nodeset", nodeset, "Invalid type.");
-        }
+
+        throw new ArgumentOutOfRangeException("nodeset", nodeset, "Invalid type.");
     }
 
     private string Evaluate(XPathNodeIterator iterator, string xpath)
@@ -104,11 +103,13 @@ public class XpathEvaluator : IXpathEvaluator
             switch (returnDataType)
             {
                 case OrigamDataType.Boolean:
+                {
                     if (result == null)
                     {
                         return false;
                     }
-                    else if (result is String)
+
+                    if (result is String)
                     {
                         if (
                             (string)result == ""
@@ -118,102 +119,100 @@ public class XpathEvaluator : IXpathEvaluator
                         {
                             return false;
                         }
-                        else
-                        {
-                            return true;
-                        }
+
+                        return true;
                     }
-                    else if (result is double)
+
+                    if (result is double)
                     {
                         if ((double)result == 0)
                         {
                             return false;
                         }
-                        else
-                        {
-                            return true;
-                        }
+
+                        return true;
                     }
-                    else if (result is bool)
+
+                    if (result is bool)
                     {
                         return result;
                     }
-                    else
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorConvertToBool"));
-                    }
+
+                    throw new Exception(ResourceUtils.GetString("ErrorConvertToBool"));
+                }
 
                 case OrigamDataType.UniqueIdentifier:
+                {
                     if (result == null || result.ToString() == "")
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return new Guid(result.ToString());
-                    }
+
+                    return new Guid(result.ToString());
+                }
 
                 case OrigamDataType.Date:
+                {
                     if (result == null || result.ToString() == "")
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return XmlConvert.ToDateTime(
-                            result.ToString(),
-                            XmlDateTimeSerializationMode.RoundtripKind
-                        );
-                    }
+
+                    return XmlConvert.ToDateTime(
+                        result.ToString(),
+                        XmlDateTimeSerializationMode.RoundtripKind
+                    );
+                }
 
                 case OrigamDataType.Long:
+                {
                     if (result == null || result.ToString() == "")
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return Convert.ToInt64(result, new System.Globalization.NumberFormatInfo());
-                    }
+
+                    return Convert.ToInt64(result, new System.Globalization.NumberFormatInfo());
+                }
 
                 case OrigamDataType.Integer:
+                {
                     if (result == null || result.ToString() == "")
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return Convert.ToInt32(result, new System.Globalization.NumberFormatInfo());
-                    }
+
+                    return Convert.ToInt32(result, new System.Globalization.NumberFormatInfo());
+                }
 
                 case OrigamDataType.Float:
+                {
                     if (result == null || result.ToString() == "")
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return Convert.ToDecimal(
-                            result,
-                            new System.Globalization.NumberFormatInfo()
-                        );
-                    }
+
+                    return Convert.ToDecimal(result, new System.Globalization.NumberFormatInfo());
+                }
 
                 case OrigamDataType.Currency:
+                {
                     return Convert.ToDecimal(result, new System.Globalization.NumberFormatInfo());
+                }
 
                 case OrigamDataType.String:
+                {
                     if (result == null)
                     {
                         return DBNull.Value;
                     }
-                    else
-                    {
-                        return XmlTools.ConvertToString(result);
-                    }
+
+                    return XmlTools.ConvertToString(result);
+                }
 
                 default:
+                {
                     throw new Exception("Data type not supported by rule evaluation.");
+                }
             }
         }
         catch (Exception ex)

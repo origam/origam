@@ -275,10 +275,8 @@ public class ExtensionPad : AbstractPadContent
             {
                 return lvwPackages.SelectedItems[0].Tag as Package;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         set
         {
@@ -358,7 +356,9 @@ public class ExtensionPad : AbstractPadContent
         {
             Commands.LoadSelectedPackage cmd = new Origam.Workbench.Commands.LoadSelectedPackage();
             if (cmd.IsEnabled)
+            {
                 cmd.Run();
+            }
         }
         catch (Exception ex)
         {

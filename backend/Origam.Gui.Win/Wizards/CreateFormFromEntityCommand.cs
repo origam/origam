@@ -95,7 +95,10 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
     {
         string groupName = null;
         if (screenwizardForm.Entity.Group != null)
+        {
             groupName = screenwizardForm.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
             screenwizardForm.Entity,
             screenwizardForm.NameOfEntity,
@@ -196,7 +199,10 @@ public class CreateCompleteUICommand : AbstractMenuCommand
     {
         string groupName = null;
         if (wizardForm.Entity.Group != null)
+        {
             groupName = wizardForm.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
             wizardForm.Entity,
             wizardForm.NameOfEntity,
@@ -307,7 +313,10 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
         PanelControlSet panel = ((PanelControlSet)panelWizard.Entity);
         string groupName = null;
         if (panelWizard.Entity.Group != null)
+        {
             groupName = panelWizard.Entity.Group.Name;
+        }
+
         DataStructure dataStructure = EntityHelper.CreateDataStructure(
             panel.DataEntity,
             panelWizard.NameOfEntity,

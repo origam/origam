@@ -58,7 +58,10 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.InputValidationRule != null)
+        {
             dependencies.Add(this.InputValidationRule);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

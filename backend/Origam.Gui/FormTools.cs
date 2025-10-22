@@ -99,7 +99,10 @@ public static class FormTools
         IParameterService parameterService =
             ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         if (!parameterService.IsFeatureOn(features))
+        {
             return false;
+        }
+
         if (roles != null && roles != String.Empty)
         {
             if (
@@ -141,9 +144,15 @@ public static class FormTools
     public static string FindTableByDataMember(DataSet ds, string member)
     {
         if (member == null)
+        {
             return "";
+        }
+
         if (ds == null)
+        {
             return "";
+        }
+
         string tableName = "";
         if (member.IndexOf(".") > 0)
         {
@@ -185,7 +194,10 @@ public static class FormTools
             tableName = table.TableName;
         }
         else
+        {
             tableName = member;
+        }
+
         return tableName;
     }
 

@@ -46,11 +46,16 @@ public class SQLValueFormatter
         switch (sqlOperator)
         {
             case "like":
+            {
                 escapedValue = escapeLikeInput(text);
                 break;
+            }
+
             default:
+            {
                 escapedValue = text;
                 break;
+            }
         }
         return "'" + escapedValue.Replace("'", "''") + "'";
     }
@@ -62,29 +67,44 @@ public class SQLValueFormatter
             case OrigamDataType.Integer:
             case OrigamDataType.Float:
             case OrigamDataType.Currency:
+            {
                 return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+            }
             case OrigamDataType.Boolean:
+            {
                 bool boolValue = value is string maybeBoolValue
                     ? bool.Parse(maybeBoolValue)
                     : (bool)value;
                 return boolValue ? trueValue : falseValue;
+            }
+
             case OrigamDataType.UniqueIdentifier:
+            {
                 return value.ToString() == "null" ? "NULL" : "'" + value + "'";
+            }
             case OrigamDataType.Array:
+            {
                 return "'" + value + "'";
+            }
             case OrigamDataType.Xml:
             case OrigamDataType.Memo:
             case OrigamDataType.String:
+            {
                 return value.ToString() == "null"
                     ? "NULL"
                     : RenderString(value.ToString(), sqlOperator);
+            }
             case OrigamDataType.Date:
+            {
                 if (
                     value == null
                     || value.Equals("null")
-                    || value is string strValue1 && string.IsNullOrWhiteSpace(strValue1)
+                    || (value is string strValue1 && string.IsNullOrWhiteSpace(strValue1))
                 )
+                {
                     return "null";
+                }
+
                 DateTime date;
                 if (value is string strValue)
                 {
@@ -100,10 +120,14 @@ public class SQLValueFormatter
                     date = (DateTime)value;
                 }
                 return date.ToString(@" \'yyyy-MM-dd HH:mm:ss\' ");
+            }
+
             default:
+            {
                 throw new NotImplementedException(
                     ResourceUtils.GetString("TypeNotImplementedByDatabase", dataType.ToString())
                 );
+            }
         }
     }
 }

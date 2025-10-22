@@ -76,7 +76,10 @@ public class OrigamNameSpace
     private static OrigamNameSpace CreateNonCached(string xmlNamespace)
     {
         if (xmlNamespace == null)
+        {
             throw new ArgumentNullException(nameof(xmlNamespace));
+        }
+
         if (!IsOrigamNamespace(xmlNamespace))
         {
             throw new ArgumentException(

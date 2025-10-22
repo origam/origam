@@ -118,10 +118,7 @@ public class DataStructureRuleSetReference : AbstractSchemaItem
         {
             return this.Name.CompareTo((obj as DataStructureRuleSetReference).Name);
         }
-        else
-        {
-            // rulesets are always an top, so rules are lower
-            return -1;
-        }
+        // rulesets are always an top, so rules are lower
+        return -1;
     }
 }

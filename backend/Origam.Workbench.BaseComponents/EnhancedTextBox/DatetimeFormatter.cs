@@ -45,7 +45,10 @@ internal class DatetimeFormatter : Formatter
     {
         Text = Text.Trim();
         if (string.IsNullOrEmpty(Text))
+        {
             return;
+        }
+
         var dateStr = IsAutoCompleteAble(Text) ? AutoComplete(Text) : Text;
         var result = ParseToDate(dateStr);
         var parseSuccess = result.Item1;
@@ -91,20 +94,30 @@ internal class DatetimeFormatter : Formatter
     {
         var dateParts = dateStr.Split(DateTimeSeparator);
         if (dateParts.Length > 2)
+        {
             return false;
+        }
+
         var datePart = dateParts[0];
         if (datePart.Contains(DateSeparator))
         {
             if (datePart.Length > 10)
+            {
                 return false;
+            }
         }
         else
         {
             if (datePart.Length > 8)
+            {
                 return false;
+            }
         }
         if (dateParts.Length == 2 && dateParts[1].Length > 6)
+        {
             return false;
+        }
+
         return true;
     }
 
@@ -187,20 +200,26 @@ class DateCompleter
         {
             case 1:
             case 2:
+            {
                 return incompleteTime + timeSeparator + "00" + timeSeparator + "00";
+            }
             case 3:
             case 4:
+            {
                 return incompleteTime.Substring(0, 2)
                     + timeSeparator
                     + incompleteTime.Substring(2)
                     + timeSeparator
                     + "00";
+            }
             default:
+            {
                 return incompleteTime.Substring(0, 2)
                     + timeSeparator
                     + incompleteTime.Substring(2, 2)
                     + timeSeparator
                     + incompleteTime.Substring(4);
+            }
         }
     }
 
@@ -253,7 +272,9 @@ class DateCompleter
                 return incompleteWithSeparators;
             }
             default:
+            {
                 return AddSeparators(incompleteDate);
+            }
         }
     }
 

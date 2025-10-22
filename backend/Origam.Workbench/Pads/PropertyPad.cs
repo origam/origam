@@ -137,7 +137,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
     private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
     {
         if (!_selectComponent)
+        {
             return;
+        }
+
         PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
         if (item != null)
         {

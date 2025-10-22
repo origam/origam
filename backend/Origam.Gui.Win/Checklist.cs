@@ -175,7 +175,10 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
         try
         {
             if (!_itemsLoaded)
+            {
                 return;
+            }
+
             var col = _origamMetadata
                 .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
                 .ToList();
@@ -193,7 +196,10 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
     public void CreateMappingItemsCollection()
     {
         if (!_itemsLoaded)
+        {
             return;
+        }
+
         if (this.DataLookup != null)
         {
             foreach (var entry in this.DataLookup.ParameterReferences)
@@ -213,7 +219,9 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
     private void FillParameterCache(ControlSetItem controlItem)
     {
         if (controlItem == null)
+        {
             return;
+        }
 
         ParameterMappings.Clear();
 

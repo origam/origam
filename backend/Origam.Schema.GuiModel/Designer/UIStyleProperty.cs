@@ -93,7 +93,10 @@ public class UIStyleProperty : AbstractSchemaItem
         get
         {
             if (_value == null)
+            {
                 return null;
+            }
+
             return _value.Trim();
         }
         set

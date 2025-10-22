@@ -217,10 +217,8 @@ public class DeployVersion : AbstractMenuCommand
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         set
         {

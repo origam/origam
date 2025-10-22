@@ -63,7 +63,9 @@ public class DataConstantReference : AbstractSchemaItem
     )
     {
         if (this.DataConstant != null)
+        {
             base.GetParameterReferences(DataConstant, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

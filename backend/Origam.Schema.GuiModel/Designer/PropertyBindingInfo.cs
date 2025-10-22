@@ -56,7 +56,10 @@ public class PropertyBindingInfo : AbstractPropertyValueItem
         get
         {
             if (_value == null)
+            {
                 return null;
+            }
+
             return _value.Trim();
         }
         set { _value = value; }

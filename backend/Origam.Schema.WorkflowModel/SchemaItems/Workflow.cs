@@ -87,7 +87,9 @@ public class Workflow : AbstractSchemaItem, IWorkflow
         foreach (ContextStore context in ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
         {
             if (context.IsReturnValue)
+            {
                 return context;
+            }
         }
         return null;
     }
@@ -138,14 +140,17 @@ public class Workflow : AbstractSchemaItem, IWorkflow
                     {
                         return Trace.Yes;
                     }
-                    else if (workflowStep is WorkflowCallTask workflowCallTask)
+
+                    if (workflowStep is WorkflowCallTask workflowCallTask)
                     {
                         // skip any direct recursion
                         if (!workflowCallTask.Workflow.PrimaryKey.Equals(this.PrimaryKey))
                         {
                             Trace result = workflowCallTask.Workflow.Trace;
                             if (result == Trace.Yes)
+                            {
                                 return Trace.Yes;
+                            }
                         }
                     }
                 }

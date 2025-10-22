@@ -454,18 +454,30 @@ internal class TestItem : IFilePersistent
     private bool ByteArraysEqual(byte[] first, byte[] second)
     {
         if (first.Length != second.Length)
+        {
             return false;
+        }
+
         return !first.Where((byte1, i) => byte1 != second[i]).Any();
     }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, obj))
+        {
             return true;
+        }
+
         if (obj.GetType() != this.GetType())
+        {
             return false;
+        }
+
         return Equals((TestItem)obj);
     }
 

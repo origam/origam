@@ -64,9 +64,7 @@ class RulesProcessor
             System.Console.Write(sb.ToString());
             return 1;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }

@@ -221,9 +221,14 @@ public class DataGridBuilder : IGridBuilder
         foreach (DataGridColumnStyleHolder style in _styles)
         {
             if (!style.Hidden)
+            {
                 allHidden = false;
+            }
+
             if (style.Style.Width == 0)
+            {
                 style.Style.Width = 100;
+            }
         }
         _styles.Sort();
         if (allHidden & _styles.Count > 0)
@@ -358,17 +363,26 @@ public class DataGridBuilder : IGridBuilder
     {
         string defProperty = (control as IAsControl).DefaultBindableProperty;
         if (defProperty == null)
+        {
             return null;
+        }
+
         DataColumn column = GetDataColumn(control);
         if (column == null)
+        {
             return null;
+        }
+
         DataGridColumnStyle columnStyle = MakeDataGridColumnStyle(control, ruleEngine, column);
 
         columnStyle.HeaderText = SelectCaption(column, control);
         columnStyle.MappingName = column.ColumnName;
 
         if (column.ReadOnly)
+        {
             columnStyle.ReadOnly = true;
+        }
+
         SetColumnWidth(control, userConfig, columnStyle);
         columnStyle.NullText = "";
 
@@ -509,7 +523,10 @@ public class DataGridBuilder : IGridBuilder
     {
         Binding controlDataBinding = control.DataBindings[0];
         if (controlDataBinding == null)
+        {
             return null;
+        }
+
         var bindingField = controlDataBinding.BindingMemberInfo.BindingField;
         if (controlDataBinding.DataSource is DataView dataView)
         {
@@ -540,9 +557,14 @@ public class DataGridBuilder : IGridBuilder
         if (control is IAsCaptionControl iAsCaptionControl)
         {
             if (!string.IsNullOrEmpty(iAsCaptionControl.GridColumnCaption))
+            {
                 return ((IAsCaptionControl)control).GridColumnCaption;
+            }
+
             if (!string.IsNullOrEmpty(iAsCaptionControl.Caption))
+            {
                 return ((IAsCaptionControl)control).Caption;
+            }
         }
         return column.Caption;
     }
@@ -707,6 +729,7 @@ public class DataGridBuilder : IGridBuilder
                     switch (e.Button)
                     {
                         case MouseButtons.Left: // By left button we only change the clicked cell.
+                        {
                             if (grid.DataSource != null)
                             {
                                 // set the current cell to the checkbox column, otherwise datagrid will
@@ -752,8 +775,10 @@ public class DataGridBuilder : IGridBuilder
                             }
 
                             break;
+                        }
 
                         case MouseButtons.Right: // By right button we reverse all values in the current column.
+                        {
                             var selectedRows = new List<DataRow>();
                             int count = cm.Count;
                             for (int i = 0; i < count; i++)
@@ -781,6 +806,7 @@ public class DataGridBuilder : IGridBuilder
                             }
 
                             break;
+                        }
                     }
                 }
             }
@@ -793,11 +819,16 @@ public class DataGridBuilder : IGridBuilder
         AsDataGrid grid = sender as AsDataGrid;
         DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
         if (hti.Column < 0 || hti.Row < 0)
+        {
             return;
+        }
 
         if (
             grid.TableStyles[0].GridColumnStyles[hti.Column] is DataGridDropdownColumn
-            && (Control.ModifierKeys & Keys.Control) == Keys.Control & e.Button == MouseButtons.Left
+            && (
+                (Control.ModifierKeys & Keys.Control) == Keys.Control
+                & e.Button == MouseButtons.Left
+            )
         )
         {
             DataGridDropdownColumn col =
@@ -819,7 +850,9 @@ public class DataGridBuilder : IGridBuilder
         DataGrid.HitTestInfo hti = (sender as DataGrid).HitTest(e.X, e.Y);
         AsDataGrid grid = sender as AsDataGrid;
         if (hti.Column < 0 || hti.Row < 0)
+        {
             return;
+        }
 
         DataGridDropdownColumn col =
             grid.TableStyles[0].GridColumnStyles[hti.Column] as DataGridDropdownColumn;
@@ -848,9 +881,14 @@ public class DataGridBuilder : IGridBuilder
     {
         AsDataGrid grid = sender as AsDataGrid;
         if (grid.DataSource == null)
+        {
             return;
+        }
+
         if (!(grid.CurrentCell.ColumnNumber >= 0 & grid.CurrentCell.RowNumber >= 0))
+        {
             return;
+        }
 
         if (
             grid.TableStyles[0].GridColumnStyles[grid.CurrentCell.ColumnNumber]
@@ -861,10 +899,14 @@ public class DataGridBuilder : IGridBuilder
             switch (e.KeyChar)
             {
                 case (char)32: // space
+                {
                     grid[grid.CurrentCell] = !Convert.ToBoolean(grid[grid.CurrentCell]);
                     e.Handled = true;
                     break;
+                }
+
                 case (char)42: // *
+                {
                     for (
                         int i = 0;
                         i < grid.BindingContext[grid.DataSource, grid.DataMember].Count;
@@ -879,6 +921,7 @@ public class DataGridBuilder : IGridBuilder
                         }
                     }
                     break;
+                }
             }
         }
     }
@@ -887,7 +930,10 @@ public class DataGridBuilder : IGridBuilder
     public void Dispose()
     {
         if (grid == null)
+        {
             return;
+        }
+
         parentControl = null;
         FilterFactory = null;
         grid.MouseDown -= grid_MouseDown;

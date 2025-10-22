@@ -44,7 +44,10 @@ public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute
     public override Exception CheckRule(object instance, string memberName)
     {
         if (string.IsNullOrEmpty(memberName))
+        {
             CheckRule(instance);
+        }
+
         if (!(instance is EntityRelationItem relationItem))
         {
             throw new Exception(

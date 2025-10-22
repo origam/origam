@@ -141,10 +141,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
     private bool _canceled = false;
@@ -165,7 +163,9 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
     private void UpdateListSize()
     {
         if (this.IsDisposed)
+        {
             return;
+        }
 
         this.Height = 200;
         int w = 5;
@@ -211,7 +211,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             location.X -= location.X + this.Width - screenTotalWidth;
         }
         if (location.X < screen.X)
+        {
             location.X = screen.X;
+        }
+
         if (location.Y + this.Height > screenTotalHeight)
         {
             location.Y -= (this.DropDownControl.Height + this.Height);
@@ -242,7 +245,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
                         [style.MappingName]
                         .ToString();
                     if (!columnValueAtRow.Equals(""))
+                    {
                         emptyColumn = false;
+                    }
+
                     int width =
                         ((int)graphics.MeasureString(columnValueAtRow, grid.Font).Width) + 2;
                     if (width > num)
@@ -338,7 +344,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             }
             grid.SetDataBinding(value, "");
             if (value == null)
+            {
                 return;
+            }
+
             UpdateListSize();
             value.ListChanged += new ListChangedEventHandler(DropDownGrid_ListChanged);
         }
@@ -371,10 +380,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
             {
                 return (this.Context.Current as DataRowView)[this.ColumnList[0]].ToString();
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
             //				return this.list.GetItemText(this.list.SelectedItem);
         }
         set { throw new NotImplementedException(); }
@@ -384,7 +391,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
         get
         {
             if (this.Context.Position < 0)
+            {
                 return DBNull.Value;
+            }
+
             return (this.Context.Current as DataRowView)[this.ValueMember];
             //				return this.list.SelectedValue;
         }

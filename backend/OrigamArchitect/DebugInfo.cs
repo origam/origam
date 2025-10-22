@@ -393,16 +393,27 @@ public class DebugInfo : IDebugInfoProvider
             switch (protocoleID)
             {
                 case WTS_PROTOCOL_TYPE_CONSOLE:
+                {
                     protocoleType = "Console";
                     break;
+                }
+
                 case WTS_PROTOCOL_TYPE_ICA:
+                {
                     protocoleType = "ICA";
                     break;
+                }
+
                 case WTS_PROTOCOL_TYPE_RDP:
+                {
                     protocoleType = "RDP";
                     break;
+                }
+
                 default:
+                {
                     break;
+                }
             }
         }
         WTSFreeMemory(ppBuffer);

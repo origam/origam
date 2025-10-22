@@ -35,12 +35,18 @@ internal abstract class ExternalFileWriter
             case Txt:
             case Xml:
             case Xslt:
+            {
                 return new TextFileWriter(filePath);
+            }
             case Bin:
             case Png:
+            {
                 return new BinaryFileWriter(filePath);
+            }
             default:
+            {
                 throw new NotImplementedException();
+            }
         }
     }
 

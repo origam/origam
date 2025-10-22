@@ -61,11 +61,14 @@ public class WorkQueueClass : AbstractSchemaItem
             this.GetChildByName(name, WorkQueueWorkflowCommand.CategoryConst)
             as WorkQueueWorkflowCommand;
         if (cmd == null)
+        {
             throw new ArgumentOutOfRangeException(
                 "name",
                 name,
                 ResourceUtils.GetString("ErrorUknownWorkQueueCommand")
             );
+        }
+
         return cmd;
     }
 
@@ -74,11 +77,14 @@ public class WorkQueueClass : AbstractSchemaItem
         WorkqueueLoader loader =
             this.GetChildByName(name, WorkqueueLoader.CategoryConst) as WorkqueueLoader;
         if (loader == null)
+        {
             throw new ArgumentOutOfRangeException(
                 "name",
                 name,
                 ResourceUtils.GetString("ErrorUknownWorkQueueLoader")
             );
+        }
+
         return loader;
     }
 
@@ -97,39 +103,90 @@ public class WorkQueueClass : AbstractSchemaItem
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.EntityStructure != null)
+        {
             dependencies.Add(this.EntityStructure);
+        }
+
         if (this.EntityStructurePrimaryKeyMethod != null)
+        {
             dependencies.Add(this.EntityStructurePrimaryKeyMethod);
+        }
+
         if (this.Entity != null)
+        {
             dependencies.Add(this.Entity);
+        }
+
         if (this.ConditionFilter != null)
+        {
             dependencies.Add(this.ConditionFilter);
+        }
+
         if (this.RelatedEntity1 != null)
+        {
             dependencies.Add(this.RelatedEntity1);
+        }
+
         if (this.RelatedEntity2 != null)
+        {
             dependencies.Add(this.RelatedEntity2);
+        }
+
         if (this.RelatedEntity3 != null)
+        {
             dependencies.Add(this.RelatedEntity3);
+        }
+
         if (this.RelatedEntity4 != null)
+        {
             dependencies.Add(this.RelatedEntity4);
+        }
+
         if (this.RelatedEntity5 != null)
+        {
             dependencies.Add(this.RelatedEntity5);
+        }
+
         if (this.RelatedEntity6 != null)
+        {
             dependencies.Add(this.RelatedEntity6);
+        }
+
         if (this.RelatedEntity7 != null)
+        {
             dependencies.Add(this.RelatedEntity7);
+        }
+
         if (this.WorkQueueStructure != null)
+        {
             dependencies.Add(this.WorkQueueStructure);
+        }
+
         if (this.WorkQueueStructureUserListMethod != null)
+        {
             dependencies.Add(this.WorkQueueStructureUserListMethod);
+        }
+
         if (this.NotificationLoadMethod != null)
+        {
             dependencies.Add(this.NotificationLoadMethod);
+        }
+
         if (this.NotificationStructure != null)
+        {
             dependencies.Add(this.NotificationStructure);
+        }
+
         if (this.WorkQueueItemCountLookup != null)
+        {
             dependencies.Add(this.WorkQueueItemCountLookup);
+        }
+
         if (this.WorkQueueStructureSortSet != null)
+        {
             dependencies.Add(this.WorkQueueStructureSortSet);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
     #endregion

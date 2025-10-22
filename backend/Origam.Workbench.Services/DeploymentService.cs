@@ -56,7 +56,10 @@ public class DeploymentService : IDeploymentService
         get
         {
             if (_versionData == null)
+            {
                 _versionData = new OrigamModelVersionData();
+            }
+
             return _versionData;
         }
         set { _versionData = value; }
@@ -147,10 +150,8 @@ public class DeploymentService : IDeploymentService
                 {
                     return PackageVersion.Zero;
                 }
-                else
-                {
-                    return new PackageVersion(versionRow.Version);
-                }
+
+                return new PackageVersion(versionRow.Version);
             }
         }
         return PackageVersion.Zero;
@@ -270,18 +271,26 @@ public class DeploymentService : IDeploymentService
         switch (activity.TargetLocation)
         {
             case DeploymentFileLocation.ReportsFolder:
+            {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 fileName = Path.Combine(settings.ReportsFolder(), activity.FileName);
                 break;
+            }
+
             case DeploymentFileLocation.Manual:
+            {
                 fileName = activity.FileName;
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "TargetLocaltion",
                     activity.TargetLocation,
                     ResourceUtils.GetString("ErrorUnsupportedTarget")
                 );
+            }
         }
         Log("Restoring file to: " + fileName);
         MemoryStream ms = new MemoryStream(activity.File);
@@ -301,11 +310,19 @@ public class DeploymentService : IDeploymentService
         finally
         {
             if (s != null)
+            {
                 s.Close();
+            }
+
             if (file != null)
+            {
                 file.Close();
+            }
+
             if (ms != null)
+            {
                 ms.Close();
+            }
         }
         File.SetCreationTime(fileName, entry.DateTime);
     }
@@ -518,7 +535,10 @@ public class DeploymentService : IDeploymentService
     private void TryLoadVersions()
     {
         if (_versionsLoaded)
+        {
             return;
+        }
+
         ClearVersions();
         string localTransaction = Guid.NewGuid().ToString();
         DataSet data = null;
@@ -553,7 +573,10 @@ public class DeploymentService : IDeploymentService
             data = versionDataFromOrigamModelVersion;
         }
         if (data == null)
+        {
             return;
+        }
+
         VersionData.Merge(data);
         _versionsLoaded = true;
     }
@@ -561,9 +584,15 @@ public class DeploymentService : IDeploymentService
     private void SaveVersions()
     {
         if (TrySaveVersions(origamModelVersionQueryId))
+        {
             return;
+        }
+
         if (TrySaveVersions(asapModelVersionQueryId))
+        {
             return;
+        }
+
         throw new Exception(
             "Failed to save Model versions. Does a table named OrigamModelVersion or AsapModelVersion exist?"
         );

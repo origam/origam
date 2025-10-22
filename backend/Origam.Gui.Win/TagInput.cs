@@ -176,7 +176,10 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
         try
         {
             if (!_itemsLoaded)
+            {
                 return;
+            }
+
             var col = _origamMetadata
                 .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
                 .ToList();
@@ -194,7 +197,10 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
     public void CreateMappingItemsCollection()
     {
         if (!_itemsLoaded)
+        {
             return;
+        }
+
         if (this.DataLookup != null)
         {
             foreach (var entry in this.DataLookup.ParameterReferences)
@@ -214,7 +220,9 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
     private void FillParameterCache(ControlSetItem controlItem)
     {
         if (controlItem == null)
+        {
             return;
+        }
 
         ParameterMappings.Clear();
 

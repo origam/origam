@@ -50,7 +50,10 @@ public class BlockWrapper : IScheduledItem
     DateTime NextRunTime(DateTime time, int count, bool AllowExact)
     {
         if (count == 0)
+        {
             throw new Exception("Invalid block wrapper combination.");
+        }
+
         DateTime temp = _Item.NextRunTime(time, AllowExact),
             begin = _Begin.NextRunTime(time, true),
             end = _End.NextRunTime(time, true);
@@ -64,19 +67,24 @@ public class BlockWrapper : IScheduledItem
         if (C)
         {
             if (A && B)
+            {
                 return NextRunTime(begin, --count, false);
-            else
-                return temp;
+            }
+
+            return temp;
         }
-        else
+
+        if (!A && !B)
         {
-            if (!A && !B)
-                return temp;
-            if (!A)
-                return NextRunTime(begin, --count, false);
-            else
-                return NextRunTime(end, --count, false);
+            return temp;
         }
+
+        if (!A)
+        {
+            return NextRunTime(begin, --count, false);
+        }
+
+        return NextRunTime(end, --count, false);
     }
 
     private IScheduledItem _Item;

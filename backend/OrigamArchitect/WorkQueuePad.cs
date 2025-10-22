@@ -256,7 +256,10 @@ public class WorkQueuePad : AbstractPadContent
             this.dataGrid1.Show();
             OrigamSettings settings = (OrigamSettings)ConfigurationManager.GetActiveConfiguration();
             if (settings == null)
+            {
                 return;
+            }
+
             if (settings.WorkQueueListRefreshPeriod == 0)
             {
                 WQTimer.Enabled = false;
@@ -268,11 +271,17 @@ public class WorkQueuePad : AbstractPadContent
             IWorkQueueService wqs =
                 ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
             if (wqs == null)
+            {
                 return;
+            }
+
             SchemaService schema =
                 ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
             if (!schema.IsSchemaLoaded)
+            {
                 return;
+            }
+
             if (_data.Tables.Count == 0)
             {
                 _data.Merge(wqs.UserQueueList());

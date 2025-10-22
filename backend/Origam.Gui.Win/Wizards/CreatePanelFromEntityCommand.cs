@@ -99,7 +99,10 @@ public class CreatePanelFromEntityCommand : AbstractMenuCommand
     {
         string groupName = null;
         if (screenwizardForm.Entity.Group != null)
+        {
             groupName = screenwizardForm.Entity.Group.Name;
+        }
+
         panel = GuiHelper.CreatePanel(
             groupName,
             screenwizardForm.Entity,

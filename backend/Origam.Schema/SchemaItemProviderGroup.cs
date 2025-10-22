@@ -130,10 +130,8 @@ public class SchemaItemProviderGroup : IBrowserNode2, IComparable
         {
             return _order.CompareTo(group.Order);
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
 }

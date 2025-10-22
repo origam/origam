@@ -93,7 +93,9 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
             foreach (IDataEntityColumn column in this.EntityColumns)
             {
                 if (column.IsPrimaryKey)
+                {
                     list.Add(column);
+                }
             }
             return list;
         }
@@ -211,7 +213,9 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
             foreach (EntityRelationItem relation in this.EntityRelations)
             {
                 if (relation.IsParentChild)
+                {
                     result.Add(relation.RelatedEntity);
+                }
             }
             return result;
         }
@@ -268,7 +272,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
                 }
             }
             if (pk.Fields.Count > 0)
+            {
                 result.Add(pk);
+            }
+
             return result;
         }
     }
@@ -294,7 +301,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.DescribingField != null)
+        {
             dependencies.Add(this.DescribingField);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

@@ -188,11 +188,16 @@ public partial class PropertyGridModelDropdown : UserControl
         {
             case Keys.Up:
             case Keys.Down:
+            {
                 listBox1.Focus();
                 break;
+            }
+
             case Keys.Enter:
+            {
                 Finish();
                 break;
+            }
         }
     }
 

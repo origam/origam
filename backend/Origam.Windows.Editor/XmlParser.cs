@@ -258,7 +258,8 @@ namespace Origam.Windows.Editor
                         ignoreEqualsSign = true;
                         break;
                     }
-                    else if (IsQuoteChar(ch))
+
+                    if (IsQuoteChar(ch))
                     {
                         foundQuoteChar = true;
                     }
@@ -287,10 +288,14 @@ namespace Origam.Windows.Editor
                             int oldIndex = index;
                             // move back to first non-whitespace
                             while (index > -1 && char.IsWhiteSpace(xml[index]))
+                            {
                                 index--;
+                            }
                             // if no equals sign is found reset index
                             if (index > -1 && xml[index] != '=')
+                            {
                                 index = oldIndex;
+                            }
                         }
                         else
                         {
@@ -385,7 +390,8 @@ namespace Origam.Windows.Editor
             {
                 return true;
             }
-            else if ((lastQuoteChar == '\'') && ((singleQuotesCount % 2) > 0))
+
+            if ((lastQuoteChar == '\'') && ((singleQuotesCount % 2) > 0))
             {
                 return true;
             }
@@ -422,7 +428,8 @@ namespace Origam.Windows.Editor
                     equalsSignIndex = i;
                     break;
                 }
-                else if (IsQuoteChar(ch))
+
+                if (IsQuoteChar(ch))
                 {
                     foundQuoteChar = true;
                 }
@@ -455,7 +462,8 @@ namespace Origam.Windows.Editor
                         // End of attribute value.
                         return attributeValue.ToString();
                     }
-                    else if (IsAttributeValueChar(ch) || IsQuoteChar(ch))
+
+                    if (IsAttributeValueChar(ch) || IsQuoteChar(ch))
                     {
                         attributeValue.Append(ch);
                     }
@@ -518,7 +526,8 @@ namespace Origam.Windows.Editor
                     elementStartIndex = currentIndex;
                     break;
                 }
-                else if (currentChar == '>')
+
+                if (currentChar == '>')
                 {
                     break;
                 }
@@ -549,7 +558,8 @@ namespace Origam.Windows.Editor
                     elementEndIndex = i;
                     break;
                 }
-                else if (currentChar == '<')
+
+                if (currentChar == '<')
                 {
                     elementEndIndex = -1;
                     break;
@@ -808,6 +818,7 @@ namespace Origam.Windows.Editor
                             switch (xmlReader.NodeType)
                             {
                                 case XmlNodeType.Element:
+                                {
                                     if (!xmlReader.IsEmptyElement)
                                     {
                                         QualifiedName category = new QualifiedName(
@@ -818,9 +829,13 @@ namespace Origam.Windows.Editor
                                         path.AddElement(category);
                                     }
                                     break;
+                                }
+
                                 case XmlNodeType.EndElement:
+                                {
                                     path.Elements.RemoveLast();
                                     break;
+                                }
                             }
                         }
                     }
@@ -851,16 +866,25 @@ namespace Origam.Windows.Editor
         public static string GetXmlIdentifierBeforeIndex(ITextSource document, int index)
         {
             if (document == null)
+            {
                 throw new ArgumentNullException("document");
+            }
+
             if (index < 0 || index > document.TextLength)
+            {
                 throw new ArgumentOutOfRangeException(
                     "index",
                     index,
                     "Value must be between 0 and " + document.TextLength
                 );
+            }
+
             int i = index - 1;
             while (i >= 0 && IsXmlNameChar(document.GetCharAt(i)) && document.GetCharAt(i) != '/')
+            {
                 i--;
+            }
+
             return document.GetText(i + 1, index - i - 1);
         }
     }

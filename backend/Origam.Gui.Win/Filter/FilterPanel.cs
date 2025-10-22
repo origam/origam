@@ -161,7 +161,10 @@ public class FilterPanel : System.Windows.Forms.UserControl
     public void SizeControls(DataGridTableStyle tableStyle, int offset)
     {
         if (tableStyle == null)
+        {
             return;
+        }
+
         _lastTableStyle = tableStyle;
         _lastOffset = offset;
         this.SuspendLayout();
@@ -314,7 +317,10 @@ public class FilterPanel : System.Windows.Forms.UserControl
 
         int newHeight = part.OperatorLabelControl.Top + part.OperatorLabelControl.Height;
         if (newHeight > height)
+        {
             height = newHeight;
+        }
+
         int top = 30;
         foreach (Control c in part.FilterControls)
         {
@@ -330,7 +336,10 @@ public class FilterPanel : System.Windows.Forms.UserControl
                 top += c.Height;
                 newHeight = c.Top + c.Height;
                 if (newHeight > height)
+                {
                     height = newHeight;
+                }
+
                 startingTabIndex++;
             }
             else
@@ -363,7 +372,10 @@ public class FilterPanel : System.Windows.Forms.UserControl
                     panel.GetSortColumn(part.GridColumnName);
                 }
                 if (result.Length > 0)
+                {
                     result.Append(" AND ");
+                }
+
                 result.AppendFormat("({0})", part.Query);
             }
         }
@@ -374,7 +386,10 @@ public class FilterPanel : System.Windows.Forms.UserControl
     private void part_QueryChanged(object sender, string query)
     {
         if (_ignoreQueryChange)
+        {
             return;
+        }
+
         keyboardTimer.Enabled = false;
         keyboardTimer.Enabled = true;
     }

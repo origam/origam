@@ -97,12 +97,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
                         toVersion
                     );
                 }
-                else
-                {
-                    throw new Exception(
-                        $"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found"
-                    );
-                }
+
+                throw new Exception(
+                    $"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found"
+                );
             }
             if (scriptsToRun.Last().ToVersion != endVersion)
             {

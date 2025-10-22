@@ -68,6 +68,7 @@ public class TransformationAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "Transform":
+            {
                 bool validateOnly = false;
                 if (
                     this.Parameters.Contains("ValidateOnly")
@@ -78,18 +79,27 @@ public class TransformationAgent : AbstractServiceAgent
                 }
                 // Check input parameters
                 if (!(this.Parameters["Data"] is IXmlContainer))
+                {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
+                }
+
                 if (!(this.Parameters["XslScript"] is Guid))
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorXslScriptNotGuid")
                     );
+                }
+
                 if (
                     !(
                         this.Parameters["Parameters"] == null
                         || this.Parameters["Parameters"] is Hashtable
                     )
                 )
+                {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+                }
+
                 InitializeTransformer();
                 _result = _transformer.Transform(
                     this.Parameters["Data"] as IXmlContainer,
@@ -100,18 +110,28 @@ public class TransformationAgent : AbstractServiceAgent
                     validateOnly
                 );
                 break;
+            }
+
             case "TransformText":
+            {
                 TransformText();
                 break;
+            }
+
             case "TransformData":
+            {
                 TransformData();
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     this.MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 
@@ -233,9 +253,14 @@ public class TransformationAgent : AbstractServiceAgent
             throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
         }
         if (!(Parameters["XslScript"] is string))
+        {
             throw new InvalidCastException(ResourceUtils.GetString("ErrorXslScriptNotGuid"));
+        }
+
         if (!((Parameters["Parameters"] == null) || (Parameters["Parameters"] is Hashtable)))
+        {
             throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+        }
     }
 
     private void ValidateTransformDataParameters()

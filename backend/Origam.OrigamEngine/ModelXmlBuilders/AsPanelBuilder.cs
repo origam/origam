@@ -58,15 +58,30 @@ public class AsPanelBuilder
         parentNode.SetAttribute("ModelId", modelId);
         OrigamPanelViewMode defaultPanelView = OrigamPanelViewMode.Form;
         if (renderData.IsGridVisible)
+        {
             defaultPanelView = OrigamPanelViewMode.Grid;
+        }
+
         if (renderData.IsCalendarVisible)
+        {
             defaultPanelView = OrigamPanelViewMode.Calendar;
+        }
+
         if (renderData.IsPipelineVisible)
+        {
             defaultPanelView = OrigamPanelViewMode.Pipeline;
+        }
+
         if (renderData.IsMapVisible)
+        {
             defaultPanelView = OrigamPanelViewMode.Map;
+        }
+
         if (renderData.IsVisualEditorVisible)
+        {
             defaultPanelView = OrigamPanelViewMode.VisualEditor;
+        }
+
         parentNode.SetAttribute("DefaultPanelView", XmlConvert.ToString((int)defaultPanelView));
         if (renderData.NewRecordInDetailView)
         {

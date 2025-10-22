@@ -76,7 +76,10 @@ public class NotNullModelElementRuleAttribute : AbstractModelElementRuleAttribut
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty || memberName == null)
+        {
             CheckRule(instance);
+        }
+
         object value = Reflector.GetValue(instance.GetType(), instance, memberName);
         object field1Value = null;
         object field2Value = null;

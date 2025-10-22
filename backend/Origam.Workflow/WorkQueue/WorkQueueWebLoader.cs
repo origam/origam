@@ -61,17 +61,25 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "url":
+                    {
                         _url = pair[1];
                         break;
+                    }
+
                     case "stateXPath":
+                    {
                         _stateXPath = pair[1];
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName",
                             pair[0],
                             ResourceUtils.GetString("ErrorInvalidConnectionString")
                         );
+                    }
                 }
             }
         }
@@ -153,9 +161,7 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
         {
             return newState;
         }
-        else
-        {
-            return lastState;
-        }
+
+        return lastState;
     }
 }

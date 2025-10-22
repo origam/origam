@@ -256,6 +256,7 @@ public class FileSystemServiceAgent : AbstractServiceAgent
         switch (MethodName)
         {
             case "GetFileSystemInfo":
+            {
                 string mask = "";
                 bool recursive = false;
                 if (Parameters.Contains("Mask"))
@@ -276,21 +277,30 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 _result = GetFileSystemInfo(Parameters["Path"] as string, mask, recursive);
                 break;
+            }
+
             case "LoadBlob":
+            {
                 if (!(Parameters["Path"] is string))
                 {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 LoadBlob((string)Parameters["Path"]);
                 break;
+            }
+
             case "LoadXml":
+            {
                 if (!(Parameters["Path"] is string))
                 {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 LoadXml((string)Parameters["Path"]);
                 break;
+            }
+
             case "LoadText":
+            {
                 if (!(Parameters["Path"] is string))
                 {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
@@ -298,7 +308,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 encoding = Parameters["Encoding"] as string;
                 LoadText((string)Parameters["Path"], encoding);
                 break;
+            }
+
             case "SaveXml":
+            {
                 outPath = Parameters["Path"] as string;
                 if (outPath == null)
                 {
@@ -316,7 +329,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 SaveXml(outPath, outXml.Xml, encoding, createDirectory);
                 break;
+            }
+
             case "SaveText":
+            {
                 outPath = Parameters["Path"] as string;
                 if (outPath == null)
                 {
@@ -334,7 +350,9 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 SaveText(outPath, output, encoding, createDirectory);
                 break;
+            }
             case "SaveBlob":
+            {
                 outPath = Parameters["Path"] as string;
                 if (outPath == null)
                 {
@@ -351,7 +369,9 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 SaveBlob(outPath, blob, createDirectory);
                 break;
+            }
             case "DeleteFile":
+            {
                 string deletePath = Parameters["Path"] as string;
                 if (deletePath == null)
                 {
@@ -359,7 +379,9 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 DeleteFile(deletePath);
                 break;
+            }
             case "CopyFile":
+            {
                 inPath = Parameters["SourcePath"] as string;
                 if (inPath == null)
                 {
@@ -384,7 +406,9 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 CopyFile(inPath, outPath, createDirectory, overwrite);
                 break;
+            }
             case "MoveFile":
+            {
                 inPath = Parameters["SourcePath"] as string;
                 if (inPath == null)
                 {
@@ -409,19 +433,26 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                 }
                 MoveFile(inPath, outPath, createDirectory, overwrite);
                 break;
+            }
+
             case "CreateDirectory":
+            {
                 if (!(Parameters["Path"] is string))
                 {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
                 }
                 CreateDirectory((string)Parameters["Path"]);
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
     #endregion

@@ -48,7 +48,10 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
         DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
         if (reference.ListDataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureMethod> methods =
             reference.ListDataStructure.ChildItemsByType<DataStructureMethod>(
                 DataStructureMethod.CategoryConst
@@ -69,9 +72,11 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -85,7 +90,10 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
             DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
             if (reference.ListDataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureMethod> methods =
                 reference.ListDataStructure.ChildItemsByType<DataStructureMethod>(
                     DataStructureMethod.CategoryConst
@@ -93,12 +101,14 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
             foreach (DataStructureMethod item in methods)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -124,7 +134,10 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
         DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
         if (reference.ValueDataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureMethod> methods = reference.ValueDataStructure.Methods;
         var methodArray = new List<DataStructureMethod>(methods.Count);
         foreach (DataStructureMethod method in methods)
@@ -142,9 +155,11 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -158,17 +173,22 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
             DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
             if (reference.ValueDataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureMethod> methods = reference.ValueDataStructure.Methods;
             foreach (DataStructureMethod item in methods)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -194,7 +214,10 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
         AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
 
         if (reference.TooltipDataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureMethod> methods = reference.TooltipDataStructure.Methods;
         var methodArray = new List<DataStructureMethod>(methods.Count);
         foreach (DataStructureMethod method in methods)
@@ -212,9 +235,11 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -228,17 +253,22 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
             AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
 
             if (reference.TooltipDataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureMethod> methods = reference.TooltipDataStructure.Methods;
             foreach (DataStructureMethod item in methods)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -264,7 +294,10 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
         DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
         if (reference.ValueDataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureSortSet> sortSets = reference.ValueDataStructure.SortSets;
         var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
         foreach (DataStructureSortSet sortSet in sortSets)
@@ -282,9 +315,11 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -298,17 +333,22 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
             DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
             if (reference.ValueDataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureSortSet> sortSets = reference.ValueDataStructure.SortSets;
             foreach (DataStructureSortSet item in sortSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -334,7 +374,10 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
         DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
         if (reference.ListDataStructure == null)
+        {
             return null;
+        }
+
         List<DataStructureSortSet> sortSets = reference.ListDataStructure.SortSets;
         var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
         foreach (DataStructureSortSet sortSet in sortSets)
@@ -352,9 +395,11 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -368,16 +413,21 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
             DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 
             if (reference.ListDataStructure == null)
+            {
                 return null;
+            }
+
             List<DataStructureSortSet> sortSets = reference.ListDataStructure.SortSets;
             foreach (DataStructureSortSet item in sortSets)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

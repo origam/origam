@@ -57,8 +57,8 @@ public class MIMETypes
                 )
                 .Trim();
         }
-        else
-            return "";
+
+        return "";
     }
 
     public static string GetContentCharset(string strBuffer, int pos)
@@ -81,27 +81,33 @@ public class MIMETypes
             }
             return result;
         }
-        else
-            return "";
+
+        return "";
     }
 
     public static bool IsMSTNEF(string strContentType)
     {
         if (strContentType != null & strContentType != "")
+        {
             if (strContentType.ToLower() == MIMEType_MSTNEF.ToLower())
+            {
                 return true;
-            else
-                return false;
-        else
+            }
+
             return false;
+        }
+
+        return false;
     }
 
     public static string ContentType(string strExtension)
     {
         if (_MIMETypeList.ContainsKey(strExtension))
+        {
             return _MIMETypeList[strExtension].ToString();
-        else
-            return null;
+        }
+
+        return null;
     }
 
     public static Hashtable MIMETypeList
@@ -404,10 +410,8 @@ public class MIMETypes
             {
                 return strContentType.ToString();
             }
-            else
-            {
-                return "application/octet-stream";
-            }
+
+            return "application/octet-stream";
         }
         catch (System.Exception)
         {

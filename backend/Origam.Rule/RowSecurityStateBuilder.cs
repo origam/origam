@@ -285,7 +285,9 @@ public class RowSecurityStateBuilder
             finally
             {
                 if (isDummyRow && childRow != null)
+                {
                     childRow.Delete();
+                }
             }
         }
         return this;

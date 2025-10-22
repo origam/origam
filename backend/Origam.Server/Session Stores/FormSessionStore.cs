@@ -346,13 +346,17 @@ public class FormSessionStore : SaveableSessionStore
             }
 
             case ACTION_REFRESH:
+            {
                 return Refresh();
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
+            }
         }
     }
 

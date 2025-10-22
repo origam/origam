@@ -143,11 +143,13 @@ class ParameterSessionStore : SessionStore
                 }
 
                 default:
+                {
                     throw new ArgumentOutOfRangeException(
                         "DataType",
                         this.Constant.DataType,
                         "Unsupported data type for DataConstantReferenceMenuItem."
                     );
+                }
             }
         }
         else
@@ -187,15 +189,21 @@ class ParameterSessionStore : SessionStore
         switch (actionId)
         {
             case ACTION_SAVE:
+            {
                 return SaveParameterData();
+            }
             case ACTION_REFRESH:
+            {
                 return Refresh();
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
+            }
         }
     }
 

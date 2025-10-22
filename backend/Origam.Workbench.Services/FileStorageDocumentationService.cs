@@ -57,7 +57,10 @@ public class FileStorageDocumentationService
     public override string GetDocumentation(Guid schemaItemId, DocumentationType docType)
     {
         if (schemaItemId == Guid.Empty)
+        {
             return "";
+        }
+
         DocXmlDocument docXmlDocument = GetDocumentFor(schemaItemId);
         IEnumerable<XmlNode> nodes = docXmlDocument.GetNodesFor(schemaItemId);
         string documentation = new DocumentationCompleteXmlDocument(
@@ -99,7 +102,10 @@ public class FileStorageDocumentationService
         foreach (Guid documentedItemId in dataSetXmlDocument.GetAllDocumentedItemIds())
         {
             if (!filePersistenceProvider.Has(documentedItemId))
+            {
                 continue;
+            }
+
             DocXmlDocument docXmlDocument = GetDocumentFor(documentedItemId);
             List<XmlNode> docNodes = dataSetXmlDocument.GetNodesWith(documentedItemId);
             docXmlDocument.RemoveOutDatedNodes(docNodes, schemaItemId);

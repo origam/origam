@@ -64,22 +64,21 @@ public class AuditLogPad : AbstractPadContent
                 return columnId;
             }
             if (item == null)
+            {
                 return columnId;
+            }
+
             if (item is ICaptionSchemaItem captionItem)
             {
                 if (!string.IsNullOrEmpty(captionItem.Caption))
                 {
                     return captionItem.Caption;
                 }
-                else
-                {
-                    return item.Name;
-                }
-            }
-            else
-            {
+
                 return item.Name;
             }
+
+            return item.Name;
         }
     }
 
@@ -96,15 +95,25 @@ public class AuditLogPad : AbstractPadContent
             switch ((int)base.GetColumnValueAtRow(source, rowNum))
             {
                 case 4:
+                {
                     return ResourceUtils.GetString("New");
+                }
                 case 8:
+                {
                     return ResourceUtils.GetString("Deleted");
+                }
                 case 16:
+                {
                     return ResourceUtils.GetString("Change");
+                }
                 case 32:
+                {
                     return ResourceUtils.GetString("Deduplication");
+                }
                 default:
+                {
                     return "?";
+                }
             }
         }
     }
@@ -121,7 +130,10 @@ public class AuditLogPad : AbstractPadContent
         {
             object o = base.GetColumnValueAtRow(source, rowNum);
             if (o == DBNull.Value)
+            {
                 return null;
+            }
+
             IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
             try
             {
@@ -380,7 +392,10 @@ public class AuditLogPad : AbstractPadContent
     public void GetLog()
     {
         if (!_supportLog)
+        {
             return;
+        }
+
         try
         {
             this.dataGrid1.DataSource = null;

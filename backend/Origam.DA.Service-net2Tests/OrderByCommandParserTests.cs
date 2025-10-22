@@ -59,7 +59,10 @@ class OrderByCommandParserTests
     private List<Ordering> ToListOfOrderings(string orderingStr)
     {
         if (orderingStr == null)
+        {
             return null;
+        }
+
         string[] strings = orderingStr.Split(',');
         return new List<Ordering> { new Ordering(strings[0], strings[1], 100) };
     }

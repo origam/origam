@@ -31,9 +31,13 @@ public static class InstanceTools
     {
         Type memberType;
         if (memberInfo is PropertyInfo)
+        {
             memberType = (memberInfo as PropertyInfo).PropertyType;
+        }
         else
+        {
             memberType = (memberInfo as FieldInfo).FieldType;
+        }
 
         object correctlyTypedValue;
         // If member is enum, we have to convert

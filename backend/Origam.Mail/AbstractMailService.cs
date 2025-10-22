@@ -350,7 +350,10 @@ public abstract class AbstractMailService : IMailService
             );
             int count = popClient.Count;
             if (maxCount > 0 && maxCount < count)
+            {
                 count = maxCount;
+            }
+
             for (int i = 1; i <= count; i++)
             {
                 RetrieveMail(mailData, popClient, i, true);
@@ -383,7 +386,10 @@ public abstract class AbstractMailService : IMailService
     )
     {
         if (popClient.Count == 0)
+        {
             return;
+        }
+
         MimeMessage message = popClient.GetMessage(messageNumber);
         MailData.MailRow mailrow = mailData.Mail.NewMailRow();
         mailrow.Id = Guid.NewGuid();
@@ -443,7 +449,9 @@ public abstract class AbstractMailService : IMailService
         {
             var message = GetMessageByIndex(popClient, i);
             if (message != null)
+            {
                 return i;
+            }
         }
         return null;
     }
@@ -486,10 +494,8 @@ public abstract class AbstractMailService : IMailService
             mailData.Merge((mailDocument as IDataDocument).DataSet);
             return SendMail2(mailData, server, port);
         }
-        else
-        {
-            return SendMail1(mailDocument, server, port);
-        }
+
+        return SendMail1(mailDocument, server, port);
     }
 
     public abstract int SendMail1(IXmlContainer mailDocument, string server, int port);
@@ -504,7 +510,10 @@ public abstract class AbstractMailService : IMailService
     private static Maybe<Pop3Client> TryFindInActiveClient(string connString, string transactionId)
     {
         if (transactionId == null)
+        {
             return null;
+        }
+
         Pop3Transaction pop3Transaction =
             ResourceMonitor.GetTransaction(transactionId, connString) as Pop3Transaction;
         return Maybe<Pop3Client>.From(pop3Transaction?.PopClient);
@@ -530,7 +539,10 @@ public abstract class AbstractMailService : IMailService
             + password;
         Maybe<Pop3Client> maybeClient = TryFindInActiveClient(connString, transactionId);
         if (maybeClient.HasValue)
+        {
             return maybeClient.Value;
+        }
+
         Pop3Client popClient = new Pop3Client();
         // accept all SSL certificates (in case the server supports STARTTLS)!
         popClient.ServerCertificateValidationCallback = (s, c, h, e) => true;

@@ -84,9 +84,15 @@ public class StateMachineEvent : AbstractSchemaItem
     {
         dependencies.Add(this.Action);
         if (this.OldState != null)
+        {
             dependencies.Add(this.OldState);
+        }
+
         if (this.NewState != null)
+        {
             dependencies.Add(this.NewState);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

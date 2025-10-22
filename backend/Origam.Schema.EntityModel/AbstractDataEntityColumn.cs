@@ -406,10 +406,8 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
                 result.Fields.Add(this);
                 return result;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
     public abstract string FieldType { get; }
@@ -425,15 +423,30 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.ForeignKeyEntity != null)
+        {
             dependencies.Add(this.ForeignKeyEntity);
+        }
+
         if (this.ForeignKeyField != null)
+        {
             dependencies.Add(this.ForeignKeyField);
+        }
+
         if (this.DefaultLookup != null)
+        {
             dependencies.Add(this.DefaultLookup);
+        }
+
         if (this.DefaultValue != null)
+        {
             dependencies.Add(this.DefaultValue);
+        }
+
         if (this.DefaultValueParameter != null)
+        {
             dependencies.Add(this.DefaultValueParameter);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

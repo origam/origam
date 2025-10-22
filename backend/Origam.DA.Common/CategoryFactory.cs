@@ -45,8 +45,10 @@ public static class CategoryFactory
         object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
 
         if (attributes != null && attributes.Length > 0)
+        {
             return (XmlRootAttribute)attributes[0];
-        else
-            return null;
+        }
+
+        return null;
     }
 }

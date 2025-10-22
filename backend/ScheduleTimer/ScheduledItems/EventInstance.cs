@@ -39,9 +39,15 @@ public class EventInstance : IComparable
     public int CompareTo(object obj)
     {
         if (obj is EventInstance)
+        {
             return Time.CompareTo(((EventInstance)obj).Time);
+        }
+
         if (obj is DateTime)
+        {
             return Time.CompareTo((DateTime)obj);
+        }
+
         return 0;
     }
 }

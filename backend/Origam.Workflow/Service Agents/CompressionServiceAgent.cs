@@ -47,11 +47,13 @@ public class CompressionServiceAgent : AbstractServiceAgent
                 break;
             }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(MethodName),
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 

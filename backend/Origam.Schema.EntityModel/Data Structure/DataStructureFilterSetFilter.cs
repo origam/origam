@@ -140,7 +140,10 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
         set
         {
             if (value == "")
+            {
                 value = null;
+            }
+
             _ignoreFilterParameterName = value;
         }
     }
@@ -235,10 +238,8 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
             // only inside the same data structure
             return this.RootItem.Equals((newNode as ISchemaItem).RootItem);
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public override ISchemaItemCollection ChildItems

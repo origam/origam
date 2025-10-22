@@ -69,7 +69,9 @@ public class Workbench
             // data database is empty and we are not supposed to ask for running init scripts
             // that means the new project wizard is running and will take care
             case true when !PopulateEmptyDatabaseOnLoad:
+            {
                 return;
+            }
             case true:
             {
                 deployment.Deploy();

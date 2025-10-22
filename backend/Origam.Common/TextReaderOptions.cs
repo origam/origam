@@ -43,7 +43,10 @@ public class TextReaderOptions
     public static TextReaderOptions Deserialize(XmlDocument doc)
     {
         if (doc == null)
+        {
             return new TextReaderOptions();
+        }
+
         XmlSerializer ser = new XmlSerializer(typeof(TextReaderOptions));
         XmlNodeReader reader = new XmlNodeReader(doc);
         return (TextReaderOptions)ser.Deserialize(reader);

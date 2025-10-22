@@ -69,68 +69,127 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         switch (this.MethodName)
         {
             case "GetUserData":
+            {
                 GetUserData();
                 break;
+            }
+
             case "ChangePasswordAnswerAndQuestion":
+            {
                 ChangeUserPasswordQuestionAndAnswer();
                 break;
+            }
+
             case "UnlockUser":
+            {
                 UnlockUser();
                 break;
+            }
+
             case "ChangePassword":
+            {
                 ChangePassword();
                 break;
+            }
+
             case "ResetPassword":
+            {
                 ResetPassword();
                 break;
+            }
+
             case "GetPasswordAttributes":
+            {
                 GetPasswordAttributes();
                 break;
+            }
+
             case "DeleteUser":
+            {
                 DeleteUser();
                 break;
+            }
+
             case "UpdateUser":
+            {
                 UpdateUser();
                 break;
+            }
+
             case "CreateUser":
+            {
                 CreateUser();
                 break;
+            }
+
             case "SendEmailConfirmationToken":
+            {
                 SendEmailConfirmationToken();
                 break;
+            }
+
             case "ConfirmEmail":
+            {
                 ConfirmEmail();
                 break;
+            }
+
             case "ForceConfirmEmail":
+            {
                 ForceConfirmEmail();
                 break;
+            }
+
             case "GetEmailConfirmationToken":
+            {
                 GetEmailConfirmationToken();
                 break;
+            }
+
             case "GetPasswordResetToken":
+            {
                 GetPasswordResetToken();
                 break;
+            }
+
             case "GetPasswordResetTokenFromEmail":
+            {
                 GetPasswordResetTokenFromEmail();
                 break;
+            }
+
             case "IsEmailConfirmed":
+            {
                 IsEmailConfirmed();
                 break;
+            }
+
             case "IsLockedOut":
+            {
                 IsLockedOut();
                 break;
+            }
+
             case "Is2FAEnforced":
+            {
                 Is2FAEnforced();
                 break;
+            }
+
             case "Set2FAEnforcement":
+            {
                 Set2FAEnforcement();
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     this.MethodName,
                     Origam.Workflow.ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 
@@ -148,10 +207,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = GetUserDataXml(task.Result);
-        }
+
+        result = GetUserDataXml(task.Result);
     }
 
     private void ChangeUserPasswordQuestionAndAnswer()
@@ -182,10 +239,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void IsLockedOut()
@@ -199,10 +254,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void Is2FAEnforced()
@@ -216,10 +269,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void Set2FAEnforcement()
@@ -240,10 +291,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private void IsEmailConfirmed()
@@ -257,10 +306,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void UnlockUser()
@@ -274,10 +321,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private void ForceConfirmEmail()
@@ -300,7 +345,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             ex.RuleResult.Add(rd);
             throw ex;
         }
-        else if (!task.Result.Succeeded)
+
+        if (!task.Result.Succeeded)
         {
             RuleExceptionData rd2 = new RuleExceptionData();
             foreach (object o in task.Result.Errors)
@@ -314,10 +360,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             }
             throw ex;
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private void ConfirmEmail()
@@ -345,7 +389,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             ex.RuleResult.Add(rd);
             throw ex;
         }
-        else if (!task.Result.Succeeded)
+
+        if (!task.Result.Succeeded)
         {
             RuleExceptionData rd2 = new RuleExceptionData();
             foreach (object o in task.Result.Errors)
@@ -359,10 +404,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             }
             throw ex;
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private void ChangePassword()
@@ -389,14 +432,13 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else if (!task.Result.Succeeded)
+
+        if (!task.Result.Succeeded)
         {
             throw new Exception(string.Join(" ", task.Result.Errors));
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private IOrigamUser FindUser()
@@ -410,10 +452,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw taskFindUser.Exception;
         }
-        else
-        {
-            user = taskFindUser.Result;
-        }
+
+        user = taskFindUser.Result;
         if (user == null)
         {
             throw new Exception(Resources.ErrorUserNotFound);
@@ -444,7 +484,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw resetPasswordTask.Exception;
         }
-        else if (!resetPasswordTask.Result.Succeeded)
+
+        if (!resetPasswordTask.Result.Succeeded)
         {
             //throw new Exception(string.Join(" ", resetPasswordTask.Result.Errors));
             RuleExceptionDataCollection reCol = new RuleExceptionDataCollection();
@@ -454,10 +495,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             }
             throw new RuleException(reCol);
         }
-        else
-        {
-            result = true;
-        }
+
+        result = true;
     }
 
     private void DeleteUser()
@@ -473,11 +512,9 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result.Succeeded;
-            OrigamUserContext.Reset(user.UserName);
-        }
+        result = task.Result.Succeeded;
+
+        OrigamUserContext.Reset(user.UserName);
     }
 
     private void UpdateUser()
@@ -506,10 +543,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result.Succeeded;
-        }
+
+        result = task.Result.Succeeded;
     }
 
     private void SendEmailConfirmationToken()
@@ -580,10 +615,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
             {
                 throw new InvalidCastException(Resources.ErrorEmailConfirmedNotBool);
             }
-            else
-            {
-                emailConfirmed = (bool)Parameters["EmailConfirmed"];
-            }
+
+            emailConfirmed = (bool)Parameters["EmailConfirmed"];
         }
         IOrigamUser user = userManager.CreateUserObject(Parameters["Username"].ToString());
         user.Email = Parameters["Email"].ToString();
@@ -609,7 +642,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else if (!task.Result.Succeeded)
+
+        if (!task.Result.Succeeded)
         {
             throw new OrigamValidationException(string.Join(" ", task.Result.Errors));
         }
@@ -630,10 +664,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void GetPasswordResetTokenFromEmail()
@@ -649,32 +681,30 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw generateTask.Exception;
         }
-        else
-        {
-            // render xml
-            XmlDocument xmlDoc = new XmlDocument();
-            XmlNode rootNode = xmlDoc.CreateElement("ROOT");
-            xmlDoc.AppendChild(rootNode);
-            XmlNode tokenResultNode = xmlDoc.CreateElement("TokenResult");
-            // token
-            XmlAttribute tokenAttr = xmlDoc.CreateAttribute("Token");
-            tokenAttr.Value = generateTask.Result.Token;
-            tokenResultNode.Attributes.Append(tokenAttr);
-            // userId
-            XmlAttribute userNameAttr = xmlDoc.CreateAttribute("UserName");
-            userNameAttr.Value = generateTask.Result.UserName.ToString();
-            tokenResultNode.Attributes.Append(userNameAttr);
-            // tokenValidityHours
-            XmlAttribute tokenValidityAttr = xmlDoc.CreateAttribute("TokenValidityHours");
-            tokenValidityAttr.Value = generateTask.Result.TokenValidityHours.ToString();
-            tokenResultNode.Attributes.Append(tokenValidityAttr);
-            // errorMessage
-            XmlAttribute errorMessageAttr = xmlDoc.CreateAttribute("ErrorMessage");
-            errorMessageAttr.Value = generateTask.Result.ErrorMessage;
-            tokenResultNode.Attributes.Append(errorMessageAttr);
-            rootNode.AppendChild(tokenResultNode);
-            result = new XmlContainer(xmlDoc);
-        }
+        // render xml
+        XmlDocument xmlDoc = new XmlDocument();
+        XmlNode rootNode = xmlDoc.CreateElement("ROOT");
+        xmlDoc.AppendChild(rootNode);
+        XmlNode tokenResultNode = xmlDoc.CreateElement("TokenResult");
+        // token
+        XmlAttribute tokenAttr = xmlDoc.CreateAttribute("Token");
+        tokenAttr.Value = generateTask.Result.Token;
+        tokenResultNode.Attributes.Append(tokenAttr);
+        // userId
+        XmlAttribute userNameAttr = xmlDoc.CreateAttribute("UserName");
+        userNameAttr.Value = generateTask.Result.UserName.ToString();
+        tokenResultNode.Attributes.Append(userNameAttr);
+        // tokenValidityHours
+        XmlAttribute tokenValidityAttr = xmlDoc.CreateAttribute("TokenValidityHours");
+        tokenValidityAttr.Value = generateTask.Result.TokenValidityHours.ToString();
+        tokenResultNode.Attributes.Append(tokenValidityAttr);
+        // errorMessage
+        XmlAttribute errorMessageAttr = xmlDoc.CreateAttribute("ErrorMessage");
+        errorMessageAttr.Value = generateTask.Result.ErrorMessage;
+        tokenResultNode.Attributes.Append(errorMessageAttr);
+        rootNode.AppendChild(tokenResultNode);
+
+        result = new XmlContainer(xmlDoc);
     }
 
     private void GetPasswordResetToken()
@@ -690,10 +720,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private void GetPasswordAttributes()
@@ -703,10 +731,8 @@ public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
         {
             throw task.Exception;
         }
-        else
-        {
-            result = task.Result;
-        }
+
+        result = task.Result;
     }
 
     private XmlDocument GetUserDataXml(IOrigamUser user)

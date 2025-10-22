@@ -249,7 +249,10 @@ public class SchedulerWorker(ILogger<SchedulerWorker> log) : BackgroundService
     private void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
         if (restarting)
+        {
             return;
+        }
+
         try
         {
             if (OrigamEngine.IsRestartPending())

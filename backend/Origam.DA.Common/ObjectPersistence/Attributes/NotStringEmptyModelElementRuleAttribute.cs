@@ -43,7 +43,10 @@ public class StringNotEmptyModelElementRuleAttribute : AbstractModelElementRuleA
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         object value = Reflector.GetValue(instance.GetType(), instance, memberName);
         if (value == null | (value as string) == string.Empty)
         {

@@ -363,7 +363,8 @@ internal class SelectionServiceImpl : ISelectionService
                     {
                         continue;
                     }
-                    else if (defaultIndex == -1)
+
+                    if (defaultIndex == -1)
                     {
                         defaultIndex = i;
                     }
@@ -453,9 +454,14 @@ internal class SelectionServiceImpl : ISelectionService
         if (!batchMode)
         {
             if (selectionChanged)
+            {
                 OnSelectionChanged();
+            }
+
             if (selectionContentsChanged)
+            {
                 OnSelectionContentsChanged();
+            }
         }
     }
 

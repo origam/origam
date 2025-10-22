@@ -67,18 +67,29 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
     )
     {
         if (this.Rule != null)
+        {
             base.GetParameterReferences(Rule, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.Rule);
         if (this.ForegroundColorLookup != null)
+        {
             dependencies.Add(this.ForegroundColorLookup);
+        }
+
         if (this.BackgroundColorLookup != null)
+        {
             dependencies.Add(this.BackgroundColorLookup);
+        }
+
         if (this.DynamicColorLookupField != null)
+        {
             dependencies.Add(this.DynamicColorLookupField);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 
@@ -275,10 +286,8 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
         {
             return this.Level.CompareTo(compared.Level);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }
