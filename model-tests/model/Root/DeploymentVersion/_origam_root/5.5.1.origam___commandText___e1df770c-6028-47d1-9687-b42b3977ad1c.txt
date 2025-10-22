@@ -1,0 +1,8 @@
+﻿INSERT INTO "WorkQueueRetryType"("Id", "Name", "RecordCreated")
+VALUES ('69460bcf-81d4-4a97-94f7-5a391d16f771', 'No Retry', NOW());
+
+INSERT INTO "WorkQueueRetryType"("Id", "Name", "RecordCreated")
+VALUES ('8a5c793f-73b8-41ef-a459-618a8e6fe4fa', 'Linear Retry', NOW());
+
+INSERT INTO "WorkQueueRetryType"("Id", "Name", "RecordCreated")
+VALUES ('57ad4c10-1f43-4ccf-a48a-132e7e418d53', 'Exponential Retry', NOW());
