@@ -2708,7 +2708,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
         var schemaTables = new List<TableMappingItem>();
         foreach (var tableMappingItem in entityList.OfType<TableMappingItem>())
         {
-            schemaTables.Add(tableMappingItem);
+            if (tableMappingItem.DatabaseObjectType == DatabaseMappingObjectType.Table)
+            {
+                schemaTables.Add(tableMappingItem);
+            }
         }
         return schemaTables;
     }
