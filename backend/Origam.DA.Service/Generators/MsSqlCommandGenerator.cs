@@ -278,15 +278,14 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         return "";
     }
 
-    internal override string ChangeColumnDef(FieldMappingItem field)
+    public override string AlterColumnDdl(FieldMappingItem field)
     {
-        StringBuilder ddl = new StringBuilder();
-        ddl.Append(DdlDataType(field.DataType, field.DataLength, field.MappedDataType));
-        if (field.AllowNulls)
-            ddl.Append(" NULL");
-        else
-            ddl.Append(" NOT NULL");
-        return ddl.ToString();
+        string tableName = RenderExpression(field.ParentItem as TableMappingItem);
+        string columnName =
+            sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket;
+        string dataType = DdlDataType(field.DataType, field.DataLength, field.MappedDataType);
+        string notOrNothing = field.AllowNulls ? "" : "NOT";
+        return $"ALTER TABLE {tableName} ALTER COLUMN {columnName} {dataType} {notOrNothing} NULL;";
     }
 
     internal override string DropDefaultValue(FieldMappingItem field, string constraintName)

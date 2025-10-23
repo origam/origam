@@ -282,19 +282,16 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         return output.ToString();
     }
 
-    internal override string ChangeColumnDef(FieldMappingItem field)
+    public override string AlterColumnDdl(FieldMappingItem field)
     {
-        StringBuilder ddl = new StringBuilder();
-        if (field.AllowNulls)
-        {
-            ddl.Append(" DROP");
-        }
-        else
-        {
-            ddl.Append(" SET");
-        }
-        ddl.Append(" NOT NULL");
-        return ddl.ToString();
+        string tableName = RenderExpression(field.ParentItem as TableMappingItem);
+        string columnName =
+            sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket;
+        string dataType = DdlDataType(field.DataType, field.DataLength, field.MappedDataType);
+        string nullability = field.AllowNulls ? "DROP NOT NULL" : "SET NOT NULL";
+        return $"ALTER TABLE {tableName}"
+            + $"  ALTER COLUMN {columnName} TYPE {dataType},"
+            + $"  ALTER COLUMN {columnName} {nullability};";
     }
 
     internal override string DropDefaultValue(FieldMappingItem field, string constraintName)

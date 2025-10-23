@@ -820,30 +820,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     internal abstract string DropDefaultValue(FieldMappingItem field, string constraintName);
 
-    public string AlterColumnDdl(FieldMappingItem field)
-    {
-        StringBuilder ddl = new StringBuilder();
-
-        ddl.AppendFormat(
-            "ALTER TABLE {0} ALTER COLUMN {1}",
-            RenderExpression(field.ParentItem as TableMappingItem),
-            ChangeColumnDefinitionDdl(field)
-        );
-        return ddl.ToString();
-    }
-
-    private string ChangeColumnDefinitionDdl(FieldMappingItem field)
-    {
-        StringBuilder ddl = new StringBuilder();
-        ddl.AppendFormat(
-            "{0} ",
-            sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket
-        );
-        ddl.Append(ChangeColumnDef(field));
-        return ddl.ToString();
-    }
-
-    internal abstract string ChangeColumnDef(FieldMappingItem field);
+    public abstract string AlterColumnDdl(FieldMappingItem field);
 
     internal string ColumnDefinitionDdl(FieldMappingItem field)
     {
