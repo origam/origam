@@ -69,4 +69,24 @@ try {
     throw
 }
 
+# Install Node.js (Windows, PowerShell version)
+$env:NODE_VERSION = "22.21.0"
+$env:NODE_OPTIONS = "--max-old-space-size=4096"
+
+Write-Host "Downloading Node.js version $env:NODE_VERSION..."
+
+$nodeUrl = "https://nodejs.org/dist/v$($env:NODE_VERSION)/node-v$($env:NODE_VERSION)-win-x64.zip"
+Invoke-WebRequest -Uri $nodeUrl -OutFile "node.zip"
+
+Expand-Archive -Path "node.zip" -DestinationPath "C:\" -Force
+Remove-Item "node.zip"
+
+Rename-Item -Path "C:\node-v$($env:NODE_VERSION)-win-x64" -NewName "C:\node"
+
+# Update PATH system-wide
+$nodePaths = "C:\node", "C:\node\bin", "C:\node\node_modules\npm\bin"
+$existingPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
+$newPath = "$existingPath;" + ($nodePaths -join ";")
+[Environment]::SetEnvironmentVariable("Path", $newPath, [EnvironmentVariableTarget]::Machine)
+
 Write-Host "Installation completed successfully."
