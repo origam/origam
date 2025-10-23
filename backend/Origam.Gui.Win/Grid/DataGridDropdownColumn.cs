@@ -88,11 +88,20 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
     {
         OrigamDataRow row = e.Row as OrigamDataRow;
         if (!row.IsColumnWithValidChange(e.Column))
+        {
             return;
+        }
+
         if (!row.Equals(this.DropDown.CurrentRow))
+        {
             return;
+        }
+
         if (this.DataGridTableStyle == null)
+        {
             return;
+        }
+
         DataGrid grid = this.DataGridTableStyle.DataGrid;
         foreach (ColumnParameterMapping mapping in _dropDown.ParameterMappings)
         {
@@ -130,7 +139,10 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
             _dropDown_LookupValueChangingByUser
         );
         if (_dropDown.IsDisposed)
+        {
             return;
+        }
+
         base.Abort(rowNum);
     }
 
@@ -195,7 +207,10 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
     protected override bool Commit(CurrencyManager dataSource, int rowNum)
     {
         if (_dropDown.Bounds.X != 0 | _dropDown.Bounds.Y != 0 | _dropDown.Width != 0)
+        {
             _dropDown.Bounds = Rectangle.Empty;
+        }
+
         _dropDown.LookupValueChangingByUser -= new EventHandler(
             _dropDown_LookupValueChangingByUser
         );
@@ -241,7 +256,10 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         if (_dropDown.Parent != null)
         {
             if (_dropDown.Parent.Equals(value))
+            {
                 return;
+            }
+
             _dropDown.Parent.Controls.Remove(_dropDown);
         }
         if (value != null)
@@ -275,10 +293,16 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
     private void CatchGridContext()
     {
         if (this.DataGridTableStyle == null)
+        {
             return;
+        }
+
         DataGrid grid = this.DataGridTableStyle.DataGrid;
         if (grid.DataSource == null | grid.DataMember == "" | grid.BindingContext == null)
+        {
             return;
+        }
+
         CurrencyManager cm =
             grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
         if (_handledTable != null)
@@ -309,9 +333,14 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
+            {
                 myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
             if (!formatting.UseDefaultForeColor)
+            {
                 myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
         }
         if (DropDown.LookupCanEditSourceRecord)
         {

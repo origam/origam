@@ -91,19 +91,11 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
             {
                 return this.ActivityOrder.CompareTo(compared.ActivityOrder);
             }
-            else
-            {
-                return versionCompare;
-            }
+
+            return versionCompare;
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "obj",
-                obj,
-                ResourceUtils.GetString("ErrorCompare")
-            );
-        }
+
+        throw new ArgumentOutOfRangeException("obj", obj, ResourceUtils.GetString("ErrorCompare"));
     }
     #endregion
 }

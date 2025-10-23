@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using System.Xml;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
@@ -90,9 +89,15 @@ public class DatasetRuleHandler
     )
     {
         if (_inRowChanging)
+        {
             return;
+        }
+
         if (e.Row.RowState == DataRowState.Detached)
+        {
             return;
+        }
+
         _inRowChanging = true;
         try
         {
@@ -168,7 +173,9 @@ public class DatasetRuleHandler
         OrigamDataRow row = e.Row as OrigamDataRow;
 #if ! ORIGAM_SERVER
         if (!row.IsColumnWithValidChange(e.Column))
+        {
             return;
+        }
 #endif
         try
         {

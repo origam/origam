@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,7 +187,10 @@ public class DeploymentSorter
     private void MoveToSorted(IDeploymentVersion deployment)
     {
         if (sortedDeployments.Contains(deployment))
+        {
             return;
+        }
+
         current = deployment;
         sortedDeployments.Add(deployment);
         remainingDeployments.Remove(deployment);
@@ -344,11 +346,20 @@ class OtherPackagesFirst : Comparer<IDeploymentVersion>
     public override int Compare(IDeploymentVersion x, IDeploymentVersion y)
     {
         if (x.SchemaExtensionId == y.SchemaExtensionId)
+        {
             return 0;
+        }
+
         if (x.SchemaExtensionId == thisPackageId)
+        {
             return 1;
+        }
+
         if (y.SchemaExtensionId == thisPackageId)
+        {
             return -1;
+        }
+
         return 0;
     }
 }

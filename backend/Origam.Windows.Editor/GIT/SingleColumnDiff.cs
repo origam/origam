@@ -91,7 +91,10 @@ public class DiffParser
         foreach (DiffSectionViewModel section in sections)
         {
             if (lineCount + section.MixedDiff.Count > maxLineCount)
+            {
                 return filtered;
+            }
+
             filtered.Add(section);
             lineCount += section.MixedDiff.Count;
         }

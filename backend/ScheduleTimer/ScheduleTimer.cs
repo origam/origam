@@ -14,7 +14,6 @@
  **************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
 
@@ -120,7 +119,9 @@ public class ScheduleTimerBase
     {
         TimeSpan interval = _Jobs.NextRunTime(thisTime) - thisTime;
         if (interval > MAX_INTERVAL)
+        {
             interval = MAX_INTERVAL;
+        }
         //Handles the case of 0 wait time, the interval property requires a duration > 0.
         return (interval.TotalMilliseconds == 0) ? 1 : interval.TotalMilliseconds;
     }
@@ -139,7 +140,10 @@ public class ScheduleTimerBase
         try
         {
             if (_Jobs == null)
+            {
                 return;
+            }
+
             _Timer.Stop();
             foreach (TimerJob Event in _Jobs.Jobs)
             {
@@ -160,14 +164,19 @@ public class ScheduleTimerBase
         finally
         {
             if (_StopFlag == false)
+            {
                 QueueNextTime(e.SignalTime);
+            }
         }
     }
 
     private void OnError(DateTime eventTime, TimerJob job, Exception e)
     {
         if (Error == null)
+        {
             return;
+        }
+
         try
         {
             Error(this, new ExceptionEventArgs(eventTime, e));
@@ -186,7 +195,10 @@ public class ScheduleTimer : ScheduleTimerBase
     public void AddEvent(IScheduledItem Schedule)
     {
         if (Elapsed == null)
+        {
             throw new ArgumentNullException("Elapsed", "member variable is null.");
+        }
+
         AddJob(new TimerJob(Schedule, new DelegateMethodCall(Elapsed)));
     }
 

@@ -62,7 +62,10 @@ class ColumnOrderingRenderer
     internal string ToSqlOrderBy(List<Ordering> orderings)
     {
         if (orderings == null)
+        {
             return "";
+        }
+
         return string.Join(", ", orderings.Select(ToSql));
     }
 
@@ -83,11 +86,17 @@ class ColumnOrderingRenderer
         switch (orderingName.ToLower())
         {
             case "asc":
+            {
                 return "ASC";
+            }
             case "desc":
+            {
                 return "DESC";
+            }
             default:
+            {
                 throw new NotImplementedException(orderingName);
+            }
         }
     }
 }

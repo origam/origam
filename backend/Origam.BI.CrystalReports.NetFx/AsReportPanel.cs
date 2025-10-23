@@ -310,7 +310,9 @@ public class AsReportPanel
     private void FillParameterCache(ControlSetItem controlItem)
     {
         if (controlItem == null)
+        {
             return;
+        }
 
         _fillingParameterCache = true;
         ParameterMappings.Clear();
@@ -377,7 +379,10 @@ public class AsReportPanel
         get
         {
             if (this._origamMetadata == null)
+            {
                 return null;
+            }
+
             return (CrystalReport)
                 this._origamMetadata.PersistenceProvider.RetrieveInstance(
                     typeof(ISchemaItem),
@@ -433,7 +438,10 @@ public class AsReportPanel
         try
         {
             if (!_itemsLoaded)
+            {
                 return;
+            }
+
             var col = _origamMetadata
                 .ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
                 .ToList();
@@ -451,7 +459,9 @@ public class AsReportPanel
     private void CreateMappingItemsCollection()
     {
         if (this.CrystalReport == null)
+        {
             return;
+        }
         // create any missing parameter mappings
         foreach (var entry in this.CrystalReport.ParameterReferences)
         {
@@ -509,7 +519,10 @@ public class AsReportPanel
     public void SetDataBinding(object dataSource, string dataMember)
     {
         if (dataSource == null || dataMember == null || dataMember == "" || this.DesignMode)
+        {
             return;
+        }
+
         _dataSource = dataSource;
         _dataMember = (null == dataMember) ? "" : dataMember;
         if (_bindMan != null)
@@ -531,7 +544,10 @@ public class AsReportPanel
     private BindingManagerBase GetBindingManager()
     {
         if (null != _dataSource && null != BindingContext)
+        {
             return BindingContext[_dataSource, _dataMember];
+        }
+
         return null;
     }
 
@@ -544,10 +560,8 @@ public class AsReportPanel
         {
             return (DataSet)data;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
     #endregion
     /// <summary>
@@ -558,15 +572,24 @@ public class AsReportPanel
     private Hashtable GetParameters(CurrencyManager cm)
     {
         if (cm == null)
+        {
             throw new NullReferenceException(
                 Origam.BI.CrystalReports.ResourceUtils.GetString("ErrorInvalidReportSource")
             );
+        }
+
         Hashtable result = new Hashtable();
 
         if (ParameterMappings.Count == 0)
+        {
             return result;
+        }
+
         if (cm.Position < 0)
+        {
             return result;
+        }
+
         DataRowView drv = cm.Current as DataRowView;
         foreach (ColumnParameterMapping colMap in ParameterMappings)
         {
@@ -824,7 +847,7 @@ public class AsReportPanel
         int top = 0;
         int left = 0;
         top = parent.Height / 3;
-        left = parent.Width / 2 - (16);
+        left = (parent.Width / 2) - (16);
         circ.Top = top;
         circ.Left = left;
         circ.Height = 32;
@@ -840,7 +863,10 @@ public class AsReportPanel
     {
         this.ProgressText = "";
         if (!circ.Active)
+        {
             return;
+        }
+
         circ.Active = false;
         circ.ParentControl.Invalidate();
         circ.ParentControl = null;
@@ -889,8 +915,8 @@ public class AsReportPanel
                 text,
                 font,
                 new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor),
-                this.Width / 2 - (stringWidth / 2),
-                this.Height / 3 + 64
+                (this.Width / 2) - (stringWidth / 2),
+                (this.Height / 3) + 64
             );
         }
         catch { }

@@ -50,11 +50,20 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
     public bool Authorize(IPrincipal principal, string context)
     {
         if (context == null)
+        {
             return false;
+        }
+
         if (context.Trim() == "")
+        {
             return false;
+        }
+
         if (context == "*")
+        {
             return true;
+        }
+
         string[] roles = context.Split(";".ToCharArray());
         foreach (string roleTest in roles)
         {
@@ -68,7 +77,10 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
                 negation = true;
             }
             if (appRole == "*")
+            {
                 return false;
+            }
+
             foreach (Credential c in RoleList(principal))
             {
                 bool process = true;
@@ -87,7 +99,9 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
                 if (process)
                 {
                     if (appRole.Equals(c.RoleName))
+                    {
                         result = true;
+                    }
                 }
                 if (result)
                 {
@@ -155,7 +169,10 @@ public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
         DataSet result = (DataSet)dataServiceAgent.Result;
         DataTable table = result.Tables["OrigamRoleOrigamApplicationRole"];
         if (table == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorRoleListNotLoaded"));
+        }
+
         Credential[] array = new Credential[table.Rows.Count];
 
         for (int i = 0; i < array.Length; i++)

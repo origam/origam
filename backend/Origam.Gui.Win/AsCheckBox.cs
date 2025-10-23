@@ -62,10 +62,8 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return this.Checked;
-            }
+
+            return this.Checked;
         }
         set
         {
@@ -139,7 +137,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
         {
             _readOnly = value;
             if (!this.DesignMode)
+            {
                 this.Enabled = !value;
+            }
         }
     }
     private bool _hideOnForm = false;
@@ -164,10 +164,8 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             {
                 return false;
             }
-            else
-            {
-                return _enabled;
-            }
+
+            return _enabled;
         }
         set
         {
@@ -242,7 +240,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
     private void AsCheckBox_EnabledChanged(object sender, EventArgs e)
     {
         if (this.ReadOnly & base.Enabled)
+        {
             this.Enabled = false;
+        }
     }
 
     private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
@@ -320,7 +320,9 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             if (table != null)
             {
                 if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                {
                     return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                }
             }
         }
         return binding.BindingMemberInfo.BindingField;
@@ -345,7 +347,10 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             }
         }
         else
+        {
             tableName = dataMember;
+        }
+
         return tableName;
     }
 
@@ -356,6 +361,7 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
             foreach (Binding binding in this.DataBindings)
             {
                 if (binding.PropertyName == "Text")
+                {
                     try
                     {
                         base.Text = ColumnCaption(binding);
@@ -364,6 +370,7 @@ public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
                     {
                         base.Text = "????";
                     }
+                }
             }
         }
     }

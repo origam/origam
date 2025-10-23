@@ -39,39 +39,59 @@ public class DateBoxBuilder
             switch (customFormat)
             {
                 case "dd. MM. yyyy":
+                {
                     pattern = culture.DateTimeFormat.ShortDatePattern;
                     break;
+                }
+
                 case "dd. MM. yyyy HH:mm":
+                {
                     pattern =
                         culture.DateTimeFormat.ShortDatePattern
                         + " "
                         + culture.DateTimeFormat.ShortTimePattern;
                     break;
+                }
+
                 case "dd. MM. yyyy HH:mm:ss":
+                {
                     pattern =
                         culture.DateTimeFormat.ShortDatePattern
                         + " "
                         + culture.DateTimeFormat.LongTimePattern;
                     break;
+                }
+
                 case "dd. MM. yyyy HH:mm:ss.fff":
+                {
                     pattern =
                         culture.DateTimeFormat.ShortDatePattern
                         + " "
                         + culture.DateTimeFormat.LongTimePattern
                         + ".fff";
                     break;
+                }
+
                 case "ddd d. MMMM yyyy":
+                {
                     pattern = AddDayName(culture.DateTimeFormat.LongDatePattern);
                     break;
+                }
+
                 case "ddd d. MMMM yyyy HH:mm":
+                {
                     pattern =
                         AddDayName(culture.DateTimeFormat.LongDatePattern)
                         + " "
                         + culture.DateTimeFormat.ShortTimePattern;
                     break;
+                }
+
                 default:
+                {
                     pattern = customFormat;
                     break;
+                }
             }
         }
         else
@@ -79,16 +99,27 @@ public class DateBoxBuilder
             switch (format)
             {
                 case "Long":
+                {
                     pattern = "long";
                     break;
+                }
+
                 case "Short":
+                {
                     pattern = "short";
                     break;
+                }
+
                 case "Time":
+                {
                     pattern = "time";
                     break;
+                }
+
                 default:
+                {
                     throw new NotImplementedException("Unknown option " + format);
+                }
             }
         }
         propertyElement.SetAttribute("Entity", "Date");

@@ -58,7 +58,10 @@ public class ModelRules
                     .Select(exception => exception.Message)
                     .ToList();
                 if (errorMessages.Count == 0)
+                {
                     return null;
+                }
+
                 return new Dictionary<ISchemaItem, string>
                 {
                     { retrievedObj, string.Join("\n", errorMessages) },

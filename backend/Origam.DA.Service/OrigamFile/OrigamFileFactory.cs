@@ -65,17 +65,15 @@ public class OrigamFileFactory : IOrigamFileFactory
                 isAFullyWrittenFile
             );
         }
-        else
-        {
-            return new OrigamFile(
-                path,
-                parentFolders,
-                origamFileManager,
-                origamPathFactory,
-                fileEventQueue,
-                isAFullyWrittenFile
-            );
-        }
+
+        return new OrigamFile(
+            path,
+            parentFolders,
+            origamFileManager,
+            origamPathFactory,
+            fileEventQueue,
+            isAFullyWrittenFile
+        );
     }
 
     public ITrackeableFile New(
@@ -89,8 +87,11 @@ public class OrigamFileFactory : IOrigamFileFactory
         switch (fileInfo.Name)
         {
             case OrigamFile.ReferenceFileName:
+            {
                 return new OrigamReferenceFile(path, parentFolders);
+            }
             case OrigamFile.GroupFileName:
+            {
                 return new OrigamGroupFile(
                     path,
                     parentFolders,
@@ -99,7 +100,9 @@ public class OrigamFileFactory : IOrigamFileFactory
                     fileEventQueue,
                     isAFullyWrittenFile
                 );
+            }
             default:
+            {
                 return new OrigamFile(
                     path,
                     parentFolders,
@@ -108,6 +111,7 @@ public class OrigamFileFactory : IOrigamFileFactory
                     fileEventQueue,
                     isAFullyWrittenFile
                 );
+            }
         }
     }
 
@@ -130,8 +134,11 @@ public class OrigamFileFactory : IOrigamFileFactory
         switch (path.FileName)
         {
             case OrigamFile.ReferenceFileName:
+            {
                 return new OrigamReferenceFile(path, parentFolderIds, fileHash);
+            }
             case OrigamFile.GroupFileName:
+            {
                 return new OrigamGroupFile(
                     path,
                     parentFolderIds,
@@ -140,7 +147,9 @@ public class OrigamFileFactory : IOrigamFileFactory
                     fileEventQueue,
                     fileHash
                 );
+            }
             default:
+            {
                 return new OrigamFile(
                     path,
                     parentFolderIds,
@@ -149,6 +158,7 @@ public class OrigamFileFactory : IOrigamFileFactory
                     fileEventQueue,
                     fileHash
                 );
+            }
         }
     }
 }

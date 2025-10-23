@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MoreLinq;
 using NUnit.Framework;
 using Origam.Extensions;
 using Origam.Schema;
@@ -67,11 +66,20 @@ public class DictionaryExtensionsTests
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
+            {
                 return false;
+            }
+
             if (ReferenceEquals(this, obj))
+            {
                 return true;
+            }
+
             if (obj.GetType() != this.GetType())
+            {
                 return false;
+            }
+
             return Equals((ReferenceTypeInt)obj);
         }
 

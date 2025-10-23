@@ -276,10 +276,14 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                                 }
 
                                 case DataRowState.Deleted:
+                                {
                                     // deletions later
                                     break;
+                                }
                                 default:
+                                {
                                     throw new Exception(Resources.ErrorUnknownRowChangeState);
+                                }
                             }
                         }
                     }
@@ -381,7 +385,9 @@ public class ServerEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         }
 
                         default:
+                        {
                             throw new Exception(Resources.ErrorUnknownRowChangeState);
+                        }
                     }
                 }
             }

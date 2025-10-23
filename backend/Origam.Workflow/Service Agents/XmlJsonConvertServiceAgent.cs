@@ -19,12 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System.Globalization;
 using System.IO;
 using Origam.JSON;
 using Origam.Service.Core;
-using Origam.Workflow;
 
 namespace Origam.Workflow;
 
@@ -38,6 +36,7 @@ public class XmlJsonConvertServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "TypedXml2Json":
+            {
                 StringWriter stringWriter = new StringWriter(CultureInfo.InvariantCulture);
                 JsonUtils.SerializeToJson(
                     textWriter: stringWriter,
@@ -47,6 +46,7 @@ public class XmlJsonConvertServiceAgent : AbstractServiceAgent
                 );
                 result = stringWriter.ToString();
                 break;
+            }
         }
     }
 }

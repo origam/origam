@@ -71,7 +71,10 @@ public class DataStructureTransformationTemplate : DataStructureTemplate
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Transformation != null)
+        {
             dependencies.Add(this.Transformation);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
     #endregion

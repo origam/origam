@@ -74,7 +74,10 @@ public class Config : IConfig
         try
         {
             if (!File.Exists(filePath))
+            {
                 return false;
+            }
+
             var jsonText = File.ReadAllText(filePath);
             var token = JToken.Parse(jsonText);
             foreach (var segment in path)
@@ -83,7 +86,9 @@ public class Config : IConfig
                 {
                     token = obj[segment];
                     if (token == null)
+                    {
                         return false;
+                    }
                 }
                 else
                 {
@@ -139,7 +144,9 @@ public class Config : IConfig
         )
         {
             if (long.TryParse(value, out long parsed) && parsed > 0)
+            {
                 return parsed;
+            }
         }
 
         var envAppsettingsPath = Path.Combine(basePath, $"appsettings.{environment}.json");
@@ -149,7 +156,9 @@ public class Config : IConfig
         )
         {
             if (long.TryParse(value, out long parsed) && parsed > 0)
+            {
                 return parsed;
+            }
         }
 
         var secretsId = userSecretsId.Value;
@@ -173,7 +182,9 @@ public class Config : IConfig
                 )
                 {
                     if (long.TryParse(value, out long parsed) && parsed > 0)
+                    {
                         return parsed;
+                    }
                 }
             }
             catch

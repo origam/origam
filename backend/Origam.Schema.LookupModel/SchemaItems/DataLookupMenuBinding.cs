@@ -172,10 +172,8 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
             {
                 return null;
             }
-            else
-            {
-                return _selectionPanelId.ToString();
-            }
+
+            return _selectionPanelId.ToString();
         }
         set
         {
@@ -216,10 +214,8 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
             // then by level
             return this.Level.CompareTo(compared.Level);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

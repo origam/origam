@@ -23,7 +23,6 @@ using System;
 using System.Linq;
 using System.Xml;
 using Origam.DA.Common;
-using Origam.Schema;
 
 namespace Origam.DA.Service;
 
@@ -63,16 +62,17 @@ public static class XmlUtils
         {
             return null;
         }
-        else
-        {
-            return new Guid(result);
-        }
+
+        return new Guid(result);
     }
 
     private static Guid? ReadGuid(XmlNode node, string attrName)
     {
         if (node?.Attributes == null)
+        {
             return null;
+        }
+
         XmlAttribute idAtt = node.Attributes[attrName, OrigamFile.ModelPersistenceUri];
         Guid? id = null;
         if (idAtt != null)

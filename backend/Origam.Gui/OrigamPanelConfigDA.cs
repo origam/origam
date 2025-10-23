@@ -56,7 +56,10 @@ public class OrigamPanelConfigDA
         row["RecordCreatedBy"] = profileId;
         row["FormPanelId"] = panelInstanceId;
         if (workflowId != Guid.Empty)
+        {
             row["WorkflowId"] = workflowId;
+        }
+
         row["ProfileId"] = profileId;
         row["DefaultView"] = defaultView;
         configTable.Rows.Add(row);
@@ -114,7 +117,10 @@ public class OrigamPanelConfigDA
         try
         {
             if (userConfig == null)
+            {
                 return;
+            }
+
             DataSet configCopy = userConfig.Copy();
             DataSet actualConfig = LoadConfigData(panelInstanceId, workflowId, profileId);
             if (actualConfig.Tables[0].Rows.Count > 0)

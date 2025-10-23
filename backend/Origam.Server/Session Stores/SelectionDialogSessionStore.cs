@@ -106,15 +106,21 @@ public class SelectionDialogSessionStore : SessionStore
         switch (actionId)
         {
             case ACTION_REFRESH:
+            {
                 return Refresh();
+            }
             case ACTION_NEXT:
+            {
                 return Next();
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
+            }
         }
     }
 
@@ -171,11 +177,17 @@ public class SelectionDialogSessionStore : SessionStore
         switch (this.Request.Type)
         {
             case UIRequestType.FormReferenceMenuItem_WithSelection:
+            {
                 return this.NextForm();
+            }
             case UIRequestType.ReportReferenceMenuItem_WithSelection:
+            {
                 return this.NextReport();
+            }
             default:
+            {
                 throw new Exception("Not supported by selection dialog: " + this.Request.Type);
+            }
         }
     }
 

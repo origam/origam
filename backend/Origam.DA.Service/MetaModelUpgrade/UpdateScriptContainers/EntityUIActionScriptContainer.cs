@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Origam.Schema.GuiModel;
-using Origam.Schema.WorkflowModel;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 

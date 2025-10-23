@@ -19,9 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -111,7 +109,10 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (Rule != null)
+        {
             dependencies.Add(Rule);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 }

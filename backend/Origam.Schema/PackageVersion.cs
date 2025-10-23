@@ -82,7 +82,10 @@ public class PackageVersion : IComparable<PackageVersion>
     public int CompareTo(PackageVersion other)
     {
         if (other == null)
+        {
             return 1;
+        }
+
         return CompareNumVersions(versionNums, other.versionNums);
     }
 
@@ -112,9 +115,15 @@ public class PackageVersion : IComparable<PackageVersion>
     public static bool operator ==(PackageVersion x, PackageVersion y)
     {
         if (ReferenceEquals(x, null) && ReferenceEquals(y, null))
+        {
             return true;
+        }
+
         if (ReferenceEquals(x, null) && !ReferenceEquals(y, null))
+        {
             return false;
+        }
+
         return x.Equals(y);
     }
 
@@ -131,21 +140,35 @@ public class PackageVersion : IComparable<PackageVersion>
         for (int i = 0; i < versionNumCount; i++)
         {
             if (paddedversions1[i] > paddedversions2[i])
+            {
                 return 1;
+            }
+
             if (paddedversions1[i] < paddedversions2[i])
+            {
                 return -1;
+            }
         }
         if (paddedversions1.Count > paddedversions2.Count)
+        {
             return 1;
+        }
+
         if (paddedversions1.Count < paddedversions2.Count)
+        {
             return -1;
+        }
+
         return 0;
     }
 
     private List<int> PadWithZeros(List<int> list, int newLength)
     {
         if (list.Count >= newLength)
+        {
             return list;
+        }
+
         List<int> longerList = new List<int>();
         for (int i = 0; i < newLength; i++)
         {
@@ -161,22 +184,34 @@ public class PackageVersion : IComparable<PackageVersion>
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, obj))
+        {
             return true;
+        }
+
         if (obj.GetType() != this.GetType())
+        {
             return false;
+        }
+
         return Equals((PackageVersion)obj);
     }
 
     public override int GetHashCode()
     {
         if (versionNums != null)
+        {
             return 0;
+        }
+
         int hashCode = versionNums.Count;
         foreach (int versionNum in versionNums)
         {
-            hashCode = unchecked(hashCode * 314159 + versionNum);
+            hashCode = unchecked((hashCode * 314159) + versionNum);
         }
         return hashCode;
     }

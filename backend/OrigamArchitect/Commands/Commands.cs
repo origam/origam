@@ -44,7 +44,6 @@ using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
 using Origam.Schema.ItemCollection;
 using Origam.Schema.MenuModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.UI;
@@ -189,19 +188,17 @@ public class ExecuteSchemaItem : AbstractCommand
                         {
                             return;
                         }
-                        else
-                        {
-                            foreach (
-                                var mapping in formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(
-                                    SelectionDialogParameterMapping.CategoryConst
-                                )
+
+                        foreach (
+                            var mapping in formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(
+                                SelectionDialogParameterMapping.CategoryConst
                             )
-                            {
-                                generator.SelectionParameters.Add(
-                                    mapping.Name,
-                                    row[mapping.SelectionDialogField.Name]
-                                );
-                            }
+                        )
+                        {
+                            generator.SelectionParameters.Add(
+                                mapping.Name,
+                                row[mapping.SelectionDialogField.Name]
+                            );
                         }
                     }
                 }
@@ -240,7 +237,9 @@ public class ExecuteSchemaItem : AbstractCommand
                     ex
                 );
                 if (frm != null)
+                {
                     frm.Close();
+                }
             }
             finally
             {
@@ -294,16 +293,14 @@ public class ExecuteSchemaItem : AbstractCommand
                 {
                     return;
                 }
-                else
-                {
-                    foreach (
-                        var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(
-                            SelectionDialogParameterMapping.CategoryConst
-                        )
+
+                foreach (
+                    var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(
+                        SelectionDialogParameterMapping.CategoryConst
                     )
-                    {
-                        parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
-                    }
+                )
+                {
+                    parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
                 }
             }
             CrystalReport crReport = reportRef.Report as CrystalReport;
@@ -328,10 +325,7 @@ public class ExecuteSchemaItem : AbstractCommand
                     )
                 );
             }
-            else
-            {
-                // all other reports
-            }
+            // all other reports
         }
         else if (item is AbstractUpdateScriptActivity)
         {
@@ -522,7 +516,10 @@ public class ExecuteSchemaItem : AbstractCommand
             sd.SaveOnClose = false;
             DialogResult result = sd.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
             if (result == DialogResult.Cancel)
+            {
                 return null;
+            }
+
             DataRow row;
             if (transformationAfterSelection == null)
             {
@@ -547,7 +544,10 @@ public class ExecuteSchemaItem : AbstractCommand
         finally
         {
             if (sd != null)
+            {
                 sd.Dispose();
+            }
+
             sd = null;
             sdGenerator = null;
         }
@@ -634,7 +634,9 @@ public class ViewProcessBrowserPad : AbstractMenuCommand
         WorkflowPlayerPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowPlayerPad)) as WorkflowPlayerPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -651,7 +653,9 @@ public class ViewWorkQueuePad : AbstractMenuCommand
         WorkQueuePad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(WorkQueuePad)) as WorkQueuePad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -965,9 +969,14 @@ public class GenerateLocalizationFile : AbstractMenuCommand
             finally
             {
                 if (fs != null)
+                {
                     fs.Close();
+                }
+
                 if (ms != null)
+                {
                     ms.Close();
+                }
             }
         }
     }
@@ -1023,7 +1032,9 @@ public class ViewWorkflowWatchPad : AbstractMenuCommand
         WorkflowWatchPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(WorkflowWatchPad)) as WorkflowWatchPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -1208,6 +1219,7 @@ public class SchemaExtensionSorter : IDatasetFormatter
                 case "SchemaItemGroup":
                 case "SchemaExtension":
                 case "PackageReference":
+                {
                     originalTable
                         .Rows.Cast<DataRow>()
                         .OrderBy(row => row["Id"])
@@ -1217,12 +1229,16 @@ public class SchemaExtensionSorter : IDatasetFormatter
                             ImportChildRows(originalTable, newTable, row);
                         });
                     break;
+                }
+
                 default:
+                {
                     foreach (DataRow row in originalTable.Rows)
                     {
                         newTable.ImportRow(row);
                     }
                     break;
+                }
             }
         }
         return data;

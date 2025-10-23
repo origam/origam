@@ -25,7 +25,6 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Attributes;
 using Origam.Schema.EntityModel;
 using Origam.Schema.ItemCollection;
 
@@ -89,10 +88,8 @@ public class ContextStore : AbstractSchemaItem, IContextStore
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
     #endregion
     #region IContextStore Members

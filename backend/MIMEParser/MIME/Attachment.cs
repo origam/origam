@@ -116,9 +116,11 @@ public class Attachment : IComparable
                             else
                                 return (_contentFileName!="");*/
             if ((_contentType == null || _contentFileName == "") && _contentID == null) //&&_contentType.ToLower().IndexOf("text/")!=-1)
+            {
                 return true;
-            else
-                return false;
+            }
+
+            return false;
         }
     }
 
@@ -318,7 +320,10 @@ public class Attachment : IComparable
     {
         _inBytes = false;
         if (strAttachment == null)
+        {
             throw new ArgumentNullException("strAttachment");
+        }
+
         StringReader srReader = new StringReader(strAttachment);
         if (blnParseHeader)
         {
@@ -327,9 +332,11 @@ public class Attachment : IComparable
             {
                 ParseHeader(srReader, ref strLine);
                 if (Utility.IsOrNullTextEx(strLine))
+                {
                     break;
-                else
-                    strLine = srReader.ReadLine();
+                }
+
+                strLine = srReader.ReadLine();
             }
         }
         this._rawAttachment = srReader.ReadToEnd();
@@ -349,8 +356,12 @@ public class Attachment : IComparable
         switch (array[0].ToUpper())
         {
             case "CONTENT-TYPE":
+            {
                 if (values.Length > 0)
+                {
                     _contentType = values[0].Trim();
+                }
+
                 if (values.Length > 1)
                 {
                     _contentCharset = Utility.GetQuotedValue(values[1], "=", "charset");
@@ -371,22 +382,36 @@ public class Attachment : IComparable
                     _contentFileName = Utility.ParseFileName(strRet);
                     _contentCharset = MIMETypes.GetContentCharset(strRet + "\r\n", 0);
                     if (_contentCharset == "")
+                    {
                         _contentCharset = null;
+                    }
+
                     if (_contentFileName == "")
+                    {
                         ParseHeader(srReader, ref strRet);
+                    }
                 }
                 break;
+            }
+
             case "CONTENT-TRANSFER-ENCODING":
+            {
                 _contentTransferEncoding = Utility.SplitOnSemiColon(array[1])[0].Trim();
                 break;
+            }
             case "CONTENT-DESCRIPTION":
+            {
                 _contentDescription = Utility.DecodeText(
                     Utility.SplitOnSemiColon(array[1])[0].Trim()
                 );
                 break;
+            }
             case "CONTENT-DISPOSITION":
+            {
                 if (values.Length > 0)
+                {
                     _contentDisposition = values[0].Trim();
+                }
 
                 ///<bug>reported by grandepuffo @ https://sourceforge.net/forum/message.php?msg_id=2589759
                 //_contentFileName=values[1];
@@ -400,14 +425,20 @@ public class Attachment : IComparable
                 }
 
                 if (_contentFileName == "")
+                {
                     _contentFileName = srReader.ReadLine();
+                }
+
                 _contentFileName = _contentFileName.Replace("\t", "");
                 _contentFileName = Utility.GetQuotedValue(_contentFileName, "=", "filename");
                 _contentFileName = Utility.DecodeText(_contentFileName);
                 break;
+            }
             case "CONTENT-ID":
+            {
                 _contentID = Utility.SplitOnSemiColon(array[1])[0].Trim('<').Trim('>');
                 break;
+            }
         }
     }
 
@@ -431,31 +462,44 @@ public class Attachment : IComparable
         try
         {
             if (_contentType.ToLower() == "message/rfc822".ToLower())
+            {
                 decodedAttachment = Utility.DecodeText(_rawAttachment);
+            }
             else if (_contentTransferEncoding != null)
             {
                 decodedAttachment = _rawAttachment;
                 if (!IsEncoding("7bit"))
                 {
-                    if (IsEncoding("8bit") && _contentCharset != null & _contentCharset != "")
+                    if (IsEncoding("8bit") && (_contentCharset != null & _contentCharset != ""))
+                    {
                         decodedAttachment = Utility.Change(decodedAttachment, _contentCharset);
+                    }
+
                     if (Utility.IsQuotedPrintable(_contentTransferEncoding))
+                    {
                         decodedAttachment = DecodeQP.ConvertHexContent(
                             decodedAttachment,
                             _contentCharset
                         );
+                    }
                     else if (IsEncoding("8bit")) { }
                     else
+                    {
                         decodedAttachment = Utility.deCodeB64s(
                             Utility.RemoveNonB64(decodedAttachment),
                             _contentCharset
                         );
+                    }
                 }
             }
             else if (_contentCharset != null)
+            {
                 decodedAttachment = Utility.Change(_rawAttachment, _contentCharset); //Encoding.Default.GetString(Encoding.GetEncoding(_contentCharset).GetBytes(_rawAttachment));
+            }
             else
+            {
                 decodedAttachment = _rawAttachment;
+            }
         }
         catch
         {
@@ -481,43 +525,62 @@ public class Attachment : IComparable
     public byte[] DecodedAsBytes()
     {
         if (_rawAttachment == null)
+        {
             return null;
+        }
+
         if (_contentFileName != "")
         {
             byte[] decodedBytes = null;
             if (_contentType != null && _contentType.ToLower() == "message/rfc822".ToLower())
+            {
                 decodedBytes = Encoding.Default.GetBytes(Utility.DecodeText(_rawAttachment));
+            }
             else if (_contentTransferEncoding != null)
             {
                 string bytContent = _rawAttachment;
                 if (!IsEncoding("7bit"))
                 {
-                    if (IsEncoding("8bit") && _contentCharset != null & _contentCharset != "")
+                    if (IsEncoding("8bit") && (_contentCharset != null & _contentCharset != ""))
+                    {
                         bytContent = Utility.Change(bytContent, _contentCharset);
+                    }
+
                     if (Utility.IsQuotedPrintable(_contentTransferEncoding))
+                    {
                         decodedBytes = Encoding.Default.GetBytes(
                             DecodeQP.ConvertHexContent(bytContent)
                         );
+                    }
                     else if (IsEncoding("8bit"))
+                    {
                         decodedBytes = Encoding.Default.GetBytes(bytContent);
+                    }
                     else
+                    {
                         decodedBytes = Convert.FromBase64String(Utility.RemoveNonB64(bytContent));
+                    }
                 }
                 else
+                {
                     decodedBytes = Encoding.Default.GetBytes(bytContent);
+                }
             }
             else if (_contentCharset != null)
+            {
                 decodedBytes = Encoding.Default.GetBytes(
                     Utility.Change(_rawAttachment, _contentCharset)
                 ); //Encoding.Default.GetString(Encoding.GetEncoding(_contentCharset).GetBytes(_rawAttachment));
+            }
             else
+            {
                 decodedBytes = Encoding.Default.GetBytes(_rawAttachment);
+            }
+
             return decodedBytes;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public int CompareTo(object attachment)

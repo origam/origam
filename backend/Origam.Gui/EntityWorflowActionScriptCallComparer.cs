@@ -40,7 +40,6 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
@@ -57,13 +56,12 @@ public class EntityWorkflowActionScriptCallComparer : IComparer<ISchemaItem>
         {
             return 0;
         }
-        else if (scriptX.Order > scriptY.Order)
+
+        if (scriptX.Order > scriptY.Order)
         {
             return 1;
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 }

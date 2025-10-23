@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using Origam.DA;
 using Origam.DA.Service;
@@ -35,7 +33,6 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Service.Core;
-using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui;
@@ -99,7 +96,10 @@ public static class FormTools
         IParameterService parameterService =
             ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         if (!parameterService.IsFeatureOn(features))
+        {
             return false;
+        }
+
         if (roles != null && roles != String.Empty)
         {
             if (
@@ -141,9 +141,15 @@ public static class FormTools
     public static string FindTableByDataMember(DataSet ds, string member)
     {
         if (member == null)
+        {
             return "";
+        }
+
         if (ds == null)
+        {
             return "";
+        }
+
         string tableName = "";
         if (member.IndexOf(".") > 0)
         {
@@ -185,7 +191,10 @@ public static class FormTools
             tableName = table.TableName;
         }
         else
+        {
             tableName = member;
+        }
+
         return tableName;
     }
 

@@ -51,15 +51,25 @@ public class QuotedCoding
                 if (s[i] == '=')
                 {
                     if (s[i + 1] == '\r' && s[i + 2] == '\n')
+                    {
                         bufferPosition--;
+                    }
                     else
+                    {
                         buffer[bufferPosition] = System.Convert.ToByte(s.Substring(i + 1, 2), 16);
+                    }
+
                     i += 2;
                 }
                 else if (s[i] == '_')
+                {
                     buffer[bufferPosition] = 32;
+                }
                 else
+                {
                     buffer[bufferPosition] = (byte)s[i];
+                }
+
                 bufferPosition++;
             }
         }
@@ -84,16 +94,24 @@ public class QuotedCoding
         char[] separator = { '?' };
         string[] sArray = s.Split(separator);
         if (sArray[0].Equals("=") == false)
+        {
             return s;
+        }
 
         byte[] bArray;
         //rozpoznaj rodzj kodowania
         if (sArray[2].ToUpper() == "Q") //querystring
+        {
             bArray = GetByteArray(sArray[3]);
+        }
         else if (sArray[2].ToUpper() == "B") //base64
+        {
             bArray = Convert.FromBase64String(sArray[3]);
+        }
         else
+        {
             return s;
+        }
         //pobierz strone kodowa
         Encoding encoding = Encoding.GetEncoding(sArray[1]);
         return encoding.GetString(bArray);
@@ -120,7 +138,10 @@ public class QuotedCoding
             }
             stop = s.IndexOf("?=", start + 2);
             if (stop == -1) //blad w stringu
+            {
                 return s;
+            }
+
             retstring.Append(s, old, start - old);
             retstring.Append(DecodeOne(s.Substring(start, stop - start + 2)));
             start = stop + 2;

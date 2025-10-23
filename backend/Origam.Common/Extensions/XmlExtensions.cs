@@ -23,7 +23,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.IO;
+#pragma warning disable IDE0005
 using System.Linq;
+#pragma warning restore IDE0005
 using System.Xml;
 using System.Xml.Linq;
 

@@ -355,25 +355,45 @@ public static class WorkflowHelper
         switch (dataType)
         {
             case OrigamDataType.Blob:
+            {
                 return "blob";
+            }
             case OrigamDataType.Boolean:
+            {
                 return "b";
+            }
             case OrigamDataType.Currency:
+            {
                 return "c";
+            }
             case OrigamDataType.Date:
+            {
                 return "d";
+            }
             case OrigamDataType.Float:
+            {
                 return "f";
+            }
             case OrigamDataType.Integer:
+            {
                 return "i";
+            }
             case OrigamDataType.Long:
+            {
                 return "i";
+            }
             case OrigamDataType.Memo:
+            {
                 return "m";
+            }
             case OrigamDataType.String:
+            {
                 return "s";
+            }
             case OrigamDataType.UniqueIdentifier:
+            {
                 return "g";
+            }
         }
         throw new ArgumentOutOfRangeException(
             nameof(dataType),

@@ -232,11 +232,13 @@ public class GuiHelper
                 break;
             }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "DataType",
                     column.DataType,
                     "Default control of this data type is not supported by the control builder."
                 );
+            }
         }
     }
 

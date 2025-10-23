@@ -49,6 +49,7 @@ public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElem
             switch (memberName)
             {
                 case "ServersideFilterParameter":
+                {
                     if (
                         lookup.ServersideFilterParameter == null
                         || lookup.ServersideFilterParameter == string.Empty
@@ -57,12 +58,16 @@ public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElem
                         return new ArgumentNullException("ServersideFilterParameter");
                     }
                     break;
+                }
+
                 case "ListMethod":
+                {
                     if (lookup.ListMethod == null)
                     {
                         return new ArgumentNullException("ListMethod");
                     }
                     break;
+                }
             }
         }
         return null;

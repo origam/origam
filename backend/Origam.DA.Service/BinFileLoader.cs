@@ -104,11 +104,16 @@ internal class BinFileLoader : IBinFileLoader
             switch (operation)
             {
                 case Operation.clear:
+                {
                     fileSaveQueue.Clear();
                     break;
+                }
+
                 case Operation.add:
+                {
                     fileSaveQueue.Enqueue(itemTracker);
                     break;
+                }
             }
         }
     }
@@ -141,7 +146,10 @@ internal class BinFileLoader : IBinFileLoader
     public void LoadInto(ItemTracker itemTracker)
     {
         if (!indexFile.ExistsNow())
+        {
             return;
+        }
+
         lock (Lock)
         {
             bool indexFileCompatible = true;
@@ -230,10 +238,16 @@ internal class BinFileLoader : IBinFileLoader
         foreach (var file in fileInfos)
         {
             if (!trackerFiles.ContainsKey(file.FullName))
+            {
                 return false;
+            }
+
             string hash = file.GetFileBase64Hash();
             if (trackerFiles[file.FullName].FileHash != hash)
+            {
                 return false;
+            }
+
             trackerFiles.Remove(file.FullName);
         }
         return trackerFiles.Count == 0;

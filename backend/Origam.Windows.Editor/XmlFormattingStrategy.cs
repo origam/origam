@@ -177,21 +177,32 @@ public class XmlFormattingStrategy
                 {
                     wasEmptyElement = false;
                     if (tagStack.Count == 0)
+                    {
                         currentIndentation = "";
+                    }
                     else
+                    {
                         currentIndentation = tagStack.Pop();
+                    }
                 }
                 if (r.NodeType == XmlNodeType.EndElement)
                 {
                     if (tagStack.Count == 0)
+                    {
                         currentIndentation = "";
+                    }
                     else
+                    {
                         currentIndentation = tagStack.Pop();
+                    }
                 }
                 while (r.LineNumber >= nextLine)
                 {
                     if (nextLine > end)
+                    {
                         break;
+                    }
+
                     if (lastType == XmlNodeType.CDATA || lastType == XmlNodeType.Comment)
                     {
                         nextLine++;
@@ -203,28 +214,44 @@ public class XmlFormattingStrategy
                     string newText;
                     // special case: opening tag has closing bracket on extra line: remove one indentation level
                     if (lineText.Trim() == ">")
+                    {
                         newText = tagStack.Peek() + lineText.Trim();
+                    }
                     else
+                    {
                         newText = currentIndentation + lineText.Trim();
+                    }
+
                     document.SmartReplaceLine(line, newText);
                     nextLine++;
                 }
                 if (r.LineNumber > end)
+                {
                     break;
+                }
+
                 wasEmptyElement = r.NodeType == XmlNodeType.Element && r.IsEmptyElement;
                 string attribIndent = null;
                 if (r.NodeType == XmlNodeType.Element)
                 {
                     tagStack.Push(currentIndentation);
                     if (r.LineNumber < begin)
+                    {
                         currentIndentation = DocumentUtilities.GetIndentation(
                             editor.Document,
                             r.LineNumber
                         );
+                    }
+
                     if (r.Name.Length < 16)
+                    {
                         attribIndent = currentIndentation + new string(' ', 2 + r.Name.Length);
+                    }
                     else
+                    {
                         attribIndent = currentIndentation + tab;
+                    }
+
                     currentIndentation += tab;
                 }
                 lastType = r.NodeType;
@@ -233,12 +260,17 @@ public class XmlFormattingStrategy
                     int startLine = r.LineNumber;
                     r.MoveToAttribute(0); // move to first attribute
                     if (r.LineNumber != startLine)
+                    {
                         attribIndent = currentIndentation; // change to tab-indentation
+                    }
+
                     r.MoveToAttribute(r.AttributeCount - 1);
                     while (r.LineNumber >= nextLine)
                     {
                         if (nextLine > end)
+                        {
                             break;
+                        }
                         // set indentation of 'nextLine'
                         IDocumentLine line = document.GetLineByNumber(nextLine);
                         string newText = attribIndent + document.GetText(line).Trim();
@@ -439,9 +471,15 @@ public class BlockCommentRegion
         unchecked
         {
             if (CommentStart != null)
+            {
                 hashCode += 1000000007 * CommentStart.GetHashCode();
+            }
+
             if (CommentEnd != null)
+            {
                 hashCode += 1000000009 * CommentEnd.GetHashCode();
+            }
+
             hashCode += 1000000021 * StartOffset.GetHashCode();
             hashCode += 1000000033 * EndOffset.GetHashCode();
         }
@@ -452,7 +490,10 @@ public class BlockCommentRegion
     {
         BlockCommentRegion other = obj as BlockCommentRegion;
         if (other == null)
+        {
             return false;
+        }
+
         return this.CommentStart == other.CommentStart
             && this.CommentEnd == other.CommentEnd
             && this.StartOffset == other.StartOffset

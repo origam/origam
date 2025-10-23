@@ -86,12 +86,14 @@ public class Utility
                     || strFile.EndsWith(".gif")
                     || strFile.EndsWith(".png")
                 )
+                {
                     return true;
-                else
-                    return false;
-            }
-            else
+                }
+
                 return false;
+            }
+
+            return false;
         }
         catch
         {
@@ -129,9 +131,11 @@ public class Utility
     {
         int indexOfTag = strText.IndexOf(strTag);
         if (indexOfTag != -1)
+        {
             return strText.Substring(0, indexOfTag - 1);
-        else
-            return strText;
+        }
+
+        return strText;
     }
 
     /// <summary>
@@ -155,11 +159,17 @@ public class Utility
             strRet = strHeader.Substring(intPos + strTag.Length);
             intPos = strRet.ToLower().IndexOf(";");
             if (intPos != -1)
+            {
                 strRet = strRet.Substring(1, intPos - 1);
+            }
+
             strRet = RemoveQuote(strRet);
         }
         else
+        {
             strRet = "";
+        }
+
         return strRet;
     }
 
@@ -212,7 +222,10 @@ public class Utility
         try
         {
             if (File.Exists(strFile))
+            {
                 File.Delete(strFile);
+            }
+
             FileStream fs = File.Create(strFile);
             fs.Write(bytContent, 0, bytContent.Length);
             fs.Close();
@@ -240,9 +253,13 @@ public class Utility
             if (File.Exists(strFile))
             {
                 if (blnReplaceExists)
+                {
                     File.Delete(strFile);
+                }
                 else
+                {
                     blnRet = false;
+                }
             }
             if (blnRet == true)
             {
@@ -274,8 +291,8 @@ public class Utility
             fs.Close();
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /// <summary>
@@ -286,7 +303,10 @@ public class Utility
     public static string[] GetHeadersValue(string strRawHeader)
     {
         if (strRawHeader == null)
+        {
             throw new ArgumentNullException("strRawHeader", "Argument was null");
+        }
+
         string[] array = new string[2] { "", "" };
         int indexOfColon = strRawHeader.IndexOf(":");
         try
@@ -308,7 +328,10 @@ public class Utility
     public static string GetQuotedValue(string strText, string strSplitter, string strTag)
     {
         if (strText == null)
+        {
             throw new ArgumentNullException("strText", "Argument was null");
+        }
+
         string[] array = new string[2] { "", "" };
         int indexOfstrSplitter = strText.IndexOf(strSplitter);
         try
@@ -325,21 +348,23 @@ public class Utility
         catch (Exception) { }
         //return array;
         if (array[0].ToLower() == strTag.ToLower())
+        {
             return array[1].Trim();
-        else
-            return null;
+        }
+
+        return null;
         /*			string []array=null;
-                try
-                {
-                    array=Regex.Split(strText,strSplitter);
-                    //return array;
-                    if(array[0].ToLower()==strTag.ToLower())
-                        return RemoveQuote(array[1].Trim());
-                    else
-                        return null;
-                }
-                catch
-                {return null;}*/
+       try
+       {
+           array=Regex.Split(strText,strSplitter);
+           //return array;
+           if(array[0].ToLower()==strTag.ToLower())
+               return RemoveQuote(array[1].Trim());
+           else
+               return null;
+       }
+       catch
+       {return null;}*/
     }
 
     /// <summary>
@@ -351,7 +376,10 @@ public class Utility
     public static string Change(string strText, string strCharset)
     {
         if (strCharset == null || strCharset == "")
+        {
             return strText;
+        }
+
         byte[] b = Encoding.Default.GetBytes(strText);
         return new string(Encoding.GetEncoding(strCharset).GetChars(b));
     }
@@ -385,9 +413,15 @@ public class Utility
     {
         string strRet = strText;
         if (strRet.StartsWith("\""))
+        {
             strRet = strRet.Substring(1);
+        }
+
         if (strRet.EndsWith("\""))
+        {
             strRet = strRet.Substring(0, strRet.Length - 1);
+        }
+
         return strRet;
     }
 
@@ -467,27 +501,34 @@ public class Utility
                     switch (m.Groups["Encoding"].Value.ToUpper())
                     {
                         case "B":
+                        {
                             strBody = deCodeB64s(strBody, m.Groups["Charset"].Value);
                             break;
+                        }
+
                         case "Q":
+                        {
                             strBody = DecodeQP.ConvertHexContent(
                                 strBody,
                                 m.Groups["Charset"].Value
                             );
                             break;
+                        }
+
                         default:
+                        {
                             break;
+                        }
                     }
                     strRet += strBody;
                 }
                 else
                 {
                     if (!IsValidMIMEText(strParts[i]))
-                        strRet += strParts[i];
-                    else
                     {
-                        //blank text
+                        strRet += strParts[i];
                     }
+                    //blank text
                 }
             }
             return strRet;
@@ -568,9 +609,11 @@ public class Utility
         try
         {
             if (strEncoding.ToLower() == "ISO-8859-1".ToLower())
+            {
                 return deCodeB64s(strText);
-            else
-                return Encoding.GetEncoding(strEncoding).GetString(deCodeB64(strText));
+            }
+
+            return Encoding.GetEncoding(strEncoding).GetString(deCodeB64(strText));
         }
         catch
         {
@@ -645,23 +688,30 @@ public class Utility
     public static bool IsQuotedPrintable(string strText)
     {
         if (strText != null)
+        {
             return (strText.ToLower() == "quoted-printable".ToLower());
-        else
-            return false;
+        }
+
+        return false;
     }
 
     public static bool IsBase64(string strText)
     {
         if (strText != null)
+        {
             return (strText.ToLower() == "base64".ToLower());
-        else
-            return false;
+        }
+
+        return false;
     }
 
     public static string[] SplitOnSemiColon(string strText)
     {
         if (strText == null)
+        {
             throw new ArgumentNullException("strText", "Argument was null");
+        }
+
         string[] array = null;
         int indexOfColon = strText.IndexOf(";");
         if (indexOfColon < 0)
@@ -670,10 +720,8 @@ public class Utility
             array[0] = strText;
             return array;
         }
-        else
-        {
-            array = new string[2];
-        }
+
+        array = new string[2];
         try
         {
             array[0] = strText.Substring(0, indexOfColon).Trim();

@@ -75,7 +75,10 @@ internal class OrigamXmlManager
         );
 
         if (loadedObj == null)
+        {
             throw new Exception();
+        }
+
         return loadedObj;
     }
 
@@ -208,7 +211,10 @@ internal class OrigamXmlManager
         public Guid Get(int depth)
         {
             if (!depthToParentDict.ContainsKey(depth))
+            {
                 return Guid.Empty;
+            }
+
             return depthToParentDict[depth];
         }
     }

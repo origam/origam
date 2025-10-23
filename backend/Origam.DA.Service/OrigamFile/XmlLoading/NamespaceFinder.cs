@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,19 +88,30 @@ internal class PreLoadedNamespaceFinder : INamespaceFinder
             switch (xmlData.FileInfo.Name)
             {
                 case OrigamFile.PackageFileName:
+                {
                     packageFiles.Add(objectFileDataFactory.NewPackageFileData(xmlData));
                     break;
+                }
+
                 case OrigamFile.GroupFileName:
+                {
                     var groupFileData = objectFileDataFactory.NewGroupFileData(xmlData);
                     groupFileDict.Add(groupFileData.Folder, groupFileData);
                     break;
+                }
+
                 case OrigamFile.ReferenceFileName:
+                {
                     var referenceFileData = objectFileDataFactory.NewReferenceFileData(xmlData);
                     referenceFileDict.Add(referenceFileData.Folder, referenceFileData);
                     break;
+                }
+
                 default:
+                {
                     objectFileData.Add(objectFileDataFactory.NewObjectFileData(xmlData));
                     break;
+                }
             }
         }
     }

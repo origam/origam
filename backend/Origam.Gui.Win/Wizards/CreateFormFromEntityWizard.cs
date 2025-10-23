@@ -220,11 +220,17 @@ public class CreateFormFromEntityWizard : System.Windows.Forms.Form
     {
         lstFields.Items.Clear();
         if (this.Entity == null)
+        {
             return;
+        }
+
         foreach (IDataEntityColumn column in this.Entity.EntityColumns)
         {
             if (string.IsNullOrEmpty(column.ToString()))
+            {
                 continue;
+            }
+
             if (
                 !this._textColumnsOnly
                 || (

@@ -20,22 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
-using Origam.Rule;
 using Origam.Schema;
-using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
-using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -58,7 +50,6 @@ public class OrigamEngine
     #region Constructors
     internal OrigamEngine() { }
     #endregion
-
 
     #region Public Static Methods
     public static void InitializeSchemaItemProviders(SchemaService service)
@@ -234,10 +225,8 @@ public class OrigamEngine
         {
             return DateTime.MinValue;
         }
-        else
-        {
-            return (DateTime)value;
-        }
+
+        return (DateTime)value;
     }
     #endregion
     public static bool IsRestartPending()
@@ -267,7 +256,7 @@ public class OrigamEngine
             {
                 log.LogOrigamError(
                     "Could not get restart status. Will retry in "
-                        + RestartTimer.Interval / 1000
+                        + (RestartTimer.Interval / 1000)
                         + "seconds.",
                     ex
                 );

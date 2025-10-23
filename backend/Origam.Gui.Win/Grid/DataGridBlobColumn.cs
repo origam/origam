@@ -94,7 +94,10 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         _isEditing = false;
         _blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
         if (_blobControl.IsDisposed)
+        {
             return;
+        }
+
         base.Abort(rowNum);
     }
 
@@ -151,7 +154,10 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
     protected override bool Commit(CurrencyManager dataSource, int rowNum)
     {
         if (_blobControl.Bounds.X != 0 | _blobControl.Bounds.Y != 0 | _blobControl.Width != 0)
+        {
             _blobControl.Bounds = Rectangle.Empty;
+        }
+
         _blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
         if (_isEditing)
         {
@@ -195,7 +201,10 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         if (_blobControl.Parent != null)
         {
             if (_blobControl.Parent.Equals(value))
+            {
                 return;
+            }
+
             _blobControl.Parent.Controls.Remove(_blobControl);
         }
         if (value != null)
@@ -220,9 +229,14 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
+            {
                 myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
             if (!formatting.UseDefaultForeColor)
+            {
                 myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
         }
         string text = this.GetColumnValueAtRow(source, rowNum).ToString();
         Font font = new Font(

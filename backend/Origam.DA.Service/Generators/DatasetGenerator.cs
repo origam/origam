@@ -61,7 +61,9 @@ public class DatasetGenerator
     private void AddExtendedProperties(PropertyCollection collection, Key primaryKey)
     {
         foreach (DictionaryEntry entry in primaryKey)
+        {
             collection.Add(entry.Key, entry.Value);
+        }
     }
 
     /* @short Evaluates parameter value. Firstly look into custom parameters
@@ -85,10 +87,8 @@ public class DatasetGenerator
             {
                 return val.ToString();
             }
-            else
-            {
-                return val;
-            }
+
+            return val;
         }
         // try ordinary input parameters
         if (parameters.Contains(param))
@@ -98,10 +98,8 @@ public class DatasetGenerator
             {
                 return val.ToString();
             }
-            else
-            {
-                return val;
-            }
+
+            return val;
         }
         return null;
     }
@@ -173,17 +171,25 @@ public class DatasetGenerator
                 switch (column.XmlMappingType)
                 {
                     case EntityColumnXmlMapping.Element:
+                    {
                         tableColumn.ColumnMapping = MappingType.Element;
                         break;
+                    }
+
                     case EntityColumnXmlMapping.Attribute:
+                    {
                         tableColumn.ColumnMapping = MappingType.Attribute;
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "XmlMappingType",
                             column.XmlMappingType,
                             ResourceUtils.GetString("UnknownXmlMapping")
                         );
+                    }
                 }
                 if (column.DefaultValue != null)
                 {
@@ -306,10 +312,13 @@ public class DatasetGenerator
     )
     {
         if (ds == null)
+        {
             throw new ArgumentNullException(
                 "ds",
                 ResourceUtils.GetString("ErrorDatastructureNull")
             );
+        }
+
         Hashtable dsCache = GetCache();
         string cacheKey =
             ds.Id.ToString()
@@ -400,7 +409,9 @@ public class DatasetGenerator
                     }
                 }
                 else
+                {
                     table.DisplayExpression = DatasetTools.TextExpression(entity.Caption);
+                }
                 //table.EndInit();
                 // Add columns
                 foreach (DataStructureColumn column in entity.Columns)
@@ -421,11 +432,14 @@ public class DatasetGenerator
                         // doesn't have 'UseLookupValue' set (read-only datastructure lookups
                         // aren't saveable so they aren't actually database fields)
                         case FieldMappingItem _:
+                        {
                             tableColumn.ExtendedProperties.Add(
                                 Const.IsDatabaseField,
                                 !column.UseLookupValue
                             );
                             break;
+                        }
+
                         case DetachedField detachedField
                             when detachedField.DataType == OrigamDataType.Array:
                         {
@@ -495,37 +509,53 @@ public class DatasetGenerator
                     switch (column.XmlMappingType)
                     {
                         case DataStructureColumnXmlMappingType.Default:
+                        {
                             switch (column.Field.XmlMappingType)
                             {
                                 case EntityColumnXmlMapping.Element:
+                                {
                                     tableColumn.ColumnMapping = MappingType.Element;
                                     break;
+                                }
                                 case EntityColumnXmlMapping.Attribute:
+                                {
                                     tableColumn.ColumnMapping = MappingType.Attribute;
                                     break;
+                                }
                                 case EntityColumnXmlMapping.Hidden:
+                                {
                                     tableColumn.ColumnMapping = MappingType.Hidden;
                                     break;
+                                }
                                 default:
+                                {
                                     throw new ArgumentOutOfRangeException(
                                         "XmlMappingType",
                                         finalColumn.Field.XmlMappingType,
                                         "Unknown XmlMappingType"
                                     );
+                                }
                             }
                             break;
+                        }
                         case DataStructureColumnXmlMappingType.Attribute:
+                        {
                             tableColumn.ColumnMapping = MappingType.Attribute;
                             break;
+                        }
                         case DataStructureColumnXmlMappingType.Element:
+                        {
                             tableColumn.ColumnMapping = MappingType.Element;
                             break;
+                        }
                         default:
+                        {
                             throw new ArgumentOutOfRangeException(
                                 "XmlMappingType",
                                 finalColumn.XmlMappingType,
                                 "Unknown XmlMappingType"
                             );
+                        }
                     }
                     if (column.HideInOutput)
                     {
@@ -994,9 +1024,12 @@ public class DatasetGenerator
             if (assoc != null && entity.Columns.Count > 0)
             {
                 if (assoc.IsOR)
+                {
                     throw new InvalidOperationException(
                         "IsOR = true not supported for data structures, only for data filtering."
                     );
+                }
+
                 string baseEntityName = entity.ParentItem.Name;
                 string relatedEntityName = entity.Name;
                 string relationName = entity.Name;
@@ -1133,50 +1166,75 @@ public class DatasetGenerator
         switch (dataType)
         {
             case OrigamDataType.Blob:
+            {
                 returnType = typeof(Byte[]);
                 break;
+            }
+
             case OrigamDataType.Boolean:
+            {
                 returnType = typeof(System.Boolean);
                 break;
+            }
+
             case OrigamDataType.Byte:
+            {
                 returnType = typeof(System.Byte);
                 break;
+            }
 
             case OrigamDataType.Currency:
+            {
                 returnType = typeof(System.Decimal);
                 break;
+            }
 
             case OrigamDataType.Date:
+            {
                 returnType = typeof(System.DateTime);
                 break;
+            }
 
             case OrigamDataType.Array:
             case OrigamDataType.Long:
+            {
                 returnType = typeof(System.Int64);
                 break;
+            }
 
             case OrigamDataType.Float:
+            {
                 returnType = typeof(System.Decimal);
                 break;
+            }
 
             case OrigamDataType.Integer:
+            {
                 returnType = typeof(System.Int32);
                 break;
+            }
 
             case OrigamDataType.Memo:
             case OrigamDataType.Geography:
             case OrigamDataType.Xml:
             case OrigamDataType.String:
             case OrigamDataType.Object:
+            {
                 returnType = typeof(System.String);
                 break;
+            }
 
             case OrigamDataType.UniqueIdentifier:
+            {
                 returnType = typeof(System.Guid);
                 break;
+            }
+
             default:
+            {
                 returnType = typeof(System.Object);
                 break;
+            }
         }
 
         return returnType;
@@ -1185,25 +1243,48 @@ public class DatasetGenerator
     public string RenderExpression(ISchemaItem item, DataStructureEntity entity)
     {
         if (item is FieldMappingItem)
+        {
             return RenderExpression(item as FieldMappingItem, entity);
-        else if (item is DetachedField)
+        }
+
+        if (item is DetachedField)
+        {
             return RenderExpression(item as DetachedField, entity);
-        else if (item is EntityColumnReference)
+        }
+
+        if (item is EntityColumnReference)
+        {
             return RenderExpression(item as EntityColumnReference, entity);
-        else if (item is FunctionCall)
+        }
+
+        if (item is FunctionCall)
+        {
             return RenderExpression(item as FunctionCall, entity);
-        else if (item is DataConstantReference)
+        }
+
+        if (item is DataConstantReference)
+        {
             return RenderExpression(item as DataConstantReference);
-        else if (item is DataConstant)
+        }
+
+        if (item is DataConstant)
+        {
             return RenderExpression(item as DataConstant);
-        else if (item is AggregatedColumn)
+        }
+
+        if (item is AggregatedColumn)
+        {
             return RenderExpression(item as AggregatedColumn, entity);
-        else if (item is EntityFilterReference)
+        }
+
+        if (item is EntityFilterReference)
+        {
             return RenderExpression(item as EntityFilterReference, entity);
-        else
-            throw new NotImplementedException(
-                ResourceUtils.GetString("TypeNotImplementedByDSGen", item.GetType().ToString())
-            );
+        }
+
+        throw new NotImplementedException(
+            ResourceUtils.GetString("TypeNotImplementedByDSGen", item.GetType().ToString())
+        );
     }
 
     private string RenderExpression(DataConstantReference item)
@@ -1228,15 +1309,21 @@ public class DatasetGenerator
         foreach (ISchemaItem filterItem in filter.ChildItems)
         {
             if (i > 0)
+            {
                 sqlExpression.Append(" AND ");
+            }
             else
+            {
                 sqlExpression.Append(" (");
+            }
 
             sqlExpression.Append(RenderExpression(filterItem, entity));
             i++;
         }
         if (i > 0)
+        {
             sqlExpression.Append(")");
+        }
     }
 
     /// <summary>
@@ -1366,7 +1453,10 @@ public class DatasetGenerator
     private string RenderExpression(DataConstant constant)
     {
         if (constant.Name == "null")
+        {
             return "null";
+        }
+
         object value;
         if (UserDefinedParameters)
         {
@@ -1403,20 +1493,30 @@ public class DatasetGenerator
             case OrigamDataType.Float:
             case OrigamDataType.Long:
             case OrigamDataType.Integer:
+            {
                 return DatasetTools.NumberExpression(value);
+            }
             case OrigamDataType.UniqueIdentifier:
+            {
                 return "CONVERT('" + value.ToString() + "', System.Guid)";
+            }
             case OrigamDataType.Memo:
             case OrigamDataType.Xml:
             case OrigamDataType.String:
+            {
                 return DatasetTools.TextExpression(value.ToString());
+            }
             case OrigamDataType.Date:
+            {
                 return DatasetTools.DateExpression(value);
+            }
 
             default:
+            {
                 throw new NotImplementedException(
                     ResourceUtils.GetString("TypeNotImplementedByDSGen1", dataType.ToString())
                 );
+            }
         }
     }
 
@@ -1473,10 +1573,8 @@ public class DatasetGenerator
                 entity
             );
         }
-        else
-        {
-            return RenderColumn(item, entity);
-        }
+
+        return RenderColumn(item, entity);
     }
 
     private string RenderExpression(EntityColumnReference item, DataStructureEntity entity)
@@ -1501,21 +1599,29 @@ public class DatasetGenerator
             case "LessThanOrEqual":
             case "GreaterThan":
             case "GreaterThanOrEqual":
+            {
                 ISchemaItem leftParam = item.GetChildByName("Left");
                 ISchemaItem rightParam = item.GetChildByName("Right");
                 ISchemaItem leftValue = null;
                 ISchemaItem rightValue = null;
                 if (leftParam.HasChildItems)
+                {
                     leftValue = leftParam.ChildItems[0];
+                }
+
                 if (rightParam.HasChildItems)
+                {
                     rightValue = rightParam.ChildItems[0];
+                }
 
                 if (leftValue == null)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Left",
                         null,
                         ResourceUtils.GetString("ErrorLeftParamEmpty")
                     );
+                }
                 // handle IS NULL
                 if (rightValue == null && item.Function.Name == "Equal")
                 {
@@ -1528,11 +1634,14 @@ public class DatasetGenerator
                 else
                 {
                     if (rightValue == null)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "Right",
                             null,
                             ResourceUtils.GetString("ErrorRightParamEmpty")
                         );
+                    }
+
                     result =
                         RenderExpression(leftValue, entity)
                         + " "
@@ -1541,74 +1650,107 @@ public class DatasetGenerator
                         + RenderExpression(rightValue, entity);
                 }
                 break;
+            }
+
             case "Not":
+            {
                 ISchemaItem argument = item.GetChildByName("Argument");
 
                 if (!argument.HasChildItems)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Argument",
                         null,
                         ResourceUtils.GetString("ErrorArgumentEmpty")
                     );
+                }
+
                 if (argument.ChildItems.Count > 1)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Argument",
                         null,
                         ResourceUtils.GetString("ErrorOneNOTArgument")
                     );
+                }
+
                 ISchemaItem argumentValue = argument.ChildItems[0];
                 result = "NOT(" + RenderExpression(argumentValue, entity) + ")";
                 break;
+            }
+
             case "Concat":
+            {
                 ISchemaItem concatArg = item.GetChildByName("Strings");
                 List<ISchemaItem> concatStrings = concatArg.ChildItems.ToList();
                 if (concatStrings.Count < 2)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Strings",
                         null,
                         ResourceUtils.GetString("ErrorTwoCONCATArguments")
                     );
+                }
+
                 concatStrings.Sort();
                 i = 0;
                 StringBuilder concatBuilder = new StringBuilder();
                 foreach (ISchemaItem concatString in concatStrings)
                 {
                     if (i > 0)
+                    {
                         concatBuilder.Append(" + ");
+                    }
+
                     concatBuilder.Append(RenderExpression(concatString, entity));
                     i++;
                 }
                 result = concatBuilder.ToString();
                 break;
+            }
+
             case "LogicalOr":
             case "LogicalAnd":
+            {
                 ISchemaItem logicalArg = item.GetChildByName("Arguments");
                 ISchemaItemCollection logicalArguments = logicalArg.ChildItems;
                 if (logicalArguments.Count < 2)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Arguments",
                         null,
                         ResourceUtils.GetString("ErrorTwoArguments", item.Function.Name)
                     );
+                }
+
                 i = 0;
                 StringBuilder logicalBuilder = new StringBuilder();
                 foreach (ISchemaItem logicalArgument in logicalArguments)
                 {
                     if (i > 0)
+                    {
                         logicalBuilder.Append(" " + GetOperator(item.Function.Name) + " ");
+                    }
+
                     logicalBuilder.Append(RenderExpression(logicalArgument, entity));
                     i++;
                 }
                 result = logicalBuilder.ToString();
                 break;
+            }
+
             case "Space":
+            {
                 ISchemaItem spacesArg = item.GetChildByName("NumberOfSpaces");
                 if (spacesArg.ChildItems.Count == 0)
+                {
                     throw new ArgumentOutOfRangeException(
                         "NumberOfSpaces",
                         null,
                         ResourceUtils.GetString("ErrorNumberOfSpaces")
                     );
+                }
+
                 int numberOfSpaces = Convert.ToInt32(
                     RenderExpression(spacesArg.ChildItems[0], entity)
                 );
@@ -1618,7 +1760,10 @@ public class DatasetGenerator
                 }
                 result = DatasetTools.TextExpression(result);
                 break;
+            }
+
             case "Substring":
+            {
                 result =
                     "SUBSTRING("
                     + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity)
@@ -1628,7 +1773,10 @@ public class DatasetGenerator
                     + RenderExpression(item.GetChildByName("Length").ChildItems[0], entity)
                     + ")";
                 break;
+            }
+
             case "Condition":
+            {
                 result =
                     "IIF("
                     + RenderExpression(item.GetChildByName("If").ChildItems[0], entity)
@@ -1646,13 +1794,19 @@ public class DatasetGenerator
                     )
                     + ")";
                 break;
+            }
+
             case "Length":
+            {
                 result =
                     "LEN("
                     + RenderExpression(item.GetChildByName("Text").ChildItems[0], entity)
                     + ")";
                 break;
+            }
+
             case "ConvertDateToString":
+            {
                 result =
                     "Substring(Convert("
                     + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity)
@@ -1660,28 +1814,40 @@ public class DatasetGenerator
                     + item.DataLength.ToString()
                     + ")";
                 break;
+            }
+
             case "In":
+            {
                 ISchemaItem leftArg = item.GetChildByName("FilterExpression").ChildItems[0];
                 ISchemaItem listArg = item.GetChildByName("List");
                 ISchemaItemCollection listExpressions = listArg.ChildItems;
                 if (listExpressions.Count < 2)
+                {
                     throw new ArgumentOutOfRangeException(
                         "List",
                         null,
                         "There have to be at least 2 items in the List argument for IN function specified as a column."
                     );
+                }
+
                 i = 0;
                 StringBuilder listBuilder = new StringBuilder();
                 foreach (ISchemaItem listExpression in listExpressions)
                 {
                     if (i > 0)
+                    {
                         listBuilder.Append(", ");
+                    }
+
                     listBuilder.Append(RenderExpression(listExpression, entity));
                     i++;
                 }
                 result = RenderExpression(leftArg, entity) + " IN (" + listBuilder.ToString() + ")";
                 break;
+            }
+
             case "IsNull":
+            {
                 ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                 ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
 
@@ -1692,9 +1858,12 @@ public class DatasetGenerator
                     + RenderExpression(replacementArg, entity)
                     + ")";
                 break;
+            }
+
             case "Between":
-                expressionArg = item.GetChildByName("Expression").ChildItems[0];
-                leftArg = item.GetChildByName("Left").ChildItems[0];
+            {
+                ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
+                ISchemaItem leftArg = item.GetChildByName("Left").ChildItems[0];
                 ISchemaItem rightArg = item.GetChildByName("Right").ChildItems[0];
 
                 string betweenExpression = RenderExpression(expressionArg, entity);
@@ -1707,8 +1876,11 @@ public class DatasetGenerator
                     + " <= "
                     + RenderExpression(rightArg, entity);
                 break;
+            }
+
             case "Round":
-                expressionArg = item.GetChildByName("Expression").ChildItems[0];
+            {
+                ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                 ISchemaItem precisionArg = item.GetChildByName("Precision").ChildItems[0];
                 string expression = RenderExpression(expressionArg, entity);
                 int precision = 0;
@@ -1722,8 +1894,11 @@ public class DatasetGenerator
                     Math.Pow(10, precision)
                 );
                 break;
+            }
+
             case "Abs":
-                expressionArg = item.GetChildByName("Expression").ChildItems[0];
+            {
+                ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                 var renderedExpressionArgument = RenderExpression(expressionArg, entity);
                 result =
                     "IIF("
@@ -1736,12 +1911,16 @@ public class DatasetGenerator
                     + " * -1"
                     + ")";
                 break;
+            }
+
             default:
+            {
                 throw new Exception(
                     $"{item.Function.Name} is a database function and "
                         + "cannot be used for in-memory calculation. Either set ForceDatabaseCalculation "
                         + $"to true in {item.Path} or use a data rule."
                 );
+            }
         }
         return "(" + result + ")";
     }
@@ -1751,21 +1930,33 @@ public class DatasetGenerator
         switch (type)
         {
             case AggregationType.Sum:
+            {
                 return "SUM";
+            }
             case AggregationType.Count:
+            {
                 return "COUNT";
+            }
             case AggregationType.Average:
+            {
                 return "AVG";
+            }
             case AggregationType.Minimum:
+            {
                 return "MIN";
+            }
             case AggregationType.Maximum:
+            {
                 return "MAX";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "type",
                     type,
                     ResourceUtils.GetString("UnsupportedAggreg")
                 );
+            }
         }
     }
 
@@ -1774,37 +1965,65 @@ public class DatasetGenerator
         switch (functionName)
         {
             case "NotEqual":
+            {
                 return "<>";
+            }
             case "Equal":
+            {
                 return "=";
+            }
             case "Like":
+            {
                 return "LIKE";
+            }
             case "Add":
+            {
                 return "+";
+            }
             case "Deduct":
+            {
                 return "-";
+            }
             case "Multiply":
+            {
                 return "*";
+            }
             case "Divide":
+            {
                 return "/";
+            }
             case "LessThan":
+            {
                 return "<";
+            }
             case "LessThanOrEqual":
+            {
                 return "<=";
+            }
             case "GreaterThan":
+            {
                 return ">";
+            }
             case "GreaterThanOrEqual":
+            {
                 return ">=";
+            }
             case "LogicalOr":
+            {
                 return "OR";
+            }
             case "LogicalAnd":
+            {
                 return "AND";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "functionName",
                     functionName,
                     ResourceUtils.GetString("UnsupportedOperator")
                 );
+            }
         }
     }
 

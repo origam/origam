@@ -244,7 +244,10 @@ public class SchemaItemAncestorCollection : CollectionBase
         foreach (SchemaItemAncestor item in this)
         {
             if (result != "")
+            {
                 result += ", ";
+            }
+
             if (item.Ancestor == null)
             {
                 result += "!!! Unspecified !!!";

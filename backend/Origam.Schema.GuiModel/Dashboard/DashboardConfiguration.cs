@@ -39,7 +39,10 @@ public class DashboardConfiguration
     public static DashboardConfiguration Deserialize(XmlDocument doc)
     {
         if (doc == null)
+        {
             return new DashboardConfiguration();
+        }
+
         XmlSerializer ser = new XmlSerializer(typeof(DashboardConfiguration));
         XmlNodeReader reader = new XmlNodeReader(doc);
         return (DashboardConfiguration)ser.Deserialize(reader);

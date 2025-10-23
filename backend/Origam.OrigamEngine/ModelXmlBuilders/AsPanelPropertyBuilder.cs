@@ -23,7 +23,6 @@ using System;
 using System.Data;
 using System.Xml;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -119,7 +118,10 @@ public static class AsPanelPropertyBuilder
             propertyNameElement.InnerText = bindingMember;
         }
         if (string.IsNullOrEmpty(caption))
+        {
             caption = table.Columns[bindingMember].Caption;
+        }
+
         Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
         string propertyDocumentation = documentationSvc
             .GetDocumentation(id, DocumentationType.USER_LONG_HELP)
@@ -137,13 +139,19 @@ public static class AsPanelPropertyBuilder
         propertyElement.SetAttribute("ModelInstanceId", modelId.ToString());
         propertyElement.SetAttribute("Name", caption);
         if (!string.IsNullOrEmpty(gridCaption))
+        {
             propertyElement.SetAttribute("GridColumnCaption", gridCaption);
+        }
+
         propertyElement.SetAttribute("ReadOnly", XmlConvert.ToString(readOnly));
         propertyElement.SetAttribute("X", XmlConvert.ToString(left));
         propertyElement.SetAttribute("Y", XmlConvert.ToString(top));
         propertyElement.SetAttribute("Width", XmlConvert.ToString(width));
         if (!string.IsNullOrEmpty(gridColumnWidth))
+        {
             propertyElement.SetAttribute("GridColumnWidth", gridColumnWidth);
+        }
+
         propertyElement.SetAttribute("Height", XmlConvert.ToString(height));
         propertyElement.SetAttribute("CaptionLength", XmlConvert.ToString(captionLength));
         propertyElement.SetAttribute("CaptionPosition", captionPosition);

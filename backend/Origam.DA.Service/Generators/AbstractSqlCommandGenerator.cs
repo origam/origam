@@ -756,7 +756,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             foreach (FieldMappingItem field in constraint.Fields)
             {
                 if (i > 0)
+                {
                     ddl.Append(", ");
+                }
+
                 ddl.Append(Environment.NewLine + "\t\t" + RenderExpression(field, null));
 
                 i++;
@@ -772,7 +775,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             foreach (FieldMappingItem field in constraint.Fields)
             {
                 if (i > 0)
+                {
                     ddl.Append(", ");
+                }
+
                 ddl.Append(
                     Environment.NewLine
                         + "\t\t"
@@ -832,11 +838,19 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             DdlDataType(field.DataType, field.DataLength, field.MappedDataType)
         );
         if (field.AllowNulls)
+        {
             ddl.Append(" NULL");
+        }
         else
+        {
             ddl.Append(" NOT NULL");
+        }
+
         if (field.IsPrimaryKey)
+        {
             ddl.Append(SqlPrimaryIndex());
+        }
+
         return ddl.ToString();
     }
 
@@ -865,7 +879,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (DataEntityIndexField field in sortedFields)
         {
             if (i > 0)
+            {
                 ddl.Append(", ");
+            }
 
             ddl.AppendFormat(
                 "{0} {1}",
@@ -897,10 +913,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return dbDataType.MappedDatabaseTypeName;
         }
-        else
-        {
-            return DefaultDdlDataType(columnType);
-        }
+
+        return DefaultDdlDataType(columnType);
     }
 
     public string TableDefinitionDdl(TableMappingItem table)
@@ -926,7 +940,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 FieldMappingItem field = item as FieldMappingItem;
 
                 if (i > 0)
+                {
                     ddl.Append(",");
+                }
 
                 ddl.Append(Environment.NewLine + "\t" + ColumnDefinitionDdl(field));
 
@@ -1396,12 +1412,16 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         switch (relation.RelationType)
                         {
                             case RelationType.FilterParent:
+                            {
                                 existsClause = " EXISTS";
                                 break;
+                            }
 
                             case RelationType.NotExists:
+                            {
                                 existsClause = " NOT EXISTS";
                                 break;
+                            }
                         }
 
                         joinedFilterBuilder.AppendFormat(
@@ -1658,7 +1678,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         int filterCount = Filters(filter, relation, dynamicParameters, ignoreImplicitFilters).Count;
 
         if (filterCount > 0)
+        {
             return false;
+        }
 
         // we test for child entities as well
         foreach (
@@ -1676,7 +1698,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
             // some filters found, we break
             if (filterCount > 0)
+            {
                 return false;
+            }
         }
 
         return true;
@@ -1705,16 +1729,13 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             {
                 return true;
             }
-            else if (
-                dynamicParameters[relation.ConditionEntityParameterName] == null
-                | constant == null
-            )
+
+            if (dynamicParameters[relation.ConditionEntityParameterName] == null | constant == null)
             {
                 return false;
             }
-            else if (
-                dynamicParameters[relation.ConditionEntityParameterName].ToString() != constant
-            )
+
+            if (dynamicParameters[relation.ConditionEntityParameterName].ToString() != constant)
             {
                 return true;
             }
@@ -1773,6 +1794,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 switch (type)
                 {
                     case UpsertType.Key:
+                    {
                         if (keys > 0)
                         {
                             keysBuilder.Append(", ");
@@ -1786,23 +1808,38 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         );
                         keys++;
                         break;
+                    }
+
                     case UpsertType.Replace:
+                    {
                         updateBuilder.AppendFormat("{0} = {1}", fieldName, paramName);
                         break;
+                    }
+
                     case UpsertType.Increase:
+                    {
                         updateBuilder.AppendFormat("{0} = {0} + {1}", fieldName, paramName);
                         break;
+                    }
+
                     case UpsertType.Decrease:
+                    {
                         updateBuilder.AppendFormat("{0} = {0} - {1}", fieldName, paramName);
                         break;
+                    }
+
                     case UpsertType.InsertOnly:
+                    {
                         break;
+                    }
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "UpsertType",
                             column.UpsertType,
                             "Unknown UpsertType"
                         );
+                    }
                 }
             }
         }
@@ -1864,7 +1901,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 sqlExpression2.Append(NewValueParameterName(column, false));
                 i++;
                 if (column.Field.AutoIncrement)
+                {
                     existAutoIncrement = true;
+                }
             }
         }
         PrettyLine(sqlExpression);
@@ -1885,7 +1924,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (DataStructureColumn column in entity.Columns)
         {
             if (column.Field.IsPrimaryKey)
+            {
                 primaryKeys.Add(column);
+            }
         }
         if (primaryKeys.Count == 0)
         {
@@ -1932,7 +1973,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             )
             {
                 if (column.Field.IsPrimaryKey)
+                {
                     primaryKeys.Add(column);
+                }
             }
             if (
                 column.Field is DetachedField
@@ -1941,7 +1984,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             )
             {
                 if (column.Field.IsPrimaryKey)
+                {
                     primaryDetachKeys.Append(column.Name).Append(";");
+                }
             }
         }
         if (primaryKeys.Count == 0)
@@ -2000,7 +2045,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (DataStructureColumn column in primaryKeys)
         {
             if (i > 0)
+            {
                 sqlExpression.Append(" AND ");
+            }
+
             PrettyIndent(sqlExpression);
             sqlExpression.Append(
                 sqlRenderer.Array(
@@ -2037,10 +2085,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             if (column.Field.IsPrimaryKey | column.Field.PrimaryKey.Equals(updatedField.PrimaryKey))
             {
                 if (i > 0)
+                {
                     sqlExpression.Append(", ");
+                }
 
                 if (column.Field.PrimaryKey.Equals(updatedField.PrimaryKey))
+                {
                     selectKeys.Add(column);
+                }
 
                 sqlExpression.AppendFormat(
                     "{0} AS {1}",
@@ -2062,7 +2114,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (DataStructureColumn column in selectKeys)
         {
             if (i > 0)
+            {
                 sqlExpression.Append(" AND ");
+            }
 
             sqlExpression.AppendFormat(
                 "{0} = {1}",
@@ -2107,7 +2161,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (DataStructureColumn column in selectKeys)
         {
             if (i > 0)
+            {
                 sqlExpression.Append(" AND ");
+            }
 
             sqlExpression.AppendFormat(
                 "{0} = {1}",
@@ -2224,7 +2280,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 }
                 i++;
                 if (column.Field.AutoIncrement)
+                {
                     existAutoIncrement = true;
+                }
             }
         }
         RenderUpdateDeleteWherePart(sqlExpression, entity);
@@ -2241,13 +2299,24 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     internal bool ShouldUpdateColumn(DataStructureColumn column, DataStructureEntity entity)
     {
         if (!(column.Field is FieldMappingItem))
+        {
             return false;
+        }
+
         if (column.UseLookupValue)
+        {
             return false;
+        }
+
         if (column.UseCopiedValue)
+        {
             return false;
+        }
+
         if (column.Entity != null)
+        {
             return false;
+        }
 
         return true;
     }
@@ -2379,7 +2448,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             if (columnRenderData != null)
             {
                 if (i > 0)
+                {
                     sqlExpression.Append(",");
+                }
+
                 PrettyIndent(sqlExpression);
                 i++;
                 if (!string.IsNullOrWhiteSpace(customGrouping?.GroupingUnit))
@@ -2668,32 +2740,49 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             switch (aggregation.AggregationType)
             {
                 case CustomAggregationType.Max:
+                {
                     sqlExpression.Append(
                         $"MAX({renderedColumn}) as {aggregation.SqlQueryColumnName} "
                     );
                     break;
+                }
+
                 case CustomAggregationType.Sum:
+                {
                     sqlExpression.Append(
                         $"SUM({renderedColumn}) as {aggregation.SqlQueryColumnName} "
                     );
                     break;
+                }
+
                 case CustomAggregationType.Avg:
+                {
                     sqlExpression.Append(
                         $"AVG(Cast ({renderedColumn} as Float)) as {aggregation.SqlQueryColumnName} "
                     );
                     break;
+                }
+
                 case CustomAggregationType.Min:
+                {
                     sqlExpression.Append(
                         $"MIN({renderedColumn}) as {aggregation.SqlQueryColumnName} "
                     );
                     break;
+                }
+
                 case CustomAggregationType.Count:
+                {
                     sqlExpression.Append(
                         $"{sqlRenderer.CountAggregate()}({renderedColumn}) as {aggregation.SqlQueryColumnName} "
                     );
                     break;
+                }
+
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }
@@ -2814,7 +2903,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     }
                 }
                 if (!found)
+                {
                     processColumn = true;
+                }
             }
         }
         else if (
@@ -3052,10 +3143,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return sqlRenderer.IsNull() + " (" + expression + ", 0)";
         }
-        else
-        {
-            return expression;
-        }
+
+        return expression;
     }
 
     private string RenderLookupColumnExpression(
@@ -3408,10 +3497,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     )
     {
         if (relation.RelationType != RelationType.Normal)
+        {
             return false;
+        }
 
         if (stopAtEntity.PrimaryKey.Equals(relation.PrimaryKey))
+        {
             return false;
+        }
 
         return true;
     }
@@ -3502,6 +3595,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         switch (beginType)
         {
             case JoinBeginType.Join:
+            {
                 string joinString = (
                     dsEntity.RelationType == RelationType.LeftJoin
                         ? "LEFT OUTER JOIN"
@@ -3516,12 +3610,19 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
                 numberOfJoins++;
                 break;
+            }
+
             case JoinBeginType.Where:
+            {
                 relationBuilder.Append("WHERE ");
                 break;
+            }
+
             case JoinBeginType.And:
+            {
                 relationBuilder.Append("AND ");
                 break;
+            }
         }
         int i = 0;
         if (assoc.IsOR)
@@ -3566,9 +3667,11 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
             }
             else
+            {
                 throw new NotSupportedException(
                     ResourceUtils.GetString("TypeNotSupportedByDatabase", item.GetType().ToString())
                 );
+            }
 
             i++;
         }
@@ -3748,7 +3851,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
 
         if (i > 0)
+        {
             sqlExpression.Append(")");
+        }
     }
 
     internal List<EntityFilter> Filters(
@@ -3841,7 +3946,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                         // reverse condition if PassWhenParameterMatch = true
                         if (filterPart.PassWhenParameterMatch)
+                        {
                             skip = !skip;
+                        }
 
                         if (!skip || ResolveAllFilters)
                         {
@@ -3900,9 +4007,13 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         foreach (ISchemaItem filterItem in filter.ChildItems)
         {
             if (i > 0)
+            {
                 sqlExpression.Append(" AND ");
+            }
             else
+            {
                 sqlExpression.Append(" (");
+            }
 
             sqlExpression.Append(
                 RenderExpression(
@@ -3918,7 +4029,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
 
         if (i > 0)
+        {
             sqlExpression.Append(")");
+        }
     }
 
     #endregion
@@ -3933,17 +4046,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return sqlRenderer.ParameterDeclarationChar + column.Name;
         }
-        else
+        string result = sqlRenderer.ParameterReferenceChar + column.Name;
+
+        if (column.DataType == OrigamDataType.Geography)
         {
-            string result = sqlRenderer.ParameterReferenceChar + column.Name;
-
-            if (column.DataType == OrigamDataType.Geography)
-            {
-                result = sqlRenderer.ConvertGeoFromTextClause(result);
-            }
-
-            return result;
+            result = sqlRenderer.ConvertGeoFromTextClause(result);
         }
+
+        return result;
     }
 
     /// <summary>
@@ -3955,10 +4065,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return sqlRenderer.ParameterDeclarationChar + "Original_" + column.Name;
         }
-        else
-        {
-            return sqlRenderer.ParameterReferenceChar + "Original_" + column.Name;
-        }
+
+        return sqlRenderer.ParameterReferenceChar + "Original_" + column.Name;
     }
 
     /// <summary>
@@ -3973,10 +4081,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return sqlRenderer.ParameterDeclarationChar + "OriginalIsNull_" + column.Name;
         }
-        else
-        {
-            return sqlRenderer.ParameterReferenceChar + "OriginalIsNull_" + column.Name;
-        }
+
+        return sqlRenderer.ParameterReferenceChar + "OriginalIsNull_" + column.Name;
     }
 
     #endregion
@@ -4028,12 +4134,22 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     )
     {
         if (item is TableMappingItem)
+        {
             return RenderExpression(item as TableMappingItem);
+        }
+
         if (item is EntityRelationItem)
+        {
             return RenderExpression(item as EntityRelationItem);
-        else if (item is FieldMappingItem)
+        }
+
+        if (item is FieldMappingItem)
+        {
             return RenderExpression(item as FieldMappingItem, entity);
-        else if (item is LookupField)
+        }
+
+        if (item is LookupField)
+        {
             return RenderLookupColumnExpression(
                 entity.RootItem as DataStructure,
                 entity,
@@ -4043,7 +4159,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else if (item is EntityColumnReference)
+        }
+
+        if (item is EntityColumnReference)
+        {
             return RenderExpression(
                 item as EntityColumnReference,
                 entity,
@@ -4051,7 +4170,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else if (item is FunctionCall)
+        }
+
+        if (item is FunctionCall)
+        {
             return RenderExpression(
                 item as FunctionCall,
                 entity,
@@ -4059,7 +4181,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else if (item is ParameterReference)
+        }
+
+        if (item is ParameterReference)
+        {
             return RenderExpression(
                 item as ParameterReference,
                 entity,
@@ -4067,9 +4192,15 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 null,
                 parameterReferences
             );
-        else if (item is DataConstantReference)
+        }
+
+        if (item is DataConstantReference)
+        {
             return RenderExpression(item as DataConstantReference);
-        else if (item is EntityFilterReference)
+        }
+
+        if (item is EntityFilterReference)
+        {
             return RenderExpression(
                 item as EntityFilterReference,
                 entity,
@@ -4077,7 +4208,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else if (item is EntityFilterLookupReference)
+        }
+
+        if (item is EntityFilterLookupReference)
+        {
             return RenderExpression(
                 item as EntityFilterLookupReference,
                 entity,
@@ -4085,13 +4219,17 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else if (item is DetachedField detachedField)
+        }
+
+        if (item is DetachedField detachedField)
         {
             return renderSqlForDetachedFields
                 ? RenderSqlExpression(entity, detachedField, parameterReferences)
                 : "";
         }
-        else if (item is AggregatedColumn)
+
+        if (item is AggregatedColumn)
+        {
             return RenderExpression(
                 item as AggregatedColumn,
                 entity,
@@ -4099,10 +4237,11 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 dynamicParameters,
                 parameterReferences
             );
-        else
-            throw new NotImplementedException(
-                ResourceUtils.GetString("TypeNotSupported", item.GetType().ToString())
-            );
+        }
+
+        throw new NotImplementedException(
+            ResourceUtils.GetString("TypeNotSupported", item.GetType().ToString())
+        );
     }
 
     public string RenderSqlExpression(
@@ -4232,7 +4371,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
 
                 if (i > 0)
+                {
                     joins.Append(" AND ");
+                }
 
                 if (key != null)
                 {
@@ -4319,7 +4460,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
 
                 if (i > 0)
+                {
                     result.Append(" AND ");
+                }
 
                 if (key != null)
                 {
@@ -4541,20 +4684,17 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             return (string)replaceParameterTexts[parameterName];
         }
-        else
+        string name = sqlRenderer.ParameterReferenceChar + parameterName;
+        string declarationName = sqlRenderer.ParameterDeclarationChar + parameterName;
+        if (parameterReferences != null)
         {
-            string name = sqlRenderer.ParameterReferenceChar + parameterName;
-            string declarationName = sqlRenderer.ParameterDeclarationChar + parameterName;
-            if (parameterReferences != null)
+            if (!parameterReferences.Contains(declarationName))
             {
-                if (!parameterReferences.Contains(declarationName))
-                {
-                    parameterReferences.Add(declarationName, item);
-                }
+                parameterReferences.Add(declarationName, item);
             }
-
-            return name;
         }
+
+        return name;
     }
 
     private string GetParameterName(DataStructureEntity entity, ParameterReference item)
@@ -4612,17 +4752,17 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
             return builder.ToString();
         }
-        else
-        {
-            return "";
-        }
+
+        return "";
     }
 
     internal string RenderConstant(DataConstant constant, bool userDefinedParameters)
     {
         //needs set
         if (constant.Name == "null")
+        {
             return "NULL";
+        }
 
         IParameterService parameterService =
             ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -4645,17 +4785,23 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         switch (direction)
         {
             case DataStructureColumnSortDirection.Ascending:
+            {
                 return "ASC";
+            }
 
             case DataStructureColumnSortDirection.Descending:
+            {
                 return "DESC";
+            }
 
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "direction",
                     direction,
                     ResourceUtils.GetString("UnknownSortDirection")
                 );
+            }
         }
     }
 
@@ -4677,16 +4823,14 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 parameterReferences
             );
         }
-        else
-        {
-            return RenderBuiltinFunction(
-                item,
-                entity,
-                replaceParameterTexts,
-                dynamicParameters,
-                parameterReferences
-            );
-        }
+
+        return RenderBuiltinFunction(
+            item,
+            entity,
+            replaceParameterTexts,
+            dynamicParameters,
+            parameterReferences
+        );
     }
 
     internal string RenderDatabaseFunction(
@@ -4702,6 +4846,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         switch (item.Function.Name)
         {
             case "DaysToAnniversary":
+            {
                 if (item.ChildItems[0].ChildItems.Count == 0)
                 {
                     throw new Exception(
@@ -4735,8 +4880,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "Exists":
+            {
                 if (item.ChildItems[0].ChildItems.Count == 0)
                 {
                     throw new Exception(ResourceUtils.GetString("ErrorLookupNotSet", item.Path));
@@ -4753,10 +4900,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ")";
                 break;
+            }
 
             case "Month":
             case "Year":
             case "Day":
+            {
                 if (item.ChildItems[0].ChildItems.Count == 0)
                 {
                     throw new Exception(
@@ -4774,10 +4923,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "Hour":
             case "Minute":
             case "Second":
+            {
                 if (item.ChildItems[0].ChildItems.Count == 0)
                 {
                     throw new Exception(
@@ -4795,8 +4946,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "AddDays":
+            {
                 {
                     ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                     ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
@@ -4820,7 +4973,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     );
                 }
                 break;
+            }
+
             case "AddMinutes":
+            {
                 {
                     ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                     ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
@@ -4843,7 +4999,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     );
                 }
                 break;
+            }
+
             case "AddSeconds":
+            {
                 {
                     ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                     ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
@@ -4866,8 +5025,11 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     );
                 }
                 break;
+            }
+
             case "FullTextContains":
             case "FullText":
+            {
                 ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                 ISchemaItem languageArg = item.GetChildByName("Language");
                 ISchemaItem fieldsArg = item.GetChildByName("Fields");
@@ -4884,13 +5046,18 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 else
                 {
                     if (fieldsArg.ChildItems.Count > 1)
+                    {
                         columnsForSeach += "(";
+                    }
 
                     int fieldNum = 0;
                     foreach (ISchemaItem field in fieldsArg.ChildItems)
                     {
                         if (fieldNum > 0)
+                        {
                             result += ", ";
+                        }
+
                         columnsForSeach += RenderExpression(
                             field,
                             entity,
@@ -4902,7 +5069,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     }
 
                     if (fieldsArg.ChildItems.Count > 1)
+                    {
                         result += ")";
+                    }
                 }
                 string freetext_string = RenderExpression(
                     expressionArg,
@@ -4923,20 +5092,28 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     );
                 }
                 if (item.Function.Name == "FullText")
+                {
                     result = sqlRenderer.FreeText(
                         columnsForSeach,
                         freetext_string,
                         languageForFullText
                     );
+                }
+
                 if (item.Function.Name == "FullTextContains")
+                {
                     result = sqlRenderer.Contains(
                         columnsForSeach,
                         freetext_string,
                         languageForFullText
                     );
+                }
+
                 break;
+            }
 
             case "Soundex":
+            {
                 result =
                     "SOUNDEX("
                     + RenderExpression(
@@ -4948,8 +5125,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ")";
                 break;
+            }
 
             case "Distance":
+            {
                 ISchemaItem param1 = item.GetChildByName("Param1").ChildItems[0];
                 ISchemaItem param2 = item.GetChildByName("Param2").ChildItems[0];
 
@@ -4970,8 +5149,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "Latitude":
+            {
                 result = sqlRenderer.LatLon(
                     geoLatLonSql.Lat,
                     RenderExpression(
@@ -4983,8 +5164,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "Longitude":
+            {
                 result = sqlRenderer.LatLon(
                     geoLatLonSql.Lon,
                     RenderExpression(
@@ -4996,8 +5179,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "ToDate":
+            {
                 result =
                     " CAST ("
                     + RenderExpression(
@@ -5009,8 +5194,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + " AS DATE )";
                 break;
+            }
 
             case "Round":
+            {
                 result =
                     "ROUND("
                     + RenderExpression(
@@ -5030,7 +5217,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ")";
                 break;
+            }
+
             case "Abs":
+            {
                 result = string.Format(
                     "ABS({0})",
                     RenderExpression(
@@ -5042,7 +5232,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
+
             case "DateDiffMinutes":
+            {
                 result = sqlRenderer.DateDiff(
                     DateTypeSql.Minute,
                     RenderExpression(
@@ -5061,8 +5254,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             default:
+            {
                 result = sqlRenderer.FunctionPrefix() + item.Function.Name + "(";
 
                 var sortedParams = item.ChildItems.CastToList<FunctionCallParameter>();
@@ -5072,14 +5267,18 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 foreach (FunctionCallParameter param in sortedParams)
                 {
                     if (i > 0)
+                    {
                         result += ", ";
+                    }
 
                     if (param.ChildItems.Count != 1)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "Count",
                             param.ChildItems.Count,
                             "Argument number must be 1"
                         );
+                    }
 
                     result += RenderExpression(
                         param.ChildItems[0],
@@ -5094,6 +5293,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                 result += ")";
                 break;
+            }
         }
 
         return result;
@@ -5122,6 +5322,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             case "LessThanOrEqual":
             case "GreaterThan":
             case "GreaterThanOrEqual":
+            {
                 string leftValue = GetItemByFunctionParameter(
                     item,
                     "Left",
@@ -5140,8 +5341,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
                 result = filterRenderer.BinaryOperator(leftValue, rightValue, item.Function.Name);
                 break;
+            }
 
             case "Not":
+            {
                 string argument = GetItemByFunctionParameter(
                     item,
                     "Argument",
@@ -5152,16 +5355,21 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
                 result = filterRenderer.Not(argument);
                 break;
+            }
 
             case "Concat":
+            {
                 ISchemaItem concatArg = item.GetChildByName("Strings");
                 var concatStrings = concatArg.ChildItems.ToList<ISchemaItem>();
                 if (concatStrings.Count < 2)
+                {
                     throw new ArgumentOutOfRangeException(
                         "Strings",
                         null,
                         "There have to be at least 2 strings to concatenate."
                     );
+                }
+
                 concatStrings.Sort();
                 result = RenderConcat(
                     concatStrings,
@@ -5171,9 +5379,11 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     parameterReferences
                 );
                 break;
+            }
 
             case "LogicalOr":
             case "LogicalAnd":
+            {
                 var arguments = GetItemListByFunctionParameter(
                     item,
                     "Arguments",
@@ -5184,8 +5394,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
                 result = filterRenderer.LogicalAndOr(item.Function.Name, arguments);
                 break;
+            }
 
             case "Space":
+            {
                 ISchemaItem spacesArg = item.GetChildByName("NumberOfSpaces");
 
                 System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
@@ -5207,8 +5419,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                 result = sqlValueFormatter.RenderString(result);
                 break;
+            }
 
             case "Substring":
+            {
                 result =
                     " SUBSTRING("
                     + RenderExpression(
@@ -5236,8 +5450,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ")";
                 break;
+            }
 
             case "Condition":
+            {
                 result =
                     "(CASE WHEN "
                     + RenderExpression(
@@ -5273,8 +5489,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + " END)";
                 break;
+            }
 
             case "Length":
+            {
                 result = sqlRenderer.Length(
                     RenderExpression(
                         item.GetChildByName("Text").ChildItems[0],
@@ -5285,8 +5503,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                 );
                 break;
+            }
 
             case "ConvertDateToString":
+            {
                 result =
                     "CONVERT( "
                     + sqlRenderer.VarcharSql()
@@ -5302,18 +5522,22 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ", 104)";
                 break;
+            }
 
             case "In":
+            {
                 ISchemaItem leftArg = item.GetChildByName("FilterExpression");
                 ISchemaItem listArg = item.GetChildByName("List");
                 ISchemaItemCollection listExpressions = listArg.ChildItems;
 
                 if (listExpressions.Count < 1)
+                {
                     throw new ArgumentOutOfRangeException(
                         "List",
                         null,
                         ResourceUtils.GetString("ErrorNoParamIN")
                     );
+                }
 
                 if (
                     listExpressions.Count == 1
@@ -5363,8 +5587,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     result = filterRenderer.In(leftOperand, options);
                 }
                 break;
+            }
 
             case "IsNull":
+            {
                 ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                 ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
                 result =
@@ -5387,10 +5613,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     )
                     + ")";
                 break;
+            }
 
             case "Between":
-                expressionArg = item.GetChildByName("Expression").ChildItems[0];
-                leftArg = item.GetChildByName("Left").ChildItems[0];
+            {
+                ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
+                ISchemaItem leftArg = item.GetChildByName("Left").ChildItems[0];
                 ISchemaItem rightArg = item.GetChildByName("Right").ChildItems[0];
 
                 result =
@@ -5418,13 +5646,16 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         parameterReferences
                     );
                 break;
+            }
 
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "Function.Name",
                     item.Function.Name,
                     ResourceUtils.GetString("UnknownFunction")
                 );
+            }
         }
 
         return result;
@@ -5449,7 +5680,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 "Only 1 argument can be present to " + item.Path
             );
         }
-        else if (param.HasChildItems)
+
+        if (param.HasChildItems)
         {
             value = param.ChildItems[0];
         }
@@ -5757,25 +5989,37 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         switch (type)
         {
             case AggregationType.Sum:
+            {
                 return "SUM";
+            }
 
             case AggregationType.Count:
+            {
                 return sqlRenderer.CountAggregate();
+            }
             case AggregationType.Average:
+            {
                 return "AVG";
+            }
 
             case AggregationType.Minimum:
+            {
                 return "MIN";
+            }
 
             case AggregationType.Maximum:
+            {
                 return "MAX";
+            }
 
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "type",
                     type,
                     ResourceUtils.GetString("UnsupportedAggreg")
                 );
+            }
         }
     }
 
@@ -5793,16 +6037,24 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         switch (columnType)
         {
             case OrigamDataType.String:
+            {
                 return DdlDataType(columnType, dbDataType) + "(" + dataLength + ")";
+            }
 
             case OrigamDataType.Xml:
+            {
                 return DdlDataType(columnType, dbDataType);
+            }
 
             case OrigamDataType.Float:
+            {
                 return DdlDataType(columnType, dbDataType) + "(28,10)";
+            }
 
             default:
+            {
                 return DdlDataType(columnType, dbDataType);
+            }
         }
     }
 
@@ -5839,7 +6091,9 @@ internal class LookupOrderingInfo
     {
         var ordering = orderings?.FirstOrDefault(x => x.ColumnName == columnName);
         if (ordering == null || ordering.LookupId == Guid.Empty)
+        {
             return null;
+        }
 
         var lookup =
             ServiceManager

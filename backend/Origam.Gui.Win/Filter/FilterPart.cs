@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.UI;
@@ -237,13 +236,25 @@ public abstract class FilterPart : IDisposable
     private static string StoredFilterColumn(Type type, int position)
     {
         if (type == typeof(string))
+        {
             return "StringValue" + position.ToString();
+        }
+
         if (type == typeof(int))
+        {
             return "IntValue" + position.ToString();
+        }
+
         if (type == typeof(Guid))
+        {
             return "GuidValue" + position.ToString();
+        }
+
         if (type == typeof(DateTime))
+        {
             return "DateValue" + position.ToString();
+        }
+
         throw new ArgumentOutOfRangeException(
             "type",
             type,
@@ -254,7 +265,10 @@ public abstract class FilterPart : IDisposable
     private void RefreshQuery()
     {
         if (this.Operator == FilterOperator.None)
+        {
             return;
+        }
+
         string field = "[" + this.DataMember + "]";
         string v1 = QueryValue(this.Value1, this.Operator, this.DataType);
         if (this.Operator == FilterOperator.IsNull | this.Operator == FilterOperator.NotIsNull)
@@ -340,7 +354,8 @@ public abstract class FilterPart : IDisposable
         {
             return null;
         }
-        else if (value is DateTime)
+
+        if (value is DateTime)
         {
             result = Origam.DA.DatasetTools.DateExpression(value);
         }
@@ -382,37 +397,63 @@ public abstract class FilterPart : IDisposable
             case FilterOperator.BeginsWith:
             case FilterOperator.Contains:
             case FilterOperator.EndsWith:
+            {
                 return "LIKE";
+            }
             case FilterOperator.Equals:
+            {
                 return "=";
+            }
             case FilterOperator.Between:
+            {
                 return "BETWEEN";
+            }
             case FilterOperator.GreaterOrEqualThan:
+            {
                 return ">=";
+            }
             case FilterOperator.GreaterThan:
+            {
                 return ">";
+            }
             case FilterOperator.LessOrEqualThan:
+            {
                 return "<=";
+            }
             case FilterOperator.LessThan:
+            {
                 return "<";
+            }
             case FilterOperator.NotBeginsWith:
             case FilterOperator.NotContains:
             case FilterOperator.NotEndsWith:
+            {
                 return "NOT LIKE";
+            }
             case FilterOperator.NotBetween:
+            {
                 return "NOT BETWEEN";
+            }
             case FilterOperator.NotEquals:
+            {
                 return "<>";
+            }
             case FilterOperator.IsNull:
+            {
                 return "IS NULL";
+            }
             case FilterOperator.NotIsNull:
+            {
                 return "IS NOT NULL";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "operator",
                     oper,
                     ResourceUtils.GetString("ErrorUnknownFilterOperator")
                 );
+            }
         }
     }
 
@@ -421,45 +462,81 @@ public abstract class FilterPart : IDisposable
         switch (oper)
         {
             case FilterOperator.None:
+            {
                 return "";
+            }
             case FilterOperator.BeginsWith:
+            {
                 return "zaèíná na";
+            }
             case FilterOperator.Contains:
+            {
                 return "obsahuje";
+            }
             case FilterOperator.EndsWith:
+            {
                 return "konèí na";
+            }
             case FilterOperator.Equals:
+            {
                 return "=";
+            }
             case FilterOperator.Between:
+            {
                 return "je mezi";
+            }
             case FilterOperator.GreaterOrEqualThan:
+            {
                 return ">=";
+            }
             case FilterOperator.GreaterThan:
+            {
                 return ">";
+            }
             case FilterOperator.LessOrEqualThan:
+            {
                 return "<=";
+            }
             case FilterOperator.LessThan:
+            {
                 return "<";
+            }
             case FilterOperator.NotBeginsWith:
+            {
                 return "nezaèíná na";
+            }
             case FilterOperator.NotContains:
+            {
                 return "neobsahuje";
+            }
             case FilterOperator.NotEndsWith:
+            {
                 return "nekonèí na";
+            }
             case FilterOperator.NotBetween:
+            {
                 return "není mezi";
+            }
             case FilterOperator.NotEquals:
+            {
                 return "není rovno";
+            }
             case FilterOperator.IsNull:
+            {
                 return "je prázdné";
+            }
             case FilterOperator.NotIsNull:
+            {
                 return "není prázdné";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "oper",
                     oper,
                     ResourceUtils.GetString("ErrorUnknownFilterOperatorLabel")
                 );
+            }
         }
     }
     #endregion

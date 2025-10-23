@@ -440,10 +440,8 @@ public class ColumnParameterMappingCollectionConverter : ExpandableObjectConvert
             {
                 return "1 parameter";
             }
-            else
-            {
-                return col.Count.ToString() + " parameters";
-            }
+
+            return col.Count.ToString() + " parameters";
         }
         return base.ConvertTo(context, culture, value, destinationType);
     }

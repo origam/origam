@@ -20,9 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.MenuModel;

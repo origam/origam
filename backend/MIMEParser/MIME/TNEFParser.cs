@@ -93,9 +93,13 @@ public class TNEFParser
             try
             {
                 if (value.EndsWith("\\"))
+                {
                     _basePath = value;
+                }
                 else
+                {
                     _basePath = value + "\\";
+                }
             }
             catch { }
         }
@@ -168,8 +172,8 @@ public class TNEFParser
                 fsTNEF.Read(buffer, 0, size);
                 return 1;
             }
-            else
-                return 0;
+
+            return 0;
         }
         catch (Exception e)
         {
@@ -281,49 +285,75 @@ public class TNEFParser
         switch (d & 0xffff0000)
         {
             case _BYTE:
+            {
                 PrintResult("Attribute {0} =", d & 0xffff);
                 for (i = 0; i < len; i += 1)
                 {
                     v = geti8();
                     if (i < 10)
+                    {
                         PrintResult(" {0}", v);
+                    }
                     else if (i == 10)
+                    {
                         PrintResult("...");
+                    }
                 }
                 PrintResult("\n");
                 break;
+            }
+
             case _WORD:
+            {
                 PrintResult("Attribute {0} =", d & 0xffff);
                 for (i = 0; i < len; i += 2)
                 {
                     v = geti16();
                     if (i < 6)
+                    {
                         PrintResult(" {0}", v);
+                    }
                     else if (i == 6)
+                    {
                         PrintResult("...");
+                    }
                 }
                 PrintResult("\n");
                 break;
+            }
+
             case _DWORD:
+            {
                 PrintResult("Attribute {0} =", d & 0xffff);
                 for (i = 0; i < len; i += 4)
                 {
                     v = geti32();
                     if (i < 4)
+                    {
                         PrintResult(" {0}", v);
+                    }
                     else if (i == 4)
+                    {
                         PrintResult("...");
+                    }
                 }
                 PrintResult("\n");
                 break;
+            }
+
             case _string:
+            {
                 StreamReadBytes(buf, len);
                 PrintResult("Attribute {0} = {1}\n", d & 0xffff, Encoding.Default.GetString(buf));
                 break;
+            }
+
             default:
+            {
                 StreamReadBytes(buf, len);
                 PrintResult("Attribute {0}\n", d);
                 break;
+            }
         }
         geti16(); /* checksum */
     }
@@ -347,6 +377,7 @@ public class TNEFParser
         switch (d)
         {
             case ASUBJECT:
+            {
                 len = geti32();
                 StreamReadBytes(buf, len);
                 byte[] _subjectBuffer = new byte[len - 1];
@@ -355,14 +386,20 @@ public class TNEFParser
                 PrintResult("Found subject: {0}", strSubject);
                 geti16(); /* checksum */
                 break;
+            }
+
             case AFILENAME:
+            {
                 len = geti32();
                 StreamReadBytes(buf, len);
                 //PrintResult("File-Name: {0}\n", buf);
                 byte[] _fileNameBuffer = new byte[len - 1];
                 Array.Copy(buf, _fileNameBuffer, (long)len - 1);
                 if (_fileNameBuffer == null)
+                {
                     _fileNameBuffer = Encoding.Default.GetBytes("tnef.dat");
+                }
+
                 string strFileName = Encoding.Default.GetString(_fileNameBuffer);
                 PrintResult("{0}: WRITING {1}\n", BasePath, strFileName);
                 //new attachment found because attachment data goes before attachment name
@@ -371,7 +408,9 @@ public class TNEFParser
                 _attachments.Add(_attachment.FileName, _attachment);
                 geti16(); /* checksum */
                 break;
+            }
             case ATTACHDATA:
+            {
                 len = geti32();
                 PrintResult("ATTACH-DATA: {0} bytes\n", len);
                 _attachment = new TNEFAttachment();
@@ -381,7 +420,10 @@ public class TNEFParser
                 {
                     chunk = len - i;
                     if (chunk > buf.Length)
+                    {
                         chunk = buf.Length;
+                    }
+
                     StreamReadBytes(buf, chunk);
                     Array.Copy(buf, 0, _attachment.FileContent, i, chunk);
                     i += chunk;
@@ -389,10 +431,13 @@ public class TNEFParser
                 geti16(); /* checksum */
 
                 break;
+            }
 
             default:
+            {
                 decode_attribute(d);
                 break;
+            }
         }
     }
 
@@ -431,7 +476,10 @@ public class TNEFParser
         {
             string strOutFile = BasePath + attachment.FileName;
             if (File.Exists(strOutFile))
+            {
                 File.Delete(strOutFile);
+            }
+
             FileStream fsData = new FileStream(strOutFile, FileMode.CreateNew, FileAccess.Write);
             fsData.Write(attachment.FileContent, 0, (int)attachment.FileLength);
             fsData.Close();
@@ -471,34 +519,47 @@ public class TNEFParser
             for (; ; )
             {
                 if (StreamReadBytes(buf, 1) == 0)
+                {
                     break;
+                }
+
                 d = (int)buf[0];
                 switch (d)
                 {
                     case LVL_MESSAGE:
+                    {
                         PrintResult("{0}: Decoding Message Attributes\n", fsTNEF.Position);
                         decode_message();
                         break;
+                    }
+
                     case LVL_ATTACHMENT:
+                    {
                         PrintResult("Decoding Attachment\n");
                         decode_attachment();
                         break;
+                    }
+
                     default:
+                    {
                         PrintResult("Coding Error in TNEF file\n");
                         return false;
+                    }
                 }
             }
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     private void PrintResult(string strResult, params object[] strContent)
     {
         string strRet = string.Format(strResult, strContent);
         if (Verbose)
+        {
             Utility.LogError(strRet);
+        }
     }
 
     ~TNEFParser()

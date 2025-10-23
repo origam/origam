@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Server.Attributes;
@@ -36,7 +35,10 @@ public class RequiredNonDefaultAttribute : ValidationAttribute
     public override bool IsValid(object value)
     {
         if (value is null)
+        {
             return false;
+        }
+
         var type = value.GetType();
         return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
     }

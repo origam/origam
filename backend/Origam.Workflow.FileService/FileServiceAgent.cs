@@ -198,7 +198,8 @@ public class FileServiceAgent : AbstractServiceAgent
                 return ReadDelimitedFile(sr, optionsXml, entity);
             }
         }
-        else if (blobFile != null)
+
+        if (blobFile != null)
         {
             MemoryStream ms = new MemoryStream(blobFile);
             using (TextReader tr = new StreamReader(ms, encoding))
@@ -206,12 +207,10 @@ public class FileServiceAgent : AbstractServiceAgent
                 return ReadDelimitedFile(tr, optionsXml, entity);
             }
         }
-        else
+
+        using (TextReader tr = new StreamReader(fileName, encoding))
         {
-            using (TextReader tr = new StreamReader(fileName, encoding))
-            {
-                return ReadDelimitedFile(tr, optionsXml, entity);
-            }
+            return ReadDelimitedFile(tr, optionsXml, entity);
         }
     }
 
@@ -221,22 +220,23 @@ public class FileServiceAgent : AbstractServiceAgent
         {
             return typeof(int?);
         }
-        else if (t == typeof(decimal))
+
+        if (t == typeof(decimal))
         {
             return typeof(decimal?);
         }
-        else if (t == typeof(Guid))
+
+        if (t == typeof(Guid))
         {
             return typeof(Guid?);
         }
-        else if (t == typeof(DateTime))
+
+        if (t == typeof(DateTime))
         {
             return typeof(DateTime?);
         }
-        else
-        {
-            return t;
-        }
+
+        return t;
     }
 
     public override object Result
@@ -274,11 +274,15 @@ public class FileServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "ReadTextFile":
+            {
                 // Check input parameters
                 if (!(this.Parameters["Entity"] is string || this.Parameters["Entity"] == null))
+                {
                     throw new InvalidCastException(
                         ResourceUtils.GetString("ErrorViewNameNotString")
                     );
+                }
+
                 _result = this.ReadFile(
                     this.Parameters["FileName"] as String,
                     this.Parameters["Options"] as XmlContainer,
@@ -287,6 +291,7 @@ public class FileServiceAgent : AbstractServiceAgent
                     this.Parameters["Encoding"] as string
                 );
                 break;
+            }
         }
     }
 }

@@ -190,18 +190,28 @@ public class IdentityServerConfig
         switch (authenticationScheme)
         {
             case GoogleDefaults.AuthenticationScheme:
+            {
                 return GoogleLogin;
+            }
             case MicrosoftAccountDefaults.AuthenticationScheme:
+            {
                 return MicrosoftLogin;
+            }
             case IdentityServerDefaults.AzureAdScheme:
+            {
                 return AzureAdLogin;
+            }
             case IdentityServerDefaults.WindowsAdScheme:
+            {
                 return new WindowsLogin();
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(authenticationScheme),
                     $@"Invalid authentication scheme {authenticationScheme}"
                 );
+            }
         }
     }
 }

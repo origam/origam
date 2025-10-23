@@ -21,9 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Origam.Schema;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;

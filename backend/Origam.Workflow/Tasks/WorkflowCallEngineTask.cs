@@ -58,13 +58,21 @@ public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
         switch (task.Trace)
         {
             case Trace.Yes:
+            {
                 _call.Trace = true;
                 break;
+            }
+
             case Trace.No:
+            {
                 _call.Trace = false;
                 break;
+            }
+
             case Trace.InheritFromParent:
+            {
                 break;
+            }
         }
     }
 
@@ -78,8 +86,8 @@ public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
             OperationTimer.Global.Start(
                 logEntryType: WorkflowItemType,
                 path: Step is ISchemaItem schemItem ? schemItem.Path : "",
-                hash: _call.GetHashCode(),
-                id: Step.NodeId
+                id: Step.NodeId,
+                hash: _call.GetHashCode()
             );
         }
     }

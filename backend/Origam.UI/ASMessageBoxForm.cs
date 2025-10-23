@@ -83,26 +83,43 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
         switch (icon)
         {
             case MessageBoxIcon.Asterisk:
+            {
                 image = System.Drawing.SystemIcons.Asterisk.ToBitmap();
                 break;
+            }
+
             case MessageBoxIcon.Error:
+            {
                 image = imageList2.Images[0];
                 break;
+            }
+
             case MessageBoxIcon.Exclamation:
+            {
                 image = System.Drawing.SystemIcons.Exclamation.ToBitmap();
                 break;
+            }
+
             case MessageBoxIcon.None:
+            {
                 image = null;
                 break;
+            }
+
             case MessageBoxIcon.Question:
+            {
                 image = System.Drawing.SystemIcons.Question.ToBitmap();
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "icon",
                     icon,
                     ResourceUtils.GetString("ErrorUnknownIconType")
                 );
+            }
         }
         pctIcon.Image = image;
         string stackTrace = "";
@@ -132,9 +149,15 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
         int width = lblMessage.Left + lblMessage.Width + 16;
         int height = lblMessage.Top + messagePartHeight + 32 + btnCopy.Height + 32;
         if (width < this.Width)
+        {
             width = this.Width;
+        }
+
         if (height < this.Height)
+        {
             height = this.Height;
+        }
+
         this.Width = width;
         this.Height = height;
         panel1.Top = lblMessage.Top + messagePartHeight + 16;
@@ -403,9 +426,7 @@ public class ASMessageBoxForm : System.Windows.Forms.Form
         {
             return Environment.NewLine + Environment.NewLine + _debugInfoProvider.GetInfo();
         }
-        else
-        {
-            return "";
-        }
+
+        return "";
     }
 }

@@ -143,11 +143,17 @@ public abstract class AbstractController : ControllerBase
             switch (ex)
             {
                 case OrigamDataException or OrigamSecurityException:
+                {
                     return StatusCode(400, GetReturnObject(ex));
+                }
                 case OrigamValidationException:
+                {
                     return StatusCode(400, GetReturnObject(ex, ex.Message));
+                }
                 case IUserException:
+                {
                     return StatusCode(420, GetReturnObject(ex, ex.Message));
+                }
                 default:
                 {
                     log.LogOrigamError(ex, ex.Message);
@@ -363,11 +369,9 @@ public abstract class AbstractController : ControllerBase
                 )
                 .Bind(CheckEntityBelongsToMenu);
         }
-        else
-        {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem));
-        }
+
+        return FindItem<FormReferenceMenuItem>(input.MenuId)
+            .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem));
     }
 
     protected Result<Guid, IActionResult> EntityDataToEntityId(EntityData entityData)

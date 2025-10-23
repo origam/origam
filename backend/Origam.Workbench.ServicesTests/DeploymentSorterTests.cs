@@ -538,10 +538,8 @@ class MockDeploymentVersion : IDeploymentVersion
         {
             return Version.CompareTo(otherDeployment.Version);
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
     public override string ToString() => SchemaExtensionId + " " + Version;

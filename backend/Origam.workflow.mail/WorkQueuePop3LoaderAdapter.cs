@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using MailKit.Net.Pop3;
 using Origam.Mail;
 using Origam.Workbench.Services;
@@ -56,27 +55,44 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
                 switch (pair[0].Trim())
                 {
                     case "server":
+                    {
                         server = pair[1];
                         break;
+                    }
+
                     case "port":
+                    {
                         port = int.Parse(pair[1]);
                         break;
+                    }
+
                     case "ssl":
+                    {
                         ssl = bool.Parse(pair[1]);
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName",
                             pair[0],
                             ResourceUtils.GetString("ErrorInvalidConnectionString")
                         );
+                    }
                 }
             }
         }
         if (server == null)
+        {
             throw new Exception(ResourceUtils.GetString("ErrorNoServer"));
+        }
+
         if (port == 0)
+        {
             throw new Exception(ResourceUtils.GetString("ErrorNoString"));
+        }
+
         _popClient = AbstractMailService.GetPopClient(
             mailServer: server,
             port: port,
@@ -98,7 +114,10 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
         mailData.DataSetName = "ROOT";
         int messageCount = _popClient.GetMessageUids().Count;
         if (messageCount == 0)
+        {
             return null;
+        }
+
         AbstractMailService.RetrieveMailNext(mailData, _popClient, true);
         WorkQueueAdapterResult result = new WorkQueueAdapterResult(
             DataDocumentFactory.New(mailData)

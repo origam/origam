@@ -51,8 +51,8 @@ internal class BalloonPainter : INodeItemPainter
         SizeF stringSize = editorGraphics.MeasureString(node.LabelText, painter.Font);
 
         var labelPoint = new PointF(
-            (float)node.GeometryNode.Center.X - stringSize.Width / 2,
-            (float)node.GeometryNode.Center.Y - (int)stringSize.Height / 2
+            (float)node.GeometryNode.Center.X - (stringSize.Width / 2),
+            (float)node.GeometryNode.Center.Y - ((int)stringSize.Height / 2)
         );
         var boundingRectangle = new Rectangle(
             (int)node.BoundingBox.LeftBottom.X,

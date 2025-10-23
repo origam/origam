@@ -248,19 +248,17 @@ public abstract class AbstractXsltEngine : IXsltEngine
         {
             return GetTransform(xsl);
         }
-        else
-        {
-            IXmlContainer oldXslt = new XmlContainer(xsl);
-            IXmlContainer newXslt = Transform(
-                oldXslt,
-                retransformTemplateId,
-                retransformationParameters,
-                transactionId,
-                null,
-                false
-            );
-            return GetTransform(newXslt);
-        }
+        IXmlContainer oldXslt = new XmlContainer(xsl);
+        IXmlContainer newXslt = Transform(
+            oldXslt,
+            retransformTemplateId,
+            retransformationParameters,
+            transactionId,
+            null,
+            false
+        );
+
+        return GetTransform(newXslt);
     }
 
     internal abstract object GetTransform(IXmlContainer xslt);

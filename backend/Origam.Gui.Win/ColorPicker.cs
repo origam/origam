@@ -102,10 +102,8 @@ public class ColorPicker : BaseCaptionControl
             {
                 return DBNull.Value;
             }
-            else
-            {
-                return _selectedColor;
-            }
+
+            return _selectedColor;
         }
         set
         {
@@ -144,7 +142,10 @@ public class ColorPicker : BaseCaptionControl
     private void button1_Click(object sender, System.EventArgs e)
     {
         if (_readOnly)
+        {
             return;
+        }
+
         colorDialog1.Color = this.button1.BackColor;
         DialogResult result = colorDialog1.ShowDialog(this.FindForm() as IWin32Window);
 

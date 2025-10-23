@@ -43,7 +43,10 @@ class RealNumberFormatter : Formatter
     public override void OnLeave(object sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(Text))
+        {
             return;
+        }
+
         var value = numberParser.Parse(Text);
         Text = string.Format(Culture, "{0:" + Format + "}", value);
     }
@@ -56,7 +59,9 @@ class RealNumberFormatter : Formatter
     protected override bool IsValidChar(char input)
     {
         if (base.IsValidChar(input))
+        {
             return true;
+        }
 
         return char.IsDigit(input)
             || input == Minus

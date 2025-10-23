@@ -19,12 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections;
 using System.Data;
 using System.Linq;
 using System.Xml;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders;

@@ -71,7 +71,7 @@ public class AsGradientLabel : System.Windows.Forms.Label
         // set rectangle bound text
         RectangleF rectF = new RectangleF(
             0,
-            this.Height / 2 - Font.Height / 2,
+            (this.Height / 2) - (Font.Height / 2),
             this.Width,
             this.Height
         );

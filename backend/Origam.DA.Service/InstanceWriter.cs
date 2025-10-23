@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -71,8 +70,8 @@ namespace Origam.DA.Service
 
             Guid? parentNodeId = XmlUtils.ReadId(existingElement.ParentNode);
             bool parentNodeIdInXmlDiffersFromParentIdInInstance =
-                parentNodeId.HasValue && parentNodeId.Value != instance.FileParentId
-                || !parentNodeId.HasValue && instance.FileParentId != Guid.Empty;
+                (parentNodeId.HasValue && parentNodeId.Value != instance.FileParentId)
+                || (!parentNodeId.HasValue && instance.FileParentId != Guid.Empty);
             if (parentNodeIdInXmlDiffersFromParentIdInInstance)
             {
                 MoveElementToNewLocation(existingElement, instance, namespaceMapping);
@@ -114,16 +113,16 @@ namespace Origam.DA.Service
                 {
                     return element;
                 }
-                else
+                XmlElement foundEl = FindElementToWriteTo(
+                    child,
+                    instance,
+                    depth + 1,
+                    namespaceMapping
+                );
+
+                if (foundEl != null)
                 {
-                    XmlElement foundEl = FindElementToWriteTo(
-                        child,
-                        instance,
-                        depth + 1,
-                        namespaceMapping
-                    );
-                    if (foundEl != null)
-                        return foundEl;
+                    return foundEl;
                 }
             }
             if ((parentId.HasValue && parentId.Value == instance.FileParentId) || depth == 0)
@@ -253,9 +252,15 @@ namespace Origam.DA.Service
                 object value = GetValueToWrite(instance, memberInfo);
 
                 if (ShouldBeSkipped(value))
+                {
                     continue;
+                }
+
                 if (Guid.Empty.Equals(value))
+                {
                     continue;
+                }
+
                 node.SetAttribute(
                     localName: attribute.AttributeName,
                     namespaceURI: namespaceMapping.GetNamespaceByPropertyName(
@@ -269,13 +274,25 @@ namespace Origam.DA.Service
         private bool ShouldBeSkipped(object value)
         {
             if (ReferenceEquals(value, null))
+            {
                 return true;
+            }
+
             if (value is Enum)
+            {
                 return false;
+            }
+
             if (value is bool)
+            {
                 return false;
+            }
+
             if (value is string strValue)
+            {
                 return string.IsNullOrEmpty(strValue);
+            }
+
             return value.IsDefault();
         }
 

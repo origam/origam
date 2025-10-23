@@ -47,22 +47,39 @@ public class DebugTimer : IDisposable
         switch (logType)
         {
             case LogType.CONSOLE:
+            {
                 Console.WriteLine($"{message} {watch.Elapsed} s");
                 break;
+            }
+
             case LogType.DEBUG:
+            {
                 log.Debug($"{message} {watch.Elapsed} s");
                 break;
+            }
+
             case LogType.ERROR:
+            {
                 log.Error($"{message} {watch.Elapsed} s");
                 break;
+            }
+
             case LogType.INFO:
+            {
                 log.Info($"{message} {watch.Elapsed} s");
                 break;
+            }
+
             case LogType.WARNING:
+            {
                 log.Warn($"{message} {watch.Elapsed} s");
                 break;
+            }
+
             default:
+            {
                 throw new NotImplementedException();
+            }
         }
     }
 }

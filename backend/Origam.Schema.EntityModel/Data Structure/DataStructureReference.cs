@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
@@ -63,16 +62,24 @@ public class DataStructureReference : AbstractSchemaItem, IDataStructureReferenc
     )
     {
         if (this.DataStructure != null)
+        {
             base.GetParameterReferences(DataStructure, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.DataStructure);
         if (this.Method != null)
+        {
             dependencies.Add(this.Method);
+        }
+
         if (this.SortSet != null)
+        {
             dependencies.Add(this.SortSet);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

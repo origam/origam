@@ -74,9 +74,14 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         if (formatting != null)
         {
             if (!formatting.UseDefaultBackColor)
+            {
                 myBackBrush = new SolidBrush(formatting.BackColor);
+            }
+
             if (!formatting.UseDefaultForeColor)
+            {
                 myForeBrush = new SolidBrush(formatting.ForeColor);
+            }
         }
         try
         {
@@ -178,7 +183,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         //			AsTextBox.ModifiedChanged -= new EventHandler(AsTextBox_ModifiedChanged);
         Invalidate();
         if (this.AsTextBox.IsDisposed)
+        {
             return;
+        }
+
         base.Abort(rowNum);
     }
 
@@ -247,7 +255,9 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
             //				this.AsTextBox.Enabled = false;
         }
         if (AsTextBox.Visible)
+        {
             DataGridTableStyle.DataGrid.Invalidate(bounds);
+        }
     }
 
     private RuleEngine GetRuleEngine()
@@ -321,7 +331,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
     private void AsTextBox_ModifiedChanged(object sender, EventArgs e)
     {
         if (this.AsTextBox.ReadOnly)
+        {
             return;
+        }
+
         _isEditing = true;
         try
         {
@@ -342,7 +355,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
     private void AsTextBox_KeyPress(object sender, KeyPressEventArgs e)
     {
         if (e.KeyChar == (char)Keys.Escape)
+        {
             return;
+        }
+
         bool canEdit = false;
         if (
             (Control.ModifierKeys & Keys.Control) == Keys.Control
@@ -370,7 +386,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         if (canEdit)
         {
             if (this.AsTextBox.ReadOnly)
+            {
                 return;
+            }
+
             _isEditing = true;
             try
             {
@@ -389,7 +408,10 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
         if (e.KeyCode == Keys.Delete | e.KeyCode == Keys.Back)
         {
             if (this.AsTextBox.ReadOnly)
+            {
                 return;
+            }
+
             _isEditing = true;
             try
             {

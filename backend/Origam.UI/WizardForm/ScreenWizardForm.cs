@@ -40,11 +40,17 @@ public class ScreenWizardForm : AbstractWizardForm
         {
             _lstFields = lstField;
             if (this.Entity == null)
+            {
                 return;
+            }
+
             foreach (IDataEntityColumn column in this.Entity.EntityColumns)
             {
                 if (string.IsNullOrEmpty(column.ToString()))
+                {
                     continue;
+                }
+
                 if (
                     !this.textColumnsOnly
                     || (

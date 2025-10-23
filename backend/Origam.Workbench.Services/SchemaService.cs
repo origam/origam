@@ -20,14 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.NamespaceMapping;
-using Origam.Extensions;
 using Origam.Schema;
 using Origam.Services;
 using Origam.UI;
@@ -154,10 +151,8 @@ public class SchemaService : AbstractService, ISchemaService
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public bool CanEditItem(object item)
@@ -165,18 +160,19 @@ public class SchemaService : AbstractService, ISchemaService
         if (item is ISchemaItem)
         {
             if (!IsItemFromExtension(item))
+            {
                 return false;
+            }
             // check if the item is checked out by the user
             return true;
         }
-        else if (item is Package)
+
+        if (item is Package)
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public virtual bool UnloadSchema()
@@ -209,7 +205,9 @@ public class SchemaService : AbstractService, ISchemaService
     public bool LoadSchema(Guid schemaExtensionId, bool isInteractive = false)
     {
         if (!UnloadSchema())
+        {
             return false;
+        }
 
         IPersistenceService persistence =
             ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -299,7 +297,9 @@ public class SchemaService : AbstractService, ISchemaService
                 foreach (Type interf in entry.Value.GetType().GetInterfaces())
                 {
                     if (type.Equals(interf))
+                    {
                         return entry.Value;
+                    }
                 }
             }
         }

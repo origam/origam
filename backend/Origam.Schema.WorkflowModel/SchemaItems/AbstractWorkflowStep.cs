@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -79,7 +78,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
             || destinationSchemaItem.RootItem == null
             || this.RootItem != destinationSchemaItem.RootItem
             || !(destinationNode is IWorkflowBlock)
-            || destinationNode is AbstractWorkflowBlock && Dependencies.Count > 0
+            || (destinationNode is AbstractWorkflowBlock && Dependencies.Count > 0)
         )
         {
             return false;
@@ -90,13 +89,25 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.StartConditionRule != null)
+        {
             dependencies.Add(this.StartConditionRule);
+        }
+
         if (this.StartConditionRuleContextStore != null)
+        {
             dependencies.Add(this.StartConditionRuleContextStore);
+        }
+
         if (this.ValidationRule != null)
+        {
             dependencies.Add(this.ValidationRule);
+        }
+
         if (this.ValidationRuleContextStore != null)
+        {
             dependencies.Add(this.ValidationRuleContextStore);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

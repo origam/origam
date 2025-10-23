@@ -157,9 +157,15 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Rule != null)
+        {
             dependencies.Add(this.Rule);
+        }
+
         if (this.LabelConstant != null)
+        {
             dependencies.Add(this.LabelConstant);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 
@@ -181,14 +187,12 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
         {
             return this.Level.CompareTo(compared.Level);
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "obj",
-                obj,
-                ResourceUtils.GetString("ErrorCompareEntityConditionalFormatting")
-            );
-        }
+
+        throw new ArgumentOutOfRangeException(
+            "obj",
+            obj,
+            ResourceUtils.GetString("ErrorCompareEntityConditionalFormatting")
+        );
     }
     #endregion
 }

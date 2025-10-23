@@ -23,8 +23,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
@@ -94,7 +92,10 @@ public class Graphics : AbstractSchemaItem
         get
         {
             if (GraphicsDataByte == null)
+            {
                 return null;
+            }
+
             Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
             if (b.RawFormat == ImageFormat.Bmp)
             {

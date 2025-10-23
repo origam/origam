@@ -23,8 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
-using System.Xml;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 
@@ -158,23 +156,33 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
         switch (this.MethodName)
         {
             case "ExecuteWorkflow":
+            {
                 // Check input parameters
                 if (!(this.Parameters["Workflow"] is Guid))
+                {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorWorkflowNotGuid"));
+                }
 
                 if (!(this.Parameters["Parameters"] is Hashtable))
+                {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+                }
+
                 _result = this.ExecuteWorkflow(
                     (Guid)this.Parameters["Workflow"],
                     (Hashtable)this.Parameters["Parameters"]
                 );
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     this.MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 

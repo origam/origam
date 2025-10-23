@@ -201,10 +201,8 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
         {
             return this.NodeText.CompareTo(bn.NodeText);
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
 }

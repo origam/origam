@@ -29,7 +29,6 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using Mvp.Xml.Exslt;
 using Origam.Rule.XsltFunctions;
-using Origam.Workbench.Services;
 
 namespace Origam.Rule.Xslt;
 
@@ -254,10 +253,15 @@ public class OrigamXsltContext : XsltContext
         switch (Type.GetTypeCode(type))
         {
             case TypeCode.String:
+            {
                 return XPathResultType.String;
+            }
             case TypeCode.Boolean:
+            {
                 return XPathResultType.Boolean;
+            }
             case TypeCode.Object:
+            {
                 if (
                     typeof(XPathNavigator).IsAssignableFrom(type)
                     || typeof(IXPathNavigable).IsAssignableFrom(type)
@@ -271,10 +275,16 @@ public class OrigamXsltContext : XsltContext
                 }
                 // [....]: It be better to check that type is realy object and otherwise return XPathResultType.Error
                 return XPathResultType.Any;
+            }
+
             case TypeCode.DateTime:
+            {
                 return XPathResultType.Error;
+            }
             default: /* all numeric types */
+            {
                 return XPathResultType.Number;
+            }
         }
     }
 
@@ -432,11 +442,8 @@ public class OrigamXsltContext : XsltContext
             {
                 return IteratorToString(it);
             }
-            else
-            {
-                //return XmlConvert.ToXPathString(argument);
-                return XmlTools.ConvertToString(argument);
-            }
+            //return XmlConvert.ToXPathString(argument);
+            return XmlTools.ConvertToString(argument);
         }
 
         public static bool ToBoolean(object argument)
@@ -482,28 +489,39 @@ public class OrigamXsltContext : XsltContext
             switch (xt)
             {
                 case XPathResultType.String:
+                {
                     // Unfortunately XPathResultType.String == XPathResultType.Navigator (This is wrong but cant be changed in Everett)
                     // Fortunately we have typeCode hare so let's discriminate by typeCode
                     if (typeCode == TypeCode.String)
                     {
                         return ToString(val);
                     }
-                    else
-                    {
-                        return ToNavigator(val);
-                    }
+
+                    return ToNavigator(val);
+                }
+
                 case XPathResultType.Number:
+                {
                     return ToNumeric(val, typeCode);
+                }
                 case XPathResultType.Boolean:
+                {
                     return ToBoolean(val);
+                }
                 case XPathResultType.NodeSet:
+                {
                     return ToIterator(val);
+                }
                 case XPathResultType.Any:
                 case XPathResultType.Error:
+                {
                     return val;
+                }
                 default:
+                {
                     System.Diagnostics.Debug.Assert(false, "unexpected XPath type");
                     return val;
+                }
             }
         }
     }

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -74,10 +73,8 @@ public class FormControlSet : AbstractControlSet
         {
             return new UI.BrowserNodeCollection();
         }
-        else
-        {
-            return base.Alternatives;
-        }
+
+        return base.Alternatives;
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

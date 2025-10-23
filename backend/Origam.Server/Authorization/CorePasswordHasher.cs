@@ -54,13 +54,21 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
         switch (result)
         {
             case VerificationResult.Failed:
+            {
                 return PasswordVerificationResult.Failed;
+            }
             case VerificationResult.Success:
+            {
                 return PasswordVerificationResult.Success;
+            }
             case VerificationResult.SuccessRehashNeeded:
+            {
                 return PasswordVerificationResult.SuccessRehashNeeded;
+            }
             default:
+            {
                 throw new NotImplementedException();
+            }
         }
     }
 }

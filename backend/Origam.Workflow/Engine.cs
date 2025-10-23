@@ -37,7 +37,6 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;

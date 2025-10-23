@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.Schema.EntityModel;
@@ -71,9 +70,11 @@ public class ControlConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -90,12 +91,14 @@ public class ControlConverter : TypeConverter
             foreach (ISchemaItem item in controls.ChildItems)
             {
                 if (item.ToString() == value.ToString())
+                {
                     return item as ControlItem;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -139,9 +142,11 @@ public class FormControlSetConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -157,12 +162,14 @@ public class FormControlSetConverter : TypeConverter
             foreach (ISchemaItem item in forms.ChildItems)
             {
                 if (item.ToString() == value.ToString())
+                {
                     return item as FormControlSet;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -206,9 +213,11 @@ public class PanelControlSetConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -224,12 +233,14 @@ public class PanelControlSetConverter : TypeConverter
             foreach (ISchemaItem item in forms.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as PanelControlSet;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -273,9 +284,11 @@ public class ReportConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -292,12 +305,14 @@ public class ReportConverter : TypeConverter
             foreach (ISchemaItem item in reports.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as AbstractReport;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -342,9 +357,11 @@ public class GraphicsConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -362,12 +379,14 @@ public class GraphicsConverter : TypeConverter
             foreach (ISchemaItem item in graphics.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as Graphics;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -410,9 +429,11 @@ public class ChartsConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -428,12 +449,14 @@ public class ChartsConverter : TypeConverter
             foreach (ISchemaItem item in forms.ChildItems)
             {
                 if (item.ToString() == value.ToString())
+                {
                     return item as AbstractChart;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -458,7 +481,10 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
     {
         ChartFormMapping currentItem = context.Instance as ChartFormMapping;
         if (currentItem.Screen == null)
+        {
             return new StandardValuesCollection(new List<DataStructureEntity>());
+        }
+
         List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
         var entityArray = new List<DataStructureEntity>(entities.Count);
         foreach (DataStructureEntity entity in entities)
@@ -475,9 +501,11 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -490,17 +518,22 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
         {
             ChartFormMapping currentItem = context.Instance as ChartFormMapping;
             if (currentItem.Screen == null)
+            {
                 return new StandardValuesCollection(new List<DataStructureEntity>());
+            }
+
             List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
             foreach (DataStructureEntity item in entities)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -549,9 +582,11 @@ public class StylesConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -568,12 +603,14 @@ public class StylesConverter : TypeConverter
             foreach (ISchemaItem item in styles.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as UIStyle;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -619,9 +656,11 @@ public class TreeStructureConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -639,12 +678,14 @@ public class TreeStructureConverter : TypeConverter
             foreach (ISchemaItem item in trees.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as TreeStructure;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -690,9 +731,11 @@ public class KeyboardShortcutsConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -710,12 +753,14 @@ public class KeyboardShortcutsConverter : TypeConverter
             foreach (ISchemaItem item in shortcuts.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item as KeyboardShortcut;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -756,9 +801,11 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -775,11 +822,13 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
             foreach (ControlStyleProperty item in styleProperties)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

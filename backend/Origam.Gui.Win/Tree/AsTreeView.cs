@@ -104,7 +104,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
         if (disposing)
         {
             if (components != null)
+            {
                 components.Dispose();
+            }
+
             if (listManager != null)
             {
                 if (this.listManager.List is IBindingList)
@@ -480,12 +483,16 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private void DataTreeView_ListChanged(object sender, ListChangedEventArgs e)
     {
         if (this.items_Positions.Count == 0 & e.ListChangedType != ListChangedType.Reset)
+        {
             return;
+        }
+
         try
         {
             switch (e.ListChangedType)
             {
                 case ListChangedType.ItemAdded:
+                {
                     if (!TryAddNode(this.CreateNode(this.listManager, e.NewIndex)))
                     {
                         throw new ApplicationException(
@@ -493,7 +500,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
                         );
                     }
                     break;
+                }
+
                 case ListChangedType.ItemChanged:
+                {
                     DataTreeViewNode chnagedNode =
                         this.items_Positions[e.NewIndex] as DataTreeViewNode;
                     if (chnagedNode != null)
@@ -508,7 +518,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
                         );
                     }
                     break;
+                }
+
                 case ListChangedType.ItemMoved:
+                {
                     if (e.NewIndex >= 0)
                     {
                         DataTreeViewNode movedNode =
@@ -526,7 +539,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
                         }
                     }
                     break;
+                }
+
                 case ListChangedType.ItemDeleted:
+                {
                     try
                     {
                         if (items_Positions.Contains(e.NewIndex))
@@ -569,9 +585,13 @@ public class AsTreeView : TreeView, IAsDataConsumer
                     //							throw new ApplicationException("Item not found or wrong type.");
                     //						}
                     break;
+                }
+
                 case ListChangedType.Reset:
+                {
                     this.ResetData();
                     break;
+                }
             }
         }
         catch (Exception ex)
@@ -615,11 +635,9 @@ public class AsTreeView : TreeView, IAsDataConsumer
                     this.BindingContext[this.dataSource, this.dataMember] as CurrencyManager;
                 return true;
             }
-            else
-            {
-                this.listManager = null;
-                this.Clear();
-            }
+            this.listManager = null;
+
+            this.Clear();
         }
         return false;
     }
@@ -736,18 +754,15 @@ public class AsTreeView : TreeView, IAsDataConsumer
             this.AddNode(this.Nodes, node);
             return true;
         }
-        else
+
+        if (this.items_Identifiers.ContainsKey(node.ParentID))
         {
-            if (this.items_Identifiers.ContainsKey(node.ParentID))
+            DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
+            if (parentNode != null)
             {
-                DataTreeViewNode parentNode =
-                    this.items_Identifiers[node.ParentID] as DataTreeViewNode;
-                if (parentNode != null)
-                {
-                    CheckRecursion(node, parentNode);
-                    this.AddNode(parentNode.Nodes, node);
-                    return true;
-                }
+                CheckRecursion(node, parentNode);
+                this.AddNode(parentNode.Nodes, node);
+                return true;
             }
         }
         return false;
@@ -756,7 +771,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
     {
         if (node.ID == null | node.ID == DBNull.Value)
+        {
             return;
+        }
+
         if (!this.items_Positions.ContainsKey(node.Position))
         {
             this.items_Positions.Add(node.Position, node);
@@ -788,7 +806,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
     {
         if (node == null | parentNode == null)
+        {
             return;
+        }
+
         if (node.ID.Equals(parentNode.ID))
         {
             this.parentIdProperty.SetValue(this.listManager.List[node.Position], DBNull.Value);
@@ -808,7 +829,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private void SynchronizeSelection()
     {
         if (this.listManager == null | this.selectionChanging)
+        {
             return;
+        }
+
         DataTreeViewNode node = this.items_Positions[this.listManager.Position] as DataTreeViewNode;
         if (node != null)
         {
@@ -819,7 +843,10 @@ public class AsTreeView : TreeView, IAsDataConsumer
     private void RefreshData(DataTreeViewNode node)
     {
         if (this.listManager == null)
+        {
             return;
+        }
+
         int position = node.Position;
         node.ID = this.GetID(position);
         object name = this.GetName(position);
@@ -862,16 +889,15 @@ public class AsTreeView : TreeView, IAsDataConsumer
         {
             return true;
         }
-        else
+
+        if (id.GetType() == typeof(string))
         {
-            if (id.GetType() == typeof(string))
-            {
-                return (((string)id).Length == 0);
-            }
-            else if (id.GetType() == typeof(Guid))
-            {
-                return ((Guid)id == Guid.Empty);
-            }
+            return (((string)id).Length == 0);
+        }
+
+        if (id.GetType() == typeof(Guid))
+        {
+            return ((Guid)id == Guid.Empty);
         }
         return false;
     }

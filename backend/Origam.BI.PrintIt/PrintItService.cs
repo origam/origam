@@ -22,9 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
-using System.Xml;
 using Origam.JSON;
-using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.GuiModel;
 using Origam.Service.Core;

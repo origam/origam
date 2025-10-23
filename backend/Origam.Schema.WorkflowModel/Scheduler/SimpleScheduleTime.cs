@@ -240,23 +240,37 @@ public class SimpleScheduleTime : AbstractScheduleTime
         switch (intervalType)
         {
             case ScheduleIntervalType.ByMinute:
+            {
                 return EventTimeBase.ByMinute;
+            }
             case ScheduleIntervalType.BySecond:
+            {
                 return EventTimeBase.BySecond;
+            }
             case ScheduleIntervalType.Daily:
+            {
                 return EventTimeBase.Daily;
+            }
             case ScheduleIntervalType.Hourly:
+            {
                 return EventTimeBase.Hourly;
+            }
             case ScheduleIntervalType.Monthly:
+            {
                 return EventTimeBase.Monthly;
+            }
             case ScheduleIntervalType.Weekly:
+            {
                 return EventTimeBase.Weekly;
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "intervalType",
                     intervalType,
                     ResourceUtils.GetString("ErrorUknownIntervalType")
                 );
+            }
         }
     }
     #endregion

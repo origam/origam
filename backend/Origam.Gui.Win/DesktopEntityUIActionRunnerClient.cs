@@ -24,14 +24,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Xml;
 using Origam.DA;
-using Origam.Gui;
 using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Service.Core;
-using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win;
@@ -204,6 +201,7 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                 switch (changeType)
                 {
                     case DataRowState.Added:
+                    {
                         ruleHandler.OnRowCopied(
                             row,
                             xmlData,
@@ -211,7 +209,10 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                             generator.FormRuleEngine
                         );
                         break;
+                    }
+
                     case DataRowState.Modified:
+                    {
                         row.BeginEdit();
                         Hashtable changedColumns = rowEntry.Value.Columns;
                         if (changedColumns != null)
@@ -230,11 +231,17 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                         }
                         row.EndEdit();
                         break;
+                    }
+
                     case DataRowState.Deleted:
+                    {
                         // deletions later
                         break;
+                    }
                     default:
+                    {
                         throw new Exception(ResourceUtils.GetString("ErrorUnknownRowChangeState"));
+                    }
                 }
             }
         }

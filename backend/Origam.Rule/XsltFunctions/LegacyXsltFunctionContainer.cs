@@ -414,21 +414,33 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         switch (operand)
         {
             case "PLUS":
+            {
                 return XmlConvert.ToString(num1 + num2);
+            }
             case "MINUS":
+            {
                 return XmlConvert.ToString(num1 - num2);
+            }
             case "MUL":
+            {
                 return XmlConvert.ToString(num1 * num2);
+            }
             case "MOD":
+            {
                 return XmlConvert.ToString(num1 % num2);
+            }
             case "DIV":
+            {
                 return XmlConvert.ToString(num1 / num2);
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "operand",
                     operand,
                     ResourceUtils.GetString("ErrorUnsupportedOperator")
                 );
+            }
         }
     }
 
@@ -460,11 +472,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         {
             return "";
         }
-        else
-        {
-            List<string> sorted = SortedArray(iterator);
-            return sorted[0];
-        }
+        List<string> sorted = SortedArray(iterator);
+
+        return sorted[0];
     }
 
     public string MaxString(XPathNodeIterator iterator)
@@ -473,11 +483,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         {
             return "";
         }
-        else
-        {
-            List<string> sorted = SortedArray(iterator);
-            return sorted[sorted.Count - 1];
-        }
+        List<string> sorted = SortedArray(iterator);
+
+        return sorted[sorted.Count - 1];
     }
 
     private List<string> SortedArray(XPathNodeIterator iterator)
@@ -736,13 +744,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         {
             XPathNodeIterator keyIterator = (XPathNodeIterator)iter.Current.Evaluate("@key");
             if (keyIterator == null || keyIterator.Count == 0)
+            {
                 throw new Exception("'key' attribute not present in the parameters.");
+            }
+
             keyIterator.MoveNext();
             string key = keyIterator.Current.Value.ToString();
 
             XPathNodeIterator valueIterator = (XPathNodeIterator)iter.Current.Evaluate("@value");
             if (valueIterator == null || valueIterator.Count == 0)
+            {
                 throw new Exception("'value' attribute not present in the parameters.");
+            }
+
             valueIterator.MoveNext();
             object value = valueIterator.Current.Value;
 
@@ -822,13 +836,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         switch (type)
         {
             case "9ecc0d91-f4bd-411e-936d-e4a8066b38dd": // up
+            {
                 return RoundUD(true, precision, num);
+            }
             case "970da659-63b1-42e5-9c5b-bfff0216a976": //down
+            {
                 return RoundUD(false, precision, num);
+            }
             case "0b58b6b8-5d68-42bd-bf23-c698a9c78cbf": //arithmetic
+            {
                 decimal lvalue =
                     decimal.ToInt64((num / precision) + (0.5m * Math.Sign(num))) * precision;
                 return lvalue;
+            }
             //return decimal.Round(num, GetDecimalPlaces(precision));
         }
 
@@ -848,21 +868,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             {
                 return "0";
             }
-            else
+
+            try
             {
-                try
-                {
-                    price = XmlConvert.ToDecimal(amount);
-                }
-                catch
-                {
-                    double dnum1 = Double.Parse(
-                        amount,
-                        NumberStyles.Float,
-                        CultureInfo.InvariantCulture
-                    );
-                    price = Convert.ToDecimal(dnum1);
-                }
+                price = XmlConvert.ToDecimal(amount);
+            }
+            catch
+            {
+                double dnum1 = Double.Parse(
+                    amount,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture
+                );
+                price = Convert.ToDecimal(dnum1);
             }
         }
         catch (Exception ex)
@@ -884,21 +902,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             {
                 return "0";
             }
-            else
+
+            try
             {
-                try
-                {
-                    price = XmlConvert.ToDecimal(amount);
-                }
-                catch
-                {
-                    double dnum1 = Double.Parse(
-                        amount,
-                        NumberStyles.Float,
-                        CultureInfo.InvariantCulture
-                    );
-                    price = Convert.ToDecimal(dnum1);
-                }
+                price = XmlConvert.ToDecimal(amount);
+            }
+            catch
+            {
+                double dnum1 = Double.Parse(
+                    amount,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture
+                );
+                price = Convert.ToDecimal(dnum1);
             }
         }
         catch (Exception ex)
@@ -935,7 +951,10 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         const int MAX_DP = 10;
         decimal THRES = pow(0.1m, MAX_DP);
         if (val == 0)
+        {
             return 0;
+        }
+
         int nDecimal = 0;
         while (val - decimal.Floor(val) > THRES && nDecimal < MAX_DP)
         {
@@ -955,7 +974,10 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         decimal res = 1;
         for (int i = 0; i < power; i++, res *= basis)
+        {
             ;
+        }
+
         return res;
     }
 
@@ -1100,7 +1122,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (result == "" | result == null)
+            {
                 log.Debug("AddDays: empty");
+            }
         }
 
         return result;
@@ -1119,7 +1143,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (result == "" | result == null)
+            {
                 log.Debug("AddHours: empty");
+            }
         }
 
         return result;
@@ -1138,7 +1164,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (result == "" | result == null)
+            {
                 log.Debug("AddMinutes: empty");
+            }
         }
 
         return result;
@@ -1157,7 +1185,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (result == "" | result == null)
+            {
                 log.Debug("AddYears: empty");
+            }
         }
 
         return result;
@@ -1176,7 +1206,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (result == "" | result == null)
+            {
                 log.Debug("AddSeconds: empty");
+            }
         }
 
         return result;
@@ -1211,7 +1243,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         if (log.IsDebugEnabled)
         {
             if (retVal == "" | retVal == null)
+            {
                 log.Debug("AddMonths: empty");
+            }
         }
 
         return retVal;
@@ -1607,7 +1641,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     private static string AddDecimalPoint(string numberChars, int decimalPlaces)
     {
         if (decimalPlaces == 0)
+        {
             return numberChars;
+        }
 
         var length = numberChars.Length;
         var splitIndex = length + 1 - decimalPlaces; // +1 is here because numberChars are one char shorter than the actual number
@@ -1627,13 +1663,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         switch (codeChar)
         {
             case '}':
+            {
                 lastDigit = '0';
                 sign = -1;
                 break;
+            }
+
             case '{':
+            {
                 lastDigit = '0';
                 sign = +1;
                 break;
+            }
+
             case 'A':
             case 'B':
             case 'C':
@@ -1643,9 +1685,12 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             case 'G':
             case 'H':
             case 'I':
+            {
                 sign = +1;
                 lastDigit = (char)(codeChar - positiveDiff);
                 break;
+            }
+
             case 'J':
             case 'K':
             case 'L':
@@ -1655,13 +1700,18 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             case 'P':
             case 'Q':
             case 'R':
+            {
                 sign = -1;
                 lastDigit = (char)(codeChar - negativeDiff);
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentException(
                     $"\"{codeChar}\" is not a valid Signed overpunch character"
                 );
+            }
         }
 
         return (sign, lastDigit);
@@ -1678,13 +1728,19 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         {
             XPathNodeIterator keyIterator = (XPathNodeIterator)iter.Current.Evaluate("@value");
             if (keyIterator == null || keyIterator.Count == 0)
+            {
                 throw new Exception("'value' attribute not present in the parameters.");
+            }
+
             keyIterator.MoveNext();
             string key = keyIterator.Current.Value.ToString();
 
             XPathNodeIterator valueIterator = (XPathNodeIterator)iter.Current.Evaluate("@quantity");
             if (valueIterator == null || valueIterator.Count == 0)
+            {
                 throw new Exception("'quantity' attribute not present in the parameters.");
+            }
+
             valueIterator.MoveNext();
             int value = Convert.ToInt32(valueIterator.Current.Value);
             total += value;
@@ -1837,7 +1893,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         CalendarDataset.OrigamCalendarRow calendarRow = null;
 
         if (calendar.OrigamCalendar.Rows.Count > 0)
+        {
             calendarRow = calendar.OrigamCalendar[0];
+        }
 
         if (shift == 0)
         {
@@ -1845,10 +1903,8 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             {
                 return date;
             }
-            else
-            {
-                shift = 1;
-            }
+
+            shift = 1;
         }
 
         int direction = shift > 0 ? 1 : -1;
@@ -1882,39 +1938,82 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         // if there is no calendar, we always return that this is a working day
         if (calendar == null)
+        {
             return true;
+        }
 
         // if the day is not marked as working day, we return false directly
         switch (date.DayOfWeek)
         {
             case DayOfWeek.Sunday:
+            {
                 if (!calendar.IsSundayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Monday:
+            {
                 if (!calendar.IsMondayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Tuesday:
+            {
                 if (!calendar.IsTuesdayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Wednesday:
+            {
                 if (!calendar.IsWednesdayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Thursday:
+            {
                 if (!calendar.IsThursdayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Friday:
+            {
                 if (!calendar.IsFridayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
+
             case DayOfWeek.Saturday:
+            {
                 if (!calendar.IsSaturdayWorkingDay)
+                {
                     return false;
+                }
+
                 break;
+            }
         }
 
         // the weekday is working day, so we check if it is a holiday
@@ -1923,7 +2022,9 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         )
         {
             if (holiday.Date == date)
+            {
                 return false;
+            }
         }
 
         return true;
@@ -2335,14 +2436,20 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             {
                 XPathNodeIterator keyIterator = (XPathNodeIterator)iter.Current.Evaluate("@name");
                 if (keyIterator == null || keyIterator.Count == 0)
+                {
                     throw new Exception("'name' attribute not present in the parameters.");
+                }
+
                 keyIterator.MoveNext();
                 string name = keyIterator.Current.Value.ToString();
 
                 XPathNodeIterator valueIterator = (XPathNodeIterator)
                     iter.Current.Evaluate("@value");
                 if (valueIterator == null || valueIterator.Count == 0)
+                {
                     throw new Exception("'value' attribute not present in the parameters.");
+                }
+
                 valueIterator.MoveNext();
                 object value = valueIterator.Current.Value;
 
@@ -2374,22 +2481,18 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         {
             return stringResult;
         }
-        else if (byteResult != null)
+
+        if (byteResult != null)
         {
             return Convert.ToBase64String(byteResult);
         }
-        else if (xmlResult != null)
+
+        if (xmlResult != null)
         {
             return xmlResult.Xml.OuterXml;
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "result",
-                result,
-                "Unknown http request result type"
-            );
-        }
+
+        throw new ArgumentOutOfRangeException("result", result, "Unknown http request result type");
     }
 
     public string ProcessMarkdown(string text)

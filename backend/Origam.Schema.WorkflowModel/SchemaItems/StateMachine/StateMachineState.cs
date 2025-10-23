@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -65,15 +64,25 @@ public class StateMachineState : AbstractSchemaItem
             switch (Type)
             {
                 case StateMachineStateType.Initial:
+                {
                     return "state-initial.png";
+                }
                 case StateMachineStateType.Running:
+                {
                     return "state-running.png";
+                }
                 case StateMachineStateType.Final:
+                {
                     return "state-final.png";
+                }
                 case StateMachineStateType.Group:
+                {
                     return "state-group.png";
+                }
                 default:
+                {
                     return "state.png";
+                }
             }
         }
     }
@@ -310,17 +319,25 @@ public class StateMachineState : AbstractSchemaItem
                             switch (value.GetType().ToString())
                             {
                                 case "System.String":
+                                {
                                     guidValue = new Guid((string)value);
                                     break;
+                                }
+
                                 case "System.Guid":
+                                {
                                     guidValue = (Guid)value;
                                     break;
+                                }
+
                                 default:
+                                {
                                     throw new ArgumentOutOfRangeException(
                                         "value",
                                         value,
                                         ResourceUtils.GetString("ErrorConvertToGuid")
                                     );
+                                }
                             }
                         }
                         GuidValue = guidValue;

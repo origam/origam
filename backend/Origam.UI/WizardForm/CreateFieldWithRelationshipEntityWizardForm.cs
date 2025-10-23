@@ -67,7 +67,10 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         if (tableRelation.Items.Count == 0)
         {
             if (this.Entity == null)
+            {
                 return;
+            }
+
             txtRelationName.Text = this.Entity.Name;
             foreach (ISchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
             {
@@ -85,7 +88,10 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         BaseEntityField.Items.Clear();
         RelatedEntityField.Items.Clear();
         if (this.Entity == null)
+        {
             return;
+        }
+
         txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
         foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {

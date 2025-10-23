@@ -62,9 +62,15 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
     {
         dependencies.Add(this.DataStructure);
         if (this.Method != null)
+        {
             dependencies.Add(this.Method);
+        }
+
         if (this.SortSet != null)
+        {
             dependencies.Add(this.SortSet);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

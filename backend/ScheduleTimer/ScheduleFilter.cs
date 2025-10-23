@@ -14,7 +14,6 @@
  **************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Schedule;
@@ -31,7 +30,10 @@ public class Filter : IResultFilter
     public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
     {
         if (List == null)
+        {
             return;
+        }
+
         List.Sort();
     }
 }
@@ -48,9 +50,15 @@ public class FirstEventFilter : IResultFilter
     public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
     {
         if (List == null)
+        {
             return;
+        }
+
         if (List.Count < 2)
+        {
             return;
+        }
+
         List.Sort();
         List.RemoveRange(1, List.Count - 1);
     }
@@ -68,9 +76,15 @@ public class LastEventFilter : IResultFilter
     public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
     {
         if (List == null)
+        {
             return;
+        }
+
         if (List.Count < 2)
+        {
             return;
+        }
+
         List.Sort();
         List.RemoveRange(0, List.Count - 1);
     }

@@ -47,9 +47,12 @@ public abstract class AbstractIndexFile : IDisposable
     public void AddEntryToIndexFile(string entry)
     {
         if (disposed)
+        {
             throw new ObjectDisposedException(
                 "Dispose method has been already called and file is closed!"
             );
+        }
+
         try
         {
             byte[] bytes = new UTF8Encoding(true).GetBytes(entry + Environment.NewLine);
@@ -75,7 +78,10 @@ public abstract class AbstractIndexFile : IDisposable
             int n = fileStream.Read(bytes, numBytesRead, numBytesToRead);
             // Break when the end of the file is reached.
             if (n == 0)
+            {
                 break;
+            }
+
             numBytesRead += n;
             numBytesToRead -= n;
         }

@@ -117,7 +117,9 @@ public class AsPanelTitle : Panel
     protected override void OnPaint(PaintEventArgs e)
     {
         if (this.Width == 0)
+        {
             return;
+        }
         //base.OnPaint (e);
         // rounded rectangle
         GraphicsPath path = null;
@@ -170,14 +172,20 @@ public class AsPanelTitle : Panel
             // set rectangle bound text
             float x = 5;
             if (PanelIcon != null)
+            {
                 x = 20;
-            RectangleF rectF = new RectangleF(x, 12 - Font.Height / 2, this.Width, this.Height);
+            }
+
+            RectangleF rectF = new RectangleF(x, 12 - (Font.Height / 2), this.Width, this.Height);
             RectangleF rectIcon = new RectangleF(3, 4, 16, 16);
             // output string
             font = new Font(this.Font, FontStyle.Bold);
 
             if (PanelIcon != null)
+            {
                 graphics.DrawImage(this.PanelIcon, rectIcon);
+            }
+
             graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
             if (StatusIcon != null)
             {
@@ -193,18 +201,34 @@ public class AsPanelTitle : Panel
         finally
         {
             if (path != null)
+            {
                 path.Dispose();
+            }
             //			//graphics.Dispose();
             if (brush != null)
+            {
                 brush.Dispose();
+            }
+
             if (GBrush != null)
+            {
                 GBrush.Dispose();
+            }
+
             if (drawBrush != null)
+            {
                 drawBrush.Dispose();
+            }
+
             if (sf != null)
+            {
                 sf.Dispose();
+            }
+
             if (font != null)
+            {
                 font.Dispose();
+            }
         }
     }
 

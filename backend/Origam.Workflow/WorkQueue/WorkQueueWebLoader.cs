@@ -20,11 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Data;
 using System.IO;
 using System.Net;
-using System.Xml;
 using System.Xml.XPath;
 using Origam.Workbench.Services;
 
@@ -61,17 +59,25 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "url":
+                    {
                         _url = pair[1];
                         break;
+                    }
+
                     case "stateXPath":
+                    {
                         _stateXPath = pair[1];
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName",
                             pair[0],
                             ResourceUtils.GetString("ErrorInvalidConnectionString")
                         );
+                    }
                 }
             }
         }
@@ -153,9 +159,7 @@ public class WorkQueueWebLoader : WorkQueueLoaderAdapter
         {
             return newState;
         }
-        else
-        {
-            return lastState;
-        }
+
+        return lastState;
     }
 }

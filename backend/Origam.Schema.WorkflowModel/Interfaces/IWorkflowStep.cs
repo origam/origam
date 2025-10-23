@@ -19,9 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
-using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 

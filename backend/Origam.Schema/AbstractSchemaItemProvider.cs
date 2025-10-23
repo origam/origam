@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 using Origam.UI;
@@ -282,12 +281,16 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         BrowserNodeCollection col = new BrowserNodeCollection();
         // get root groups
         foreach (IBrowserNode2 nod in this.ChildGroups)
+        {
             col.Add(nod);
+        }
         // only return nodes without groups
         foreach (ISchemaItem item in this.ChildItems)
         {
             if (item.Group == null)
+            {
                 col.Add(item);
+            }
         }
         return col;
     }
@@ -440,7 +443,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         foreach (SchemaItemGroup group in this.ChildGroups)
         {
             if (group.Name == name)
+            {
                 return group;
+            }
         }
         return null;
     }
@@ -462,7 +467,10 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
     {
         AbstractSchemaItemProvider compareItem = obj as AbstractSchemaItemProvider;
         if (compareItem == null)
+        {
             throw new InvalidCastException();
+        }
+
         return this.NodeText.CompareTo(compareItem.NodeText);
     }
     #endregion

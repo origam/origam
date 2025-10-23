@@ -146,7 +146,9 @@ public class DatasetTools
             {
                 DataRow[] parentRows = row.GetParentRows(relation);
                 if (parentRows == null || parentRows.Length == 0)
+                {
                     return false;
+                }
             }
         }
         return true;
@@ -230,7 +232,10 @@ public class DatasetTools
             {
                 string tableName = table.DisplayExpression;
                 if (tableName == null)
+                {
                     tableName = table.TableName;
+                }
+
                 result.AppendFormat(
                     "{0}: Id: {3} {1}{2}",
                     tableName,
@@ -305,14 +310,13 @@ public class DatasetTools
         {
             return (string)value;
         }
-        else if (value is decimal)
+
+        if (value is decimal)
         {
             return ((decimal)value).ToString("0.#");
         }
-        else
-        {
-            return value.ToString();
-        }
+
+        return value.ToString();
     }
 
     /// <summary>
@@ -340,7 +344,10 @@ public class DatasetTools
                 {
                     IList<KeyValuePair<object, DataMergeChange>> tableChangeList = null;
                     if (changeList != null)
+                    {
                         tableChangeList = new List<KeyValuePair<object, DataMergeChange>>();
+                    }
+
                     if (
                         MergeDataTable(
                             inout_dsTarget.Tables[table.TableName],
@@ -1041,12 +1048,17 @@ public class DatasetTools
                 switch (col.ColumnMapping)
                 {
                     case MappingType.Attribute:
+                    {
                         e.SetAttribute(col.ColumnName, val);
                         break;
+                    }
+
                     case MappingType.Element:
+                    {
                         XmlNode colElement = e.AppendChild(doc.CreateElement(col.ColumnName));
                         colElement.InnerText = val;
                         break;
+                    }
                 }
             }
         }
@@ -1168,6 +1180,7 @@ public class DatasetTools
                 switch ((OnCopyActionType)col.ExtendedProperties["OnCopyAction"])
                 {
                     case OnCopyActionType.Initialize:
+                    {
                         if (col.DefaultValue == null)
                         {
                             row[col] = DBNull.Value;
@@ -1177,12 +1190,16 @@ public class DatasetTools
                             row[col] = col.DefaultValue;
                         }
                         break;
+                    }
+
                     case OnCopyActionType.PrependCopyText:
+                    {
                         if (row[col] is string)
                         {
                             row[col] = GetCopiedValue(row, col);
                         }
                         break;
+                    }
                 }
             }
         }
@@ -1519,7 +1536,9 @@ public class DatasetTools
                         }
                     }
                     if (CheckRowErrorRecursive(childRow, skipRow, includeChildErrorsInParent))
+                    {
                         result = true;
+                    }
                 }
             }
         }
@@ -1529,7 +1548,9 @@ public class DatasetTools
         if (skipRow == null || (skipRow != null & skipRow != row))
         {
             if (CheckRowError(row))
+            {
                 result = true;
+            }
         }
         if (includeChildErrorsInParent && childErrors)
         {
@@ -1540,7 +1561,10 @@ public class DatasetTools
             );
 #endif
             if (row.RowError != "")
+            {
                 row.RowError += "; ";
+            }
+
             row.RowError += ResourceUtils.GetString("ChildErrors");
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(
@@ -1578,7 +1602,10 @@ public class DatasetTools
             row.ClearErrors();
         }
         if (row.RowState == DataRowState.Deleted || row.RowState == DataRowState.Detached)
+        {
             return false;
+        }
+
         bool result = false;
         foreach (DataColumn col in row.Table.Columns)
         {
@@ -1587,7 +1614,10 @@ public class DatasetTools
                 if ((bool)col.ExtendedProperties["AllowNulls"] == false && row[col] == DBNull.Value)
                 {
                     if (row.RowError != "")
+                    {
                         row.RowError += "; ";
+                    }
+
                     row.RowError += ResourceUtils.GetString(
                         "CantBeEmpty",
                         (col.Caption == "" ? col.ColumnName : col.Caption)
@@ -1654,14 +1684,22 @@ public class DatasetTools
             switch (row.RowState)
             {
                 case DataRowState.Added:
+                {
                     version = DataRowVersion.Current;
                     break;
+                }
+
                 case DataRowState.Deleted:
+                {
                     version = DataRowVersion.Original;
                     break;
+                }
+
                 case DataRowState.Modified:
+                {
                     version = DataRowVersion.Original;
                     break;
+                }
             }
         }
         return version;
@@ -1794,11 +1832,14 @@ public class DatasetTools
                 {
                     columnName = columnName.Trim();
                     if (!row.Table.Columns.Contains(columnName))
+                    {
                         throw new ArgumentOutOfRangeException(
                             "ColumnName",
                             columnName,
                             ResourceUtils.GetString("MappedColumnNotFound", parameterName)
                         );
+                    }
+
                     result.Add(parameterName, RetrieveValue(row, columnName));
                 }
             }
@@ -1841,74 +1882,87 @@ public class DatasetTools
     public static object ConvertValue(object value, Type targetType)
     {
         if (value == null || value == DBNull.Value)
+        {
             return DBNull.Value;
+        }
+
         if (value.GetType().Equals(targetType))
+        {
             return value;
+        }
+
         if (targetType == typeof(string))
         {
             if (value is int)
             {
                 return XmlConvert.ToString((int)value);
             }
-            else if (value is decimal)
+
+            if (value is decimal)
             {
                 return XmlConvert.ToString((decimal)value);
             }
-            else if (value is bool)
+
+            if (value is bool)
             {
                 return XmlConvert.ToString((bool)value);
             }
-            else if (value is Guid)
+
+            if (value is Guid)
             {
                 return XmlConvert.ToString((Guid)value);
             }
-            else if (value is DateTime)
+
+            if (value is DateTime)
             {
                 return XmlConvert.ToString(
                     (DateTime)value,
                     XmlDateTimeSerializationMode.RoundtripKind
                 );
             }
-            else
-            {
-                return value.ToString();
-            }
+
+            return value.ToString();
         }
-        else if (targetType == typeof(Guid))
+
+        if (targetType == typeof(Guid))
         {
             return new Guid(value.ToString());
         }
-        else if (targetType == typeof(DateTime))
+
+        if (targetType == typeof(DateTime))
         {
             return XmlConvert.ToDateTime(
                 value.ToString(),
                 XmlDateTimeSerializationMode.RoundtripKind
             );
         }
-        else if (targetType == typeof(bool))
+
+        if (targetType == typeof(bool))
         {
             return XmlConvert.ToBoolean(value.ToString());
         }
-        else if (targetType == typeof(Int32))
+
+        if (targetType == typeof(Int32))
         {
             return XmlConvert.ToInt32(value.ToString());
         }
-        else if (targetType == typeof(double))
+
+        if (targetType == typeof(double))
         {
             return XmlConvert.ToDouble(value.ToString());
         }
-        else if (targetType == typeof(Int64))
+
+        if (targetType == typeof(Int64))
         {
             return XmlConvert.ToInt64(value.ToString());
         }
-        else if (targetType == typeof(decimal))
+
+        if (targetType == typeof(decimal))
         {
             return XmlConvert.ToDecimal(value.ToString());
         }
-        else
-        {
-            return Convert.ChangeType(value, targetType);
-        }
+
+        return Convert.ChangeType(value, targetType);
     }
 
     public static object RetrieveValue(DataRow row, string columnName)
@@ -1975,7 +2029,9 @@ public class DatasetTools
     {
         // has ruleset
         if (ruleSet != null)
+        {
             return true;
+        }
         // has some lookup fields that are processed (looked up on changes)
         // by the rule engine
         if (dataSet != null)
