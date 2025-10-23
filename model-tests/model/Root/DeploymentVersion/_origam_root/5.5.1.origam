@@ -36,10 +36,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="130"
+      ausa:activityOrder="120"
       scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___3c5f7959-4fb4-4d41-94af-71826264602b.txt"
       x:id="3c5f7959-4fb4-4d41-94af-71826264602b"
-      asi:name="0020_PG_WorkQueueRetryType_translations"
+      asi:name="00120_PG_WorkQueueRetryType_translations"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
