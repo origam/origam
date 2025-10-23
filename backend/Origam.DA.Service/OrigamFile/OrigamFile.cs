@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using CSharpFunctionalExtensions;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -186,7 +185,10 @@ public class OrigamFile : ITrackeableFile
     private void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
     {
         if (!IsInAGroup)
+        {
             return;
+        }
+
         bool referenceFileIsMissing = !directory
             .GetFiles()
             .Any(file => file.Name == GroupFileName || file.Name == ReferenceFileName);

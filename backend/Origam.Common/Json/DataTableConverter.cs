@@ -20,9 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Data;
-using System.Linq;
 using Newtonsoft.Json.Serialization;
-using Origam.Extensions;
 using Origam.Service.Core;
 using newton = Newtonsoft.Json.Converters;
 

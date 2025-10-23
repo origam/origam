@@ -14,7 +14,6 @@
  **************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Schedule;
@@ -57,7 +56,10 @@ public class EventQueue : IScheduledItem
     public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
     {
         foreach (IScheduledItem st in _List)
+        {
             st.AddEventsInInterval(Begin, End, List);
+        }
+
         List.Sort();
     }
 

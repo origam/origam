@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Origam.DA;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;
@@ -257,10 +256,8 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
         {
             return this.NodeText.CompareTo(bn.NodeText);
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
 }

@@ -99,7 +99,10 @@ public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenu
     {
         IDataEntityColumn field = Owner as IDataEntityColumn;
         if (field.Name == null)
+        {
             throw new ArgumentException("Filed Name is not set.");
+        }
+
         IDataEntity entity = field.ParentItem as IDataEntity;
         // first paramater
         DatabaseParameter param1 = entity.NewItem<DatabaseParameter>(
@@ -136,7 +139,10 @@ public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenu
         Function equalFunction = (Function)
             functionProvider.GetChildByName("Between", Function.CategoryConst);
         if (equalFunction == null)
+        {
             throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
+        }
+
         call.Function = equalFunction;
         call.Name = "Between";
         call.Persist();

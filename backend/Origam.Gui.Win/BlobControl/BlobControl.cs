@@ -267,9 +267,14 @@ namespace Origam.Gui.Win
             set
             {
                 if (_fileName == value)
+                {
                     return;
+                }
+
                 if (value == "")
+                {
                     value = null;
+                }
 
                 _fileName = value;
 
@@ -574,10 +579,8 @@ namespace Origam.Gui.Win
 
                     return compress;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
         }
 
@@ -596,10 +599,8 @@ namespace Origam.Gui.Win
                 {
                     throw new NullReferenceException(member + " not set.");
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
 
             return true;
@@ -608,7 +609,9 @@ namespace Origam.Gui.Win
         private void CheckCurrentRow()
         {
             if (CurrentRow == null)
+            {
                 throw new NullReferenceException(ResourceUtils.GetString("ErrorHandleBlob"));
+            }
         }
 
         private void Upload()
@@ -709,14 +712,18 @@ namespace Origam.Gui.Win
                                     finally
                                     {
                                         if (ms != null)
+                                        {
                                             ms.Close();
+                                        }
                                     }
                                 }
                             }
                             finally
                             {
                                 if (img != null)
+                                {
                                     img.Dispose();
+                                }
                             }
                         }
                     }
@@ -805,7 +812,8 @@ namespace Origam.Gui.Win
                     {
                         throw new Exception("Data source did not return any data.");
                     }
-                    else if (result is byte[])
+
+                    if (result is byte[])
                     {
                         bytes = (byte[])result;
                     }
@@ -824,10 +832,8 @@ namespace Origam.Gui.Win
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorRecordEmpty"));
                     }
-                    else
-                    {
-                        ByteArrayConverter.SaveFromDataSet(path, row, BlobMember, IsCompressed);
-                    }
+
+                    ByteArrayConverter.SaveFromDataSet(path, row, BlobMember, IsCompressed);
                 }
 
                 return true;

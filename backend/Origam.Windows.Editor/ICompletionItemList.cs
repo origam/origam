@@ -117,9 +117,11 @@ public class DefaultCompletionItemList : ICompletionItemList
             {
                 int r = string.Compare(a.Text, b.Text, StringComparison.CurrentCultureIgnoreCase);
                 if (r != 0)
+                {
                     return r;
-                else
-                    return string.Compare(a.Text, b.Text, StringComparison.CurrentCulture);
+                }
+
+                return string.Compare(a.Text, b.Text, StringComparison.CurrentCulture);
             }
         );
     }

@@ -90,31 +90,28 @@ public class FormXmlBuilder
         {
             return GetWorkflowFinishedXml(name, menuId, message);
         }
-        else
-        {
-            IPersistenceService persistence =
-                ServiceManager.Services.GetService(typeof(IPersistenceService))
-                as IPersistenceService;
-            FormControlSet item =
-                persistence.SchemaProvider.RetrieveInstance(
-                    typeof(FormControlSet),
-                    new ModelElementKey(formId)
-                ) as FormControlSet;
-            DataStructure structure =
-                persistence.SchemaProvider.RetrieveInstance(
-                    typeof(DataStructure),
-                    new ModelElementKey(structureId)
-                ) as DataStructure;
-            return GetXml(
-                item,
-                name,
-                isPreloaded,
-                menuId,
-                structure,
-                forceReadOnly,
-                confirmSelectionChangeEntity
-            ).Document;
-        }
+        IPersistenceService persistence =
+            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        FormControlSet item =
+            persistence.SchemaProvider.RetrieveInstance(
+                typeof(FormControlSet),
+                new ModelElementKey(formId)
+            ) as FormControlSet;
+        DataStructure structure =
+            persistence.SchemaProvider.RetrieveInstance(
+                typeof(DataStructure),
+                new ModelElementKey(structureId)
+            ) as DataStructure;
+
+        return GetXml(
+            item,
+            name,
+            isPreloaded,
+            menuId,
+            structure,
+            forceReadOnly,
+            confirmSelectionChangeEntity
+        ).Document;
     }
 
     public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId)
@@ -343,10 +340,8 @@ public class FormXmlBuilder
         {
             return tableMapping.MappedObjectName;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public static XmlElement AddDataSourceElement(
@@ -911,6 +906,7 @@ public class FormXmlBuilder
                     case OrigamDataType.Currency:
                     case OrigamDataType.Memo:
                     case OrigamDataType.String:
+                    {
                         var buildDefinition = new TextBoxBuildDefinition(col.Field.DataType)
                         {
                             Multiline = col.Field.DataType == OrigamDataType.Memo,
@@ -921,7 +917,10 @@ public class FormXmlBuilder
                         }
                         TextBoxBuilder.Build(propertyElement, buildDefinition);
                         break;
+                    }
+
                     case OrigamDataType.UniqueIdentifier:
+                    {
                         ComboBoxBuilder.Build(
                             propertyElement,
                             (Guid)col.FinalLookup.PrimaryKey["Id"],
@@ -945,16 +944,23 @@ public class FormXmlBuilder
                             propertyElement.SetAttribute("Cached", XmlConvert.ToString(false));
                         }
                         break;
+                    }
+
                     case OrigamDataType.Date:
+                    {
                         if (string.IsNullOrEmpty(formatPattern))
                         {
                             formatPattern = "dd. MM. yyyy HH:mm:ss";
                         }
                         DateBoxBuilder.Build(propertyElement, "Custom", formatPattern);
                         break;
+                    }
+
                     case OrigamDataType.Boolean:
+                    {
                         CheckBoxBuilder.Build(propertyElement, caption);
                         break;
+                    }
                 }
             }
         }
@@ -1488,37 +1494,65 @@ public class FormXmlBuilder
             switch (controlItem.Name)
             {
                 case "Panel":
+                {
                     PanelBuilder.Build(parentNode);
                     break;
+                }
+
                 case "AsReportPanel":
+                {
                     ReportPanelBuilder.Build(parentNode, renderData, table, control);
                     break;
+                }
+
                 case "TabControl":
+                {
                     TabControlBuilder.Build(parentNode);
                     break;
+                }
+
                 case "TabPage":
+                {
                     TabBuilder.Build(parentNode, renderData.Text);
                     break;
+                }
+
                 case "CollapsibleContainer":
+                {
                     CollapsibleContainerBuilder.Build(parentNode);
                     break;
+                }
+
                 case "CollapsiblePanel":
+                {
                     CollapsiblePanelBuilder.Build(parentNode, renderData);
                     break;
+                }
+
                 case "GridLayoutPanel":
+                {
                     GridLayoutPanelBuilder.Build(parentNode);
                     break;
+                }
+
                 case "GridLayoutPanelItem":
+                {
                     GridLayoutPanelItemBuilder.Build(parentNode, renderData);
                     break;
+                }
+
                 case "SplitPanel":
+                {
                     SplitPanelBuilder.Build(
                         parentNode,
                         (SplitPanelOrientation)renderData.Orientation,
                         renderData.FixedSize
                     );
                     break;
+                }
+
                 case "AsTree":
+                {
                     TreeControlBuilder.Build(
                         parentNode,
                         renderData,
@@ -1528,14 +1562,20 @@ public class FormXmlBuilder
                         false
                     );
                     break;
+                }
+
                 case "AsTree2":
+                {
                     TreeControlBuilder.Build2(
                         parentNode,
                         renderData.FormParameterName,
                         renderData.TreeId
                     );
                     break;
+                }
+
                 case "ScreenLevelPlugin":
+                {
                     ScreenLevelPluginBuilder.Build(
                         parentNode: parentNode,
                         text: renderData.Text,
@@ -1545,7 +1585,10 @@ public class FormXmlBuilder
                         dataMember: renderData.DataMember
                     );
                     break;
+                }
+
                 case "SectionLevelPlugin":
+                {
                     SectionLevelPluginBuilder.Build(
                         parentNode: parentNode,
                         text: renderData.Text,
@@ -1558,10 +1601,16 @@ public class FormXmlBuilder
                         dataMember: renderData.DataMember
                     );
                     break;
+                }
+
                 case "Label":
+                {
                     FormLabelBuilder.Build(parentNode, renderData.Text);
                     break;
+                }
+
                 default:
+                {
                     parentNode.SetAttribute(
                         "type",
                         "http://www.w3.org/2001/XMLSchema-instance",
@@ -1570,6 +1619,7 @@ public class FormXmlBuilder
                     parentNode.SetAttribute("Type", "Box");
                     parentNode.SetAttribute("Title", "UNKNOWN CONTROL:" + control.Name);
                     break;
+                }
             }
             AddDynamicProperties(parentNode, renderData);
         }
@@ -1589,9 +1639,11 @@ public class FormXmlBuilder
                 );
             }
             if (table.PrimaryKey.Length == 0)
+            {
                 throw new Exception(
                     "Panel's data source has no primary key. Cannot render panel. " + control.Path
                 );
+            }
             // get list of valid actions and set the panel multi-select-checkbox column visibility
             var validActions = new List<EntityUIAction>();
             bool hasMultipleSelection = UIActionTools.GetValidActions(
@@ -1728,7 +1780,8 @@ public class FormXmlBuilder
         else if (
             (
                 renderData.ImplicitFilter == null
-                || renderData.ImplicitFilter == ""
+                || (
+                    renderData.ImplicitFilter == ""
                     && (
                         renderData.HideNavigationPanel
                         || (
@@ -1736,6 +1789,7 @@ public class FormXmlBuilder
                             && renderData.ShowNewButton == false
                         )
                     )
+                )
             )
         )
         {
@@ -1972,72 +2026,139 @@ public class FormXmlBuilder
                     switch (property.ControlPropertyItem.Name)
                     {
                         case "TabIndex":
+                        {
                             tabIndex = property.IntValue.ToString();
                             break;
+                        }
+
                         case "Text":
+                        {
                             text = stringValue;
                             break;
+                        }
+
                         case "Caption":
+                        {
                             caption = stringValue;
                             break;
+                        }
+
                         case "GridColumnCaption":
+                        {
                             gridCaption = stringValue;
                             break;
+                        }
+
                         case "LookupId":
+                        {
                             lookupId = property.GuidValue;
                             break;
+                        }
+
                         case "ReadOnly":
+                        {
                             readOnly = (readOnly ? true : property.BoolValue);
                             break;
+                        }
+
                         case "ShowUniqueValues":
+                        {
                             showUniqueValues = property.BoolValue;
                             break;
+                        }
+
                         case "Top":
+                        {
                             top = property.IntValue;
                             break;
+                        }
+
                         case "Left":
+                        {
                             left = property.IntValue;
                             break;
+                        }
+
                         case "Width":
+                        {
                             width = property.IntValue;
                             break;
+                        }
+
                         case "Height":
+                        {
                             height = property.IntValue;
                             break;
+                        }
+
                         case "CaptionLength":
+                        {
                             captionLength = property.IntValue;
                             break;
+                        }
+
                         case "CaptionPosition":
+                        {
                             captionPosition = ((CaptionPosition)property.IntValue).ToString();
                             break;
+                        }
+
                         case "SourceType":
+                        {
                             sourceType = ((ImageBoxSourceType)property.IntValue).ToString();
                             break;
+                        }
+
                         case "Dock":
+                        {
                             dock = ToWinFormsDockStyle(property.IntValue);
                             break;
+                        }
+
                         case "Multiline":
+                        {
                             multiline = property.BoolValue;
                             break;
+                        }
+
                         case "IsPassword":
+                        {
                             isPassword = property.BoolValue;
                             break;
+                        }
+
                         case "GridColumnWidth":
+                        {
                             gridColumnWidth = property.IntValue.ToString();
                             break;
+                        }
+
                         case "IsRichText":
+                        {
                             isRichText = property.BoolValue;
                             break;
+                        }
+
                         case "AllowTab":
+                        {
                             allowTab = property.BoolValue;
                             break;
+                        }
+
                         case "HideOnForm":
+                        {
                             hideOnForm = property.BoolValue;
                             break;
+                        }
+
                         case "StyleId":
+                        {
                             styleId = property.GuidValue;
                             break;
+                        }
+
                         case "Format":
+                        {
                             if (property.Value == null)
                             {
                                 format = "Long";
@@ -2051,21 +2172,37 @@ public class FormXmlBuilder
                                     .InnerText;
                             }
                             break;
+                        }
+
                         case "CustomFormat":
+                        {
                             customFormat = stringValue;
                             break;
+                        }
+
                         case "ColumnWidth":
+                        {
                             columnWidth = property.IntValue;
                             break;
+                        }
+
                         case "DataConstantId":
+                        {
                             dataConstantId = property.GuidValue;
                             break;
+                        }
+
                         case "ControlMember":
+                        {
                             controlMember = property.Value;
                             break;
+                        }
+
                         case "CustomNumericFormat":
+                        {
                             customNumericFormat = property.Value;
                             break;
+                        }
                     }
                 }
                 if (!styleId.Equals(Guid.Empty))
@@ -2120,6 +2257,7 @@ public class FormXmlBuilder
                 else if (csi.ControlItem.Name == "RadioButton" && processEditControls)
                 {
                     if (!table.Columns.Contains(bindingMember))
+                    {
                         throw new Exception(
                             "Field '"
                                 + bindingMember
@@ -2127,6 +2265,7 @@ public class FormXmlBuilder
                                 + panel.RootItem.Path
                                 + "'"
                         );
+                    }
 
                     XmlElement controlElement = AsPanelPropertyBuilder.CreateProperty(
                         category: "Control",
@@ -2217,6 +2356,7 @@ public class FormXmlBuilder
                     switch (csi.ControlItem.Name)
                     {
                         case "ColorPicker":
+                        {
                             var bindingColumn = table.Columns[bindingMember];
                             if (bindingColumn.DataType != typeof(int))
                             {
@@ -2230,13 +2370,22 @@ public class FormXmlBuilder
                             }
                             ColorPickerBuilder.Build(propertyElement);
                             break;
+                        }
+
                         case "BlobControl":
+                        {
                             BlobControlBuilder.Build(propertyElement, csi);
                             break;
+                        }
+
                         case "ImageBox":
+                        {
                             ImageBoxBuilder.Build(propertyElement, sourceType);
                             break;
+                        }
+
                         case "AsTextBox":
+                        {
                             TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(
                                 (OrigamDataType)
                                     table.Columns[bindingMember].ExtendedProperties[
@@ -2252,15 +2401,22 @@ public class FormXmlBuilder
                             buildDefinition.CustomNumberFormat = customNumericFormat;
                             TextBoxBuilder.Build(propertyElement, buildDefinition);
                             break;
+                        }
+
                         case "AsDateBox":
+                        {
                             DateBoxBuilder.Build(propertyElement, format, customFormat);
                             break;
+                        }
                         case "AsCheckBox":
+                        {
                             CheckBoxBuilder.Build(propertyElement, text);
                             break;
+                        }
                         case "AsCombo":
                         case "TagInput":
                         case "Checklist":
+                        {
                             if (csi.ControlItem.Name == "AsCombo")
                             {
                                 ComboBoxBuilder.Build(
@@ -2310,7 +2466,9 @@ public class FormXmlBuilder
                                 propertyElement.SetAttribute("Cached", XmlConvert.ToString(false));
                             }
                             break;
+                        }
                         case "MultiColumnAdapterFieldWrapper":
+                        {
                             MultiColumnAdapterFieldWrapperBuilder.Build(
                                 propertyElement,
                                 csi,
@@ -2339,7 +2497,10 @@ public class FormXmlBuilder
                             }
                             propertyElement.RemoveChild(propertyNames);
                             break;
+                        }
+
                         default: // fallback: TextBox
+                        {
                             TextBoxBuilder.Build(
                                 propertyElement,
                                 new TextBoxBuildDefinition(
@@ -2350,6 +2511,7 @@ public class FormXmlBuilder
                                 )
                             );
                             break;
+                        }
                     }
                     // The Id column was created earlier in AsPanelBuilder.cs
                     // and is meant to be invisible.
@@ -2410,21 +2572,35 @@ public class FormXmlBuilder
         switch (intVal)
         {
             case 2:
+            {
                 return "Bottom";
+            }
             case 5:
+            {
                 return "Fill";
+            }
             case 3:
+            {
                 return "Left";
+            }
             case 0:
+            {
                 return "None";
+            }
             case 4:
+            {
                 return "Right";
+            }
             case 1:
+            {
                 return "Top";
+            }
             default:
+            {
                 throw new Exception(
                     "Cannot convert value " + intVal + " to System.Windows.Forms string"
                 );
+            }
         }
     }
 
@@ -2588,7 +2764,10 @@ public class FormXmlBuilder
                 string dataMember = g.GetAttribute("DataMember");
                 string parentId = g.GetAttribute("ParentId");
                 if (dataMember == "")
+                {
                     dataMember = entity;
+                }
+
                 string parentDataMember = DataMemberByGridInstanceId(doc, parentId);
                 DataTable t = dataset.Tables[entity];
                 if (entity == parentEntity && dataMember == parentDataMember) // references to the same entity
@@ -2623,6 +2802,7 @@ public class FormXmlBuilder
                         }
                     }
                     if (relation == null)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "ParentEntityName",
                             parentEntity,
@@ -2630,6 +2810,8 @@ public class FormXmlBuilder
                                 + entity
                                 + "'. Cannot generate filters."
                         );
+                    }
+
                     XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
                     g.AppendChild(filterExpressionsElement);
                     for (int i = 0; i < relation.ChildColumns.Length; i++)

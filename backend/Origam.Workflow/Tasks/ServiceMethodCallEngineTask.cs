@@ -152,9 +152,15 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
                                     {
                                         object av = list[i];
                                         if (i != 0)
+                                        {
                                             v += ", ";
+                                        }
+
                                         if (av == null)
+                                        {
                                             av = "null";
+                                        }
+
                                         v += av.ToString();
                                     }
                                     v += "}";

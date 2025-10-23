@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -137,7 +136,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
     private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
     {
         if (!_selectComponent)
+        {
             return;
+        }
+
         PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
         if (item != null)
         {

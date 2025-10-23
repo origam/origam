@@ -41,11 +41,15 @@ public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute
             return null;
         }
         if (
-            aggregatedColumn.AggregationType != referencedColumn.AggregationType
+            (
+                aggregatedColumn.AggregationType != referencedColumn.AggregationType
                 && aggregatedColumn.AggregationType != AggregationType.Sum
                 && referencedColumn.AggregationType != AggregationType.Count
-            || aggregatedColumn.AggregationType == AggregationType.Count
+            )
+            || (
+                aggregatedColumn.AggregationType == AggregationType.Count
                 && referencedColumn.AggregationType == AggregationType.Count
+            )
         )
         {
             return new Exception(

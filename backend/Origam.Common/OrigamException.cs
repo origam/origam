@@ -56,7 +56,10 @@ public class OrigamException : Exception
     public void AppendStackTrace(string stacktrace)
     {
         if (_appendStackTrace == null)
+        {
             _appendStackTrace = new StringBuilder();
+        }
+
         _appendStackTrace.Append(Environment.NewLine);
         _appendStackTrace.Append("--------------------------------------------");
         _appendStackTrace.Append(Environment.NewLine);
@@ -75,10 +78,8 @@ public class OrigamException : Exception
                 _appendStackTrace.Append(base.StackTrace);
                 return _appendStackTrace.ToString();
             }
-            else
-            {
-                return base.StackTrace;
-            }
+
+            return base.StackTrace;
         }
     }
 }

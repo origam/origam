@@ -128,10 +128,8 @@ public class TextReaderOptionsField
         {
             return CultureInfo.InvariantCulture;
         }
-        else
-        {
-            return new CultureInfo(_culture);
-        }
+
+        return new CultureInfo(_culture);
     }
 
     public string[] Formats
@@ -144,25 +142,19 @@ public class TextReaderOptionsField
                 {
                     return new string[0];
                 }
-                else
-                {
-                    return new string[] { this.Format };
-                }
+
+                return new string[] { this.Format };
             }
-            else
+
+            if (this.Format == null)
             {
-                if (this.Format == null)
-                {
-                    return this.AlternativeFormats;
-                }
-                else
-                {
-                    string[] result = new string[this.AlternativeFormats.LongLength + 1];
-                    result[0] = this.Format;
-                    this.AlternativeFormats.CopyTo(result, 1);
-                    return result;
-                }
+                return this.AlternativeFormats;
             }
+            string[] result = new string[this.AlternativeFormats.LongLength + 1];
+            result[0] = this.Format;
+            this.AlternativeFormats.CopyTo(result, 1);
+
+            return result;
         }
     }
 }

@@ -122,7 +122,10 @@ public static class IOExtensions
     public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
     {
         if (!dir.Exists)
+        {
             return;
+        }
+
         foreach (FileInfo file in dir.GetAllFilesInSubDirectories())
         {
             File.SetAttributes(file.FullName, FileAttributes.Normal);

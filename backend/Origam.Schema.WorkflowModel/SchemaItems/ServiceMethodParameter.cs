@@ -23,7 +23,6 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel;
 
@@ -64,7 +63,10 @@ public class ServiceMethodParameter : SchemaItemParameter
     {
         bool current = Resolve(element);
         if (current == value)
+        {
             return;
+        }
+
         if (value)
         {
             CallElements += (int)element;

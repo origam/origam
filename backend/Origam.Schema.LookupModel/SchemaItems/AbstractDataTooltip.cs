@@ -157,10 +157,8 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
             {
                 return "*";
             }
-            else
-            {
-                return _roles;
-            }
+
+            return _roles;
         }
         set { _roles = value; }
     }
@@ -191,10 +189,8 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         {
             return this.Level.CompareTo(compared.Level);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

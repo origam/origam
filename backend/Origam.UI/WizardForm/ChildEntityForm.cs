@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
+
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
@@ -40,7 +40,10 @@ public class ChildEntityForm : AbstractWizardForm
             cboEntity1.Items.Clear();
             cboEntity2.Items.Clear();
             if (this.Entity1 == null)
+            {
                 return;
+            }
+
             object selectedItem = null;
             foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
             {

@@ -1002,8 +1002,8 @@ public class XsltTests
         {
             new XsltFunctionsDefinition(
                 Container: new LegacyXsltFunctionContainer(counterMock.Object),
-                NameSpaceUri: "http://schema.advantages.cz/AsapFunctions",
-                NameSpacePrefix: "AS"
+                NameSpacePrefix: "AS",
+                NameSpaceUri: "http://schema.advantages.cz/AsapFunctions"
             ),
         };
 
@@ -1466,11 +1466,20 @@ public class XsltTests
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
+            {
                 return false;
+            }
+
             if (ReferenceEquals(this, obj))
+            {
                 return true;
+            }
+
             if (!(obj is XmlContainer))
+            {
                 return false;
+            }
+
             return Equals((XmlContainer)obj);
         }
 

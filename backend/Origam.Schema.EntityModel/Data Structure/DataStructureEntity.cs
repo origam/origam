@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -108,9 +107,13 @@ public class DataStructureEntity : AbstractSchemaItem
             switch (Entity)
             {
                 case IDataEntity _:
+                {
                     return Entity as IDataEntity;
+                }
                 case IAssociation _:
+                {
                     return ((IAssociation)Entity).AssociatedEntity;
+                }
                 default:
                 {
                     if (Entity != null)

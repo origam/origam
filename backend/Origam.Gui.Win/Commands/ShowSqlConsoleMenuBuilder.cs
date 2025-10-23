@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Origam.UI;
-using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win.Commands;
 

@@ -54,7 +54,9 @@ public class Setting
         this.category = category;
         this._type = type;
         if (update != null)
+        {
             ValueChanged += update;
+        }
     }
 
     #region Other constructors that call the one above
@@ -113,6 +115,8 @@ public class Setting
         //I didnt do this in the Value's set method because sometimes I want to set the Value without firing the event
         //I could do the same thing with a second property, but this works fine.
         if (ValueChanged != null)
+        {
             ValueChanged(this, e);
+        }
     }
 }

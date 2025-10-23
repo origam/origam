@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.Schema.EntityModel;
@@ -56,7 +55,10 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
             selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
         }
         if (selectionDialogPanel == null)
+        {
             return new StandardValuesCollection(new List<object>());
+        }
+
         List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
         var array = new List<IDataEntityColumn>(fields.Count);
         foreach (IDataEntityColumn item in fields)
@@ -73,9 +75,11 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -101,16 +105,21 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
                 ).SelectionDialogPanel;
             }
             if (selectionDialogPanel == null)
+            {
                 return null;
+            }
+
             List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
             foreach (var item in fields)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

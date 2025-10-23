@@ -95,11 +95,13 @@ internal class DataLoader
                     break;
                 }
                 default:
+                {
                     throw new ArgumentOutOfRangeException(
                         "DataSourceType",
                         Query.DataSourceType,
                         ResourceUtils.GetString("UnknownDataSource")
                     );
+                }
             }
             IDbDataAdapter dbDataAdapter = adapter;
             dbDataAdapter.SelectCommand.Connection = connection;
@@ -849,7 +851,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                         myValue = row[column, DataRowVersion.Original].ToString();
                     }
                     if (
-                        storedValue != null && storedValue.Equals(myValue)
+                        (storedValue != null && storedValue.Equals(myValue))
                         || (storedValue == null && myValue == null)
                     )
                     {
@@ -1962,7 +1964,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
     )
     {
         if (columnData == null)
+        {
             throw new ArgumentNullException(nameof(columnData));
+        }
+
         var updatedValues = new List<KeyValuePair<string, object>>();
         for (int i = 0; i < columnData.Count; i++)
         {
@@ -1982,13 +1987,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
                     );
                     continue;
                 }
-                else
-                {
-                    updatedValues.Add(
-                        new KeyValuePair<string, object>(values[i].Key, columnData[i].DefaultValue)
-                    );
-                    continue;
-                }
+                updatedValues.Add(
+                    new KeyValuePair<string, object>(values[i].Key, columnData[i].DefaultValue)
+                );
+
+                continue;
             }
             updatedValues.Add(new KeyValuePair<string, object>(values[i].Key, values[i].Value));
         }

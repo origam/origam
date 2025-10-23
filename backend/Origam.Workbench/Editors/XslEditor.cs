@@ -867,6 +867,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             cboTraceLevel.Items.Add(Trace.No);
             cboTraceLevel.SelectedItem = _xslRule.TraceLevel;
             if (txtText.Text == "")
+            {
                 txtText.Text =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                     + Environment.NewLine
@@ -913,6 +914,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                     + Environment.NewLine
                     + Environment.NewLine
                     + "</xsl:stylesheet>";
+            }
+
             _isEditing = false;
         }
         else if (ModelContent is XslTransformation)
@@ -927,6 +930,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             txtId.Text = _XslTransformation.Id.ToString();
             txtPackage.Text = _XslTransformation.PackageName;
             if (txtText.Text == "")
+            {
                 txtText.Text =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                     + Environment.NewLine
@@ -963,6 +967,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                     + "\t</xsl:template>"
                     + Environment.NewLine
                     + "</xsl:stylesheet>";
+            }
+
             _isEditing = false;
         }
         else
@@ -984,7 +990,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             finally
             {
                 if (reader != null)
+                {
                     reader.Close();
+                }
             }
             tabControl.SelectedTab = tabSource;
         }
@@ -999,7 +1007,10 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 
         grdResult.DataSource = null;
         if (result == null)
+        {
             return;
+        }
+
         try
         {
             if (result is IDataDocument)
@@ -1049,7 +1060,9 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             transformer.Run();
             IXmlContainer result = transformer.Result as IXmlContainer;
             if (result == null)
+            {
                 return new XmlContainer();
+            }
             // rule handling
             DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
             IDataDocument dataDoc = result as IDataDocument;
@@ -1117,10 +1130,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
             ProcessXpath(txtXpath.Text, txtSource.Text);
             return true;
         }
-        else
-        {
-            return base.ProcessDialogKey(keyData);
-        }
+
+        return base.ProcessDialogKey(keyData);
     }
 
     private void ProcessXpath(string xpath, string xml)
@@ -1162,7 +1173,10 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private string GetFormattedXml(XmlNode node)
     {
         if (node == null)
+        {
             return "";
+        }
+
         string resultText = "";
         System.IO.StringWriter swriter = new System.IO.StringWriter();
         XmlTextWriter xwriter = new XmlTextWriter(swriter);
@@ -1215,6 +1229,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void btnValidate_Click(object sender, EventArgs e)
     {
         if (ValidateXslt())
+        {
             MessageBox.Show(
                 this,
                 "The stylesheet is valid.",
@@ -1222,6 +1237,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
             );
+        }
     }
 
     private void cboSourceStructure_SelectedValueChanged(object sender, EventArgs e)
@@ -1240,7 +1256,10 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void UpdateParameterData(ParameterData parData)
     {
         if (parData == null)
+        {
             return;
+        }
+
         parData.Type = (OrigamDataType)parameterTypeComboBox.SelectedItem;
         parData.Text = paremeterEditor.Text;
     }
@@ -1248,7 +1267,10 @@ public class XslEditor : AbstractEditor, IToolStripContainer
     private void DisplayParameterData(ParameterData parData)
     {
         if (parData == null)
+        {
             return;
+        }
+
         parameterTypeComboBox.SelectedItem = parData.Type;
         paremeterEditor.Text = parData.Text;
     }
@@ -1387,7 +1409,10 @@ internal class ParameterData
     private OrigamDataType StringTypeToParameterDataType(string type)
     {
         if (type == null)
+        {
             return OrigamDataType.String;
+        }
+
         return Enum.GetValues(typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
                 .FirstOrDefault(origamType => origamType.ToString() == type)
@@ -1402,11 +1427,9 @@ internal class ParameterData
             {
                 return new XmlContainer(Text);
             }
-            else
-            {
-                Type systemType = DatasetGenerator.ConvertDataType(Type);
-                return DatasetTools.ConvertValue(Text, systemType);
-            }
+            Type systemType = DatasetGenerator.ConvertDataType(Type);
+
+            return DatasetTools.ConvertValue(Text, systemType);
         }
     }
 

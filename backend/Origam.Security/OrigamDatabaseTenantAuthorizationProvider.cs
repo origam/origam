@@ -50,11 +50,20 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
     public bool Authorize(IPrincipal principal, string context)
     {
         if (context == null)
+        {
             return false;
+        }
+
         if (context.Trim() == "")
+        {
             return false;
+        }
+
         if (context == "*")
+        {
             return true;
+        }
+
         string[] roles = context.Split(";".ToCharArray());
         foreach (string roleTest in roles)
         {
@@ -68,7 +77,10 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
                 negation = true;
             }
             if (appRole == "*")
+            {
                 return false;
+            }
+
             foreach (Credential c in RoleList(principal))
             {
                 bool process = true;
@@ -87,7 +99,9 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
                 if (process)
                 {
                     if (appRole.Equals(c.RoleName))
+                    {
                         result = true;
+                    }
                 }
                 if (result)
                 {
@@ -159,7 +173,9 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
         DataSet result = (DataSet)dataServiceAgent.Result;
         DataTable table = result.Tables["OrigamRoleOrigamApplicationRole"];
         if (table == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorRoleListNotLoaded"));
+        }
         // retrieve application roles for organization
         DataStructureQuery query2 = new DataStructureQuery(
             new Guid("c68dca4b-5690-40f5-8b11-4aa6efdc1b04"),
@@ -189,9 +205,12 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
         DataSet result2 = (DataSet)dataServiceAgent.Result;
         DataTable table2 = result2.Tables["OrganizationOrigamRoleOrigamApplicationRole"];
         if (table2 == null)
+        {
             throw new NullReferenceException(
                 ResourceUtils.GetString("ErrorOrganizationRoleListNotLoaded")
             );
+        }
+
         Credential[] array = new Credential[table.Rows.Count + table2.Rows.Count];
 
         for (int i = 0; i < table.Rows.Count; i++)

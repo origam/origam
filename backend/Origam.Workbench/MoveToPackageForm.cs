@@ -21,17 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
-using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Workbench.Services;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Origam.Workbench;
 

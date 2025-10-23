@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Gui;
 using Origam.Schema.MenuModel;
 using Origam.Workbench;
 
@@ -37,18 +36,29 @@ public class DesktopEntityUIActionRunner : EntityUIActionRunner
         switch (processData.Action)
         {
             case EntityMenuAction action:
+            {
                 menuItem = action.Menu;
                 break;
+            }
+
             case EntityWorkflowAction action:
+            {
                 menuItem = action.Workflow;
                 break;
+            }
+
             case EntityReportAction action:
+            {
                 menuItem = action.Report;
                 break;
+            }
+
             default:
+            {
                 throw new NotImplementedException(
                     $"Cannot execule action type {processData.Action.GetType()}"
                 );
+            }
         }
         WorkbenchSingleton.Workbench.OpenForm(menuItem, processData.Parameters);
     }

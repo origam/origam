@@ -67,9 +67,14 @@ public class DecodeQP
         try
         {
             if (Hexstring == null || Hexstring.Equals(""))
+            {
                 return "";
+            }
+
             if (Hexstring.StartsWith("="))
+            {
                 Hexstring = Hexstring.Substring(1);
+            }
 
             string[] aHex = Hexstring.Split(new char[1] { '=' });
             byte[] abyte = new Byte[aHex.Length];
@@ -96,7 +101,9 @@ public class DecodeQP
     public static string ConvertHexContent(string Hexstring, Encoding encode, long nStart)
     {
         if (nStart >= Hexstring.Length)
+        {
             return Hexstring;
+        }
         //to hold string to be decoded
         StringBuilder sbHex = new StringBuilder();
         sbHex.Append("");
@@ -122,7 +129,9 @@ public class DecodeQP
                     if (temp.EndsWith("\r\n")) //return char
                     {
                         if (isBegin && (count % 2 == 0))
+                        {
                             break;
+                        }
                         //	sbEncoded.Append("");
                         i = i + 3;
                     }
@@ -136,7 +145,9 @@ public class DecodeQP
                     else //if it ends with 3D, it is "="
                     {
                         if (isBegin && (count % 2 == 0)) //wait until even items to handle all character sets
+                        {
                             break;
+                        }
 
                         sbEncoded.Append("=");
                         i = i + 3;
@@ -145,7 +156,10 @@ public class DecodeQP
                 else
                 {
                     if (isBegin) //we have got the how Quoted-Printable string, break it
+                    {
                         break;
+                    }
+
                     sbEncoded.Append(temp); //not Quoted-Printable string, put it into buffer
                     i++;
                 }
@@ -165,7 +179,10 @@ public class DecodeQP
     public static string ConvertHexContent(string Hexstring)
     {
         if (Hexstring == null || Hexstring.Equals(""))
+        {
             return Hexstring;
+        }
+
         return ConvertHexContent(Hexstring, Encoding.Default, 0);
     }
 

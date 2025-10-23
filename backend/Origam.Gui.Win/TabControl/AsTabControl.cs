@@ -179,8 +179,11 @@ public class AsTabControl : System.Windows.Forms.TabControl
         switch (this.SelectedIndex)
         {
             case -1:
+            {
                 break;
+            }
             case 0:
+            {
                 Rectangle selrect = this.GetTabRect(this.SelectedIndex);
                 int selrectRight = selrect.Right;
                 e.Graphics.DrawLine(
@@ -191,9 +194,12 @@ public class AsTabControl : System.Windows.Forms.TabControl
                     selrect.Bottom + 1
                 );
                 break;
+            }
+
             default:
-                selrect = this.GetTabRect(this.SelectedIndex);
-                selrectRight = selrect.Right;
+            {
+                Rectangle selrect = this.GetTabRect(this.SelectedIndex);
+                int selrectRight = selrect.Right;
                 e.Graphics.DrawLine(
                     new Pen(OrigamColorScheme.TabActiveEndColor),
                     selrect.Left + 6 - selrect.Height,
@@ -202,6 +208,7 @@ public class AsTabControl : System.Windows.Forms.TabControl
                     selrect.Bottom + 1
                 );
                 break;
+            }
         }
     }
 
@@ -352,12 +359,15 @@ public class AsTabControl : System.Windows.Forms.TabControl
         Rectangle rect = this.GetTabRect(index);
         Rectangle rect2 = new Rectangle(rect.Left + 8, rect.Top + 1, rect.Width - 6, rect.Height);
         if (index == 0)
+        {
             rect2 = new Rectangle(
                 rect.Left + rect.Height,
                 rect.Top + 1,
                 rect.Width - rect.Height,
                 rect.Height
             );
+        }
+
         string tabtext = this.TabPages[index].Text;
         System.Drawing.StringFormat format = new System.Drawing.StringFormat();
         format.Alignment = StringAlignment.Near;

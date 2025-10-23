@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
 

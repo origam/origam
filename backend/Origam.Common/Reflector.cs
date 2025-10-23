@@ -20,13 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+#pragma warning disable IDE0005
 using System.Collections;
+#pragma warning restore IDE0005
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+#pragma warning disable IDE0005
 using System.Text;
 using Origam.Extensions;
+#pragma warning restore IDE0005
 
 namespace Origam;
 
@@ -52,7 +56,9 @@ public class Reflector
         {
             // exclude abstract constructors (weird concept anyway)
             if (!constructorInfo.IsAbstract)
+            {
                 result.Add(constructorInfo);
+            }
         }
         return result;
     }

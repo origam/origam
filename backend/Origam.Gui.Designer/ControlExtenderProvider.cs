@@ -46,10 +46,8 @@ public class ControlExtenderProvider : IExtenderProvider
         {
             return si.PrimaryKey["Id"].ToString();
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     [ExtenderProvidedProperty()]
@@ -61,10 +59,8 @@ public class ControlExtenderProvider : IExtenderProvider
         {
             return si.Name;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void SetSchemaItemName(Control acontrol, string value)
@@ -84,10 +80,8 @@ public class ControlExtenderProvider : IExtenderProvider
         {
             return csi.Roles;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void SetRoles(Control acontrol, string value)
@@ -107,10 +101,8 @@ public class ControlExtenderProvider : IExtenderProvider
         {
             return csi.Features;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void SetFeatures(Control acontrol, string value)
@@ -126,9 +118,11 @@ public class ControlExtenderProvider : IExtenderProvider
     public bool CanExtend(object extendee)
     {
         if (extendee is Control && (extendee as Control).Tag is ISchemaItem)
+        {
             return true;
-        else
-            return false;
+        }
+
+        return false;
     }
     #endregion
 }

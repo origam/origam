@@ -60,7 +60,10 @@ public class StateMachineOperation : AbstractSchemaItem
     {
         dependencies.Add(this.TargetState);
         if (this.Rule != null)
+        {
             dependencies.Add(this.Rule);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

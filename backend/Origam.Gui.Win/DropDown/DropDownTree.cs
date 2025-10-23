@@ -135,10 +135,8 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
     private bool _canceled = false;
@@ -254,15 +252,20 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
         {
             case Keys.Up:
             case Keys.Down:
+            {
                 if (e.Alt)
                 {
                     _readyToClose = true;
                 }
                 break;
+            }
+
             case Keys.Tab:
             case Keys.Return:
+            {
                 _readyToClose = true;
                 break;
+            }
         }
     }
     #endregion
@@ -316,18 +319,15 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
             this.AddNode(this.tree.Nodes, node);
             return true;
         }
-        else
+
+        if (this.items_Identifiers.ContainsKey(node.ParentID))
         {
-            if (this.items_Identifiers.ContainsKey(node.ParentID))
+            DataTreeViewNode parentNode = this.items_Identifiers[node.ParentID] as DataTreeViewNode;
+            if (parentNode != null)
             {
-                DataTreeViewNode parentNode =
-                    this.items_Identifiers[node.ParentID] as DataTreeViewNode;
-                if (parentNode != null)
-                {
-                    CheckRecursion(node, parentNode);
-                    this.AddNode(parentNode.Nodes, node);
-                    return true;
-                }
+                CheckRecursion(node, parentNode);
+                this.AddNode(parentNode.Nodes, node);
+                return true;
             }
         }
         return false;
@@ -353,7 +353,10 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
     private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
     {
         if (node.ID == null | node.ID == DBNull.Value)
+        {
             return;
+        }
+
         if (!this.items_Identifiers.ContainsKey(node.ID))
         {
             this.items_Identifiers.Add(node.ID, node);
@@ -366,7 +369,9 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
     private void timer1_Tick(object sender, System.EventArgs e)
     {
         if (_readyToClose)
+        {
             this.SelectItem();
+        }
     }
 
     private void DropDownTree_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -381,7 +386,10 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
     private void tree_DoubleClick(object sender, System.EventArgs e)
     {
         if (_selectingValue)
+        {
             return;
+        }
+
         _readyToClose = true;
     }
 

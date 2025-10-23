@@ -69,10 +69,8 @@ public class ElongatedButton
             {
                 return new Rectangle(1, 1, rc.Width - 3, rc.Height - 2);
             }
-            else
-            {
-                return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
-            }
+
+            return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
         }
     }
     #endregion
@@ -511,6 +509,7 @@ public class ElongatedButton
         switch (enmState)
         {
             case ControlState.Normal:
+            {
                 if (this.Enabled)
                 {
                     if (this.Focused || this.IsDefault)
@@ -530,10 +529,14 @@ public class ElongatedButton
                     OnDrawDisabled(e.Graphics);
                 }
                 break;
+            }
+
             case ControlState.Pressed:
+            {
                 //when the mouse is pressed over the button
                 OnDrawPressed(e.Graphics);
                 break;
+            }
         }
         OnDrawText(e.Graphics);
 

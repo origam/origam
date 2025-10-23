@@ -25,11 +25,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 using Origam.DA;
 using Origam.Gui.UI;
 using Origam.Rule;
-using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 using Origam.Service.Core;
 
@@ -89,7 +87,10 @@ public class ActionButtonManager : IDisposable
     public void UpdateActionButtons()
     {
         if (actionButtons == null)
+        {
             return;
+        }
+
         var disabledActionIds = GetDisabledActionIds();
         UpdateToolStripItemVisibility(disabledActionIds);
         var toolStrip = toolStripGetter.Invoke();
@@ -103,7 +104,10 @@ public class ActionButtonManager : IDisposable
     public void BindActionButtons()
     {
         if (actionButtons == null)
+        {
             return;
+        }
+
         foreach (var actionButton in actionButtons)
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
@@ -120,7 +124,10 @@ public class ActionButtonManager : IDisposable
     public void Dispose()
     {
         if (actionButtons == null)
+        {
             return;
+        }
+
         foreach (var actionButton in actionButtons)
         {
             if (actionButton is ToolStripActionDropDownButton dropDownbutton)
@@ -140,9 +147,15 @@ public class ActionButtonManager : IDisposable
         Guid entityId = parentIdGetter.Invoke();
         RuleEngine ruleEngine = formGeneratorGetter.Invoke().FormRuleEngine;
         if (ruleEngine == null)
+        {
             return new List<string>();
+        }
+
         if (entityId == Guid.Empty)
+        {
             return new List<string>();
+        }
+
         bool noDataToDisplay = currencyManager.Position == -1;
         if (noDataToDisplay)
         {
@@ -150,7 +163,10 @@ public class ActionButtonManager : IDisposable
         }
         DataRow row = (currencyManager.Current as DataRowView).Row;
         if (!DatasetTools.HasRowValidParent(row))
+        {
             return new List<string>();
+        }
+
         XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
         XmlContainer actualData = DatasetTools.GetRowXml(
             row,

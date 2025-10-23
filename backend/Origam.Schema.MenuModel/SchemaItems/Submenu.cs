@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.MenuModel;
 
@@ -111,7 +109,10 @@ public class Submenu : AbstractMenuItem
             foreach (string feature in features)
             {
                 if (stringBuilder.Length > 0)
+                {
                     stringBuilder.Append(";");
+                }
+
                 stringBuilder.Append(feature);
             }
             return stringBuilder.ToString();

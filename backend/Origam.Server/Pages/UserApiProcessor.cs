@@ -264,11 +264,13 @@ public class UserApiProcessor
             }
 
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(page),
                     page,
                     Resources.ErrorUnknownPageType
                 );
+            }
         }
         return handler;
     }
@@ -524,11 +526,13 @@ public class UserApiProcessor
                 }
 
                 default:
+                {
                     throw new ArgumentOutOfRangeException(
                         "FileInfoType",
                         fileMapping.FileInfoType,
                         "Unknown Type"
                     );
+                }
             }
         }
     }
@@ -679,11 +683,13 @@ public class UserApiProcessor
                     }
 
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "ContentType",
                             requestMimeType,
                             "Unknown content type. Use text/xml or application/json."
                         );
+                    }
                 }
             }
             catch (ConstraintException)
@@ -923,13 +929,21 @@ public class UserApiProcessor
         switch (context.Request.HttpMethod)
         {
             case "PUT":
+            {
                 return page.AllowPUT;
+            }
             case "DELETE":
+            {
                 return page.AllowDELETE;
+            }
             case "OPTIONS":
+            {
                 return false;
+            }
             default:
+            {
                 return true;
+            }
         }
     }
 

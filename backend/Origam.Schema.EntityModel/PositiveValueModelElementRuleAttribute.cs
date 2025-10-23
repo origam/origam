@@ -46,7 +46,10 @@ public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAt
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var dataStructure = (IDataEntityColumn)instance;
         OrigamDataType origamDataType = dataStructure.DataType;
 

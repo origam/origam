@@ -53,7 +53,9 @@ public class CrystalReportHelper
     public ReportDocument CreateReport(Guid reportId, Hashtable parameters, string transactionId)
     {
         if (parameters == null)
+        {
             parameters = new Hashtable();
+        }
         // get report model element
         var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
         ReportHelper.PopulateDefaultValues(report, parameters);
@@ -100,7 +102,9 @@ public class CrystalReportHelper
     public ReportDocument CreateReport(Guid reportId, DataSet data, Hashtable parameters)
     {
         if (parameters == null)
+        {
             parameters = new Hashtable();
+        }
         // get report model element
         var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
         TraceReportData(data, report.Name);
@@ -132,9 +136,12 @@ public class CrystalReportHelper
             WriteInfoLog(reportElement, "Generating report started");
         }
         if (parameters == null)
+        {
             throw new NullReferenceException(
                 ResourceUtils.GetString("CreateReport: Parameters cannot be null.")
             );
+        }
+
         ReportDocument result = null;
         string path = fileName;
         try
@@ -235,17 +242,32 @@ public class CrystalReportHelper
         {
             CrystalDecisions.Shared.TableLogOnInfo logon = table.LogOnInfo;
             if (connection["DatabaseName"] != null)
+            {
                 logon.ConnectionInfo.DatabaseName = Convert.ToString(connection["DatabaseName"]);
+            }
+
             if (connection["IntegratedSecurity"] != null)
+            {
                 logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(
                     connection["IntegratedSecurity"]
                 );
+            }
+
             if (connection["ServerName"] != null)
+            {
                 logon.ConnectionInfo.ServerName = Convert.ToString(connection["ServerName"]);
+            }
+
             if (connection["UserID"] != null)
+            {
                 logon.ConnectionInfo.UserID = Convert.ToString(connection["UserID"]);
+            }
+
             if (connection["Password"] != null)
+            {
                 logon.ConnectionInfo.Password = Convert.ToString(connection["Password"]);
+            }
+
             table.ApplyLogOnInfo(logon);
         }
     }
@@ -266,7 +288,10 @@ public class CrystalReportHelper
                     {
                         object val = entry.Value;
                         if (val is Guid)
+                        {
                             val = entry.Value.ToString();
+                        }
+
                         report.SetParameterValue(paramDef.Name, val);
                     }
                 }

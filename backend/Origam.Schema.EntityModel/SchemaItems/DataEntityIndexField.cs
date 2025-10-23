@@ -150,10 +150,8 @@ public class DataEntityIndexField : AbstractSchemaItem
 
             return this.OrdinalPosition.CompareTo(f.OrdinalPosition);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

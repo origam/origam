@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 namespace Origam.ProjectAutomation;
 
 public class SettingsBuilder : AbstractBuilder

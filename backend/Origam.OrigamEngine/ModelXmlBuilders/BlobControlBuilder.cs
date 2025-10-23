@@ -64,26 +64,43 @@ public class BlobControlBuilder
                 switch (property.ControlPropertyItem.PropertyType)
                 {
                     case ControlPropertyValueType.Boolean:
+                    {
                         value = XmlConvert.ToString(property.BoolValue);
                         break;
+                    }
+
                     case ControlPropertyValueType.Integer:
+                    {
                         value = XmlConvert.ToString(property.IntValue);
                         break;
+                    }
+
                     case ControlPropertyValueType.String:
+                    {
                         value = property.Value;
                         break;
+                    }
+
                     case ControlPropertyValueType.UniqueIdentifier:
+                    {
                         value = property.GuidValue.ToString();
                         break;
+                    }
+
                     case ControlPropertyValueType.Xml:
+                    {
                         value = property.Value;
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "PropertyType",
                             property.ControlPropertyItem.PropertyType,
                             "Unknown property type."
                         );
+                    }
                 }
                 blobPropertyElement.SetAttribute("Name", property.ControlPropertyItem.Name);
                 blobPropertyElement.SetAttribute("Value", value);

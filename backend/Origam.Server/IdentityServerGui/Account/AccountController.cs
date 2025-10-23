@@ -476,17 +476,17 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                else if (string.IsNullOrEmpty(model.ReturnUrl))
+
+                if (string.IsNullOrEmpty(model.ReturnUrl))
                 {
                     return Redirect("~/");
                 }
-                else
-                {
-                    // user might have clicked on a malicious link - should be logged
-                    throw new Exception("invalid return URL");
-                }
+
+                // user might have clicked on a malicious link - should be logged
+                throw new Exception("invalid return URL");
             }
-            else if (result.IsLockedOut)
+
+            if (result.IsLockedOut)
             {
                 await _events.RaiseAsync(
                     new UserLoginFailureEvent(
@@ -583,17 +583,16 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             }
             throw new Exception("invalid return URL");
         }
-        else if (result.IsLockedOut)
+
+        if (result.IsLockedOut)
         {
             //Same logic as in the Login action
             ModelState.AddModelError("", resourceManager.GetString("UserLockedOut"));
             return View();
         }
-        else
-        {
-            ModelState.AddModelError("", resourceManager.GetString("LoginFailedWrongCode"));
-            return View();
-        }
+
+        ModelState.AddModelError("", resourceManager.GetString("LoginFailedWrongCode"));
+        return View();
     }
 
     /// <summary>

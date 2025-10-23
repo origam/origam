@@ -51,7 +51,10 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
     {
         dependencies.Add(Constant);
         if (DataLookup != null)
+        {
             dependencies.Add(DataLookup);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 

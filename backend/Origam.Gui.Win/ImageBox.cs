@@ -68,6 +68,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                     switch (this.SourceType)
                     {
                         case ImageBoxSourceType.Blob:
+                        {
                             if (!(value is byte[]))
                             {
                                 throw new Exception(ResourceUtils.GetString("ErrorImageData"));
@@ -75,7 +76,10 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                             _imageData = (byte[])value;
                             stream = new MemoryStream(_imageData);
                             break;
+                        }
+
                         case ImageBoxSourceType.Url:
+                        {
                             if (!(value is string))
                             {
                                 throw new Exception(ResourceUtils.GetString("ErrorImageData"));
@@ -101,6 +105,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                                 catch { }
                                 break;
                             }
+                        }
                     }
                     if (stream == null)
                     {
@@ -119,7 +124,9 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
                 finally
                 {
                     if (stream != null)
+                    {
                         stream.Close();
+                    }
                 }
             }
             OnImageDataChanged(EventArgs.Empty);

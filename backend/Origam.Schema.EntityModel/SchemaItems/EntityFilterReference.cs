@@ -62,7 +62,9 @@ public class EntityFilterReference : AbstractSchemaItem
     )
     {
         if (this.Filter != null)
+        {
             base.GetParameterReferences(Filter, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

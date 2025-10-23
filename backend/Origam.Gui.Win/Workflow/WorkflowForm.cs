@@ -21,12 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-using System.Xml;
 using Origam.DA;
 using Origam.Gui.Win;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
@@ -112,7 +110,10 @@ public class WorkflowForm : AsForm
     public void FinishTask()
     {
         if (this.CanFinishTask == false)
+        {
             return;
+        }
+
         try
         {
             this.EndCurrentEdit();
@@ -367,7 +368,10 @@ public class WorkflowForm : AsForm
     private void WorkflowForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         if (_finishScreen)
+        {
             return;
+        }
+
         AbortTask();
         e.Cancel = true;
     }

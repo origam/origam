@@ -35,7 +35,10 @@ public static class AuditLogDA
     public static bool IsRecordIdValid(object recordId)
     {
         if (recordId is Guid)
+        {
             return true;
+        }
+
         string stringId = recordId as string;
         if (stringId != null)
         {
@@ -55,7 +58,10 @@ public static class AuditLogDA
     public static DataSet RetrieveLog(Guid entityId, object recordId)
     {
         if (!IsRecordIdValid(recordId))
+        {
             return null;
+        }
+
         IBusinessServicesService services =
             ServiceManager.Services.GetService(typeof(IBusinessServicesService))
             as IBusinessServicesService;

@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Drawing;
 using System.Linq;
 using System.Xml;
@@ -40,10 +39,11 @@ using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.UI.Common;
+#pragma warning disable IDE0005
 using Origam.Workbench;
+#pragma warning restore IDE0005
 using Origam.Workbench.Services;
 using StackExchange.Profiling;
-using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule;
 
@@ -208,36 +208,58 @@ public class RuleEngine
                 switch (origamDataType)
                 {
                     case OrigamDataType.Integer:
+                    {
                         contextValue = XmlConvert.ToInt32(inputString);
                         break;
+                    }
+
                     case OrigamDataType.Long:
+                    {
                         contextValue = XmlConvert.ToInt64(inputString);
                         break;
+                    }
+
                     case OrigamDataType.UniqueIdentifier:
+                    {
                         contextValue = XmlConvert.ToGuid(inputString);
                         break;
+                    }
+
                     case OrigamDataType.Currency:
                     case OrigamDataType.Float:
+                    {
                         contextValue = XmlConvert.ToDecimal(inputString);
                         break;
+                    }
+
                     case OrigamDataType.Date:
+                    {
                         contextValue = XmlConvert.ToDateTime(
                             inputString,
                             XmlDateTimeSerializationMode.RoundtripKind
                         );
                         break;
+                    }
+
                     case OrigamDataType.Boolean:
+                    {
                         contextValue = XmlConvert.ToBoolean(inputString);
                         break;
+                    }
+
                     case OrigamDataType.String:
                     case OrigamDataType.Memo:
+                    {
                         break;
+                    }
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "dataType",
                             origamDataType,
                             "Unsupported data type."
                         );
+                    }
                 }
             }
         }
@@ -295,19 +317,24 @@ public class RuleEngine
             switch (rule)
             {
                 case XPathRule pathRule:
+                {
                     ruleResult = EvaluateRule(pathRule, xmlData, contextPosition);
                     ruleEvaluationDidRun = true;
                     break;
+                }
+
                 case XslRule xslRule:
+                {
                     ruleResult = EvaluateRule(xslRule, xmlData);
                     ruleEvaluationDidRun = true;
                     break;
+                }
             }
 
             if (
                 (
                     rule.Trace == Origam.Trace.Yes
-                    || rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing
+                    || (rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
                 ) && ruleEvaluationDidRun
             )
             {
@@ -410,7 +437,7 @@ public class RuleEngine
 
             if (
                 rule.Trace == Origam.Trace.Yes
-                || rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing
+                || (rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
             )
             {
                 _tracingService.TraceRule(
@@ -465,36 +492,39 @@ public class RuleEngine
         {
             return Evaluate(item as DataStructureReference);
         }
-        else if (item is SystemFunctionCall)
+
+        if (item is SystemFunctionCall)
         {
             return Evaluate(item as SystemFunctionCall);
         }
-        else if (item is TransformationReference)
+
+        if (item is TransformationReference)
         {
             return Evaluate(item as TransformationReference);
         }
-        else if (item is ReportReference)
+
+        if (item is ReportReference)
         {
             return (item as ReportReference).ReportId;
         }
-        else if (item is DataConstantReference)
+
+        if (item is DataConstantReference)
         {
             return _parameterService.GetParameterValue(
                 (item as DataConstantReference).DataConstant.Id
             );
         }
-        else if (item is WorkflowReference)
+
+        if (item is WorkflowReference)
         {
             return (item as WorkflowReference).WorkflowId;
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "item",
-                item,
-                ResourceUtils.GetString("ErrorRuleInvalidType")
-            );
-        }
+
+        throw new ArgumentOutOfRangeException(
+            "item",
+            item,
+            ResourceUtils.GetString("ErrorRuleInvalidType")
+        );
     }
 
     public bool Merge(
@@ -541,11 +571,8 @@ public class RuleEngine
             {
                 return context;
             }
-            else
-            {
-                // convert value to XML
-                context = GetXmlDocumentFromData(context).Xml;
-            }
+            // convert value to XML
+            context = GetXmlDocumentFromData(context).Xml;
         }
 
         if (context is XmlDocument)
@@ -593,13 +620,17 @@ public class RuleEngine
                 switch (dataType)
                 {
                     case OrigamDataType.Blob:
+                    {
                         if (!(result is String))
                         {
                             throw new InvalidCastException("Only string can be converted to blob.");
                         }
                         result = Convert.FromBase64String((string)result);
                         break;
+                    }
+
                     case OrigamDataType.Boolean:
+                    {
                         if (!(result is bool))
                         {
                             if (result == null)
@@ -619,8 +650,10 @@ public class RuleEngine
                             }
                         }
                         break;
+                    }
 
                     case OrigamDataType.UniqueIdentifier:
+                    {
                         if (result != null)
                         {
                             if ((string)result == "")
@@ -633,20 +666,29 @@ public class RuleEngine
                             }
                         }
                         break;
+                    }
+
                     case OrigamDataType.Integer:
+                    {
                         if (!(result is Int32) & result != null)
                         {
                             result = Convert.ToInt32(result);
                         }
                         break;
+                    }
+
                     case OrigamDataType.Float:
                     case OrigamDataType.Currency:
+                    {
                         if (!(result is Decimal) && result != null)
                         {
                             result = XmlConvert.ToDecimal(result.ToString());
                         }
                         break;
+                    }
+
                     case OrigamDataType.Date:
+                    {
                         if (!(result is DateTime) && result != null)
                         {
                             result = XmlConvert.ToDateTime(
@@ -655,6 +697,7 @@ public class RuleEngine
                             );
                         }
                         break;
+                    }
                 }
             }
             else
@@ -893,7 +936,7 @@ public class RuleEngine
                 !queueEntry[0].Equals(rowChanged)
                 && (
                     (queueEntry[1] != null && queueEntry[1].Equals(ruleSet))
-                    || queueEntry[1] == null && ruleSet == null
+                    || (queueEntry[1] == null && ruleSet == null)
                 )
             )
             {
@@ -911,7 +954,10 @@ public class RuleEngine
     )
     {
         if (rowChanged.RowState == DataRowState.Deleted)
+        {
             return;
+        }
+
         if (columns == null)
         {
             // only pass other entities's column changes (e.g. from children to parents)
@@ -1057,7 +1103,10 @@ public class RuleEngine
         }
         EnqueueParentRows(rowChanged, data, ruleSet, columns, parentRows);
         if (wasQueued)
+        {
             return;
+        }
+
         _ruleColumnChanges.Clear();
         ProcessRuleQueue();
     }
@@ -1133,11 +1182,20 @@ public class RuleEngine
     )
     {
         if (_ruleProcessingPaused)
+        {
             return false;
+        }
+
         if (columnChanged == null && columnsChanged.Count == 0)
+        {
             return false;
+        }
+
         if (!DatasetTools.HasRowValidParent(rowChanged))
+        {
             return false;
+        }
+
         bool result = false;
         bool resultRules = false;
         var outputPad = GetOutputPad();
@@ -1180,7 +1238,10 @@ public class RuleEngine
             {
                 // columns we cannot recognize will not fire any events
                 if (!columnChanged.ExtendedProperties.Contains("Id"))
+                {
                     return false;
+                }
+
                 Guid fieldId = (Guid)columnChanged.ExtendedProperties["Id"];
                 rules = ruleSet.Rules(rowChanged.Table.TableName, fieldId, false);
                 UpdateQueueEntries(rowChanged, ruleSet, columnChanged);
@@ -1195,7 +1256,10 @@ public class RuleEngine
                     foreach (DataColumn column in rowChanged.Table.PrimaryKey)
                     {
                         if (pk != "")
+                        {
                             pk += ", ";
+                        }
+
                         pk += column.ColumnName + ": " + rowChanged[column].ToString();
                     }
                     if (log.IsDebugEnabled)
@@ -1553,94 +1617,87 @@ public class RuleEngine
                     }
                     throw new Exception(message);
                 }
-                else
+
+                var changedColumns = new List<DataColumn>();
+                var changedTargetColumns = new List<DataColumn>(changedColumns.Count);
+                foreach (DataColumn col in resultRow.Table.Columns)
                 {
-                    var changedColumns = new List<DataColumn>();
-                    var changedTargetColumns = new List<DataColumn>(changedColumns.Count);
-                    foreach (DataColumn col in resultRow.Table.Columns)
+                    if (
+                        rowChanged.Table.Columns.Contains(col.ColumnName)
+                        && !(resultRow[col].Equals(rowChanged[col.ColumnName]))
+                    )
                     {
-                        if (
-                            rowChanged.Table.Columns.Contains(col.ColumnName)
-                            && !(resultRow[col].Equals(rowChanged[col.ColumnName]))
-                        )
-                        {
-                            changedColumns.Add(col);
-                            changedTargetColumns.Add(rowChanged.Table.Columns[col.ColumnName]);
-                        }
+                        changedColumns.Add(col);
+                        changedTargetColumns.Add(rowChanged.Table.Columns[col.ColumnName]);
                     }
-                    #region TRACE
-                    if (log.IsDebugEnabled)
-                    {
-                        log.RunHandled(() =>
-                        {
-                            foreach (DataColumn col in changedColumns)
-                            {
-                                string newLookupValue = null;
-                                string oldLookupValue = null;
-                                object resultValue = resultRow[col];
-                                object oldValue = rowChanged[col.ColumnName];
-                                string columnName = col.ColumnName;
-                                if (
-                                    col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute)
-                                    && col.ExtendedProperties.Contains(Const.OrigamDataType)
-                                    && !OrigamDataType.Array.Equals(
-                                        col.ExtendedProperties[Const.OrigamDataType]
-                                    )
-                                )
-                                {
-                                    if (resultValue != DBNull.Value)
-                                    {
-                                        newLookupValue = LookupValue(
-                                            col.ExtendedProperties[Const.DefaultLookupIdAttribute]
-                                                .ToString(),
-                                            resultValue.ToString()
-                                        );
-                                    }
-                                    if (oldValue != DBNull.Value)
-                                    {
-                                        oldLookupValue = LookupValue(
-                                            col.ExtendedProperties[Const.DefaultLookupIdAttribute]
-                                                .ToString(),
-                                            oldValue.ToString()
-                                        );
-                                    }
-                                }
-                                log.Debug(
-                                    "   "
-                                        + columnName
-                                        + ": "
-                                        + resultValue.ToString()
-                                        + (
-                                            newLookupValue == null
-                                                ? ""
-                                                : " (" + newLookupValue + ")"
-                                        )
-                                        + ResourceUtils.GetString("PadRuleResult1")
-                                        + ResourceUtils.GetString("PadRuleResult2")
-                                        + oldValue.ToString()
-                                        + (
-                                            oldLookupValue == null
-                                                ? ""
-                                                : " (" + oldLookupValue + ")"
-                                        )
-                                );
-                            }
-                        });
-                    }
-                    #endregion
-                    // copy the values into the source row
-                    PauseRuleProcessing();
-                    bool localChanged = DatasetTools.CopyRecordValues(
-                        resultRow,
-                        DataRowVersion.Current,
-                        rowChanged,
-                        true
-                    );
-                    ResumeRuleProcessing();
-                    if (!changed)
-                        changed = localChanged;
-                    ProcessRules(rowChanged, data, changedTargetColumns, ruleSet);
                 }
+                #region TRACE
+                if (log.IsDebugEnabled)
+                {
+                    log.RunHandled(() =>
+                    {
+                        foreach (DataColumn col in changedColumns)
+                        {
+                            string newLookupValue = null;
+                            string oldLookupValue = null;
+                            object resultValue = resultRow[col];
+                            object oldValue = rowChanged[col.ColumnName];
+                            string columnName = col.ColumnName;
+                            if (
+                                col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute)
+                                && col.ExtendedProperties.Contains(Const.OrigamDataType)
+                                && !OrigamDataType.Array.Equals(
+                                    col.ExtendedProperties[Const.OrigamDataType]
+                                )
+                            )
+                            {
+                                if (resultValue != DBNull.Value)
+                                {
+                                    newLookupValue = LookupValue(
+                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                            .ToString(),
+                                        resultValue.ToString()
+                                    );
+                                }
+                                if (oldValue != DBNull.Value)
+                                {
+                                    oldLookupValue = LookupValue(
+                                        col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+                                            .ToString(),
+                                        oldValue.ToString()
+                                    );
+                                }
+                            }
+                            log.Debug(
+                                "   "
+                                    + columnName
+                                    + ": "
+                                    + resultValue.ToString()
+                                    + (newLookupValue == null ? "" : " (" + newLookupValue + ")")
+                                    + ResourceUtils.GetString("PadRuleResult1")
+                                    + ResourceUtils.GetString("PadRuleResult2")
+                                    + oldValue.ToString()
+                                    + (oldLookupValue == null ? "" : " (" + oldLookupValue + ")")
+                            );
+                        }
+                    });
+                }
+                #endregion
+                // copy the values into the source row
+                PauseRuleProcessing();
+                bool localChanged = DatasetTools.CopyRecordValues(
+                    resultRow,
+                    DataRowVersion.Current,
+                    rowChanged,
+                    true
+                );
+                ResumeRuleProcessing();
+                if (!changed)
+                {
+                    changed = localChanged;
+                }
+
+                ProcessRules(rowChanged, data, changedTargetColumns, ruleSet);
             }
             else if (result is XmlDocument)
             {
@@ -1756,9 +1813,12 @@ public class RuleEngine
                         if (rule.ForegroundColorLookup != null)
                         {
                             if (rule.DynamicColorLookupField == null)
+                            {
                                 throw new Exception(
                                     ResourceUtils.GetString("ErrorNoForegroundDynamicColorLookup")
                                 );
+                            }
+
                             object color = _lookupService.GetDisplayText(
                                 rule.ForeColorLookupId,
                                 lookupParam,
@@ -1768,14 +1828,19 @@ public class RuleEngine
                             );
 
                             if (color is int)
+                            {
                                 foreColor = System.Drawing.Color.FromArgb((int)color);
+                            }
                         }
                         if (rule.BackgroundColorLookup != null)
                         {
                             if (rule.DynamicColorLookupField == null)
+                            {
                                 throw new Exception(
                                     ResourceUtils.GetString("ErrorNoBackgroundDynamicColorLookup")
                                 );
+                            }
+
                             object color = _lookupService.GetDisplayText(
                                 rule.BackColorLookupId,
                                 lookupParam,
@@ -1785,7 +1850,9 @@ public class RuleEngine
                             );
 
                             if (color is int)
+                            {
                                 backColor = System.Drawing.Color.FromArgb((int)color);
+                            }
                         }
                     }
                     if (foreColor != NullColor && formatting.ForeColor == NullColor)
@@ -1822,7 +1889,10 @@ public class RuleEngine
             ) as IDataEntity;
         IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
         if (field == null)
+        {
             return null; // lookup fields in a data structure
+        }
+
         rules.AddRange(field.DynamicLabels);
         if (rules.Count > 0)
         {
@@ -1847,7 +1917,10 @@ public class RuleEngine
     public bool EvaluateRowLevelSecurityState(DataRow row, string field, CredentialType type)
     {
         if (!DatasetTools.HasRowValidParent(row))
+        {
             return true;
+        }
+
         Guid entityId = Guid.Empty;
         Guid fieldId = Guid.Empty;
         if (row.Table.ExtendedProperties.Contains("EntityId"))
@@ -1871,10 +1944,8 @@ public class RuleEngine
                 row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached
             );
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     public List<string> GetDisabledActions(
@@ -2030,7 +2101,8 @@ public class RuleEngine
                     // always allow to delete new (not saved) records
                     return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, true);
                 }
-                else if (
+
+                if (
                     (entityRule.UpdateCredential && type == CredentialType.Update)
                     || (entityRule.CreateCredential && type == CredentialType.Update && isNewRow)
                     || (entityRule.CreateCredential && type == CredentialType.Create)
@@ -2097,10 +2169,8 @@ public class RuleEngine
         {
             return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, true);
         }
-        else
-        {
-            return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, false);
-        }
+
+        return PutToRulelessCache(type, entityId, ruleEvaluationCache, column, false);
     }
 
     private static bool PutToRulelessCache(
@@ -2143,13 +2213,11 @@ public class RuleEngine
             {
                 return (bool)result;
             }
-            else
-            {
-                throw new ArgumentException(
-                    "Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: "
-                        + ((ISchemaItem)rule).Path
-                );
-            }
+
+            throw new ArgumentException(
+                "Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: "
+                    + ((ISchemaItem)rule).Path
+            );
         }
         return true;
     }
@@ -2296,15 +2364,21 @@ public class RuleEngine
         switch (functionCall.Function)
         {
             case SystemFunction.ActiveProfileId:
+            {
                 return this.ActiveProfileId();
+            }
             case SystemFunction.ResourceIdByActiveProfile:
+            {
                 return resourceTools.ResourceIdByActiveProfile();
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "Function",
                     functionCall.Function,
                     ResourceUtils.GetString("ErrorUnsupportedFunction")
                 );
+            }
         }
     }
 
@@ -2530,11 +2604,8 @@ public class ProcessRuleComparer : IComparer<DataStructureRule>
         {
             return x.Priority.CompareTo(y.Priority);
         }
-        else
-        {
-            // rulesets are always an top, so rules are greater
-            return 1;
-        }
+        // rulesets are always an top, so rules are greater
+        return 1;
     }
 }
 #endregion

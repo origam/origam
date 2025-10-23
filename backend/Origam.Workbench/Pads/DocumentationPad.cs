@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -375,9 +374,7 @@ public class DocumentationPad : AbstractPadContent
             Save();
             return true;
         }
-        else
-        {
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+
+        return base.ProcessCmdKey(ref msg, keyData);
     }
 }

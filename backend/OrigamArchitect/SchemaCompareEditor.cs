@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -101,7 +100,10 @@ public class SchemaCompareEditor : AbstractViewContent
             if (version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
             {
                 if (version.IsCurrentVersion)
+                {
                     currentVersion = version;
+                }
+
                 cboDeploymentVersion.Items.Add(version);
             }
         }

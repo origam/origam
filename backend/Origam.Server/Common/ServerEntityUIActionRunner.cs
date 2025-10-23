@@ -96,7 +96,9 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
             }
 
             default:
+            {
                 throw new NotImplementedException();
+            }
         }
     }
 
@@ -181,11 +183,13 @@ public class ServerEntityUIActionRunner : EntityUIActionRunner
                         }
 
                         default:
+                        {
                             throw new ArgumentOutOfRangeException(
                                 "Value",
                                 pm.Value,
                                 Resources.ErrorUnknownWorkQueueCommandValueType
                             );
+                        }
                     }
                     processData.Parameters.Add(pm.Name, val);
                 }

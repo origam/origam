@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -93,7 +92,10 @@ public class UIStyleProperty : AbstractSchemaItem
         get
         {
             if (_value == null)
+            {
                 return null;
+            }
+
             return _value.Trim();
         }
         set

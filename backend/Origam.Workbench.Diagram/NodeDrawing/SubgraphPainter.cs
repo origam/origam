@@ -59,7 +59,7 @@ internal class SubgraphPainter : INodeItemPainter
         var width =
             clusterBoundary.MinWidth > labelWidth
                 ? clusterBoundary.MinWidth
-                : labelWidth + painter.LabelSideMargin * 2;
+                : labelWidth + (painter.LabelSideMargin * 2);
         return CurveFactory.CreateRectangle(width, height, new Point());
     }
 
@@ -72,23 +72,23 @@ internal class SubgraphPainter : INodeItemPainter
         double centerX = node.GeometryNode.Center.X;
         double centerY = node.GeometryNode.Center.Y;
         var borderCorner = new System.Drawing.Point(
-            (int)centerX - borderSize.Width / 2,
-            (int)centerY - borderSize.Height / 2
+            (int)centerX - (borderSize.Width / 2),
+            (int)centerY - (borderSize.Height / 2)
         );
         Rectangle border = new Rectangle(borderCorner, borderSize);
         var labelPoint = new PointF(
             (float)(
                 centerX
-                - labelWidth / 2
+                - (labelWidth / 2)
                 + painter.ImageLeftMargin
                 + nodeData.PrimaryImage.Width
                 + painter.ImageRightMargin
             ),
-            (float)centerY - border.Height / 2.0f + painter.LabelTopMargin
+            (float)centerY - (border.Height / 2.0f) + painter.LabelTopMargin
         );
         var imagePoint = new PointF(
-            (float)(centerX - labelWidth / 2 + painter.ImageLeftMargin),
-            (float)(centerY - border.Height / 2.0f + painter.ImageTopMargin)
+            (float)(centerX - (labelWidth / 2) + painter.ImageLeftMargin),
+            (float)(centerY - (border.Height / 2.0f) + painter.ImageTopMargin)
         );
         Rectangle imageBackground = new Rectangle(
             borderCorner,
@@ -146,8 +146,8 @@ internal class SubgraphPainter : INodeItemPainter
         string emptyGraphMessage = Strings.SubgraphPainter_Right_click_to_add_steps;
         SizeF messageSize = painter.MeasureString(emptyGraphMessage);
         var emptyMessagePoint = new PointF(
-            (float)centerX - messageSize.Width / 2,
-            (float)centerY + painter.HeadingBackgroundHeight / 2 - messageSize.Height / 2
+            (float)centerX - (messageSize.Width / 2),
+            (float)centerY + (painter.HeadingBackgroundHeight / 2) - (messageSize.Height / 2)
         );
 
         return new Tuple<PointF, string>(emptyMessagePoint, emptyGraphMessage);

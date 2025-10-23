@@ -112,7 +112,10 @@ public class FilePersistenceIndex : IDisposable
         {
             PersistedObjectInfo objInfo = itemTracker.GetById(id);
             if (objInfo == null)
+            {
                 return null;
+            }
+
             return BelongsToALoadedPackage(objInfo) ? objInfo : null;
         });
     }
@@ -149,12 +152,17 @@ public class FilePersistenceIndex : IDisposable
     protected virtual bool BelongsToALoadedPackage(PersistedObjectInfo objInfo)
     {
         if (LoadedPackages.Count == 0)
+        {
             return true;
+        }
 
         bool isPackageOrPackageReference =
             objInfo.OrigamFile.Path.FileName == OrigamFile.PackageFileName;
         if (isPackageOrPackageReference)
+        {
             return true;
+        }
+
         Guid parentPackageId = objInfo.OrigamFile.ParentFolderIds.PackageId;
         return LoadedPackages.Contains(parentPackageId) || LoadedPackages.Contains(objInfo.Id);
     }

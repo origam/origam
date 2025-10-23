@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.UI;
@@ -192,7 +191,10 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
         {
             ListViewItem item = listView1.SelectedItems[0];
             if (item.Index == 0)
+            {
                 return;
+            }
+
             listView1.BeginUpdate();
             try
             {
@@ -217,7 +219,10 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
         {
             ListViewItem item = listView1.SelectedItems[0];
             if (item.Index == listView1.Items.Count - 1)
+            {
                 return;
+            }
+
             listView1.BeginUpdate();
             try
             {

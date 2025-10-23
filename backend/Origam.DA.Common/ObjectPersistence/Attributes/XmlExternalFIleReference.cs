@@ -60,17 +60,29 @@ public static class ExternalFileExtensionTools
         switch (extension)
         {
             case ExternalFileExtension.Xml:
+            {
                 return true;
+            }
             case ExternalFileExtension.Png:
+            {
                 return false;
+            }
             case ExternalFileExtension.Xslt:
+            {
                 return true;
+            }
             case ExternalFileExtension.Bin:
+            {
                 return false;
+            }
             case ExternalFileExtension.Txt:
+            {
                 return true;
+            }
             default:
+            {
                 return false;
+            }
         }
     }
 

@@ -45,7 +45,9 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         protected override bool ProcessKeyMessage(ref Message m)
         {
             if (!_noKeyUp)
+            {
                 return base.ProcessKeyMessage(ref m);
+            }
             // ignore cursor keys and tab key
             if (m.Msg == WM_KEYDOWN)
             {
@@ -73,12 +75,19 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
                 )
                 {
                     if (m.WParam.ToInt32() == KEY_CURSOR_DOWN)
+                    {
                         this.OnCursorDownPressed(EventArgs.Empty);
+                    }
+
                     if (m.WParam.ToInt32() == KEY_CURSOR_UP)
+                    {
                         this.OnCursorUpPressed(EventArgs.Empty);
+                    }
+
                     return true;
                 }
-                else if (
+
+                if (
                     (m.WParam.ToInt32() == 37 & this.DataType != typeof(DateTime))
                     | (m.WParam.ToInt32() == 39 & this.DataType != typeof(DateTime))
                     | (m.WParam.ToInt32() == KEY_CURSOR_DOWN & this.IgnoreCursorDown)
@@ -407,16 +416,25 @@ public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
         try
         {
             if (this.ReadOnly)
+            {
                 return;
+            }
+
             if (_popupHelper.Handle.ToInt32() == 0)
             {
                 Form form = this.FindForm();
                 if (form.Parent is WeifenLuo.WinFormsUI.Docking.DockPane)
+                {
                     form = form.Parent.FindForm();
+                }
+
                 _popupHelper.AssignHandle(form.Handle);
             }
             if (_droppedDown)
+            {
                 return;
+            }
+
             txtEdit.Focus();
             _popup = this.CreatePopup();
             Rectangle screen = Screen.FromControl(this).WorkingArea;

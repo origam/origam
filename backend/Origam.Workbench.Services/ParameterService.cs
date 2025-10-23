@@ -213,16 +213,16 @@ public class ParameterService : IParameterService
             string rawString = s.String;
             return string.Format(rawString, args);
         }
-        else
+        if (throwException)
         {
-            if (throwException)
-                throw new ArgumentOutOfRangeException(
-                    "name",
-                    name,
-                    ResourceUtils.GetString("ErrorStringNotFound")
-                );
-            return "";
+            throw new ArgumentOutOfRangeException(
+                "name",
+                name,
+                ResourceUtils.GetString("ErrorStringNotFound")
+            );
         }
+
+        return "";
     }
 
     public object GetParameterValue(Guid id, Guid? overridenProfileId = null)
@@ -247,20 +247,14 @@ public class ParameterService : IParameterService
                     {
                         return constant.Value;
                     }
-                    else
-                    {
-                        return GetParameterValue(constant.UserDefinableDefaultConstantId);
-                    }
+
+                    return GetParameterValue(constant.UserDefinableDefaultConstantId);
                 }
-                else
-                {
-                    return ValueFromRow(constant.DataType, row);
-                }
+
+                return ValueFromRow(constant.DataType, row);
             }
-            else
-            {
-                return _constantsById[id];
-            }
+
+            return _constantsById[id];
         }
         throw new ArgumentOutOfRangeException(
             "id",
@@ -284,14 +278,12 @@ public class ParameterService : IParameterService
         {
             return GetParameterValue(_constantIdByName[parameterName], overridenProfileId);
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "parameterName",
-                parameterName,
-                ResourceUtils.GetString("ConstantNotFound")
-            );
-        }
+
+        throw new ArgumentOutOfRangeException(
+            "parameterName",
+            parameterName,
+            ResourceUtils.GetString("ConstantNotFound")
+        );
     }
 
     public object GetParameterValue(
@@ -309,14 +301,12 @@ public class ParameterService : IParameterService
         {
             return GetCustomParameterValue(_constantIdByName[parameterName]);
         }
-        else
-        {
-            throw new ArgumentOutOfRangeException(
-                "parameterName",
-                parameterName,
-                ResourceUtils.GetString("ConstantNotFound")
-            );
-        }
+
+        throw new ArgumentOutOfRangeException(
+            "parameterName",
+            parameterName,
+            ResourceUtils.GetString("ConstantNotFound")
+        );
     }
 
     public object GetCustomParameterValue(Guid id)
@@ -332,32 +322,55 @@ public class ParameterService : IParameterService
         switch (constant.DataType)
         {
             case OrigamDataType.Date:
+            {
                 lookupId = new Guid("394142f3-c07f-4d7a-a05a-d83fa5f8625e");
                 break;
+            }
+
             case OrigamDataType.Boolean:
+            {
                 lookupId = new Guid("f04ad389-c4c9-4af5-b69f-ef9dbe88378f");
                 break;
+            }
+
             case OrigamDataType.Integer:
+            {
                 lookupId = new Guid("852438ec-2c48-4ea7-b9b3-c554555bc93b");
                 break;
+            }
+
             case OrigamDataType.UniqueIdentifier:
+            {
                 lookupId = new Guid("cbcbd053-a374-4661-a1ae-e6c9004edffe");
                 break;
+            }
+
             case OrigamDataType.Currency:
+            {
                 lookupId = new Guid("d592a7f5-1e95-4d49-97d4-e0133f2b8154");
                 break;
+            }
+
             case OrigamDataType.Float:
+            {
                 lookupId = new Guid("3f08e25d-bbea-4026-b84f-956524d2b763");
                 break;
+            }
+
             case OrigamDataType.String:
+            {
                 lookupId = new Guid("2e14ba59-e415-4098-9414-2cca6e702f5b");
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "dataType",
                     constant.DataType,
                     "Type not supported for custom parameters. Cannot retrieve value."
                 );
+            }
         }
         return ls.GetDisplayText(lookupId, id, false, false, null);
     }
@@ -608,7 +621,10 @@ public class ParameterService : IParameterService
             _schemaService.GetProvider(typeof(DataConstantSchemaItemProvider))
             as DataConstantSchemaItemProvider;
         if (constants == null)
+        {
             throw new InvalidOperationException(ResourceUtils.GetString("ErrorModelNotLoaded"));
+        }
+
         foreach (DataConstant constant in constants.ChildItems)
         {
             if (constant.Name == "null")
@@ -642,17 +658,35 @@ public class ParameterService : IParameterService
         Guid guidValue = Guid.Empty;
         object dateValue = null;
         if (!row.IsStringValueNull())
+        {
             stringValue = row.StringValue;
+        }
+
         if (!row.IsIntValueNull())
+        {
             intValue = row.IntValue;
+        }
+
         if (!row.IsCurrencyValueNull())
+        {
             currencyValue = row.CurrencyValue;
+        }
+
         if (!row.IsFloatValueNull())
+        {
             floatValue = row.FloatValue;
+        }
+
         if (!row.IsGuidValueNull())
+        {
             guidValue = row.GuidValue;
+        }
+
         if (!row.IsDateValueNull())
+        {
             dateValue = row.DateValue;
+        }
+
         return DataConstant.ConvertValue(
             dataType,
             stringValue,
@@ -668,7 +702,10 @@ public class ParameterService : IParameterService
     public bool IsFeatureOn(string features)
     {
         if (features == null | features == "")
+        {
             return true;
+        }
+
         foreach (string feature in features.Split(";".ToCharArray()))
         {
             bool negation = false;
@@ -696,12 +733,11 @@ public class ParameterService : IParameterService
                 {
                     return false;
                 }
-                else
-                {
-                    return true;
-                }
+
+                return true;
             }
-            else if (negation)
+
+            if (negation)
             {
                 return true;
             }
@@ -714,7 +750,9 @@ public class ParameterService : IParameterService
         get
         {
             if (languageResolveDict != null)
+            {
                 return languageResolveDict;
+            }
             // lazily initialize resolver dict from db
             languageResolveDict = new Hashtable();
 
@@ -727,7 +765,10 @@ public class ParameterService : IParameterService
             );
             DataTable table = result.Tables["Language"];
             if (table == null)
+            {
                 throw new NullReferenceException(ResourceUtils.GetString("ErrorRoleListNotLoaded"));
+            }
+
             String[] array = new String[table.Rows.Count];
             for (int i = 0; i < array.Length; i++)
             {
@@ -789,7 +830,10 @@ public class ParameterService : IParameterService
                 _schemaService.GetProvider(typeof(DataConstantSchemaItemProvider))
                 as DataConstantSchemaItemProvider;
             if (constants == null)
+            {
                 throw new InvalidOperationException(ResourceUtils.GetString("ErrorModelNotLoaded"));
+            }
+
             foreach (DataConstant constant in constants.ChildItems)
             {
                 if (_constantIdByName.ContainsKey(constant.Name))
@@ -937,6 +981,7 @@ public class ParameterService : IParameterService
         switch (targetType)
         {
             case OrigamDataType.String:
+            {
                 if (value == null)
                 {
                     return null;
@@ -945,27 +990,32 @@ public class ParameterService : IParameterService
                 {
                     return System.Xml.XmlConvert.ToString((decimal)value);
                 }
-                else if (value is float)
+
+                if (value is float)
                 {
                     return System.Xml.XmlConvert.ToString((float)value);
                 }
-                else if (value is bool)
+
+                if (value is bool)
                 {
                     return System.Xml.XmlConvert.ToString((bool)value);
                 }
-                else if (value is DateTime)
+
+                if (value is DateTime)
                 {
                     return System.Xml.XmlConvert.ToString(
                         (DateTime)value,
                         System.Xml.XmlDateTimeSerializationMode.RoundtripKind
                     );
                 }
-                else
-                {
-                    return value.ToString();
-                }
+
+                return value.ToString();
+            }
+
             default:
+            {
                 return value;
+            }
         }
     }
 
@@ -984,10 +1034,8 @@ public class ParameterService : IParameterService
         {
             return (Guid)LanguageResolveDict[cultureString.ToLower()];
         }
-        else
-        {
-            return Guid.Empty;
-        }
+
+        return Guid.Empty;
     }
 
     public void SetCustomParameterValue(

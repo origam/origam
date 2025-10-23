@@ -60,10 +60,8 @@ public class EntityMenuAction : EntityUIAction
             {
                 return base.NewTypeNames;
             }
-            else
-            {
-                return this.Menu.NewTypeNames;
-            }
+
+            return this.Menu.NewTypeNames;
         }
     }
     #endregion

@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using System.Xml;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -93,7 +92,9 @@ public class UpdateContextEngineTask : AbstractWorkflowEngineTask
                     ref valueToContext
                 );
                 if (valueToContext == null)
+                {
                     valueToContext = DBNull.Value;
+                }
                 // update fields in dataset table's rows
                 foreach (DataRow row in table.Rows)
                 {

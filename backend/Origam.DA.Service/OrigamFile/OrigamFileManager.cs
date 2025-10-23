@@ -55,7 +55,10 @@ public class OrigamFileManager : IDisposable
     )
     {
         if (File.Exists(fullPath))
+        {
             return;
+        }
+
         OrigamPath path = origamPathFactory.Create(fullPath);
 
         fileEventQueue.Pause();
@@ -73,7 +76,10 @@ public class OrigamFileManager : IDisposable
     {
         string newDirPath = Path.Combine(dirToRename.Parent.FullName, newName);
         if (dirToRename.FullName.ToLower() == newDirPath.ToLower())
+        {
             return;
+        }
+
         fileEventQueue.Pause();
         if (Directory.Exists(dirToRename.FullName))
         {
@@ -127,7 +133,10 @@ public class OrigamFileManager : IDisposable
     {
         FileInfo fi = new FileInfo(fileToDelete);
         if (!fi.Exists)
+        {
             return;
+        }
+
         for (int i = 0; i < 10; i++)
         {
             try
@@ -144,7 +153,10 @@ public class OrigamFileManager : IDisposable
         for (int i = 0; i < 10; i++)
         {
             if (!fi.Exists)
+            {
                 return;
+            }
+
             Thread.Sleep(100);
             fi.Refresh();
         }

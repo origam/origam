@@ -92,7 +92,9 @@ public class WorkQueueUtils
         )
         {
             if (queueClass.Name == name)
+            {
                 return queueClass;
+            }
         }
 
 #if ORIGAM_CLIENT

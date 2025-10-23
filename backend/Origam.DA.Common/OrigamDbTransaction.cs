@@ -65,10 +65,8 @@ public class OrigamDbTransaction : OrigamTransaction
                 ResourceUtils.GetString("PartialRollbackNotSupported", _transaction.ToString())
             );
         }
-        else
-        {
-            tran.Rollback(savePointName);
-        }
+
+        tran.Rollback(savePointName);
     }
 
     public override void Save(string savePointName)
@@ -80,10 +78,8 @@ public class OrigamDbTransaction : OrigamTransaction
                 ResourceUtils.GetString("SavingNotSupported", _transaction.ToString())
             );
         }
-        else
-        {
-            tran.Save(savePointName);
-        }
+
+        tran.Save(savePointName);
     }
 
     public IDbTransaction Transaction

@@ -39,14 +39,20 @@ public class ReportTimer : ScheduleTimerBase
     public void AddReportEvent(IScheduledItem Schedule, int reportNo)
     {
         if (Elapsed == null)
+        {
             throw new Exception("You must set elapsed before adding Events");
+        }
+
         AddJob(new TimerJob(Schedule, new DelegateMethodCall(Handler, Elapsed, reportNo)));
     }
 
     public void AddAsyncReportEvent(IScheduledItem Schedule, int reportNo)
     {
         if (Elapsed == null)
+        {
             throw new Exception("You must set elapsed before adding Events");
+        }
+
         TimerJob Event = new TimerJob(Schedule, new DelegateMethodCall(Handler, Elapsed, reportNo));
         Event.SyncronizedEvent = false;
         AddJob(Event);
@@ -64,9 +70,15 @@ public class ReportTimer : ScheduleTimerBase
     static void Converter(ReportEventHandler Handler, int ReportNo, object sender, DateTime time)
     {
         if (Handler == null)
+        {
             throw new ArgumentNullException("Handler");
+        }
+
         if (sender == null)
+        {
             throw new ArgumentNullException("sender");
+        }
+
         Handler(sender, new ReportEventArgs(time, ReportNo));
     }
 }

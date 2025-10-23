@@ -127,7 +127,10 @@ public class ItemTracker
     private void LogTreeIndexState(string message)
     {
         if (!log.IsDebugEnabled)
+        {
             return;
+        }
+
         log.Debug(message + ", treeIndex.Count: " + treeIndex?.Count);
     }
 
@@ -277,7 +280,10 @@ internal class FileHashIndex
     public void AddOrReplace(ITrackeableFile newTrackAble)
     {
         if (newTrackAble.FileHash == null)
+        {
             return;
+        }
+
         pathDict[newTrackAble.Path.Relative] = newTrackAble;
         hashFileDict[newTrackAble.Path.Absolute.ToLower()] = newTrackAble.FileHash;
         if (OrigamFile.IsPackageFile(newTrackAble.Path))
@@ -290,7 +296,10 @@ internal class FileHashIndex
     public bool ContainsFile(FileInfo file)
     {
         if (!hashFileDict.ContainsKey(file.FullName.ToLower()))
+        {
             return false;
+        }
+
         string registeredHash = hashFileDict[file.FullName.ToLower()];
         return registeredHash == file.GetFileBase64Hash();
     }
@@ -351,13 +360,11 @@ public class AutoIncrementedIntIndex<TValue>
         {
             return ValueToId[category];
         }
-        else
-        {
-            highestId++;
-            ValueToId.Add(category, highestId);
-            IdToValue.Add(highestId, category);
-            return highestId;
-        }
+        highestId++;
+        ValueToId.Add(category, highestId);
+        IdToValue.Add(highestId, category);
+
+        return highestId;
     }
 
     public TValue this[int id] => IdToValue[id];

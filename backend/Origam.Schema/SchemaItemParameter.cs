@@ -65,10 +65,8 @@ public class SchemaItemParameter : AbstractSchemaItem
             {
                 return 8;
             }
-            else
-            {
-                return _dataLength;
-            }
+
+            return _dataLength;
         }
         set { _dataLength = value; }
     }
@@ -94,10 +92,8 @@ public class SchemaItemParameter : AbstractSchemaItem
         {
             return newItem.ItemType.Equals(this.ParentItem.ItemType);
         }
-        else
-        {
-            return newNode.GetType().Equals(this.ParentItem.GetType());
-        }
+
+        return newNode.GetType().Equals(this.ParentItem.GetType());
     }
     #endregion
 }

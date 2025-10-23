@@ -41,6 +41,7 @@ public class PrintServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "PrintPDF":
+            {
                 if (!(Parameters["Filename"] is string))
                 {
                     throw new InvalidCastException(
@@ -63,6 +64,7 @@ public class PrintServiceAgent : AbstractServiceAgent
                     Convert.ToInt32(Parameters["Timeout"])
                 );
                 break;
+            }
         }
     }
     #endregion

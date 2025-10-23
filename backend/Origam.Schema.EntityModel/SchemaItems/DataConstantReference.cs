@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
@@ -63,7 +62,9 @@ public class DataConstantReference : AbstractSchemaItem
     )
     {
         if (this.DataConstant != null)
+        {
             base.GetParameterReferences(DataConstant, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

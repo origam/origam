@@ -14,7 +14,6 @@
  **************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Schedule;
@@ -68,7 +67,10 @@ public class ScheduledTime : IScheduledItem
     public int ArrayAccess(string[] Arr, int i)
     {
         if (i >= Arr.Length)
+        {
             return 0;
+        }
+
         return int.Parse(Arr[i]);
     }
 
@@ -91,9 +93,15 @@ public class ScheduledTime : IScheduledItem
     {
         DateTime NextRun = LastSyncForTime(time) + _Offset;
         if (NextRun == time && AllowExact)
+        {
             return time;
+        }
+
         if (NextRun > time)
+        {
             return NextRun;
+        }
+
         return IncInterval(NextRun);
     }
 
@@ -102,6 +110,7 @@ public class ScheduledTime : IScheduledItem
         switch (_Base)
         {
             case EventTimeBase.BySecond:
+            {
                 return new DateTime(
                     time.Year,
                     time.Month,
@@ -110,18 +119,29 @@ public class ScheduledTime : IScheduledItem
                     time.Minute,
                     time.Second
                 );
+            }
             case EventTimeBase.ByMinute:
+            {
                 return new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, 0);
+            }
             case EventTimeBase.Hourly:
+            {
                 return new DateTime(time.Year, time.Month, time.Day, time.Hour, 0, 0);
+            }
             case EventTimeBase.Daily:
+            {
                 return new DateTime(time.Year, time.Month, time.Day);
+            }
             case EventTimeBase.Weekly:
+            {
                 return (new DateTime(time.Year, time.Month, time.Day)).AddDays(
                     -(int)time.DayOfWeek
                 );
+            }
             case EventTimeBase.Monthly:
+            {
                 return new DateTime(time.Year, time.Month, 1);
+            }
         }
         throw new Exception("Invalid base specified for timer.");
     }
@@ -131,17 +151,29 @@ public class ScheduledTime : IScheduledItem
         switch (_Base)
         {
             case EventTimeBase.BySecond:
+            {
                 return Last.AddSeconds(1);
+            }
             case EventTimeBase.ByMinute:
+            {
                 return Last.AddMinutes(1);
+            }
             case EventTimeBase.Hourly:
+            {
                 return Last.AddHours(1);
+            }
             case EventTimeBase.Daily:
+            {
                 return Last.AddDays(1);
+            }
             case EventTimeBase.Weekly:
+            {
                 return Last.AddDays(7);
+            }
             case EventTimeBase.Monthly:
+            {
                 return Last.AddMonths(1);
+            }
         }
         throw new Exception("Invalid base specified for timer.");
     }
@@ -151,32 +183,45 @@ public class ScheduledTime : IScheduledItem
         switch (_Base)
         {
             case EventTimeBase.BySecond:
+            {
                 {
                     int offset = int.Parse(StrOffset);
                     if (offset >= 1000 || offset < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             offset,
                             "millisecond offset must be between 0 and 1000.  If you need an event every n seconds use simpleinterval."
                         );
+                    }
+
                     _Offset = new TimeSpan(0, 0, 0, 0, int.Parse(StrOffset));
                 }
                 break;
+            }
+
             case EventTimeBase.ByMinute:
+            {
                 {
                     string[] ArrMinute = StrOffset.Split(',');
                     if (ArrayAccess(ArrMinute, 0) >= 60 || ArrayAccess(ArrMinute, 0) < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             ArrayAccess(ArrMinute, 0),
                             "second offset must be between 0 and 60.  If you need an event every n minutes use simpleinterval."
                         );
+                    }
+
                     if (ArrayAccess(ArrMinute, 1) >= 1000 || ArrayAccess(ArrMinute, 1) < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             ArrayAccess(ArrMinute, 1),
                             "millisecond offset must be between 0 and 1000."
                         );
+                    }
+
                     _Offset = new TimeSpan(
                         0,
                         0,
@@ -186,27 +231,39 @@ public class ScheduledTime : IScheduledItem
                     );
                 }
                 break;
+            }
+
             case EventTimeBase.Hourly:
+            {
                 {
                     string[] ArrHour = StrOffset.Split(',');
                     if (ArrayAccess(ArrHour, 0) >= 60 || ArrayAccess(ArrHour, 0) < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             ArrayAccess(ArrHour, 0),
                             "minute offset must be between 0 and 60.  If you need an event every n hours use simpleinterval."
                         );
+                    }
+
                     if (ArrayAccess(ArrHour, 1) >= 60 || ArrayAccess(ArrHour, 1) < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             ArrayAccess(ArrHour, 1),
                             "second offset must be between 0 and 60."
                         );
+                    }
+
                     if (ArrayAccess(ArrHour, 2) >= 1000 || ArrayAccess(ArrHour, 2) < 0)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             ArrayAccess(ArrHour, 2),
                             "millisecond offset must be between 0 and 1000."
                         );
+                    }
+
                     _Offset = new TimeSpan(
                         0,
                         0,
@@ -216,7 +273,10 @@ public class ScheduledTime : IScheduledItem
                     );
                 }
                 break;
+            }
+
             case EventTimeBase.Daily:
+            {
                 {
                     DateTime Daytime = DateTime.Parse(StrOffset);
                     _Offset = new TimeSpan(
@@ -228,16 +288,22 @@ public class ScheduledTime : IScheduledItem
                     );
                 }
                 break;
+            }
+
             case EventTimeBase.Weekly:
+            {
                 {
                     string[] ArrWeek = StrOffset.Split(',');
                     int offset = int.Parse(ArrWeek[0]);
                     if (ArrWeek.Length != 2 || offset < 0 || offset >= 7)
+                    {
                         throw new ArgumentOutOfRangeException(
                             "offset",
                             offset,
                             "Weekly offset must be in the format n, time where n is the day of the week starting with 0 for sunday"
                         );
+                    }
+
                     DateTime WeekTime = DateTime.Parse(ArrWeek[1]);
                     _Offset = new TimeSpan(
                         offset,
@@ -248,14 +314,20 @@ public class ScheduledTime : IScheduledItem
                     );
                 }
                 break;
+            }
+
             case EventTimeBase.Monthly:
+            {
                 {
                     string[] ArrMonth = StrOffset.Split(',');
                     int offset = int.Parse(ArrMonth[0]);
                     if (ArrMonth.Length != 2)
+                    {
                         throw new Exception(
                             "Monthly offset must be in the format n, time where n is the day of the month starting with 1 for the first day of the month."
                         );
+                    }
+
                     DateTime MonthTime = DateTime.Parse(ArrMonth[1]);
                     _Offset = new TimeSpan(
                         offset - 1,
@@ -266,8 +338,12 @@ public class ScheduledTime : IScheduledItem
                     );
                 }
                 break;
+            }
+
             default:
+            {
                 throw new Exception("Invalid base specified for timer.");
+            }
         }
     }
 

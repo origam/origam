@@ -54,62 +54,118 @@ public class KeystrokeMessageFilter : System.Windows.Forms.IMessageFilter
             switch (((int)m.WParam) | ((int)Control.ModifierKeys))
             {
                 case (int)Keys.Up:
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyMoveUp);
                     break;
+                }
+
                 case (int)Keys.Down:
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyMoveDown);
                     break;
+                }
+
                 case (int)Keys.Right:
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyMoveRight);
                     break;
+                }
+
                 case (int)Keys.Left:
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyMoveLeft);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Up):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeUp);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Down):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeDown);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Right):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeRight);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Left):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeLeft);
                     break;
+                }
+
                 case (int)(Keys.Shift | Keys.Up):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeySizeHeightDecrease);
                     break;
+                }
+
                 case (int)(Keys.Shift | Keys.Down):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeySizeHeightIncrease);
                     break;
+                }
+
                 case (int)(Keys.Shift | Keys.Right):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeySizeWidthIncrease);
                     break;
+                }
+
                 case (int)(Keys.Shift | Keys.Left):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeySizeWidthDecrease);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Shift | Keys.Up):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeHeightIncrease);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Shift | Keys.Down):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeHeightDecrease);
                     break;
+                }
+
                 case (int)(Keys.Control | Keys.Shift | Keys.Right):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeWidthIncrease);
                     break;
+                }
+
                 case (int)(Keys.ControlKey | Keys.Shift | Keys.Left):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyNudgeWidthDecrease);
                     break;
+                }
+
                 case (int)(Keys.Escape):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyCancel);
                     break;
+                }
+
                 case (int)(Keys.Shift | Keys.Escape):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyReverseCancel);
                     break;
+                }
+
                 case (int)(Keys.Enter):
+                {
                     mcs.GlobalInvoke(MenuCommands.KeyDefaultAction);
                     break;
+                }
             }
         }
         // Never filter the message

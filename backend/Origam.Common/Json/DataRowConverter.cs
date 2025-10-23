@@ -24,7 +24,6 @@ using System.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Origam.Service.Core;
-using newton = Newtonsoft.Json.Converters;
 
 namespace Origam.JSON;
 
@@ -49,7 +48,10 @@ class DataRowConverter : JsonConverter
                 serializer.NullValueHandling == NullValueHandling.Ignore
                 && (row[column] == null || row[column] == DBNull.Value)
             )
+            {
                 continue;
+            }
+
             writer.WritePropertyName(
                 (resolver != null)
                     ? resolver.GetResolvedPropertyName(column.ColumnName)

@@ -78,11 +78,14 @@ public class DynamicTypeFactory
         );
         typeBuilder.SetParent(parentType);
         foreach (DynamicProperty property in dynamicProperties)
+        {
             AddDynamicPropertyToType(property, inheritor);
+        }
+
         Type childType = typeBuilder.CreateType();
         controlItemMapping[childType] = new DynamicTypeInfo(
-            inheritor: inheritor,
-            originalType: parentType
+            originalType: parentType,
+            inheritor: inheritor
         );
         return childType;
     }

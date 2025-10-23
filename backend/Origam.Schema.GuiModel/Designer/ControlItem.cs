@@ -152,9 +152,11 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
         get
         {
             if (this.PanelControlSet == null)
+            {
                 return true;
-            else
-                return false;
+            }
+
+            return false;
         }
     }
     public override string ItemType

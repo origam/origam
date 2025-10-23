@@ -42,7 +42,10 @@ public static class ProfilingTools
     )
     {
         if (task == null)
+        {
             return;
+        }
+
         (string id, string path) = GetIdAndPath(task, logEntryType);
         LogDuration(logEntryType, path, id, stoppedStopwatch);
     }
@@ -157,7 +160,10 @@ public static class ProfilingTools
     private static bool ShouldLog(Func<bool> logOnlyIf)
     {
         if (logOnlyIf == null)
+        {
             return true;
+        }
+
         return logOnlyIf();
     }
 }
@@ -198,7 +204,10 @@ public class OperationTimer
     public Stopwatch Stop(int hash)
     {
         if (!runningOperations.ContainsKey(hash))
+        {
             return new Stopwatch();
+        }
+
         Stopwatch stopwatch = runningOperations[hash].Stopwatch;
         stopwatch.Stop();
         runningOperations.Remove(hash);
@@ -208,7 +217,9 @@ public class OperationTimer
     public void StopAndLog(int hash)
     {
         if (!runningOperations.ContainsKey(hash))
+        {
             return;
+        }
 
         ProfilingTools.LogDuration(
             logEntryType: runningOperations[hash].LogEntryType,

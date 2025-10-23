@@ -142,6 +142,8 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
                 .First()
                 .Label.Width(Font) + 50;
         if (methodInfo != null)
+        {
             methodInfo.Invoke(controll, new object[] { maxwidth });
+        }
     }
 }

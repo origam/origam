@@ -20,18 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpFunctionalExtensions;
-using MoreLinq;
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
-using Origam.OrigamEngine;
 using Origam.Schema;
 #if !NETSTANDARD
 using Origam.Git;
@@ -113,9 +108,9 @@ public class FilePersistenceService : IPersistenceService
             topDirectory: topDirectory,
             fileEventQueue: FileEventQueue,
             ignoredFileFilter: ignoredFileFilter,
-            index: index,
-            origamFileFactory: origamFileFactory,
             trackerLoaderFactory: trackerLoaderFactory,
+            origamFileFactory: origamFileFactory,
+            index: index,
             origamFileManager: origamFileManager,
             checkRules: checkRules,
             runtimeModelConfig: new RuntimeModelConfig(this.pathToRuntimeModelConfig)
@@ -222,8 +217,8 @@ public class FilePersistenceService : IPersistenceService
         return new FilePersistenceService(
             metaModelUpgradeService,
             defaultFolders,
-            mode: MetaModelUpgradeMode.Ignore,
-            pathToRuntimeModelConfig: pathToRuntimeModelConfig
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig,
+            mode: MetaModelUpgradeMode.Ignore
         );
     }
 

@@ -84,12 +84,16 @@ public static class DataSetExtensions
         // primary key
         bool found = IsInColumns(column, column.Table.PrimaryKey);
         if (found)
+        {
             return true;
+        }
 
         // parent relations
         found = IsInRelations(column, column.Table.ParentRelations);
         if (found)
+        {
             return true;
+        }
 
         // child relations
         return IsInRelations(column, column.Table.ChildRelations);
@@ -100,7 +104,9 @@ public static class DataSetExtensions
         foreach (DataRelation relation in relations)
         {
             if (IsRelationKey(column, relation))
+            {
                 return true;
+            }
         }
 
         return false;
@@ -112,7 +118,9 @@ public static class DataSetExtensions
         bool found = IsInColumns(column, relation.ParentColumns);
 
         if (found)
+        {
             return true;
+        }
 
         // child columns
         return IsInColumns(column, relation.ChildColumns);
@@ -123,7 +131,9 @@ public static class DataSetExtensions
         foreach (DataColumn col in columns)
         {
             if (col.Equals(searchedColumn))
+            {
                 return true;
+            }
         }
 
         return false;

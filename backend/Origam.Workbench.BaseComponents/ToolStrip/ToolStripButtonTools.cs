@@ -53,7 +53,9 @@ internal static class ToolStripButtonTools
     public static void PaintText(this ToolStripItem actionButton, PaintEventArgs e)
     {
         if (actionButton.Owner == null)
+        {
             return;
+        }
 
         var renderer = actionButton.Owner.Renderer;
 
@@ -80,7 +82,9 @@ internal static class ToolStripButtonTools
     public static void PaintImage(ToolStripItem actionButton, PaintEventArgs e)
     {
         if (actionButton.Owner == null)
+        {
             return;
+        }
 
         var renderer = actionButton.Owner.Renderer;
         actionButton.Image = GetImage(actionButton);
@@ -110,7 +114,7 @@ internal static class ToolStripButtonTools
     {
         Image image = GetImage(actionButton);
         var xCoord = (actionButton.Width - image.Size.Width) / 2;
-        var yCoord = actionButton.Margin.Top + (defaultImageHeight - image.Height) / 2;
+        var yCoord = actionButton.Margin.Top + ((defaultImageHeight - image.Height) / 2);
         return new Rectangle(new Point(xCoord, yCoord), image.Size);
     }
 

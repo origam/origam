@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Origam.OrigamEngine;
 using Origam.UI;
 
 namespace Origam.Workbench;
@@ -253,12 +252,16 @@ public class OrigamSettingsEditor : AbstractViewContent
             switch (result)
             {
                 case DialogResult.Yes:
+                {
                     SaveObject();
                     break;
+                }
 
                 case DialogResult.Cancel:
+                {
                     e.Cancel = true;
                     break;
+                }
             }
         }
     }
@@ -266,7 +269,10 @@ public class OrigamSettingsEditor : AbstractViewContent
     private void lvwConfigurations_SelectedIndexChanged(object sender, System.EventArgs e)
     {
         if (_closing)
+        {
             return;
+        }
+
         if (lvwConfigurations.SelectedItems.Count > 0)
         {
             OrigamSettings[] selectedSettings = new OrigamSettings[
@@ -320,7 +326,10 @@ public class OrigamSettingsEditor : AbstractViewContent
         if (e.Button == btnDelete)
         {
             if (lvwConfigurations.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             ListViewItem[] items = new ListViewItem[lvwConfigurations.SelectedItems.Count];
             lvwConfigurations.SelectedItems.CopyTo(items, 0);
             foreach (ListViewItem item in items)
@@ -333,7 +342,10 @@ public class OrigamSettingsEditor : AbstractViewContent
         if (e.Button == btnClone)
         {
             if (lvwConfigurations.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             foreach (ListViewItem item in lvwConfigurations.SelectedItems)
             {
                 ListViewItem newItem = NewItem();

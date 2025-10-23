@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using Origam.Schema;
@@ -188,11 +187,16 @@ public partial class PropertyGridModelDropdown : UserControl
         {
             case Keys.Up:
             case Keys.Down:
+            {
                 listBox1.Focus();
                 break;
+            }
+
             case Keys.Enter:
+            {
                 Finish();
                 break;
+            }
         }
     }
 

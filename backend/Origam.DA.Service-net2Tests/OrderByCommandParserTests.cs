@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Origam.DA.Service.CustomCommandParser;
-using Origam.DA.Service.Generators;
+
 #region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
@@ -59,7 +59,10 @@ class OrderByCommandParserTests
     private List<Ordering> ToListOfOrderings(string orderingStr)
     {
         if (orderingStr == null)
+        {
             return null;
+        }
+
         string[] strings = orderingStr.Split(',');
         return new List<Ordering> { new Ordering(strings[0], strings[1], 100) };
     }

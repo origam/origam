@@ -29,15 +29,19 @@ public class SingleEvent : IScheduledItem
     public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
     {
         if (Begin <= _EventTime && End > _EventTime)
+        {
             List.Add(_EventTime);
+        }
     }
 
     public DateTime NextRunTime(DateTime time, bool IncludeStartTime)
     {
         if (IncludeStartTime)
+        {
             return (_EventTime >= time) ? _EventTime : DateTime.MaxValue;
-        else
-            return (_EventTime > time) ? _EventTime : DateTime.MaxValue;
+        }
+
+        return (_EventTime > time) ? _EventTime : DateTime.MaxValue;
     }
 
     private DateTime _EventTime;

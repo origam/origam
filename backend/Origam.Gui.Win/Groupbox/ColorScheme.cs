@@ -62,6 +62,7 @@ internal class ColorScheme
         switch (oClrScheme)
         {
             case EnmColorScheme.Green:
+            {
                 //=========================================================
                 //Setting color properties of button control for
                 //Green color scheme
@@ -77,8 +78,10 @@ internal class ColorScheme
                 aCtrl.FontColor = Color.FromArgb(105, 110, 26);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
+            }
             //---------------------------------------------------------
             case EnmColorScheme.Purple:
+            {
                 //=========================================================
                 //Setting color properties of button control for
                 //Purple color scheme
@@ -94,8 +97,10 @@ internal class ColorScheme
                 aCtrl.FontColor = Color.FromArgb(74, 30, 115);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
+            }
             //---------------------------------------------------------
             case EnmColorScheme.Yellow:
+            {
                 //=========================================================
                 //Setting color properties of button control for
                 //Yellow color scheme
@@ -111,6 +116,7 @@ internal class ColorScheme
                 aCtrl.FontColor = Color.FromArgb(96, 83, 43);
                 aCtrl.PressedFontColor = Color.Black;
                 break;
+            }
             //---------------------------------------------------------
         }
     }
@@ -124,6 +130,7 @@ internal class ColorScheme
         switch (oClrScheme)
         {
             case EnmColorScheme.Origam:
+            {
                 //=========================================================
                 // Setting color properties of container control for
                 // Green color scheme
@@ -135,8 +142,10 @@ internal class ColorScheme
                 aCtrl.BackgroundTopColor = OrigamColorScheme.GroupBoxBackgroundTopColor;
                 aCtrl.BackgroundBottomColor = OrigamColorScheme.GroupBoxBackgroundBottomColor;
                 break;
+            }
             //---------------------------------------------------------
             case EnmColorScheme.Green:
+            {
                 //=========================================================
                 // Setting color properties of container control for
                 // Green color scheme
@@ -148,8 +157,10 @@ internal class ColorScheme
                 aCtrl.BackgroundTopColor = Color.FromArgb(245, 243, 219);
                 aCtrl.BackgroundBottomColor = Color.FromArgb(214, 209, 153);
                 break;
+            }
             //---------------------------------------------------------
             case EnmColorScheme.Purple:
+            {
                 //=========================================================
                 // Setting color properties of container control for
                 // Purple color scheme
@@ -161,11 +172,14 @@ internal class ColorScheme
                 aCtrl.BackgroundTopColor = Color.FromArgb(251, 246, 255);
                 aCtrl.BackgroundBottomColor = Color.FromArgb(241, 229, 249);
                 break;
+            }
             //---------------------------------------------------------
             default:
+            {
                 // For container control if other than Purple or Green
                 // any other value is selected it throws an exception
                 throw new InvalidColorSchemeException();
+            }
         }
     }
 }

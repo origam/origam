@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -489,11 +488,14 @@ public class PackageEditor : AbstractViewContent
         txtDescription.TextChanged -= txtDescription_TextChanged;
 
         if (!(objectToLoad is Package))
+        {
             throw new ArgumentOutOfRangeException(
                 "objectToLoad",
                 objectToLoad,
                 ResourceUtils.GetString("ErrorEditPackagesOnly")
             );
+        }
+
         _package = objectToLoad as Package;
         txtName.Text = _package.Name;
         txtVersion.Text = _package.Version;
@@ -617,15 +619,11 @@ public class PackageEditor : AbstractViewContent
                         return null;
                     }
                 }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
+
                 return null;
             }
+
+            return null;
         }
     }
 
@@ -681,7 +679,10 @@ public class PackageEditor : AbstractViewContent
     private bool ShouldFilterGroup(SchemaItemGroup group)
     {
         if (group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
+        {
             return false;
+        }
+
         foreach (ISchemaItem child in group.ChildItems)
         {
             if (child.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
@@ -766,7 +767,10 @@ public class PackageEditor : AbstractViewContent
     private bool IsPackageReferenced(Package package)
     {
         if (package == null)
+        {
             return false;
+        }
+
         List<ISchemaItem> allCurrent =
             _package.PersistenceProvider.RetrieveListByPackage<ISchemaItem>(
                 _schema.ActiveExtension.Id

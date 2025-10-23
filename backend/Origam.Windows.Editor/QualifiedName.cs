@@ -57,7 +57,8 @@ public class QualifiedName
         {
             return lhs.Equals(rhs);
         }
-        else if ((lhsObject == null) && (rhsObject == null))
+
+        if ((lhsObject == null) && (rhsObject == null))
         {
             return true;
         }
@@ -80,13 +81,11 @@ public class QualifiedName
         {
             return xmlQualifiedName.Equals(qualifiedName.xmlQualifiedName);
         }
-        else
+        XmlQualifiedName name = obj as XmlQualifiedName;
+
+        if (name != null)
         {
-            XmlQualifiedName name = obj as XmlQualifiedName;
-            if (name != null)
-            {
-                return xmlQualifiedName.Equals(name);
-            }
+            return xmlQualifiedName.Equals(name);
         }
         return false;
     }

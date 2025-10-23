@@ -40,7 +40,9 @@ public class ViewAttachmentPad : AbstractMenuCommand
         AttachmentPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(AttachmentPad)) as AttachmentPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -59,7 +61,9 @@ public class ViewAuditLogPad : AbstractMenuCommand
     {
         AuditLogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(AuditLogPad)) as AuditLogPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -78,7 +82,9 @@ public class ViewPropertyPad : AbstractMenuCommand
     {
         PropertyPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(PropertyPad)) as PropertyPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -98,7 +104,9 @@ public class ViewDocumentationPad : AbstractMenuCommand
         DocumentationPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(DocumentationPad)) as DocumentationPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -118,7 +126,9 @@ public class ViewExtensionPad : AbstractMenuCommand
         ExtensionPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -138,7 +148,9 @@ public class ViewSchemaBrowserPad : AbstractMenuCommand
         SchemaBrowser pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -157,7 +169,9 @@ public class ViewOutputPad : AbstractMenuCommand
     {
         OutputPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -176,7 +190,9 @@ public class ViewLogPad : AbstractMenuCommand
     {
         LogPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(LogPad)) as LogPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -196,7 +212,9 @@ public class ViewServerLogPad : AbstractMenuCommand
         ServerLogPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(ServerLogPad)) as ServerLogPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -217,7 +235,9 @@ public class ViewFindSchemaItemResultsPad : AbstractMenuCommand
             WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad))
             as FindSchemaItemResultsPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }
 
@@ -237,6 +257,8 @@ public class ViewFindRuleResultsPad : AbstractMenuCommand
         FindRulesPad pad =
             WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
         if (pad != null)
+        {
             WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
     }
 }

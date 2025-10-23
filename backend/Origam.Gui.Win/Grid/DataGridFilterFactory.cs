@@ -127,10 +127,15 @@ public class DataGridFilterFactory : IDisposable
         {
             caption = captionControl.GridColumnCaption;
             if (caption == "" | caption == null)
+            {
                 caption = captionControl.Caption;
+            }
         }
         if (caption == "" | caption == null)
+        {
             caption = column.Caption;
+        }
+
         AsDropDown dropDown = control as AsDropDown;
         AsTextBox textBox = control as AsTextBox;
         AsTextBox tb = new AsTextBox();
@@ -317,13 +322,25 @@ public class DataGridFilterFactory : IDisposable
         filter.ProfileId = profile.Id;
 
         if (!filter.IsRecordCreatedNull())
+        {
             filter.RecordUpdated = DateTime.Now;
+        }
+
         if (!filter.IsRecordCreatedByNull())
+        {
             filter.RecordUpdatedBy = profile.Id;
+        }
+
         if (filter.IsRecordCreatedNull())
+        {
             filter.RecordCreated = DateTime.Now;
+        }
+
         if (filter.IsRecordCreatedByNull())
+        {
             filter.RecordCreatedBy = profile.Id;
+        }
+
         if (filter.RowState == DataRowState.Detached)
         {
             (filter.Table.DataSet as OrigamPanelFilter).PanelFilter.AddPanelFilterRow(filter);
@@ -361,8 +378,11 @@ public class DataGridFilterFactory : IDisposable
         switch (item.GetType().Name)
         {
             case "AsDateBox":
+            {
                 return ">=";
+            }
             case "AsTextBox":
+            {
                 if (
                     (item as AsTextBox).DataType == typeof(string)
                     | (item as AsTextBox).DataType == typeof(object)
@@ -370,12 +390,14 @@ public class DataGridFilterFactory : IDisposable
                 {
                     return "LIKE";
                 }
-                else
-                {
-                    return "=";
-                }
-            default:
+
                 return "=";
+            }
+
+            default:
+            {
+                return "=";
+            }
         }
     }
     #endregion

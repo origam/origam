@@ -166,28 +166,39 @@ public class ComboBoxBuilder
                 switch (origamType)
                 {
                     case OrigamDataType.Date:
+                    {
                         targetEntity = "Date";
                         targetColumn = "Date";
                         formatPattern = "ddd dd. MM yyyy HH:mm";
                         break;
+                    }
+
                     case OrigamDataType.Integer:
                     case OrigamDataType.Long:
                     case OrigamDataType.Float:
                     case OrigamDataType.Currency:
+                    {
                         targetEntity = origamType.ToString();
                         targetColumn = "Number";
                         break;
+                    }
+
                     case OrigamDataType.Boolean:
+                    {
                         targetEntity = origamType.ToString();
                         targetColumn = "CheckBox";
                         break;
+                    }
                 }
                 comboColumnElement.SetAttribute("Id", comboColumn);
                 comboColumnElement.SetAttribute("Name", dataColumn.Caption);
                 comboColumnElement.SetAttribute("Entity", targetEntity);
                 comboColumnElement.SetAttribute("Column", targetColumn);
                 if (formatPattern != "")
+                {
                     comboColumnElement.SetAttribute("FormatterPattern", formatPattern);
+                }
+
                 comboColumnElement.SetAttribute("Index", dataColumn.Ordinal.ToString());
             }
         }

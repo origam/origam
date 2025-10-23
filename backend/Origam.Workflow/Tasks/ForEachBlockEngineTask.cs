@@ -22,14 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using System.Diagnostics;
-using System.Windows.Input;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.XPath;
-using Origam.Rule;
 using Origam.Rule.Xslt;
-using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -124,7 +119,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
             }
             // if workflow finished with an exception, we don't proceed
             if (this.Engine == null)
+            {
                 return;
+            }
+
             if (log.IsInfoEnabled)
             {
                 log.Info("Starting iteration no. " + _iter.CurrentPosition);
@@ -207,7 +205,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
         if (this.Engine == null)
+        {
             return; // finished already
+        }
+
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
         {

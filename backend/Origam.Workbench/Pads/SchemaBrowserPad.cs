@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
 

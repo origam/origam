@@ -145,9 +145,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         get
         {
             if (this.controlToHide != null)
+            {
                 return !this.controlToHide.Visible;
-            else
-                return true;
+            }
+
+            return true;
         }
     }
 
@@ -356,7 +358,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
             if (controlToHide != null)
             {
                 if (!controlToHide.Visible)
+                {
                     this.Cursor = Cursors.Default;
+                }
                 else // Changed in v1.2 to support Horizontal Splitters
                 {
                     if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
@@ -397,7 +401,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
     {
         // if an animation is currently in progress for this control, drop out
         if (currentState == SplitterState.Collapsing || currentState == SplitterState.Expanding)
+        {
             return;
+        }
+
         controlWidth = controlToHide.Width;
         controlHeight = controlToHide.Height;
         if (controlToHide.Visible)
@@ -488,6 +495,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         switch (currentState)
         {
             case SplitterState.Collapsing:
+            {
                 if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
                 {
                     // vertical splitter
@@ -553,7 +561,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                     }
                 }
                 break;
+            }
+
             case SplitterState.Expanding:
+            {
                 if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
                 {
                     // vertical splitter
@@ -619,6 +630,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                     }
                 }
                 break;
+            }
         }
     }
     #endregion
@@ -688,6 +700,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                 switch (visualStyle)
                 {
                     case VisualStyles.Mozilla:
+                    {
                         for (int i = 0; i < 30; i++)
                         {
                             // light dot
@@ -729,7 +742,10 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             }
                         }
                         break;
+                    }
+
                     case VisualStyles.DoubleDots:
+                    {
                         for (int i = 0; i < 30; i++)
                         {
                             // light dot
@@ -767,13 +783,17 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                     case VisualStyles.Win9x:
+                    {
                         g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 2, y);
                         g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 90);
                         g.DrawLine(new Pen(SystemColors.ControlDark), x + 2, y, x + 2, y + 90);
                         g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 90, x + 2, y + 90);
                         break;
+                    }
                     case VisualStyles.XP:
+                    {
                         for (int i = 0; i < 18; i++)
                         {
                             // light dot
@@ -817,7 +837,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                     case VisualStyles.Lines:
+                    {
                         for (int i = 0; i < 44; i++)
                         {
                             g.DrawLine(
@@ -829,6 +851,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                 }
             }
             // Added in version 1.3
@@ -904,6 +927,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                 switch (visualStyle)
                 {
                     case VisualStyles.Mozilla:
+                    {
                         for (int i = 0; i < 30; i++)
                         {
                             // light dot
@@ -945,7 +969,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             }
                         }
                         break;
+                    }
                     case VisualStyles.DoubleDots:
+                    {
                         for (int i = 0; i < 30; i++)
                         {
                             // light dot
@@ -983,13 +1009,17 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                     case VisualStyles.Win9x:
+                    {
                         g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x, y + 2);
                         g.DrawLine(new Pen(SystemColors.ControlLightLight), x, y, x + 88, y);
                         g.DrawLine(new Pen(SystemColors.ControlDark), x, y + 2, x + 88, y + 2);
                         g.DrawLine(new Pen(SystemColors.ControlDark), x + 88, y, x + 88, y + 2);
                         break;
+                    }
                     case VisualStyles.XP:
+                    {
                         for (int i = 0; i < 18; i++)
                         {
                             // light dot
@@ -1033,7 +1063,9 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                     case VisualStyles.Lines:
+                    {
                         for (int i = 0; i < 44; i++)
                         {
                             g.DrawLine(
@@ -1045,6 +1077,7 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
                             );
                         }
                         break;
+                    }
                 }
             }
             // Added in version 1.3
@@ -1146,11 +1179,11 @@ public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPai
         float backGreen = backColor.G;
         float backBlue = backColor.B;
 
-        float fRed = frontRed * alpha / 255 + backRed * ((float)(255 - alpha) / 255);
+        float fRed = (frontRed * alpha / 255) + (backRed * ((float)(255 - alpha) / 255));
         byte newRed = (byte)fRed;
-        float fGreen = frontGreen * alpha / 255 + backGreen * ((float)(255 - alpha) / 255);
+        float fGreen = (frontGreen * alpha / 255) + (backGreen * ((float)(255 - alpha) / 255));
         byte newGreen = (byte)fGreen;
-        float fBlue = frontBlue * alpha / 255 + backBlue * ((float)(255 - alpha) / 255);
+        float fBlue = (frontBlue * alpha / 255) + (backBlue * ((float)(255 - alpha) / 255));
         byte newBlue = (byte)fBlue;
         return Color.FromArgb(255, newRed, newGreen, newBlue);
     }

@@ -155,7 +155,8 @@ public class ServerLogPad : OutputPad
                     // nothing changed, we do not continue
                     return;
                 }
-                else if (size >= _lastPosition)
+
+                if (size >= _lastPosition)
                 {
                     // file grew, we request the increment
                     request.AddRange(_lastPosition, size);
@@ -173,7 +174,7 @@ public class ServerLogPad : OutputPad
         {
             timer.Interval *= 10;
             string message =
-                "Could not load server log. Will retry in " + timer.Interval / 1000 + " seconds.";
+                "Could not load server log. Will retry in " + (timer.Interval / 1000) + " seconds.";
             SetOutputText(message);
             if (log.IsErrorEnabled)
             {
@@ -211,10 +212,8 @@ public class ServerLogPad : OutputPad
         {
             return size;
         }
-        else
-        {
-            return initSize;
-        }
+
+        return initSize;
     }
 
     private static int GetFileSize(string url)

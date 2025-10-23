@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Drawing;
 using System.IO;
 
@@ -30,7 +29,10 @@ public static class BitmapExtensions
     public static byte[] ToByteArray(this Bitmap bitmap)
     {
         if (bitmap == null)
+        {
             return null;
+        }
+
         using (var stream = new MemoryStream())
         {
             bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);

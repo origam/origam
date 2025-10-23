@@ -21,11 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.Service;
 using Origam.Extensions;
-using ProtoBuf;
 
 namespace Origam.DA.Service;
 
@@ -81,10 +78,8 @@ public class OrigamPath
         {
             return absolutePath.Substring(basePath.Length);
         }
-        else
-        {
-            return absolutePath.Substring(basePath.Length + 1);
-        }
+
+        return absolutePath.Substring(basePath.Length + 1);
     }
 
     public bool EqualsTo(FileInfo file)
@@ -97,11 +92,20 @@ public class OrigamPath
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, obj))
+        {
             return true;
+        }
+
         if (obj.GetType() != this.GetType())
+        {
             return false;
+        }
+
         return Equals((OrigamPath)obj);
     }
 
@@ -142,9 +146,15 @@ public class ExternalFilePath : OrigamPath
     public static bool IsExternalFileLink(string mayBePath)
     {
         if (string.IsNullOrEmpty(mayBePath))
+        {
             return false;
+        }
+
         if (!mayBePath.StartsWith(ExternalFileLinkPrefix))
+        {
             return false;
+        }
+
         if (
             !ParseOwnerId(mayBePath).HasValue
             || !ExternalFileExtensionTools.TryParse(mayBePath, out var _)

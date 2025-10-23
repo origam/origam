@@ -43,7 +43,9 @@ public static class ImageResizer
             finally
             {
                 if (ms != null)
+                {
                     ms.Close();
+                }
             }
         }
     }
@@ -51,7 +53,10 @@ public static class ImageResizer
     public static Image Resize(Image image, int width)
     {
         if (image.Width == width)
+        {
             return image;
+        }
+
         return Resize(image, width, width, true);
     }
 
@@ -74,7 +79,9 @@ public static class ImageResizer
             finally
             {
                 if (ms != null)
+                {
                     ms.Close();
+                }
             }
         }
     }
@@ -92,21 +99,32 @@ public static class ImageResizer
         {
             case "jpeg":
             case "jpg":
+            {
                 format = System.Drawing.Imaging.ImageFormat.Jpeg;
                 break;
+            }
+
             case "png":
+            {
                 format = System.Drawing.Imaging.ImageFormat.Png;
                 break;
+            }
+
             case "gif":
+            {
                 format = System.Drawing.Imaging.ImageFormat.Gif;
                 break;
+            }
+
             default:
+            {
                 throw new OrigamException(
                     String.Format(
                         "Invalid program exception. Unexpected " + "output image format: {0}",
                         outFormat
                     )
                 );
+            }
         }
         MemoryStream ms = new MemoryStream(imgBytes);
         Image img = Image.FromStream(ms);
@@ -177,17 +195,27 @@ public static class ImageResizer
             switch (rotationValue)
             {
                 case 1: // landscape, do nothing
+                {
                     break;
+                }
                 case 8: // rotated 90 right
+                {
                     // de-rotate:
                     imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
                     break;
+                }
+
                 case 3: // bottoms up
+                {
                     imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
                     break;
+                }
+
                 case 6: // rotated 90 left
+                {
                     imgPhoto.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
                     break;
+                }
             }
         }
         int sourceWidth = imgPhoto.Width;

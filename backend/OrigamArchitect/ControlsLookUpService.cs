@@ -58,9 +58,11 @@ public class ControlsLookUpService : IControlsLookUpService
         _controls.Add(lookupControl, form);
         AbstractDataLookup lookup = dataLookupService.GetLookup(lookupControl.LookupId);
         if (lookup == null)
+        {
             throw new NullReferenceException(
                 "Lookup not specified in control: " + (lookupControl as Control).Name
             );
+        }
         // set the EditMenu visibility, if user can or cannot run the Edit command
         lookupControl.LookupShowEditButton = (showEditCommand & HasEditListMenuBinding(lookup));
         lookupControl.LookupCanEditSourceRecord = HasEditRecordMenuBinding(lookup);
@@ -154,7 +156,10 @@ public class ControlsLookUpService : IControlsLookUpService
     {
         ParameterizedEventArgs args = e as ParameterizedEventArgs;
         if (args == null)
+        {
             return;
+        }
+
         WorkbenchSingleton.Workbench.ProcessGuiLink(args.SourceForm, menuItem, args.Parameters);
     }
 

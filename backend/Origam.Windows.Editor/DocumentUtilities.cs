@@ -52,13 +52,18 @@ public static class DocumentUtilities
     public static string GetWordBeforeCaret(this TextEditor editor)
     {
         if (editor == null)
+        {
             throw new ArgumentNullException("editor");
+        }
+
         int endOffset = editor.TextArea.Caret.Offset;
         int startOffset = FindPrevWordStart(editor.Document, endOffset);
         if (startOffset < 0)
+        {
             return string.Empty;
-        else
-            return editor.Document.GetText(startOffset, endOffset - startOffset);
+        }
+
+        return editor.Document.GetText(startOffset, endOffset - startOffset);
     }
 
     static readonly char[] whitespaceChars = { ' ', '\t' };
@@ -75,15 +80,27 @@ public static class DocumentUtilities
     )
     {
         if (document == null)
+        {
             throw new ArgumentNullException("document");
+        }
+
         if (line == null)
+        {
             throw new ArgumentNullException("line");
+        }
+
         if (newLineText == null)
+        {
             throw new ArgumentNullException("newLineText");
+        }
+
         string newLineTextTrim = newLineText.Trim(whitespaceChars);
         string oldLineText = document.GetText(line);
         if (oldLineText == newLineText)
+        {
             return;
+        }
+
         int pos = oldLineText.IndexOf(newLineTextTrim, StringComparison.Ordinal);
         if (newLineTextTrim.Length > 0 && pos >= 0)
         {
@@ -95,7 +112,10 @@ public static class DocumentUtilities
                 {
                     char c = newLineText[startWhitespaceLength];
                     if (c != ' ' && c != '\t')
+                    {
                         break;
+                    }
+
                     startWhitespaceLength++;
                 }
                 // find whitespace at end
@@ -226,7 +246,10 @@ public static class DocumentUtilities
             // at the end of the document, there's no line delimiter, so use the delimiter
             // from the previous line
             if (lineNumber == 1)
+            {
                 return Environment.NewLine;
+            }
+
             line = document.GetLineByNumber(lineNumber - 1);
         }
         return document.GetText(line.Offset + line.Length, line.DelimiterLength);
@@ -245,7 +268,10 @@ public static class DocumentUtilities
     public static void InsertNormalized(this IDocument document, int offset, string text)
     {
         if (document == null)
+        {
             throw new ArgumentNullException("document");
+        }
+
         IDocumentLine line = document.GetLineByOffset(offset);
         text = NormalizeNewLines(text, document, line.LineNumber);
         document.Insert(offset, text);

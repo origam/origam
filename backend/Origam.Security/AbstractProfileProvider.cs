@@ -44,35 +44,33 @@ public abstract class AbstractProfileProvider : IOrigamProfileProvider
         {
             return profileCacheById[profileId];
         }
-        else
+        UserProfile profile = new UserProfile();
+        profile.Id = profileId;
+        lock (profileCacheById)
         {
-            UserProfile profile = new UserProfile();
-            profile.Id = profileId;
-            lock (profileCacheById)
+            DataStructureQuery query = new DataStructureQuery(
+                new Guid("1a90ab22-6bc8-416c-92ee-e053272f225c"),
+                new Guid("ef310516-e1e2-4a01-b0b2-b259ad14e1b5")
+            );
+            query.Parameters.Add(new QueryParameter("BusinessPartner_parId", profileId));
+            IServiceAgent dataServiceAgent = GetAgent();
+            dataServiceAgent.MethodName = "GetScalarValueByQuery";
+            dataServiceAgent.Parameters.Clear();
+            dataServiceAgent.Parameters.Add("Query", query);
+            dataServiceAgent.Parameters.Add("ColumnName", "LookupText");
+            dataServiceAgent.Run();
+            object result = dataServiceAgent.Result;
+            if (result == null)
             {
-                DataStructureQuery query = new DataStructureQuery(
-                    new Guid("1a90ab22-6bc8-416c-92ee-e053272f225c"),
-                    new Guid("ef310516-e1e2-4a01-b0b2-b259ad14e1b5")
+                throw new Exception(
+                    ResourceUtils.GetString("ErrorProfileUnavailable", profileId.ToString())
                 );
-                query.Parameters.Add(new QueryParameter("BusinessPartner_parId", profileId));
-                IServiceAgent dataServiceAgent = GetAgent();
-                dataServiceAgent.MethodName = "GetScalarValueByQuery";
-                dataServiceAgent.Parameters.Clear();
-                dataServiceAgent.Parameters.Add("Query", query);
-                dataServiceAgent.Parameters.Add("ColumnName", "LookupText");
-                dataServiceAgent.Run();
-                object result = dataServiceAgent.Result;
-                if (result == null)
-                {
-                    throw new Exception(
-                        ResourceUtils.GetString("ErrorProfileUnavailable", profileId.ToString())
-                    );
-                }
-                profile.FullName = (string)result;
-                profileCacheById[profileId] = profile;
             }
-            return profile;
+            profile.FullName = (string)result;
+            profileCacheById[profileId] = profile;
         }
+
+        return profile;
     }
 
     public abstract object GetProfile(string userName);
@@ -102,10 +100,8 @@ public abstract class AbstractProfileProvider : IOrigamProfileProvider
         {
             throw new InvalidOperationException(ResourceUtils.GetString("ErrorModelNotLoaded"));
         }
-        else
-        {
-            return bus.GetAgent("DataService", null, null);
-        }
+
+        return bus.GetAgent("DataService", null, null);
     }
 
     protected Hashtable GetCacheById()

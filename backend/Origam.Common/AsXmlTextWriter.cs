@@ -48,9 +48,13 @@ public class AsXmlTextWriter : XmlTextWriter
         switch (navigator.NodeType)
         {
             case XPathNodeType.Root:
+            {
                 flag = true;
                 break;
+            }
+
             case XPathNodeType.Element:
+            {
                 this.WriteStartElement(
                     navigator.Prefix,
                     navigator.LocalName,
@@ -77,19 +81,32 @@ public class AsXmlTextWriter : XmlTextWriter
                 }
                 flag = true;
                 break;
+            }
+
             case XPathNodeType.Text:
+            {
                 this.WriteString(navigator.Value);
                 break;
+            }
+
             case XPathNodeType.SignificantWhitespace:
             case XPathNodeType.Whitespace:
+            {
                 this.WriteWhitespace(navigator.Value);
                 break;
+            }
+
             case XPathNodeType.ProcessingInstruction:
+            {
                 this.WriteProcessingInstruction(navigator.LocalName, navigator.Value);
                 break;
+            }
+
             case XPathNodeType.Comment:
+            {
                 this.WriteComment(navigator.Value);
                 break;
+            }
         }
         if (flag)
         {

@@ -54,16 +54,14 @@ public class ResourceMonitor
         {
             throw new Exception(ResourceUtils.GetString("TransactionRegistered"));
         }
-        else
+        transactions.Add(resourceManagerId, transaction);
+        List<string> savePoints = SavePoints(transactionId);
+
+        foreach (string savePointName in savePoints)
         {
-            transactions.Add(resourceManagerId, transaction);
-            List<string> savePoints = SavePoints(transactionId);
-            foreach (string savePointName in savePoints)
+            foreach (OrigamTransaction t in transactions.Values)
             {
-                foreach (OrigamTransaction t in transactions.Values)
-                {
-                    t.Save(savePointName);
-                }
+                t.Save(savePointName);
             }
         }
     }
@@ -75,10 +73,8 @@ public class ResourceMonitor
         {
             return transactions[resourceManagerId] as OrigamTransaction;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public static void Commit(string transactionId)
@@ -139,7 +135,10 @@ public class ResourceMonitor
                         log.FatalFormat("Failed rolling back transaction {0}", transactionId, ex);
                     }
                     if (errorMessage != "")
+                    {
                         errorMessage += Environment.NewLine;
+                    }
+
                     errorMessage += ex.Message;
                 }
             }
@@ -186,7 +185,10 @@ public class ResourceMonitor
                         log.LogOrigamError(ex.Message, ex);
                     }
                     if (errorMessage != "")
+                    {
                         errorMessage += Environment.NewLine;
+                    }
+
                     errorMessage += ex.Message;
                 }
             }

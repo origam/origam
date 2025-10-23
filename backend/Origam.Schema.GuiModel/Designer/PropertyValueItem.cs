@@ -61,16 +61,26 @@ public class PropertyValueItem : AbstractPropertyValueItem
             switch (ControlPropertyItem.PropertyType)
             {
                 case ControlPropertyValueType.Integer:
+                {
                     return XmlConvert.ToString(IntValue);
+                }
                 case ControlPropertyValueType.Boolean:
+                {
                     return XmlConvert.ToString(BoolValue);
+                }
                 case ControlPropertyValueType.Xml:
                 case ControlPropertyValueType.String:
+                {
                     return StringValue;
+                }
                 case ControlPropertyValueType.UniqueIdentifier:
+                {
                     return XmlConvert.ToString(GuidValue);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException("PropertyType");
+                }
             }
         }
         set
@@ -91,16 +101,26 @@ public class PropertyValueItem : AbstractPropertyValueItem
             switch (ControlPropertyItem.PropertyType)
             {
                 case ControlPropertyValueType.Integer:
+                {
                     return IntValue;
+                }
                 case ControlPropertyValueType.Boolean:
+                {
                     return BoolValue;
+                }
                 case ControlPropertyValueType.Xml:
                 case ControlPropertyValueType.String:
+                {
                     return StringValue;
+                }
                 case ControlPropertyValueType.UniqueIdentifier:
+                {
                     return GuidValue;
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException("PropertyType");
+                }
             }
         }
     }
@@ -125,20 +145,34 @@ public class PropertyValueItem : AbstractPropertyValueItem
             switch (ControlPropertyItem.PropertyType)
             {
                 case ControlPropertyValueType.Integer:
+                {
                     IntValue = XmlConvert.ToInt32(_xmlPersistedValue);
                     break;
+                }
+
                 case ControlPropertyValueType.Boolean:
+                {
                     BoolValue = XmlConvert.ToBoolean(_xmlPersistedValue);
                     break;
+                }
+
                 case ControlPropertyValueType.Xml:
                 case ControlPropertyValueType.String:
+                {
                     StringValue = _xmlPersistedValue;
                     break;
+                }
+
                 case ControlPropertyValueType.UniqueIdentifier:
+                {
                     GuidValue = XmlConvert.ToGuid(_xmlPersistedValue);
                     break;
+                }
+
                 default:
+                {
                     throw new ArgumentOutOfRangeException("PropertyType");
+                }
             }
         }
     }
@@ -168,7 +202,10 @@ public class PropertyValueItem : AbstractPropertyValueItem
         get
         {
             if (_stringValue == null)
+            {
                 return null;
+            }
+
             return _stringValue.Trim();
         }
         set { _stringValue = value; }

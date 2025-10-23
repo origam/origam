@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -121,11 +120,17 @@ public class TableMappingItem : AbstractDataEntity
             switch (DatabaseObjectType)
             {
                 case DatabaseMappingObjectType.Table:
+                {
                     return "icon_database-entity.png";
+                }
                 case DatabaseMappingObjectType.View:
+                {
                     return "54";
+                }
                 default:
+                {
                     return "0";
+                }
             }
         }
     }
@@ -147,7 +152,9 @@ public class TableMappingItem : AbstractDataEntity
             foreach (IDataEntityColumn column in this.EntityColumns)
             {
                 if (column.IsPrimaryKey && column is FieldMappingItem)
+                {
                     list.Add(column);
+                }
             }
             return list;
         }
