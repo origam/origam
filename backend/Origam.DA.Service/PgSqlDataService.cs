@@ -349,15 +349,17 @@ public class PgSqlDataService : AbstractSqlDataService
         return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname =(select current_schema)";
     }
 
-    protected override string GetIndexSelectQuery(DataEntityIndexField indexField, string mappedObjectName, string indexName)
+    protected override string GetIndexSelectQuery(
+        DataEntityIndexField indexField,
+        string mappedObjectName,
+        string indexName
+    )
     {
-        return @$"""
-        TableName = '{mappedObjectName}'
-        AND IndexName = '{indexName}'
-        AND ColumnName = '{((FieldMappingItem)indexField.Field).MappedColumnName}'
-        AND OrdinalPosition = {indexField.OrdinalPosition}
-        AND IsNull(IsDescending, false) = {(indexField.SortOrder == DataEntityIndexSortOrder.Descending ? "true" : "false")}
-    """.Trim();
+        return $"TableName = '{mappedObjectName}'"
+            + $" AND IndexName = '{indexName}'"
+            + $" AND ColumnName = '{((FieldMappingItem)indexField.Field).MappedColumnName}'"
+            + $" AND OrdinalPosition = {indexField.OrdinalPosition}"
+            + $" AND IsNull(IsDescending, false) = {(indexField.SortOrder == DataEntityIndexSortOrder.Descending ? "true" : "false")}";
     }
 
     internal override string GetSqlFk()
