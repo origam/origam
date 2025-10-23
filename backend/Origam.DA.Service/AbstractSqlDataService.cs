@@ -2468,7 +2468,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
             // only if the table exists in the model,
             // otherwise we will be creating the whole table later on
             // so it makes no sense to list all the columns with it
-            if (!schemaTableList.ContainsKey(row["TABLE_NAME"]))
+            if (schemaTableList[row["TABLE_NAME"]] is not TableMappingItem table)
+            {
+                continue;
+            }
+            if (table.DatabaseObjectType == DatabaseMappingObjectType.View)
             {
                 continue;
             }
@@ -2705,10 +2709,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         var schemaTables = new List<TableMappingItem>();
         foreach (var tableMappingItem in entityList.OfType<TableMappingItem>())
         {
-            if (tableMappingItem.DatabaseObjectType == DatabaseMappingObjectType.Table)
-            {
-                schemaTables.Add(tableMappingItem);
-            }
+            schemaTables.Add(tableMappingItem);
         }
         return schemaTables;
     }
