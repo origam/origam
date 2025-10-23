@@ -2345,6 +2345,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 
     internal abstract string GetSqlFk();
 
+    protected abstract string GetIndexSelectQuery(
+        DataEntityIndexField indexField,
+        string mappedObjectName,
+        string indexName
+    );
+
     private void DoCompareIndex(
         List<SchemaDbCompareResult> results,
         List<TableMappingItem> schemaTables,
@@ -2405,20 +2411,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
                         rows = indexFields
                             .Tables[0]
                             .Select(
-                                "TableName = '"
-                                    + table.MappedObjectName
-                                    + "' AND IndexName = '"
-                                    + index.Name
-                                    + "' AND ColumnName = '"
-                                    + (indexField.Field as FieldMappingItem).MappedColumnName
-                                    + "' AND OrdinalPosition = "
-                                    + (indexField.OrdinalPosition + 1)
-                                    + " AND IsDescending = "
-                                    + (
-                                        indexField.SortOrder == DataEntityIndexSortOrder.Descending
-                                            ? "1"
-                                            : "0"
-                                    )
+                                GetIndexSelectQuery(
+                                    indexField: indexField,
+                                    mappedObjectName: table.MappedObjectName,
+                                    indexName: index.Name
+                                )
                             );
                         if (rows.Length == 0)
                         {

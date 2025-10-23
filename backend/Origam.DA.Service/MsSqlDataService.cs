@@ -349,6 +349,24 @@ public class MsSqlDataService : AbstractSqlDataService
             + "and si.name is not null";
     }
 
+    protected override string GetIndexSelectQuery(
+        DataEntityIndexField indexField,
+        string mappedObjectName,
+        string indexName
+    )
+    {
+        return "TableName = '"
+            + mappedObjectName
+            + "' AND IndexName = '"
+            + indexName
+            + "' AND ColumnName = '"
+            + (indexField.Field as FieldMappingItem).MappedColumnName
+            + "' AND OrdinalPosition = "
+            + (indexField.OrdinalPosition + 1)
+            + " AND IsDescending = "
+            + (indexField.SortOrder == DataEntityIndexSortOrder.Descending ? "1" : "0");
+    }
+
     internal override string GetSqlFk()
     {
         return "select "
