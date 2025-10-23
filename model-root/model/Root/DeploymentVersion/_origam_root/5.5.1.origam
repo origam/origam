@@ -12,6 +12,14 @@
     dv:version="5.5.1">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="190"
+      scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___00f3c552-9ace-42e2-876b-16ba7ece02cf.txt"
+      x:id="00f3c552-9ace-42e2-876b-16ba7ece02cf"
+      asi:name="00190_Database_Field_WorkQueue.ExternalSourceConnection"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="50"
       scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___1567c91e-c2db-43b6-86f8-3c2397ac98bd.txt"
       x:id="1567c91e-c2db-43b6-86f8-3c2397ac98bd"
@@ -36,10 +44,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="130"
+      ausa:activityOrder="120"
       scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___3c5f7959-4fb4-4d41-94af-71826264602b.txt"
       x:id="3c5f7959-4fb4-4d41-94af-71826264602b"
-      asi:name="0020_PG_WorkQueueRetryType_translations"
+      asi:name="00120_PG_WorkQueueRetryType_translations"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -84,10 +92,26 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="170"
+      scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___d22e6488-db97-4d4e-8ff3-95ec4504964c.txt"
+      x:id="d22e6488-db97-4d4e-8ff3-95ec4504964c"
+      asi:name="00170_Database_Field_OrigamTraceRule.Output"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___e1df770c-6028-47d1-9687-b42b3977ad1c.txt"
       x:id="e1df770c-6028-47d1-9687-b42b3977ad1c"
       asi:name="00010_PG_WorkQueueRetryType_Values"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="180"
+      scusa:commandText="-***-ExternalFile:5.5.1.origam___commandText___e8e190be-5058-423c-a8ed-bc1e7df84c00.txt"
+      x:id="e8e190be-5058-423c-a8ed-bc1e7df84c00"
+      asi:name="00180_Database_Field_OrigamTraceRule.Input"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity

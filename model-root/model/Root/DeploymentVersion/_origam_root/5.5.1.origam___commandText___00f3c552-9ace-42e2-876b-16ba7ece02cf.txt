@@ -1,0 +1,1 @@
+﻿ALTER TABLE "WorkQueue" ALTER COLUMN "ExternalSourceConnection" TYPE text;
