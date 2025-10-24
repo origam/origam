@@ -276,9 +276,11 @@ jobs:
 
       - name: Build base server image for tests
         run: |
-          docker build -t origam-server-linux -f docker/DockerfileServer.linux docker
+          cd docker
+          docker build -t origam-server-linux -f DockerfileServer.linux docker
       - name: Run Tests
         run: |
+          cd ..
           cd test
           mkdir output
           docker compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up --abort-on-container-exit
