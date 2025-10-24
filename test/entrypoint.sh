@@ -82,7 +82,6 @@ fill_origam_settings_for_workflow_tests(){
   sed -i "s/OrigamSettings_DbUsername/${OrigamSettings__DatabaseUsername}/g" OrigamSettings.config
   sed -i "s/OrigamSettings_DbPassword/${OrigamSettings__DatabasePassword}/g" OrigamSettings.config
   sed -i "s/OrigamSettings_DatabaseName/${OrigamSettings__DatabaseName}/g" OrigamSettings.config
-  sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/g" OrigamSettings.config
 }
 
 # Main script
@@ -112,7 +111,7 @@ if [[ $? -eq 0 ]]; then
   echo "Success."
 else
   sudo cp frontend-integration-test-results.trx /home/origam/output/
-  print_error "Scripts failed"
+  print_error "Frontend integration tests failed"
   exit 1
 fi
 
@@ -128,6 +127,6 @@ if [[ $? -eq 0 ]]; then
   echo "Success."
 else
   sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
-  print_error "Scripts failed"
+  print_error "Workflow integration tests failed"
   exit 1
 fi
