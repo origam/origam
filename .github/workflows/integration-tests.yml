@@ -264,7 +264,7 @@ jobs:
           path: docker/server/HTML5
 
       - name: Ensure server/Scheduler exists
-        run: mkdir -p server/Scheduler
+        run: mkdir -p docker/server/Scheduler
 
       - name: Download Frontend artifact
         uses: actions/download-artifact@v4
