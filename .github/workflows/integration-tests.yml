@@ -257,6 +257,12 @@ jobs:
           name: htmlserverbuild
           path: test/HTML5
 
+      - name: Download HTML5 artifact (for docker build context)
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: docker/HTML5
+
       - name: Download Frontend artifact
         uses: actions/download-artifact@v4
         with:
