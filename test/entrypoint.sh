@@ -51,28 +51,45 @@ filter_test_output() {
     '
 }
 
+start_server() {
+  sudo /root/updateTimezone.sh
+  cd /home/origam/Setup
+  ./cleanUpEnvironment.sh
+  sudo ./cleanUpEnvironmentRoot.sh
+  
+  cd /etc/nginx/ssl
+  sudo /etc/nginx/ssl/createSslCertificate.sh
+  sudo /etc/init.d/nginx start
+  cd /home/origam/HTML5
+  ./configureServer.sh
+  export ASPNETCORE_URLS="http://+:8080"
+  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+}
+
+fill_origam_settings_for_workflow_tests(){
+  if [[ ${DatabaseType} == mssql ]]; then
+    cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+  fi
+  if [[ ${DatabaseType} == postgresql ]]; then
+    cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
+  fi
+  if [[ ! -f "OrigamSettings.config" ]]; then
+    echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
+    exit 1
+  fi
+  sed -i "s/OrigamSettings_DbHost/${OrigamSettings__DatabaseHost}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings_DbPort/${OrigamSettings__DatabasePort}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings_DbUsername/${OrigamSettings__DatabaseUsername}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings_DbPassword/${OrigamSettings__DatabasePassword}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings_DatabaseName/${OrigamSettings__DatabaseName}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/g" OrigamSettings.config
+}
+
 # Main script
 cd /home/origam/HTML5
 
 print_title "Start server and wait for database to be available"
-# ENV variable default values specific to linux
-# OrigamSettings.config
-if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
-  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
-fi
-
-sudo /root/updateTimezone.sh
-cd /home/origam/Setup
-./cleanUpEnvironment.sh
-sudo ./cleanUpEnvironmentRoot.sh
-
-cd /etc/nginx/ssl
-sudo /etc/nginx/ssl/createSslCertificate.sh
-sudo /etc/init.d/nginx start
-cd /home/origam/HTML5
-./configureServer.sh
-export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+start_server
 
 echo "Waiting for Origam.Server.dll to initialize DB..."
 dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
@@ -103,22 +120,7 @@ print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
 echo
 cd /home/origam/HTML5_TESTS
-if [[ ${DatabaseType} == mssql ]]; then
-  cp _OrigamSettings.wf.mssql.template OrigamSettings.config
-fi
-if [[ ${DatabaseType} == postgresql ]]; then
-  cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
-fi
-if [[ ! -f "OrigamSettings.config" ]]; then
-  echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
-  exit 1
-fi
-sed -i "s/OrigamSettings_DbHost/${OrigamSettings__DatabaseHost}/g" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPort/${OrigamSettings__DatabasePort}/g" OrigamSettings.config
-sed -i "s/OrigamSettings_DbUsername/${OrigamSettings__DatabaseUsername}/g" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPassword/${OrigamSettings__DatabasePassword}/g" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${OrigamSettings__DatabaseName}/g" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/g" OrigamSettings.config
+fill_origam_settings_for_workflow_tests
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
 if [[ $? -eq 0 ]]; then

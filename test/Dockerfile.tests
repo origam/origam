@@ -30,6 +30,7 @@ RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends google-chrome-stable; \
     rm -rf /var/lib/apt/lists/*
 
+# Install gawk
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends gawk && rm -rf /var/lib/apt/lists/*
 
 
@@ -54,4 +55,3 @@ WORKDIR /home/origam/HTML5
 RUN chmod +x entrypoint.sh
 
 # The source server image starts the entrypoint.sh, no need to change it here
-#ENTRYPOINT ["/bin/bash"]
