@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.postgresql
     environment:
       - POSTGRES_PASSWORD=${SA_PASSWORD}
-      - USER_PASSWORD=${OrigamSettings_DbPassword}
+      - USER_PASSWORD=${OrigamSettings__DatabasePassword}
       - SA_PASSWORD=${SA_PASSWORD}
       - ACCEPT_EULA=Y
       - BUILDKIT_PROGRESS=tty
@@ -29,21 +29,18 @@ services:
       args:
         - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
     environment:
-        - gitPullOnStart=${gitPullOnStart}
-        - OrigamSettings_SetOnStart=${OrigamSettings_SetOnStart}
-        - OrigamSettings_SchemaExtensionGuid=${OrigamSettings_SchemaExtensionGuid}
-        - OrigamSettings_DbHost=${OrigamSettings_DbHost}
-        - OrigamSettings_DbPort=${OrigamSettings_DbPort}
-        - OrigamSettings_DbUsername=${OrigamSettings_DbUsername}
-        - OrigamSettings_DbPassword=${OrigamSettings_DbPassword}
-        - DatabaseName=${DatabaseName}
-        - OrigamSettings_TitleName=${OrigamSettings_TitleName}
-        - DatabaseType=${DatabaseType}
-        - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
-        - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}
-        - EnableChat=${EnableChat}
-        - BUILDKIT_PROGRESS=tty
-        - CI=true
+      - OrigamSettings__DefaultSchemaExtensionId=${OrigamSettings__DefaultSchemaExtensionId}
+      - OrigamSettings__DatabaseHost=${OrigamSettings__DatabaseHost}
+      - OrigamSettings__DatabasePort=${OrigamSettings__DatabasePort}
+      - OrigamSettings__DatabaseUsername=${OrigamSettings__DatabaseUsername}
+      - OrigamSettings__DatabasePassword=${OrigamSettings__DatabasePassword}
+      - OrigamSettings__DatabaseName=${OrigamSettings__DatabaseName}
+      - OrigamSettings__Name=${OrigamSettings__Name}
+      - DatabaseType=${DatabaseType}
+      - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
+      - TZ=${TZ}
+      - BUILDKIT_PROGRESS=tty
+      - CI=true
     ports:
       - "8080:8080"
     depends_on:
