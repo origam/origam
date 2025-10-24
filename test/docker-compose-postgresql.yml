@@ -1,5 +1,5 @@
 services:
-  database-server:
+  database-server-postgres:
     build:
       context: .
       dockerfile: Dockerfile.postgresql
@@ -22,7 +22,7 @@ services:
       timeout: 5s
       retries: 5
 
-  test-server-postgres:
+  server-postgres:
     build:
       context: .
       dockerfile: Dockerfile.tests
@@ -44,7 +44,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      database-server:
+      database-server-postgres:
         condition: service_healthy
     profiles:
       - test
@@ -52,4 +52,4 @@ services:
     volumes:
       - ./output/:/home/origam/output/
     links:
-     - database-server
+     - database-server-postgres
