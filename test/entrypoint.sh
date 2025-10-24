@@ -52,6 +52,10 @@ filter_test_output() {
 }
 
 start_server() {
+  if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
+    export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
+  fi
+
   sudo /root/updateTimezone.sh
   cd /home/origam/Setup
   ./cleanUpEnvironment.sh
