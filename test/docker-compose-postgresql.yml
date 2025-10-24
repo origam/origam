@@ -22,7 +22,7 @@ services:
       timeout: 5s
       retries: 5
 
-  test-server:
+  test-server-postgres:
     build:
       context: .
       dockerfile: Dockerfile.tests
