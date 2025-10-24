@@ -1,88 +1,57 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /tmp
-RUN apt-get -qq update > /dev/null 2>&1 \
-&& apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget > /dev/null 2>&1
-RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
-&& dpkg -i packages-microsoft-prod.deb \
-&& rm packages-microsoft-prod.deb
+ARG SERVER_IMAGE=origam-server-linux
+FROM ${SERVER_IMAGE}
 
-# INSTALL yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
-&& apt-get -qq update > /dev/null 2>&1 \
-&& apt-get -qq -y install yarn dotnet-sdk-8.0 > /dev/null 2>&1 \
-&& useradd -ms /bin/bash origam \
-&& usermod -aG sudo origam \
-&& echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
+# Ensure we run privileged steps as root
+USER root
+SHELL ["/bin/bash", "-c"]
 
-# Install Chrome
-RUN apt-get -qq update > /dev/null 2>&1 \
-    && apt-get -qq install -y xvfb > /dev/null 2>&1 \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get -qq update > /dev/null 2>&1 \
-    && apt-get -qq install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends > /dev/null 2>&1 \
-    && rm -rf /var/lib/apt/lists/*
+# INSTALL dotnet SDK (because we will run dotnet test later on)
+RUN apt-get -qq update \
+ && apt-get -qq install -y wget gpg apt-transport-https sudo \
+ && wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb \
+ && dpkg -i /tmp/packages-microsoft-prod.deb \
+ && rm /tmp/packages-microsoft-prod.deb \
+ && apt-get -qq update \
+ && apt-get -qq install -y dotnet-sdk-8.0 
 
-# Install GAWK
-RUN apt-get update > /dev/null 2>&1 && apt-get install -y wget build-essential > /dev/null 2>&1
-RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz > /dev/null 2>&1 && \
-    tar -xzf gawk-5.1.0.tar.gz > /dev/null 2>&1 && \
-    cd gawk-5.1.0 && \
-    ./configure > /dev/null 2>&1 && \
-    make > /dev/null 2>&1 && \
-    make install > /dev/null 2>&1 && \
-    cd .. && \
-    rm -rf gawk-5.1.0 gawk-5.1.0.tar.gz
+# Install Chrome (modern keyring flow; no apt-key)
+RUN set -eux; \
+    apt-get -qq update; \
+    DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends \
+      ca-certificates curl gnupg xvfb \
+      fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
+      libxss1; \
+    install -d -m 0755 /etc/apt/keyrings; \
+    curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
+      | gpg --dearmor -o /etc/apt/keyrings/google-linux-signing-keyring.gpg; \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-linux-signing-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main" \
+      > /etc/apt/sources.list.d/google-chrome.list; \
+    apt-get -qq update; \
+    DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends google-chrome-stable; \
+    rm -rf /var/lib/apt/lists/*
 
-# HTTPS proxy
-COPY https-proxy /root/https-proxy
-WORKDIR /root/https-proxy
-RUN yarn --ignore-engines
-WORKDIR /root
-COPY updateTimezone.sh \
-reverse-proxy.conf \
-/root/
-RUN mv reverse-proxy.conf /etc/nginx/sites-available \
-&& unlink /etc/nginx/sites-enabled/default \
-&& ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf \
-&& nginx -t \
-&& chmod +x updateTimezone.sh \
-&& cd /home \
-&& su origam
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends gawk && rm -rf /var/lib/apt/lists/*
+
 
 # Copy test files
 USER origam
-SHELL ["/bin/bash", "-c"]
-RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
-&& source ~/.bashrc
 WORKDIR /home/origam
-RUN mkdir HTML5  \
-&& mkdir HTML5/data \
-&& mkdir HTML5/data/origam \
-&& mkdir output \
-&& mkdir HTML5_TESTS \
-&& ls -all
-COPY --chown=origam:origam HTML5 _appsettings.template \
-_OrigamSettings.mssql.template \
-_OrigamSettings.postgres.template \
-startTests.sh \
-startServer.sh \
-log4net.config \
-updateEnvironment.sh \
-updateEnvironmentRoot.sh \
-/home/origam/HTML5/
+RUN mkdir -p HTML5/data/origam HTML5_TESTS output
+
+COPY --chown=origam:origam entrypoint.sh \
+    /home/origam/HTML5/
+
 COPY --chown=origam:origam HTML5_TESTS \
-_OrigamSettings.wf.mssql.template \
-_OrigamSettings.wf.pgsql.template \
-log4net.config \
-/home/origam/HTML5_TESTS/
+    _OrigamSettings.wf.mssql.template \
+    _OrigamSettings.wf.pgsql.template \
+    log4net.config \
+    /home/origam/HTML5_TESTS/
+
 COPY --chown=origam:origam tests_e2e /home/origam/HTML5/tests_e2e/
-COPY --chown=origam:origam model /home/origam/HTML5/data/origam/
+COPY --chown=origam:origam model /home/origam/projectData/model/
+
 WORKDIR /home/origam/HTML5
-RUN mkdir logs \
-&& chmod +x startServer.sh \
-&& chmod +x updateEnvironment.sh \
-&& chmod +x updateEnvironmentRoot.sh \
-&& chmod +x startTests.sh
-CMD sudo /root/updateTimezone.sh && ./startTests.sh
+RUN chmod +x entrypoint.sh
+
+# The source server image starts the entrypoint.sh, no need to change it here
+#ENTRYPOINT ["/bin/bash"]

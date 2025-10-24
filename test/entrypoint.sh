@@ -52,14 +52,28 @@ filter_test_output() {
 }
 
 # Main script
-sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 
 print_title "Start server and wait for database to be available"
-./startServer.sh
+# ENV variable default values specific to linux
+# OrigamSettings.config
+if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
+  export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
+fi
 
+sudo /root/updateTimezone.sh
+cd /home/origam/Setup
+./cleanUpEnvironment.sh
+sudo ./cleanUpEnvironmentRoot.sh
+
+cd /etc/nginx/ssl
+sudo /etc/nginx/ssl/createSslCertificate.sh
+sudo /etc/init.d/nginx start
+cd /home/origam/HTML5
+./configureServer.sh
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+
 echo "Waiting for Origam.Server.dll to initialize DB..."
 dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
 return_code=$?
@@ -99,18 +113,12 @@ if [[ ! -f "OrigamSettings.config" ]]; then
   echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
   exit 1
 fi
-sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
-sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
-sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbHost/${OrigamSettings__DatabaseHost}/g" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPort/${OrigamSettings__DatabasePort}/g" OrigamSettings.config
+sed -i "s/OrigamSettings_DbUsername/${OrigamSettings__DatabaseUsername}/g" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPassword/${OrigamSettings__DatabasePassword}/g" OrigamSettings.config
+sed -i "s/OrigamSettings_DatabaseName/${OrigamSettings__DatabaseName}/g" OrigamSettings.config
+sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/g" OrigamSettings.config
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
 if [[ $? -eq 0 ]]; then

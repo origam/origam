@@ -131,10 +131,6 @@ cd /home/origam/HTML5
 
 if [ ! -d "$PROJECT_DATA_DIRECTORY" ]; then
 	echo "Server has no model!!! Review the instance setup.";
-	echo "Mandatory: gitPullOnStart(true)"
-	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
-	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
-	echo "Optional: gitUsername, gitPassword"
 	exit 1
 fi
 # generate certificate every start.

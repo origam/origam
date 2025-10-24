@@ -274,6 +274,9 @@ jobs:
           mkdir test/model
           cp -r model-tests test/model
 
+      - name: Build base server image for tests
+        run: |
+          docker build -t origam-server-linux -f docker/DockerfileServer.linux docker
       - name: Run Tests
         run: |
           cd test
@@ -347,6 +350,9 @@ jobs:
           mkdir test/model
           cp -r model-tests test/model
 
+#      - name: Build base server image for tests
+#        run: |
+#          docker build -t origam-server-linux -f docker/DockerfileServer.linux docker
       - name: Run Tests
         run: |
           cd test
