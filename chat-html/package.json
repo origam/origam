@@ -85,7 +85,7 @@
     "@babel/plugin-proposal-decorators": "^7.28.0",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
+    "@babel/preset-typescript": "^7.28.5",
     "@vitejs/plugin-react": "^5.0.4",
     "sass": "^1.93.2",
     "vite": "^7.1.12",
