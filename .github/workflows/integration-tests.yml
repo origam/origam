@@ -277,7 +277,7 @@ jobs:
       - name: Build base server image for tests
         run: |
           cd docker
-          docker build -t origam-server-linux -f DockerfileServer.linux docker
+          docker build -t origam-server-linux -f DockerfileServer.linux .
       - name: Run Tests
         run: |
           cd ..
