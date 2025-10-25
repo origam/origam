@@ -1,0 +1,43 @@
+﻿WITH lang AS (
+  SELECT "Id" AS lang_id
+  FROM "Language"
+  WHERE "TagIETF" LIKE '%de-DE%'
+  LIMIT 1
+)
+INSERT INTO "WorkQueueRetryType_l10n"
+  ("refWorkQueueRetryTypeId","Name","RecordCreated","Id","refLanguageId")
+SELECT '69460BCF-81D4-4A97-94F7-5A391D16F771'::uuid, 'Keine Wiederholung', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '8A5C793F-73B8-41EF-A459-618A8E6FE4FA'::uuid, 'Lineare Wiederholung', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '57AD4C10-1F43-4CCF-A48A-132E7E418D53'::uuid, 'Exponentielle Wiederholung', now(), gen_random_uuid(), lang_id FROM lang;
+
+-- de-CH
+WITH lang AS (
+  SELECT "Id" AS lang_id
+  FROM "Language"
+  WHERE "TagIETF" LIKE '%de-CH%'
+  LIMIT 1
+)
+INSERT INTO "WorkQueueRetryType_l10n"
+  ("refWorkQueueRetryTypeId","Name","RecordCreated","Id","refLanguageId")
+SELECT '69460BCF-81D4-4A97-94F7-5A391D16F771'::uuid, 'Keine Wiederholung', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '8A5C793F-73B8-41EF-A459-618A8E6FE4FA'::uuid, 'Lineare Wiederholung', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '57AD4C10-1F43-4CCF-A48A-132E7E418D53'::uuid, 'Exponenzielle Wiederholung', now(), gen_random_uuid(), lang_id FROM lang;
+
+-- cs-CZ
+WITH lang AS (
+  SELECT "Id" AS lang_id
+  FROM "Language"
+  WHERE "TagIETF" LIKE '%cs-CZ%'
+  LIMIT 1
+)
+INSERT INTO "WorkQueueRetryType_l10n"
+  ("refWorkQueueRetryTypeId","Name","RecordCreated","Id","refLanguageId")
+SELECT '69460BCF-81D4-4A97-94F7-5A391D16F771'::uuid, 'Bez opakování', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '8A5C793F-73B8-41EF-A459-618A8E6FE4FA'::uuid, 'Lineární opakování', now(), gen_random_uuid(), lang_id FROM lang
+UNION ALL
+SELECT '57AD4C10-1F43-4CCF-A48A-132E7E418D53'::uuid, 'Exponenciální opakování', now(), gen_random_uuid(), lang_id FROM lang;
