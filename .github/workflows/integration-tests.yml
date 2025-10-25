@@ -257,6 +257,24 @@ jobs:
           name: htmlserverbuild
           path: test/HTML5
 
+      - name: Download HTML5 artifact (for server build context)
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: docker/server/HTML5
+
+      - name: Ensure server/Scheduler exists
+        run: mkdir -p docker/server/Scheduler
+
+      - name: Download Frontend artifact (for server build context)
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: docker/server/HTML5/clients/origam
+        
+      - name: Ensure server/HTML5-SOURCE exists
+        run: mkdir -p docker/server/HTML5-SOURCE
+
       - name: Download Frontend artifact
         uses: actions/download-artifact@v4
         with:
@@ -274,6 +292,11 @@ jobs:
           mkdir test/model
           cp -r model-tests test/model
 
+      - name: Build base server image for tests
+        run: |
+          cd docker
+          docker build -t origam-server-linux -f DockerfileServer.linux .
+          
       - name: Run Tests
         run: |
           cd test
@@ -347,6 +370,9 @@ jobs:
           mkdir test/model
           cp -r model-tests test/model
 
+#      - name: Build base server image for tests
+#        run: |
+#          docker build -t origam-server-linux -f docker/DockerfileServer.linux docker
       - name: Run Tests
         run: |
           cd test

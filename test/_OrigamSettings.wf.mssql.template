@@ -4,7 +4,7 @@
     <ArrayOfOrigamSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <OrigamSettings>
         <SchemaConnectionString />
-        <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
+        <ModelSourceControlLocation>/home/origam/projectData/model</ModelSourceControlLocation>
         <DataConnectionString>Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
         <SchemaDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</SchemaDataService>
         <DataDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</DataDataService>
@@ -34,7 +34,7 @@
       </OrigamSettings>
 	  <OrigamSettings>
         <SchemaConnectionString />
-        <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
+        <ModelSourceControlLocation>/home/origam/projectData/model</ModelSourceControlLocation>
         <DataConnectionString>Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
         <SchemaDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</SchemaDataService>
         <DataDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</DataDataService>
