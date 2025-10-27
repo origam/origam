@@ -28,7 +28,7 @@ services:
       args:
         - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
     env_file:
-      - envFileMsSql.env
+      - envFilePostgres.env
     environment:
       - BUILDKIT_PROGRESS=tty
       - CI=true
