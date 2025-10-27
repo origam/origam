@@ -19,17 +19,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   display: flex;
+  flex-direction: column;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
   background: var(--background2);
   border-bottom: 1px solid var(--background3);
 
-  .title {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #000;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #000;
+    }
+  }
+
+  .content {
   }
 }

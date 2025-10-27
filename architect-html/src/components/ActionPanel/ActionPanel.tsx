@@ -23,8 +23,11 @@ import S from '@components/ActionPanel/ActionPanel.module.scss';
 const ActionPanel = ({ title }: { title: string }) => {
   return (
     <div className={S.root}>
-      <div className={S.title}>{title}</div>
-      <SaveButtonHOC />
+      <div className={S.header}>
+        <div className={S.title}>{title}</div>
+        <SaveButtonHOC />
+      </div>
+      <div className={S.content}></div>
     </div>
   );
 };
