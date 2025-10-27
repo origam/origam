@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   display: flex;
-  flex: 1;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
