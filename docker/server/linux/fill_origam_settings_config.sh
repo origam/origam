@@ -35,7 +35,7 @@ fill_origam_settings_config() {
 
     # Compose the DataConnectionString using the required connection string variables.
     if [[ "$database_type" == "mssql" ]]; then
-      local connection_string="Encrypt=True;TrustServerCertificate=True;Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
+      local connection_string="Encrypt=False;Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
       local schema_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
       local data_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
     elif [[ "$database_type" == "postgresql" ]]; then
