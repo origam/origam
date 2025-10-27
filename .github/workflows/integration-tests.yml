@@ -297,20 +297,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download HTML5 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlserverbuild
-          path: test/HTML5
-
       - name: Ensure server/HTML5-SOURCE exists
         run: mkdir -p docker/server/HTML5-SOURCE
-
-      - name: Download Frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlfrontendbuild
-          path: test/HTML5/clients/origam
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
@@ -381,18 +369,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Download HTML5 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlserverbuild
-          path: test/HTML5
-
-      - name: Download Frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlfrontendbuild
-          path: test/HTML5/clients/origam
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
