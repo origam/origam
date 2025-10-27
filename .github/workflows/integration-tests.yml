@@ -254,6 +254,9 @@ jobs:
       - name: Ensure server/Scheduler exists
         run: mkdir -p docker/server/Scheduler
 
+      - name: Ensure server/HTML5-SOURCE exists
+        run: mkdir -p docker/server/HTML5-SOURCE
+
       - name: Download Frontend artifact (for server build context)
         uses: actions/download-artifact@v4
         with:
@@ -296,9 +299,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Ensure server/HTML5-SOURCE exists
-        run: mkdir -p docker/server/HTML5-SOURCE
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
