@@ -67,8 +67,7 @@ start_server() {
   cd /home/origam/HTML5
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
-#  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
-  exec dotnet Origam.Server.dll
+  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 }
 
 fill_origam_settings_for_workflow_tests(){
