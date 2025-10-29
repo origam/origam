@@ -30,8 +30,9 @@ namespace Origam.WorkflowTests;
 public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService)
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod()?.DeclaringType);
-    
+        MethodBase.GetCurrentMethod()?.DeclaringType
+    );
+
     public override List<Guid> InsertWorkQueueEntries()
     {
         dataService.ExecuteSql(createTestDataSql);

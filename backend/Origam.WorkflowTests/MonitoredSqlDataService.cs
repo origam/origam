@@ -71,8 +71,9 @@ interface ITraceService
 public class SqlDataServiceMonitor
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod()?.DeclaringType);
-        
+        MethodBase.GetCurrentMethod()?.DeclaringType
+    );
+
     public List<Operation> Operations { get; } = new();
 
     private void AddOperation(Operation operation)
@@ -88,7 +89,12 @@ public class SqlDataServiceMonitor
         }
 
         DataTable table = dataset.Tables[0];
-        log.Debug("TableName: " + table.TableName + "Rows: " + string.Join(", ", table.Rows.Cast<DataRow>().Select(x => x.RowState).Distinct()));
+        log.Debug(
+            "TableName: "
+                + table.TableName
+                + "Rows: "
+                + string.Join(", ", table.Rows.Cast<DataRow>().Select(x => x.RowState).Distinct())
+        );
         var deletesWorkQueueEntry =
             dataset
                 is {
