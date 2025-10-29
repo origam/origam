@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Data;
+using System.Reflection;
 using System.Security.Principal;
 using Origam.DA;
 using Origam.DA.Service;
@@ -69,6 +70,9 @@ interface ITraceService
 
 public class SqlDataServiceMonitor
 {
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        MethodBase.GetCurrentMethod()?.DeclaringType);
+        
     public List<Operation> Operations { get; } = new();
 
     private void AddOperation(Operation operation)
@@ -78,6 +82,13 @@ public class SqlDataServiceMonitor
 
     public void TraceUpdateData(DataSet dataset)
     {
+        if (dataset.Tables.Count == 0)
+        {
+            log.Debug("No table in dataset");
+        }
+
+        DataTable table = dataset.Tables[0];
+        log.Debug("TableName: " + table.TableName + "Rows: " + string.Join(", ", table.Rows.Cast<DataRow>().Select(x => x.RowState).Distinct()));
         var deletesWorkQueueEntry =
             dataset
                 is {
@@ -87,10 +98,10 @@ public class SqlDataServiceMonitor
                 };
         if (deletesWorkQueueEntry)
         {
-            dataset.Tables[0].Rows[0].RejectChanges();
-            var deletedRowId = (Guid)dataset.Tables[0].Rows[0]["Id"];
-            var refWorkQueueId = (Guid)dataset.Tables[0].Rows[0]["refWorkQueueId"];
-            dataset.Tables[0].Rows[0].Delete();
+            table.Rows[0].RejectChanges();
+            var deletedRowId = (Guid)table.Rows[0]["Id"];
+            var refWorkQueueId = (Guid)table.Rows[0]["refWorkQueueId"];
+            table.Rows[0].Delete();
             AddOperation(
                 new DeleteWorkQueueEntryOperation(
                     "UpdateData",
