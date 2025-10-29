@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Origam.Workbench.Services.CoreServices;
 
@@ -28,9 +29,14 @@ namespace Origam.WorkflowTests;
 
 public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService)
 {
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        MethodBase.GetCurrentMethod()?.DeclaringType);
+    
     public override List<Guid> InsertWorkQueueEntries()
     {
         dataService.ExecuteSql(createTestDataSql);
+        int workQueueEntryCount = GetWorkQueueEntryCount();
+        log.Debug("workQueueEntryCount after inserts: " + workQueueEntryCount);
         return GetWorkQueueEntryIds(createTestDataSql);
     }
 
