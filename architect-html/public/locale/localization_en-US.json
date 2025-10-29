@@ -27,5 +27,9 @@
   "grid_editor_title": "Editing: {0}",
   "documentation_editor_title": "Documentation: {0}",
   "screen_section_editor_title": "Screen Section Editor: {0}",
-  "screen_editor_title": "Screen Editor: {0}"
+  "screen_editor_title": "Screen Editor: {0}",
+  "editor_deployment_scripts_tab_sql": "SQL",
+  "editor_deployment_scripts_tab_sql_title": "SQL Editor: {0}",
+  "editor_deployment_scripts_tab_settings": "Settings",
+  "editor_deployment_scripts_tab_settings_title": "Settings: {0}"
 }

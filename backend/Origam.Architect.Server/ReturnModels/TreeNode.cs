@@ -76,6 +76,10 @@ public class TreeNodeFactory
         }
 
         string itemType = node.GetType().ToString();
+        if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
+        {
+            return EditorSubType.DeploymentScriptsEditor;
+        }
         if (itemType == "Origam.Schema.GuiModel.FormControlSet")
         {
             return EditorSubType.ScreenEditor;
@@ -118,6 +122,7 @@ public class TreeNodeFactory
 
 public enum EditorSubType
 {
+    DeploymentScriptsEditor,
     GridEditor,
     XsltEditor,
     ScreenSectionEditor,

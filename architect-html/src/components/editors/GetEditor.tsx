@@ -29,6 +29,7 @@ import {
 import { IEditorState } from '@components/editorTabView/IEditorState';
 import { EditorData } from '@components/modelTree/EditorData';
 import { PropertiesState } from '@components/properties/PropertiesState';
+import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
@@ -53,6 +54,18 @@ export function getEditor(args: {
 }) {
   const { editorType, editorData, propertiesState, architectApi } = args;
   const { node, data, isDirty } = editorData;
+
+  if (editorType === 'DeploymentScriptsEditor') {
+    const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
+    const editorState = new GridEditorState(
+      editorData.editorId,
+      node,
+      properties,
+      isDirty,
+      architectApi,
+    );
+    return new Editor(editorState, <DeploymentScriptsEditor editorState={editorState} />);
+  }
 
   if (editorType === 'GridEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
