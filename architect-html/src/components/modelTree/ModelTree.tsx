@@ -78,6 +78,10 @@ const ModelTreeNode: React.FC<{
     run({ generator: editorTabViewState.openDocumentationEditor(node) });
   }
 
+  function setVersionCurrent() {
+    run({ generator: node.setVersionCurrent() });
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -123,6 +127,14 @@ const ModelTreeNode: React.FC<{
               </Item>
               <Item id="documentation" onClick={openDocumentationEditor}>
                 {T('Documentation', 'tree_node_documentation')}
+              </Item>
+            </>
+          )}
+          {node.isDeploymentVersion && (
+            <>
+              <Separator />
+              <Item id="setVersionCurrent" onClick={setVersionCurrent}>
+                {T('Make version current', 'tree_node_make_version_current')}
               </Item>
             </>
           )}

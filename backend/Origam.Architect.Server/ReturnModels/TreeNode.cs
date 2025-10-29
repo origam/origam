@@ -35,6 +35,7 @@ public class TreeNode
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
     public EditorSubType? DefaultEditor { get; set; }
+    public string ItemType { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -55,6 +56,7 @@ public class TreeNodeFactory
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
             IconUrl = GetIcon(node),
+            ItemType = node.GetType().FullName,
         };
     }
 

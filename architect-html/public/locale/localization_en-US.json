@@ -31,5 +31,6 @@
   "editor_deployment_scripts_tab_sql": "SQL",
   "editor_deployment_scripts_tab_sql_title": "SQL Editor: {0}",
   "editor_deployment_scripts_tab_settings": "Settings",
-  "editor_deployment_scripts_tab_settings_title": "Settings: {0}"
+  "editor_deployment_scripts_tab_settings_title": "Settings: {0}",
+  "tree_node_make_version_current": "Make version current"
 }
