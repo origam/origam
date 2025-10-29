@@ -33,7 +33,9 @@ namespace Origam.WorkflowTests;
 public class WorkQueueIntegrationTests
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        MethodBase.GetCurrentMethod()?.DeclaringType);
+        MethodBase.GetCurrentMethod()?.DeclaringType
+    );
+
     public WorkQueueIntegrationTests()
     {
         XmlConfigurator.Configure(new FileInfo("log4net.config"));
@@ -101,17 +103,14 @@ public class WorkQueueIntegrationTests
         // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
         var dataService = DataServiceFactory.GetDataService();
-        SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            dataService
-        );
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, dataService);
         // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
         ITraceService traceService = (ITraceService)dataService;
-        log.Debug("operations: "+ traceService.Operations.Count);
+        log.Debug("operations: " + traceService.Operations.Count);
         var deleteOperations = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
