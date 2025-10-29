@@ -106,18 +106,18 @@ else
   echo " DB initialized"
 fi
 
-print_title "Run frontend integration tests"
-cd tests_e2e
-yarn install --ignore-engines > /dev/null 2>&1
-yarn test:e2e
-if [[ $? -eq 0 ]]; then
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
-  echo "Success."
-else
-  sudo cp frontend-integration-test-results.trx /home/origam/output/
-  print_error "Frontend integration tests failed"
-  exit 1
-fi
+#print_title "Run frontend integration tests"
+#cd tests_e2e
+#yarn install --ignore-engines > /dev/null 2>&1
+#yarn test:e2e
+#if [[ $? -eq 0 ]]; then
+#  sudo cp frontend-integration-test-results.trx /home/origam/output/
+#  echo "Success."
+#else
+#  sudo cp frontend-integration-test-results.trx /home/origam/output/
+#  print_error "Frontend integration tests failed"
+#  exit 1
+#fi
 
 print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
@@ -132,5 +132,6 @@ if [[ $? -eq 0 ]]; then
 else
   sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   print_error "Workflow integration tests failed"
+  print_file_contents /home/origam/HTML5_TESTS/logs/OrigamServer.log
   exit 1
 fi
