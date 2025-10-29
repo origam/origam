@@ -6,7 +6,7 @@
         <BaseFolder></BaseFolder>
         <SchemaConnectionString />
         <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
-        <DataConnectionString>Encrypt=True;TrustServerCertificate=True;Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
+        <DataConnectionString>Encrypt=False;Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
         <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>
         <SecurityDomain />
