@@ -238,6 +238,10 @@ export class ArchitectApi implements IArchitectApi {
       })
     ).data;
   }
+
+  async setVersionCurrent(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post('/Editor/SetVersionCurrent', { schemaItemId: schemaItemId });
+  }
 }
 
 export function simpleErrorHandler(error: any) {

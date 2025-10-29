@@ -101,6 +101,8 @@ export interface IArchitectApi {
   ): Promise<IUpdatePropertiesResult>;
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
+
+  setVersionCurrent(schemaItemId: string): Promise<void>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;
@@ -227,6 +229,7 @@ export interface IApiTreeNode extends INodeLoadData {
   childrenIds: string[];
   children?: IApiTreeNode[];
   iconUrl?: string;
+  itemType?: string;
 }
 
 export interface IPackagesInfo {
