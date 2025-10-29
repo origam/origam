@@ -18,6 +18,7 @@ if [ -z "$ContainerMode" ] || [ "$ContainerMode" = 'server' ]; then
   cd /home/origam/HTML5
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
+  bash
   exec dotnet Origam.Server.dll
 elif [ "$ContainerMode" = "scheduler" ]; then
   cd /home/origam/Scheduler

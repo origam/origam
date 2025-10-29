@@ -95,11 +95,7 @@ function Fill-OrigamSettingsConfig {
 
     # Define the required environment variables.
     $requiredVars = @(
-        "OrigamSettings__DatabaseHost",
-        "OrigamSettings__DatabasePort",
-        "OrigamSettings__DatabaseName",
-        "OrigamSettings__DatabaseUsername",
-        "OrigamSettings__DatabasePassword",
+        "OrigamSettings__DataConnectionString",
         "OrigamSettings__DefaultSchemaExtensionId",
         "OrigamSettings__Name",
         "OrigamSettings__ModelSourceControlLocation"
@@ -126,12 +122,10 @@ function Fill-OrigamSettingsConfig {
     # Compose connection string + data service types
     switch ($DatabaseType) {
         "mssql" {
-            $connectionString   = "Data Source=$($env:OrigamSettings__DatabaseHost),$($env:OrigamSettings__DatabasePort);Initial Catalog=$($env:OrigamSettings__DatabaseName);User ID=$($env:OrigamSettings__DatabaseUsername);Password=$($env:OrigamSettings__DatabasePassword);"
             $schemaDataService  = "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
             $dataDataService    = "Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
         }
         "postgresql" {
-            $connectionString   = "Host=$($env:OrigamSettings__DatabaseHost);Port=$($env:OrigamSettings__DatabasePort);Database=$($env:OrigamSettings__DatabaseName);Username=$($env:OrigamSettings__DatabaseUsername);Password=$($env:OrigamSettings__DatabasePassword);"
             $schemaDataService  = "Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
             $dataDataService    = "Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
         }
@@ -140,19 +134,24 @@ function Fill-OrigamSettingsConfig {
             exit 1
         }
     }
-    # Update/create DataConnectionString, SchemaDataService, DataDataService
-    Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "DataConnectionString" -value $connectionString
+    # Update/create SchemaDataService, DataDataService
     Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "SchemaDataService"  -value $schemaDataService
     Set-OrCreateNode -xmlDoc $xml -parentXpath $origamSettingNodeXpath -nodeName "DataDataService"    -value $dataDataService
 
     # Iterate through environment variables starting with 'OrigamSettings__'
     # excluding those starting with 'OrigamSettings__Database'
     $envVars = [System.Environment]::GetEnvironmentVariables().GetEnumerator() |
-        Where-Object { $_.Key -like "OrigamSettings__*" -and $_.Key -notlike "OrigamSettings__Database*" }
+        Where-Object { $_.Key -like "OrigamSettings__*" }
 
     foreach ($envVar in $envVars) {
         $key = $envVar.Key
         $value = $envVar.Value
+        
+        # Strip surrounding quotes if present
+        if ($value -match '^".*"$') {
+            $value = $value.Substring(1, $value.Length - 2)
+        }
+        
         # Remove the prefix to get the node name.
         $nodeName = $key -replace "^OrigamSettings__", ""
         $xpath = "$origamSettingNodeXpath/$nodeName"
