@@ -58,6 +58,9 @@ cd /home/origam/HTML5
 print_title "Start server and wait for database to be available"
 ./startServer.sh
 
+echo "OrigamSettings.config"
+cat OrigamSettings.config
+
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "Waiting for Origam.Server.dll to initialize DB..."

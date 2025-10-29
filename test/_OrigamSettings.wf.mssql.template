@@ -5,7 +5,7 @@
       <OrigamSettings>
         <SchemaConnectionString />
         <ModelSourceControlLocation>OrigamSettings_ModelName</ModelSourceControlLocation>
-        <DataConnectionString>Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
+        <DataConnectionString>Encrypt=False;Data Source=OrigamSettings_DbHost,OrigamSettings_DbPort;Initial Catalog=OrigamSettings_DatabaseName;User ID=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;</DataConnectionString>
         <SchemaDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</SchemaDataService>
         <DataDataService>Origam.WorkflowTests.MonitoredMsSqlDataService, Origam.WorkflowTests</DataDataService>
         <SecurityDomain />

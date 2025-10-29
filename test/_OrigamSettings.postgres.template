@@ -4,7 +4,7 @@
     <ArrayOfOrigamSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <OrigamSettings>
         <SchemaConnectionString></SchemaConnectionString>
-        <DataConnectionString>Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
+        <DataConnectionString>sslmode=disable;Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
         <SchemaDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</SchemaDataService>
         <DefaultSchemaExtensionId>OrigamSettings_SchemaExtensionGuid</DefaultSchemaExtensionId>
         <DataDataService>Origam.DA.Service.PgSqlDataService, Origam.DA.Service</DataDataService>

@@ -35,11 +35,11 @@ fill_origam_settings_config() {
 
     # Compose the DataConnectionString using the required connection string variables.
     if [[ "$database_type" == "mssql" ]]; then
-      local connection_string="Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
+      local connection_string="Encrypt=False;Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
       local schema_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
       local data_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
     elif [[ "$database_type" == "postgresql" ]]; then
-      local connection_string="Host=${OrigamSettings__DatabaseHost};Port=${OrigamSettings__DatabasePort};Database=${OrigamSettings__DatabaseName};Username=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
+      local connection_string="sslmode=disable;Host=${OrigamSettings__DatabaseHost};Port=${OrigamSettings__DatabasePort};Database=${OrigamSettings__DatabaseName};Username=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
       local schema_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
       local data_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
     else
