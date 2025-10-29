@@ -79,6 +79,7 @@ public class SqlDataServiceMonitor
     private void AddOperation(Operation operation)
     {
         Operations.Add(operation);
+        log.Debug("Added operation, Operations: " + Operations.Count);
     }
 
     public void TraceUpdateData(DataSet dataset)
@@ -89,12 +90,6 @@ public class SqlDataServiceMonitor
         }
 
         DataTable table = dataset.Tables[0];
-        log.Debug(
-            "TableName: "
-                + table.TableName
-                + "Rows: "
-                + string.Join(", ", table.Rows.Cast<DataRow>().Select(x => x.RowState).Distinct())
-        );
         var deletesWorkQueueEntry =
             dataset
                 is {
@@ -102,6 +97,14 @@ public class SqlDataServiceMonitor
                         { TableName: "WorkQueueEntry", Rows: [{ RowState: DataRowState.Deleted }] },
                     ]
                 };
+        log.Debug(
+            "TableName: "
+                + table.TableName
+                + "Rows: "
+                + string.Join(", ", table.Rows.Cast<DataRow>().Select(x => x.RowState).Distinct())
+                + "deletesWorkQueueEntry: "
+                + deletesWorkQueueEntry
+        );
         if (deletesWorkQueueEntry)
         {
             table.Rows[0].RejectChanges();
