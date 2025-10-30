@@ -81,11 +81,20 @@ public class WorkQueueIntegrationTests
 
         ITraceService traceService = (ITraceService)dataService;
         log.Debug("operations: " + traceService.Operations.Count);
+        log.Debug(
+            "operation types: "
+                + string.Join(
+                    ", ",
+                    traceService.Operations.Select(x => x.GetType().FullName).Distinct()
+                )
+        );
         var deletedWorkQueueEntryIds = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .Select(x => x.RowId)
             .Reverse()
             .ToList();
+        log.Debug($"createdWorkQueueEntryIds: [{string.Join(", ", createdWorkQueueEntryIds)}]");
+        log.Debug($"deletedWorkQueueEntryIds: [{string.Join(", ", deletedWorkQueueEntryIds)}]");
 
         CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
     }
@@ -110,7 +119,6 @@ public class WorkQueueIntegrationTests
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
         ITraceService traceService = (ITraceService)dataService;
-        log.Debug("operations: " + traceService.Operations.Count);
         var deleteOperations = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
