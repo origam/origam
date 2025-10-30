@@ -132,6 +132,5 @@ if [[ $? -eq 0 ]]; then
 else
   sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   print_error "Workflow integration tests failed"
-  print_file_contents /home/origam/HTML5_TESTS/logs/OrigamServer.log
   exit 1
 fi

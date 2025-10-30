@@ -63,6 +63,7 @@ public class WorkQueueIntegrationTests
     [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
+        log.Debug($"ShouldTestAllWorkQueueEntriesAreProcessed, configName: {configName}");
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically
         OrigamEngine.OrigamEngine.ConnectRuntime(
