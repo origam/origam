@@ -1,23 +1,23 @@
 ﻿-- localization into cs-CZ
 INSERT INTO [OrigamEventType_l10n] ([Id], [refOrigamEventTypeId], [Name], [refLanguageId])
 VALUES
-('2da15147-bd5f-4691-aec4-fa19829e6436', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Přihlášení', '5477D278-BA2B-46EA-9BD3-509D4C699762'),
-('da21f5b7-1978-4050-bc7e-73ce923de29a', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Odhlášení', '5477D278-BA2B-46EA-9BD3-509D4C699762'),
-('74b04654-935b-4422-bb31-8eea37ee54d6', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Otevření obrazovky', '5477D278-BA2B-46EA-9BD3-509D4C699762'),
-('4ac73bd3-3952-4729-bcb6-7e7972b5c204', '62f161e9-b817-4631-93e3-360551257dc2', N'Export do Excelu', '5477D278-BA2B-46EA-9BD3-509D4C699762');	
+('2da15147-bd5f-4691-aec4-fa19829e6436', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Přihlášení', (select Id from language where TagIETF like '%cs-CZ%')),
+('da21f5b7-1978-4050-bc7e-73ce923de29a', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Odhlášení', (select Id from language where TagIETF like '%cs-CZ%')),
+('74b04654-935b-4422-bb31-8eea37ee54d6', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Otevření obrazovky', (select Id from language where TagIETF like '%cs-CZ%')),
+('4ac73bd3-3952-4729-bcb6-7e7972b5c204', '62f161e9-b817-4631-93e3-360551257dc2', N'Export do Excelu', (select Id from language where TagIETF like '%cs-CZ%'));	
 
 -- localization into de-DE
 INSERT INTO [OrigamEventType_l10n] ([Id], [refOrigamEventTypeId], [Name], [refLanguageId])
 VALUES
-('a13b496a-4ebc-437a-9afc-591d611efe79', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Anmeldung', '8B92F824-289C-4F93-A245-ECB67B81DE1B'),
-('c1c7305c-1202-4999-b08b-768cac2a30a1', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Abmeldung', '8B92F824-289C-4F93-A245-ECB67B81DE1B'),
-('88fee706-bde6-4628-a88a-a9b05522acf0', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Bildschirmöffnung', '8B92F824-289C-4F93-A245-ECB67B81DE1B'),
-('11dba228-e0dc-416e-9f25-a7677258487b', '62f161e9-b817-4631-93e3-360551257dc2', N'Export nach Excel', '8B92F824-289C-4F93-A245-ECB67B81DE1B');
+('a13b496a-4ebc-437a-9afc-591d611efe79', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Anmeldung', (select Id from language where TagIETF like '%de-DE%')),
+('c1c7305c-1202-4999-b08b-768cac2a30a1', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Abmeldung', (select Id from language where TagIETF like '%de-DE%')),
+('88fee706-bde6-4628-a88a-a9b05522acf0', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Bildschirmöffnung', (select Id from language where TagIETF like '%de-DE%')),
+('11dba228-e0dc-416e-9f25-a7677258487b', '62f161e9-b817-4631-93e3-360551257dc2', N'Export nach Excel', (select Id from language where TagIETF like '%de-DE%'));
 
 -- localization into de-CH
 INSERT INTO [OrigamEventType_l10n] ([Id], [refOrigamEventTypeId], [Name], [refLanguageId])
 VALUES
-('7ac45863-53b9-4cc5-a8ab-ca282f4c0667', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Anmeldung', '81FEF0EB-8492-4A26-9532-44B8567D0A1B'),
-('273fe09e-2403-412c-b91e-841de10e20cb', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Abmeldung', '81FEF0EB-8492-4A26-9532-44B8567D0A1B'),
-('9eafa14a-6ec2-4b4d-9fad-8423109c3397', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Bildschirmöffnung', '81FEF0EB-8492-4A26-9532-44B8567D0A1B'),
-('5fcba9cc-0ce5-4051-98fd-1f880000ec0f', '62f161e9-b817-4631-93e3-360551257dc2', N'Export nach Excel', '81FEF0EB-8492-4A26-9532-44B8567D0A1B');
+('7ac45863-53b9-4cc5-a8ab-ca282f4c0667', '3d91cd2c-1265-4022-8834-150de0237a3c', N'Anmeldung', (select Id from language where TagIETF like '%de-CH%')),
+('273fe09e-2403-412c-b91e-841de10e20cb', 'b737ea8b-1cda-42d1-845a-c0c909386389', N'Abmeldung', (select Id from language where TagIETF like '%de-CH%')),
+('9eafa14a-6ec2-4b4d-9fad-8423109c3397', '4c14c1da-797b-4f0f-b6df-f787ca7e9647', N'Bildschirmöffnung', (select Id from language where TagIETF like '%de-CH%')),
+('5fcba9cc-0ce5-4051-98fd-1f880000ec0f', '62f161e9-b817-4631-93e3-360551257dc2', N'Export nach Excel', (select Id from language where TagIETF like '%de-CH%'));
