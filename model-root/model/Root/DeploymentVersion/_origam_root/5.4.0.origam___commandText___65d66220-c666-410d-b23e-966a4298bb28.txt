@@ -1,4 +1,5 @@
 ﻿-- localization into cs-CZ
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'cs-CZ')
 INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
 VALUES
 ('2da15147-bd5f-4691-aec4-fa19829e6436', '3d91cd2c-1265-4022-8834-150de0237a3c', 'Přihlášení', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%')),
@@ -7,6 +8,7 @@ VALUES
 ('4ac73bd3-3952-4729-bcb6-7e7972b5c204', '62f161e9-b817-4631-93e3-360551257dc2', 'Export do Excelu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'));
 
 -- localization into de-DE
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'de-DE')
 INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
 VALUES
 ('a13b496a-4ebc-437a-9afc-591d611efe79', '3d91cd2c-1265-4022-8834-150de0237a3c', 'Anmeldung', (select "Id" from "Language" where "TagIETF" like '%de-DE%')),
@@ -15,6 +17,7 @@ VALUES
 ('11dba228-e0dc-416e-9f25-a7677258487b', '62f161e9-b817-4631-93e3-360551257dc2', 'Export nach Excel', (select "Id" from "Language" where "TagIETF" like '%de-DE%'));
 
 -- localization into de-CH
+IF EXISTS (select * from "Language" WHERE "TagIETF" = 'de-CH')
 INSERT INTO "OrigamEventType_l10n" ("Id", "refOrigamEventTypeId", "Name", "refLanguageId")
 VALUES
 ('7ac45863-53b9-4cc5-a8ab-ca282f4c0667', '3d91cd2c-1265-4022-8834-150de0237a3c', 'Anmeldung', (select "Id" from "Language" where "TagIETF" like '%de-CH%')),
