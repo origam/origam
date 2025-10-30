@@ -19,18 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Data;
-using NUnit.Framework;
-using Origam.Workflow.WorkQueue;
+// using System.Data;
+// using NUnit.Framework;
+// using Origam.Workflow.WorkQueue;
 
 namespace Origam.WorkflowTests;
 
-public record TestData(
-    Guid RetryType,
-    int RetryIntervalSeconds,
-    int MaxRetries,
-    DateTime ExpectedNextAttempt
-);
+// public record TestData(
+//     Guid RetryType,
+//     int RetryIntervalSeconds,
+//     int MaxRetries,
+//     DateTime ExpectedNextAttempt
+// );
 //
 // [TestFixture]
 // public class RetryManagerTests
