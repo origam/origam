@@ -69,19 +69,19 @@ public class WorkQueueIntegrationTests
             configName: configName,
             customServiceFactory: new TestRuntimeServiceFactory()
         );
-        SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
-        );
+        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
+        // in OrigamSettings.config
+        var dataService = DataServiceFactory.GetDataService();
+
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, dataService);
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
-        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
-        // in OrigamSettings.config
-        var dataService = (ITraceService)DataServiceFactory.GetDataService();
-        var deletedWorkQueueEntryIds = dataService
+        ITraceService traceService = (ITraceService)dataService;
+        log.Debug("operations: " + traceService.Operations.Count);
+        var deletedWorkQueueEntryIds = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .Select(x => x.RowId)
             .Reverse()
