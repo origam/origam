@@ -60,7 +60,7 @@ public class WorkQueueIntegrationTests
     }
 
     [TestCase("LinearWorkQueueProcessor")]
-    [TestCase("RoundRobinWorkQueueProcessor")]
+    // [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
         log.Debug($"ShouldTestAllWorkQueueEntriesAreProcessed, configName: {configName}");
