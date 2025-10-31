@@ -1,0 +1,8 @@
+﻿ALTER TABLE "Resource" ADD CONSTRAINT "FK_Resource_refBusinessUnitId_BusinessUnit"
+	FOREIGN KEY (
+		"refBusinessUnitId"
+	)
+
+	REFERENCES "BusinessUnit" (
+		"Id"
+	);

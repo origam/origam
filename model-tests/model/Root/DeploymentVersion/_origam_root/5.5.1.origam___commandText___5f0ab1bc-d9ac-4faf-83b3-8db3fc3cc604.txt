@@ -1,0 +1,8 @@
+﻿ALTER TABLE "Resource" ADD CONSTRAINT "FK_Resource_refResourceTypeId_ResourceType"
+	FOREIGN KEY (
+		"refResourceTypeId"
+	)
+
+	REFERENCES "ResourceType" (
+		"Id"
+	);

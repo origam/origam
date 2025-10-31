@@ -1,0 +1,1 @@
+﻿CREATE UNIQUE  INDEX  "OrigamFeatureList_ix_Unique" ON "OrigamFeatureList" ("ReferenceCode" ASC);

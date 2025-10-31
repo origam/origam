@@ -1,0 +1,8 @@
+﻿ALTER TABLE "WorkQueue" ADD CONSTRAINT "FK_WorkQueue_refWorkQueueRetryTypeId_WorkQueueRetryType"
+	FOREIGN KEY (
+		"refWorkQueueRetryTypeId"
+	)
+
+	REFERENCES "WorkQueueRetryType" (
+		"Id"
+	);

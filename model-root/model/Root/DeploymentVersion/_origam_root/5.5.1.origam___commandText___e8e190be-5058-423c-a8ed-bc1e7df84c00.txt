@@ -1,0 +1,1 @@
+﻿ALTER TABLE "OrigamTraceRule" ALTER COLUMN "Input" TYPE text;
