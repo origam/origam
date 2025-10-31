@@ -243,7 +243,11 @@ public class MsSqlManager(ICoreDataService dataService) : SqlManager(dataService
 
     public override void DeleteWorkQueueEntries()
     {
+        int workQueueEntryCount1 = GetWorkQueueEntryCount();
+        log.Debug("workQueueEntryCount before delete: " + workQueueEntryCount1);
         dataService.ExecuteSql(@"DELETE FROM [dbo].[WorkQueueEntry]");
+        int workQueueEntryCount2 = GetWorkQueueEntryCount();
+        log.Debug("workQueueEntryCount after delete: " + workQueueEntryCount2);
     }
 
     public override int GetWorkQueueEntryCount()
