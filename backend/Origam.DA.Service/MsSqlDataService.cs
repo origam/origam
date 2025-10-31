@@ -92,6 +92,7 @@ public class MsSqlDataService : AbstractSqlDataService
         builder.DataSource = serverName;
         builder.InitialCatalog = databaseName;
         builder.Pooling = pooling;
+        builder.Encrypt = false;
         if (!integratedAuthentication && port != 1433)
         {
             builder.DataSource = serverName + "," + port;
