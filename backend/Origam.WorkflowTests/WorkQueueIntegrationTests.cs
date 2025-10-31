@@ -64,7 +64,7 @@ public class WorkQueueIntegrationTests
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
         log.Debug($"ShouldTestAllWorkQueueEntriesAreProcessed, configName: {configName}");
-        Thread.Sleep(1000);
+        Thread.Sleep(10_000);
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically
         OrigamEngine.OrigamEngine.ConnectRuntime(
