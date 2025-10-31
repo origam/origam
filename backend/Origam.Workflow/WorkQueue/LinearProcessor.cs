@@ -46,6 +46,7 @@ public class LinearProcessor : IWorkQueueProcessor
         WorkQueueThrottle workQueueThrottle
     )
     {
+        log.Debug("LinearProcessor instantiated");
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
         this.retryManager = retryManager;
@@ -54,6 +55,7 @@ public class LinearProcessor : IWorkQueueProcessor
 
     public virtual void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
     {
+        log.Debug("LinearProcessor Runs");
         foreach (WorkQueueRow queue in queues)
         {
             ProcessAutoQueueCommands(

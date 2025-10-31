@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Reflection;
 using log4net.Config;
 using NUnit.Framework;
 using Origam.OrigamEngine;
@@ -31,6 +32,10 @@ namespace Origam.WorkflowTests;
 [TestFixture]
 public class WorkQueueIntegrationTests
 {
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        MethodBase.GetCurrentMethod()?.DeclaringType
+    );
+
     public WorkQueueIntegrationTests()
     {
         XmlConfigurator.Configure(new FileInfo("log4net.config"));
@@ -58,6 +63,7 @@ public class WorkQueueIntegrationTests
     [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
+        log.Debug($"ShouldTestAllWorkQueueEntriesAreProcessed, configName: {configName}");
         Thread.Sleep(1000);
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically
@@ -65,23 +71,32 @@ public class WorkQueueIntegrationTests
             configName: configName,
             customServiceFactory: new TestRuntimeServiceFactory()
         );
-        SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
-        );
+        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
+        // in OrigamSettings.config
+        var dataService = DataServiceFactory.GetDataService();
+
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, dataService);
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
 
-        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
-        // in OrigamSettings.config
-        var dataService = (ITraceService)DataServiceFactory.GetDataService();
-        var deletedWorkQueueEntryIds = dataService
+        ITraceService traceService = (ITraceService)dataService;
+        log.Debug("operations: " + traceService.Operations.Count);
+        log.Debug(
+            "operation types: "
+                + string.Join(
+                    ", ",
+                    traceService.Operations.Select(x => x.GetType().FullName).Distinct()
+                )
+        );
+        var deletedWorkQueueEntryIds = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .Select(x => x.RowId)
             .Reverse()
             .ToList();
+        log.Debug($"createdWorkQueueEntryIds: [{string.Join(", ", createdWorkQueueEntryIds)}]");
+        log.Debug($"deletedWorkQueueEntryIds: [{string.Join(", ", deletedWorkQueueEntryIds)}]");
 
         CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
     }
@@ -96,20 +111,17 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory()
         );
 
-        SqlManager sqlManager = SqlManagerFactory.Create(
-            DataService.Instance,
-            DataServiceFactory.GetDataService()
-        );
+        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
+        // in OrigamSettings.config
+        var dataService = DataServiceFactory.GetDataService();
+        SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, dataService);
         // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
-
-        // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
-        // in OrigamSettings.config
-        var dataService = (ITraceService)DataServiceFactory.GetDataService();
-        var deleteOperations = dataService
+        ITraceService traceService = (ITraceService)dataService;
+        var deleteOperations = traceService
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
         var deletedWorkQueueEntryIds = deleteOperations.Select(x => x.RowId).Reverse().ToList();
