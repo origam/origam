@@ -110,14 +110,14 @@ public class WorkQueueIntegrationTests
             configName: "RoundRobinWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory()
         );
-    
+
         // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
         var dataService = DataServiceFactory.GetDataService();
         SqlManager sqlManager = SqlManagerFactory.Create(DataService.Instance, dataService);
         // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3
         List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
-    
+
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
         ITraceService traceService = (ITraceService)dataService;
@@ -125,11 +125,11 @@ public class WorkQueueIntegrationTests
             .Operations.OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
         var deletedWorkQueueEntryIds = deleteOperations.Select(x => x.RowId).Reverse().ToList();
-    
+
         CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
-    
+
         int batchSize = ConfigurationManager.GetActiveConfiguration().RoundRobinBatchSize;
-    
+
         int numberOfGroups = deleteOperations.Count / batchSize;
         int numberOfGroupsWhereWeExpectEntriesFromASingleQueue = numberOfGroups - 3;
         for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
@@ -143,13 +143,13 @@ public class WorkQueueIntegrationTests
             Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
         }
     }
-    
+
     [Test]
     public void ShouldTestThrottling()
     {
         const int throttlingIntervalSeconds = 20;
         const int throttlingItemsPerInterval = 3;
-    
+
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically
         OrigamEngine.OrigamEngine.ConnectRuntime(
@@ -167,10 +167,10 @@ public class WorkQueueIntegrationTests
                 throttlingItemsPerInterval: throttlingItemsPerInterval
             );
             List<Guid> createdWorkQueueEntryIds = sqlManager.InsertFourEntriesToTestQueue3();
-    
+
             Thread.Sleep(1000);
             sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
-    
+
             // MonitoredMsSqlDataService/MonitoredPgSqlDataService must be set in "DataDataService" element
             // in OrigamSettings.config
             var dataService = (ITraceService)DataServiceFactory.GetDataService();
@@ -178,26 +178,26 @@ public class WorkQueueIntegrationTests
                 .Operations.OfType<DeleteWorkQueueEntryOperation>()
                 .OrderBy(operation => operation.ExecutedAt)
                 .ToList();
-    
+
             var firstIntervalOperations = deleteOperations
                 .Take(throttlingItemsPerInterval)
                 .ToList();
             var firstOperationInFirstInterval = firstIntervalOperations.First();
-    
+
             var firstOperationInSecondInterval = deleteOperations
                 .Skip(throttlingItemsPerInterval)
                 .First();
             DateTime expectedSecondIntervalStart =
                 firstOperationInFirstInterval.ExecutedAt.AddSeconds(throttlingIntervalSeconds);
-    
+
             Assert.That(firstOperationInSecondInterval.ExecutedAt > expectedSecondIntervalStart);
             foreach (var operation in firstIntervalOperations)
             {
                 Assert.That(operation.ExecutedAt < expectedSecondIntervalStart);
             }
-    
+
             var deletedWorkQueueEntryIds = deleteOperations.Select(x => x.RowId).Reverse().ToList();
-    
+
             CollectionAssert.AreEquivalent(createdWorkQueueEntryIds, deletedWorkQueueEntryIds);
         }
         finally
@@ -205,7 +205,7 @@ public class WorkQueueIntegrationTests
             sqlManager.DisableThrottlingOnTestQueue3();
         }
     }
-    
+
     [Test]
     public void ShouldRetryProcessingOfFailingQueue()
     {
@@ -252,7 +252,7 @@ public class WorkQueueIntegrationTests
                 + $" number of times ({maxRetries}). Number of attempts is {attempts}"
         );
     }
-    
+
     [Test]
     public void ShouldNotRetryProcessingOfFailingQueueIfNoRetry()
     {
@@ -278,7 +278,7 @@ public class WorkQueueIntegrationTests
         int attempts = sqlManager.GetFailingQueueEntryAttempts();
         Assert.That(attempts, Is.EqualTo(1));
     }
-    
+
     [Test]
     public void ShouldMoveWorkQueueEntryToErrorQueueAfterError()
     {
@@ -313,14 +313,14 @@ public class WorkQueueIntegrationTests
             );
             sqlManager.InsertOneEntryIntoFailingQueue();
             Thread.Sleep(15_000);
-    
+
             int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
             int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
             int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
             Assert.That(entriesInFailingQueue, Is.EqualTo(0));
             Assert.That(entriesInRetryQueue, Is.EqualTo(0));
             Assert.That(entriesInErrorQueue, Is.EqualTo(1));
-    
+
             Dictionary<Guid, int> attempts = sqlManager.GetAttemptCountsInQueues(
                 SqlManager.FailingEntryId
             );
