@@ -2472,11 +2472,11 @@ __metadata:
   linkType: hard
 
 "@messageformat/runtime@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@messageformat/runtime@npm:3.0.1"
+  version: 3.0.2
+  resolution: "@messageformat/runtime@npm:3.0.2"
   dependencies:
     make-plural: "npm:^7.0.0"
-  checksum: 10c0/a236279da66a138f7860d4a190070b00d752cc5b5aed877ec3b0f6dce708e7e3bd5b290e4f4ec30b97a4213f069fb70dbda9af49f849a106da227d41a9e19581
+  checksum: 10c0/5efb037fab20ab9529da220553f868f857be9ee7c3dd58b12eb96ee16c7d3b32e3bc1f88821e458a4e35fce71ed93e8846818532d97f5e933b442c4b56b1d176
   languageName: node
   linkType: hard
 
@@ -3600,14 +3600,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.13.0":
-  version: 1.13.0
-  resolution: "axios@npm:1.13.0"
+"axios@npm:^1.13.1":
+  version: 1.13.1
+  resolution: "axios@npm:1.13.1"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/2af09f8ad9db9565bf97055eb0ddd2fd4abd9a03d23157b409348c9589370a88c3ede02e11fd1268becb780a77b62bdf9488650dd7208eda57edceca1d65622e
+  checksum: 10c0/de9c3c6de43d3ee1146d3afe78645f19450cac6a5d7235bef8b8e8eeb705c2e47e2d231dea99cecaec4dae1897c521118ca9413b9d474063c719c4d94c5b9adc
   languageName: node
   linkType: hard
 
@@ -7364,7 +7364,7 @@ __metadata:
     "@vitejs/plugin-basic-ssl": "npm:^2.1.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@xstate/inspect": "npm:^0.8.0"
-    axios: "npm:^1.13.0"
+    axios: "npm:^1.13.1"
     bind-decorator: "npm:^1.0.11"
     browserslist: "npm:^4.27.0"
     browserslist-useragent-regexp: "npm:^4.1.3"

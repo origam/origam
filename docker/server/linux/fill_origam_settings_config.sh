@@ -10,11 +10,7 @@ fill_origam_settings_config() {
     fi
 
     local required_vars=(
-      OrigamSettings__DatabaseHost
-      OrigamSettings__DatabasePort
-      OrigamSettings__DatabaseName
-      OrigamSettings__DatabaseUsername
-      OrigamSettings__DatabasePassword
+      OrigamSettings__DataConnectionString
       OrigamSettings__DefaultSchemaExtensionId
       OrigamSettings__Name
       OrigamSettings__ModelSourceControlLocation
@@ -35,23 +31,14 @@ fill_origam_settings_config() {
 
     # Compose the DataConnectionString using the required connection string variables.
     if [[ "$database_type" == "mssql" ]]; then
-      local connection_string="Encrypt=False;Data Source=${OrigamSettings__DatabaseHost},${OrigamSettings__DatabasePort};Initial Catalog=${OrigamSettings__DatabaseName};User ID=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
       local schema_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
       local data_data_service="Origam.DA.Service.MsSqlDataService, Origam.DA.Service"
     elif [[ "$database_type" == "postgresql" ]]; then
-      local connection_string="sslmode=disable;Host=${OrigamSettings__DatabaseHost};Port=${OrigamSettings__DatabasePort};Database=${OrigamSettings__DatabaseName};Username=${OrigamSettings__DatabaseUsername};Password=${OrigamSettings__DatabasePassword};"
       local schema_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
       local data_data_service="Origam.DA.Service.PgSqlDataService, Origam.DA.Service"
     else
       echo "Unsupported or missing DatabaseType. Please set DatabaseType to mssql or postgresql."
       exit 1
-    fi
-
-    # DataConnectionString (update or create)
-    if xmlstarlet sel -t -v "${OrigamSettingNodeXpath}/DataConnectionString" "$config_file" >/dev/null 2>&1; then
-      xmlstarlet ed -L -u "${OrigamSettingNodeXpath}/DataConnectionString" -v "$connection_string" "$config_file"
-    else
-      xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataConnectionString" -v "$connection_string" "$config_file"
     fi
 
     # SchemaDataService (update or create)
@@ -68,19 +55,25 @@ fill_origam_settings_config() {
       xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "DataDataService" -v "$data_data_service" "$config_file"
     fi
 
-    for env_entry in $(env | grep '^OrigamSettings__' | grep -v '^OrigamSettings__Database'); do
-        key="${env_entry%%=*}"
-        value="${env_entry#*=}"
-
-        node_name="${key#OrigamSettings__}"
-        xpath="${OrigamSettingNodeXpath}/${node_name}"
-
-        # Check if the node exists; if it does, update its value, otherwise create it.
-        if xmlstarlet sel -t -v "$xpath" "$config_file" &>/dev/null; then
-            xmlstarlet ed -L -u "$xpath" -v "${value}" "$config_file"
-        else
-            xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "${node_name}" -v "${value}" "$config_file"
-        fi
+    env | grep '^OrigamSettings__' | while IFS= read -r env_entry; do
+      key="${env_entry%%=*}"
+      value="${env_entry#*=}"
+    
+      # Strip surrounding quotes if present 
+      if [[ $value == \"*\" && $value == *\" ]]; then
+        value="${value#\"}"
+        value="${value%\"}"
+      fi
+    
+      node_name="${key#OrigamSettings__}"
+      xpath="${OrigamSettingNodeXpath}/${node_name}"
+    
+      # Update existing node or create a new one
+      if xmlstarlet sel -t -v "$xpath" "$config_file" &>/dev/null; then
+        xmlstarlet ed -L -u "$xpath" -v "$value" "$config_file"
+      else
+        xmlstarlet ed -L -s "$OrigamSettingNodeXpath" -t elem -n "$node_name" -v "$value" "$config_file"
+      fi
     done
 
     echo "${config_file} file updated successfully."
