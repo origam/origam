@@ -81,11 +81,7 @@ fill_origam_settings_for_workflow_tests(){
     echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
     exit 1
   fi
-  sed -i "s/OrigamSettings_DbHost/${OrigamSettings__DatabaseHost}/g" OrigamSettings.config
-  sed -i "s/OrigamSettings_DbPort/${OrigamSettings__DatabasePort}/g" OrigamSettings.config
-  sed -i "s/OrigamSettings_DbUsername/${OrigamSettings__DatabaseUsername}/g" OrigamSettings.config
-  sed -i "s/OrigamSettings_DbPassword/${OrigamSettings__DatabasePassword}/g" OrigamSettings.config
-  sed -i "s/OrigamSettings_DatabaseName/${OrigamSettings__DatabaseName}/g" OrigamSettings.config
+  sed -i "s/OrigamSettings__DataConnectionString/${OrigamSettings__DataConnectionString}/g" OrigamSettings.config
 }
 
 # Main script

@@ -5,7 +5,7 @@
       <OrigamSettings>
         <SchemaConnectionString />
         <ModelSourceControlLocation>/home/origam/projectData/model</ModelSourceControlLocation>
-        <DataConnectionString>sslmode=disable;Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
+        <DataConnectionString>OrigamSettings__DataConnectionString</DataConnectionString>
         <SchemaDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</SchemaDataService>
         <DataDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</DataDataService>
         <SecurityDomain />
@@ -35,7 +35,7 @@
 	  <OrigamSettings>
         <SchemaConnectionString />
         <ModelSourceControlLocation>/home/origam/projectData/model</ModelSourceControlLocation>
-        <DataConnectionString>sslmode=disable;Application Name=Origam;Host=OrigamSettings_DbHost;Port=OrigamSettings_DbPort;Username=OrigamSettings_DbUsername;Password=OrigamSettings_DbPassword;Database=OrigamSettings_DatabaseName;Pooling=True;Search Path=OrigamSettings_DatabaseName,public</DataConnectionString>
+        <DataConnectionString>OrigamSettings__DataConnectionString</DataConnectionString>
         <SchemaDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</SchemaDataService>
         <DataDataService>Origam.WorkflowTests.MonitoredPgSqlDataService, Origam.WorkflowTests</DataDataService>
         <SecurityDomain />
