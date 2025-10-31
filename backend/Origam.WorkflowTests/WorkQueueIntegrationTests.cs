@@ -27,6 +27,9 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using Origam.Workflow.WorkQueue;
 
+[assembly: Parallelizable(ParallelScope.None)]
+[assembly: LevelOfParallelism(1)]
+
 namespace Origam.WorkflowTests;
 
 [TestFixture]
