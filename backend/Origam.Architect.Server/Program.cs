@@ -41,6 +41,7 @@ public class Program
         workbench.InitializeDefaultServices();
         workbench.Connect();
 
+        var deploymentService = ServiceManager.Services.GetService<IDeploymentService>();
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var documentation = ServiceManager.Services.GetService<IDocumentationService>();
         var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +53,7 @@ public class Program
             });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
