@@ -25,6 +25,7 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
+using Origam.Schema.DeploymentModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -126,12 +127,12 @@ public class EditorController(
                 useCache: false
             );
 
-            if (item.GetType().FullName != "Origam.Schema.DeploymentModel.DeploymentVersion")
+            if (item is not DeploymentVersion version)
             {
+                // It means this: item.GetType().FullName != "Origam.Schema.DeploymentModel.DeploymentVersion"
                 return BadRequest("Selected item is not a DeploymentVersion");
             }
-
-            deploymentVersionCurrentService.SetVersionCurrent();
+            deploymentVersionCurrentService.SetVersionCurrent(version);
 
             return Ok();
         });
