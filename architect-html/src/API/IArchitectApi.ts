@@ -230,6 +230,7 @@ export interface IApiTreeNode extends INodeLoadData {
   children?: IApiTreeNode[];
   iconUrl?: string;
   itemType?: string;
+  isCurrentVersion?: boolean;
 }
 
 export interface IPackagesInfo {

@@ -46,6 +46,7 @@ export class TreeNode implements IEditorNode {
     this.childrenIds = apiNode.childrenIds;
     this.iconUrl = apiNode.iconUrl;
     this.itemType = apiNode.itemType;
+    this.isCurrentVersion = apiNode.isCurrentVersion;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -63,6 +64,7 @@ export class TreeNode implements IEditorNode {
   childrenIds: string[];
   iconUrl?: string;
   itemType?: string;
+  isCurrentVersion?: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
