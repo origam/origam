@@ -150,6 +150,7 @@ public class WorkQueueIntegrationTests
     [Test]
     public void ShouldTestThrottling()
     {
+        Thread.Sleep(10_000);
         const int throttlingIntervalSeconds = 20;
         const int throttlingItemsPerInterval = 3;
 
