@@ -107,8 +107,11 @@ export class TreeNode implements IEditorNode {
     this.contextMenuItems = yield this.architectApi.getMenuItems(this);
   }
 
-  *setVersionCurrent(): Generator<Promise<void>, void, void> {
+  *setVersionCurrent() {
     yield this.architectApi.setVersionCurrent(this.origamId);
+    if (this.parent) {
+      yield* this.parent.loadChildren.bind(this.parent)();
+    }
   }
 
   createNode(typeName: string) {
