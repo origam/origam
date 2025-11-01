@@ -97,7 +97,7 @@ const ModelTreeNode: React.FC<{
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
           onContextMenu={handleContextMenu}
-          className={S.iconAndText}
+          className={`${S.iconAndText} ${node.isCurrentVersion ? S.currentVersion : ''}`}
         >
           <div className={S.icon}>
             <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
