@@ -581,7 +581,7 @@ jobs:
      - bash: |
         cp -R ../frontend-html server/client_source
         mv origam server/server_bin
-        mv origam-scheduler server/Scheduler
+        mv origam-scheduler server/scheduler_bin
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2
@@ -651,7 +651,7 @@ jobs:
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination server\client_source -Recurse
         Move-Item -Path origam -Destination server\server_bin -force
-        Move-Item -Path origam-scheduler -Destination server\Scheduler -force
+        Move-Item -Path origam-scheduler -Destination server\scheduler_bin -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2
@@ -692,7 +692,7 @@ jobs:
      - powershell: |
         Copy-Item -Path ..\frontend-html -Destination server\client_source -Recurse
         Move-Item -Path origam -Destination server\server_bin -force
-        Move-Item -Path origam-scheduler -Destination server\Scheduler -force
+        Move-Item -Path origam-scheduler -Destination server\scheduler_bin -force
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Place resources in correct positions
      - task: Docker@2

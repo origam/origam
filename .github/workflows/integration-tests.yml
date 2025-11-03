@@ -251,8 +251,8 @@ jobs:
           name: htmlserverbuild
           path: docker/server/server_bin
 
-      - name: Ensure server/Scheduler exists
-        run: mkdir -p docker/server/Scheduler
+      - name: Ensure server/scheduler_bin exists
+        run: mkdir -p docker/server/scheduler_bin
 
       - name: Ensure server/client_source exists
         run: mkdir -p docker/server/client_source
