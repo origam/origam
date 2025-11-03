@@ -17,3 +17,4 @@ RuntimeModelConfiguration.json
 /docker/server/Scheduler/
 /chat-html/dist
 /docker/debug/
+/docker/server/scheduler_bin/
