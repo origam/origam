@@ -245,23 +245,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download HTML5 artifact (for server build context)
+      - name: Download server_bin artifact (for server build context)
         uses: actions/download-artifact@v4
         with:
           name: htmlserverbuild
-          path: docker/server/HTML5
+          path: docker/server/server_bin
 
       - name: Ensure server/Scheduler exists
         run: mkdir -p docker/server/Scheduler
 
-      - name: Ensure server/HTML5-SOURCE exists
-        run: mkdir -p docker/server/HTML5-SOURCE
+      - name: Ensure server/client_source exists
+        run: mkdir -p docker/server/client_source
 
       - name: Download Frontend artifact (for server build context)
         uses: actions/download-artifact@v4
         with:
           name: htmlfrontendbuild
-          path: docker/server/HTML5/clients/origam
+          path: docker/server/server_bin/clients/origam
 
       - name: Build base server image for tests
         run: |
@@ -304,7 +304,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: workflowbuild
-          path: test/HTML5_TESTS
+          path: test/tests_workflow
 
       - name: Copy model to test directory
         run: |
@@ -374,7 +374,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: workflowbuild
-          path: test/HTML5_TESTS
+          path: test/tests_workflow
 
       - name: Copy model to test directory
         run: |

@@ -112,7 +112,7 @@ async function waitForRowCount(page, dataViewId, expectedRowCount){
 async function takeScreenShot(page, name){
   const screenDir = process.platform === "win32"
     ? "screenshots"
-    : "/home/origam/HTML5/screenshots";
+    : "/home/origam/server_bin/screenshots";
   if(!fs.existsSync(screenDir)){
     fs.mkdirSync(screenDir)
   }

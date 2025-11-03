@@ -37,21 +37,21 @@ RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends gawk &&
 # Copy test files
 USER origam
 WORKDIR /home/origam
-RUN mkdir -p HTML5/data/origam HTML5_TESTS output
+RUN mkdir -p server_bin/data/origam tests_workflow output
 
 COPY --chown=origam:origam entrypoint.sh \
-    /home/origam/HTML5/
+    /home/origam/server_bin/
 
-COPY --chown=origam:origam HTML5_TESTS \
+COPY --chown=origam:origam tests_workflow \
     _OrigamSettings.wf.mssql.template \
     _OrigamSettings.wf.pgsql.template \
     log4net.config \
-    /home/origam/HTML5_TESTS/
+    /home/origam/tests_workflow/
 
-COPY --chown=origam:origam tests_e2e /home/origam/HTML5/tests_e2e/
+COPY --chown=origam:origam tests_e2e /home/origam/server_bin/tests_e2e/
 COPY --chown=origam:origam model /home/origam/projectData/model/
 
-WORKDIR /home/origam/HTML5
+WORKDIR /home/origam/server_bin
 RUN chmod +x entrypoint.sh
 
 # The source server image starts the entrypoint.sh, no need to change it here

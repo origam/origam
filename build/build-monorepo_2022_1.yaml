@@ -480,8 +480,8 @@ jobs:
          artifactName: 'origam-html'
          downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - bash: |
-        cp -R ../frontend-html HTML5-SOURCE
-        mv origam-html HTML5
+        cp -R ../frontend-html client_source
+        mv origam-html server_bin
        workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Download origam-html and source artifact
      - task: Docker@2

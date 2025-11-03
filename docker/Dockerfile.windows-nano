@@ -19,18 +19,18 @@ RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
 WORKDIR /home/origam
 
 # Create required directories
-RUN mkdir HTML5 && \
-    mkdir HTML5-SOURCE && \
+RUN mkdir server_bin && \
+    mkdir client_source && \
     mkdir "C:\\ssl"
 RUN mkdir Scheduler
 
 # Copy application files
-COPY server/HTML5 HTML5/
-COPY server/HTML5-SOURCE HTML5-SOURCE/
+COPY server/server_bin server_bin/
+COPY server/client_source client_source/
 COPY server/Scheduler Scheduler/
 
 # Copy configuration templates and scripts
-WORKDIR /home/origam/HTML5
+WORKDIR /home/origam/server_bin
 COPY server/_appsettings.template .
 COPY server/log4net.server.config log4net.config
 WORKDIR /home/origam/Scheduler

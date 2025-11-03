@@ -38,7 +38,7 @@ else
 }
 switch ($env:ContainerMode) {
     "server" {
-        Set-Location /home/origam/HTML5
+        Set-Location /home/origam/server_bin
         # Generate the HTTPS SSL certificate
         Write-Host "Generating HTTPS SSL certificate..."
         & './../CreateSslCertificate.ps1'

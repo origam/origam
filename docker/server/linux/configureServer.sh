@@ -51,7 +51,7 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 			   #test custom scripts	
 			   cd origam
 			   if [ -f custom.js ]; then
-					cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+					cp custom.js /home/origam/server_bin/assets/identity/js/custom.js
 			   fi
 			   if [ -f reverse-proxy.conf ]; then
 					sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
@@ -63,7 +63,7 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 				rm /home/origam/.ssh/id_rsa
 		   fi
 fi
-cd /home/origam/HTML5
+cd /home/origam/server_bin
 
 DIRCONFIG="configuredata"
 if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
@@ -114,7 +114,7 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 			cp log4net.config ../../
 		   fi
 		   if [ -f custom.js ]; then
-			cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+			cp custom.js /home/origam/server_bin/assets/identity/js/custom.js
 		   fi
 		   if [ -f reverse-proxy.conf ]; then
 				sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
@@ -127,7 +127,7 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   fi
 fi
 
-cd /home/origam/HTML5
+cd /home/origam/server_bin
 
 if [ ! -d "$PROJECT_DATA_DIRECTORY" ]; then
 	echo "Server has no model!!! Review the instance setup.";
@@ -136,7 +136,7 @@ fi
 # generate certificate every start.
 openssl rand -base64 10 >certpass
 run_silently openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
-openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx
+openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/server_bin/serverCore.pfx
 cp _appsettings.template appsettings.prepare
   sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
 
@@ -148,7 +148,7 @@ if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
 fi
 
 if [[ ! -z ${EnableChat} && ${EnableChat} == true ]]; then
-	sed -i "s|pathchatapp|/home/origam/HTML5/clients/chat|" appsettings.json
+	sed -i "s|pathchatapp|/home/origam/server_bin/clients/chat|" appsettings.json
 	sed -i "s|chatinterval|10000|" appsettings.json
 else
 	sed -i "s|pathchatapp||" appsettings.json

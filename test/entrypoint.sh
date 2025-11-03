@@ -64,7 +64,7 @@ start_server() {
   cd /etc/nginx/ssl
   sudo /etc/nginx/ssl/createSslCertificate.sh
   sudo /etc/init.d/nginx start
-  cd /home/origam/HTML5
+  cd /home/origam/server_bin
   ./configureServer.sh
   export ASPNETCORE_URLS="http://+:8080"
   dotnet Origam.Server.dll > origam-output.txt 2>&1 &
@@ -85,7 +85,7 @@ fill_origam_settings_for_workflow_tests(){
 }
 
 # Main script
-cd /home/origam/HTML5
+cd /home/origam/server_bin
 
 print_title "Start server and wait for database to be available"
 start_server
@@ -118,15 +118,15 @@ fi
 print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
 echo
-cd /home/origam/HTML5_TESTS
+cd /home/origam/tests_workflow
 fill_origam_settings_for_workflow_tests
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
 if [[ $? -eq 0 ]]; then
-  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
+  sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
-  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
+  sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
   print_error "Workflow integration tests failed"
   exit 1
 fi
