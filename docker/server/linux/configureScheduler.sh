@@ -1,4 +1,4 @@
-﻿cd /home/origam/Scheduler
+﻿cd /home/origam/scheduler_bin
 
 ORIGAM_SETTINGS_FILE="OrigamSettings.config"
 cp _OrigamSettings.template "$ORIGAM_SETTINGS_FILE"

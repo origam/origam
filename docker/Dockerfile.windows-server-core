@@ -10,19 +10,19 @@ WORKDIR /home/origam
 RUN mkdir server_bin && \
     mkdir client_source && \
     mkdir "C:\\ssl" && \
-    mkdir Scheduler
+    mkdir scheduler_bin
 
 # Copy application files
 COPY server/server_bin server_bin/
 COPY server/client_source client_source/
-COPY server/Scheduler Scheduler/
+COPY server/scheduler_bin scheduler_bin/
 
 
 # Copy configuration templates and scripts
 WORKDIR /home/origam/server_bin
 COPY server/_appsettings.template .
 COPY server/log4net.server.config log4net.config
-WORKDIR /home/origam/Scheduler
+WORKDIR /home/origam/scheduler_bin
 COPY server/log4net.scheduler.config log4net.config
 WORKDIR /home/origam
 COPY server/_OrigamSettings.template .

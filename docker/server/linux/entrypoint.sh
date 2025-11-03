@@ -20,7 +20,7 @@ if [ -z "$ContainerMode" ] || [ "$ContainerMode" = 'server' ]; then
   export ASPNETCORE_URLS="http://+:8080"
   exec dotnet Origam.Server.dll
 elif [ "$ContainerMode" = "scheduler" ]; then
-  cd /home/origam/Scheduler
+  cd /home/origam/scheduler_bin
   ./configureScheduler.sh
   exec dotnet OrigamScheduler.dll
 #  bash
