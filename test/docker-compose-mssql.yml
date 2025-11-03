@@ -1,1 +1,46 @@
-services:  database-server-mssql:    build:      context: .      dockerfile: Dockerfile.mssql    environment:      - POSTGRES_PASSWORD=${SA_PASSWORD}      - USER_PASSWORD=${OrigamSettings__DatabasePassword}      - SA_PASSWORD=${SA_PASSWORD}      - ACCEPT_EULA=Y      - BUILDKIT_PROGRESS=tty    ports:      - "1435:1433"    profiles:      - test    tty: false    stdin_open: false    healthcheck:      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '1Secure*Password1' -Q \"SELECT 1\""]      interval: 5s      timeout: 5s      retries: 5  server-mssql:    build:      context: .      dockerfile: Dockerfile.tests      args:        - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}    env_file:      - envFileMsSql.env    environment:      - BUILDKIT_PROGRESS=tty      - CI=true    ports:      - "443:443"    depends_on:      database-server-mssql:        condition: service_healthy    profiles:      - test    tty: true    volumes:      - ./output/:/home/origam/output/    links:     - database-server-mssql
+services:
+  database-server-mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mssql
+    environment:
+      - POSTGRES_PASSWORD=${SA_PASSWORD}
+      - USER_PASSWORD=${OrigamSettings__DatabasePassword}
+      - SA_PASSWORD=${SA_PASSWORD}
+      - ACCEPT_EULA=Y
+      - BUILDKIT_PROGRESS=tty
+    ports:
+      - "1435:1433"
+    profiles:
+      - test
+    tty: false
+    stdin_open: false
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '1Secure*Password1' -Q \"SELECT 1\""]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server-mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+      args:
+        - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
+    env_file:
+      - envFileMsSql.env
+    environment:
+      - BUILDKIT_PROGRESS=tty
+      - CI=true
+    ports:
+      - "443:443"
+    depends_on:
+      database-server-mssql:
+        condition: service_healthy
+    profiles:
+      - test
+    tty: true
+    volumes:
+      - ./output/:/home/origam/output/
+    links:
+     - database-server-mssql

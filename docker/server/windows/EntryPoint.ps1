@@ -12,7 +12,7 @@ if ($Env:gitPullOnStart -eq "true")
     {
         Remove-Item $projectDataPath -Recurse -Force
     }
-    # Create new data direct
+    # Create new data directory
     New-Item -Name $projectDataPath -ItemType Directory
     Set-Location $projectDataPath
     # Clone the repository
