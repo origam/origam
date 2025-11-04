@@ -9,7 +9,6 @@ public class RegisterViewModel
     public string Email { get; set; }
 
     [Required(ErrorMessage = "UserNameRequired")]
-    [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
     [DataType(DataType.Text)]
     public string UserName { get; set; }
 
@@ -24,7 +23,6 @@ public class RegisterViewModel
     public string FirstName { get; set; }
 
     [Required(ErrorMessage = "PasswordRequired")]
-    [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 
