@@ -576,9 +576,11 @@ public class ServerCoreUIService : IBasicUIService
         switch (sessionStore)
         {
             case null:
+            {
                 return Result.Success<RowData, IActionResult>(
                     new RowData { Row = null, Entity = null }
                 );
+            }
             default:
             {
                 var row = sessionStore.GetSessionRow(entity, rowId);
@@ -595,7 +597,9 @@ public class ServerCoreUIService : IBasicUIService
         switch (sessionStore)
         {
             case null:
+            {
                 return Result.Success<Guid, IActionResult>(Guid.Empty);
+            }
             default:
             {
                 var table = sessionStore.GetDataTable(entity, sessionStore.Data);

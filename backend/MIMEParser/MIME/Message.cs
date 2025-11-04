@@ -137,9 +137,13 @@ public class Message
             try
             {
                 if (value.EndsWith("\\"))
+                {
                     _basePath = value;
+                }
                 else
+                {
                     _basePath = value + "\\";
+                }
             }
             catch { }
         }
@@ -188,15 +192,23 @@ public class Message
             {
                 case "5":
                 case "HIGH":
+                {
                     return MessageImportanceType.HIGH;
+                }
                 case "3":
                 case "NORMAL":
+                {
                     return MessageImportanceType.NORMAL;
+                }
                 case "1":
                 case "LOW":
+                {
                     return MessageImportanceType.LOW;
+                }
                 default:
+                {
                     return MessageImportanceType.NORMAL;
+                }
             }
         }
     }
@@ -470,7 +482,9 @@ public class Message
             NewMessage(ref blnFinish, strBasePath, blnAutoDecodeMSTNEF, strMessage, blnOnlyHeader);
         }
         else
+        {
             blnFinish = true;
+        }
     }
 
     /// <summary>
@@ -560,15 +574,20 @@ public class Message
             sbdBuilder.Append(strLine + "\r\n");
             ParseHeader(sbdBuilder, srdReader, ref strLine);
             if (Utility.IsOrNullTextEx(strLine))
+            {
                 break;
-            else
-                strLine = srdReader.ReadLine();
+            }
+
+            strLine = srdReader.ReadLine();
         }
         _rawHeader = sbdBuilder.ToString();
 
         SetAttachmentBoundry2(_rawMessage);
         if (_contentLength == 0)
+        {
             _contentLength = strMessage.Length; //_rawMessageBody.Length;
+        }
+
         if (blnOnlyHeader == false)
         {
             _rawMessageBody = srdReader.ReadToEnd().Trim();
@@ -583,18 +602,20 @@ public class Message
                 {
                     Attachment at = this.GetAttachment(0);
                     if (at != null && at.NotAttachment)
+                    {
                         this.GetMessageBody(at.DecodeAsText());
-                    else { }
+                    }
+
                     //in case body parts as text[0] html[1]
                     if (this.Attachments.Count > 1 && !this.IsReport())
                     {
                         at = this.GetAttachment(1);
                         if (at != null && at.NotAttachment)
+                        {
                             this.GetMessageBody(at.DecodeAsText());
-                        else { }
+                        }
                     }
                 }
-                else { }
             }
             else
             {
@@ -613,9 +634,11 @@ public class Message
     public string GetTextBody(string strBuffer)
     {
         if (strBuffer.EndsWith("\r\n."))
+        {
             return strBuffer.Substring(0, strBuffer.Length - "\r\n.".Length);
-        else
-            return strBuffer;
+        }
+
+        return strBuffer;
     }
 
     /// <summary>
@@ -634,8 +657,11 @@ public class Message
         try
         {
             if (Utility.IsOrNullTextEx(strBuffer))
+            {
                 return;
-            else if (Utility.IsOrNullTextEx(_contentType) && _contentTransferEncoding == null)
+            }
+
+            if (Utility.IsOrNullTextEx(_contentType) && _contentTransferEncoding == null)
             {
                 _messageBody.Add(GetTextBody(strBuffer));
             }
@@ -685,17 +711,24 @@ public class Message
                             {
                                 begin += 4;
                                 if (begin >= end)
+                                {
                                     continue;
-                                else if (
+                                }
+
+                                if (
                                     this._contentEncoding != null
                                     && this._contentEncoding.IndexOf("8bit") != -1
                                 )
+                                {
                                     body = Utility.Change(
                                         strBuffer.Substring(begin, end - begin - 2),
                                         _contentCharset
                                     );
+                                }
                                 else
+                                {
                                     body = strBuffer.Substring(begin, end - begin - 2);
+                                }
                             }
                             else
                             {
@@ -712,14 +745,23 @@ public class Message
                                 string ret = Utility.RemoveNonB64(body);
                                 ret = Utility.deCodeB64s(ret, charset);
                                 if (ret != "\0")
+                                {
                                     _messageBody.Add(ret);
+                                }
                                 else
+                                {
                                     _messageBody.Add(body);
+                                }
                             }
                             else
+                            {
                                 _messageBody.Add(body);
+                            }
+
                             if (end == -1)
+                            {
                                 break;
+                            }
                         }
                         else
                         {
@@ -743,7 +785,9 @@ public class Message
             _messageBody.Add(Utility.deCodeB64s(strBuffer));
         }
         if (_messageBody.Count > 1)
+        {
             _html = true;
+        }
     }
 
     /// <summary>
@@ -753,9 +797,11 @@ public class Message
     public bool IsReport()
     {
         if (Utility.IsNotNullText(_contentType))
+        {
             return (_contentType.ToLower().IndexOf("report".ToLower()) != -1);
-        else
-            return false;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -795,11 +841,14 @@ public class Message
                 if (Utility.IsPictureFile(att.ContentFileName) == true)
                 {
                     if (Utility.IsNotNullText(att.ContentID))
+                    {
                         //support for embedded pictures
                         strBody = strBody.Replace(
                             "cid:" + att.ContentID,
                             hsbFiles[att.ContentFileName].ToString()
                         );
+                    }
+
                     strBody = strBody.Replace(
                         att.ContentFileName,
                         hsbFiles[att.ContentFileName].ToString()
@@ -834,11 +883,14 @@ public class Message
                 if (Utility.IsPictureFile(att.ContentFileName) == true)
                 {
                     if (Utility.IsNotNullText(att.ContentID))
+                    {
                         //support for embedded pictures
                         strBody = strBody.Replace(
                             "cid:" + att.ContentID,
                             strPath + att.ContentFileName
                         );
+                    }
+
                     strBody = strBody.Replace(att.ContentFileName, strPath + att.ContentFileName);
                 }
             }
@@ -905,7 +957,9 @@ public class Message
                     Attachment att = GetAttachment(i);
                     blnRet = SaveAttachment(att, strPath + GetAttachmentFileName(att));
                     if (!blnRet)
+                    {
                         break;
+                    }
                 }
                 return blnRet;
             }
@@ -915,8 +969,8 @@ public class Message
                 return false;
             }
         }
-        else
-            return false;
+
+        return false;
     }
 
     /// <summary>
@@ -990,7 +1044,9 @@ public class Message
                     _rawMessageBody.IndexOf(_attachmentboundry, indexOf_attachmentstart)
                     + _attachmentboundry.Length;
                 if (_rawMessageBody == "" || indexOf_attachmentstart < 0)
+                {
                     return;
+                }
 
                 indexOfAttachmentEnd = _rawMessageBody.IndexOf(
                     _attachmentboundry,
@@ -1009,7 +1065,10 @@ public class Message
                 indexOfAttachmentEnd = _rawMessageBody.Length;
             }
             else
+            {
                 return;
+            }
+
             if (indexOf_attachmentstart == indexOfAttachmentEnd - 9)
             {
                 indexOf_attachmentstart = 0;
@@ -1055,10 +1114,14 @@ public class Message
                         }
                     }
                     else
+                    {
                         Utility.LogError("set_attachments():ms-tnef file parse failed");
+                    }
                 }
                 else
+                {
                     Utility.LogError("set_attachments():ms-tnef file open failed");
+                }
             }
             else
             {
@@ -1097,7 +1160,10 @@ public class Message
                     indexOfAttachmentBoundry2Begin + 9
                 );
                 if (indexOfAttachmentBoundry2End == -1)
+                {
                     indexOfAttachmentBoundry2End = strBuffer.Length;
+                }
+
                 _attachmentboundry2 = Utility.RemoveQuote(
                     strBuffer.Substring(
                         indexOfAttachmentBoundry2Begin + 9,
@@ -1195,7 +1261,10 @@ public class Message
             intLines++;
         }
         if (!hstCollection.ContainsKey(strName))
+        {
             hstCollection.Add(strName, strReturn);
+        }
+
         if (strLine != "")
         {
             sbdBuilder.Append(strLine + "\r\n");
@@ -1231,7 +1300,10 @@ public class Message
         strReturn = strValue;
         sbdBuilder.Append(strLine + "\r\n");
         if (blnLineDecode == true)
+        {
             strReturn = Utility.DecodeLine(strReturn);
+        }
+
         strLine = srdReader.ReadLine();
         while (strLine.Trim() != "" && (strLine.StartsWith("\t") || strLine.StartsWith(" ")))
         {
@@ -1272,36 +1344,55 @@ public class Message
         switch (array[0].ToUpper())
         {
             case "TO":
+            {
                 _to = array[1].Split(',');
                 for (int i = 0; i < _to.Length; i++)
                 {
                     _to[i] = Utility.DecodeLine(_to[i].Trim());
                 }
                 break;
+            }
+
             case "CC":
+            {
                 _cc = array[1].Split(',');
                 for (int i = 0; i < _cc.Length; i++)
                 {
                     _cc[i] = Utility.DecodeLine(_cc[i].Trim());
                 }
                 break;
+            }
+
             case "BCC":
+            {
                 _bcc = array[1].Split(',');
                 for (int i = 0; i < _bcc.Length; i++)
                 {
                     _bcc[i] = Utility.DecodeLine(_bcc[i].Trim());
                 }
                 break;
+            }
+
             case "FROM":
+            {
                 Utility.ParseEmailAddress(array[1], ref _from, ref _fromEmail);
                 break;
+            }
+
             case "REPLY-TO":
+            {
                 Utility.ParseEmailAddress(array[1], ref _replyTo, ref _replyToEmail);
                 break;
+            }
+
             case "KEYWORDS": //ms outlook keywords
+            {
                 ParseStreamLines(sbdBuilder, srdReader, array[1].Trim(), ref strLine, _keywords);
                 break;
+            }
+
             case "RECEIVED":
+            {
                 ParseStreamLines(
                     sbdBuilder,
                     srdReader,
@@ -1311,17 +1402,29 @@ public class Message
                     true
                 );
                 break;
+            }
+
             case "IMPORTANCE":
+            {
                 _importance = array[1].Trim();
                 break;
+            }
+
             case "DISPOSITION-NOTIFICATION-TO":
+            {
                 _dispositionNotificationTo = array[1].Trim();
                 break;
+            }
+
             case "MIME-VERSION":
+            {
                 _mimeVersion = array[1].Trim();
                 break;
+            }
+
             case "SUBJECT":
             case "THREAD-TOPIC":
+            {
                 string strRet = null;
                 for (int i = 1; i < array.Length; i++)
                 {
@@ -1329,13 +1432,22 @@ public class Message
                 }
                 ParseStreamLines(sbdBuilder, srdReader, strRet, ref strLine, ref _subject, false);
                 break;
+            }
+
             case "RETURN-PATH":
+            {
                 _returnPath = array[1].Trim().Trim('>').Trim('<');
                 break;
+            }
+
             case "MESSAGE-ID":
+            {
                 _messageID = array[1].Trim().Trim('>').Trim('<');
                 break;
+            }
+
             case "DATE":
+            {
                 for (int i = 1; i < array.Length; i++)
                 {
                     _dateTimeInfo += array[i];
@@ -1343,16 +1455,28 @@ public class Message
                 _dateTimeInfo = _dateTimeInfo.Trim();
                 _date = Utility.ParseEmailDate(_dateTimeInfo);
                 break;
+            }
+
             case "CONTENT-LENGTH":
+            {
                 _contentLength = Convert.ToInt32(array[1]);
                 break;
+            }
+
             case "CONTENT-TRANSFER-ENCODING":
+            {
                 _contentTransferEncoding = array[1].Trim();
                 break;
+            }
+
             case "CONTENT-TYPE":
+            {
                 //if already content type has been assigned
                 if (_contentType != null)
+                {
                     return;
+                }
+
                 strLine = array[1];
                 _contentType = strLine.Split(';')[0];
                 _contentType = _contentType.Trim();
@@ -1361,7 +1485,10 @@ public class Message
                 {
                     int intBound2 = strLine.ToLower().IndexOf(";", intCharset + 8);
                     if (intBound2 == -1)
+                    {
                         intBound2 = strLine.Length;
+                    }
+
                     intBound2 -= (intCharset + 8);
                     _contentCharset = strLine.Substring(intCharset + 8, intBound2);
                     _contentCharset = Utility.RemoveQuote(_contentCharset);
@@ -1378,13 +1505,18 @@ public class Message
                     {
                         strLine = srdReader.ReadLine();
                         if (strLine == "")
+                        {
                             return;
+                        }
+
                         intCharset = strLine.ToLower().IndexOf("charset=".ToLower());
                         if (intCharset != -1)
+                        {
                             _contentCharset = strLine.Substring(
                                 intCharset + 9,
                                 strLine.Length - intCharset - 10
                             );
+                        }
                         else if (strLine.IndexOf(":") != -1)
                         {
                             sbdBuilder.Append(strLine + "\r\n");
@@ -1398,12 +1530,18 @@ public class Message
                     }
                 }
                 if (_contentType == "text/plain")
+                {
                     return;
-                else if (
+                }
+
+                if (
                     _contentType.ToLower() == "text/html"
                     || _contentType.ToLower().IndexOf("multipart/") != -1
                 )
+                {
                     _html = true;
+                }
+
                 if (
                     strLine.Trim().Length == _contentType.Length + 1
                     || strLine.ToLower().IndexOf("boundary=".ToLower()) == -1
@@ -1416,10 +1554,8 @@ public class Message
                         ParseHeader(sbdBuilder, srdReader, ref strLine);
                         return;
                     }
-                    else
-                    {
-                        sbdBuilder.Append(strLine + "\r\n");
-                    }
+
+                    sbdBuilder.Append(strLine + "\r\n");
                     if (strLine.ToLower().IndexOf("boundary=".ToLower()) == -1)
                     {
                         _attachmentboundry = srdReader.ReadLine();
@@ -1439,14 +1575,20 @@ public class Message
                 {
                     int intBound2 = _attachmentboundry.ToLower().IndexOf(";", intBound + 10);
                     if (intBound2 == -1)
+                    {
                         intBound2 = _attachmentboundry.Length;
+                    }
+
                     intBound2 -= (intBound + 9);
                     _attachmentboundry = _attachmentboundry.Substring(intBound + 9, intBound2);
                 }
                 _attachmentboundry = Utility.RemoveQuote(_attachmentboundry);
                 _hasAttachment = true;
                 break;
+            }
+
             default:
+            {
                 if (array.Length > 1) //here we parse all custom headers
                 {
                     string headerName = array[0].Trim();
@@ -1463,6 +1605,7 @@ public class Message
                     }
                 }
                 break;
+            }
         }
     }
 }

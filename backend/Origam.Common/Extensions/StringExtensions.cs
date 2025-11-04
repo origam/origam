@@ -52,8 +52,8 @@ public static class StringExtensions
         {
             var indexAtButtonEdge = WidthToIndex(
                 text: text,
-                font: font,
-                targetPosition: widthInPixels
+                targetPosition: widthInPixels,
+                font: font
             );
             var indexOfNearestSpace = GetIndexOfNearestSpace(text, indexAtButtonEdge);
             var wrappedText = text.Insert(indexOfNearestSpace, Environment.NewLine);
@@ -75,13 +75,23 @@ public static class StringExtensions
                 return i;
             }
             if (error > 0)
+            {
                 i++;
+            }
             else if (error < 0)
+            {
                 i--;
+            }
+
             if (i >= text.Length)
+            {
                 return i - 1;
+            }
+
             if (i < 0)
+            {
                 return 0;
+            }
         }
         throw new Exception("Could not convert pixels to index in suplied string.");
     }
@@ -90,7 +100,10 @@ public static class StringExtensions
     {
         var canBeSplit = text.Contains(' ');
         if (!canBeSplit)
+        {
             return text.Length;
+        }
+
         var spaceIndices = FindAllSpaceIndices(text);
         return spaceIndices
             .OrderBy(spaceIndex => Math.Abs(pivotIndex - spaceIndex))
@@ -115,11 +128,17 @@ public static class StringExtensions
         switch (input)
         {
             case null:
+            {
                 throw new ArgumentNullException(nameof(input));
+            }
             case "":
+            {
                 throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+            }
             default:
+            {
                 return input.Substring(0, 1).ToUpper() + input.Substring(1).ToLower();
+            }
         }
     }
 

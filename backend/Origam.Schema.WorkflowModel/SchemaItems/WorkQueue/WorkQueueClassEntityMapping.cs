@@ -98,10 +98,8 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
         {
             return base.CompareTo(obj);
         }
-        else
-        {
-            return this.SortOrder.CompareTo(compareItem.SortOrder);
-        }
+
+        return this.SortOrder.CompareTo(compareItem.SortOrder);
     }
     #endregion
 }

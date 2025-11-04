@@ -221,16 +221,14 @@ public class HttpTools : IHttpTools
                     )
                 );
             }
-            else
-            {
-                return new HttpResult(
-                    Content: null,
-                    StatusCode: null,
-                    StatusDescription: null,
-                    Headers: null,
-                    Exception: webException
-                );
-            }
+
+            return new HttpResult(
+                Content: null,
+                StatusCode: null,
+                StatusDescription: null,
+                Headers: null,
+                Exception: webException
+            );
         }
     }
 

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
-using Origam.Mail;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
 
 namespace Origam.Workflow.WorkQueue;

@@ -230,7 +230,8 @@ public class ExcelEntityExporter
         {
             return GetLookupValue(row[field.FieldName], field.LookupId);
         }
-        else if (field.PolymorphRules != null)
+
+        if (field.PolymorphRules != null)
         {
             var controlFieldValue = row[field.PolymorphRules.ControlField];
             if (
@@ -243,10 +244,8 @@ public class ExcelEntityExporter
 
             return row[field.PolymorphRules.Rules[controlFieldValue.ToString()].ToString()];
         }
-        else
-        {
-            return row[field.FieldName];
-        }
+
+        return row[field.FieldName];
     }
 
     private object GetArrayColumnValue(EntityExportInfo info, EntityExportField field, DataRow row)

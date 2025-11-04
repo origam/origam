@@ -71,7 +71,10 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.MenuIcon != null)
+        {
             dependencies.Add(this.MenuIcon);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
     #endregion
@@ -140,10 +143,8 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
             {
                 return base.NodeImage;
             }
-            else
-            {
-                return MenuIcon.GraphicsData.ToByteArray();
-            }
+
+            return MenuIcon.GraphicsData.ToByteArray();
         }
     }
     #endregion

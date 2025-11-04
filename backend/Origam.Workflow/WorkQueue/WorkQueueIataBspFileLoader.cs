@@ -25,7 +25,6 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
 using log4net;
 using Origam.Extensions;
 using Origam.Workbench.Services;
@@ -144,32 +143,55 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "path":
+                    {
                         path = pair[1];
                         break;
+                    }
+
                     case "indexFile":
+                    {
                         indexFile = pair[1];
                         break;
+                    }
+
                     case "searchPattern":
+                    {
                         searchPattern = pair[1];
                         break;
+                    }
+
                     case "segmentMarker":
+                    {
                         segmentMarker = pair[1];
                         break;
+                    }
+
                     case "footerMarker":
+                    {
                         footerMarker = pair[1];
                         break;
+                    }
+
                     case "lastRowMarker":
+                    {
                         lastRowMarker = pair[1];
                         break;
+                    }
+
                     case "addLastRowToQueue":
+                    {
                         addLastRowToQueue = pair[1] == "true";
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName",
                             pair[0],
                             ResourceUtils.GetString("ErrorInvalidConnectionString")
                         );
+                    }
                 }
             }
         }

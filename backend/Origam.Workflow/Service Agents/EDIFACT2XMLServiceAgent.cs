@@ -44,17 +44,25 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
         switch (MethodName)
         {
             case "ParseString":
+            {
                 ParseString();
                 break;
+            }
+
             case "ParseFile":
+            {
                 ParseFile();
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 
@@ -89,14 +97,18 @@ public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
         switch (fileInfo.Extension)
         {
             case ".gz":
+            {
                 return new StreamReader(
                     new GZipStream(
                         File.OpenRead(Parameters["Filename"] as string),
                         CompressionMode.Decompress
                     )
                 );
+            }
             default:
+            {
                 return new StreamReader(Parameters["Filename"] as string);
+            }
         }
     }
 

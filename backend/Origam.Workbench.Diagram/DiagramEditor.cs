@@ -34,7 +34,6 @@ using Origam.Workbench.Diagram;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
-using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Editors;
 
@@ -224,16 +223,20 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
         switch (objectToLoad)
         {
             case IWorkflowBlock workflowBlock:
+            {
                 internalEditor = new WorkFlowDiagramEditor(
                     graphParentId: workflowBlock.Id,
                     gViewer: gViewer,
-                    nodeSelector: nodeSelector,
                     parentForm: this,
                     persistenceProvider: persistenceProvider,
-                    factory: new WorkFlowDiagramFactory(nodeSelector, gViewer, schemaService)
+                    factory: new WorkFlowDiagramFactory(nodeSelector, gViewer, schemaService),
+                    nodeSelector: nodeSelector
                 );
                 break;
+            }
+
             case IContextStore contextStore:
+            {
                 internalEditor = new GeneralDiagramEditor<IContextStore>(
                     gViewer: gViewer,
                     schemaItem: contextStore,
@@ -246,7 +249,10 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
                     persistenceProvider: persistenceProvider
                 );
                 break;
+            }
+
             case ISchemaItem schemaItem:
+            {
                 internalEditor = new GeneralDiagramEditor<ISchemaItem>(
                     gViewer: gViewer,
                     schemaItem: schemaItem,
@@ -254,6 +260,7 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
                     persistenceProvider: persistenceProvider
                 );
                 break;
+            }
         }
     }
 
@@ -317,12 +324,18 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
     private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
     {
         if (e.NewValue == e.OldValue)
+        {
             return;
+        }
+
         var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
         if (focusSubgraph == null)
+        {
             return;
+        }
+
         double distanceFromCenter =
-            focusSubgraph.Width / 100 * e.NewValue - focusSubgraph.Width / 2;
+            (focusSubgraph.Width / 100 * e.NewValue) - (focusSubgraph.Width / 2);
         gViewer.CenterToXCoordinate(focusSubgraph.Pos.X + distanceFromCenter);
     }
     //        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)

@@ -152,10 +152,8 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 
@@ -179,13 +177,18 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
         switch (e.KeyCode)
         {
             case Keys.Escape:
+            {
                 this.Canceled = true;
                 this.Close();
                 break;
+            }
+
             case Keys.Return:
+            {
                 e.Handled = true;
                 SelectItem();
                 break;
+            }
         }
     }
     #endregion

@@ -62,7 +62,11 @@ class ActionNodePainter : INodeItemPainter
         int actualTextWidth = GetTextLines(nodeData).Select(line => line.Width(painter.Font)).Max();
         int totalWidth = textSideMargin + actualTextWidth + textSideMargin;
         int totalHeight =
-            imageTopMargin + imageSize + imageTextGap + painter.Font.Height * 2 + textBottomMargin;
+            imageTopMargin
+            + imageSize
+            + imageTextGap
+            + (painter.Font.Height * 2)
+            + textBottomMargin;
         return new Size(totalWidth, totalHeight);
     }
 
@@ -90,13 +94,13 @@ class ActionNodePainter : INodeItemPainter
         var image = nodeData.PrimaryImage;
         var borderSize = CalculateBorder(node);
         var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - borderSize.Width / 2,
-            (int)node.GeometryNode.Center.Y - borderSize.Height / 2
+            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
         );
         Rectangle border = new Rectangle(borderCorner, borderSize);
 
         var imagePoint = new PointF(
-            (float)(node.GeometryNode.Center.X - (float)image.Width / 2),
+            (float)(node.GeometryNode.Center.X - ((float)image.Width / 2)),
             borderCorner.Y + imageTopMargin
         );
 
@@ -104,7 +108,7 @@ class ActionNodePainter : INodeItemPainter
         var lineWidths = lines.Select(line => line.Width(painter.Font)).ToArray();
         int actualTextWidth = lineWidths.Max();
         var (label1XOffset, label2XOffset) = CalculateLabelPointOffsets(lineWidths);
-        float textXCoordinate = (float)node.GeometryNode.Center.X - (float)actualTextWidth / 2;
+        float textXCoordinate = (float)node.GeometryNode.Center.X - ((float)actualTextWidth / 2);
         PointF line1LabelPoint = new PointF(
             textXCoordinate + label1XOffset,
             (float)borderCorner.Y + imageTopMargin + image.Height + imageTextGap

@@ -43,27 +43,23 @@ public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
             // use AdaptiveHasher
             return base.VerifyHashedPassword(hashedPassword, providedPassword);
         }
-        else
-        {
-            // migrated account from NetMembership
-            // format hashedFormat|salt
-            string passwordHash = passwordProperties[0];
-            string salt = passwordProperties[1];
-            if (
-                String.Equals(
-                    EncryptPassword(providedPassword, salt),
-                    passwordHash,
-                    StringComparison.CurrentCultureIgnoreCase
-                )
+        // migrated account from NetMembership
+        // format hashedFormat|salt
+        string passwordHash = passwordProperties[0];
+        string salt = passwordProperties[1];
+
+        if (
+            String.Equals(
+                EncryptPassword(providedPassword, salt),
+                passwordHash,
+                StringComparison.CurrentCultureIgnoreCase
             )
-            {
-                return VerificationResult.SuccessRehashNeeded;
-            }
-            else
-            {
-                return VerificationResult.Failed;
-            }
+        )
+        {
+            return VerificationResult.SuccessRehashNeeded;
         }
+
+        return VerificationResult.Failed;
     }
 
     private string EncryptPassword(string pass, string salt)

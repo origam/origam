@@ -32,7 +32,9 @@ public static class ObjectExtensions
     public static bool IsDefault(this object obj)
     {
         if (ReferenceEquals(obj, null))
+        {
             return true;
+        }
 
         Type type = obj.GetType();
         if (type.IsValueType)

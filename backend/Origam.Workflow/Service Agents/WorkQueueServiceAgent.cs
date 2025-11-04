@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using System.Xml;
 using Origam.DA;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
@@ -53,26 +52,43 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "Add":
+            {
                 Add(wqs);
                 break;
+            }
+
             case "Remove":
+            {
                 Remove(wqs);
                 break;
+            }
+
             case "Get":
+            {
                 Get(wqs);
                 break;
+            }
+
             case "GetNextItem":
+            {
                 GetNextItem(wqs);
                 break;
+            }
+
             case "GenerateNotificationMessage":
+            {
                 GenerateNotificationMessage(wqs);
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 
@@ -94,20 +110,29 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
     {
         // check input parameters
         if (!(this.Parameters["NotificationTemplateId"] is Guid))
+        {
             throw new InvalidCastException(
                 ResourceUtils.GetString("ErrorNotificationTemplateIdNotGuid")
             );
+        }
+
         if (!(this.Parameters["NotificationSource"] is IXmlContainer))
+        {
             throw new InvalidCastException(
                 ResourceUtils.GetString("ErrorNotificationSourceNotXmlDocument")
             );
+        }
+
         WorkQueue.OrigamNotificationContactData recipientDataDS = null;
         if (this.Parameters.Contains("RecipientData"))
         {
             if (!(this.Parameters["RecipientData"] is IDataDocument))
+            {
                 throw new InvalidCastException(
                     ResourceUtils.GetString("ErrorRecipientDataNotXmlDataDocument")
                 );
+            }
+
             recipientDataDS = new WorkQueue.OrigamNotificationContactData();
             DatasetTools.MergeDataSetVerbose(
                 recipientDataDS,
@@ -127,7 +152,10 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
     {
         // Check input parameters
         if (this.Parameters["MessageId"] == null)
+        {
             throw new InvalidCastException("MessageId must not be null.");
+        }
+
         TraceLog("MessageId");
         _result = wqs.WorkQueueGetMessage((Guid)this.Parameters["MessageId"], this.TransactionId);
     }
@@ -136,9 +164,15 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
     {
         // Check input parameters
         if (this.Parameters["MessageId"] == null)
+        {
             throw new InvalidCastException("MessageId must not be null.");
+        }
+
         if (!(this.Parameters["QueueId"] is Guid))
+        {
             throw new InvalidCastException("QueueId must be Guid.");
+        }
+
         TraceLog("MessageId");
         wqs.WorkQueueRemove(
             (Guid)this.Parameters["QueueId"],
@@ -175,9 +209,15 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
     {
         // Check input parameters
         if (!(this.Parameters["Data"] is IXmlContainer))
+        {
             throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
+        }
+
         if (!(this.Parameters["QueueName"] is string))
+        {
             throw new InvalidCastException("QueueName must be a string.");
+        }
+
         WorkQueueAttachment[] attachments = null;
         if (this.Parameters.ContainsKey("Attachments"))
         {

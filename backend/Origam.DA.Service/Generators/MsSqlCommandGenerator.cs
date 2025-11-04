@@ -19,13 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Text;
+using Microsoft.Data.SqlClient;
 using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -112,11 +111,14 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         SqlDataAdapter newa = GetAdapter() as SqlDataAdapter;
         SqlDataAdapter sqla = adapter as SqlDataAdapter;
         if (sqla == null)
+        {
             throw new ArgumentOutOfRangeException(
                 "adapter",
                 adapter,
                 ResourceUtils.GetString("InvalidAdapterType")
             );
+        }
+
         newa.AcceptChangesDuringFill = adapter.AcceptChangesDuringFill;
         newa.ContinueUpdateOnError = adapter.ContinueUpdateOnError;
         newa.DeleteCommand = (SqlCommand)CloneCommand(sqla.DeleteCommand);
@@ -140,7 +142,10 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     public override IDbCommand CloneCommand(IDbCommand command)
     {
         if (command == null)
+        {
             return null;
+        }
+
         SqlCommand newc = GetCommand(command.CommandText) as SqlCommand;
         newc.CommandTimeout = command.CommandTimeout;
         newc.CommandType = command.CommandType;
@@ -164,7 +169,10 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         // don't copy the size for blobs - they should always be 0 so the size is
         // automatically calculated on every update
         if (param.DbType != DbType.Binary)
+        {
             newp.Size = param.Size;
+        }
+
         newp.SourceColumn = param.SourceColumn;
         newp.SourceVersion = param.SourceVersion;
         newp.SqlDbType = ((SqlParameter)param).SqlDbType;
@@ -178,34 +186,60 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (ddlType.ToUpper())
         {
             case "IMAGE":
+            {
                 return OrigamDataType.Blob;
+            }
             case "BIT":
+            {
                 return OrigamDataType.Boolean;
+            }
             case "TINYINT":
+            {
                 return OrigamDataType.Byte;
+            }
             case "MONEY":
+            {
                 return OrigamDataType.Currency;
+            }
             case "DATETIME":
+            {
                 return OrigamDataType.Date;
+            }
             case "BIGINT":
+            {
                 return OrigamDataType.Long;
+            }
             case "NTEXT":
+            {
                 return OrigamDataType.Memo;
+            }
             case "SMALLINT":
             case "INT":
+            {
                 return OrigamDataType.Integer;
+            }
             case "FLOAT":
             case "DECIMAL":
+            {
                 return OrigamDataType.Float;
+            }
             case "VARCHAR":
             case "NVARCHAR":
+            {
                 return OrigamDataType.String;
+            }
             case "UNIQUEIDENTIFIER":
+            {
                 return OrigamDataType.UniqueIdentifier;
+            }
             case "GEOGRAPHY":
+            {
                 return OrigamDataType.Geography;
+            }
             default:
+            {
                 return OrigamDataType.String;
+            }
         }
     }
 
@@ -231,11 +265,17 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (dataType)
         {
             case OrigamDataType.UniqueIdentifier:
+            {
                 return " CAST (" + expression + " AS NVARCHAR (36))";
+            }
             case OrigamDataType.Boolean:
+            {
                 return " CAST (" + expression + "  AS INT)";
+            }
             default:
+            {
                 return expression;
+            }
         }
     }
 
@@ -278,15 +318,14 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         return "";
     }
 
-    internal override string ChangeColumnDef(FieldMappingItem field)
+    public override string AlterColumnDdl(FieldMappingItem field)
     {
-        StringBuilder ddl = new StringBuilder();
-        ddl.Append(DdlDataType(field.DataType, field.DataLength, field.MappedDataType));
-        if (field.AllowNulls)
-            ddl.Append(" NULL");
-        else
-            ddl.Append(" NOT NULL");
-        return ddl.ToString();
+        string tableName = RenderExpression(field.ParentItem as TableMappingItem);
+        string columnName =
+            sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket;
+        string dataType = DdlDataType(field.DataType, field.DataLength, field.MappedDataType);
+        string notOrNothing = field.AllowNulls ? "" : "NOT";
+        return $"ALTER TABLE {tableName} ALTER COLUMN {columnName} {dataType} {notOrNothing} NULL;";
     }
 
     internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
@@ -308,7 +347,10 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
             foreach (FunctionParameter parameter in function.ChildItems)
             {
                 if (i > 0)
+                {
                     builder.Append(", ");
+                }
+
                 builder.Append(ParameterDeclarationChar + parameter.Name + " as ?");
                 i++;
             }
@@ -330,10 +372,8 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
             builder.Append("END");
             return builder.ToString();
         }
-        else
-        {
-            throw new InvalidOperationException(ResourceUtils.GetString("DDLForFunctionsOnly"));
-        }
+
+        throw new InvalidOperationException(ResourceUtils.GetString("DDLForFunctionsOnly"));
     }
 
     public override string DefaultDdlDataType(OrigamDataType columnType)
@@ -341,17 +381,29 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (columnType)
         {
             case OrigamDataType.Geography:
+            {
                 return "geography";
+            }
             case OrigamDataType.Memo:
+            {
                 return "nvarchar(max)";
+            }
             case OrigamDataType.Object:
+            {
                 return "nvarchar(max)";
+            }
             case OrigamDataType.Xml:
+            {
                 return "nvarchar(max)";
+            }
             case OrigamDataType.Blob:
+            {
                 return "varbinary(max)";
+            }
             default:
+            {
                 return ConvertDataType(columnType, null).ToString();
+            }
         }
     }
 
@@ -364,36 +416,64 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         switch (columnType)
         {
             case OrigamDataType.Blob:
+            {
                 return SqlDbType.Image;
+            }
             case OrigamDataType.Boolean:
+            {
                 return SqlDbType.Bit;
+            }
             case OrigamDataType.Byte:
+            {
                 //TODO: check right
                 return SqlDbType.TinyInt;
+            }
             case OrigamDataType.Currency:
+            {
                 return SqlDbType.Money;
+            }
             case OrigamDataType.Date:
+            {
                 return SqlDbType.DateTime;
+            }
             case OrigamDataType.Long:
+            {
                 return SqlDbType.BigInt;
+            }
             case OrigamDataType.Xml:
             case OrigamDataType.Memo:
+            {
                 return SqlDbType.NVarChar;
+            }
             case OrigamDataType.Array:
+            {
                 return SqlDbType.Structured;
+            }
             case OrigamDataType.Geography:
+            {
                 return SqlDbType.Text;
+            }
             case OrigamDataType.Integer:
+            {
                 return SqlDbType.Int;
+            }
             case OrigamDataType.Float:
+            {
                 return SqlDbType.Decimal;
+            }
             case OrigamDataType.Object:
             case OrigamDataType.String:
+            {
                 return SqlDbType.NVarChar;
+            }
             case OrigamDataType.UniqueIdentifier:
+            {
                 return SqlDbType.UniqueIdentifier;
+            }
             default:
+            {
                 throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
+            }
         }
     }
 

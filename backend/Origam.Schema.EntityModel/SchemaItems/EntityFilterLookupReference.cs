@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
@@ -84,7 +83,10 @@ public class EntityFilterLookupReference : AbstractSchemaItem
     )
     {
         if (this.Lookup != null)
+        {
             base.GetParameterReferences(Lookup, list);
+        }
+
         base.GetParameterReferences(this, list);
     }
 

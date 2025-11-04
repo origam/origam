@@ -106,11 +106,13 @@ public class ModelServiceAgent : AbstractServiceAgent
                 break;
             }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(MethodName),
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
     #endregion
@@ -302,13 +304,21 @@ public class ModelServiceAgent : AbstractServiceAgent
                 switch (memberInfo.MemberInfo)
                 {
                     case System.Reflection.PropertyInfo propertyInfo:
+                    {
                         type = propertyInfo.PropertyType;
                         break;
+                    }
+
                     case System.Reflection.FieldInfo fieldInfo:
+                    {
                         type = fieldInfo.FieldType;
                         break;
+                    }
+
                     default:
+                    {
                         throw new Exception("Unknown type.");
+                    }
                 }
                 if (!table.Columns.Contains(name))
                 {

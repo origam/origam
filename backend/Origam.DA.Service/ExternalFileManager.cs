@@ -83,7 +83,10 @@ public class ExternalFileManager : IExternalFileManager
     )
     {
         if (data == null)
+        {
             return "";
+        }
+
         ExternalFilePath filePath = pathFactory.Create(
             origamFile.Path,
             fieldName,
@@ -119,7 +122,9 @@ public class ExternalFileManager : IExternalFileManager
             .Values.Select(file => file.ExtFilePath)
             .FirstOrDefault(path => path.OwnerOjectId == instanceId && path.FieldName == fieldName);
         if (filePath == null)
+        {
             return null;
+        }
         // first try to see if the value is not waiting in deferred queue
         // otherwise read it from the external file
         return deferredTasks
@@ -132,7 +137,10 @@ public class ExternalFileManager : IExternalFileManager
     public void AddFileLink(string externalLinkWithPrefix)
     {
         if (string.IsNullOrEmpty(externalLinkWithPrefix))
+        {
             return;
+        }
+
         ExternalFilePath externalFilePath = pathFactory.Create(
             origamFile.Path,
             externalLinkWithPrefix

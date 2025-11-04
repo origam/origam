@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
+
 #region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
@@ -146,12 +146,16 @@ class FilterNode
         switch (dataType)
         {
             case OrigamDataType.Integer:
+            {
                 if (!int.TryParse(value, out var intValue))
                 {
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to int");
                 }
                 return intValue;
+            }
+
             case OrigamDataType.Currency:
+            {
                 if (
                     !decimal.TryParse(
                         value,
@@ -164,7 +168,10 @@ class FilterNode
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to decimal");
                 }
                 return decimalValue;
+            }
+
             case OrigamDataType.Float:
+            {
                 if (
                     !float.TryParse(
                         value,
@@ -177,13 +184,19 @@ class FilterNode
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to float");
                 }
                 return floatValue;
+            }
+
             case OrigamDataType.Boolean:
+            {
                 if (!bool.TryParse(value, out var boolValue))
                 {
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to bool");
                 }
                 return boolValue;
+            }
+
             case OrigamDataType.Date:
+            {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
                 {
                     return null;
@@ -193,7 +206,10 @@ class FilterNode
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to DateTime");
                 }
                 return dateValue;
+            }
+
             case OrigamDataType.UniqueIdentifier:
+            {
                 if (value == null)
                 {
                     return Guid.Empty;
@@ -203,6 +219,7 @@ class FilterNode
                     throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to Guid");
                 }
                 return guidValue;
+            }
         }
         return value;
     }
@@ -213,10 +230,8 @@ class FilterNode
         {
             return GetSqlOfOperatorNode();
         }
-        else
-        {
-            return GetSqlOfLeafNode();
-        }
+
+        return GetSqlOfLeafNode();
     }
 
     private string GetSqlOfOperatorNode()
@@ -229,9 +244,15 @@ class FilterNode
     private string GetLogicalOperator()
     {
         if (Value.Trim() == "\"$AND\"")
+        {
             return "AND";
+        }
+
         if (Value.Trim() == "\"$OR\"")
+        {
             return "OR";
+        }
+
         throw new Exception("Could not parse node value to logical operator: \"" + Value + "\"");
     }
 
@@ -253,8 +274,8 @@ class FilterNode
         {
             string isNullSql = renderer.BinaryOperator(
                 leftValue: RenderedColumnName,
-                operatorName: "Equal",
-                rightValue: null
+                rightValue: null,
+                operatorName: "Equal"
             );
             return renderer.LogicalAndOr("OR", new[] { nodeSql, isNullSql });
         }
@@ -290,8 +311,8 @@ class FilterNode
             }
             parameterDataList.Add(
                 new ParameterData(
-                    columnName: ColumnName,
                     parameterName: ParameterName,
+                    columnName: ColumnName,
                     value: value,
                     dataType: ParameterDataType
                 )
@@ -319,8 +340,8 @@ class FilterNode
                         string parameterNameNumbered = ParameterName + "_" + i;
                         parameterDataList.Add(
                             new ParameterData(
-                                columnName: ColumnName,
                                 parameterName: parameterNameNumbered,
+                                columnName: ColumnName,
                                 value: value,
                                 dataType: ParameterDataType
                             )
@@ -376,13 +397,21 @@ class FilterNode
         switch (Operator)
         {
             case "eq":
+            {
                 actualOperator = "between";
                 break;
+            }
+
             case "neq":
+            {
                 actualOperator = "nbetween";
                 break;
+            }
+
             default:
+            {
                 throw new InvalidOperationException("Operator must be eq or neq");
+            }
         }
 
         var (operatorName, _) = GetRendererInput(actualOperator, "");
@@ -396,8 +425,8 @@ class FilterNode
                     string parameterNameNumbered = ParameterName + "_" + i;
                     parameterDataList.Add(
                         new ParameterData(
-                            columnName: ColumnName,
                             parameterName: parameterNameNumbered,
+                            columnName: ColumnName,
                             value: value,
                             dataType: ParameterDataType
                         )
@@ -420,44 +449,82 @@ class FilterNode
         switch (operatorName)
         {
             case "gt":
+            {
                 return ("GreaterThan", parameterName);
+            }
             case "lt":
+            {
                 return ("LessThan", parameterName);
+            }
             case "gte":
+            {
                 return ("GreaterThanOrEqual", parameterName);
+            }
             case "lte":
+            {
                 return ("LessThanOrEqual", parameterName);
+            }
             case "eq":
+            {
                 return ("Equal", parameterName);
+            }
             case "neq":
+            {
                 return ("NotEqual", parameterName);
+            }
             case "starts":
+            {
                 return ("Like", AppendWildCard(parameterName));
+            }
             case "nstarts":
+            {
                 return ("NotLike", AppendWildCard(parameterName));
+            }
             case "ends":
+            {
                 return ("Like", PrependWildCard(parameterName));
+            }
             case "nends":
+            {
                 return ("NotLike", PrependWildCard(parameterName));
+            }
             case "like":
             case "contains":
+            {
                 return ("Like", PrependWildCard(AppendWildCard(parameterName)));
+            }
             case "ncontains":
+            {
                 return ("NotLike", PrependWildCard(AppendWildCard(parameterName)));
+            }
             case "null":
+            {
                 return ("Equal", null);
+            }
             case "nnull":
+            {
                 return ("NotEqual", null);
+            }
             case "between":
+            {
                 return ("Between", null);
+            }
             case "nbetween":
+            {
                 return ("NotBetween", null);
+            }
             case "in":
+            {
                 return ("In", null);
+            }
             case "nin":
+            {
                 return ("NotIn", null);
+            }
             default:
+            {
                 throw new NotImplementedException(operatorName);
+            }
         }
     }
 

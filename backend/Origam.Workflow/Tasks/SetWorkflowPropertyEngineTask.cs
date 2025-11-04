@@ -21,8 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Xml;
-using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
@@ -74,6 +72,7 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
         switch (setProperty.WorkflowProperty)
         {
             case WorkflowProperty.Title:
+            {
                 if (
                     setProperty.Method == SetWorkflowPropertyMethod.Add
                     && this.Engine.RuntimeDescription != ""
@@ -86,7 +85,10 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
                     this.Engine.RuntimeDescription = propertyValue;
                 }
                 break;
+            }
+
             case WorkflowProperty.Notification:
+            {
                 if (
                     setProperty.Method == SetWorkflowPropertyMethod.Add
                     && this.Engine.Notification != ""
@@ -99,7 +101,10 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
                     this.Engine.Notification = propertyValue;
                 }
                 break;
+            }
+
             case WorkflowProperty.ResultMessage:
+            {
                 if (
                     setProperty.Method == SetWorkflowPropertyMethod.Add
                     && this.Engine.ResultMessage != ""
@@ -112,12 +117,16 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
                     this.Engine.ResultMessage = propertyValue;
                 }
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "WorkflowProperty",
                     setProperty.WorkflowProperty,
                     ResourceUtils.GetString("ErrorUnknownWorkflow")
                 );
+            }
         }
     }
 }

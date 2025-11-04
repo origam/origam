@@ -51,7 +51,10 @@ public class LocalEventStorage : IEventStorage
     public DateTime ReadLastTime()
     {
         if (_LastTime == DateTime.MaxValue)
+        {
             _LastTime = DateTime.Now;
+        }
+
         return _LastTime;
     }
 
@@ -81,7 +84,10 @@ public class FileEventStorage : IEventStorage
         _Doc.Load(_FileName);
         string Value = _Doc.SelectSingleNode(_XPath).Value;
         if (Value == null || Value == string.Empty)
+        {
             return DateTime.Now;
+        }
+
         return DateTime.Parse(Value);
     }
 

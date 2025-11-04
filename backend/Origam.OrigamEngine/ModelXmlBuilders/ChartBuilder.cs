@@ -127,10 +127,15 @@ public class ChartBuilder
         chartElement.SetAttribute("ValueField", chart.ValueField);
         string titleLookupId = GetLookupId(table, chart.TitleField, chart);
         if (titleLookupId != null)
+        {
             chartElement.SetAttribute("TitleFieldLookupId", titleLookupId);
+        }
+
         string svgObjectLookupId = GetLookupId(table, chart.SvgObjectField, chart);
         if (svgObjectLookupId != null)
+        {
             chartElement.SetAttribute("SvgObjectFieldLookupId", svgObjectLookupId);
+        }
     }
 
     private static void BuildCartesianChartHorizontalAxis(
@@ -147,7 +152,10 @@ public class ChartBuilder
         axis.SetAttribute("Field", item.Field);
         string fieldLookupId = GetLookupId(table, item.Field, item);
         if (fieldLookupId != null)
+        {
             axis.SetAttribute("FieldLookupId", fieldLookupId);
+        }
+
         axis.SetAttribute("AggregationType", item.AggregationType.ToString());
     }
 
@@ -182,9 +190,14 @@ public class ChartBuilder
         axis.SetAttribute("Id", item.Name);
         axis.SetAttribute("Caption", item.Caption);
         if (item.ApplyMinLimit)
+        {
             axis.SetAttribute("Min", item.Min.ToString());
+        }
+
         if (item.ApplyMaxLimit)
+        {
             axis.SetAttribute("Max", item.Max.ToString());
+        }
     }
 
     private static XmlElement BuildBasicSeries(
@@ -200,10 +213,16 @@ public class ChartBuilder
         series.SetAttribute("Field", item.Field);
         string fieldLookupId = GetLookupId(table, item.Field, item);
         if (fieldLookupId != null)
+        {
             series.SetAttribute("FieldLookupId", fieldLookupId);
+        }
+
         series.SetAttribute("Aggregation", item.Aggregation.ToString());
         if (item.ColorsLookup != null)
+        {
             series.SetAttribute("ColorsLookupId", item.ColorsLookupId.ToString());
+        }
+
         return series;
     }
 
@@ -218,7 +237,9 @@ public class ChartBuilder
         series.SetAttribute("ZAxisField", item.ZAxisField);
         string zAxisFieldLookupId = GetLookupId(table, item.ZAxisField, item);
         if (zAxisFieldLookupId != null)
+        {
             series.SetAttribute("ZAxisFieldLookupId", zAxisFieldLookupId);
+        }
     }
 
     private static void BuildLineSeries(XmlElement seriesElement, LineSeries item, DataTable table)
@@ -229,7 +250,9 @@ public class ChartBuilder
         series.SetAttribute("ZAxisField", item.ZAxisField);
         string zAxisFieldLookupId = GetLookupId(table, item.ZAxisField, item);
         if (zAxisFieldLookupId != null)
+        {
             series.SetAttribute("ZAxisFieldLookupId", zAxisFieldLookupId);
+        }
     }
 
     private static void BuildPieSeries(XmlElement seriesElement, PieSeries item, DataTable table)
@@ -239,6 +262,8 @@ public class ChartBuilder
         series.SetAttribute("NameField", item.NameField);
         string nameFieldLookupId = GetLookupId(table, item.NameField, item);
         if (nameFieldLookupId != null)
+        {
             series.SetAttribute("NameFieldLookupId", nameFieldLookupId);
+        }
     }
 }

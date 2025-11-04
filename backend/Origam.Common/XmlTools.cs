@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
@@ -43,7 +42,10 @@ public class XmlTools
     {
         string s = arg as String;
         if (s != null)
+        {
             return s;
+        }
+
         XPathNodeIterator xpni = arg as XPathNodeIterator;
         if (xpni != null)
         {
@@ -51,10 +53,8 @@ public class XmlTools
             {
                 return xpni.Current.Value;
             }
-            else
-            {
-                return "";
-            }
+
+            return "";
         }
         return ConvertToString(arg);
     }
@@ -69,38 +69,43 @@ public class XmlTools
         {
             return (string)val;
         }
-        else if (val is double)
+
+        if (val is double)
         {
             return XmlConvert.ToString((double)val);
         }
-        else if (val is int)
+
+        if (val is int)
         {
             return XmlConvert.ToString((int)val);
         }
-        else if (val is bool)
+
+        if (val is bool)
         {
             return XmlConvert.ToString((bool)val);
         }
-        else if (val is DateTime)
+
+        if (val is DateTime)
         {
             return XmlConvert.ToString((DateTime)val, XmlDateTimeSerializationMode.Unspecified);
         }
-        else if (val is decimal)
+
+        if (val is decimal)
         {
             return XmlConvert.ToString((decimal)val);
         }
-        else if (val is byte[])
+
+        if (val is byte[])
         {
             return Convert.ToBase64String((byte[])val);
         }
-        else if (val is IList)
+
+        if (val is IList)
         {
             return Strings.ArrayCannotBeConverted;
         }
-        else
-        {
-            return val.ToString();
-        }
+
+        return val.ToString();
     }
 
     /// <summary>
@@ -177,30 +182,33 @@ public class XmlTools
         {
             return FormatXmlDateTime((DateTime)value);
         }
-        else if (value is decimal)
+
+        if (value is decimal)
         {
             return XmlConvert.ToString((decimal)value);
         }
-        else if (value is float)
+
+        if (value is float)
         {
             return XmlConvert.ToString((float)value);
         }
-        else if (value is double)
+
+        if (value is double)
         {
             return XmlConvert.ToString((double)value);
         }
-        else if (value is bool)
+
+        if (value is bool)
         {
             return XmlConvert.ToString((bool)value);
         }
-        else if (value == null || value == DBNull.Value)
+
+        if (value == null || value == DBNull.Value)
         {
             return String.Empty;
         }
-        else
-        {
-            return value.ToString();
-        }
+
+        return value.ToString();
     }
 
     public static string FormatXmlDateTime(DateTime date)
@@ -219,9 +227,7 @@ public class XmlTools
                 + offset.Minutes.ToString("00");
             return result;
         }
-        else
-        {
-            return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
-        }
+
+        return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
     }
 }

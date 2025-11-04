@@ -67,10 +67,10 @@ public class XmlLoaderTest : AbstractFileTestClass
         ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
         InitFilePersistenceProvider(parentFolders, TestProjectDir);
         var origamXmlLoader = new OrigamXmlLoader(
-            metaModelUpgradeService: new NullMetaModelUpgradeService(),
             objectFileDataFactory: MakeObjectFileDataFactory(TestProjectDir),
             topDirectory: TestProjectDir,
-            xmlFileDataFactory: new XmlFileDataFactory()
+            xmlFileDataFactory: new XmlFileDataFactory(),
+            metaModelUpgradeService: new NullMetaModelUpgradeService()
         );
         var pathFactory = new OrigamPathFactory(TestProjectDir);
         ItemTracker itemTracker = new ItemTracker(pathFactory);

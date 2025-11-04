@@ -20,10 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using AeroWizard;
 using Origam.Schema;
@@ -42,7 +39,10 @@ public partial class Wizard : Form
         iwizard = objectForm;
         StartPage.Text = "What will happen...";
         if (iwizard.Title != null)
+        {
             aerowizard1.Title = iwizard.Title;
+        }
+
         InitData();
     }
 
@@ -498,26 +498,47 @@ public partial class Wizard : Form
         switch (nextPage)
         {
             case PagesList.StructureNamePage:
+            {
                 return StructureNamePage;
+            }
             case PagesList.ScreenForm:
+            {
                 return ScreenFormPage;
+            }
             case PagesList.LookupForm:
+            {
                 return LookupFormPage;
+            }
             case PagesList.FieldLookup:
+            {
                 return FieldLookupEntity;
+            }
             case PagesList.Finish:
+            {
                 return finishPage;
+            }
             case PagesList.FieldEntity:
+            {
                 return RelationShipEntityPage;
+            }
             case PagesList.ChildEntity:
+            {
                 return childEntityPage;
+            }
             case PagesList.ForeignForm:
+            {
                 return foreignKeyPage;
+            }
             case PagesList.SummaryPage:
+            {
                 return SummaryPage;
+            }
             case PagesList.MenuPage:
+            {
                 return menuFromPage;
+            }
             default:
+            {
                 MessageBox.Show(
                     "Not Set WizardPage",
                     "Error",
@@ -525,6 +546,7 @@ public partial class Wizard : Form
                     MessageBoxIcon.Error
                 );
                 break;
+            }
         }
         return null;
     }
@@ -623,7 +645,9 @@ public partial class Wizard : Form
     private void SetPageTitle(object sender)
     {
         if (iwizard.PageTitle != null)
+        {
             ((WizardPage)sender).Text = iwizard.PageTitle;
+        }
     }
 
     private void tbDataStructureName_TextChanged(object sender, EventArgs e)

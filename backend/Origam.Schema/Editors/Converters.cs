@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -64,9 +63,11 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -82,12 +83,14 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
             foreach (SchemaItemParameter item in root.Parameters)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }
 
@@ -99,9 +102,11 @@ public class SchemaItemAncestorConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
     //		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
     //		{
@@ -146,7 +151,9 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
         SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 
         if (ancestor.SchemaItem.ParentItem != null)
+        {
             return new StandardValuesCollection(new List<object>());
+        }
 
         ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
         var items = new List<ISchemaItem>();
@@ -167,9 +174,11 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -183,17 +192,21 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
             SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 
             if (ancestor.SchemaItem.ParentItem != null)
+            {
                 return new StandardValuesCollection(new List<object>());
+            }
 
             ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
             foreach (ISchemaItem item in provider.ChildItems)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

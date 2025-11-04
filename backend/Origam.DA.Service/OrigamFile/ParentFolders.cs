@@ -46,9 +46,14 @@ public class ParentFolders : IDictionary<string, Guid>
     private static void CheckIsValid(IDictionary<string, Guid> parentFolderIds)
     {
         if (parentFolderIds[OrigamFile.PackageCategory].Equals(Guid.Empty))
+        {
             throw new Exception("Package id cannot be empty");
+        }
+
         if (parentFolderIds.Count != 2)
+        {
             throw new Exception("Wrong ParentFolderId number: " + parentFolderIds.Count);
+        }
     }
 
     public Guid PackageId
@@ -112,7 +117,10 @@ public class ParentFolders : IDictionary<string, Guid>
     public void Add(KeyValuePair<string, Guid> item)
     {
         if (innerDict.Count == 2 && !innerDict.ContainsKey(item.Key))
+        {
             throw new Exception("Max. Parent folder number is 2 ");
+        }
+
         innerDict.Add(item.Key, item.Value);
     }
 
@@ -150,7 +158,10 @@ public class ParentFolders : IDictionary<string, Guid>
     public void Add(string key, Guid value)
     {
         if (innerDict.Count == 2 && !innerDict.ContainsKey(key))
+        {
             throw new Exception("Max. Parent folder number is 2 ");
+        }
+
         innerDict.Add(key, value);
     }
 
@@ -170,7 +181,10 @@ public class ParentFolders : IDictionary<string, Guid>
         set
         {
             if (innerDict.Count == 2 && !innerDict.ContainsKey(key))
+            {
                 throw new Exception("Max. Parent folder number is 2 ");
+            }
+
             innerDict[key] = value;
         }
     }

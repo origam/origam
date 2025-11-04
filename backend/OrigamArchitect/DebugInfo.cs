@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,7 +27,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
-using Origam.DA.Service;
 using Origam.OrigamEngine;
 using Origam.Rule;
 using Origam.Schema;
@@ -393,16 +391,27 @@ public class DebugInfo : IDebugInfoProvider
             switch (protocoleID)
             {
                 case WTS_PROTOCOL_TYPE_CONSOLE:
+                {
                     protocoleType = "Console";
                     break;
+                }
+
                 case WTS_PROTOCOL_TYPE_ICA:
+                {
                     protocoleType = "ICA";
                     break;
+                }
+
                 case WTS_PROTOCOL_TYPE_RDP:
+                {
                     protocoleType = "RDP";
                     break;
+                }
+
                 default:
+                {
                     break;
+                }
             }
         }
         WTSFreeMemory(ppBuffer);

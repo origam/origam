@@ -62,12 +62,10 @@ public static class CustomParameterService
         {
             return null;
         }
-        else
-        {
-            return method.ParameterReferences.Keys.FirstOrDefault(parameterName =>
-                MatchParameter(parameterName) == null
-            );
-        }
+
+        return method.ParameterReferences.Keys.FirstOrDefault(parameterName =>
+            MatchParameter(parameterName) == null
+        );
     }
 
     private static void Initialize()

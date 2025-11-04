@@ -23,8 +23,6 @@ using System;
 using System.Data;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
-using Origam.Services;
-using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel;
 
@@ -41,14 +39,23 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
     public override Exception CheckRule(object instance, string memberName)
     {
         if (string.IsNullOrEmpty(memberName))
+        {
             CheckRule(instance);
+        }
+
         if (memberName != "Name")
+        {
             throw new Exception(
                 nameof(NoDuplicateNamesInDataConstantRuleAtribute)
                     + " can be only applied to Name properties"
             );
+        }
+
         if (!(instance is DataConstant dataconstant))
+        {
             return null;
+        }
+
         if (dataconstant.RootProvider == null) { }
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
         var itemWithDuplicateName = dataconstant

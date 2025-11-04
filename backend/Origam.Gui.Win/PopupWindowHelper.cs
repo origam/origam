@@ -479,8 +479,10 @@ public class PopupWindowHelperMessageFilter : IMessageFilter
                 case WM_NCLBUTTONDOWN:
                 case WM_NCRBUTTONDOWN:
                 case WM_NCMBUTTONDOWN:
+                {
                     OnMouseDown();
                     break;
+                }
             }
         }
         return false;

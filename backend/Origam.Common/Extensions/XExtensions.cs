@@ -38,7 +38,10 @@ public static class XExtensions
             .Attributes()
             .FirstOrDefault(attr => attr.Name.LocalName == oldLocalName);
         if (attribute == null)
+        {
             return;
+        }
+
         XNamespace nameSpace = attribute.Name.Namespace;
         string value = attribute.Value;
         attribute.Remove();

@@ -79,16 +79,23 @@ public class TimeGroupingRenderer
         switch (groupingUnit)
         {
             case "year":
+            {
                 expressions = new[] { columnRenderer.Render(columnRenderData, "year") };
                 break;
+            }
+
             case "month":
+            {
                 expressions = new[]
                 {
                     columnRenderer.Render(columnRenderData, "year"),
                     columnRenderer.Render(columnRenderData, "month"),
                 };
                 break;
+            }
+
             case "day":
+            {
                 expressions = new[]
                 {
                     columnRenderer.Render(columnRenderData, "year"),
@@ -96,7 +103,10 @@ public class TimeGroupingRenderer
                     columnRenderer.Render(columnRenderData, "day"),
                 };
                 break;
+            }
+
             case "hour":
+            {
                 expressions = new[]
                 {
                     columnRenderer.Render(columnRenderData, "year"),
@@ -105,7 +115,10 @@ public class TimeGroupingRenderer
                     columnRenderer.Render(columnRenderData, "hour"),
                 };
                 break;
+            }
+
             case "minute":
+            {
                 expressions = new[]
                 {
                     columnRenderer.Render(columnRenderData, "year"),
@@ -115,8 +128,12 @@ public class TimeGroupingRenderer
                     columnRenderer.Render(columnRenderData, "minute"),
                 };
                 break;
+            }
+
             default:
+            {
                 throw new NotImplementedException("Cannot render columns for " + groupingUnit);
+            }
         }
         return expressions;
     }

@@ -159,7 +159,10 @@ public class OutputPad : AbstractPadContent, IOutputPad
     private void AddTextInternal(string sText)
     {
         if (IsDisposed)
+        {
             return;
+        }
+
         int startPosition = 0;
         if (sText.StartsWith("Origam."))
         {

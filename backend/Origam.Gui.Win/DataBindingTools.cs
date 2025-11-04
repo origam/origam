@@ -35,31 +35,48 @@ public class DataBindingTools
         {
             AsDataGrid grid = control.Parent as AsDataGrid;
             if (grid.DataSource == null)
+            {
                 return null;
+            }
+
             if (grid.BindingContext[grid.DataSource, grid.DataMember] == null)
+            {
                 return null;
+            }
+
             if (grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0)
+            {
                 return null;
+            }
+
             return (
                 grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView
             ).Row;
         }
-        else if (control.Parent is FilterPanel)
+
+        if (control.Parent is FilterPanel)
         {
             return null;
             //AsPanel panel = this.Parent.Parent as AsPanel;
             //return ((DataRowView)(panel.BindingContext[panel.DataSource, panel.DataMember] as CurrencyManager).Current).Row;
         }
-        else
+
+        if (control.DataBindings[property] == null)
         {
-            if (control.DataBindings[property] == null)
-                return null;
-            if (control.DataBindings[property].BindingManagerBase == null)
-                return null;
-            if (control.DataBindings[property].BindingManagerBase.Position < 0)
-                return null;
-            return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
+            return null;
         }
+
+        if (control.DataBindings[property].BindingManagerBase == null)
+        {
+            return null;
+        }
+
+        if (control.DataBindings[property].BindingManagerBase.Position < 0)
+        {
+            return null;
+        }
+
+        return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
     }
 
     public static void UpdateBindedFormComponent(BindingsCollection bindings, string mappingName)

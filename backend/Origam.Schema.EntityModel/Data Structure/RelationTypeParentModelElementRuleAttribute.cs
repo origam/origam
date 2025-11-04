@@ -37,7 +37,10 @@ public class RelationTypeParentModelElementRuleAttribute : AbstractModelElementR
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var dataStructureColumn = (DataStructureColumn)instance;
         var abstractSchemaItemParent = dataStructureColumn.ParentItem;
         if (abstractSchemaItemParent?.ItemType is DataStructureEntity.CategoryConst)

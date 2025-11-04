@@ -148,10 +148,8 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
             {
                 return true;
             }
-            else
-            {
-                return _isViewOnly;
-            }
+
+            return _isViewOnly;
         }
         set { _isViewOnly = value; }
     }

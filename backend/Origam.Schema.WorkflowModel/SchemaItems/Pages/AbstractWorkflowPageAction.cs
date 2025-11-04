@@ -124,7 +124,9 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
     {
         base.GetExtraDependencies(dependencies);
         if (this.ConditionRule != null)
+        {
             dependencies.Add(this.ConditionRule);
+        }
     }
     #endregion
     #region IComparable Members
@@ -132,9 +134,12 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
     {
         AbstractWorkflowPageAction compareItem = obj as AbstractWorkflowPageAction;
         if (compareItem == null)
+        {
             throw new InvalidCastException(
                 ResourceUtils.GetString("ErrorCompareAbstractWorkflowPageAction")
             );
+        }
+
         return this.SortOrder.CompareTo(compareItem.SortOrder);
     }
     #endregion

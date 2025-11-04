@@ -70,73 +70,71 @@ public class OrigamProfileProvider : AbstractProfileProvider
         {
             return profileCacheByIdentity[userName];
         }
-        else
+
+        try
         {
-            try
+            UserProfile profile = new UserProfile();
+            lock (profileCacheByIdentity)
             {
-                UserProfile profile = new UserProfile();
-                lock (profileCacheByIdentity)
+                DataSet result = GetProfileData(userName);
+                if (result.Tables["BusinessPartner"].Rows.Count == 0)
                 {
-                    DataSet result = GetProfileData(userName);
-                    if (result.Tables["BusinessPartner"].Rows.Count == 0)
-                    {
-                        throw new ProfileNotFoundException(
-                            ResourceUtils.GetString("ErrorProfileUnavailable", userName)
-                        );
-                    }
-                    DataRow row = result.Tables["BusinessPartner"].Rows[0];
-                    profile.Id = (Guid)row["Id"];
-                    profile.FullName = (string)row["FullName"];
-                    if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
-                    {
-                        profile.ResourceId = (Guid)row["Resource_Id"];
-                    }
-                    if (
-                        row.Table.Columns.Contains("BusinessUnit_Id")
-                        && (!row.IsNull("BusinessUnit_Id"))
-                    )
-                    {
-                        profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
-                    }
-                    if (
-                        row.Table.Columns.Contains("Organization_Id")
-                        && (!row.IsNull("Organization_Id"))
-                    )
-                    {
-                        profile.OrganizationId = (Guid)row["Organization_Id"];
-                    }
-                    if (row.Table.Columns.Contains("UserEmail") && (!row.IsNull("UserEmail")))
-                    {
-                        profile.Email = (string)row["UserEmail"];
-                    }
-                    profileCacheByIdentity[userName] = profile;
+                    throw new ProfileNotFoundException(
+                        ResourceUtils.GetString("ErrorProfileUnavailable", userName)
+                    );
                 }
-                return profile;
+                DataRow row = result.Tables["BusinessPartner"].Rows[0];
+                profile.Id = (Guid)row["Id"];
+                profile.FullName = (string)row["FullName"];
+                if (row.Table.Columns.Contains("Resource_Id") && (!row.IsNull("Resource_Id")))
+                {
+                    profile.ResourceId = (Guid)row["Resource_Id"];
+                }
+                if (
+                    row.Table.Columns.Contains("BusinessUnit_Id")
+                    && (!row.IsNull("BusinessUnit_Id"))
+                )
+                {
+                    profile.BusinessUnitId = (Guid)row["BusinessUnit_Id"];
+                }
+                if (
+                    row.Table.Columns.Contains("Organization_Id")
+                    && (!row.IsNull("Organization_Id"))
+                )
+                {
+                    profile.OrganizationId = (Guid)row["Organization_Id"];
+                }
+                if (row.Table.Columns.Contains("UserEmail") && (!row.IsNull("UserEmail")))
+                {
+                    profile.Email = (string)row["UserEmail"];
+                }
+                profileCacheByIdentity[userName] = profile;
             }
-            catch (ProfileNotFoundException ex)
+            return profile;
+        }
+        catch (ProfileNotFoundException ex)
+        {
+            if (log.IsErrorEnabled)
             {
-                if (log.IsErrorEnabled)
-                {
-                    log.LogOrigamError(ex.Message, ex);
-                }
-                throw;
+                log.LogOrigamError(ex.Message, ex);
             }
-            catch (Exception ex)
+            throw;
+        }
+        catch (Exception ex)
+        {
+            if (log.IsErrorEnabled)
             {
-                if (log.IsErrorEnabled)
-                {
-                    log.LogOrigamError(ex.Message, ex);
-                }
-                throw new Exception(
-                    ResourceUtils.GetString("ErrorUnableToLoadProfile0")
-                        + Environment.NewLine
-                        + Environment.NewLine
-                        + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
-                        + Environment.NewLine
-                        + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
-                    ex
-                );
+                log.LogOrigamError(ex.Message, ex);
             }
+            throw new Exception(
+                ResourceUtils.GetString("ErrorUnableToLoadProfile0")
+                    + Environment.NewLine
+                    + Environment.NewLine
+                    + ResourceUtils.GetString("ErrorUnableToLoadProfile1")
+                    + Environment.NewLine
+                    + ResourceUtils.GetString("ErrorUnableToLoadProfile2"),
+                ex
+            );
         }
     }
 

@@ -301,7 +301,7 @@ public abstract class BaseContainer : System.Windows.Forms.GroupBox, IGradientCo
             this.BorderRectangle.X + miBorderWidth + 1,
             this.BorderRectangle.Y + 12 + miBorderWidth,
             this.BorderRectangle.Width - (miBorderWidth * 2),
-            this.BorderRectangle.Height - (12 + miBorderWidth * 2)
+            this.BorderRectangle.Height - (12 + (miBorderWidth * 2))
         );
         SolidBrush oSolidBrush;
         for (int Index = 1; Index >= 0; Index--)

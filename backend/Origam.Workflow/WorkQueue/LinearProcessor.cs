@@ -172,13 +172,11 @@ public class LinearProcessor : IWorkQueueProcessor
                             // item successfully locked, we finish
                             break;
                         }
-                        else
-                        {
-                            // could not be locked, we start over
-                            pageNumber = 0;
-                            result = null;
-                            break;
-                        }
+                        // could not be locked, we start over
+                        pageNumber = 0;
+                        result = null;
+
+                        break;
                     }
                 }
                 pageNumber++;

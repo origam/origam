@@ -108,33 +108,36 @@ public class DataReaderXPathNavigator : XPathNavigator
             {
                 return XmlConvert.ToString(dataReader.GetInt32(position - 1));
             }
-            else if (fieldType == typeof(Guid))
+
+            if (fieldType == typeof(Guid))
             {
                 return XmlConvert.ToString(dataReader.GetGuid(position - 1));
             }
-            else if (fieldType == typeof(long))
+
+            if (fieldType == typeof(long))
             {
                 return XmlConvert.ToString(dataReader.GetInt32(position - 1));
             }
-            else if (fieldType == typeof(decimal))
+
+            if (fieldType == typeof(decimal))
             {
                 return XmlConvert.ToString(dataReader.GetDecimal(position - 1));
             }
-            else if (fieldType == typeof(bool))
+
+            if (fieldType == typeof(bool))
             {
                 return XmlConvert.ToString(dataReader.GetBoolean(position - 1));
             }
-            else if (fieldType == typeof(DateTime))
+
+            if (fieldType == typeof(DateTime))
             {
                 return XmlConvert.ToString(
                     dataReader.GetDateTime(position - 1),
                     XmlDateTimeSerializationMode.RoundtripKind
                 );
             }
-            else
-            {
-                return dataReader.GetValue(position - 1).ToString();
-            }
+
+            return dataReader.GetValue(position - 1).ToString();
         }
     }
 

@@ -62,11 +62,20 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         if (context == null)
+        {
             return false;
+        }
+
         if (context.Trim() == "")
+        {
             return false;
+        }
+
         if (context == "*")
+        {
             return true;
+        }
+
         string[] roles = context.Split(";".ToCharArray());
         foreach (string roleTest in roles)
         {
@@ -80,7 +89,10 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
                 negation = true;
             }
             if (appRole == "*")
+            {
                 return false;
+            }
+
             foreach (Credential c in CredentialList(appRole))
             {
                 bool process = true;

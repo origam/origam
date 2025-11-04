@@ -80,7 +80,9 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
     )
     {
         if (this.Rule != null)
+        {
             base.GetParameterReferences(Rule, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -241,15 +243,11 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
                 // then by level
                 return this.Level.CompareTo(compared.Level);
             }
-            else
-            {
-                return 0 - tempResult; // we reverse because actualValue is more important than savedValue
-            }
+
+            return 0 - tempResult; // we reverse because actualValue is more important than savedValue
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

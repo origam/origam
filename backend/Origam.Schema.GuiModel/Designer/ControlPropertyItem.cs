@@ -102,16 +102,26 @@ public class ControlPropertyItem : AbstractSchemaItem
             switch (PropertyType)
             {
                 case ControlPropertyValueType.Integer:
+                {
                     return typeof(int);
+                }
                 case ControlPropertyValueType.Boolean:
+                {
                     return typeof(bool);
+                }
                 case ControlPropertyValueType.Xml:
                 case ControlPropertyValueType.String:
+                {
                     return typeof(string);
+                }
                 case ControlPropertyValueType.UniqueIdentifier:
+                {
                     return typeof(Guid);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }

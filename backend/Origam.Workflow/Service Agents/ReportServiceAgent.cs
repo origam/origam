@@ -90,6 +90,7 @@ public class ReportServiceAgent : AbstractServiceAgent
         switch (MethodName)
         {
             case "PrintReport":
+            {
                 PrintReport(
                     Parameters.Get<Guid>("Report"),
                     Parameters.TryGet<IXmlContainer>("Data"),
@@ -98,7 +99,10 @@ public class ReportServiceAgent : AbstractServiceAgent
                     Parameters.TryGet<Hashtable>("Parameters")
                 );
                 break;
+            }
+
             case "GetReport":
+            {
                 result = GetReport(
                     Parameters.Get<Guid>("Report"),
                     Parameters.TryGet<IXmlContainer>("Data"),
@@ -106,12 +110,16 @@ public class ReportServiceAgent : AbstractServiceAgent
                     Parameters.TryGet<Hashtable>("Parameters")
                 );
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(MethodName),
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
     #endregion

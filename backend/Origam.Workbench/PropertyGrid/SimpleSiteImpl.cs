@@ -41,7 +41,10 @@ public sealed class SimpleSiteImpl : ISite, IServiceProvider
         where T : class
     {
         if (services == null)
+        {
             services = new Dictionary<Type, object>();
+        }
+
         services[typeof(T)] = service;
     }
 
@@ -49,7 +52,9 @@ public sealed class SimpleSiteImpl : ISite, IServiceProvider
         where T : class
     {
         if (services != null)
+        {
             services.Remove(typeof(T));
+        }
     }
 
     object IServiceProvider.GetService(Type serviceType)

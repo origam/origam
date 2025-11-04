@@ -91,10 +91,8 @@ internal static class Crypto
                 byte[] hashData = alg.ComputeHash(input);
                 return BinaryToHex(hashData);
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
     }
 

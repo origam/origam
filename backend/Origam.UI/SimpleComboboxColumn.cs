@@ -142,12 +142,17 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
         while (i < rowCount)
         {
             if (s.Equals(dv[i][this.ColumnComboBox.ValueMember]))
+            {
                 break;
+            }
+
             ++i;
         }
 
         if (i < rowCount)
+        {
             return dv[i][this.ColumnComboBox.DisplayMember];
+        }
 
         return DBNull.Value;
     }
@@ -169,13 +174,21 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
             while (i < rowCount)
             {
                 if (s.Equals(dv[i][this.ColumnComboBox.DisplayMember]))
+                {
                     break;
+                }
+
                 ++i;
             }
             if (i < rowCount)
+            {
                 s = dv[i][this.ColumnComboBox.ValueMember];
+            }
             else
+            {
                 s = DBNull.Value;
+            }
+
             base.SetColumnValueAtRow(source, rowNum, s);
         }
     }
@@ -217,7 +230,8 @@ public class NoKeyUpCombo : ComboBox
             {
                 return true;
             }
-            else if (m.WParam.ToInt32() == 37 | m.WParam.ToInt32() == 39)
+
+            if (m.WParam.ToInt32() == 37 | m.WParam.ToInt32() == 39)
             {
                 return false;
             }

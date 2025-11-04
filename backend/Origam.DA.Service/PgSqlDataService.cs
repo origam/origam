@@ -146,24 +146,38 @@ public class PgSqlDataService : AbstractSqlDataService
                 switch (postgresException.SqlState)
                 {
                     case "42601":
+                    {
                         PgDataException(recordErrorMessage, ex);
                         break;
+                    }
+
                     case "42P01":
+                    {
                         DataTableException(ex);
                         break;
+                    }
+
                     case "42883":
+                    {
                         SQLProcedureException(ex);
                         break;
+                    }
+
                     default:
                     {
                         switch (postgresException.SqlState.Substring(0, 2))
                         {
                             case "23":
+                            {
                                 customMessage = ResourceUtils.GetString("IntegrityError");
                                 break;
+                            }
+
                             default:
+                            {
                                 customMessage = ResourceUtils.GetString("ExceptionWhenUpdate");
                                 break;
+                            }
                         }
                         break;
                     }

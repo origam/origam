@@ -145,7 +145,7 @@ public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
             this.BorderRectangle.X + this.BorderWidth + 1,
             this.BorderRectangle.Y + this.BorderWidth + 12,
             this.BorderRectangle.Width - (this.BorderWidth * 2),
-            this.BorderRectangle.Height - (12 + this.BorderWidth * 2)
+            this.BorderRectangle.Height - (12 + (this.BorderWidth * 2))
         );
 
         int iWdth = miToolBarWidth;

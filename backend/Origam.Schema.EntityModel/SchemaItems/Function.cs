@@ -62,9 +62,13 @@ public class Function : AbstractSchemaItem
             switch (FunctionType)
             {
                 case OrigamFunctionType.Database:
+                {
                     return "55";
+                }
                 default:
+                {
                     return "icon_10_functions.png";
+                }
             }
         }
     }

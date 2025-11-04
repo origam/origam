@@ -50,10 +50,8 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
                     new ModelElementKey(csi.MultiColumnAdapterFieldCondition)
                 );
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public void SetMappingCondition(Control acontrol, DataConstant value)
@@ -77,9 +75,7 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 }

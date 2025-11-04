@@ -72,13 +72,25 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
             predicate: (sourceNode, targetNode) =>
             {
                 if (IdTranslator.ToSchemaId(sourceNode) == Guid.Empty)
+                {
                     return false;
+                }
+
                 if (IdTranslator.ToSchemaId(targetNode) == Guid.Empty)
+                {
                     return false;
+                }
+
                 if (RetrieveItem(sourceNode) is ContextStore)
+                {
                     return false;
+                }
+
                 if (RetrieveItem(targetNode) is ContextStore)
+                {
                     return false;
+                }
+
                 var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
                 var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
                 return Equals(sourcesParent, targetsParent);
@@ -157,13 +169,18 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
                 ? wfSubgraph.WorkflowItemId
                 : IdTranslator.NodeToSchema(node.Id);
             if (schemaItemId == Guid.Empty)
+            {
                 return;
+            }
         }
         else if (viewer.SelectedObject is Edge edge)
         {
             Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
             if (id == null)
+            {
                 return;
+            }
+
             schemaItemId = id.Value;
         }
         ShowEditor(schemaItemId);
@@ -259,7 +276,10 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
                 ? workflowSubgraph.WorkflowItemId
                 : IdTranslator.ToSchemaId(node);
             if (schemaItemId == Guid.Empty)
+            {
                 return false;
+            }
+
             var schemaItem = RetrieveItem(schemaItemId);
             if (schemaItem != null)
             {
@@ -274,7 +294,9 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     private void OnInstancePersisted(object sender, IPersistent persistedObject)
     {
         if (!(persistedObject is ISchemaItem persistedSchemaItem))
+        {
             return;
+        }
 
         bool childPersisted =
             UpToDateGraphParent?.ChildrenRecursive.Any(x => x.Id == persistedSchemaItem.Id)
@@ -323,7 +345,10 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         {
             ISchemaItem parentStep = persistedSchemaItem.FirstParentOfType<WorkflowTask>();
             if (parentStep == null)
+            {
                 return;
+            }
+
             Node stepNode = gViewer.Graph.FindNodeOrSubgraph(
                 IdTranslator.SchemaToFirstNode(parentStep.Id)
             );
@@ -370,7 +395,9 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
         gViewer.Graph.RemoveNodeEverywhere(node);
         IViewerNode viewerNode = gViewer.FindViewerNode(node);
         if (viewerNode == null)
+        {
             return;
+        }
 
         gViewer.RemoveNode(viewerNode, true);
         bool deletedNodeItem = !(node is Subgraph);
@@ -385,7 +412,10 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
     {
         gViewer.SuspendLayout();
         if (gViewer.InsertingEdge)
+        {
             return;
+        }
+
         HandleSelectAndRedraw(e);
         TrySelectActiveNodeInModelView();
         TrySelectActiveEdgeInModelView();

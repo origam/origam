@@ -49,8 +49,8 @@ internal class NodePainter : INodeItemPainter
         Graphics editorGraphics = (Graphics)graphicsObj;
         var borderSize = painter.CalculateMinHeaderBorder(node);
         var borderCorner = new System.Drawing.Point(
-            (int)node.GeometryNode.Center.X - borderSize.Width / 2,
-            (int)node.GeometryNode.Center.Y - borderSize.Height / 2
+            (int)node.GeometryNode.Center.X - (borderSize.Width / 2),
+            (int)node.GeometryNode.Center.Y - (borderSize.Height / 2)
         );
         Rectangle border = new Rectangle(borderCorner, borderSize);
 

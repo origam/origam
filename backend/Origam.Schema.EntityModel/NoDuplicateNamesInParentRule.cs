@@ -40,15 +40,27 @@ public class NoDuplicateNamesInParentRule : AbstractModelElementRuleAttribute
     public override Exception CheckRule(object instance, string memberName)
     {
         if (string.IsNullOrEmpty(memberName))
+        {
             CheckRule(instance);
+        }
+
         if (memberName != "Name")
+        {
             throw new Exception(
                 nameof(NoDuplicateNamesInParentRule) + " can be only applied to Name properties"
             );
+        }
+
         if (!(instance is ISchemaItem abstractSchemaItem))
+        {
             return null;
+        }
+
         if (abstractSchemaItem.ParentItem == null)
+        {
             return null;
+        }
+
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
         ISchemaItem itemWithDuplicateName = abstractSchemaItem
             .ParentItem.ChildItems.Where(item => item is AbstractDataEntityColumn)

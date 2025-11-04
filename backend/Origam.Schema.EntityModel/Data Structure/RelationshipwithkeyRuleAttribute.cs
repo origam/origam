@@ -20,10 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.DA.ObjectPersistence.Attributes;
@@ -40,7 +37,10 @@ public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribut
     public override Exception CheckRule(object instance, string memberName)
     {
         if (memberName == String.Empty | memberName == null)
+        {
             CheckRule(instance);
+        }
+
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {

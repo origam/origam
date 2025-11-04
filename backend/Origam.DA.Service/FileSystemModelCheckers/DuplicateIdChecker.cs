@@ -26,7 +26,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MoreLinq;
 using Origam.DA.Service.FileSystemModeCheckers;
-using Origam.Extensions;
 
 namespace Origam.DA.Service.FileSystemModelCheckers;
 

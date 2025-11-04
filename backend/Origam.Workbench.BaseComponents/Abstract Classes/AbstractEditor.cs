@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Origam.Extensions;
 using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Schema;
@@ -261,7 +260,8 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 SaveCommand();
                 return true;
             }
-            else if (keyData == Keys.Escape)
+
+            if (keyData == Keys.Escape)
             {
                 Close();
                 return true;
@@ -300,12 +300,14 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             toolPanel.Hide();
             return;
         }
-        else if (IsDirty && !IsDialog())
+
+        if (IsDirty && !IsDialog())
         {
             toolPanel.Hide();
             return;
         }
-        else if (IsDirty && IsDialog())
+
+        if (IsDirty && IsDialog())
         {
             toolPanel.Show();
             toolStrip1.Items.Add(_saveCmd);
@@ -503,9 +505,11 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     {
         object[] attributes = type.GetCustomAttributes(typeof(HelpTopicAttribute), true);
         if (attributes != null && attributes.Length > 0)
+        {
             return attributes[0] as HelpTopicAttribute;
-        else
-            return null;
+        }
+
+        return null;
     }
 
     private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -525,6 +529,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
             switch (result)
             {
                 case DialogResult.Yes:
+                {
                     try
                     {
                         SaveObject();
@@ -540,7 +545,10 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                         e.Cancel = true;
                     }
                     break;
+                }
+
                 case DialogResult.No:
+                {
                     if (ModelContent.IsPersisted)
                     // existing item
                     {
@@ -571,10 +579,13 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                         }
                     }
                     break;
+                }
 
                 case DialogResult.Cancel:
+                {
                     e.Cancel = true;
                     break;
+                }
             }
         }
     }
@@ -582,7 +593,10 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     public virtual List<ToolStrip> GetToolStrips(int maxWidth = -1)
     {
         if (!showMenusInAppToolStrip)
+        {
             return new List<ToolStrip>();
+        }
+
         var actions = ActionsBuilder.BuildSubmenu(Content);
         var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth / 2);
         var newItems = NewElementsBuilder.BuildSubmenu(Content);
@@ -626,13 +640,19 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
         for (int i = 0; i < 200; i++)
         {
             if (itemsToHide.Count == items.Length - 1)
+            {
                 break;
+            }
+
             int totalToolTipWidth =
                 itemsToHide.Count == 0
                     ? toolStrip.PreferredSize.Width
                     : toolStrip.PreferredSize.Width + dropDownButton.Width;
             if (totalToolTipWidth < maxWidth)
+            {
                 break;
+            }
+
             int indexToMove = toolStrip.Items.Count - 1;
             if (indexToMove > -1)
             {

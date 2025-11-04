@@ -409,7 +409,10 @@ public class Platform
     {
         string _name = Name;
         if (IsPrimary)
+        {
             _name += " - Primary";
+        }
+
         return _name;
     }
 

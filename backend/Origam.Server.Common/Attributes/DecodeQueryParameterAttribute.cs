@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
 

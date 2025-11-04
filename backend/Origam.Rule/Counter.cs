@@ -78,7 +78,9 @@ public class Counter : ICounter
                 System.Threading.Thread.Sleep(RETRY_INTERVAL);
             }
             if (!error)
+            {
                 break;
+            }
         }
         string prefix = "";
         if (!row.IsPrefixNull())
@@ -118,7 +120,8 @@ public class Counter : ICounter
                 ResourceUtils.GetString("ErrorNoSequence")
             );
         }
-        else if (_data.Counter[0].ManageValidityByDate)
+
+        if (_data.Counter[0].ManageValidityByDate)
         {
             foreach (CounterDataset.CounterDetailRow row in _data.CounterDetail)
             {
@@ -135,19 +138,17 @@ public class Counter : ICounter
                 ResourceUtils.GetString("ErrorNoSequenceForDate", date, counterCode)
             );
         }
-        else
+
+        CounterDataset.CounterDetailRow[] rows = _data.Counter[0].GetCounterDetailRows();
+        if (rows.Length == 0)
         {
-            CounterDataset.CounterDetailRow[] rows = _data.Counter[0].GetCounterDetailRows();
-            if (rows.Length == 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    "counterCode",
-                    counterCode,
-                    "Èíselná øada existuje, ale nemá definován rozsah."
-                );
-            }
-            return rows[0];
+            throw new ArgumentOutOfRangeException(
+                "counterCode",
+                counterCode,
+                "Èíselná øada existuje, ale nemá definován rozsah."
+            );
         }
+        return rows[0];
     }
 
     private void Update(

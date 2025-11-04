@@ -21,17 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+#pragma warning disable IDE0005
 using System.Data;
-using System.Threading;
-using System.Xml;
 using Origam.DA;
+#pragma warning restore IDE0005
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
+#pragma warning disable IDE0005
 using Origam.Workbench.Services;
+#pragma warning restore IDE0005
 
 namespace Origam.Workflow.Tasks;
 
@@ -129,11 +130,14 @@ public class UIEngineTask : AbstractWorkflowEngineTask
     public void Finish()
     {
         if (this.Result == null)
+        {
             OnFinished(
                 new WorkflowEngineTaskEventArgs(
                     new NullReferenceException(ResourceUtils.GetString("ErrorNoResultData"))
                 )
             );
+        }
+
         OnFinished(new WorkflowEngineTaskEventArgs());
     }
 

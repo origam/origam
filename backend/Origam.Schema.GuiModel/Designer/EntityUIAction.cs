@@ -30,7 +30,6 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
-using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel;
 
@@ -285,10 +284,8 @@ public abstract class EntityUIAction : AbstractSchemaItem
         {
             return this.Name.CompareTo(compared.Name);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }

@@ -107,14 +107,26 @@ public class TracingService : ITracingService
 
             row.Category = category;
             if (data1 != null)
+            {
                 row.Data1 = data1;
+            }
+
             if (data2 != null)
+            {
                 row.Data2 = data2;
+            }
+
             if (message != null)
+            {
                 row.Message = message;
+            }
+
             row.refOrigamTraceWorkflowId = workflowInstanceId;
             if (remark != null)
+            {
                 row.Remark = remark;
+            }
+
             row.Subcategory = subCategory;
             row.WorkflowStepId = stepId;
             row.WorkflowStepPath = stepPath;
@@ -166,9 +178,15 @@ public class TracingService : ITracingService
                 row.refOrigamTraceWorkflowId = workflowInstanceId;
             }
             if (ruleInput != null)
+            {
                 row.Input = ruleInput;
+            }
+
             if (ruleResult != null)
+            {
                 row.Output = ruleResult;
+            }
+
             row.RuleId = ruleId;
             row.RuleName = ruleName;
 

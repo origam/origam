@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.Schema.EntityModel;
@@ -47,9 +46,15 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
     {
         FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
         if (currentItem == null)
+        {
             return new StandardValuesCollection(new List<DataStructureMethod>());
+        }
+
         if (currentItem.ListDataStructure == null)
+        {
             return new StandardValuesCollection(new List<DataStructureMethod>());
+        }
+
         List<DataStructureMethod> methods = currentItem.ListDataStructure.Methods;
         var array = new List<DataStructureMethod>(methods.Count);
         foreach (DataStructureMethod item in methods)
@@ -68,9 +73,11 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
     )
     {
         if (sourceType == typeof(string))
+        {
             return true;
-        else
-            return base.CanConvertFrom(context, sourceType);
+        }
+
+        return base.CanConvertFrom(context, sourceType);
     }
 
     public override object ConvertFrom(
@@ -86,11 +93,13 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
             foreach (DataStructureMethod item in methods)
             {
                 if (item.Name == value.ToString())
+                {
                     return item;
+                }
             }
             return null;
         }
-        else
-            return base.ConvertFrom(context, culture, value);
+
+        return base.ConvertFrom(context, culture, value);
     }
 }

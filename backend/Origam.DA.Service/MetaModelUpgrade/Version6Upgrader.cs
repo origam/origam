@@ -65,15 +65,23 @@ namespace Origam.DA.Service.MetaModelUpgrade
             switch (typeAttribute.Value)
             {
                 case "http://schemas.origam.com/1.0.0/packagepackage":
+                {
                     category = OrigamFile.PackageCategory;
                     break;
+                }
+
                 case "http://schemas.origam.com/5.0.0/model-elementgroup":
+                {
                     category = OrigamFile.GroupCategory;
                     break;
+                }
+
                 default:
+                {
                     throw new Exception(
                         $"Cannot convert node {node} to meta model version 6.0.0 because {typeAttribute.Value} cannot be mapped to category"
                     );
+                }
             }
             typeAttribute.Remove();
             node.SetAttributeValue(newPersistenceNamespace.GetName("type"), category);

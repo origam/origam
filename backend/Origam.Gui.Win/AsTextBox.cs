@@ -56,7 +56,10 @@ public class AsTextBox
     protected override void InitLayout()
     {
         if (this.Disposing)
+        {
             return;
+        }
+
         this.BorderStyle = BorderStyle.Fixed3D;
         this.ScrollBars = ScrollBars.Vertical;
         this.AcceptsTab = true;
@@ -97,7 +100,9 @@ public class AsTextBox
     protected override void OnValidated(EventArgs e)
     {
         if (!this.Disposing)
+        {
             base.OnValidated(e);
+        }
     }
     #endregion
     #region Properties
@@ -199,7 +204,10 @@ public class AsTextBox
     private void PaintCaption()
     {
         if (_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing)
+        {
             return;
+        }
+
         if (this.CaptionPosition == CaptionPosition.None)
         {
             if (this.Parent.Controls.Contains(_captionLabel))
@@ -222,31 +230,42 @@ public class AsTextBox
             switch (this.CaptionPosition)
             {
                 case CaptionPosition.Left:
+                {
                     this._captionLabel.Visible = true;
                     this._captionLabel.Top = this.Top + 2;
                     this._captionLabel.Left = this.Left - this.CaptionLength;
                     break;
+                }
+
                 case CaptionPosition.Right:
+                {
                     this._captionLabel.Visible = true;
                     this._captionLabel.Top = this.Top + 2;
                     this._captionLabel.Left = this.Right;
                     break;
+                }
 
                 case CaptionPosition.Top:
+                {
                     this._captionLabel.Visible = true;
                     this._captionLabel.Top = this.Top - this._captionLabel.Height;
                     this._captionLabel.Left = this.Left;
                     break;
+                }
 
                 case CaptionPosition.Bottom:
+                {
                     this._captionLabel.Visible = true;
                     this._captionLabel.Top = this.Top + this.Height;
                     this._captionLabel.Left = this.Left;
                     break;
+                }
 
                 case CaptionPosition.None:
+                {
                     this._captionLabel.Visible = false;
                     break;
+                }
             }
         }
         else
@@ -258,13 +277,25 @@ public class AsTextBox
     private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
     {
         if (!this.DesignMode)
+        {
             return;
+        }
+
         if (!string.IsNullOrEmpty(this.Caption))
+        {
             return;
+        }
+
         if (e.Element == null)
+        {
             return;
+        }
+
         if ((e.Element as Binding).PropertyName != this.DefaultBindableProperty)
+        {
             return;
+        }
+
         if (e.Action == CollectionChangeAction.Remove)
         {
             this._captionLabel.Text = "";
@@ -285,10 +316,14 @@ public class AsTextBox
     private void ResetCaption()
     {
         if (!string.IsNullOrEmpty(this.Caption))
+        {
             return;
+        }
+
         foreach (Binding binding in this.DataBindings)
         {
             if (binding.PropertyName == "Value")
+            {
                 try
                 {
                     this._captionLabel.Text = ColumnCaption(binding);
@@ -297,6 +332,7 @@ public class AsTextBox
                 {
                     this._captionLabel.Text = "????";
                 }
+            }
         }
     }
 
@@ -319,7 +355,10 @@ public class AsTextBox
             }
         }
         else
+        {
             tableName = dataMember;
+        }
+
         return tableName;
     }
 
@@ -336,7 +375,9 @@ public class AsTextBox
             if (table != null)
             {
                 if (table.Columns.Contains(binding.BindingMemberInfo.BindingField))
+                {
                     return table.Columns[binding.BindingMemberInfo.BindingField].Caption;
+                }
             }
         }
         return binding.BindingMemberInfo.BindingField;

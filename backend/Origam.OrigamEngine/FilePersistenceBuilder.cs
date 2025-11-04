@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.Service;
@@ -76,11 +75,11 @@ public class FilePersistenceBuilder : IPersistenceBuilder
         return new FilePersistenceService(
             metaModelUpgradeService: metaModelUpgradeService,
             defaultFolders: defaultFolders,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             watchFileChanges: watchFileChanges,
-            checkRules: checkRules,
             useBinFile: useBinFile,
-            mode: mode,
-            pathToRuntimeModelConfig: pathToRuntimeModelConfig
+            checkRules: checkRules,
+            mode: mode
         );
     }
 
@@ -98,10 +97,10 @@ public class FilePersistenceBuilder : IPersistenceBuilder
         return new FilePersistenceService(
             new NullMetaModelUpgradeService(),
             defaultFolders: defaultFolders,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig,
             watchFileChanges: false,
             useBinFile: false,
-            mode: MetaModelUpgradeMode.Ignore,
-            pathToRuntimeModelConfig: pathToRuntimeModelConfig
+            mode: MetaModelUpgradeMode.Ignore
         );
     }
 

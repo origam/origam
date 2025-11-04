@@ -139,10 +139,8 @@ public abstract class AbstractDataService : IDataService
         {
             return GetAdapterNonCached(selectParameters);
         }
-        else
-        {
-            return GetAdapterCached(selectParameters, identityId);
-        }
+
+        return GetAdapterCached(selectParameters, identityId);
     }
 
     internal DbDataAdapter GetSelectRowAdapter(
@@ -311,7 +309,10 @@ public abstract class AbstractDataService : IDataService
     internal DataStructure GetDataStructure(Guid id)
     {
         if (id == Guid.Empty)
+        {
             return null;
+        }
+
         DataStructure result =
             this.PersistenceProvider.RetrieveInstance(
                 typeof(DataStructure),
@@ -516,19 +517,32 @@ public abstract class AbstractDataService : IDataService
                             switch (dbParam.DbType)
                             {
                                 case DbType.Guid:
+                                {
                                     if (param.Value is Guid)
+                                    {
                                         value = param.Value;
+                                    }
                                     else if (
-                                        param.Value is string & dbParam.IsNullable
+                                        (param.Value is string & dbParam.IsNullable)
                                         && ((string)param.Value == "")
                                     )
+                                    {
                                         value = DBNull.Value;
+                                    }
                                     else if (param.Value is String)
+                                    {
                                         value = new Guid(param.Value.ToString());
+                                    }
                                     else if (param.Value == DBNull.Value)
+                                    {
                                         value = DBNull.Value;
+                                    }
+
                                     break;
+                                }
+
                                 case DbType.DateTime:
+                                {
                                     //							dbParam.Size = 8;
                                     //							dbParam.DbType = DbType.String;
                                     //							DateTimeFormatInfo myDTFI = new CultureInfo( "en-US", false ).DateTimeFormat;
@@ -557,7 +571,10 @@ public abstract class AbstractDataService : IDataService
                                         );
                                     }
                                     break;
+                                }
+
                                 case DbType.String:
+                                {
                                     if (param.Value == DBNull.Value)
                                     {
                                         value = DBNull.Value;
@@ -584,7 +601,10 @@ public abstract class AbstractDataService : IDataService
                                         }
                                     }
                                     break;
+                                }
+
                                 case DbType.Int32:
+                                {
                                     if (param.Value == DBNull.Value)
                                     {
                                         value = DBNull.Value;
@@ -600,7 +620,10 @@ public abstract class AbstractDataService : IDataService
                                         value = param.Value;
                                     }
                                     break;
+                                }
+
                                 case DbType.Int64:
+                                {
                                     if (param.Value == DBNull.Value)
                                     {
                                         value = DBNull.Value;
@@ -616,8 +639,11 @@ public abstract class AbstractDataService : IDataService
                                         value = param.Value;
                                     }
                                     break;
+                                }
+
                                 case DbType.Decimal:
                                 case DbType.Currency:
+                                {
                                     if (param.Value == DBNull.Value)
                                     {
                                         value = DBNull.Value;
@@ -633,7 +659,10 @@ public abstract class AbstractDataService : IDataService
                                         value = param.Value;
                                     }
                                     break;
+                                }
+
                                 default:
+                                {
                                     if (
                                         dbParam.DbType == DbType.Object
                                         && !(param.Value is ICollection)
@@ -652,6 +681,7 @@ public abstract class AbstractDataService : IDataService
                                         value = param.Value;
                                     }
                                     break;
+                                }
                             }
                             dbParam.Value = value;
                         }

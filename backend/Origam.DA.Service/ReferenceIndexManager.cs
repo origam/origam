@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -201,9 +200,15 @@ record ReferenceInfo(Guid Id, Type Type)
     public virtual bool Equals(ReferenceInfo other)
     {
         if (ReferenceEquals(null, other))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, other))
+        {
             return true;
+        }
+
         return Id.Equals(other.Id);
     }
 

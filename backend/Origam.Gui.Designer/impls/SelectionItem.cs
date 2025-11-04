@@ -57,7 +57,9 @@ internal class SelectionItem
             {
                 this.primary = value;
                 if (SelectionItemInvalidate != null)
+                {
                     SelectionItemInvalidate(this, EventArgs.Empty);
+                }
             }
         }
     }
@@ -73,6 +75,8 @@ internal class SelectionItem
             selectionMgr.SetPrimarySelection((SelectionItem)null);
         }
         if (SelectionItemDispose != null)
+        {
             SelectionItemDispose(this, EventArgs.Empty);
+        }
     }
 }

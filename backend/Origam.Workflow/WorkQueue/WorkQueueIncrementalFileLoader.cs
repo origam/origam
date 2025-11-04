@@ -27,9 +27,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Xml;
 using log4net;
-using Origam.Config;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue;
@@ -111,10 +109,8 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
             }
             return content;
         }
-        else
-        {
-            return GetContentFromZipArchive(filenameSegments[0], filenameSegments[1]);
-        }
+
+        return GetContentFromZipArchive(filenameSegments[0], filenameSegments[1]);
     }
 
     private string GetContentFromZipArchive(string archiveName, string filename)
@@ -202,23 +198,37 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 switch (pair[0])
                 {
                     case "path":
+                    {
                         path = pair[1];
                         break;
+                    }
+
                     case "indexFile":
+                    {
                         indexFile = pair[1];
                         break;
+                    }
+
                     case "searchPattern":
+                    {
                         searchPattern = pair[1];
                         break;
+                    }
+
                     case "compressedArchivesAsSubfolders":
+                    {
                         compressedArchivesAsSubfolders = Convert.ToBoolean(pair[1]);
                         break;
+                    }
+
                     default:
+                    {
                         throw new ArgumentOutOfRangeException(
                             "connectionParameterName",
                             pair[0],
                             Strings.ErrorInvalidConnectionString
                         );
+                    }
                 }
             }
         }

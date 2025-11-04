@@ -71,11 +71,13 @@ public class HttpServiceAgent : AbstractServiceAgent
                 break;
             }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 

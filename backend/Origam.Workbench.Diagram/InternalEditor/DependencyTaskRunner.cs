@@ -120,7 +120,10 @@ internal class AddDependencyTask : IDefferedPersistenceTask
     public bool TryRun(ISchemaItem persistedItem)
     {
         if (triggerItemId != persistedItem.Id)
+        {
             return false;
+        }
+
         var workflowTaskDependency = new WorkflowTaskDependency
         {
             SchemaExtensionId = persistedItem.SchemaExtensionId,

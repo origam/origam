@@ -46,24 +46,24 @@ class NodeHeaderPainter
         Point headerCenter = border.GetCenter();
         var labelPoint = new PointF(
             headerCenter.X
-                - (float)border.Width / 2
+                - ((float)border.Width / 2)
                 + painter.NodeHeaderHeight
                 + painter.TextSideMargin
                 + (nodeData.SecondaryImage == null ? 0 : imageBackground.Width - 5),
-            (float)headerCenter.Y - (int)stringSize.Height / 2
+            (float)headerCenter.Y - ((int)stringSize.Height / 2)
         );
         var imageBorder = new Size(
             (imageBackground.Width - nodeData.PrimaryImage.Width) / 2,
             (imageBackground.Height - nodeData.PrimaryImage.Height) / 2
         );
         var primaryImagePoint = new PointF(
-            headerCenter.X - (float)border.Width / 2 + imageBorder.Width,
-            headerCenter.Y - (float)border.Height / 2 + imageBorder.Height
+            headerCenter.X - ((float)border.Width / 2) + imageBorder.Width,
+            headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
         );
 
         var secondaryImagePoint = new PointF(
-            headerCenter.X - (float)border.Width / 2 + imageBorder.Width + imageBackground.Width,
-            headerCenter.Y - (float)border.Height / 2 + imageBorder.Height
+            headerCenter.X - ((float)border.Width / 2) + imageBorder.Width + imageBackground.Width,
+            headerCenter.Y - ((float)border.Height / 2) + imageBorder.Height
         );
         editorGraphics.DrawUpSideDown(
             drawAction: graphics =>

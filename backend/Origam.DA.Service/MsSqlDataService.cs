@@ -23,10 +23,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
@@ -92,6 +92,7 @@ public class MsSqlDataService : AbstractSqlDataService
         builder.DataSource = serverName;
         builder.InitialCatalog = databaseName;
         builder.Pooling = pooling;
+        builder.Encrypt = false;
         if (!integratedAuthentication && port != 1433)
         {
             builder.DataSource = serverName + "," + port;

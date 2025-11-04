@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -93,7 +92,10 @@ public class ServiceManager
             return;
         }
         if (log.IsInfoEnabled)
+        {
             log.Info("Unloading workbench service: " + service.GetType());
+        }
+
         service.UnloadService();
         serviceList.Remove(service);
         var hashTypes = new List<Type>();
@@ -113,7 +115,10 @@ public class ServiceManager
     public void AddService(IWorkbenchService service)
     {
         if (log.IsInfoEnabled)
+        {
             log.Info("Adding workbench service: " + service.GetType());
+        }
+
         service.InitializeService();
         serviceList.Add(service);
     }

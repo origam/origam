@@ -40,10 +40,8 @@ public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
         {
             return csi.RequestSaveAfterChange;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public void SetRequestSaveAfterChange(Control acontrol, bool value)
@@ -64,10 +62,8 @@ public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
                 .ControlItem
                 .RequestSaveAfterChangeAllowed;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
     #endregion
 }

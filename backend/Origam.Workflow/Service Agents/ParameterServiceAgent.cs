@@ -37,9 +37,13 @@ public class ParameterServiceAgent : AbstractServiceAgent
         switch (this.MethodName)
         {
             case "SetCustomParameterValue":
+            {
                 // Check input parameters
                 if (!(this.Parameters["ParameterName"] is string))
+                {
                     throw new InvalidCastException("ParameterName has to be string");
+                }
+
                 object value = this.Parameters["Value"];
                 IParameterService paramSvc =
                     ServiceManager.Services.GetService(typeof(IParameterService))
@@ -109,12 +113,16 @@ public class ParameterServiceAgent : AbstractServiceAgent
                     profileId
                 );
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "MethodName",
                     this.MethodName,
                     ResourceUtils.GetString("InvalidMethodName")
                 );
+            }
         }
     }
 }

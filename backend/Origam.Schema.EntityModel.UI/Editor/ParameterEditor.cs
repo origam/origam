@@ -226,15 +226,21 @@ namespace Origam.Schema.EntityModel
                 switch (result)
                 {
                     case DialogResult.Yes:
+                    {
                         SaveObject();
                         break;
+                    }
 
                     case DialogResult.No:
+                    {
                         break;
+                    }
 
                     case DialogResult.Cancel:
+                    {
                         e.Cancel = true;
                         break;
+                    }
                 }
             }
         }

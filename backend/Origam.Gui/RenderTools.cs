@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
-using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -46,12 +45,10 @@ public class RenderTools
             }
             return false;
         }
-        else
-        {
-            return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
-                && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
-                && ShouldRender(action.Features, action.Roles);
-        }
+
+        return (!action.ScreenIds.Any() || action.ScreenIds.Contains(formId))
+            && (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId))
+            && ShouldRender(action.Features, action.Roles);
     }
 
     public static bool ShouldRender(ControlSetItem control)

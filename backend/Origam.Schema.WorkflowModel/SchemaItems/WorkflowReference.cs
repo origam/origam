@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
@@ -60,7 +59,9 @@ public class WorkflowReference : AbstractSchemaItem
     )
     {
         if (this.Workflow != null)
+        {
             base.GetParameterReferences(Workflow, list);
+        }
     }
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

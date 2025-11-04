@@ -20,13 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
-using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -217,10 +213,8 @@ public class DeployVersion : AbstractMenuCommand
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         set
         {

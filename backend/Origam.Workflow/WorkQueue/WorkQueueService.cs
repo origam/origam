@@ -24,13 +24,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Timers;
 using System.Transactions;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.Data.SqlClient;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -741,7 +741,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     wqc.WorkQueueStructure
                 );
                 string sValue = (value as string);
-                if (sValue != null && col.MaxLength > 0 & sValue.Length > col.MaxLength)
+                if (sValue != null && (col.MaxLength > 0 & sValue.Length > col.MaxLength))
                 {
                     // handle string length
                     row[em.Name] = sValue.Substring(0, col.MaxLength - 4) + " ...";
@@ -804,7 +804,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     public void WorkQueueRemove(Guid workQueueId, object queueEntryId, string transactionId)
     {
         if (queueEntryId == null)
+        {
             return;
+        }
+
         WorkQueueData queue = GetQueue(workQueueId);
         WorkQueueData.WorkQueueRow queueRow = queue.WorkQueue[0];
         if (log.IsDebugEnabled)
@@ -857,7 +860,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     )
     {
         if (rowKey == null)
+        {
             return;
+        }
+
         if (log.IsDebugEnabled)
         {
             log.Debug(
@@ -914,7 +920,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         }
                     }
                     if (delete)
+                    {
                         rowToDelete.Delete();
+                    }
                 }
                 dataService.StoreData(wqc.WorkQueueStructure.Id, ds, false, transactionId);
             }
@@ -939,7 +947,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     )
     {
         if (rowKey == null)
+        {
             return;
+        }
+
         WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
         RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
         UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -1122,7 +1133,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         try
         {
             if (lockItems)
+            {
                 LockQueueItems(wqc, selectedRows);
+            }
+
             IParameterService ps =
                 ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_StateChange"))
@@ -1170,7 +1184,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 );
             }
             if (lockItems)
+            {
                 UnlockQueueItems(wqc, selectedRows);
+            }
         }
         catch (WorkQueueItemLockedException)
         {
@@ -1211,7 +1227,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             }
             // unlock the queue item
             if (lockItems)
+            {
                 UnlockQueueItems(wqc, selectedRows, true);
+            }
+
             throw;
         }
         if (log.IsInfoEnabled)
@@ -1549,20 +1568,31 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             switch (pm.Value)
             {
                 case WorkQueueCommandParameterMappingType.QueueEntries:
+                {
                     val = GetDataDocumentFactory(selectedRows.DataSet);
                     break;
+                }
+
                 case WorkQueueCommandParameterMappingType.Parameter1:
+                {
                     val = param1;
                     break;
+                }
+
                 case WorkQueueCommandParameterMappingType.Parameter2:
+                {
                     val = param2;
                     break;
+                }
+
                 default:
+                {
                     throw new ArgumentOutOfRangeException(
                         "Value",
                         pm.Value,
                         ResourceUtils.GetString("ErrorUnknownWorkQueueCommandValue")
                     );
+                }
             }
             parameters.Add(new QueryParameter(pm.Name, val));
         }
@@ -1750,14 +1780,18 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         catch (Exception ex)
         {
             if (log.IsErrorEnabled)
+            {
                 log.LogOrigamError("External queue load failed.", ex);
+            }
         }
         finally
         {
             _externalQueueAdapterBusy = false;
         }
         if (log.IsInfoEnabled)
+        {
             log.Info("Finished loading external work queues.");
+        }
     }
 
     private void StoreQueues(WorkQueueData queues)
@@ -1815,13 +1849,24 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         string command = null;
                         object errorQueueId = null;
                         if (!cmd.IsParam1Null())
+                        {
                             param1 = cmd.Param1;
+                        }
+
                         if (!cmd.IsParam2Null())
+                        {
                             param2 = cmd.Param2;
+                        }
+
                         if (!cmd.IsCommandNull())
+                        {
                             command = cmd.Command;
+                        }
+
                         if (!cmd.IsrefErrorWorkQueueIdNull())
+                        {
                             errorQueueId = cmd.refErrorWorkQueueId;
+                        }
                         // actual processing
                         HandleAction(
                             queue,
@@ -1923,7 +1968,8 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             // no condition, we always process
             return true;
         }
-        else if (
+
+        if (
             !cmd.IsAutoProcessingConditionXPathNull()
             && cmd.AutoProcessingConditionXPath != String.Empty
         )
@@ -2126,7 +2172,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             q.ExternalSourceLastMessage = ResourceUtils.GetString("ErrorMessage", ex.Message);
             q.ExternalSourceLastTime = DateTime.Now;
             if (log.IsErrorEnabled)
+            {
                 log.LogOrigamError("Failed to load queue " + q.Name, ex);
+            }
         }
     }
 
@@ -2187,9 +2235,13 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 catch (OrigamException ex)
                 {
                     if (IsDeadlock(ex))
+                    {
                         HandleDeadLock();
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
 
                 const int millisToSleep = 1000;
@@ -2242,7 +2294,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         SecurityManager.SetServerIdentity();
         _queueAutoProcessBusy = true;
         if (log.IsInfoEnabled)
+        {
             log.Info("Starting auto processing work queues.");
+        }
+
         try
         {
             IEnumerable<WorkQueueData.WorkQueueRow> queues = GetQueues()
@@ -2278,10 +2333,13 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         if (settings.LoadExternalWorkQueues)
         {
             if (log.IsInfoEnabled)
+            {
                 log.Info(
                     "LoadExternalWorkQueues Enabled. Interval: "
                         + settings.ExternalWorkQueueCheckPeriod
                 );
+            }
+
             _loadExternalWorkQueuesTimer.Interval = settings.ExternalWorkQueueCheckPeriod * 1000;
             _loadExternalWorkQueuesTimer.Elapsed += LoadExternalWorkQueuesElapsed;
             _loadExternalWorkQueuesTimer.Disposed += LoadExternalWorkQueuesDisposed;

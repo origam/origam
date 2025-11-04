@@ -20,9 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Security.Policy;
-using log4net;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 
@@ -123,10 +120,8 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
                     null
                 );
             }
-            else
-            {
-                return this.Engine.RuleEngine.Evaluate(item);
-            }
+
+            return this.Engine.RuleEngine.Evaluate(item);
         }
         catch (Exception ex)
         {

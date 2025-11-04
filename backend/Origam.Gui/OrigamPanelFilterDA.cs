@@ -101,7 +101,8 @@ public class OrigamPanelFilterDA
         {
             return StoredFilterValue(row, "BoolValue", valueNumber);
         }
-        else if (
+
+        if (
             type == typeof(int)
             | type == typeof(decimal)
             | type == typeof(long)
@@ -110,7 +111,8 @@ public class OrigamPanelFilterDA
         {
             return StoredFilterValue(row, "CurrencyValue", valueNumber);
         }
-        else if (type == typeof(Guid) || type == typeof(string))
+
+        if (type == typeof(Guid) || type == typeof(string))
         {
             object result = StoredFilterValue(row, "GuidValue", valueNumber);
             // try string value if there is no guid
@@ -120,14 +122,13 @@ public class OrigamPanelFilterDA
             }
             return result;
         }
-        else if (type == typeof(DateTime))
+
+        if (type == typeof(DateTime))
         {
             return StoredFilterValue(row, "DateValue", valueNumber);
         }
-        else
-        {
-            return StoredFilterValue(row, "StringValue", valueNumber);
-        }
+
+        return StoredFilterValue(row, "StringValue", valueNumber);
     }
 
     public static void AddPanelFilterDetailRow(
@@ -204,9 +205,7 @@ public class OrigamPanelFilterDA
         {
             return null;
         }
-        else
-        {
-            return row[col];
-        }
+
+        return row[col];
     }
 }

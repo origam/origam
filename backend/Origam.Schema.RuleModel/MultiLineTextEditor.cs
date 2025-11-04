@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+#if !NETSTANDARD
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
-#if !NETSTANDARD
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 #endif

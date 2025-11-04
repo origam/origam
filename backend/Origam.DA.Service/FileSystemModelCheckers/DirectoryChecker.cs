@@ -26,7 +26,6 @@ using System.Linq;
 using System.Xml;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
-using Origam.Schema;
 
 namespace Origam.DA.Service;
 
@@ -164,10 +163,16 @@ class DirectoryChecker : IFileSystemModelChecker
                 {
                     var xmlAttribute = node.Attributes?[$"x:{OrigamFile.ParentIdAttribute}"];
                     if (xmlAttribute == null)
+                    {
                         return true;
+                    }
+
                     bool parseSuccess = Guid.TryParse(xmlAttribute.Value, out Guid parentId);
                     if (!parseSuccess)
+                    {
                         return true;
+                    }
+
                     return parentId == Guid.Empty;
                 }) ?? false;
     }

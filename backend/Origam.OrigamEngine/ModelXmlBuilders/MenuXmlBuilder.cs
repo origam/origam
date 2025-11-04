@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -206,7 +205,9 @@ public class MenuXmlBuilder
                 break;
             }
             default:
+            {
                 throw new ArgumentOutOfRangeException($"Unknown menu type {item.GetType()}");
+            }
         }
         if (newNode != null)
         {
@@ -240,23 +241,37 @@ public class MenuXmlBuilder
         switch (type)
         {
             case "Submenu":
+            {
                 return "menu_folder.png";
+            }
             case "FormReferenceMenuItem":
+            {
                 return "menu_form.png";
+            }
             case "DataConstantReferenceMenuItem":
+            {
                 return "menu_parameter.png";
+            }
             case "WorkflowReferenceMenuItem":
+            {
                 return "menu_workflow.png";
+            }
             case "ReportReferenceMenuItem":
+            {
                 return "menu_report.png";
+            }
             case "DashboardMenuItem":
+            {
                 return "menu_dashboard.png";
+            }
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "type",
                     type,
                     ResourceUtils.GetString("ErrorUnknownMenuType")
                 );
+            }
         }
     }
 
@@ -273,11 +288,16 @@ public class MenuXmlBuilder
             switch (prop.ControlPropertyItem.Name)
             {
                 case "Width":
+                {
                     width = prop.IntValue;
                     break;
+                }
+
                 case "Height":
+                {
                     height = prop.IntValue;
                     break;
+                }
             }
         }
     }

@@ -141,11 +141,13 @@ public class WorkflowSessionStore : SaveableSessionStore
             }
 
             default:
+            {
                 throw new ArgumentOutOfRangeException(
                     "actionId",
                     actionId,
                     Resources.ErrorContextUnknownAction
                 );
+            }
         }
         if (_disposeAfterAction)
         {

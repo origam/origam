@@ -26,7 +26,6 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
-using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory;
 

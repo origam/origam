@@ -124,10 +124,7 @@ public class XmlSchemaCompletion
             {
                 AddElement(items, element.Name, namespacePrefix, element.Annotation);
             }
-            else
-            {
-                // Do not add reference element.
-            }
+            // Do not add reference element.
         }
         return items;
     }
@@ -455,19 +452,23 @@ public class XmlSchemaCompletion
         {
             return GetChildElementCompletion(sequence.Items, prefix);
         }
-        else if (choice != null)
+
+        if (choice != null)
         {
             return GetChildElementCompletion(choice.Items, prefix);
         }
-        else if (complexContent != null)
+
+        if (complexContent != null)
         {
             return GetChildElementCompletion(complexContent, prefix);
         }
-        else if (groupRef != null)
+
+        if (groupRef != null)
         {
             return GetChildElementCompletion(groupRef, prefix);
         }
-        else if (all != null)
+
+        if (all != null)
         {
             return GetChildElementCompletion(all.Items, prefix);
         }
@@ -548,14 +549,12 @@ public class XmlSchemaCompletion
         {
             return GetChildElementCompletion(extension, prefix);
         }
-        else
+        XmlSchemaComplexContentRestriction restriction =
+            complexContent.Content as XmlSchemaComplexContentRestriction;
+
+        if (restriction != null)
         {
-            XmlSchemaComplexContentRestriction restriction =
-                complexContent.Content as XmlSchemaComplexContentRestriction;
-            if (restriction != null)
-            {
-                return GetChildElementCompletion(restriction, prefix);
-            }
+            return GetChildElementCompletion(restriction, prefix);
         }
         return new XmlCompletionItemCollection();
     }
@@ -608,7 +607,8 @@ public class XmlSchemaCompletion
             {
                 return GetChildElementCompletion(sequence.Items, prefix);
             }
-            else if (choice != null)
+
+            if (choice != null)
             {
                 return GetChildElementCompletion(choice.Items, prefix);
             }
@@ -631,11 +631,13 @@ public class XmlSchemaCompletion
             {
                 return GetChildElementCompletion(sequence.Items, prefix);
             }
-            else if (choice != null)
+
+            if (choice != null)
             {
                 return GetChildElementCompletion(choice.Items, prefix);
             }
-            else if (groupRef != null)
+
+            if (groupRef != null)
             {
                 return GetChildElementCompletion(groupRef, prefix);
             }
@@ -861,14 +863,12 @@ public class XmlSchemaCompletion
         {
             return true;
         }
-        else
+
+        foreach (XmlSchemaAttribute prohibitedAttribute in prohibitedAttributes)
         {
-            foreach (XmlSchemaAttribute prohibitedAttribute in prohibitedAttributes)
+            if (prohibitedAttribute.QualifiedName == attribute.QualifiedName)
             {
-                if (prohibitedAttribute.QualifiedName == attribute.QualifiedName)
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -994,11 +994,13 @@ public class XmlSchemaCompletion
         {
             return FindElement(sequence.Items, name);
         }
-        else if (choice != null)
+
+        if (choice != null)
         {
             return FindElement(choice.Items, name);
         }
-        else if (complexContent != null)
+
+        if (complexContent != null)
         {
             XmlSchemaComplexContentExtension extension =
                 complexContent.Content as XmlSchemaComplexContentExtension;
@@ -1008,7 +1010,8 @@ public class XmlSchemaCompletion
             {
                 return FindChildElement(extension, name);
             }
-            else if (restriction != null)
+
+            if (restriction != null)
             {
                 return FindChildElement(restriction, name);
             }
@@ -1045,11 +1048,13 @@ public class XmlSchemaCompletion
                 {
                     return FindElement(sequence.Items, name);
                 }
-                else if (choice != null)
+
+                if (choice != null)
                 {
                     return FindElement(choice.Items, name);
                 }
-                else if (groupRef != null)
+
+                if (groupRef != null)
                 {
                     return FindElement(groupRef, name);
                 }
@@ -1076,7 +1081,8 @@ public class XmlSchemaCompletion
         {
             return FindElement(sequence.Items, name);
         }
-        else if (groupRef != null)
+
+        if (groupRef != null)
         {
             return FindElement(groupRef, name);
         }
@@ -1156,7 +1162,8 @@ public class XmlSchemaCompletion
             {
                 return FindElement(sequence.Items, name);
             }
-            else if (choice != null)
+
+            if (choice != null)
             {
                 return FindElement(choice.Items, name);
             }
@@ -1396,7 +1403,8 @@ public class XmlSchemaCompletion
         {
             return FindAttribute(extension, name);
         }
-        else if (restriction != null)
+
+        if (restriction != null)
         {
             return FindAttribute(restriction, name);
         }

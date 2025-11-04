@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -178,11 +177,8 @@ public class DataStructureRule : AbstractSchemaItem
         {
             return this.Name.CompareTo((obj as DataStructureRule).Name);
         }
-        else
-        {
-            // rulesets are always an top, so rules are lower
-            return 1;
-        }
+        // rulesets are always an top, so rules are lower
+        return 1;
     }
     #endregion
     #region ISchemaItemFactory Members

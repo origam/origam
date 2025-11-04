@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Origam.DA.ObjectPersistence;
@@ -172,10 +171,16 @@ internal class PlainTextFileSearcher : FileSearcher
     public override IEnumerable<Guid> FindObjectsContainingKeyWord()
     {
         if (!FileContainsKeyword())
+        {
             yield break;
+        }
+
         Guid? id = ExternalFilePath.ParseOwnerId(FileInfo.FullName);
         if (!id.HasValue)
+        {
             yield break;
+        }
+
         yield return id.Value;
     }
 

@@ -79,15 +79,25 @@ public class MetaModelUpgradeService : IMetaModelUpgradeService
         switch (mode)
         {
             case MetaModelUpgradeMode.Ignore:
+            {
                 return xmlFileData;
+            }
             case MetaModelUpgradeMode.Upgrade:
+            {
                 metaModelUpgrader = new MetaModelUpgrader();
                 break;
+            }
+
             case MetaModelUpgradeMode.ThrowIfOutdated:
+            {
                 metaModelUpgrader = new DisabledMetaModelUpgrader();
                 break;
+            }
+
             default:
+            {
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, "Not implemented");
+            }
         }
         metaModelAnalyzer = new MetaModelAnalyzer(metaModelUpgrader);
         filesProcessed = 0;

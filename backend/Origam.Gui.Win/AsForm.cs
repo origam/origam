@@ -98,7 +98,10 @@ public class AsForm
     public void panel_RecordIdChanged(object sender, EventArgs e)
     {
         if (this.PanelBindingSuspendedTemporarily)
+        {
             return;
+        }
+
         AsPanel panel = sender as AsPanel;
 
         if (panel.ShowAttachments)
@@ -142,7 +145,10 @@ public class AsForm
     public void PanelAttachementStateHandler(object sender, EventArgs e)
     {
         if (!(sender is AsPanel))
+        {
             return;
+        }
+
         AsPanel panel = sender as AsPanel;
         // panel is setting ShowAttachments to False
         if (
@@ -264,10 +270,8 @@ public class AsForm
             {
                 return false;
             }
-            else
-            {
-                return _canRefresh;
-            }
+
+            return _canRefresh;
         }
         set => _canRefresh = value;
     }
@@ -279,7 +283,9 @@ public class AsForm
         {
             _autoAddNewEntity = value;
             if (value != null)
+            {
                 timer.Start();
+            }
         }
     }
     public object EnteringGrid { get; set; }
@@ -302,10 +308,8 @@ public class AsForm
             {
                 return true;
             }
-            else
-            {
-                return _isReadOnly;
-            }
+
+            return _isReadOnly;
         }
         set => _isReadOnly = value;
     }
@@ -355,7 +359,10 @@ public class AsForm
     {
         this.EndCurrentEdit();
         if (HasErrors(true))
+        {
             return;
+        }
+
         FormGenerator.SaveData();
     }
 
@@ -364,6 +371,7 @@ public class AsForm
         if (FormGenerator.DataSet.HasErrors)
         {
             if (throwException)
+            {
                 throw new Exception(
                     ResourceUtils.GetString(
                         "ErrorsInForm",
@@ -372,12 +380,12 @@ public class AsForm
                             + DatasetTools.GetDatasetErrors(FormGenerator.DataSet)
                     )
                 );
+            }
+
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public Guid DisplayedItemId { get; set; }
@@ -495,10 +503,8 @@ public class AsForm
             {
                 return false;
             }
-            else
-            {
-                return _isDirty;
-            }
+
+            return _isDirty;
         }
         set
         {
@@ -602,19 +608,21 @@ public class AsForm
     {
         Control focused = FindFocused(this);
         if (focused == null)
+        {
             return "No focused control found";
-        else
-            return "Type: "
-                + focused.GetType()
-                + Environment.NewLine
-                + "Name: "
-                + focused.Name
-                + Environment.NewLine
-                + "TabStop: "
-                + focused.TabStop
-                + Environment.NewLine
-                + "TabIndex: "
-                + focused.TabIndex;
+        }
+
+        return "Type: "
+            + focused.GetType()
+            + Environment.NewLine
+            + "Name: "
+            + focused.Name
+            + Environment.NewLine
+            + "TabStop: "
+            + focused.TabStop
+            + Environment.NewLine
+            + "TabIndex: "
+            + focused.TabIndex;
     }
 
     public void EndCurrentEdit()
@@ -661,7 +669,9 @@ public class AsForm
         foreach (AsPanel panel in this.Panels)
         {
             if (panel.DataMember == dataMember)
+            {
                 return panel;
+            }
         }
         return null;
     }
@@ -669,13 +679,18 @@ public class AsForm
     private Control FindFocused(Control parent)
     {
         if (parent.Focused)
+        {
             return parent;
+        }
+
         foreach (Control control in parent.Controls)
         {
             Control focusedControl = FindFocused(control);
 
             if (focusedControl != null)
+            {
                 return FindFocused(control);
+            }
         }
         return null;
     }
@@ -716,7 +731,10 @@ public class AsForm
     private bool SaveData()
     {
         if (FormGenerator == null)
+        {
             return false;
+        }
+
         try
         {
             this.EndCurrentEdit();
@@ -763,6 +781,7 @@ public class AsForm
             switch (result)
             {
                 case DialogResult.Yes:
+                {
                     try
                     {
                         SaveObject();
@@ -778,11 +797,17 @@ public class AsForm
                         return false;
                     }
                     return true;
+                }
+
                 case DialogResult.No:
+                {
                     return true;
+                }
 
                 case DialogResult.Cancel:
+                {
                     return false;
+                }
             }
         }
         return true;
@@ -819,7 +844,10 @@ public class AsForm
     private bool IsManagerBinding(CurrencyManager cm)
     {
         if (cm == null)
+        {
             return false;
+        }
+
         return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
     }
 
@@ -866,7 +894,10 @@ public class AsForm
     public void EndDisable()
     {
         if (_disabledControls == null)
+        {
             throw new InvalidOperationException(ResourceUtils.GetString("ErrorEndDisable"));
+        }
+
         foreach (Control control in _disabledControls)
         {
             control.Enabled = true;
@@ -910,8 +941,8 @@ public class AsForm
                 text,
                 font,
                 new System.Drawing.SolidBrush(OrigamColorScheme.FormLoadingStatusColor),
-                this.Width / 2 - (stringWidth / 2),
-                this.Height / 3 + 64
+                (this.Width / 2) - (stringWidth / 2),
+                (this.Height / 3) + 64
             );
         }
         catch { }

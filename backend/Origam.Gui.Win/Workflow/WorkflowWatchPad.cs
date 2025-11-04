@@ -19,8 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench;

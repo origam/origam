@@ -42,7 +42,10 @@ public class AsTreeView2 : TextBox
     protected override void InitLayout()
     {
         if (this.Disposing)
+        {
             return;
+        }
+
         this.BorderStyle = BorderStyle.Fixed3D;
         this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
         this.AcceptsTab = true;

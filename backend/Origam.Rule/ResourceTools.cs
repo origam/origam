@@ -62,16 +62,15 @@ public class ResourceTools : IResourceTools
         {
             throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
         }
-        else if (ds.Tables["Resource"].Rows.Count > 1)
+
+        if (ds.Tables["Resource"].Rows.Count > 1)
         {
             throw new Exception(
                 ResourceUtils.GetString("ErrorMoreResources", userProfileGetter().Id)
             );
         }
-        else
-        {
-            return ds.Tables["Resource"].Rows[0]["Id"].ToString();
-        }
+
+        return ds.Tables["Resource"].Rows[0]["Id"].ToString();
     }
 
     private DataSet LoadData(DataStructureQuery query)

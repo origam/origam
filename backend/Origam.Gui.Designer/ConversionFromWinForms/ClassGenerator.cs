@@ -19,12 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
 namespace Origam.Gui.Designer;
 
 using System;
@@ -192,21 +186,37 @@ public class ClassGenerator
         switch (type.FullName)
         {
             case "System.String":
+            {
                 return "string";
+            }
             case "System.Int32":
+            {
                 return "int";
+            }
             case "System.Int64":
+            {
                 return "long";
+            }
             case "System.Double":
+            {
                 return "double";
+            }
             case "System.Boolean":
+            {
                 return "bool";
+            }
             case "System.Decimal":
+            {
                 return "decimal";
+            }
             case "System.DateTime":
+            {
                 return "DateTime";
+            }
             default:
+            {
                 return type.Name;
+            }
         }
     }
 }

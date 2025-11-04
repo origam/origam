@@ -163,8 +163,10 @@ public class SchemaItemAncestor
         {
             if (
                 item.DerivedFrom != null
-                && item.DerivedFrom.PrimaryKey.Equals(this.Ancestor.PrimaryKey)
+                && (
+                    item.DerivedFrom.PrimaryKey.Equals(this.Ancestor.PrimaryKey)
                     & item.IsDeleted == false
+                )
             )
             {
                 if (this.Ancestor.UseFolders)
@@ -172,7 +174,10 @@ public class SchemaItemAncestor
                     SchemaItemDescriptionAttribute attr = item.GetType().SchemaItemDescription();
                     string description = attr == null ? item.ItemType : attr.FolderName;
                     if (description == null)
+                    {
                         description = item.ItemType;
+                    }
+
                     if (!folders.Contains(description))
                     {
                         NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
@@ -244,10 +249,8 @@ public class SchemaItemAncestor
         {
             return this.Ancestor.Name;
         }
-        else
-        {
-            return "Unspecified";
-        }
+
+        return "Unspecified";
     }
     #endregion
     #region ICloneable Members
@@ -269,14 +272,13 @@ public class SchemaItemAncestor
         {
             return -1;
         }
-        else if (anc != null)
+
+        if (anc != null)
         {
             return this.NodeText.CompareTo(anc.NodeText);
         }
-        else
-        {
-            throw new InvalidCastException();
-        }
+
+        throw new InvalidCastException();
     }
     #endregion
 }

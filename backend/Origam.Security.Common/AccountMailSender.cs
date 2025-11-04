@@ -198,7 +198,7 @@ public class AccountMailSender
                         ex
                     );
                 }
-                throw ex;
+                throw;
             }
         }
         try
@@ -553,7 +553,9 @@ public class AccountMailSender
             );
         }
         if (File.Exists(candidate))
+        {
             return candidate;
+        }
         // try better
         /*
             password_reset.txt -> password_reset.de.txt
@@ -576,7 +578,9 @@ public class AccountMailSender
                 );
             }
             if (File.Exists(candidate))
+            {
                 return candidate;
+            }
         }
         // fallback
         return filePath;

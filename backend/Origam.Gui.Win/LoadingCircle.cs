@@ -138,7 +138,10 @@ public class LoadingCircle : Control
         get
         {
             if (m_OuterCircleRadius == 0)
+            {
                 m_OuterCircleRadius = DefaultOuterCircleRadius;
+            }
+
             return m_OuterCircleRadius;
         }
         set
@@ -161,7 +164,10 @@ public class LoadingCircle : Control
         get
         {
             if (m_InnerCircleRadius == 0)
+            {
                 m_InnerCircleRadius = DefaultInnerCircleRadius;
+            }
+
             return m_InnerCircleRadius;
         }
         set
@@ -184,7 +190,10 @@ public class LoadingCircle : Control
         get
         {
             if (m_NumberOfSpoke == 0)
+            {
                 m_NumberOfSpoke = DefaultNumberOfSpoke;
+            }
+
             return m_NumberOfSpoke;
         }
         set
@@ -230,7 +239,10 @@ public class LoadingCircle : Control
         get
         {
             if (m_SpokeThickness <= 0)
+            {
                 m_SpokeThickness = DefaultSpokeThickness;
+            }
+
             return m_SpokeThickness;
         }
         set
@@ -255,7 +267,9 @@ public class LoadingCircle : Control
         set
         {
             if (value > 0)
+            {
                 _timerInterval = value;
+            }
         }
     }
 
@@ -277,6 +291,7 @@ public class LoadingCircle : Control
             switch (m_StylePreset)
             {
                 case StylePresets.MacOSX:
+                {
                     SetCircleAppearance(
                         MacOSXNumberOfSpoke,
                         MacOSXSpokeThickness,
@@ -284,7 +299,10 @@ public class LoadingCircle : Control
                         MacOSXOuterCircleRadius
                     );
                     break;
+                }
+
                 case StylePresets.Firefox:
+                {
                     SetCircleAppearance(
                         FireFoxNumberOfSpoke,
                         FireFoxSpokeThickness,
@@ -292,7 +310,10 @@ public class LoadingCircle : Control
                         FireFoxOuterCircleRadius
                     );
                     break;
+                }
+
                 case StylePresets.IE7:
+                {
                     SetCircleAppearance(
                         IE7NumberOfSpoke,
                         IE7SpokeThickness,
@@ -300,7 +321,10 @@ public class LoadingCircle : Control
                         IE7OuterCircleRadius
                     );
                     break;
+                }
+
                 case StylePresets.Custom:
+                {
                     SetCircleAppearance(
                         DefaultNumberOfSpoke,
                         DefaultSpokeThickness,
@@ -308,6 +332,7 @@ public class LoadingCircle : Control
                         DefaultOuterCircleRadius
                     );
                     break;
+                }
             }
         }
     }
@@ -349,9 +374,15 @@ public class LoadingCircle : Control
     void aTimer_Tick(object sender)
     {
         if (!m_IsTimerActive)
+        {
             return;
+        }
+
         if (this.ParentControl.IsDisposed)
+        {
             return;
+        }
+
         m_ProgressValue = ++m_ProgressValue % m_NumberOfSpoke;
 
         using (Graphics g = this.ParentControl.CreateGraphics())
@@ -382,7 +413,10 @@ public class LoadingCircle : Control
     private void MyPaint(Graphics g)
     {
         if (_inPaint)
+        {
             return;
+        }
+
         _inPaint = true;
         try
         {
@@ -472,7 +506,9 @@ public class LoadingCircle : Control
             if (_blnShadeColor)
             {
                 if (intCursor == 0 || intCursor < NumberSpoke - _intNbSpoke)
+                {
                     objColors[intCursor] = _objColor;
+                }
                 else
                 {
                     // Increment alpha channel color
@@ -480,13 +516,17 @@ public class LoadingCircle : Control
                     // Ensure that we don't exceed the maximum alpha
                     // channel value (255)
                     if (PERCENTAGE_OF_DARKEN > byte.MaxValue)
+                    {
                         PERCENTAGE_OF_DARKEN = byte.MaxValue;
+                    }
                     // Determine the spoke forecolor
                     objColors[intCursor] = Darken(_objColor, PERCENTAGE_OF_DARKEN);
                 }
             }
             else
+            {
                 objColors[intCursor] = _objColor;
+            }
         }
         return objColors;
     }
@@ -531,7 +571,10 @@ public class LoadingCircle : Control
         try
         {
             if (this.ParentControl == null)
+            {
                 return;
+            }
+
             using (
                 Pen objPen = new Pen(
                     new SolidBrush(this.ParentControl.BackColor),
@@ -569,8 +612,8 @@ public class LoadingCircle : Control
     {
         double dblAngle = Math.PI * _dblAngle / NumberOfDegreesInHalfCircle;
         return new PointF(
-            _objCircleCenter.X + _intRadius * (float)Math.Cos(dblAngle),
-            _objCircleCenter.Y + _intRadius * (float)Math.Sin(dblAngle)
+            _objCircleCenter.X + (_intRadius * (float)Math.Cos(dblAngle)),
+            _objCircleCenter.Y + (_intRadius * (float)Math.Sin(dblAngle))
         );
     }
 
@@ -592,7 +635,10 @@ public class LoadingCircle : Control
         double[] Angles = new double[_intNumberSpoke];
         double dblAngle = (double)NumberOfDegreesInCircle / _intNumberSpoke;
         for (int shtCounter = 0; shtCounter < _intNumberSpoke; shtCounter++)
+        {
             Angles[shtCounter] = (shtCounter == 0 ? dblAngle : Angles[shtCounter - 1] + dblAngle);
+        }
+
         return Angles;
     }
 
@@ -603,12 +649,14 @@ public class LoadingCircle : Control
     {
         GetControlCenterPoint();
         if (m_IsTimerActive)
+        {
             m_Timer = new System.Threading.Timer(
                 new System.Threading.TimerCallback(aTimer_Tick),
                 null,
                 0,
                 _timerInterval
             );
+        }
         else
         {
             if (m_Timer != null)

@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.TestModel;
@@ -66,12 +65,18 @@ public class TestCaseStep : AbstractSchemaItem
             switch (this.StepType)
             {
                 case TestCaseStepType.InitialCheck:
+                {
                     return "23";
+                }
                 case TestCaseStepType.Step:
+                {
                     return "24";
+                }
 
                 case TestCaseStepType.FinalCheck:
+                {
                     return "25";
+                }
             }
             return "0";
         }

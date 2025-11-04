@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -88,7 +87,10 @@ public class AdaptivePasswordHasher
             {
                 var parts = hashedPassword.Split(PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR);
                 if (parts.Length != 2)
+                {
                     return VerificationResult.Failed;
+                }
+
                 int count = DecodeIterations(parts[0]);
                 if (count <= 0)
                 {
@@ -139,7 +141,10 @@ public class AdaptivePasswordHasher
             // if we go negative, then we wrapped (expected in year ~2044).
             // Int32.Max is best we can do at this point
             if (count < 0)
+            {
                 count = Int32.MaxValue;
+            }
+
             return count;
         }
         return START_COUNT;

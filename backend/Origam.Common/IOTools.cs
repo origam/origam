@@ -30,8 +30,8 @@ public static class IOTools
     public static bool IsSubPathOf(string path, string basePath)
     {
         if (
-            Path.IsPathRooted(path) && Path.IsPathRooted(basePath)
-            || !Path.IsPathRooted(path) && !Path.IsPathRooted(basePath)
+            (Path.IsPathRooted(path) && Path.IsPathRooted(basePath))
+            || (!Path.IsPathRooted(path) && !Path.IsPathRooted(basePath))
         )
         {
             string fullPath = Normalize(path);
@@ -44,11 +44,8 @@ public static class IOTools
             }
             return !baseDirNames.Where((dir, i) => dir != dirNames[i]).Any();
         }
-        else
-        {
-            // The paths cannot be really compared.
-            return false;
-        }
+        // The paths cannot be really compared.
+        return false;
     }
 
     private static string Normalize(string path)

@@ -115,7 +115,10 @@ public class DataStructureColumn : AbstractSchemaItem
         get
         {
             if (_column != null)
+            {
                 return _column;
+            }
+
             try
             {
                 _column = (IDataEntityColumn)
@@ -174,7 +177,8 @@ public class DataStructureColumn : AbstractSchemaItem
             {
                 throw new NotSupportedException();
             }
-            else if (value == null)
+
+            if (value == null)
             {
                 this.DefaultLookupId = Guid.Empty;
             }
@@ -210,10 +214,8 @@ public class DataStructureColumn : AbstractSchemaItem
                 {
                     return true;
                 }
-                else
-                {
-                    return _useLookupValue;
-                }
+
+                return _useLookupValue;
             }
             catch
             {
@@ -247,9 +249,12 @@ public class DataStructureColumn : AbstractSchemaItem
         get
         {
             if (!this.UseLookupValue)
+            {
                 throw new InvalidOperationException(
                     ResourceUtils.GetString("ErrorUseLookupValueTrue", this.Path)
                 );
+            }
+
             IDataLookup lookup = this.FinalLookup;
             foreach (DataStructureColumn column in LookupEntity.Columns)
             {
@@ -271,9 +276,12 @@ public class DataStructureColumn : AbstractSchemaItem
         get
         {
             if (!this.UseLookupValue)
+            {
                 throw new InvalidOperationException(
                     ResourceUtils.GetString("ErrorUseLookupValueTrue", this.Path)
                 );
+            }
+
             IDataLookup lookup = this.FinalLookup;
             foreach (DataStructureColumn column in LookupEntity.Columns)
             {
@@ -322,9 +330,12 @@ public class DataStructureColumn : AbstractSchemaItem
         get
         {
             if (this.FinalLookup == null)
+            {
                 throw new InvalidOperationException(
                     ResourceUtils.GetString("ErrorNoLookupDefined", this.Name, this.Path)
                 );
+            }
+
             return this.FinalLookup.ValueDataStructure.Entities[0] as DataStructureEntity;
         }
     }
@@ -384,28 +395,23 @@ public class DataStructureColumn : AbstractSchemaItem
                 {
                     return "icon_lookup-field.png";
                 }
-                else
+
+                if (this.Field == null)
                 {
-                    if (this.Field == null)
-                    {
-                        return "icon_field.png";
-                    }
-                    else if (this.Field.IsPrimaryKey)
-                    {
-                        return "icon_key.png";
-                    }
-                    else
-                    {
-                        if (this.Field is FieldMappingItem)
-                        {
-                            return "icon_database-field.png";
-                        }
-                        else
-                        {
-                            return "icon_field.png";
-                        }
-                    }
+                    return "icon_field.png";
                 }
+
+                if (this.Field.IsPrimaryKey)
+                {
+                    return "icon_key.png";
+                }
+
+                if (this.Field is FieldMappingItem)
+                {
+                    return "icon_database-field.png";
+                }
+
+                return "icon_field.png";
             }
             catch
             {
@@ -426,7 +432,9 @@ public class DataStructureColumn : AbstractSchemaItem
     )
     {
         if (this.Field != null)
+        {
             base.GetParameterReferences(Field, list);
+        }
     }
 
     //		public override void Persist()
@@ -447,9 +455,15 @@ public class DataStructureColumn : AbstractSchemaItem
     {
         dependencies.Add(this.Field);
         if (this.DefaultLookup != null)
+        {
             dependencies.Add(this.DefaultLookup);
+        }
+
         if (this.Entity != null)
+        {
             dependencies.Add(this.Entity);
+        }
+
         base.GetExtraDependencies(dependencies);
     }
 
@@ -494,11 +508,16 @@ public class DataStructureColumn : AbstractSchemaItem
     public bool IsColumnSorted(DataStructureSortSet sortSet)
     {
         if (sortSet == null)
+        {
             return false;
+        }
+
         foreach (DataStructureSortSetItem item in sortSet.ChildItems)
         {
             if (item.FieldName == this.Name & item.DataStructureEntityId.Equals(this.ParentItemId))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -506,11 +525,16 @@ public class DataStructureColumn : AbstractSchemaItem
     public DataStructureColumnSortDirection SortDirection(DataStructureSortSet sortSet)
     {
         if (sortSet == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorNoSortSet"));
+        }
+
         foreach (DataStructureSortSetItem item in sortSet.ChildItems)
         {
             if (item.FieldName == this.Name & item.DataStructureEntityId.Equals(this.ParentItemId))
+            {
                 return item.SortDirection;
+            }
         }
         throw new ArgumentOutOfRangeException(
             "sortSet",
@@ -522,11 +546,16 @@ public class DataStructureColumn : AbstractSchemaItem
     public int SortOrder(DataStructureSortSet sortSet)
     {
         if (sortSet == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorNoSortSet"));
+        }
+
         foreach (DataStructureSortSetItem item in sortSet.ChildItems)
         {
             if (item.FieldName == this.Name & item.DataStructureEntityId.Equals(this.ParentItemId))
+            {
                 return item.SortOrder;
+            }
         }
         throw new ArgumentOutOfRangeException(
             "sortSet",
@@ -543,10 +572,8 @@ public class DataStructureColumn : AbstractSchemaItem
         {
             return this.Order.CompareTo(compared.Order);
         }
-        else
-        {
-            return base.CompareTo(obj);
-        }
+
+        return base.CompareTo(obj);
     }
     #endregion
 }
@@ -561,9 +588,7 @@ public class ComparerSortByName : IComparer
         {
             return compare.Name.CompareTo(compared.Name);
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }

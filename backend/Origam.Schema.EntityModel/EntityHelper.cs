@@ -324,7 +324,9 @@ public static class EntityHelper
             foreach (EntityFilter filter in DefaultAncestor.EntityFilters)
             {
                 if (filter.Name == "GetId")
+                {
                     return filter;
+                }
             }
             throw new Exception(ResourceUtils.GetString("ErrorDefaultPrimaryKey"));
         }
@@ -528,6 +530,7 @@ public static class EntityHelper
         switch (functionName)
         {
             case "In":
+            {
                 return CreateFilter(
                     field,
                     functionName,
@@ -538,7 +541,9 @@ public static class EntityHelper
                     true,
                     generatedElements
                 );
+            }
             default:
+            {
                 return CreateFilter(
                     field,
                     functionName,
@@ -549,6 +554,7 @@ public static class EntityHelper
                     false,
                     generatedElements
                 );
+            }
         }
     }
 

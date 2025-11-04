@@ -78,7 +78,10 @@ public class DropDownFilterPart : FilterPart
         UnsubscribeEvents();
         this.FilterControls.Clear();
         if (this.DropDown == null)
+        {
             throw new NullReferenceException(ResourceUtils.GetString("ErrorDropDownNotSource"));
+        }
+
         if (this.DropDown.ParameterMappings.Count > 0)
         {
             throw new Exception(ResourceUtils.GetString("ErrorNoParams"));

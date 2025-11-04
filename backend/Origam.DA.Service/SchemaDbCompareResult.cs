@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.Schema;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA;
 

@@ -74,10 +74,8 @@ public class SchemaItemDescriptionAttribute : Attribute
             {
                 return _iconName;
             }
-            else
-            {
-                return _icon;
-            }
+
+            return _icon;
         }
     }
 }
@@ -91,9 +89,11 @@ public static class Extensions
             true
         );
         if (attributes != null && attributes.Length > 0)
+        {
             return attributes[0] as SchemaItemDescriptionAttribute;
-        else
-            return null;
+        }
+
+        return null;
     }
 
     public static object SchemaItemIcon(this Type type)
@@ -103,9 +103,7 @@ public static class Extensions
         {
             return -1;
         }
-        else
-        {
-            return att.Icon;
-        }
+
+        return att.Icon;
     }
 }

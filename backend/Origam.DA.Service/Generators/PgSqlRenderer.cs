@@ -76,20 +76,34 @@ class PgSqlRenderer : SqlRenderer
         switch (datepart)
         {
             case DateTypeSql.Second:
+            {
                 return "second";
+            }
             case DateTypeSql.Minute:
+            {
                 return "minute";
+            }
             case DateTypeSql.Hour:
+            {
                 return "hour";
+            }
             case DateTypeSql.Day:
+            {
                 return "day";
+            }
             case DateTypeSql.Month:
+            {
                 return "month";
+            }
             case DateTypeSql.Year:
+            {
                 return "year";
+            }
 
             default:
+            {
                 throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
+            }
         }
     }
 
@@ -99,18 +113,28 @@ class PgSqlRenderer : SqlRenderer
         switch (datepart)
         {
             case DateTypeSql.Day:
+            {
                 stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) ");
                 break;
+            }
+
             case DateTypeSql.Hour:
+            {
                 stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
                 stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp) ");
                 break;
+            }
+
             case DateTypeSql.Minute:
+            {
                 stringBuilder.Append("(DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
                 stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
                 stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)");
                 break;
+            }
+
             case DateTypeSql.Second:
+            {
                 stringBuilder.Append(
                     "(((DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + "
                 );
@@ -118,8 +142,12 @@ class PgSqlRenderer : SqlRenderer
                 stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)) *60 ");
                 stringBuilder.Append("DATE_PART('second', {0}::timestamp - {1}::timestamp)");
                 break;
+            }
+
             default:
+            {
                 throw new NotSupportedException("Unsuported DateDiffSql " + datepart.ToString());
+            }
         }
 
         return string.Format(stringBuilder.ToString(), enddate, startdate);
@@ -167,13 +195,19 @@ class PgSqlRenderer : SqlRenderer
         switch (latLon)
         {
             case geoLatLonSql.Lat:
+            {
                 return string.Format("st_y({0})", expresion);
+            }
             case geoLatLonSql.Lon:
+            {
                 return string.Format("st_x({0})", expresion);
+            }
             default:
+            {
                 throw new NotSupportedException(
                     "Unsuported in Latitude or Longtitude " + latLon.ToString()
                 );
+            }
         }
     }
 
@@ -203,10 +237,8 @@ class PgSqlRenderer : SqlRenderer
         {
             return "SELECT" + finalQuery;
         }
-        else
-        {
-            return "SELECT" + finalQuery + " LIMIT " + top.ToString();
-        }
+
+        return "SELECT" + finalQuery + " LIMIT " + top.ToString();
     }
 
     public override string ConvertGeoFromTextClause(string argument)

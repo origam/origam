@@ -39,14 +39,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq;
-using Origam.DA.Common;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;

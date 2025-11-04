@@ -108,7 +108,10 @@ public class AsRadioButton : RadioButton, IAsControl
         set
         {
             if (_settingValue)
+            {
                 return;
+            }
+
             _settingValue = true;
             try
             {

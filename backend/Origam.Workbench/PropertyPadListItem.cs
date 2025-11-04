@@ -49,9 +49,7 @@ public class PropertyPadListItem
         {
             return base.ToString();
         }
-        else
-        {
-            return si.Name + " [" + _control.GetType().FullName + "]";
-        }
+
+        return si.Name + " [" + _control.GetType().FullName + "]";
     }
 }

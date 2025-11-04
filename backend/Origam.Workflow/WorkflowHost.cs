@@ -22,14 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
-using System.Xml;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
-using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
