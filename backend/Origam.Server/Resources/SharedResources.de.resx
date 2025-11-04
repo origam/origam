@@ -177,9 +177,6 @@
   <data name="EmailInvalid" xml:space="preserve">
     <value>Ungültige E-Mail-Adresse</value>
   </data>
-  <data name="StringTooShort" xml:space="preserve">
-    <value>{0} muss mindestens {2} Zeichen lang sein.</value>
-  </data>
   <data name="AccountCreated" xml:space="preserve">
     <value>Neues Konto wurde erstellt und aktiviert.</value>
   </data>

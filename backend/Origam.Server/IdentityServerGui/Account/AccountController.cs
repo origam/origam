@@ -388,7 +388,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             );
         }
         AddErrors(result);
-        return View();
+        return View(model);
     }
 
     // GET: /Account/ResetPasswordConfirmation

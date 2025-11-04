@@ -174,9 +174,6 @@
   <data name="EmailInvalid" xml:space="preserve">
     <value>Nesprávný e-mail</value>
   </data>
-  <data name="StringTooShort" xml:space="preserve">
-    <value>{0} musí mít nejméně {2} znaků.</value>
-  </data>
   <data name="AccountCreated" xml:space="preserve">
     <value>Nový účet byl vytvořen a aktivován.</value>
   </data>
