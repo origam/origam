@@ -63,10 +63,6 @@ public class StartUpConfiguration
         configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];
     public string RouteToCustomAssetsFolder =>
         configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];
-    public string IdentityGuiLogoUrl =>
-        configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];
-    public string Html5ClientLogoUrl =>
-        configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
     public bool HasCustomAssets =>
         !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder)
         && !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder);
