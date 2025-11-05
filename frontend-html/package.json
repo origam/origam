@@ -36,7 +36,7 @@
     "@types/string-strip-html": "^5.0.0",
     "@vitejs/plugin-basic-ssl": "^2.1.0",
     "@xstate/inspect": "^0.8.0",
-    "axios": "^1.13.1",
+    "axios": "^1.13.2",
     "bind-decorator": "^1.0.11",
     "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
