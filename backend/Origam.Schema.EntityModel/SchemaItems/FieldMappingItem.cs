@@ -57,6 +57,7 @@ public class FieldMappingItem : AbstractDataEntityColumn, IDatabaseDataTypeMappi
 
     private string _sourceFieldName;
 
+    [PostgresLengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [XmlAttribute("mappedColumnName")]

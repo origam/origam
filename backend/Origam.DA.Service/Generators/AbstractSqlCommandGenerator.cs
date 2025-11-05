@@ -118,8 +118,6 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     public abstract DbDataAdapter CloneAdapter(DbDataAdapter adapter);
     public abstract IDbCommand CloneCommand(IDbCommand command);
     public abstract void DeriveStoredProcedureParameters(IDbCommand command);
-    public abstract string GetIndexName(IDataEntity entity, DataEntityIndex index);
-
     public string True { get; }
     public string False { get; }
 
@@ -862,9 +860,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         ddl.AppendFormat(
             "CREATE {0} INDEX  {1} ON {2} (",
             (index.IsUnique ? "UNIQUE " : ""),
-            sqlRenderer.NameLeftBracket
-                + GetIndexName(entity, index)
-                + sqlRenderer.NameRightBracket,
+            sqlRenderer.NameLeftBracket + index.MappedObjectName + sqlRenderer.NameRightBracket,
             sqlRenderer.NameLeftBracket
                 + (index.ParentItem as TableMappingItem).MappedObjectName
                 + sqlRenderer.NameRightBracket

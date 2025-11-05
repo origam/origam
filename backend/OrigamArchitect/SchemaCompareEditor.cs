@@ -113,7 +113,7 @@ public class SchemaCompareEditor : AbstractViewContent
             cboDeploymentVersion.SelectedItem = currentVersion;
         }
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        Platform[] platforms = settings.GetAllPlatform();
+        Platform[] platforms = settings.GetAllPlatforms();
         cboDatabaseType.Enabled = false;
         platforms?.ForEach(platform =>
         {

@@ -332,7 +332,7 @@ public class ExecuteSchemaItem : AbstractCommand
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             ServiceCommandUpdateScriptActivity scriptActivity =
                 (ServiceCommandUpdateScriptActivity)item;
-            Platform[] platforms = settings.GetAllPlatform();
+            Platform[] platforms = settings.GetAllPlatforms();
             if (
                 !platforms
                     .Where(platform =>

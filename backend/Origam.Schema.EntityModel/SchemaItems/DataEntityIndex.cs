@@ -51,6 +51,20 @@ public class DataEntityIndex : AbstractSchemaItem
     #region Properties
     private bool _isUnique = false;
 
+    public override void OnNameChanged(string originalName)
+    {
+        string ToMappedName(string name)
+        {
+            return ParentItem.Name + "_" + name;
+        }
+
+        bool mappedNameNotEditedByUser = MappedObjectName == ToMappedName(originalName);
+        if (string.IsNullOrEmpty(MappedObjectName) || mappedNameNotEditedByUser)
+        {
+            MappedObjectName = ToMappedName(Name);
+        }
+    }
+
     [DefaultValue(false)]
     [XmlAttribute("unique")]
     public bool IsUnique
@@ -70,6 +84,13 @@ public class DataEntityIndex : AbstractSchemaItem
         get { return _generateDeploymentScript; }
         set { _generateDeploymentScript = value; }
     }
+
+    [PostgresLengthLimit("Be careful, index names must be unique within schema in Postgre SQL.")]
+    [Category("Mapping")]
+    [StringNotEmptyModelElementRule()]
+    [Description("Name of the index in the database.")]
+    [XmlAttribute("mappedObjectName")]
+    public string MappedObjectName { get; set; }
     #endregion
     #region Overriden ISchemaItem Members
     public override bool UseFolders

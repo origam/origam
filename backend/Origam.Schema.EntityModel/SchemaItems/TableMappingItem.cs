@@ -55,6 +55,7 @@ public class TableMappingItem : AbstractDataEntity
     #region Properties
     private string _sourceTableName;
 
+    [PostgresLengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [Description(
