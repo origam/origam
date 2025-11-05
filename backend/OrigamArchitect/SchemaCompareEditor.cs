@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using MoreLinq;
 using Origam;
 using Origam.DA;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -38,7 +39,6 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
-using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect;
 

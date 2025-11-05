@@ -26,8 +26,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Npgsql;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Schema.EntityModel;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Origam.DA.Common;
+using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.DA.ObjectPersistence;
 
@@ -27,11 +27,9 @@ public class PostgresLengthLimitAttribute : AbstractModelElementRuleAttribute
         }
 
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        var databaseTypes = settings.GetAllPlatforms()
-            .Select(x => x.Name)
-            .ToList();
+        var databaseTypes = settings.GetAllPlatforms().Select(x => x.Name).ToList();
 
-        if (!databaseTypes.Contains(nameof(Enums.DatabaseType.PgSql)))
+        if (!databaseTypes.Contains(nameof(DatabaseType.PgSql)))
         {
             return null;
         }

@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
 using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using Origam.Workbench.Services;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Schema.DeploymentModel;
 

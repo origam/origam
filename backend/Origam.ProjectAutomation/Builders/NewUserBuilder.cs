@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.DA;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Security.Common;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation.Builders;
 

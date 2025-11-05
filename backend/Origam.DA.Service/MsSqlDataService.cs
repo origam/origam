@@ -27,10 +27,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service;
 
