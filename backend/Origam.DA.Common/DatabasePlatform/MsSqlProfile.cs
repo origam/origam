@@ -1,6 +1,6 @@
 ﻿namespace Origam.DA.Common.DatabasePlatform;
 
-public class MsSqlProfile : IDatabaseProperties
+public class MsSqlProfile : IDatabaseProfile
 {
     private readonly int maxIdentifierLength = 128;
 

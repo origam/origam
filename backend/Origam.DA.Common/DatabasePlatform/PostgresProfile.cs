@@ -1,6 +1,6 @@
 ﻿namespace Origam.DA.Common.DatabasePlatform;
 
-public class PostgresProfile : IDatabaseProperties
+public class PostgresProfile : IDatabaseProfile
 {
     private readonly int maxIdentifierLength = 63;
 

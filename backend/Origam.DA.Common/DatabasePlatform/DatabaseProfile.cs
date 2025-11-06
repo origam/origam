@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Origam.DA.Common.DatabasePlatform;
 
-public class DatabaseProfile : IDatabaseProperties
+public class DatabaseProfile : IDatabaseProfile
 {
     private static DatabaseProfile instance;
 
@@ -18,9 +18,9 @@ public class DatabaseProfile : IDatabaseProperties
         return instance;
     }
 
-    private readonly List<IDatabaseProperties> includedDatabaseProperties;
+    private readonly List<IDatabaseProfile> includedDatabaseProfiles;
 
-    private static IDatabaseProperties ToDatabaseProperties(Platform platform)
+    private static IDatabaseProfile ToDatabaseProperties(Platform platform)
     {
         return platform.Name switch
         {
@@ -32,7 +32,7 @@ public class DatabaseProfile : IDatabaseProperties
 
     private DatabaseProfile(OrigamSettings settings)
     {
-        includedDatabaseProperties = settings
+        includedDatabaseProfiles = settings
             .GetAllPlatforms()
             .Select(ToDatabaseProperties)
             .ToList();
@@ -40,14 +40,14 @@ public class DatabaseProfile : IDatabaseProperties
 
     public string CheckIdentifierLength(int length)
     {
-        return includedDatabaseProperties
+        return includedDatabaseProfiles
             .Select(x => x.CheckIdentifierLength(length))
             .FirstOrDefault();
     }
 
     public string CheckIndexNameLength(int length)
     {
-        return includedDatabaseProperties
+        return includedDatabaseProfiles
             .Select(x => x.CheckIndexNameLength(length))
             .FirstOrDefault();
     }
