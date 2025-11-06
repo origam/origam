@@ -1,4 +1,6 @@
-﻿namespace Origam.DA.Common.DatabasePlatform;
+﻿using Origam.DA.Common.Interfaces;
+
+namespace Origam.DA.Common.DatabasePlatform;
 
 public class PostgresProfile : IDatabaseProfile
 {

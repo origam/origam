@@ -1,4 +1,4 @@
-﻿namespace Origam.DA.Common.DatabasePlatform;
+﻿namespace Origam.DA.Common.Interfaces;
 
 public interface IDatabaseProfile
 {

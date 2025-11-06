@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.DA.Common.DatabasePlatform;
+using Origam.DA.Common.Interfaces;
+using Origam.Workbench.Services;
 
-namespace Origam.DA.Common.DatabasePlatform;
+namespace Origam.Schema.EntityModel;
 
-public class DatabaseProfile : IDatabaseProfile
+public class DatabaseProfileService : IDatabaseProfile, IWorkbenchService
 {
-    private static DatabaseProfile instance;
-
-    public static DatabaseProfile GetInstance()
-    {
-        if (instance == null)
-        {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            instance = new DatabaseProfile(settings);
-        }
-        return instance;
-    }
-
     private readonly List<IDatabaseProfile> includedDatabaseProfiles;
 
-    private static IDatabaseProfile ToDatabaseProperties(Platform platform)
+    private IDatabaseProfile ToDatabaseProperties(Platform platform)
     {
         return platform.Name switch
         {
@@ -30,12 +21,9 @@ public class DatabaseProfile : IDatabaseProfile
         };
     }
 
-    private DatabaseProfile(OrigamSettings settings)
+    public DatabaseProfileService(OrigamSettings settings)
     {
-        includedDatabaseProfiles = settings
-            .GetAllPlatforms()
-            .Select(ToDatabaseProperties)
-            .ToList();
+        includedDatabaseProfiles = settings.GetAllPlatforms().Select(ToDatabaseProperties).ToList();
     }
 
     public string CheckIdentifierLength(int length)
@@ -51,4 +39,8 @@ public class DatabaseProfile : IDatabaseProfile
             .Select(x => x.CheckIndexNameLength(length))
             .FirstOrDefault();
     }
+
+    public void InitializeService() { }
+
+    public void UnloadService() { }
 }

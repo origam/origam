@@ -1,15 +1,15 @@
 ﻿using System;
-using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.ObjectPersistence;
+using Origam.Workbench.Services;
 
-namespace Origam.DA.Common.ObjectPersistence.Attributes;
+namespace Origam.Schema.EntityModel.Attributes;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
+public class LengthLimitAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(DA.ResourceUtils.GetString("MemberNameRequired"));
     }
 
     public override Exception CheckRule(object instance, string memberName)
@@ -19,14 +19,13 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
             CheckRule(instance);
         }
 
-        var databaseProfile = DatabaseProfile.GetInstance();
-
+        var databaseProfile = ServiceManager.Services.GetService<DatabaseProfileService>();
         if (Reflector.GetValue(instance.GetType(), instance, memberName) is not string value)
         {
             return null;
         }
 
-        string errorMessage = databaseProfile.CheckIndexNameLength(value.Length);
+        string errorMessage = databaseProfile.CheckIdentifierLength(value.Length);
         if (!string.IsNullOrEmpty(errorMessage))
         {
             return new Exception(errorMessage);

@@ -23,8 +23,8 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
-using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Attributes;
 
 namespace Origam.Schema.EntityModel;
 

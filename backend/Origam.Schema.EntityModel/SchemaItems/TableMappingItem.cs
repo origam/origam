@@ -25,8 +25,8 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.Common;
-using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Attributes;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel;
