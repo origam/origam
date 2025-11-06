@@ -9,7 +9,7 @@ public class MsSqlProfile : IDatabaseProfile
     public string CheckIdentifierLength(int length)
     {
         return length > maxIdentifierLength
-            ? $"Length limit exceeded. Max Postgre SQL entity name length is {maxIdentifierLength} characters."
+            ? string.Format(Strings.IdentifierMaxLength, "Postgre SQL", maxIdentifierLength)
             : null;
     }
 

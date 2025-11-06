@@ -1,264 +1,348 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" />
-                            <xsd:attribute name="type" type="xsd:string" />
-                            <xsd:attribute name="mimetype" type="xsd:string" />
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" />
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="ResMimeType">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="Version">
-        <value>1.0.0.0</value>
-    </resheader>
-    <resheader name="Reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="Writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="ErrorAutoIncrement">
-        <value>Value must be non-zero for AutoIncrementStep.</value>
-    </data>
-    <data name="ErrorForeignEntityNotFound">
-        <value>Referenced Foreign Entity not found in the model</value>
-    </data>
-    <data name="ErrorDataConstantUnknownType">
-        <value>This type is not supported by DataConstant Model</value>
-    </data>
-    <data name="ErrorIOrigamEntity2NotFound">
-        <value>Could not find IOrigamEntity2 in the model.</value>
-    </data>
-    <data name="ErrorDefaultPrimaryKey">
-        <value>Could not find default entity primary key.</value>
-    </data>
-    <data name="ErrorEntityModelUnknownType">
-        <value>This type is not supported by EntityModel</value>
-    </data>
-    <data name="ErrorFunctionSchemaUnknownType">
-        <value>This type is not supported by FunctionModel</value>
-    </data>
-    <data name="ErrorTransformationModelUnknownType">
-        <value>This type is not supported by Transformation Model</value>
-    </data>
-    <data name="ErrorConstantNotFound">
-        <value>Constant '{0}' referenced by {1} '{2}' not found in the model.</value>
-    </data>
-    <data name="ErrorLookupNotFound">
-        <value>Lookup '{0}' referenced by {1} '{2}' not found in the model.</value>
-    </data>
-    <data name="ErrorDataStructureUnknownType">
-        <value>This type is not supported by DataStructure</value>
-    </data>
-    <data name="ErrorColumnNotFound">
-        <value>Entity column not found ({0}).</value>
-    </data>
-    <data name="ErrorUseLookupValueTrue">
-        <value>UseLookupValue must be set to True. DataStructureColumn: {0}</value>
-    </data>
-    <data name="ErrorValueDisplayMemberNotFound">
-        <value>ValueDisplayMember column not found in the lookup's datastructure. Lookup: {0}</value>
-    </data>
-    <data name="ErrorNoLookupDefined">
-        <value>Column '{0}' has no lookup defined ({1})</value>
-    </data>
-    <data name="ErrorNoSortSet">
-        <value>sortSet not specified. Cannot get SortDirection.</value>
-    </data>
-    <data name="ErrorNoSortDirection">
-        <value>Column is not sorted. Cannot get SortDirection</value>
-    </data>
-    <data name="ErrorDataStructureDefaultSetUnknownType">
-        <value>This type is not supported by DataStructureDefaultSet</value>
-    </data>
-    <data name="ErrorNotIDataEntity">
-        <value>Entity must be either of type IDataEntity or IAssociation</value>
-    </data>
-    <data name="ErrorDataStructureEntityUnknownType">
-        <value>This type is not supported by DataStructureEntity</value>
-    </data>
-    <data name="ErrorDataStructureFilterSetUnknownType">
-        <value>This type is not supported by DataStructureFilterSet</value>
-    </data>
-    <data name="ErrorDataStructureRuleUnknownType">
-        <value>This type is not supported by DataStructureRule</value>
-    </data>
-    <data name="ErrorDataStructureRuleSetUnknownType">
-        <value>This type is not supported by DataStructureRuleSet</value>
-    </data>
-    <data name="ErrorDataStructureSortSetUnknownType">
-        <value>This type is not supported by DataStructureSortSet</value>
-    </data>
-    <data name="ErrorParentNotIDataEntity">
-        <value>Parent DataStructureEntity must be null, IDataEntity or IAssociation</value>
-    </data>
-    <data name="ErrorDataStructureEntityFieldConverterUnknownType">
-        <value>Type not supported by DataStructureEntityFieldConverter</value>
-    </data>
-    <data name="Yes">
-        <value>Ano</value>
-    </data>
-    <data name="No">
-        <value>Ne</value>
-    </data>
-    <data name="ErrorGlobalTransaction0">
-        <value>Není možné měnit parametry aplikace, pokud je spuštěna globální transakce.</value>
-    </data>
-    <data name="ErrorGlobalTransaction1">
-        <value>Dokončete globální transakci a poté změňte parametry.</value>
-    </data>
-    <data name="ErrorParameterSaveFailed">
-        <value>Uložení parametru se nezdařilo.{0}</value>
-    </data>
-    <data name="ParameterTitle">
-        <value>Parametr</value>
-    </data>
-    <data name="DoYouWishSave">
-        <value>Přejete si uložit {0}?</value>
-    </data>
-    <data name="SaveTitle">
-        <value>Uložení</value>
-    </data>
-    <data name="NameLabel">
-        <value>Name</value>
-    </data>
-    <data name="XsdLabel">
-        <value>Xsd:</value>
-    </data>
-    <data name="ErrorXsdDataStructureOnly">
-        <value>Only XsdDataStructure objects are supported.</value>
-    </data>
-    <data name="ErrorCompareAbstractEntitySecurityRule">
-        <value>Cannot compare this object with AbstractEntitySecurityRule</value>
-    </data>
-    <data name="ErrorNotDateTime">
-        <value>DateValue must be of type DateTime or null.</value>
-    </data>
-    <data name="ErrorConvertToGuid">
-        <value>Cannot convert to Guid</value>
-    </data>
-    <data name="ErrorDataConstantNotFound">
-        <value>Data constant not found. Reference: {0}</value>
-    </data>
-    <data name="ErrorDataEntityIndexUnknownType">
-        <value>This type is not supported by DataEntityIndex</value>
-    </data>
-    <data name="ErrorDataEntityUnknownType">
-        <value>This type is not supported by DataEntity</value>
-    </data>
-    <data name="ErrorCompareEntityConditionalFormatting">
-        <value>Cannot compare this object with EntityConditionalFormatting</value>
-    </data>
-    <data name="ErrorEntityFilterUnknownType">
-        <value>This type is not supported by EntityFilter</value>
-    </data>
-    <data name="ErrorSelfJoinSameBase">
-        <value>For self joins related entity must be same as base entity.</value>
-    </data>
-    <data name="ErrorRelatedEntity">
-        <value>Related entity referenced by relation '{0}' in entity '{1}'</value>
-    </data>
-    <data name="ErrorTableMappingItemUnknownType">
-        <value>This type is not supported by TableMappingItem</value>
-    </data>
-    <data name="ErrorFunctionUnknownType">
-        <value>This type is not supported by Function</value>
-    </data>
-    <data name="ErrorSetProperty">
-        <value>Cannot set this property</value>
-    </data>
-    <data name="ErrorLikeFunctionNotFound">
-        <value>Like function not found. Cannot create filter.</value>
-    </data>
-    <data name="ErrorBetweenFunctionNotFound">
-        <value>Between function not found. Cannot create filter.</value>
-    </data>
-    <data name="ButtonCancel">
-        <value>&amp;Cancel</value>
-    </data>
-    <data name="ButtonOK">
-        <value>&amp;OK</value>
-    </data>
-    <data name="ForeignEntityLabel">
-        <value>Foreign Entity:</value>
-    </data>
-    <data name="FKFieldNameLabel">
-        <value>FK Field Name:</value>
-    </data>
-    <data name="ForeignFieldLabel">
-        <value>Foreign Field:</value>
-    </data>
-    <data name="AllowNullsLabel">
-        <value>Allow Nulls</value>
-    </data>
-    <data name="LookupLabel">
-        <value>Lookup:</value>
-    </data>
-    <data name="CaptionLabel">
-        <value>Caption:</value>
-    </data>
-    <data name="CreateForeignKeyWiz">
-        <value>Create Foreign Key Wizard</value>
-    </data>
-    <data name="SelectForeignEntity">
-        <value>Select the foreign entity.</value>
-    </data>
-    <data name="ForeignKeyWiz">
-        <value>Foreign Key Wizard</value>
-    </data>
-    <data name="SelectForeignField">
-        <value>Select the foreign field.</value>
-    </data>
-    <data name="EnterKeyName">
-        <value>Enter foreign key name.</value>
-    </data>
-    <data name="ChildEntityNameLabel">
-        <value>Child Entity Name:</value>
-    </data>
-    <data name="MasterEntityLabel">
-        <value>Master Entity:</value>
-    </data>
-    <data name="OptionalForeignEntity">
-        <value>Optional Foreign entity. Foreign key will be created in the new entity.</value>
-    </data>
-    <data name="CreateNNEntityWiz">
-        <value>Create N:N Entity Wizard</value>
-    </data>
-    <data name="EnterAllInfo">
-        <value>Please, enter all information.</value>
-    </data>
-    <data name="ChildEntityWiz">
-        <value>Child Entity Wizard</value>
-    </data>
-    <data name="ErrorStringNotFound">
-        <value>Řetězec '{0}' odkazovaný z {1} '{2}' nebyl v modelu nalezen.</value>
-    </data>
-    <data name="ErrorCompareDataStructureSortSetItem">
-        <value>Není možno porovnat jiné objekty než objekty typu DataStructureSortSetItem.</value>
-    </data>
-    <data name="ErrorDynamicParameter" xml:space="preserve">
-        <value>IsDynamic parameter musí být nastaven na True</value>
-    </data>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorAutoIncrement" xml:space="preserve">
+    <value>Value must be non-zero for AutoIncrementStep.</value>
+  </data>
+  <data name="ErrorForeignEntityNotFound" xml:space="preserve">
+    <value>Referenced Foreign Entity not found in the model</value>
+  </data>
+  <data name="ErrorDataConstantUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataConstant Model</value>
+  </data>
+  <data name="ErrorDataStructureUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructure</value>
+  </data>
+  <data name="ErrorIOrigamEntity2NotFound" xml:space="preserve">
+    <value>Could not find IOrigamEntity2 in the model.</value>
+  </data>
+  <data name="ErrorDefaultPrimaryKey" xml:space="preserve">
+    <value>Could not find default entity primary key.</value>
+  </data>
+  <data name="ErrorEntityModelUnknownType" xml:space="preserve">
+    <value>This type is not supported by EntityModel</value>
+  </data>
+  <data name="ErrorFunctionSchemaUnknownType" xml:space="preserve">
+    <value>This type is not supported by FunctionModel</value>
+  </data>
+  <data name="ErrorTransformationModelUnknownType" xml:space="preserve">
+    <value>This type is not supported by Transformation Model</value>
+  </data>
+  <data name="ErrorConstantNotFound" xml:space="preserve">
+    <value>Constant '{0}' referenced by {1} '{2}' not found in the model.</value>
+  </data>
+  <data name="ErrorLookupNotFound" xml:space="preserve">
+    <value>Lookup '{0}' referenced by {1} '{2}' not found in the model.</value>
+  </data>
+  <data name="ErrorColumnNotFound" xml:space="preserve">
+    <value>Entity column not found ({0}).</value>
+  </data>
+  <data name="ErrorUseLookupValueTrue" xml:space="preserve">
+    <value>UseLookupValue must be set to True. DataStructureColumn: {0}</value>
+  </data>
+  <data name="ErrorValueDisplayMemberNotFound" xml:space="preserve">
+    <value>ValueDisplayMember column not found in the lookup's datastructure. Lookup: {0}</value>
+  </data>
+  <data name="ErrorNoLookupDefined" xml:space="preserve">
+    <value>Column '{0}' has no lookup defined ({1})</value>
+  </data>
+  <data name="ErrorNoSortSet" xml:space="preserve">
+    <value>sortSet not specified. Cannot get SortDirection.</value>
+  </data>
+  <data name="ErrorNoSortDirection" xml:space="preserve">
+    <value>Column is not sorted. Cannot get SortDirection</value>
+  </data>
+  <data name="ErrorDataStructureDefaultSetUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureDefaultSet</value>
+  </data>
+  <data name="ErrorNotIDataEntity" xml:space="preserve">
+    <value>Entity must be either of type IDataEntity or IAssociation</value>
+  </data>
+  <data name="ErrorDataStructureEntityUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureEntity</value>
+  </data>
+  <data name="ErrorDataStructureFilterSetUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureFilterSet</value>
+  </data>
+  <data name="ErrorDataStructureRuleUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureRule</value>
+  </data>
+  <data name="ErrorDataStructureRuleSetUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureRuleSet</value>
+  </data>
+  <data name="ErrorDataStructureSortSetUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataStructureSortSet</value>
+  </data>
+  <data name="ErrorParentNotIDataEntity" xml:space="preserve">
+    <value>Parent DataStructureEntity must be null, IDataEntity or IAssociation</value>
+  </data>
+  <data name="ErrorDataStructureEntityFieldConverterUnknownType" xml:space="preserve">
+    <value>Type not supported by DataStructureEntityFieldConverter</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ano</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Ne</value>
+  </data>
+  <data name="ErrorGlobalTransaction0" xml:space="preserve">
+    <value>Není možné měnit parametry aplikace, pokud je spuštěna globální transakce.</value>
+  </data>
+  <data name="ErrorGlobalTransaction1" xml:space="preserve">
+    <value>Dokončete globální transakci a poté změňte parametry.</value>
+  </data>
+  <data name="ErrorParameterSaveFailed" xml:space="preserve">
+    <value>Uložení parametru se nezdařilo.{0}</value>
+  </data>
+  <data name="ParameterTitle" xml:space="preserve">
+    <value>Parametr</value>
+  </data>
+  <data name="DoYouWishSave" xml:space="preserve">
+    <value>Přejete si uložit {0}?</value>
+  </data>
+  <data name="SaveTitle" xml:space="preserve">
+    <value>Uložení</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="XsdLabel" xml:space="preserve">
+    <value>Xsd:</value>
+  </data>
+  <data name="ErrorXsdDataStructureOnly" xml:space="preserve">
+    <value>Only XsdDataStructure objects are supported.</value>
+  </data>
+  <data name="ErrorCompareAbstractEntitySecurityRule" xml:space="preserve">
+    <value>Cannot compare this object with AbstractEntitySecurityRule</value>
+  </data>
+  <data name="ErrorNotDateTime" xml:space="preserve">
+    <value>DateValue must be of type DateTime or null.</value>
+  </data>
+  <data name="ErrorConvertToGuid" xml:space="preserve">
+    <value>Cannot convert to Guid</value>
+  </data>
+  <data name="ErrorDataConstantNotFound" xml:space="preserve">
+    <value>Data constant not found. Reference: {0}</value>
+  </data>
+  <data name="ErrorDataEntityIndexUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataEntityIndex</value>
+  </data>
+  <data name="ErrorDataEntityUnknownType" xml:space="preserve">
+    <value>This type is not supported by DataEntity</value>
+  </data>
+  <data name="ErrorCompareEntityConditionalFormatting" xml:space="preserve">
+    <value>Cannot compare this object with EntityConditionalFormatting</value>
+  </data>
+  <data name="ErrorEntityFilterUnknownType" xml:space="preserve">
+    <value>This type is not supported by EntityFilter</value>
+  </data>
+  <data name="ErrorSelfJoinSameBase" xml:space="preserve">
+    <value>For self joins related entity must be same as base entity.</value>
+  </data>
+  <data name="ErrorRelatedEntity" xml:space="preserve">
+    <value>Related entity referenced by relation '{0}' in entity '{1}'</value>
+  </data>
+  <data name="ErrorTableMappingItemUnknownType" xml:space="preserve">
+    <value>This type is not supported by TableMappingItem</value>
+  </data>
+  <data name="ErrorFunctionUnknownType" xml:space="preserve">
+    <value>This type is not supported by Function</value>
+  </data>
+  <data name="ErrorSetProperty" xml:space="preserve">
+    <value>Cannot set this property</value>
+  </data>
+  <data name="ErrorLikeFunctionNotFound" xml:space="preserve">
+    <value>Like function not found. Cannot create filter.</value>
+  </data>
+  <data name="ErrorBetweenFunctionNotFound" xml:space="preserve">
+    <value>Between function not found. Cannot create filter.</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>&amp;Cancel</value>
+  </data>
+  <data name="ButtonOK" xml:space="preserve">
+    <value>&amp;OK</value>
+  </data>
+  <data name="ForeignEntityLabel" xml:space="preserve">
+    <value>Foreign Entity:</value>
+  </data>
+  <data name="FKFieldNameLabel" xml:space="preserve">
+    <value>FK Field Name:</value>
+  </data>
+  <data name="ForeignFieldLabel" xml:space="preserve">
+    <value>Foreign Field:</value>
+  </data>
+  <data name="AllowNullsLabel" xml:space="preserve">
+    <value>Allow Nulls</value>
+  </data>
+  <data name="LookupLabel" xml:space="preserve">
+    <value>Lookup:</value>
+  </data>
+  <data name="CaptionLabel" xml:space="preserve">
+    <value>Caption:</value>
+  </data>
+  <data name="CreateForeignKeyWiz" xml:space="preserve">
+    <value>Create Foreign Key Wizard</value>
+  </data>
+  <data name="SelectForeignEntity" xml:space="preserve">
+    <value>Select the foreign entity.</value>
+  </data>
+  <data name="ForeignKeyWiz" xml:space="preserve">
+    <value>Foreign Key Wizard</value>
+  </data>
+  <data name="SelectForeignField" xml:space="preserve">
+    <value>Select the foreign field.</value>
+  </data>
+  <data name="EnterKeyName" xml:space="preserve">
+    <value>Enter foreign key name.</value>
+  </data>
+  <data name="ChildEntityNameLabel" xml:space="preserve">
+    <value>Child Entity Name:</value>
+  </data>
+  <data name="MasterEntityLabel" xml:space="preserve">
+    <value>Master Entity:</value>
+  </data>
+  <data name="OptionalForeignEntity" xml:space="preserve">
+    <value>Optional Foreign entity. Foreign key will be created in the new entity.</value>
+  </data>
+  <data name="CreateNNEntityWiz" xml:space="preserve">
+    <value>Create N:N Entity Wizard</value>
+  </data>
+  <data name="EnterAllInfo" xml:space="preserve">
+    <value>Please, enter all information.</value>
+  </data>
+  <data name="ChildEntityWiz" xml:space="preserve">
+    <value>Child Entity Wizard</value>
+  </data>
+  <data name="ErrorStringNotFound" xml:space="preserve">
+    <value>Řetězec '{0}' odkazovaný z {1} '{2}' nebyl v modelu nalezen.</value>
+  </data>
+  <data name="ErrorCompareDataStructureSortSetItem" xml:space="preserve">
+    <value>Není možno porovnat jiné objekty než objekty typu DataStructureSortSetItem.</value>
+  </data>
+  <data name="ErrorDynamicParameter" xml:space="preserve">
+    <value>IsDynamic parameter musí být nastaven na True</value>
+  </data>
+  <data name="MemberNameRequired" xml:space="preserve">
+    <value>Název vlastnosti nesmí být prázdný.</value>
+  </data>
+  <data name="UnknownPlatform" xml:space="preserve">
+    <value>Neznámá platforma: {0}</value>
+  </data>
 </root>

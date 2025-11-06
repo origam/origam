@@ -88,9 +88,15 @@
 		<value>Invalid number of keys in the primary key of this object</value>
 	</data>
 	<data name="MemberNameRequired">
-		<value>Member name required for checking this rule.</value>
+		<value>Member name cannot be empty.</value>
 	</data>
 	<data name="CantBeNull">
 		<value>{0} cannot be empty.</value>
+	</data>
+	<data name="IdentifierMaxLength" xml:space="preserve">
+		<value>Length limit exceeded. Max {0} entity name length is {1} characters.</value>
+	</data>
+	<data name="PostgresIndexNameLength" xml:space="preserve">
+		<value>Be careful, index names must be unique within schema in Postgre SQL.</value>
 	</data>
 </root>

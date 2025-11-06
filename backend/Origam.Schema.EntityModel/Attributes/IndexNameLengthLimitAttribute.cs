@@ -9,7 +9,7 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
 {
     public override Exception CheckRule(object instance)
     {
-        return new NotSupportedException(DA.ResourceUtils.GetString("MemberNameRequired"));
+        return new NotSupportedException(Strings.MemberNameRequired);
     }
 
     public override Exception CheckRule(object instance, string memberName)

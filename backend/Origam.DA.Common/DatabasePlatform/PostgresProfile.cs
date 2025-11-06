@@ -9,7 +9,7 @@ public class PostgresProfile : IDatabaseProfile
     public string CheckIdentifierLength(int length)
     {
         return length > maxIdentifierLength
-            ? $"Length limit exceeded. Max SQL Server entity name length is {maxIdentifierLength} characters."
+            ? string.Format(Strings.IdentifierMaxLength, "SQL Server", maxIdentifierLength)
             : null;
     }
 
@@ -19,8 +19,8 @@ public class PostgresProfile : IDatabaseProfile
         if (lengthErrorMessage != null)
         {
             return lengthErrorMessage
-                + " "
-                + "Be careful, index names must be unique within schema in Postgre SQL.";
+                   + " "
+                   + string.Format(Strings.PostgresIndexNameLength);
         }
         return null;
     }
