@@ -594,8 +594,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                 {
                     foreach (DataEntityIndex index in t.EntityIndexes)
                     {
-                        string key =
-                            t.MappedObjectName + "." + t.MappedObjectName + "_" + index.Name;
+                        string key = index.MappedObjectName;
                         schemaIndexListAll.Add(key, index);
                         if (index.GenerateDeploymentScript)
                         {

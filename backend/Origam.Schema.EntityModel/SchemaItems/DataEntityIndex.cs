@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
@@ -85,7 +86,7 @@ public class DataEntityIndex : AbstractSchemaItem
         set { _generateDeploymentScript = value; }
     }
 
-    [PostgresLengthLimit("Be careful, index names must be unique within schema in Postgre SQL.")]
+    [IndexNameLengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [Description("Name of the index in the database.")]

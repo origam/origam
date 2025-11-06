@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.EntityModel;
 using Origam.DA.ObjectPersistence;
 
@@ -57,7 +58,7 @@ public class FieldMappingItem : AbstractDataEntityColumn, IDatabaseDataTypeMappi
 
     private string _sourceFieldName;
 
-    [PostgresLengthLimit]
+    [LengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [XmlAttribute("mappedColumnName")]

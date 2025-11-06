@@ -25,6 +25,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -55,7 +56,7 @@ public class TableMappingItem : AbstractDataEntity
     #region Properties
     private string _sourceTableName;
 
-    [PostgresLengthLimit]
+    [LengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [Description(
