@@ -18,9 +18,7 @@ public class PostgresProfile : IDatabaseProfile
         string lengthErrorMessage = CheckIdentifierLength(length);
         if (lengthErrorMessage != null)
         {
-            return lengthErrorMessage
-                   + " "
-                   + string.Format(Strings.PostgresIndexNameLength);
+            return lengthErrorMessage + " " + string.Format(Strings.PostgresIndexNameLength);
         }
         return null;
     }

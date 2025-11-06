@@ -17,7 +17,7 @@ public class DatabaseProfileService : IDatabaseProfile, IWorkbenchService
         {
             nameof(DatabaseType.PgSql) => new PostgresProfile(),
             nameof(DatabaseType.MsSql) => new MsSqlProfile(),
-            _ => throw new Exception(string.Format(Strings.UnknownPlatform, platform))
+            _ => throw new Exception(string.Format(Strings.UnknownPlatform, platform)),
         };
     }
 
