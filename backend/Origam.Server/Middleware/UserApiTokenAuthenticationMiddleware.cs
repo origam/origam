@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features.Authentication;
@@ -76,7 +75,7 @@ public class UserApiTokenAuthenticationMiddleware
         // Using the IdentityServerConstants.LocalApi.AuthenticationScheme here
         // causes the authentication to use the IdentityServerAccessToken.
         var result = await context.AuthenticateAsync(
-            IdentityServerConstants.LocalApi.AuthenticationScheme
+            // IdentityServerConstants.LocalApi.AuthenticationScheme
         );
         if (result?.Principal != null)
         {

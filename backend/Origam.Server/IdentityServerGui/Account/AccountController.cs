@@ -7,12 +7,6 @@ using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using IdentityModel;
-using IdentityServer4.Events;
-using IdentityServer4.Extensions;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -38,14 +32,14 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 {
     private readonly UserManager<IOrigamUser> _userManager;
     private readonly SignInManager<IOrigamUser> _signInManager;
-    private readonly IIdentityServerInteractionService _interaction;
-    private readonly IClientStore _clientStore;
+    // private readonly IIdentityServerInteractionService _interaction;
+    // private readonly IClientStore _clientStore;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
-    private readonly IEventService _events;
+    // private readonly IEventService _events;
     private readonly IMailService _mailService;
     private readonly UserConfig _userConfig;
     private readonly IStringLocalizer<SharedResources> _localizer;
-    private readonly IPersistedGrantStore _persistedGrantStore;
+    // private readonly IPersistedGrantStore _persistedGrantStore;
     private readonly SessionObjects _sessionObjects;
     private readonly ILogger<UserManager<IOrigamUser>> _logger;
     private readonly IdentityGuiConfig _configOptions;
@@ -58,14 +52,14 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     public AccountController(
         UserManager<IOrigamUser> userManager,
         SignInManager<IOrigamUser> signInManager,
-        IIdentityServerInteractionService interaction,
-        IClientStore clientStore,
+        // IIdentityServerInteractionService interaction,
+        // IClientStore clientStore,
         IAuthenticationSchemeProvider schemeProvider,
-        IEventService events,
+        // IEventService events,
         IMailService mailService,
         IOptions<UserConfig> userConfig,
         IStringLocalizer<SharedResources> localizer,
-        IPersistedGrantStore persistedGrantStore,
+        // IPersistedGrantStore persistedGrantStore,
         SessionObjects sessionObjects,
         IOptions<RequestLocalizationOptions> requestLocalizationOptions,
         IOptions<IdentityGuiConfig> configOptions,
@@ -74,13 +68,13 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _interaction = interaction;
-        _clientStore = clientStore;
+        // _interaction = interaction;
+        // _clientStore = clientStore;
         _schemeProvider = schemeProvider;
-        _events = events;
+        // _events = events;
         _mailService = mailService;
         _localizer = localizer;
-        _persistedGrantStore = persistedGrantStore;
+        // _persistedGrantStore = persistedGrantStore;
         _sessionObjects = sessionObjects;
         _logger = logger;
         _configOptions = configOptions.Value;

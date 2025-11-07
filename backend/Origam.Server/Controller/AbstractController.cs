@@ -25,7 +25,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +47,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
 
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[Authorize(Policy = "LocalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public abstract class AbstractController : ControllerBase

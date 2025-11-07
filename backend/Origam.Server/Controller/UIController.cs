@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +32,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Server.Controller;
 
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[Authorize(Policy = "LocalApi")]
 public class UIController : AbstractController
 {
     private readonly IPersistenceService persistenceService;

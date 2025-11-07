@@ -25,23 +25,23 @@ namespace Origam.Server.IdentityServerGui.Account;
 public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
 {
     private readonly UserManager<IOrigamUser> userManager;
-    private readonly IIdentityServerInteractionService interaction;
+    // private readonly IIdentityServerInteractionService interaction;
     private readonly ILogger<ExternalController> logger;
-    private readonly IEventService events;
+    // private readonly IEventService events;
     private readonly IdentityServerConfig identityServerConfig;
     private readonly IAuthenticationPostProcessor authenticationPostProcessor;
 
     public ExternalController(
-        IIdentityServerInteractionService interaction,
-        IEventService events,
+        // IIdentityServerInteractionService interaction,
+        // IEventService events,
         ILogger<ExternalController> logger,
         UserManager<IOrigamUser> userManager,
         IdentityServerConfig identityServerConfig,
         IAuthenticationPostProcessor authenticationPostProcessor
     )
     {
-        this.interaction = interaction;
-        this.events = events;
+        // this.interaction = interaction;
+        // this.events = events;
         this.logger = logger;
         this.userManager = userManager;
         this.identityServerConfig = identityServerConfig;
