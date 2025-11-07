@@ -133,9 +133,16 @@ public static class IApplicationBuilderExtensions
             apiBranch =>
             {
                 apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
-                apiBranch.UseMvc(routes =>
+                apiBranch.UseRouting();
+                apiBranch.UseAuthentication();
+                apiBranch.UseAuthorization();
+
+                apiBranch.UseEndpoints(endpoints =>
                 {
-                    routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+                    endpoints.MapControllerRoute(
+                        name: "workQueue",
+                        pattern: "{controller=WorkQueue}/{action=Index}/{id?}"
+                    );
                 });
             }
         );

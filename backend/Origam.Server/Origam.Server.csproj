@@ -50,20 +50,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
-    <Folder Include="IdentityServerGui\Browser" />
     <Folder Include="logs" />
     <Folder Include="Model\Data\" />
-    <Folder Include="Views\Browser" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.21" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"
+      Version="8.0.21"
+    />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+      Version="8.0.21"
+    />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.21" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.8.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
@@ -78,7 +86,10 @@
     <PackageReference Include="UAParser" Version="3.1.47" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.8" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount"
+      Version="8.0.8"
+    />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
   </ItemGroup>

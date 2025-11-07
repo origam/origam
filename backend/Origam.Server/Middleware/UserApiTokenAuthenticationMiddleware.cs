@@ -75,7 +75,7 @@ public class UserApiTokenAuthenticationMiddleware
         // Using the IdentityServerConstants.LocalApi.AuthenticationScheme here
         // causes the authentication to use the IdentityServerAccessToken.
         var result = await context.AuthenticateAsync(
-            // IdentityServerConstants.LocalApi.AuthenticationScheme
+        // IdentityServerConstants.LocalApi.AuthenticationScheme
         );
         if (result?.Principal != null)
         {

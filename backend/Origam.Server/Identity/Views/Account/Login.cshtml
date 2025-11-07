@@ -1,0 +1,39 @@
+﻿@model Origam.Server.Identity.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Sign in";
+    var returnUrl = (string)ViewData["ReturnUrl"];
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Login" method="post" asp-route-returnUrl="@returnUrl">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="RememberMe" class="form-check-input" />
+        <label asp-for="RememberMe" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sign in</button>
+</form>
+
+<hr />
+
+<form asp-action="ExternalLogin" method="post" asp-route-returnUrl="@returnUrl">
+    <button type="submit" name="provider" value="AzureAdOIDC" class="btn btn-outline-secondary">
+        Sign in with Microsoft
+    </button>
+    <!-- Add Google, etc., as more buttons with appropriate provider values -->
+</form>

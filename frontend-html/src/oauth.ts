@@ -19,17 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { UserManager } from "oidc-client-ts";
 
-const [windowLocation] = window.location.href.split("#");
+const windowLocation = window.location.origin;
 
 const config = {
   authority: `${windowLocation}`,
   client_id: "origamWebClient",
-  redirect_uri: `${windowLocation}#origamClientCallback/`,
+  redirect_uri: `${windowLocation}/origamClientCallback/`,
   response_type: "code",
-  scope: "openid IdentityServerApi offline_access",
+  scope: "openid offline_access",
   post_logout_redirect_uri: `${windowLocation}`,
   automaticSilentRenew: true,
-  silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`,
+  silent_redirect_uri: `${windowLocation}/origamClientCallbackRenew/`,
 };
 
 export const userManager = new UserManager(config);
@@ -40,13 +40,12 @@ export async function ensureLogin() {
     sessionStorage.setItem("origamAuthTokenOverride", authOvr);
     return {access_token: authOvr};
   }
-  if (window.location.hash.startsWith("#origamClientCallback/")) {
+  if (window.location.hash.startsWith("/origamClientCallback/")) {
     try {
       const user = await userManager.signinRedirectCallback(
-        window.location.hash.replace("#origamClientCallback/", "")
+        window.location.hash.replace("origamClientCallback/", "")
       );
-      const [urlpart] = window.location.href.split("#");
-      window.history.replaceState(null, "", urlpart);
+      window.history.replaceState(null, "", "/");
       if (!user.access_token) {
         await userManager.signinRedirect();
       } else {
