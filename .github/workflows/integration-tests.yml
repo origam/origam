@@ -66,6 +66,7 @@ jobs:
           name: htmlfrontendbuild
           path: "frontend-html/dist"
           retention-days: 1
+          if-no-files-found: error
   build-chat:
     name: build-chat
     runs-on: windows-2025
@@ -223,6 +224,7 @@ jobs:
           name: htmlserverbuild
           path: "backend/Origam.Server/bin/Release/net8.0/publish"
           retention-days: 1
+          if-no-files-found: error
 
       - name: Upload workflow integration tests artifact
         uses: actions/upload-artifact@v4
@@ -230,6 +232,7 @@ jobs:
           name: workflowbuild
           path: "backend/Origam.WorkflowTests/bin/Release/net8.0"
           retention-days: 1
+          if-no-files-found: error
 
   integration-tests-mssql:
     needs: [ build-frontend,build-server ]
