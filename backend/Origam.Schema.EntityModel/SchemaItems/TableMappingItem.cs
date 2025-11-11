@@ -56,6 +56,20 @@ public class TableMappingItem : AbstractDataEntity
     #region Properties
     private string _sourceTableName;
 
+    [IndexNameLengthLimit]
+    [Category("(Schema Item)")]
+    [StringNotEmptyModelElementRule]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [XmlAttribute("name")]
+    [Description(
+        "Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations)."
+    )]
+    public override string Name
+    {
+        get => base.Name;
+        set => base.Name = value;
+    }
+
     [LengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]

@@ -33,10 +33,10 @@ public class DatabaseProfileService : IDatabaseProfile, IWorkbenchService
             .FirstOrDefault();
     }
 
-    public string CheckIndexNameLength(int length)
+    public string CheckIndexNameLength(string indexName)
     {
         return includedDatabaseProfiles
-            .Select(x => x.CheckIndexNameLength(length))
+            .Select(x => x.CheckIndexNameLength(indexName))
             .FirstOrDefault();
     }
 

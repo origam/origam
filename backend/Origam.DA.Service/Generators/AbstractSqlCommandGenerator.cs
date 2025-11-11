@@ -860,7 +860,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         ddl.AppendFormat(
             "CREATE {0} INDEX  {1} ON {2} (",
             (index.IsUnique ? "UNIQUE " : ""),
-            sqlRenderer.NameLeftBracket + index.MappedObjectName + sqlRenderer.NameRightBracket,
+            sqlRenderer.NameLeftBracket
+                + index.MakeDatabaseName(entity)
+                + sqlRenderer.NameRightBracket,
             sqlRenderer.NameLeftBracket
                 + (index.ParentItem as TableMappingItem).MappedObjectName
                 + sqlRenderer.NameRightBracket

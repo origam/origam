@@ -141,6 +141,15 @@ namespace Origam.DA.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Index name in database is composed of entity and index name. The final index name {0} exceeds max {1} identifier length of {2} characters..
+        /// </summary>
+        internal static string IndexMaxLength {
+            get {
+                return ResourceManager.GetString("IndexMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid number of keys in the primary key of this object.
         /// </summary>
         internal static string InvalidNumberKeys {

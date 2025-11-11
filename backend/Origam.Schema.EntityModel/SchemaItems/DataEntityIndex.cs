@@ -24,7 +24,6 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
-using Origam.Schema.EntityModel.Attributes;
 
 namespace Origam.Schema.EntityModel;
 
@@ -52,20 +51,6 @@ public class DataEntityIndex : AbstractSchemaItem
     #region Properties
     private bool _isUnique = false;
 
-    public override void OnNameChanged(string originalName)
-    {
-        string ToMappedName(string name)
-        {
-            return ParentItem.Name + "_" + name;
-        }
-
-        bool mappedNameNotEditedByUser = MappedObjectName == ToMappedName(originalName);
-        if (string.IsNullOrEmpty(MappedObjectName) || mappedNameNotEditedByUser)
-        {
-            MappedObjectName = ToMappedName(Name);
-        }
-    }
-
     [DefaultValue(false)]
     [XmlAttribute("unique")]
     public bool IsUnique
@@ -86,12 +71,6 @@ public class DataEntityIndex : AbstractSchemaItem
         set { _generateDeploymentScript = value; }
     }
 
-    [IndexNameLengthLimit]
-    [Category("Mapping")]
-    [StringNotEmptyModelElementRule()]
-    [Description("Name of the index in the database.")]
-    [XmlAttribute("mappedObjectName")]
-    public string MappedObjectName { get; set; }
     #endregion
     #region Overriden ISchemaItem Members
     public override bool UseFolders
@@ -123,4 +102,9 @@ public class DataEntityIndex : AbstractSchemaItem
         );
     }
     #endregion
+
+    public string MakeDatabaseName(IDataEntity table)
+    {
+        return ((table as TableMappingItem)?.MappedObjectName ?? table.Name) + "_" + Name;
+    }
 }

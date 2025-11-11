@@ -153,4 +153,7 @@
   <data name="MemberNameRequired" xml:space="preserve">
     <value>Der Eigenschaftsname darf nicht leer sein.</value>
   </data>
+  <data name="IndexMaxLength" xml:space="preserve">
+    <value>Der Indexname in der Datenbank setzt sich aus dem Entitätsnamen und dem Indexnamen zusammen. Der endgültige Indexname {0} überschreitet die maximale {1}-Bezeichnerlänge von {2} Zeichen.</value>
+  </data>
 </root>

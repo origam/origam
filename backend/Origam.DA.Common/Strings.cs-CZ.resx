@@ -99,4 +99,7 @@
 	<data name="PostgresIndexNameLength" xml:space="preserve">
 		<value>Dbejte prosím na to, že názvy indexů musí být v rámci schématu v Postgre SQL jedinečné.</value>
 	</data>
+	<data name="IndexMaxLength" xml:space="preserve">
+		<value>Název indexu v databázi se skládá z názvu entity a názvu indexu. Výsledný název indexu {0} překračuje maximální délku identifikátoru {1} o {2} znaků.</value>
+	</data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -14,19 +15,33 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
 
     public override Exception CheckRule(object instance, string memberName)
     {
+        if (instance is not TableMappingItem table)
+        {
+            throw new Exception(
+                nameof(IndexNameLengthLimitAttribute) + " can only be applied to TableMappingItem"
+            );
+        }
+
         if (string.IsNullOrEmpty(memberName))
         {
             CheckRule(instance);
         }
 
         var databaseProfile = ServiceManager.Services.GetService<DatabaseProfileService>();
-        if (Reflector.GetValue(instance.GetType(), instance, memberName) is not string value)
-        {
-            return null;
-        }
 
-        string errorMessage = databaseProfile.CheckIndexNameLength(value.Length);
-        if (!string.IsNullOrEmpty(errorMessage))
+        var indices = table
+            .Ancestors.Cast<SchemaItemAncestor>()
+            .SelectMany(x =>
+                x.SchemaItem.ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst)
+            );
+
+        string errorMessage = "";
+        foreach (DataEntityIndex entityIndex in indices)
+        {
+            string finalIndexName = entityIndex.MakeDatabaseName(table);
+            errorMessage += databaseProfile.CheckIndexNameLength(finalIndexName);
+        }
+        if (!string.IsNullOrWhiteSpace(errorMessage))
         {
             return new Exception(errorMessage);
         }

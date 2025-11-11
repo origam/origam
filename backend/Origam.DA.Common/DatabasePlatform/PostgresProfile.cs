@@ -13,13 +13,12 @@ public class PostgresProfile : IDatabaseProfile
             : null;
     }
 
-    public string CheckIndexNameLength(int length)
+    public string CheckIndexNameLength(string indexName)
     {
-        string lengthErrorMessage = CheckIdentifierLength(length);
-        if (lengthErrorMessage != null)
-        {
-            return lengthErrorMessage + " " + string.Format(Strings.PostgresIndexNameLength);
-        }
-        return null;
+        return indexName.Length > maxIdentifierLength
+            ? string.Format(Strings.IndexMaxLength, indexName, "Postgre SQL", maxIdentifierLength)
+                + " "
+                + string.Format(Strings.PostgresIndexNameLength)
+            : null;
     }
 }

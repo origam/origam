@@ -13,8 +13,10 @@ public class MsSqlProfile : IDatabaseProfile
             : null;
     }
 
-    public string CheckIndexNameLength(int length)
+    public string CheckIndexNameLength(string indexName)
     {
-        return CheckIdentifierLength(length);
+        return indexName.Length > maxIdentifierLength
+            ? string.Format(Strings.IndexMaxLength, indexName, "Postgre SQL", maxIdentifierLength)
+            : null;
     }
 }
