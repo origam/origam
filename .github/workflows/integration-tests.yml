@@ -156,7 +156,7 @@ jobs:
         shell: bash
 
   build-architect-server:
-    name: build-server
+    name: build-architect-server
     runs-on: windows-2025
     permissions:
       actions: read
