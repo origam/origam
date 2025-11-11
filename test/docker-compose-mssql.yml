@@ -1,1 +1,46 @@
-services:  database-server:    build:      context: .      dockerfile: Dockerfile.mssql    environment:      - POSTGRES_PASSWORD=${SA_PASSWORD}      - USER_PASSWORD=${OrigamSettings_DbPassword}      - SA_PASSWORD=${SA_PASSWORD}      - ACCEPT_EULA=Y      - BUILDKIT_PROGRESS=tty    ports:      - "5433:5432"      - "5434:1433"    profiles:      - test    tty: false    stdin_open: false    healthcheck:      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '1Secure*Password1' -Q \"SELECT 1\""]      interval: 5s      timeout: 5s      retries: 5  test-server:    build:      context: .      dockerfile: Dockerfile.tests      args:        - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}    environment:        - gitPullOnStart=${gitPullOnStart}        - OrigamSettings_SetOnStart=${OrigamSettings_SetOnStart}        - OrigamSettings_SchemaExtensionGuid=${OrigamSettings_SchemaExtensionGuid}        - OrigamSettings_DbHost=${OrigamSettings_DbHost}        - OrigamSettings_DbPort=${OrigamSettings_DbPort}        - OrigamSettings_DbUsername=${OrigamSettings_DbUsername}        - OrigamSettings_DbPassword=${OrigamSettings_DbPassword}        - DatabaseName=${DatabaseName}        - OrigamSettings_TitleName=${OrigamSettings_TitleName}        - DatabaseType=${DatabaseType}        - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}        - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}        - EnableChat=${EnableChat}        - BUILDKIT_PROGRESS=tty        - CI=true    ports:      - "8080:8080"    depends_on:      database-server:        condition: service_healthy    profiles:      - test    tty: true    volumes:      - ./output/:/home/origam/output/    links:     - database-server
+services:
+  database-server-mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mssql
+    environment:
+      - POSTGRES_PASSWORD=${SA_PASSWORD}
+      - USER_PASSWORD=${OrigamSettings__DatabasePassword}
+      - SA_PASSWORD=${SA_PASSWORD}
+      - ACCEPT_EULA=Y
+      - BUILDKIT_PROGRESS=tty
+    ports:
+      - "1435:1433"
+    profiles:
+      - test
+    tty: false
+    stdin_open: false
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '1Secure*Password1' -Q \"SELECT 1\""]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server-mssql:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+      args:
+        - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
+    env_file:
+      - envFileMsSql.env
+    environment:
+      - BUILDKIT_PROGRESS=tty
+      - CI=true
+    ports:
+      - "443:443"
+    depends_on:
+      database-server-mssql:
+        condition: service_healthy
+    profiles:
+      - test
+    tty: true
+    volumes:
+      - ./output/:/home/origam/output/
+    links:
+     - database-server-mssql

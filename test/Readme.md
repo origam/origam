@@ -17,12 +17,12 @@ This is closer to the github action and can help you debug problems that cannot 
 An advantage over just running the github action is that you can inspect files in the docker container after the tests
 have finished. 
 1. Copy the folder `origam/model-tests` to `origam/test` and rename it to `model` 
-2. Create folder `origam/tests/HTML5`
-3. Build server and copy contents of the bin folder `origam\backend\Origam.Server\bin\Debug\net8.0` to `origam/tests/HTML5`
-4. Build frontend application and copy contents of the folder `origam\frontend-html\dist` to `origam\test\HTML5\clients\origam`
+2. Create folder `origam/tests/server_bin`
+3. Build server and copy contents of the bin folder `origam\backend\Origam.Server\bin\Debug\net8.0` to `origam/tests/server_bin`
+4. Build frontend application and copy contents of the folder `origam\frontend-html\dist` to `origam\test\server_bin\clients\origam`
 5. Open cmd in `origam/tests` and run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up`
     this will build the images, run the containers and the tests in `test_server` container
-6. After the tests are finished you can get screenshots if any were taken with this command `docker cp test_server_1:/home/origam/HTML5/screenshots c://SomeFolder`
+6. After the tests are finished you can get screenshots if any were taken with this command `docker cp test_server_1:/home/origam/server_bin/screenshots c://SomeFolder`
 7. To rebuild the images first run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test down` 
    then open the docker GUI and delete the images `test_server` and `test_databasesql`.
    After that you can run `docker-compose --env-file envFileMsSql.env -f "docker-compose-mssql.yml" --profile test up`.

@@ -2518,12 +2518,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.9.2":
-  version: 24.9.2
-  resolution: "@types/node@npm:24.9.2"
+"@types/node@npm:^24.10.0":
+  version: 24.10.0
+  resolution: "@types/node@npm:24.10.0"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10c0/7905d43f65cee72ef475fe76316e10bbf6ac5d08a7f0f6c38f2b6285d7ca3009e8fcafc8f8a1d2bf3f55889c9c278dbb203a9081fd0cf2d6d62161703924c6fa
+  checksum: 10c0/f82ed7194e16f5590ef7afdc20c6d09068c76d50278b485ede8f0c5749683536e3064ffa8def8db76915196afb3724b854aa5723c64d6571b890b14492943b46
   languageName: node
   linkType: hard
 
@@ -2789,14 +2789,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.13.1":
-  version: 1.13.1
-  resolution: "axios@npm:1.13.1"
+"axios@npm:^1.13.2":
+  version: 1.13.2
+  resolution: "axios@npm:1.13.2"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/de9c3c6de43d3ee1146d3afe78645f19450cac6a5d7235bef8b8e8eeb705c2e47e2d231dea99cecaec4dae1897c521118ca9413b9d474063c719c4d94c5b9adc
+  checksum: 10c0/e8a42e37e5568ae9c7a28c348db0e8cf3e43d06fcbef73f0048669edfe4f71219664da7b6cc991b0c0f01c28a48f037c515263cb79be1f1ae8ff034cd813867b
   languageName: node
   linkType: hard
 
@@ -3006,7 +3006,7 @@ __metadata:
     "@types/faker": "npm:^6.6.11"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.20"
-    "@types/node": "npm:^24.9.2"
+    "@types/node": "npm:^24.10.0"
     "@types/react": "npm:^17.0.2"
     "@types/react-dom": "npm:^17.0.2"
     "@types/react-draft-wysiwyg": "npm:^1.13.8"
@@ -3019,7 +3019,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@xstate/inspect": "npm:^0.8.0"
     animated-scroll-to: "npm:^2.3.2"
-    axios: "npm:^1.13.1"
+    axios: "npm:^1.13.2"
     classnames: "npm:^2.5.1"
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
@@ -3045,7 +3045,7 @@ __metadata:
     stream-browserify: "npm:^3.0.0"
     typescript: "npm:^5.9.3"
     uuid: "npm:^13.0.0"
-    vite: "npm:^7.1.12"
+    vite: "npm:^7.2.2"
     vite-tsconfig-paths: "npm:^5.1.4"
     web-vitals: "npm:^5.1.0"
     ws: "npm:^8.18.0"
@@ -6079,9 +6079,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^7.1.12":
-  version: 7.1.12
-  resolution: "vite@npm:7.1.12"
+"vite@npm:^7.2.2":
+  version: 7.2.2
+  resolution: "vite@npm:7.2.2"
   dependencies:
     esbuild: "npm:^0.25.0"
     fdir: "npm:^6.5.0"
@@ -6130,7 +6130,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/cef4d4b4a84e663e09b858964af36e916892ac8540068df42a05ced637ceeae5e9ef71c72d54f3cfc1f3c254af16634230e221b6e2327c2a66d794bb49203262
+  checksum: 10c0/9c76ee441f8dbec645ddaecc28d1f9cf35670ffa91cff69af7b1d5081545331603f0b1289d437b2fa8dc43cdc77b4d96b5bd9c9aed66310f490cb1a06f9c814c
   languageName: node
   linkType: hard
 
