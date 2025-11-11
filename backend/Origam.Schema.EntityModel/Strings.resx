@@ -351,4 +351,7 @@
   <data name="UnknownPlatform" xml:space="preserve">
     <value>Unknown platform: {0}</value>
   </data>
+  <data name="IndexNameTargetMisMatch" xml:space="preserve">
+    <value>{0}  can only be applied to TableMappingItem.</value>
+  </data>
 </root>

@@ -645,6 +645,15 @@ namespace Origam.Schema.EntityModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}  can only be applied to TableMappingItem..
+        /// </summary>
+        internal static string IndexNameTargetMisMatch {
+            get {
+                return ResourceManager.GetString("IndexNameTargetMisMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lookup:.
         /// </summary>
         internal static string LookupLabel {

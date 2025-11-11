@@ -123,4 +123,7 @@
   <data name="UnknownPlatform" xml:space="preserve">
     <value>Unbekannte Plattform: {0}</value>
   </data>
+  <data name="IndexNameTargetMisMatch" xml:space="preserve">
+    <value>{0} kann nur auf TableMappingItem angewendet werden.</value>
+  </data>
 </root>

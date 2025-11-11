@@ -39,7 +39,10 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
         if (instance is not TableMappingItem table)
         {
             throw new Exception(
-                nameof(IndexNameLengthLimitAttribute) + " can only be applied to TableMappingItem"
+                string.Format(
+                    Strings.IndexNameTargetMisMatch,
+                    nameof(IndexNameLengthLimitAttribute)
+                )
             );
         }
 

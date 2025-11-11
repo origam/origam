@@ -345,4 +345,7 @@
   <data name="UnknownPlatform" xml:space="preserve">
     <value>Neznámá platforma: {0}</value>
   </data>
+  <data name="IndexNameTargetMisMatch" xml:space="preserve">
+    <value>{0} lze použít pouze na TableMappingItem.</value>
+  </data>
 </root>
