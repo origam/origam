@@ -38,7 +38,7 @@ else
 }
 switch ($env:ContainerMode) {
     "server" {
-        Set-Location /home/origam/HTML5
+        Set-Location /home/origam/server_bin
         # Generate the HTTPS SSL certificate
         Write-Host "Generating HTTPS SSL certificate..."
         & './../CreateSslCertificate.ps1'
@@ -108,9 +108,9 @@ switch ($env:ContainerMode) {
         & dotnet Origam.Server.dll
     }
     "scheduler" {
-        Set-Location /home/origam/Scheduler
+        Set-Location /home/origam/scheduler_bin
         Initialize-OrigamSettingsConfig
-        Write-Host "Starting Origam.Scheduler"
+        Write-Host "Starting Origam.scheduler_bin"
         & dotnet OrigamScheduler.dll
         exit 1
     }
