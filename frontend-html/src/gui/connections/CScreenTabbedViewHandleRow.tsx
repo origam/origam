@@ -61,13 +61,23 @@ export class CScreenTabbedViewHandleRow extends React.Component {
 @observer
 class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
 
+  getIsLoading(){
+    const {item} = this.props;
+    if(item.screenUrl){
+      return false;
+    }
+    const content = getOpenedScreen(item).content;
+    if(!content){
+      return false;
+    }
+    const isEagerLoading =  !isLazyLoading(item)
+    return isEagerLoading && (content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!))
+  }
+
   render() {
     const {item} = this.props;
-    const content = getOpenedScreen(item).content;
-    const isEagerLoading =  !isLazyLoading(item)
-
-    const isLoading= isEagerLoading && (content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!))
     const label = getLabel(item);
+    const isLoading = this.getIsLoading()
     return (
       <TabbedViewHandle
         title={label}
