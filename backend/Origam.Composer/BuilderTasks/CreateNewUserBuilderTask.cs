@@ -23,6 +23,7 @@ using BrockAllen.IdentityReboot;
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.DA;
+using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.Composer.BuilderTasks;
 
@@ -57,7 +58,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
 
     private string BuildConnectionStringArchitect(Project project)
     {
-        if (project.DatabaseType == DA.Common.Enums.DatabaseType.MsSql)
+        if (project.DatabaseType == DatabaseType.MsSql)
         {
             return DataService(project.DatabaseType)
                 .BuildConnectionString(
@@ -71,7 +72,7 @@ public class CreateNewUserBuilderTask : AbstractDatabaseBuilderTask, ICreateNewU
                 );
         }
 
-        if (project.DatabaseType == DA.Common.Enums.DatabaseType.PgSql)
+        if (project.DatabaseType == DatabaseType.PgSql)
         {
             return DataService(project.DatabaseType)
                 .BuildConnectionString(
