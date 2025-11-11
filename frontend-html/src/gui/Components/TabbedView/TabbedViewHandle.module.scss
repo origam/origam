@@ -92,3 +92,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
   }
 }
+
+.spinner {
+  cursor: not-allowed;
+  margin: 0 0 0 0.5em;
+  width: 16px;
+  height: 16px;
+  border: 3px solid transparent;
+  border-top-color: var(--foreground1);
+  border-right-color: var(--foreground1);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    border-color: var(--foreground1);
+  }
+}
