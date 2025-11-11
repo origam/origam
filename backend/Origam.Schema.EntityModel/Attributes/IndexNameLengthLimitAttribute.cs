@@ -33,7 +33,8 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
             .Ancestors.Cast<SchemaItemAncestor>()
             .SelectMany(x =>
                 x.SchemaItem.ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst)
-            );
+            )
+            .Where(index => index.GenerateDeploymentScript);
 
         string errorMessage = "";
         foreach (DataEntityIndex entityIndex in indices)
