@@ -79,7 +79,8 @@ WORKDIR /home/origam/Setup/
 RUN chmod +x cleanUpEnvironment.sh \
 && chmod +x cleanUpEnvironmentRoot.sh
 WORKDIR /home/origam/server_bin
-RUN mkdir logs \
+RUN rm -rf logs \
+&& mkdir logs \
 && chmod +x configureServer.sh \
 && chmod +x fill_origam_settings_config.sh \
 && chmod +x entrypoint.sh
