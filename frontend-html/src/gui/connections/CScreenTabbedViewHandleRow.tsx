@@ -31,6 +31,9 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import React from "react";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 @observer
 export class CScreenTabbedViewHandleRow extends React.Component {
@@ -58,9 +61,23 @@ export class CScreenTabbedViewHandleRow extends React.Component {
 @observer
 class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
 
+  getIsLoading(){
+    const {item} = this.props;
+    if(item.screenUrl){
+      return false;
+    }
+    const content = getOpenedScreen(item).content;
+    if(!content){
+      return false;
+    }
+    const isEagerLoading =  !isLazyLoading(item)
+    return isEagerLoading && (content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!))
+  }
+
   render() {
     const {item} = this.props;
     const label = getLabel(item);
+    const isLoading = this.getIsLoading()
     return (
       <TabbedViewHandle
         title={label}
@@ -71,6 +88,7 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
         onClick={(event: any) => onScreenTabHandleClick(item)(event)}
         onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
         onCloseMouseDown={(event: any) => onScreenTabCloseMouseDown(item)(event)}
+        isInitializing={isLoading}
       >
         {label}
       </TabbedViewHandle>

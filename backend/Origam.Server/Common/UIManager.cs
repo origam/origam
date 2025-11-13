@@ -154,6 +154,7 @@ public class UIManager
             {
                 getFormXmlTask = Task.Run(() => ss.PrepareFormXml());
             }
+            RegisterSession(request, addChildSession, parentSession, ss);
             ss.Init();
             ss.IsExclusive = isExclusive;
         }
@@ -165,6 +166,7 @@ public class UIManager
             {
                 ss.ExecuteAction(SessionStore.ACTION_REFRESH);
             }
+            RegisterSession(request, addChildSession, parentSession, ss);
         }
         // finalize
         FormSessionStore fss = ss as FormSessionStore;
@@ -225,6 +227,16 @@ public class UIManager
         result.Tooltip = ToolTipTools.NextTooltip(ss.HelpTooltipFormId);
         result.FormDefinitionId = ss.FormId.ToString();
         result.Title = ss.Title;
+        return result;
+    }
+
+    private void RegisterSession(
+        UIRequest request,
+        bool addChildSession,
+        SessionStore parentSession,
+        SessionStore ss
+    )
+    {
         if (request.RegisterSession)
         {
             sessionManager.RegisterSession(ss);
@@ -255,7 +267,6 @@ public class UIManager
         {
             OrigamEventTools.RecordOpenScreen(ss);
         }
-        return result;
     }
 
     private static void SetFormXml(UIResult result, UserProfile profile, SessionStore ss)

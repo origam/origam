@@ -21,7 +21,9 @@ import React from "react";
 import S from "gui/Components/TabbedView/TabbedViewHandle.module.scss";
 import cx from "classnames";
 import { Icon } from "gui/Components/Icon/Icon";
+import { observer } from "mobx-react";
 
+@observer
 export class TabbedViewHandle extends React.Component<{
   title?: string;
   id?: string;
@@ -31,7 +33,27 @@ export class TabbedViewHandle extends React.Component<{
   onClick?(event: any): void;
   onCloseClick?(event: any): void;
   onCloseMouseDown?(event: any): void;
+  isInitializing?: boolean;
 }> {
+
+  renderCloseButton(){
+    if(!this.props.hasCloseBtn){
+      return null;
+    }
+    if(this.props.isInitializing){
+      return <div className={S.spinner}></div>;
+    }
+    return(
+      <a
+        className={S.closeBtn + " tabHandle"}
+        onClick={this.props.onCloseClick}
+        onMouseDown={this.props.onCloseMouseDown}
+      >
+        <Icon src="./icons/close.svg" tooltip={""}/>
+      </a>
+    )
+  }
+
   render() {
     return (
       <div
@@ -41,15 +63,7 @@ export class TabbedViewHandle extends React.Component<{
         id={this.props.id}
       >
         <div className={S.label}>{this.props.children}</div>
-        {this.props.hasCloseBtn && (
-          <a
-            className={S.closeBtn + " tabHandle"}
-            onClick={this.props.onCloseClick}
-            onMouseDown={this.props.onCloseMouseDown}
-          >
-            <Icon src="./icons/close.svg" tooltip={""}/>
-          </a>
-        )}
+        {this.renderCloseButton()}
       </div>
     );
   }
