@@ -52,20 +52,16 @@ public class IndexNameLengthLimitAttribute : AbstractModelElementRuleAttribute
         }
 
         var databaseProfile = ServiceManager.Services.GetService<DatabaseProfileService>();
+        var indices = table.ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst);
+        string errorMessage = string.Join(
+            "\n",
+            indices.Select(entityIndex =>
+            {
+                string finalIndexName = entityIndex.MakeDatabaseName(table);
+                return databaseProfile.CheckIndexNameLength(finalIndexName);
+            })
+        );
 
-        var indices = table
-            .Ancestors.Cast<SchemaItemAncestor>()
-            .SelectMany(x =>
-                x.SchemaItem.ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst)
-            )
-            .Where(index => index.GenerateDeploymentScript);
-
-        string errorMessage = "";
-        foreach (DataEntityIndex entityIndex in indices)
-        {
-            string finalIndexName = entityIndex.MakeDatabaseName(table);
-            errorMessage += databaseProfile.CheckIndexNameLength(finalIndexName);
-        }
         if (!string.IsNullOrWhiteSpace(errorMessage))
         {
             return new Exception(errorMessage);

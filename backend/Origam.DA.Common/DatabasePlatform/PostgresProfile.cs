@@ -30,16 +30,24 @@ public class PostgresProfile : IDatabaseProfile
     public string CheckIdentifierLength(int length)
     {
         return length > maxIdentifierLength
-            ? string.Format(Strings.IdentifierMaxLength, "SQL Server", maxIdentifierLength)
+            ? string.Format(Strings.IdentifierMaxLength, "Postgre SQL", maxIdentifierLength)
             : null;
     }
 
     public string CheckIndexNameLength(string indexName)
     {
-        return indexName.Length > maxIdentifierLength
-            ? string.Format(Strings.IndexMaxLength, indexName, "Postgre SQL", maxIdentifierLength)
-                + " "
-                + string.Format(Strings.PostgresIndexNameLength)
-            : null;
+        if (indexName.Length > maxIdentifierLength)
+        {
+            return string.Format(
+                       Strings.IndexMaxLength,
+                       $"\n{indexName}\n",
+                       "Postgre SQL",
+                       maxIdentifierLength
+                   )
+                   + "\n"
+                   + string.Format(Strings.PostgresIndexNameLength);
+        }
+
+        return null;
     }
 }

@@ -30,14 +30,19 @@ public class MsSqlProfile : IDatabaseProfile
     public string CheckIdentifierLength(int length)
     {
         return length > maxIdentifierLength
-            ? string.Format(Strings.IdentifierMaxLength, "Postgre SQL", maxIdentifierLength)
+            ? string.Format(Strings.IdentifierMaxLength, "SQL Server", maxIdentifierLength)
             : null;
     }
 
     public string CheckIndexNameLength(string indexName)
     {
         return indexName.Length > maxIdentifierLength
-            ? string.Format(Strings.IndexMaxLength, indexName, "Postgre SQL", maxIdentifierLength)
+            ? string.Format(
+                Strings.IndexMaxLength,
+                $"\n{indexName}\n",
+                "SQL Server",
+                maxIdentifierLength
+            )
             : null;
     }
 }
