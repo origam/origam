@@ -44,15 +44,8 @@ public class Program
         var deploymentService = ServiceManager.Services.GetService<IDeploymentService>();
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var documentation = ServiceManager.Services.GetService<IDocumentationService>();
+
         var builder = WebApplication.CreateBuilder(args);
-        builder
-            .Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
         builder.Services.AddSingleton(deploymentService);
         builder.Services.AddSingleton<TreeNodeFactory>();
         builder.Services.AddSingleton<EditorPropertyFactory>();
@@ -67,6 +60,15 @@ public class Program
         builder.Services.AddSingleton(persistence);
         builder.Services.AddSingleton(documentation);
         builder.Services.AddSingleton<DocumentationHelperService>();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder
+            .Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
         builder.Services.AddLogging(logging =>
         {
             logging.AddLog4Net();
