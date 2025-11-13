@@ -39,13 +39,13 @@ public class PostgresProfile : IDatabaseProfile
         if (indexName.Length > maxIdentifierLength)
         {
             return string.Format(
-                       Strings.IndexMaxLength,
-                       $"\n{indexName}\n",
-                       "Postgre SQL",
-                       maxIdentifierLength
-                   )
-                   + "\n"
-                   + string.Format(Strings.PostgresIndexNameLength);
+                    Strings.IndexMaxLength,
+                    $"\n{indexName}\n",
+                    "Postgre SQL",
+                    maxIdentifierLength
+                )
+                + "\n"
+                + string.Format(Strings.PostgresIndexNameLength);
         }
 
         return null;
