@@ -28,9 +28,6 @@ using Origam.Extensions;
 
 namespace Origam;
 
-/// <summary>
-/// Summary description for ResourceMonitor.
-/// </summary>
 public class ResourceMonitor
 {
     private static ConcurrentDictionary<string, OrderedDictionary> _transactionStore = new();
