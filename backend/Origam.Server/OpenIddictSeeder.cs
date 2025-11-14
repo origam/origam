@@ -19,6 +19,7 @@ public static class OpenIddictSeeder
         // Keep the old scope name for minimum churn (IdentityServerConstants.LocalApi.ScopeName == "local_api")
         // Or rename everywhere to "internal_api" if you already switched your policy.
         const string localApiScope = "local_api";
+        const string internalApiScope = "internal_api";
 
         if (await scopes.FindByNameAsync(localApiScope) is null)
         {
@@ -26,7 +27,17 @@ public static class OpenIddictSeeder
                 new OpenIddictScopeDescriptor
                 {
                     Name = localApiScope,
-                    Resources = { "origam-local" }, // optional: if you enforce audience
+                    Resources = { "origam-local" },
+                }
+            );
+        }
+        if (await scopes.FindByNameAsync(internalApiScope) is null)
+        {
+            await scopes.CreateAsync(
+                new OpenIddictScopeDescriptor
+                {
+                    Name = internalApiScope,
+                    Resources = { "internal_api" },
                 }
             );
         }
@@ -46,6 +57,7 @@ public static class OpenIddictSeeder
                         Permissions.GrantTypes.RefreshToken,
                         Permissions.Prefixes.Scope + "offline_access",
                         Permissions.Prefixes.Scope + localApiScope,
+                        Permissions.Prefixes.Scope + internalApiScope,
                     },
                 }
             );
@@ -88,6 +100,7 @@ public static class OpenIddictSeeder
                     Permissions.Scopes.Profile,
                     Permissions.Prefixes.Scope + "offline_access",
                     Permissions.Prefixes.Scope + localApiScope,
+                    Permissions.Prefixes.Scope + internalApiScope,
                 }
             );
 
@@ -128,6 +141,7 @@ public static class OpenIddictSeeder
                     Permissions.Scopes.Profile,
                     Permissions.Prefixes.Scope + "offline_access",
                     Permissions.Prefixes.Scope + localApiScope,
+                    Permissions.Prefixes.Scope + internalApiScope,
                 }
             );
 

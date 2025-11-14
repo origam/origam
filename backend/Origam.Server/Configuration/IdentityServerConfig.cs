@@ -132,7 +132,9 @@ public class IdentityServerConfig
                     .GetStringArrayOrThrow(),
                 RedirectUris = webClientSection
                     .GetSectionOrThrow("RedirectUris")
-                    .GetStringArrayOrThrow(),
+                    .GetStringArrayOrThrow()
+                    .Select(x => x.Replace("#", ""))
+                    .ToArray(),
                 AllowedCorsOrigins = webClientSection
                     .GetSection("AllowedCorsOrigins")
                     ?.Get<string[]>(),

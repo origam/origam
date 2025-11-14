@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
@@ -45,7 +46,12 @@ public static class IApplicationBuilderExtensions
                 {
                     return next();
                 }
-                if (context.Request.Path == "/")
+                // If it's a GET to a non-file path, serve index.html (classic SPA fallback)
+                if (
+                    context.Request.Method == "GET"
+                    && !Path.HasExtension(context.Request.Path.Value)
+                    && !context.Request.Path.Value.StartsWith("/assets")
+                )
                 {
                     context.Request.Path = "/index.html";
                 }

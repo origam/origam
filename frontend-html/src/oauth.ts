@@ -26,7 +26,7 @@ const config = {
   client_id: "origamWebClient",
   redirect_uri: `${windowLocation}/origamClientCallback/`,
   response_type: "code",
-  scope: "openid offline_access",
+  scope: "openid offline_access internal_api",
   post_logout_redirect_uri: `${windowLocation}`,
   automaticSilentRenew: true,
   silent_redirect_uri: `${windowLocation}/origamClientCallbackRenew/`,
@@ -35,33 +35,41 @@ const config = {
 export const userManager = new UserManager(config);
 
 export async function ensureLogin() {
+  console.log("ensureLogin");
   const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
   if (authOvr) {
     sessionStorage.setItem("origamAuthTokenOverride", authOvr);
-    return {access_token: authOvr};
+    return { access_token: authOvr };
   }
-  if (window.location.hash.startsWith("/origamClientCallback/")) {
+
+  const path = window.location.pathname;
+  debugger;
+  // Handle the OIDC redirect callback coming back from the server
+  if (path.startsWith("/origamClientCallback")) {
     try {
-      const user = await userManager.signinRedirectCallback(
-        window.location.hash.replace("origamClientCallback/", "")
-      );
+      const user = await userManager.signinRedirectCallback();
+      // Clean up the URL so code/state are not visible anymore
       window.history.replaceState(null, "", "/");
-      if (!user.access_token) {
+      if (!user || !user.access_token) {
         await userManager.signinRedirect();
-      } else {
-        return user;
+        return;
       }
-    } catch (err) {
-      console.warn(err);
-      await userManager.signinRedirect();
-    }
-  } else {
-    const user = await userManager.getUser();
-    if (user && user.access_token) {
       return user;
-    } else {
+    } catch (err) {
+      console.warn("signinRedirectCallback error", err);
       await userManager.signinRedirect();
+      return;
     }
+  }
+
+  // Normal case: either we already have a user or we need to start login
+  const user = await userManager.getUser();
+  if (user && user.access_token) {
+    return user;
+  } else {
+    console.log("windowLocation: " + windowLocation);
+    console.log("userManager.signinRedirect");
+    await userManager.signinRedirect();
   }
 }
 

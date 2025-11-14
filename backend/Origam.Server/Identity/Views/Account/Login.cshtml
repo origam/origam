@@ -7,6 +7,8 @@
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Login" method="post" asp-route-returnUrl="@returnUrl">
+    @Html.AntiForgeryToken()
+
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">

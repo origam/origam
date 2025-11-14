@@ -44,7 +44,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OpenIddict.Validation.AspNetCore;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -53,6 +52,7 @@ using Origam.Server.Middleware;
 using Origam.Service.Core;
 using SoapCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults;
 
 namespace Origam.Server
 {
@@ -121,6 +121,9 @@ namespace Origam.Server
                     lockoutConfig.LockoutTimeMinutes
                 );
                 options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
+                options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+                options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+                options.ClaimsIdentity.RoleClaimType = Claims.Role;
             });
 
             services.TryAddScoped<
@@ -135,10 +138,7 @@ namespace Origam.Server
             // Your custom Identity stack (unchanged)
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
-            services.AddScoped<
-                IUserClaimsPrincipalFactory<IOrigamUser>,
-                UserClaimsPrincipalFactory<IOrigamUser>
-            >();
+            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, ClaimsFactory>();
             services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
 
@@ -268,12 +268,19 @@ namespace Origam.Server
                 });
 
             // [CHANGED] Authentication defaults — use OpenIddict validation
+            // services.AddAuthentication(options =>
+            // {
+            //     options.DefaultAuthenticateScheme =
+            //         OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            //     options.DefaultChallengeScheme =
+            //         OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            // });
+
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
             });
 
             // [CHANGED] Authorization policy replacing IdentityServer's LocalApi
@@ -283,6 +290,7 @@ namespace Origam.Server
                     "LocalApi",
                     policy =>
                     {
+                        policy.AddAuthenticationSchemes(AuthenticationScheme);
                         policy.RequireAuthenticatedUser();
                         policy.RequireClaim(Claims.Scope, "internal_api");
                     }
