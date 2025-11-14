@@ -30,6 +30,8 @@ export const WorkflowFinishedPanel: React.FC<{
   onCloseClick?(event: any): void;
   onRepeatClick?(event: any): void;
   message: string;
+  repeatDisabled: boolean;
+
 }> = (props) => {
   const repeatButton = useRef<HTMLButtonElement>(null);
 
@@ -41,8 +43,20 @@ export const WorkflowFinishedPanel: React.FC<{
 
   return (
     <div className={S.root}>
-      {props.isRepeatButton && <button ref={repeatButton} onClick={props.onRepeatClick}>{T("Repeat", "button_repeat")}</button>}
-      {props.isCloseButton && <button onClick={props.onCloseClick}>{T("Close", "button_close")}</button>}
+      {props.isRepeatButton &&
+        <button
+          ref={repeatButton}
+          onClick={props.onRepeatClick}
+          disabled={props.repeatDisabled}
+        >
+          {T("Repeat", "button_repeat")}
+        </button>
+      }
+      {props.isCloseButton &&
+        <button onClick={props.onCloseClick}>
+          {T("Close", "button_close")}
+        </button>
+      }
       <div className={cx(S.message, "workflowMessage")} dangerouslySetInnerHTML={{__html: `${props.message}`}}/>
     </div>)
 };
