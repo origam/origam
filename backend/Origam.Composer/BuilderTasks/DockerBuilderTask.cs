@@ -23,7 +23,7 @@ using System.Text;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
-using static Origam.DA.Common.Enums;
+using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.Composer.BuilderTasks;
 

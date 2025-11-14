@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
   <p:package
     x:id="261b7cd5-4ba1-46a0-8963-27793379ac11"
     x:isFolder="true"
     p:name="Chat"
-    p:version="1.0.1">
-    <pr:packageReference
-      x:id="645bcb11-7459-4f25-a0de-a5cc085dd6e0"
-      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
+    p:version="1.0.2">
     <pr:packageReference
       x:id="527a6c3d-91a1-4c75-a227-4e2a34257c05"
       pr:referencedPackage="Security/.origamPackage#951f2cda-2867-4b99-8824-071fa8749ead" />
+    <pr:packageReference
+      x:id="645bcb11-7459-4f25-a0de-a5cc085dd6e0"
+      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
   </p:package>
 </x:file>

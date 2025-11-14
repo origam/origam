@@ -27,11 +27,11 @@ using System.Data.Common;
 using System.Globalization;
 using System.Security.Principal;
 using System.Xml;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service;
 

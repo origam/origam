@@ -44,6 +44,7 @@ jobs:
         path: "backend/**Tests/bin/Release"
         include-hidden-files: true
         retention-days: 1
+        if-no-files-found: error
      
   tests:
     needs: buildArchitect

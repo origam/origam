@@ -26,8 +26,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Npgsql;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Schema.EntityModel;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service;
 
@@ -339,27 +339,41 @@ public class PgSqlDataService : AbstractSqlDataService
 
     internal override string GetSqlIndexFields()
     {
-        return "SELECT c.relname AS TableName, "
-            + "i.relname as IndexName,f.attname AS ColumnName, "
-            + "f.attnum as OrdinalPosition, "
-            + "(select pg_index_column_has_property(i.oid, f.attnum, p.name) from unnest(array['desc']) p(name)) as IsDescending "
-            + "FROM pg_attribute f "
-            + "JOIN pg_class c ON c.oid = f.attrelid "
-            + "JOIN pg_type t ON t.oid = f.atttypid "
-            + "LEFT JOIN pg_attrdef d ON d.adrelid = c.oid AND d.adnum = f.attnum "
-            + "LEFT JOIN pg_namespace n ON n.oid = c.relnamespace "
-            + "LEFT JOIN pg_constraint p ON p.conrelid = c.oid AND f.attnum = ANY(p.conkey) "
-            + "LEFT JOIN pg_class AS g ON p.confrelid = g.oid "
-            + "LEFT JOIN pg_index AS ix ON f.attnum = ANY(ix.indkey) and c.oid = f.attrelid and c.oid = ix.indrelid "
-            + "LEFT JOIN pg_class AS i ON ix.indexrelid = i.oid "
-            + "WHERE c.relkind = 'r'::char "
-            + "AND n.nspname = (select current_schema) "
-            + "AND f.attnum > 0";
+        return @"
+            SELECT 
+                c.relname AS TableName,
+                i.relname AS IndexName,
+                a.attname AS ColumnName,
+                n.n AS OrdinalPosition,
+                pg_index_column_has_property(i.oid, n.n, 'desc') AS IsDescending
+            FROM pg_index ix
+            JOIN pg_class c ON c.oid = ix.indrelid
+            JOIN pg_class i ON i.oid = ix.indexrelid
+            JOIN pg_namespace ns ON ns.oid = c.relnamespace
+            JOIN LATERAL generate_subscripts(ix.indkey, 1) AS n(n) ON TRUE
+            JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum = ix.indkey[n.n]
+            WHERE ns.nspname = (SELECT current_schema())
+              AND c.relkind = 'r'::char
+            ORDER BY c.relname, i.relname, n.n;
+        ";
     }
 
     internal override string GetSqlIndexes()
     {
         return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname =(select current_schema)";
+    }
+
+    protected override string GetIndexSelectQuery(
+        DataEntityIndexField indexField,
+        string mappedObjectName,
+        string indexName
+    )
+    {
+        return $"TableName = '{mappedObjectName}'"
+            + $" AND IndexName = '{indexName}'"
+            + $" AND ColumnName = '{((FieldMappingItem)indexField.Field).MappedColumnName}'"
+            + $" AND OrdinalPosition = {indexField.OrdinalPosition}"
+            + $" AND IsNull(IsDescending, false) = {(indexField.SortOrder == DataEntityIndexSortOrder.Descending ? "true" : "false")}";
     }
 
     internal override string GetSqlFk()
@@ -580,8 +594,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                 {
                     foreach (DataEntityIndex index in t.EntityIndexes)
                     {
-                        string key =
-                            t.MappedObjectName + "." + t.MappedObjectName + "_" + index.Name;
+                        string key = t.MappedObjectName + "." + index.MakeDatabaseName(t);
                         schemaIndexListAll.Add(key, index);
                         if (index.GenerateDeploymentScript)
                         {

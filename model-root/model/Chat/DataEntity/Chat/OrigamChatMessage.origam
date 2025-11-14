@@ -32,23 +32,23 @@
       asi:abstract="false"
       dei:generateDeploymentScript="true"
       x:id="f3ad80f7-ce7a-4af9-ad0c-6c7155c149b7"
-      asi:name="idx_OrigamChatRoom_RecordCreated_BusinessPartnerId"
+      asi:name="idx_OrgChatRoom_RcrdCreated_BusinessPartnerId"
       dei:unique="false">
       <deif:DataEntityIndexField
         asi:abstract="false"
-        deif:field="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/refBusinessPartnerId/baba55dd-7a76-4f9c-8c96-184df35abdc6"
+        deif:field="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage\refBusinessPartnerId/baba55dd-7a76-4f9c-8c96-184df35abdc6"
         x:id="32e87f1d-3b3d-4d61-9121-198a8a614715"
         asi:name="0_refBusinessPartnerId"
         deif:sortOrder="Ascending" />
       <deif:DataEntityIndexField
         asi:abstract="false"
-        deif:field="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/refOrigamChatRoomId/3d790088-fd29-44a1-bcbe-cb112aa3300a"
+        deif:field="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage\refOrigamChatRoomId/3d790088-fd29-44a1-bcbe-cb112aa3300a"
         x:id="3fa6f596-2d02-466d-aade-b9f6bde18f76"
         asi:name="0_refOrigamChatRoomId"
         deif:sortOrder="Ascending" />
       <deif:DataEntityIndexField
         asi:abstract="false"
-        deif:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreated/6a92781b-ac57-4b24-a2a3-7ff772747431"
+        deif:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2\RecordCreated/6a92781b-ac57-4b24-a2a3-7ff772747431"
         x:id="a9369dfd-aa47-49b0-be70-fcf965a63720"
         asi:name="0_RecordCreated"
         deif:sortOrder="Ascending" />

@@ -27,10 +27,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Data.SqlClient;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service;
 
@@ -348,6 +348,24 @@ public class MsSqlDataService : AbstractSqlDataService
             + "and si.status & 2048 = 0 " // no primary keys
             + "and si.impid = 0" // no awkward indexes...
             + "and si.name is not null";
+    }
+
+    protected override string GetIndexSelectQuery(
+        DataEntityIndexField indexField,
+        string mappedObjectName,
+        string indexName
+    )
+    {
+        return "TableName = '"
+            + mappedObjectName
+            + "' AND IndexName = '"
+            + indexName
+            + "' AND ColumnName = '"
+            + (indexField.Field as FieldMappingItem).MappedColumnName
+            + "' AND OrdinalPosition = "
+            + (indexField.OrdinalPosition + 1)
+            + " AND IsDescending = "
+            + (indexField.SortOrder == DataEntityIndexSortOrder.Descending ? "1" : "0");
     }
 
     internal override string GetSqlFk()

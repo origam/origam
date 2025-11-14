@@ -1,0 +1,1 @@
+﻿CREATE  INDEX  "OrigamEvent_ix_OrigamEvent_refBusinessPartnerId" ON "OrigamEvent" ("refBusinessPartnerId" ASC);

@@ -88,9 +88,18 @@
 		<value>Invalid number of keys in the primary key of this object</value>
 	</data>
 	<data name="MemberNameRequired">
-		<value>Member name required for checking this rule.</value>
+		<value>Název vlastnosti nesmí být prázdný.</value>
 	</data>
 	<data name="CantBeNull">
 		<value>{0} cannot be empty.</value>
+	</data>
+	<data name="IdentifierMaxLength" xml:space="preserve">
+		<value>Překročeno omezení délky. Maximální délka názvu {0} je {1} znaků.</value>
+	</data>
+	<data name="PostgresIndexNameLength" xml:space="preserve">
+		<value>Dbejte prosím na to, že názvy indexů musí být v rámci schématu v Postgre SQL jedinečné.</value>
+	</data>
+	<data name="IndexMaxLength" xml:space="preserve">
+		<value>Název indexu v databázi se skládá z názvu entity a názvu indexu. Výsledný název indexu {0} překračuje maximální délku identifikátoru {1} o {2} znaků.</value>
 	</data>
 </root>

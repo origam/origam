@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.Common;
 using Origam.Composer.DTOs;
 using Origam.Composer.Interfaces.Services;
+using Origam.DA.Common.DatabasePlatform;
 using Spectre.Console.Cli;
 
 namespace Origam.Composer.Commands;
@@ -56,8 +57,8 @@ public class CreateCommand(
                 "postgres",
                 StringComparison.CurrentCultureIgnoreCase
             )
-                ? DA.Common.Enums.DatabaseType.PgSql
-                : DA.Common.Enums.DatabaseType.MsSql,
+                ? DatabaseType.PgSql
+                : DatabaseType.MsSql,
             DatabaseHost = settings.DbHost,
             DatabasePort = settings.DbPort,
             DatabaseUserName = settings.DbUsername,

@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Composer.BuilderTasks;
 

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using static Origam.DA.Common.Enums;
+using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.Composer.DTOs;
 

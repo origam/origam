@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.5.1&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.4.6"
+    x:id="46609eaf-3746-4e02-8630-ba8b4b538bcc"
+    asi:name="1.0.2"
+    dv:version="1.0.2">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.0.2.origam___commandText___b971badb-9e47-4f61-8310-a059115b6ed4.txt"
+      x:id="b971badb-9e47-4f61-8310-a059115b6ed4"
+      asi:name="00010_PG_idx_OrigamChatRoom_RecordCreated_BusinessPart_renamed"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

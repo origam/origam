@@ -26,6 +26,7 @@ using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.EntityModel;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Attributes;
 
 namespace Origam.Schema.EntityModel;
 
@@ -57,6 +58,7 @@ public class FieldMappingItem : AbstractDataEntityColumn, IDatabaseDataTypeMappi
 
     private string _sourceFieldName;
 
+    [LengthLimit]
     [Category("Mapping")]
     [StringNotEmptyModelElementRule()]
     [XmlAttribute("mappedColumnName")]

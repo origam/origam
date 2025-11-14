@@ -227,11 +227,6 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
         }
     }
 
-    public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
-    {
-        return entity.Name + "_" + index.Name;
-    }
-
     internal override string SqlDataType(IDataParameter Iparam)
     {
         NpgsqlParameter param = Iparam as Npgsql.NpgsqlParameter;

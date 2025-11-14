@@ -369,7 +369,7 @@ public class OrigamSettings : ICloneable
         );
     }
 
-    public Platform[] GetAllPlatform()
+    public Platform[] GetAllPlatforms()
     {
         Platform[] platforms = DeployPlatforms ?? new Platform[0];
         Platform platform = new Platform { IsPrimary = true, DataService = DataDataService };
