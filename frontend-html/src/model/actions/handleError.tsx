@@ -24,6 +24,7 @@ import { T } from "utils/translation";
 import { flow } from "mobx";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { getWorkbenchLifecycle } from "../selectors/getWorkbenchLifecycle";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
@@ -52,8 +53,16 @@ export function handleError(ctx: any) {
       return;
     }
     if (error.response &&
-        error.response.status === 404 &&
-        error.response.data.message.includes("row not found")) {
+        error.response.status === 404 ) {
+      const payload = JSON.parse(error.config.data)
+      const workbenchLifecycle = getWorkbenchLifecycle(ctx);
+      if(workbenchLifecycle.wasRecentlyClosed(payload.SessionFormIdentifier)){
+        return;
+      }
+    }
+    if (error.response &&
+      error.response.status === 404 &&
+      error.response.data.message.includes("row not found")) {
       yield*selectors.error.getDialogController(ctx).pushError(
         T(
           `The row you requested was not found on the server. Please refresh the data.`,

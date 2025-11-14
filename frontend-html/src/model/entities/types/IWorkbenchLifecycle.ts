@@ -81,6 +81,8 @@ export interface IWorkbenchLifecycle {
   run(): Generator;
 
   parent?: any;
+
+  wasRecentlyClosed(sessionId: string): boolean;
 }
 
 export const isIWorkbenchLifecycle = (o: any): o is IWorkbenchLifecycle =>
