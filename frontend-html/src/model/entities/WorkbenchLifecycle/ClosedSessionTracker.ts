@@ -22,11 +22,11 @@ export class ClosedSessionTracker {
   private readonly sessionIds: string[] = [];
 
   push(sessionId: string | undefined) {
-    if (!sessionId){
+    if (!sessionId) {
       return;
     }
     this.sessionIds.push(sessionId);
-    if(this.sessionIds.length > this.sizeLimit){
+    if (this.sessionIds.length > this.sizeLimit) {
       this.sessionIds.shift();
     }
   }
