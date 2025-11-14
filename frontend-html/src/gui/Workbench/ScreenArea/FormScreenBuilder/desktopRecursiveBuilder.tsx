@@ -37,6 +37,7 @@ import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedVi
 import { Box } from "gui/Components/ScreenElements/Box";
 import React from "react";
 import { findBoxes, findUIChildren } from "xmlInterpreters/xmlUtils";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
 
@@ -45,7 +46,7 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
   function run(xso: any) {
     switch (xso.attributes.Type) {
       case "ScreenLevelPlugin":{
-        let sessionId = getSessionId(formScreen);
+        const sessionId = getSessionId(formScreen);
         return pluginLibrary.getComponent(
           {
             name: xso.attributes.Name,
@@ -55,8 +56,8 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
           });
       }
       case "SectionLevelPlugin": {
-        let dataView = getDataView(xso);
-        let sessionId = getSessionId(formScreen);
+        const dataView = getDataView(xso);
+        const sessionId = getSessionId(formScreen);
         return pluginLibrary.getComponent(
           {
             name: xso.attributes.Name,
@@ -66,6 +67,7 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
           });
       }
       case "WorkflowFinishedPanel": {
+        const repeatDisabled = getFormScreenLifecycle(formScreen).isWorking;
         return (
           <WorkflowFinishedPanel
             key={xso.$iid}
@@ -74,6 +76,7 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
             message={xso.attributes.Message}
             onCloseClick={actions.workflow.onCloseClick(formScreen)}
             onRepeatClick={actions.workflow.onRepeatClick(formScreen)}
+            repeatDisabled={repeatDisabled}
           />
         );
       }

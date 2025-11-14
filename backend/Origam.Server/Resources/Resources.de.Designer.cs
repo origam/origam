@@ -564,6 +564,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ein Fehler ist aufgetreten. In der Protokolldatei befinden sich möglicherweise weitere Details..
+        /// </summary>
+        public static string GeneralErrorMessage {
+            get {
+                return ResourceManager.GetString("GeneralErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sie haben keinen Zugriff auf {0}.
         /// </summary>
         public static string MenuNotAuthorized {

@@ -564,6 +564,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Došlo k chybě. V log souboru mohou být uvedeny podrobnosti..
+        /// </summary>
+        public static string GeneralErrorMessage {
+            get {
+                return ResourceManager.GetString("GeneralErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nemáte přístup k menu {0}.
         /// </summary>
         public static string MenuNotAuthorized {
