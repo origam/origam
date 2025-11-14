@@ -82,6 +82,10 @@ const ModelTreeNode: React.FC<{
     run({ generator: node.setVersionCurrent() });
   }
 
+  function runUpdateScriptActivity() {
+    run({ generator: node.runUpdateScriptActivity() });
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -135,6 +139,14 @@ const ModelTreeNode: React.FC<{
               <Separator />
               <Item id="setVersionCurrent" onClick={setVersionCurrent}>
                 {T('Make version current', 'tree_node_make_version_current')}
+              </Item>
+            </>
+          )}
+          {node.isUpdateScriptActivity && (
+            <>
+              <Separator />
+              <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
+                {T('Execute', 'tree_node_run_update_script_activity')}
               </Item>
             </>
           )}

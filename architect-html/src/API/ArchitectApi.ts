@@ -240,7 +240,13 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async setVersionCurrent(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post('/Editor/SetVersionCurrent', { schemaItemId: schemaItemId });
+    await this.axiosInstance.post('/DeploymentScript/SetVersionCurrent', {
+      schemaItemId: schemaItemId,
+    });
+  }
+
+  async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScript/Run', { schemaItemId: schemaItemId });
   }
 }
 

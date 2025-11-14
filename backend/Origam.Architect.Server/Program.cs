@@ -54,6 +54,7 @@ public class Program
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
+        builder.Services.AddSingleton<DeploymentScriptRunnerService>();
         builder.Services.AddSingleton<ControlAdapterFactory>();
         builder.Services.AddSingleton(schema);
         builder.Services.AddSingleton(workbench);

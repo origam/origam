@@ -103,6 +103,7 @@ export interface IArchitectApi {
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
 
   setVersionCurrent(schemaItemId: string): Promise<void>;
+  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;

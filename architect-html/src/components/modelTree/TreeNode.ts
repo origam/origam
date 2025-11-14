@@ -77,6 +77,10 @@ export class TreeNode implements IEditorNode {
     return this.itemType === 'Origam.Schema.DeploymentModel.DeploymentVersion';
   }
 
+  get isUpdateScriptActivity() {
+    return this.itemType === 'Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity';
+  }
+
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
     if (this.isLoading) {
       return;
@@ -112,6 +116,10 @@ export class TreeNode implements IEditorNode {
     if (this.parent) {
       yield* this.parent.loadChildren.bind(this.parent)();
     }
+  }
+
+  *runUpdateScriptActivity() {
+    yield this.architectApi.runUpdateScriptActivity(this.origamId);
   }
 
   createNode(typeName: string) {
