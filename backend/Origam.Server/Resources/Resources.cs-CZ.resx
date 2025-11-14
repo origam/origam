@@ -300,4 +300,7 @@
   <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
     <value>Nenalezena požadovaná frontová obrazovka {0}.</value>
   </data>
+  <data name="GeneralErrorMessage" xml:space="preserve">
+    <value>Došlo k chybě. V log souboru mohou být uvedeny podrobnosti.</value>
+  </data>
 </root>

@@ -70,6 +70,7 @@ public class DataEntityIndex : AbstractSchemaItem
         get { return _generateDeploymentScript; }
         set { _generateDeploymentScript = value; }
     }
+
     #endregion
     #region Overriden ISchemaItem Members
     public override bool UseFolders
@@ -101,4 +102,9 @@ public class DataEntityIndex : AbstractSchemaItem
         );
     }
     #endregion
+
+    public string MakeDatabaseName(IDataEntity table)
+    {
+        return ((table as TableMappingItem)?.MappedObjectName ?? table.Name) + "_" + Name;
+    }
 }

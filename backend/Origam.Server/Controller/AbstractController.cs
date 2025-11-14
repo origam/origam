@@ -104,11 +104,7 @@ public abstract class AbstractController : ControllerBase
         {
             return environment.IsDevelopment()
                 ? ex
-                : new
-                {
-                    message = defaultMessage
-                        ?? "An error has occured. There may be some details in the log file.",
-                };
+                : new { message = defaultMessage ?? Resources.GeneralErrorMessage };
         }
 
         try

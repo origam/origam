@@ -300,4 +300,7 @@
   <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
     <value>Custom Work Queue Screen {0} not found.</value>
   </data>
+  <data name="GeneralErrorMessage" xml:space="preserve">
+    <value>An error has occurred. There may be some details in the log file.</value>
+  </data>
 </root>

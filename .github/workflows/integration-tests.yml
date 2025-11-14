@@ -66,6 +66,8 @@ jobs:
           name: htmlfrontendbuild
           path: "frontend-html/dist"
           retention-days: 1
+          if-no-files-found: error
+
   build-chat:
     name: build-chat
     runs-on: windows-2025
@@ -156,7 +158,7 @@ jobs:
         shell: bash
 
   build-architect-server:
-    name: build-server
+    name: build-architect-server
     runs-on: windows-2025
     permissions:
       actions: read
@@ -223,6 +225,7 @@ jobs:
           name: htmlserverbuild
           path: "backend/Origam.Server/bin/Release/net8.0/publish"
           retention-days: 1
+          if-no-files-found: error
 
       - name: Upload workflow integration tests artifact
         uses: actions/upload-artifact@v4
@@ -230,9 +233,58 @@ jobs:
           name: workflowbuild
           path: "backend/Origam.WorkflowTests/bin/Release/net8.0"
           retention-days: 1
+          if-no-files-found: error
+
+  build-server-image:
+    name: build-server-image
+    needs: [ build-frontend, build-server ]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download server_bin artifact (for server build context)
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlserverbuild
+          path: docker/server/server_bin
+
+      - name: Ensure server/scheduler_bin exists
+        run: mkdir -p docker/server/scheduler_bin
+
+      - name: Ensure server/client_source exists
+        run: mkdir -p docker/server/client_source
+
+      - name: Download Frontend artifact (for server build context)
+        uses: actions/download-artifact@v4
+        with:
+          name: htmlfrontendbuild
+          path: docker/server/server_bin/clients/origam
+
+      - name: Build base server image for tests
+        run: |
+          cd docker
+          docker build -t origam-server-linux -f DockerfileServer.linux .
+
+      - name: Save image as artifact
+        run: |
+          docker save origam-server-linux:latest -o origam-server-linux.tar
+        shell: bash
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-image
+          path: origam-server-linux.tar
+          retention-days: 1
 
   integration-tests-mssql:
-    needs: [ build-frontend,build-server ]
+    needs: [ build-frontend, build-server, build-server-image ]
     name: integration-tests-mssql
     runs-on: ubuntu-latest
     permissions:
@@ -251,28 +303,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download HTML5 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlserverbuild
-          path: test/HTML5
-
-      - name: Download Frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlfrontendbuild
-          path: test/HTML5/clients/origam
-
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
         with:
           name: workflowbuild
-          path: test/HTML5_TESTS
+          path: test/tests_workflow
 
       - name: Copy model to test directory
         run: |
           mkdir test/model
           cp -r model-tests test/model
+
+      - name: Download prebuilt server image
+        uses: actions/download-artifact@v4
+        with:
+          name: server-image
+          path: .
+
+      - name: Load prebuilt server image
+        run: docker load -i origam-server-linux.tar
 
       - name: Run Tests
         run: |
@@ -305,7 +354,7 @@ jobs:
           max-annotations: '0'
 
   integration-tests-postgres:
-    needs: [ build-frontend,build-server ]
+    needs: [ build-frontend, build-server, build-server-image ]
     name: integration-tests-pgsql
     runs-on: ubuntu-latest
     permissions:
@@ -324,28 +373,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download HTML5 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlserverbuild
-          path: test/HTML5
-
-      - name: Download Frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: htmlfrontendbuild
-          path: test/HTML5/clients/origam
-
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
         with:
           name: workflowbuild
-          path: test/HTML5_TESTS
+          path: test/tests_workflow
 
       - name: Copy model to test directory
         run: |
           mkdir test/model
           cp -r model-tests test/model
+
+      - name: Download prebuilt server image
+        uses: actions/download-artifact@v4
+        with:
+          name: server-image
+          path: .
+
+      - name: Load prebuilt server image
+        run: docker load -i origam-server-linux.tar
 
       - name: Run Tests
         run: |
@@ -392,5 +438,5 @@ jobs:
             htmlserverbuild
             htmlfrontendbuild
             workflowbuild
+            server-image
           failOnError: false
-

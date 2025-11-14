@@ -243,11 +243,6 @@ public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
         }
     }
 
-    public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
-    {
-        return index.Name;
-    }
-
     internal override string SqlDataType(IDataParameter Iparam)
     {
         SqlParameter param = Iparam as SqlParameter;

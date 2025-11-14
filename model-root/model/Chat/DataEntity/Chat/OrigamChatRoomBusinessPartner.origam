@@ -228,13 +228,13 @@
     </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       adec:foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity\Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
       x:id="2f633289-62af-4cd7-8dd2-84be9cd5c4ab"
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="refBusinessPartnerId"
@@ -256,13 +256,13 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       adec:foreignKeyEntity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2\Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="48044453-19bb-40a1-8bb4-bb3173fbbae7"
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="refOrigamChatRoomId"
@@ -271,7 +271,7 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Boolean"
       adec:excludeFromAllFields="false"

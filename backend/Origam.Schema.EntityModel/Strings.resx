@@ -345,4 +345,13 @@
   <data name="ErrorDynamicParameter" xml:space="preserve">
     <value>IsDynamic parameter must to be set to True</value>
   </data>
+  <data name="MemberNameRequired" xml:space="preserve">
+    <value>Member name cannot be empty.</value>
+  </data>
+  <data name="UnknownPlatform" xml:space="preserve">
+    <value>Unknown platform: {0}</value>
+  </data>
+  <data name="IndexNameTargetMisMatch" xml:space="preserve">
+    <value>{0}  can only be applied to TableMappingItem.</value>
+  </data>
 </root>

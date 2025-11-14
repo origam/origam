@@ -664,7 +664,7 @@ public abstract class SessionStore : IDisposable
     {
         if (this.IsProcessing)
         {
-            throw new Exception(Resources.ErrorCommandInProgress);
+            throw new UserOrigamException(Resources.ErrorCommandInProgress);
         }
         this.IsProcessing = true;
         try

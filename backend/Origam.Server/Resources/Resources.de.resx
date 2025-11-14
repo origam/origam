@@ -300,4 +300,7 @@
   <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
     <value>Benutzerdefinierter Arbeitswarteschlangenbildschirm {0} wurde nicht gefunden.</value>
   </data>
+  <data name="GeneralErrorMessage" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten. In der Protokolldatei befinden sich möglicherweise weitere Details.</value>
+  </data>
 </root>

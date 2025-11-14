@@ -2340,6 +2340,9 @@ internal class frmMain : Form, IWorkbench
         ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
+
+        var settings = ConfigurationManager.GetActiveConfiguration();
+        ServiceManager.Services.AddService(new DatabaseProfileService(settings));
     }
 
     private void InitializeDefaultServices()

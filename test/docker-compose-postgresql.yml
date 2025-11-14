@@ -1,17 +1,16 @@
 services:
-  database-server:
+  database-server-postgres:
     build:
       context: .
       dockerfile: Dockerfile.postgresql
     environment:
       - POSTGRES_PASSWORD=${SA_PASSWORD}
-      - USER_PASSWORD=${OrigamSettings_DbPassword}
+      - USER_PASSWORD=${OrigamSettings__DatabasePassword}
       - SA_PASSWORD=${SA_PASSWORD}
       - ACCEPT_EULA=Y
       - BUILDKIT_PROGRESS=tty
     ports:
       - "5433:5432"
-      - "5434:1433"
     profiles:
       - test
     tty: false
@@ -22,32 +21,21 @@ services:
       timeout: 5s
       retries: 5
 
-  test-server:
+  server-postgres:
     build:
       context: .
       dockerfile: Dockerfile.tests
       args:
         - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
+    env_file:
+      - envFilePostgres.env
     environment:
-        - gitPullOnStart=${gitPullOnStart}
-        - OrigamSettings_SetOnStart=${OrigamSettings_SetOnStart}
-        - OrigamSettings_SchemaExtensionGuid=${OrigamSettings_SchemaExtensionGuid}
-        - OrigamSettings_DbHost=${OrigamSettings_DbHost}
-        - OrigamSettings_DbPort=${OrigamSettings_DbPort}
-        - OrigamSettings_DbUsername=${OrigamSettings_DbUsername}
-        - OrigamSettings_DbPassword=${OrigamSettings_DbPassword}
-        - DatabaseName=${DatabaseName}
-        - OrigamSettings_TitleName=${OrigamSettings_TitleName}
-        - DatabaseType=${DatabaseType}
-        - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
-        - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}
-        - EnableChat=${EnableChat}
-        - BUILDKIT_PROGRESS=tty
-        - CI=true
+      - BUILDKIT_PROGRESS=tty
+      - CI=true
     ports:
-      - "8080:8080"
+      - "443:443"
     depends_on:
-      database-server:
+      database-server-postgres:
         condition: service_healthy
     profiles:
       - test
@@ -55,4 +43,4 @@ services:
     volumes:
       - ./output/:/home/origam/output/
     links:
-     - database-server
+     - database-server-postgres

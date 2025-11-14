@@ -144,4 +144,16 @@
   <data name="CantBeNull" xml:space="preserve">
     <value>{0} darf nicht leer sein.</value>
   </data>
+  <data name="IdentifierMaxLength" xml:space="preserve">
+    <value>Längenbeschränkung überschritten. Die maximale Länge des {0}-Namens beträgt {1} Zeichen.</value>
+  </data>
+  <data name="PostgresIndexNameLength" xml:space="preserve">
+    <value>Bitte beachten Sie, dass Indexnamen innerhalb eines Schemas in Postgre SQL eindeutig sein müssen.</value>
+  </data>
+  <data name="MemberNameRequired" xml:space="preserve">
+    <value>Der Eigenschaftsname darf nicht leer sein.</value>
+  </data>
+  <data name="IndexMaxLength" xml:space="preserve">
+    <value>Der Indexname in der Datenbank setzt sich aus dem Entitätsnamen und dem Indexnamen zusammen. Der endgültige Indexname {0} überschreitet die maximale {1}-Bezeichnerlänge von {2} Zeichen.</value>
+  </data>
 </root>

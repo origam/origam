@@ -51,18 +51,45 @@ filter_test_output() {
     '
 }
 
+start_server() {
+  if [ -z "${OrigamSettings__ModelSourceControlLocation}" ]; then
+    export OrigamSettings__ModelSourceControlLocation="/home/origam/projectData/model"
+  fi
+
+  sudo /root/updateTimezone.sh
+  cd /home/origam/Setup
+  ./cleanUpEnvironment.sh
+  sudo ./cleanUpEnvironmentRoot.sh
+  
+  cd /etc/nginx/ssl
+  sudo /etc/nginx/ssl/createSslCertificate.sh
+  sudo /etc/init.d/nginx start
+  cd /home/origam/server_bin
+  ./configureServer.sh
+  export ASPNETCORE_URLS="http://+:8080"
+  dotnet Origam.Server.dll > origam-output.txt 2>&1 &
+}
+
+fill_origam_settings_for_workflow_tests(){
+  if [[ ${DatabaseType} == mssql ]]; then
+    cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+  fi
+  if [[ ${DatabaseType} == postgresql ]]; then
+    cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
+  fi
+  if [[ ! -f "OrigamSettings.config" ]]; then
+    echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
+    exit 1
+  fi
+  sed -i "s/OrigamSettings__DataConnectionString/${OrigamSettings__DataConnectionString}/g" OrigamSettings.config
+}
+
 # Main script
-sudo node /root/https-proxy/index.js &
-cd /home/origam/HTML5
+cd /home/origam/server_bin
 
 print_title "Start server and wait for database to be available"
-./startServer.sh
+start_server
 
-echo "OrigamSettings.config"
-cat OrigamSettings.config
-
-export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "Waiting for Origam.Server.dll to initialize DB..."
 dotnet origam-utils.dll get-root-version --attempts 5 --delay 5000
 return_code=$?
@@ -84,43 +111,22 @@ if [[ $? -eq 0 ]]; then
   echo "Success."
 else
   sudo cp frontend-integration-test-results.trx /home/origam/output/
-  print_error "Scripts failed"
+  print_error "Frontend integration tests failed"
   exit 1
 fi
 
 print_title "Run workflow integration tests"
 print_note "Some workflow steps will fail. This is part of the tests."
 echo
-cd /home/origam/HTML5_TESTS
-if [[ ${DatabaseType} == mssql ]]; then
-  cp _OrigamSettings.wf.mssql.template OrigamSettings.config
-fi
-if [[ ${DatabaseType} == postgresql ]]; then
-  cp _OrigamSettings.wf.pgsql.template OrigamSettings.config
-fi
-if [[ ! -f "OrigamSettings.config" ]]; then
-  echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
-  exit 1
-fi
-sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
-sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
-sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
-sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
+cd /home/origam/tests_workflow
+fill_origam_settings_for_workflow_tests
 
 dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
 if [[ $? -eq 0 ]]; then
-  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
+  sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
-  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
-  print_error "Scripts failed"
+  sudo cp /home/origam/tests_workflow/TestResults/workflow-integration-test-results.trx /home/origam/output/
+  print_error "Workflow integration tests failed"
   exit 1
 fi

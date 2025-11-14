@@ -21,11 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Windows.Editor;
 using Origam.Workbench.Editors;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Schema.DeploymentModel;
 

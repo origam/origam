@@ -28,6 +28,7 @@ using CSharpFunctionalExtensions;
 using ICSharpCode.SharpZipLib.Zip;
 using MoreLinq;
 using Origam.DA;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -244,11 +245,8 @@ public class DeploymentService : IDeploymentService
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                DA.Common.Enums.DatabaseType databaseType = (DA.Common.Enums.DatabaseType)
-                    Enum.Parse(
-                        typeof(DA.Common.Enums.DatabaseType),
-                        platform.GetParseEnum(platform.DataService)
-                    );
+                DatabaseType databaseType = (DatabaseType)
+                    Enum.Parse(typeof(DatabaseType), platform.GetParseEnum(platform.DataService));
                 if (databaseType == activity.DatabaseType)
                 {
                     agent.SetDataService(DataServiceFactory.GetDataService(platform));

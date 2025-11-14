@@ -1,0 +1,1 @@
+﻿ALTER INDEX "OrigamChatMessage_idx_OrigamChatRoom_RecordCreated_BusinessPart" RENAME TO "OrigamChatMessage_idx_OrgChatRoom_RcrdCreated_BusinessPartnerId";

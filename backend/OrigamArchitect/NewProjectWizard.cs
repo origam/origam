@@ -25,13 +25,13 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using AeroWizard;
 using Origam;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.Git;
 using Origam.ProjectAutomation;
 using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
-using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect;
 

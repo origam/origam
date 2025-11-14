@@ -35,7 +35,7 @@ public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         if (settings != null)
         {
-            foreach (var platform in settings.GetAllPlatform())
+            foreach (var platform in settings.GetAllPlatforms())
             {
                 CreateMenuItem(list, platform);
             }

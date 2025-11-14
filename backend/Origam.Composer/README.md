@@ -34,12 +34,14 @@ All docker images are available on ORIGAM Github: https://github.com/origam/orig
 
 You can insert parameters into `Jetbrains Rider` > `Edit Configurations` > `Program arguments`.
 
-On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamProjects/MyOrigamApp"`
+On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamProjects/MyOrigamApp"`.
+
+You can use custom git identity `--git-user "Origam Dev"` `--git-email "no-reply@origam.com"`
 
 Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
---commands-output-format sh
+--commands-output-format cmd
 
 --db-type mssql
 --db-host localhost
@@ -53,22 +55,20 @@ Origam.Composer.exe create
 --p-admin-username admin
 --p-admin-password 5axg1zr8
 --p-admin-email "john.doe@example.com"
---p-docker-image-linux "origam/server:2025.10.alpha.4022.linux"
---p-docker-image-win "origam/server:2025.10.alpha.4022.win"
+--p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
+--p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 
---arch-docker-image-linux "origam/architect:2025.10.alpha.4022.linux"
---arch-docker-image-win "origam/architect:2025.10.alpha.4022.win"
+--arch-docker-image-linux "origam/architect:2025.11.alpha.4051.linux"
+--arch-docker-image-win "origam/architect:2025.11.alpha.4051.win"
 --arch-port 8081
 
 --git-enabled
---git-user "Origam Dev"
---git-email "no-reply@origam.com"
 ```
 
 Example for `PostgreSQL`:
 ```
 Origam.Composer.exe create
---commands-output-format sh
+--commands-output-format cmd
 
 --db-type postgres
 --db-host localhost
@@ -82,16 +82,14 @@ Origam.Composer.exe create
 --p-admin-username admin
 --p-admin-password 5axg1zr8
 --p-admin-email "john.doe@example.com"
---p-docker-image-linux "origam/server:2025.9.alpha.3984.linux"
---p-docker-image-win "origam/server:2025.9.alpha.3984.win"
+--p-docker-image-linux "origam/server:2025.11.alpha.4051.linux"
+--p-docker-image-win "origam/server:2025.11.alpha.4051.win"
 
---arch-docker-image-linux "origam/architect:2025.9.alpha.3984.linux"
---arch-docker-image-win "origam/architect:2025.9.alpha.3984.win"
+--arch-docker-image-linux "origam/architect:2025.11.alpha.4051.linux"
+--arch-docker-image-win "origam/architect:2025.11.alpha.4051.win"
 --arch-port 8081
 
 --git-enabled
---git-user "Origam Dev"
---git-email "no-reply@origam.com"
 ```
 
 ## Warning!
