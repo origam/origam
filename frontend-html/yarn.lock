@@ -3098,13 +3098,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-draft-wysiwyg@npm:^1.13.8":
-  version: 1.13.8
-  resolution: "@types/react-draft-wysiwyg@npm:1.13.8"
+"@types/react-draft-wysiwyg@npm:^1.13.9":
+  version: 1.13.9
+  resolution: "@types/react-draft-wysiwyg@npm:1.13.9"
   dependencies:
     "@types/draft-js": "npm:*"
     "@types/react": "npm:*"
-  checksum: 10c0/0330738b0fd592530a796dec4879980ac070e9e6b8c2727a1ea7a5389e163820fde32989e5b52ad24fd6f0616dc458968c08cd3b59ef5f7c6be79cb5d0f7d536
+  checksum: 10c0/7e54abd46d14423909f3ec56b3821f89db0d9b0772cd732fde72e958eb7cb009a9c87162bdb47440fdc52af8a787b945cdfdbbb7a57d9de733e3e64f5aa92ce2
   languageName: node
   linkType: hard
 
@@ -7305,7 +7305,7 @@ __metadata:
     "@types/react-beautiful-dnd": "npm:^13.1.8"
     "@types/react-color": "npm:^3.0.13"
     "@types/react-dom": "npm:^18.3.1"
-    "@types/react-draft-wysiwyg": "npm:^1.13.8"
+    "@types/react-draft-wysiwyg": "npm:^1.13.9"
     "@types/react-highlight-words": "npm:^0.20.0"
     "@types/react-inlinesvg": "npm:^1.0.0"
     "@types/react-measure": "npm:^2.0.12"
