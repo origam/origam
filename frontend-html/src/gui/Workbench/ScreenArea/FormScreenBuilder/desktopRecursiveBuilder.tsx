@@ -37,7 +37,7 @@ import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedVi
 import { Box } from "gui/Components/ScreenElements/Box";
 import React from "react";
 import { findBoxes, findUIChildren } from "xmlInterpreters/xmlUtils";
-import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
 
