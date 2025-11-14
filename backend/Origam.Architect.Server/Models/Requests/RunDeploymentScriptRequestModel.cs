@@ -21,9 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Server.Attributes;
 
-namespace Origam.Architect.Server.Models;
+namespace Origam.Architect.Server.Models.Requests;
 
-public class SetVersionCurrentModel
+public class RunDeploymentScriptRequestModel
 {
     [RequiredNonDefault]
     public Guid SchemaItemId { get; set; }

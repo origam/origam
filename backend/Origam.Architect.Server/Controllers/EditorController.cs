@@ -25,7 +25,6 @@ using Origam.Architect.Server.Models;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
-using Origam.Schema.DeploymentModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
@@ -40,7 +39,6 @@ public class EditorController(
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
     DocumentationHelperService documentationHelper,
-    DeploymentVersionCurrentService deploymentVersionCurrentService,
     IWebHostEnvironment environment,
     ILogger<OrigamController> log
 ) : OrigamController(log, environment)
@@ -114,27 +112,6 @@ public class EditorController(
                 isPersisted: true
             );
             return Ok(openEditorData);
-        });
-    }
-
-    [HttpPost("SetVersionCurrent")]
-    public IActionResult SetVersionCurrent([Required] [FromBody] SetVersionCurrentModel input)
-    {
-        return RunWithErrorHandler(() =>
-        {
-            var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                input.SchemaItemId,
-                useCache: false
-            );
-
-            if (item is not DeploymentVersion version)
-            {
-                // It means this: item.GetType().FullName != "Origam.Schema.DeploymentModel.DeploymentVersion"
-                return BadRequest("Selected item is not a DeploymentVersion");
-            }
-            deploymentVersionCurrentService.SetVersionCurrent(version);
-
-            return Ok();
         });
     }
 
