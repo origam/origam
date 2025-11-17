@@ -2388,13 +2388,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/draft-js@npm:^0.11.19":
-  version: 0.11.19
-  resolution: "@types/draft-js@npm:0.11.19"
+"@types/draft-js@npm:^0.11.20":
+  version: 0.11.20
+  resolution: "@types/draft-js@npm:0.11.20"
   dependencies:
     "@types/react": "npm:*"
     immutable: "npm:~3.7.4"
-  checksum: 10c0/51dcb1fa8e6169de20a10e8ea72d2e7a160dc34097ee5f169241f951cccad84154ff0a44d6d44296a32967b3b5635d3729a0c54f5782a119c172f23ec210f0d2
+  checksum: 10c0/707225c7491a560d5f45d626888cc30ee40c111a090dafe2395298ddd226e2a5cf0db1a4c06afcdc3b4f9789eb231c55ea6e2123bb1cda1c257687ec0a33d66a
   languageName: node
   linkType: hard
 
@@ -2977,7 +2977,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.0"
     "@testing-library/user-event": "npm:^14.6.1"
-    "@types/draft-js": "npm:^0.11.19"
+    "@types/draft-js": "npm:^0.11.20"
     "@types/draftjs-to-html": "npm:^0.8.4"
     "@types/emoji-mart": "npm:^5.3.0"
     "@types/faker": "npm:^6.6.11"
