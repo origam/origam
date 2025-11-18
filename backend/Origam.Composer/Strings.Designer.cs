@@ -141,6 +141,15 @@ namespace Origam.Composer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Print OrigamSettings xml object.
+        /// </summary>
+        internal static string BuilderTask_Print_Settings_object {
+            get {
+                return ResourceManager.GetString("BuilderTask_Print_Settings_object", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot be null or empty.
         /// </summary>
         internal static string Cannot_be_null_or_empty {

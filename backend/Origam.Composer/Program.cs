@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -61,6 +61,7 @@ class Program
         services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
         services.AddSingleton<IDockerBuilderTask, DockerBuilderTask>();
         services.AddSingleton<ICreateGitRepositoryBuilderTask, CreateGitRepositoryBuilderTask>();
+        services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);
         var app = new CommandApp(registrar);

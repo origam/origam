@@ -36,7 +36,8 @@ public class ProjectBuilderService(
     ICreateNewPackageBuilderTask createNewPackageBuilderTask,
     ICreateNewUserBuilderTask createNewUserBuilderTask,
     IDockerBuilderTask dockerBuilderTask,
-    ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask
+    ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask,
+    IPrintOrigamSettingsBuilderTask printOrigamSettingsBuilderTask
 ) : IProjectBuilderService
 {
     private readonly List<IBuilderTask> Tasks = [];
@@ -73,6 +74,7 @@ public class ProjectBuilderService(
 
     public void PrepareTasks(Project project)
     {
+        Tasks.Add(printOrigamSettingsBuilderTask);
         Tasks.Add(downloadFileModelBuilderTask);
         Tasks.Add(createDatabaseBuilderTask);
         Tasks.Add(applyDatabasePermissionsBuilderTask);
