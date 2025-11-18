@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -9,9 +12,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Authorization;
+using Origam.Server.Configuration;
 using Origam.Server.Identity.Models;
 
 namespace Origam.Server.Identity.Controllers;
@@ -19,27 +25,52 @@ namespace Origam.Server.Identity.Controllers;
 [AllowAnonymous]
 public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 {
+    private readonly UserManager<IOrigamUser> _userManager;
     private readonly SignInManager<IOrigamUser> _signInManager;
-    private readonly CoreUserManager<IOrigamUser> _userManager;
-    private readonly IAuthenticationSchemeProvider schemeProvider;
+    private readonly IAuthenticationSchemeProvider _schemeProvider;
+    private readonly IMailService _mailService;
+    private readonly UserConfig _userConfig;
+    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly SessionObjects _sessionObjects;
+    private readonly ILogger<UserManager<IOrigamUser>> _logger;
+    private readonly IdentityGuiConfig _configOptions;
     private readonly RequestLocalizationOptions _requestLocalizationOptions;
+    private readonly ResourceManager resourceManager = new ResourceManager(
+        "Origam.Server.SharedResources",
+        Assembly.GetExecutingAssembly()
+    );
 
     public AccountController(
+        UserManager<IOrigamUser> userManager,
         SignInManager<IOrigamUser> signInManager,
-        CoreUserManager<IOrigamUser> userManager,
+        // IIdentityServerInteractionService interaction,
+        // IClientStore clientStore,
         IAuthenticationSchemeProvider schemeProvider,
-        IOptions<RequestLocalizationOptions> requestLocalizationOptions
+        // IEventService events,
+        IMailService mailService,
+        IOptions<UserConfig> userConfig,
+        IStringLocalizer<SharedResources> localizer,
+        SessionObjects sessionObjects,
+        IOptions<RequestLocalizationOptions> requestLocalizationOptions,
+        IOptions<IdentityGuiConfig> configOptions,
+        ILogger<UserManager<IOrigamUser>> logger
     )
     {
-        _signInManager = signInManager;
         _userManager = userManager;
-        this.schemeProvider = schemeProvider;
+        _signInManager = signInManager;
+        _schemeProvider = schemeProvider;
+        _mailService = mailService;
+        _localizer = localizer;
+        _sessionObjects = sessionObjects;
+        _logger = logger;
+        _configOptions = configOptions.Value;
+        _userConfig = userConfig.Value;
         _requestLocalizationOptions = requestLocalizationOptions.Value;
     }
 
     private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
     {
-        var schemes = await schemeProvider.GetAllSchemesAsync();
+        var schemes = await _schemeProvider.GetAllSchemesAsync();
         var externalProviders = schemes
             .Where(x => x.DisplayName != null)
             .Select(x => new ExternalProvider
@@ -92,6 +123,161 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 
         ModelState.AddModelError(string.Empty, "Invalid login.");
         return View();
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword(string returnUrl = null)
+    {
+        if (!_configOptions.AllowPasswordReset)
+        {
+            return RedirectToAction(nameof(Login), "Account");
+        }
+        var model = new ForgotPasswordViewModel
+        {
+            ReturnUrl = ExtractRedirectUriFromReturnUrl(returnUrl),
+        };
+        return View(model);
+    }
+
+    private string ExtractRedirectUriFromReturnUrl(string returnUrl)
+    {
+        if (string.IsNullOrEmpty(returnUrl))
+        {
+            return "/";
+        }
+        string decodedUrl = Uri.UnescapeDataString(returnUrl);
+        string pattern = @"redirect_uri=([^&#]+)";
+        Match match = Regex.Match(decodedUrl, pattern);
+        return match.Success ? match.Groups[1].Value : "/";
+    }
+
+    // POST: /Account/ForgotPassword
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if (!_configOptions.AllowPasswordReset)
+        {
+            return RedirectToAction(nameof(Login), "Account");
+        }
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist or is not confirmed
+                _logger.LogWarning("ForgotPassword - " + model.Email + " User does not exist.");
+                return View("ForgotPasswordConfirmation");
+            }
+            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+            // Send an email with this link
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action(
+                "ResetPassword",
+                "Account",
+                new { userId = user.BusinessPartnerId, code = passwordResetToken },
+                protocol: HttpContext.Request.Scheme
+            );
+            _mailService.SendPasswordResetToken(
+                user,
+                passwordResetToken,
+                model.ReturnUrl,
+                tokenValidityHours: 24
+            );
+            _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
+            return View("ForgotPasswordConfirmation");
+        }
+        // If we got this far, something failed, redisplay form
+        return View(model);
+    }
+
+    // GET: /Account/ResetPassword
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPassword(
+        string code = null,
+        string mail = null,
+        string returnUrl = null
+    )
+    {
+        if (!_configOptions.AllowPasswordReset)
+        {
+            return RedirectToAction(nameof(Login), "Account");
+        }
+        if (code == null)
+        {
+            _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
+            return View("Error");
+        }
+        if (mail == null)
+        {
+            _logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
+            return View("Error");
+        }
+        var model = new ResetPasswordViewModel
+        {
+            Email = mail,
+            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
+        };
+        return View(model);
+    }
+
+    // POST: /Account/ResetPassword
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!_configOptions.AllowPasswordReset)
+        {
+            return RedirectToAction(nameof(Login), "Account");
+        }
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            // Don't reveal that the user does not exist
+            return RedirectToAction(
+                nameof(ResetPasswordConfirmation),
+                controllerName: "Account",
+                routeValues: new
+                {
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                }
+            );
+        }
+        user.EmailConfirmed = true;
+        var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+        if (result.Succeeded)
+        {
+            return RedirectToAction(
+                nameof(ResetPasswordConfirmation),
+                controllerName: "Account",
+                routeValues: new
+                {
+                    returnUrl = Uri.EscapeDataString(model.ReturnUrl ?? "/account/login"),
+                }
+            );
+        }
+        AddErrors(result);
+        return View(model);
+    }
+
+    // GET: /Account/ResetPasswordConfirmation
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPasswordConfirmation(string returnUrl = null)
+    {
+        var model = new ResetPasswordConfirmationViewModel
+        {
+            ReturnUrl = string.IsNullOrEmpty(returnUrl) ? null : Uri.UnescapeDataString(returnUrl),
+        };
+        return View(model);
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -183,7 +369,13 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     private IActionResult RedirectToLocal(string returnUrl) =>
-        Url.IsLocalUrl(returnUrl)
-            ? (IActionResult)LocalRedirect(returnUrl)
-            : RedirectToAction("Index", "Home");
+        Url.IsLocalUrl(returnUrl) ? LocalRedirect(returnUrl) : RedirectToAction("Index", "Home");
+
+    private void AddErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+    }
 }

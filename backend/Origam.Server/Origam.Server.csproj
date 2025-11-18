@@ -52,6 +52,7 @@
     <Folder Include="assets\identity\lib" />
     <Folder Include="logs" />
     <Folder Include="Model\Data\" />
+    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
