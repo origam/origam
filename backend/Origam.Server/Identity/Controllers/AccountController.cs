@@ -1,10 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Authorization;
 using Origam.Server.Identity.Models;
@@ -17,16 +22,19 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     private readonly SignInManager<IOrigamUser> _signInManager;
     private readonly CoreUserManager<IOrigamUser> _userManager;
     private readonly IAuthenticationSchemeProvider schemeProvider;
+    private readonly RequestLocalizationOptions _requestLocalizationOptions;
 
     public AccountController(
         SignInManager<IOrigamUser> signInManager,
         CoreUserManager<IOrigamUser> userManager,
-        IAuthenticationSchemeProvider schemeProvider
+        IAuthenticationSchemeProvider schemeProvider,
+        IOptions<RequestLocalizationOptions> requestLocalizationOptions
     )
     {
         _signInManager = signInManager;
         _userManager = userManager;
         this.schemeProvider = schemeProvider;
+        _requestLocalizationOptions = requestLocalizationOptions.Value;
     }
 
     private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
@@ -159,6 +167,20 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 
     [HttpGet, AllowAnonymous]
     public IActionResult AccessDenied() => View();
+
+    [HttpPost]
+    public IActionResult SetLanguage(string culture, string returnUrl)
+    {
+        var cultureProvider = _requestLocalizationOptions
+            .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
+            .First();
+        Response.Cookies.Append(
+            cultureProvider.CookieName,
+            cultureProvider.MakeCookieValue(new RequestCulture(culture)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+        );
+        return LocalRedirect(returnUrl);
+    }
 
     private IActionResult RedirectToLocal(string returnUrl) =>
         Url.IsLocalUrl(returnUrl)
