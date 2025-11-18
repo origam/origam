@@ -70,12 +70,11 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
 
         var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-        // Safety net: ensure "sub" exists (Option B should already provide it)
         if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
         {
-            // pick your canonical id: BusinessPartnerId or user.Id
-            principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+            principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
         }
+        principal.SetClaim(OpenIddictConstants.Claims.Name, user.UserName);
 
         // Scopes/resources requested by the client
         principal.SetScopes(request.GetScopes());
@@ -124,7 +123,7 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
             // Ensure the subject claim exists
             if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
             }
 
             // Set the scopes and resources
@@ -156,7 +155,7 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
 
             if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
+                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
             }
 
             principal.SetScopes(request.GetScopes());

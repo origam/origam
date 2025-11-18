@@ -44,6 +44,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -258,13 +259,20 @@ namespace Origam.Server
                         Scopes.OpenId,
                         Scopes.Profile,
                         Scopes.OfflineAccess,
-                        "internal_api"
+                        "internal_api",
+                        "local_api"
                     ); // "internal_api" replaces LocalApi
                 })
                 .AddValidation(opt =>
                 {
                     opt.UseLocalServer();
                     opt.UseAspNetCore();
+                    opt.Configure(o =>
+                    {
+                        o.TokenValidationParameters.NameClaimType = OpenIddictConstants
+                            .Claims
+                            .Subject;
+                    });
                 });
 
             // [CHANGED] Authentication defaults — use OpenIddict validation
@@ -287,12 +295,42 @@ namespace Origam.Server
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
+                    "InternalApi",
+                    policy =>
+                    {
+                        policy.AddAuthenticationSchemes(AuthenticationScheme);
+                        policy.RequireAuthenticatedUser();
+
+                        policy.RequireAssertion(ctx =>
+                        {
+                            var scopes = ctx
+                                .User.FindAll(Claims.Scope)
+                                .SelectMany(c =>
+                                    c.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                );
+
+                            return scopes.Contains("internal_api");
+                        });
+                    }
+                );
+                
+                options.AddPolicy(
                     "LocalApi",
                     policy =>
                     {
                         policy.AddAuthenticationSchemes(AuthenticationScheme);
                         policy.RequireAuthenticatedUser();
-                        policy.RequireClaim(Claims.Scope, "internal_api");
+
+                        policy.RequireAssertion(ctx =>
+                        {
+                            var scopes = ctx
+                                .User.FindAll(Claims.Scope)
+                                .SelectMany(c =>
+                                    c.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                );
+
+                            return scopes.Contains("local_api");
+                        });
                     }
                 );
             });
