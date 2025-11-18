@@ -29,7 +29,7 @@ using Origam.Server.Model.About;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "LocalApi")]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class AboutController : AbstractController

@@ -16,21 +16,8 @@ public static class OpenIddictSeeder
         var apps = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
         var scopes = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
-        // Keep the old scope name for minimum churn (IdentityServerConstants.LocalApi.ScopeName == "local_api")
-        // Or rename everywhere to "internal_api" if you already switched your policy.
-        const string localApiScope = "local_api";
         const string internalApiScope = "internal_api";
 
-        if (await scopes.FindByNameAsync(localApiScope) is null)
-        {
-            await scopes.CreateAsync(
-                new OpenIddictScopeDescriptor
-                {
-                    Name = localApiScope,
-                    Resources = { "origam-local" },
-                }
-            );
-        }
         if (await scopes.FindByNameAsync(internalApiScope) is null)
         {
             await scopes.CreateAsync(
@@ -56,7 +43,6 @@ public static class OpenIddictSeeder
                         Permissions.GrantTypes.Password,
                         Permissions.GrantTypes.RefreshToken,
                         Permissions.Prefixes.Scope + "offline_access",
-                        Permissions.Prefixes.Scope + localApiScope,
                         Permissions.Prefixes.Scope + internalApiScope,
                     },
                 }
@@ -99,7 +85,6 @@ public static class OpenIddictSeeder
                     Permissions.Prefixes.Scope + "openid",
                     Permissions.Scopes.Profile,
                     Permissions.Prefixes.Scope + "offline_access",
-                    Permissions.Prefixes.Scope + localApiScope,
                     Permissions.Prefixes.Scope + internalApiScope,
                 }
             );
@@ -140,7 +125,6 @@ public static class OpenIddictSeeder
                     Permissions.Prefixes.Scope + "openid",
                     Permissions.Scopes.Profile,
                     Permissions.Prefixes.Scope + "offline_access",
-                    Permissions.Prefixes.Scope + localApiScope,
                     Permissions.Prefixes.Scope + internalApiScope,
                 }
             );

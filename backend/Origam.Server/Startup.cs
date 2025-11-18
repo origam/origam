@@ -277,26 +277,6 @@ public class Startup
                     });
                 }
             );
-
-            options.AddPolicy(
-                "LocalApi",
-                policy =>
-                {
-                    policy.AddAuthenticationSchemes(AuthenticationScheme);
-                    policy.RequireAuthenticatedUser();
-
-                    policy.RequireAssertion(ctx =>
-                    {
-                        var scopes = ctx
-                            .User.FindAll(Claims.Scope)
-                            .SelectMany(c =>
-                                c.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                            );
-
-                        return scopes.Contains("local_api");
-                    });
-                }
-            );
         });
 
         services.AddSoapCore();

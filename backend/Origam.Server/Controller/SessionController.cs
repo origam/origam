@@ -36,7 +36,7 @@ using Origam.Server.Model.Session;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "LocalApi")]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class SessionController : AbstractController

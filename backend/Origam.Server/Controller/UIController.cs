@@ -32,7 +32,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "LocalApi")]
+[Authorize(Policy = "InternalApi")]
 public class UIController : AbstractController
 {
     private readonly IPersistenceService persistenceService;

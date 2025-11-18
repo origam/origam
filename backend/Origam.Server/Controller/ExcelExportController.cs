@@ -37,7 +37,7 @@ using Origam.Server.Model.Excel;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "LocalApi")]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class ExcelExportController : AbstractController

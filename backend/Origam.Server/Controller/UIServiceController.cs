@@ -56,7 +56,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "LocalApi")]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class UIServiceController : AbstractController

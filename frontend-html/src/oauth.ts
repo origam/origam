@@ -26,7 +26,7 @@ const config = {
   client_id: "origamWebClient",
   redirect_uri: `${windowLocation}/origamClientCallback/`,
   response_type: "code",
-  scope: "openid offline_access internal_api local_api",
+  scope: "openid offline_access internal_api",
   post_logout_redirect_uri: `${windowLocation}`,
   automaticSilentRenew: true,
   silent_redirect_uri: `${windowLocation}/origamClientCallbackRenew/`,
