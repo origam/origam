@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -41,6 +41,7 @@ class Program
 
         var services = new ServiceCollection();
         services.AddSingleton<IVisualService, VisualService>();
+        services.AddSingleton<IConnectionStringService, ConnectionStringService>();
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IFileSystemService, FileSystemService>();

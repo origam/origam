@@ -23,11 +23,13 @@ using System.Text;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
+using Origam.Composer.Interfaces.Services;
 using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class DockerBuilderTask : IDockerBuilderTask
+public class DockerBuilderTask(IConnectionStringService connectionStringService)
+    : IDockerBuilderTask
 {
     public string Name => Strings.BuilderTask_Create_Docker_run_scripts;
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
@@ -57,19 +59,11 @@ public class DockerBuilderTask : IDockerBuilderTask
                 ? "postgresql"
                 : project.DatabaseType.ToString().ToLower();
 
-        string dbUserName =
-            project.DatabaseType == DatabaseType.PgSql
-                ? project.DatabaseInternalUserName
-                : project.DatabaseUserName;
-
-        string dbPassword =
-            project.DatabaseType == DatabaseType.PgSql
-                ? project.DatabaseInternalUserPassword
-                : project.DatabasePassword;
-
         var sb = new StringBuilder();
         sb.AppendLine($"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
-        sb.AppendLine($"OrigamSettings__DataConnectionString={GetConnectionString(project)}");
+        sb.AppendLine(
+            $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project)}"
+        );
         sb.AppendLine($"OrigamSettings__Name={project.Name}");
         sb.AppendLine($"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}");
         sb.AppendLine($"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
@@ -167,48 +161,6 @@ public class DockerBuilderTask : IDockerBuilderTask
                 project.CommandsOutputFormat == CommandOutputFormat.Cmd ? "cmd" : "sh",
         };
         return dockerConfig;
-    }
-
-    private string GetDbHost(Project project)
-    {
-        if (
-            project.DatabaseHost.Equals("localhost")
-            || project.DatabaseHost.Equals(".")
-            || project.DatabaseHost.Equals("127.0.0.1")
-        )
-        {
-            return "host.docker.internal";
-        }
-        return project.DatabaseHost;
-    }
-
-    private string GetConnectionString(Project project)
-    {
-        string dbHost = GetDbHost(project);
-
-        if (project.DatabaseType == DatabaseType.MsSql)
-        {
-            string dbUserName = project.DatabaseUserName;
-            string dbPassword = project.DatabasePassword;
-
-            return $"Encrypt=False;Data Source={dbHost},{project.DatabasePort};"
-                + $"User ID={dbUserName};Password={dbPassword};"
-                + $"Initial Catalog={project.DatabaseName};";
-        }
-
-        if (project.DatabaseType == DatabaseType.PgSql)
-        {
-            string dbUserName = project.DatabaseInternalUserName;
-            string dbPassword = project.DatabaseInternalUserPassword;
-
-            return $"sslmode=disable;Application Name=Origam;"
-                + $"Host={dbHost};Port={project.DatabasePort};"
-                + $"Username={dbUserName};Password={dbPassword};"
-                + $"Database={project.DatabaseName};Pooling=True;"
-                + $"Search Path={project.DatabaseName},public";
-        }
-
-        throw new NotSupportedException("Unsupported database type.");
     }
 
     public void Rollback(Project project) { }
