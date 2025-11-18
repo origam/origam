@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +16,44 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 {
     private readonly SignInManager<IOrigamUser> _signInManager;
     private readonly CoreUserManager<IOrigamUser> _userManager;
+    private readonly IAuthenticationSchemeProvider schemeProvider;
 
     public AccountController(
         SignInManager<IOrigamUser> signInManager,
-        CoreUserManager<IOrigamUser> userManager
+        CoreUserManager<IOrigamUser> userManager,
+        IAuthenticationSchemeProvider schemeProvider
     )
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        this.schemeProvider = schemeProvider;
+    }
+
+    private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
+    {
+        var schemes = await schemeProvider.GetAllSchemesAsync();
+        var externalProviders = schemes
+            .Where(x => x.DisplayName != null)
+            .Select(x => new ExternalProvider
+            {
+                DisplayName = x.DisplayName,
+                AuthenticationScheme = x.Name,
+            })
+            .ToList();
+        return new LoginViewModel
+        {
+            EnableLocalLogin = true,
+            ReturnUrl = returnUrl,
+            VisibleExternalProviders = externalProviders,
+        };
     }
 
     [HttpGet, AllowAnonymous]
-    public IActionResult Login(string returnUrl = null)
+    public async Task<IActionResult> Login(string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        return View();
+        LoginViewModel model = await BuildLoginViewModelAsync(returnUrl);
+        return View(model);
     }
 
     [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]

@@ -1,16 +1,56 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+@using Microsoft.Extensions.Options
+@using Origam
+@using Origam.Server
+@using Origam.Server.Configuration
+@inject IOptions<CustomAssetsConfig> ConfigOptions;
+@{
+    CustomAssetsConfig config = ConfigOptions.Value;
+    var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl)
+        ? "/assets/identity/icons/origam-logo.svg"
+        : config.IdentityGuiLogoUrl;
+
+    OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+}
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8" />
-    <title>@ViewData["Title"]</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @RenderSection("Head", required: false)
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@string.Format(SharedLocalizer.GetString("IdentityServerTitle"), settings.TitleText )</title>
+    <link rel="stylesheet" href="~/assets/identity/css/css.css?version=0.0.0.0" />
+    <link rel="stylesheet" href="~/assets/identity/css/main.css?version=0.0.0.0" />
+    <link rel="stylesheet" href="~/assets/identity/css/login.css?version=0.0.0.0" />
 </head>
 <body>
-<main role="main">
+<div id="overlay" class="page-content">
+    <h3>
+        @SharedLocalizer["BrowserNotCompatible"]
+    </h3>
+    <div id="browserLinks">
+        <a class="btn normal-size primary" href="https://www.google.com/chrome/">Chrome</a>
+        <a class="btn normal-size primary" href="https://www.mozilla.org/firefox/new/">Firefox</a>
+        <a class="btn normal-size primary" id="edgeLink" href="https://www.microsoft.com/edge/">Edge</a>
+        <a class="btn normal-size primary" id="safariLink" href="https://www.apple.com/safari/">Safari</a>
+    </div>
+    <div class="input-row">
+        <a id="continueAnywayLink">@SharedLocalizer["ContinueAnyway"]</a>
+    </div>
+</div>
+<div id="page-container" class="page-content">
+        <div class="logo-container centered">
+            <img class="logo" src=@logoUrl />
+        </div>
     @RenderBody()
-</main>
+</div>
 
-@RenderSection("Scripts", required: false)
+<script src="~/assets/identity/js/form-submit.js?version=0.0.0.0"></script>
+<script src="~/assets/identity/js/custom.js?version=0.0.0.0"></script>
+<script src="~/assets/supportedBrowserRegEx.js?version=0.0.0.0"></script>
+<script src="~/assets/identity/js/browser-check.js?version=0.0.0.0"></script>
+@RenderSection("scripts", required: false)
 </body>
 </html>

@@ -44,7 +44,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OpenIddict.Abstractions;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -405,7 +404,7 @@ public class Startup
                         $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
-                    options.SignInScheme = IdentityConstants.ExternalScheme; 
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
