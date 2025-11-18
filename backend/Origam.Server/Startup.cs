@@ -154,6 +154,8 @@ public class Startup
             o.LoginPath = "/Account/Login";
             o.LogoutPath = "/Account/Logout";
             o.AccessDeniedPath = "/Account/AccessDenied";
+            o.ExpireTimeSpan = TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
+            o.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
         });
 
         services.Configure<IdentityOptions>(options =>
@@ -245,7 +247,7 @@ public class Startup
                 opt.UseAspNetCore();
                 opt.Configure(o =>
                 {
-                    o.TokenValidationParameters.NameClaimType = OpenIddictConstants.Claims.Subject;
+                    o.TokenValidationParameters.NameClaimType = Claims.Subject;
                 });
             });
 
@@ -370,7 +372,7 @@ public class Startup
                 {
                     options.ClientId = identityServerConfig.GoogleLogin.ClientId;
                     options.ClientSecret = identityServerConfig.GoogleLogin.ClientSecret;
-                    options.SignInScheme = IdentityConstants.ExternalScheme; // [CHANGED]
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
@@ -386,7 +388,7 @@ public class Startup
                     microsoftOptions.ClientSecret = identityServerConfig
                         .MicrosoftLogin
                         .ClientSecret;
-                    microsoftOptions.SignInScheme = IdentityConstants.ExternalScheme; // [CHANGED]
+                    microsoftOptions.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
@@ -403,7 +405,7 @@ public class Startup
                         $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
-                    options.SignInScheme = IdentityConstants.ExternalScheme; // [CHANGED]
+                    options.SignInScheme = IdentityConstants.ExternalScheme; 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
