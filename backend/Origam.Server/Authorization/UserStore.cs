@@ -373,7 +373,7 @@ public sealed class UserStore
         }
         return origamUserDataSet.Tables["OrigamUser"].Rows[0];
     }
-    
+
     public static DataSet GetOrigamUserDataSet(Guid methodId, string paramName, object paramValue)
     {
         return GetOrigamUserDataSet(methodId, paramName, paramValue, null);

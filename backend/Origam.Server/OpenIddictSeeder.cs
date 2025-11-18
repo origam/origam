@@ -92,7 +92,7 @@ public static class OpenIddictSeeder
                 {
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Token,
-                    // Permissions.Endpoints.Logout,                // if you expose end-session
+                    Permissions.Endpoints.EndSession,
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.ResponseTypes.Code,
                     Permissions.GrantTypes.RefreshToken,
@@ -133,7 +133,7 @@ public static class OpenIddictSeeder
                 {
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Token,
-                    // Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.EndSession,
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.ResponseTypes.Code,
                     Permissions.GrantTypes.RefreshToken,

@@ -313,7 +313,7 @@ namespace Origam.Server
                         });
                     }
                 );
-                
+
                 options.AddPolicy(
                     "LocalApi",
                     policy =>

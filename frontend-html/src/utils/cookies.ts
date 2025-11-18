@@ -139,7 +139,7 @@ export async function initLocaleCookie(ctx: any) {
     return;
   }
   const api = getApi(ctx);
-  document.cookie = "origamCurrentLocale=" + await api.defaultLocalizationCookie();
+  document.cookie = "origamCurrentLocale=" + await api.defaultLocalizationCookie() + "; path=/;";
 
   const newCookieValue = decodeURIComponent(getCookie("origamCurrentLocale"));
   if (!isValidLocalizationCookie(newCookieValue)) {

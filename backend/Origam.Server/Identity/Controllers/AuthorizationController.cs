@@ -166,4 +166,20 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
 
         return BadRequest();
     }
+
+    [HttpGet("~/connect/logout")]
+    [HttpPost("~/connect/logout")]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        OpenIddictRequest request = HttpContext.GetOpenIddictServerRequest();
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        return SignOut(
+            properties: new AuthenticationProperties
+            {
+                RedirectUri = request?.PostLogoutRedirectUri ?? Url.Content("~/"),
+            },
+            authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+        );
+    }
 }
