@@ -72,13 +72,11 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
 
         if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
         {
-            principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
+            principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
         }
         principal.SetClaim(OpenIddictConstants.Claims.Name, user.UserName);
 
-        // Scopes/resources requested by the client
-        principal.SetScopes(request.GetScopes());
-        principal.SetResources("origam-local", "api"); // adjust to your resources
+        SetScopes(principal, request);
 
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
@@ -123,12 +121,10 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
             // Ensure the subject claim exists
             if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
+                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
             }
 
-            // Set the scopes and resources
-            principal.SetScopes(request.GetScopes());
-            principal.SetResources("origam-local", "api");
+            SetScopes(principal, request);
 
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
@@ -151,20 +147,41 @@ public class AuthorizationController : Microsoft.AspNetCore.Mvc.Controller
                 return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
-
+            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user);
             if (!principal.HasClaim(c => c.Type == OpenIddictConstants.Claims.Subject))
             {
-                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.UserName);
+                principal.SetClaim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId);
             }
 
-            principal.SetScopes(request.GetScopes());
-            principal.SetResources("origam-local", "api");
-
+            SetScopes(principal, request);
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         return BadRequest();
+    }
+
+    private static void SetScopes(ClaimsPrincipal principal, OpenIddictRequest request)
+    {
+        principal.SetScopes(request.GetScopes());
+        principal.SetResources("origam-local", "api");
+        principal.SetDestinations(claim =>
+            claim.Type switch
+            {
+                OpenIddictConstants.Claims.Name => new[]
+                {
+                    OpenIddictConstants.Destinations.AccessToken,
+                    OpenIddictConstants.Destinations.IdentityToken,
+                },
+
+                OpenIddictConstants.Claims.Subject => new[]
+                {
+                    OpenIddictConstants.Destinations.AccessToken,
+                    OpenIddictConstants.Destinations.IdentityToken,
+                },
+
+                _ => new[] { OpenIddictConstants.Destinations.AccessToken },
+            }
+        );
     }
 
     [HttpGet("~/connect/logout")]

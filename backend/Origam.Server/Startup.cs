@@ -246,7 +246,8 @@ public class Startup
                 opt.UseAspNetCore();
                 opt.Configure(o =>
                 {
-                    o.TokenValidationParameters.NameClaimType = Claims.Subject;
+                    o.TokenValidationParameters.NameClaimType = Claims.Name;
+                    o.TokenValidationParameters.RoleClaimType = Claims.Role;
                 });
             });
 

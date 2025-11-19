@@ -16,7 +16,7 @@ public class ClaimsFactory : UserClaimsPrincipalFactory<IOrigamUser>
     {
         var id = await base.GenerateClaimsAsync(user);
         id.RemoveClaim(id.FindFirst(OpenIddictConstants.Claims.Subject));
-        id.AddClaim(new Claim(OpenIddictConstants.Claims.Subject, user.UserName));
+        id.AddClaim(new Claim(OpenIddictConstants.Claims.Subject, user.BusinessPartnerId));
         id.AddClaim(new Claim(OpenIddictConstants.Claims.Name, user.UserName ?? ""));
         if (!string.IsNullOrEmpty(user.Email))
         {

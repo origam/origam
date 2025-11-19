@@ -116,7 +116,21 @@ public sealed class UserStore
 
     public Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
     {
-        return FindByNameAsync(userId, cancellationToken);
+        DataRow origamUserRow = FindOrigamUserRowById(userId);
+        if (origamUserRow == null)
+        {
+            return Task.FromResult<IOrigamUser>(null);
+        }
+
+        DataRow businessPartnerRow = FindBusinessPartnerRowById(userId);
+        if (businessPartnerRow == null)
+        {
+            return Task.FromResult<IOrigamUser>(null);
+        }
+
+        return Task.FromResult(
+            UserTools.Create(origamUserRow: origamUserRow, businessPartnerRow: businessPartnerRow)
+        );
     }
 
     public Task<IOrigamUser> FindByNameAsync(
@@ -366,6 +380,34 @@ public sealed class UserStore
             "OrigamUser_parUserName",
             normalizedUserName,
             transactionId
+        );
+        if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+        {
+            return null;
+        }
+        return origamUserDataSet.Tables["OrigamUser"].Rows[0];
+    }
+
+    private static DataRow FindBusinessPartnerRowById(string userId)
+    {
+        DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
+            GET_BUSINESS_PARTNER_BY_ID,
+            "BusinessPartner_parId",
+            userId
+        );
+        if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
+        {
+            return null;
+        }
+        return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
+    }
+
+    private DataRow FindOrigamUserRowById(string userId)
+    {
+        DataSet origamUserDataSet = GetOrigamUserDataSet(
+            GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID,
+            "OrigamUser_parBusinessPartnerId",
+            userId
         );
         if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
         {
