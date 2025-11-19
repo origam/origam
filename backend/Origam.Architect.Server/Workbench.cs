@@ -28,6 +28,7 @@ using Origam.Extensions;
 using Origam.OrigamEngine;
 using Origam.Rule;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Workflow;
 
@@ -144,6 +145,9 @@ public class Workbench
         ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
         ServiceManager.Services.AddService(new AttachmentService());
         ServiceManager.Services.AddService(new RuleEngineService());
+
+        var settings = ConfigurationManager.GetActiveConfiguration();
+        ServiceManager.Services.AddService(new DatabaseProfileService(settings));
     }
 
     public void RunBackgroundInitializationTasks()
