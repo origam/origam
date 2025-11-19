@@ -20,8 +20,6 @@
         "PathToBrandIcon": "icons/origam.png"
     },
 	"IdentityServerConfig": {
-        "PathToJwtCertificate": "serverCore.pfx",
-        "PasswordForJwtCertificate": "certpassword",
         "UseGoogleLogin": "false",
         "GoogleClientId": "",
         "GoogleClientSecret": "",

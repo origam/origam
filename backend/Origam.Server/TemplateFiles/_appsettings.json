@@ -37,8 +37,6 @@
     "PrivateApiAuthentication":  "Cookie",
     "CookieExpirationMinutes": 60,
     "CookieSlidingExpiration": true,
-    "PathToJwtCertificate": "serverCore.pfx",
-    "PasswordForJwtCertificate": "bla",
     // uncomment following section to enable Google Login
     /*
     "GoogleLogin": {

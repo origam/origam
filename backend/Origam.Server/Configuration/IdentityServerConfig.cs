@@ -51,8 +51,6 @@ public static class IdentityServerDefaults
 
 public class IdentityServerConfig
 {
-    public string PathToJwtCertificate { get; }
-    public string PasswordForJwtCertificate { get; }
     public GoogleLogin GoogleLogin { get; }
     public MicrosoftLogin MicrosoftLogin { get; }
     public AzureAdLogin AzureAdLogin { get; }
@@ -67,10 +65,6 @@ public class IdentityServerConfig
     public IdentityServerConfig(IConfiguration configuration)
     {
         var identityServerSection = configuration.GetSectionOrThrow("IdentityServerConfig");
-        PathToJwtCertificate = identityServerSection.GetStringOrThrow("PathToJwtCertificate");
-        PasswordForJwtCertificate = identityServerSection.GetValue<string>(
-            "PasswordForJwtCertificate"
-        );
         CookieSlidingExpiration = identityServerSection.GetValue("CookieSlidingExpiration", true);
         PrivateApiAuthentication = identityServerSection.GetValue(
             "PrivateApiAuthentication",
