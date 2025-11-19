@@ -114,15 +114,16 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             return RedirectToLocal(returnUrl);
         }
-
+        LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl);
+        newModel.UserName = model.UserName;
         if (result.IsLockedOut)
         {
             ModelState.AddModelError(string.Empty, "Account locked.");
-            return View();
+            return View(newModel);
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login.");
-        return View();
+        return View(newModel);
     }
 
     [HttpGet]

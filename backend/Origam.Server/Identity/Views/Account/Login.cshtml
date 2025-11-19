@@ -103,7 +103,7 @@
     }
     <br />
 }
-@if (Model.VisibleExternalProviders.Any())
+@if (Model.VisibleExternalProviders != null && Model.VisibleExternalProviders.Any())
 {
     <div class="detailview-module with-title">
         <h2>@SharedLocalizer["ExternalLogin"]</h2>
@@ -128,7 +128,7 @@
 
 <partial name="_ValidationSummary"/>
 
-@if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+@if (!Model.EnableLocalLogin && (Model.VisibleExternalProviders == null || !Model.VisibleExternalProviders.Any()))
 {
     <div class="alert alert-warning">
         <strong>@SharedLocalizer["InvalidLoginRequest"]</strong>
