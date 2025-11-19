@@ -28,7 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
-namespace Origam.Server.Controller;
+namespace Origam.Server.Model.Excel;
 
 public class FileCallbackResult : FileResult
 {

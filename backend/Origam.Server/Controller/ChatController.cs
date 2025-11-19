@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
@@ -37,6 +38,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
 
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("chatrooms/[controller]")]
 public class ChatController : ControllerBase
