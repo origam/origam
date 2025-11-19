@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using MoreLinq;
+using Origam.Architect.Server.Enums;
 using Origam.DA.Service;
 using Origam.Schema.DeploymentModel;
 using Origam.Workbench.Services;
@@ -114,12 +115,9 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                var databaseType = (DA.Common.Enums.DatabaseType)
-                    Enum.Parse(
-                        typeof(DA.Common.Enums.DatabaseType),
-                        platform.GetParseEnum(platform.DataService)
-                    );
-                if (databaseType == activity.DatabaseType)
+                var databaseType = (DatabaseType)
+                    Enum.Parse(typeof(DatabaseType), platform.GetParseEnum(platform.DataService));
+                if (databaseType == (DatabaseType)activity.DatabaseType)
                 {
                     agent.SetDataService(DataServiceFactory.GetDataService(platform));
                     result = agent.ExecuteUpdate(activity.CommandText, transactionId);
