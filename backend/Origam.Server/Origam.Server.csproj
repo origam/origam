@@ -50,9 +50,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
+    <Folder Include="IdentityServerGui\Account\" />
+    <Folder Include="IdentityServerGui\Home\" />
     <Folder Include="logs" />
     <Folder Include="Model\Data\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />

@@ -280,6 +280,142 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         return View(model);
     }
 
+    // GET: /Account/RegisterConfirmation
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult RegisterConfirmation()
+    {
+        return View();
+    }
+
+    // GET: /Account/Register
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register(string returnUrl = null)
+    {
+        if (!_userConfig.UserRegistrationAllowed)
+        {
+            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+        }
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
+
+    // POST: /Account/Register
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!_userConfig.UserRegistrationAllowed)
+        {
+            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+        }
+        if (ModelState.IsValid)
+        {
+            IOrigamUser user = new User
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                Name = model.Name,
+                RoleId = _userConfig.NewUserRoleId,
+            };
+            IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
+            user = await _userManager.FindByNameAsync(user.UserName);
+            if (result.Succeeded)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                _mailService.SendNewUserToken(user, code);
+                return RedirectToAction(nameof(RegisterConfirmation), "Account");
+            }
+            AddErrors(result);
+        }
+        return View(model);
+    }
+
+    // GET: /Account/RegisterInitialUser
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult RegisterInitialUser()
+    {
+        if (!UserTools.IsInitialSetupNeeded())
+        {
+            return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
+        }
+        return View();
+    }
+
+    // POST: /Account/RegisterInitialUser
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegisterInitialUser(RegisterViewModel model)
+    {
+        if (!UserTools.IsInitialSetupNeeded())
+        {
+            return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
+        }
+
+        if (ModelState.IsValid)
+        {
+            IOrigamUser user = new User
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                Name = model.Name,
+                RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE,
+                SecurityStamp = "",
+            };
+            IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
+            user = await _userManager.FindByNameAsync(user.UserName);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(
+                    user
+                );
+                await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
+                UserTools.SetInitialSetupComplete();
+                return Redirect("/");
+            }
+            AddErrors(result);
+        }
+        return View(model);
+    }
+
+    // GET: /Account/ConfirmEmail
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    {
+        if (!_userConfig.UserRegistrationAllowed)
+        {
+            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+        }
+        if (userId == null || code == null)
+        {
+            _logger.LogWarning($"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\"");
+            return View("Error");
+        }
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            _logger.LogWarning($"User not found: userId:\"{userId}\"");
+            return View("Error");
+        }
+        var result = await _userManager.ConfirmEmailAsync(user, code);
+        if (result.Succeeded)
+        {
+            return View("EmailConfirmation");
+        }
+        string errors = string.Join("\n", result.Errors.Select(error => error.Description));
+        _logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
+
+        return View("Error");
+    }
+
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout(string returnUrl = null)
     {
