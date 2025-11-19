@@ -47,6 +47,7 @@ using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
+using Origam.Server.ClientAuthentication;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Service.Core;
@@ -348,7 +349,7 @@ public class Startup
                 .GetTypes()
                 .Where(type => typeof(IClientAuthenticationProvider).IsAssignableFrom(type))
                 .Select(type => (IClientAuthenticationProvider)Activator.CreateInstance(type))
-                // .Append(new ResourceOwnerPasswordAuthenticationProvider())
+                .Append(new ResourceOwnerPasswordAuthenticationProvider())
                 .ToList()
                 .ForEach(provider =>
                 {

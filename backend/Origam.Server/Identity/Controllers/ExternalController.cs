@@ -127,8 +127,9 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         var providerUserId = info.ProviderKey;
         var claims = externalUser.Claims.ToList();
 
-        var externalCallbackProcessingInfo =
-            identityServerConfig.GetExternalCallbackProcessingInfo(provider);
+        var externalCallbackProcessingInfo = identityServerConfig.GetExternalCallbackProcessingInfo(
+            provider
+        );
 
         var checkedClaim = externalUser.FindFirst(claim =>
             claim.Type == externalCallbackProcessingInfo.ClaimType

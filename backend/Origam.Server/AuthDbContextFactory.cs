@@ -9,10 +9,8 @@ namespace Origam.Server
     {
         public AuthDbContext CreateDbContext(string[] args)
         {
-            // Resolve content root (project folder when run from CLI)
             var basePath = Directory.GetCurrentDirectory();
 
-            // Build configuration like the app would, but minimal (no DI)
             var config = new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: true)
@@ -20,7 +18,6 @@ namespace Origam.Server
                 .AddEnvironmentVariables()
                 .Build();
 
-            // Prefer "AuthDb", fall back to "DefaultConnection"
             var cs =
                 config.GetConnectionString("AuthDb")
                 ?? config.GetConnectionString("DefaultConnection")
@@ -31,12 +28,10 @@ namespace Origam.Server
                 cs,
                 b =>
                 {
-                    // Make sure migrations end up in this assembly
                     b.MigrationsAssembly(typeof(AuthDbContextFactory).Assembly.FullName);
                 }
             );
 
-            // IMPORTANT for OpenIddict schema
             optionsBuilder.UseOpenIddict();
 
             return new AuthDbContext(optionsBuilder.Options);
