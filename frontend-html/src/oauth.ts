@@ -19,17 +19,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { UserManager } from "oidc-client-ts";
 
-const windowLocation = window.location.origin;
+const isDev = import.meta.env.DEV;
+
+const frontendOrigin = window.location.origin;
+
+// In dev, the identity server still runs on 44357, so fix authority accordingly
+const authority = isDev
+  ? "https://localhost:44357"
+  : frontendOrigin; // in prod, SPA is served by the server
+
+const redirectBase = frontendOrigin; // where the SPA is actually running (5173 in dev, server in prod)
 
 const config = {
-  authority: `${windowLocation}`,
+  authority,
   client_id: "origamWebClient",
-  redirect_uri: `${windowLocation}/origamClientCallback/`,
+  redirect_uri: `${redirectBase}/origamClientCallback/`,
   response_type: "code",
   scope: "openid offline_access internal_api",
-  post_logout_redirect_uri: `${windowLocation}`,
+  post_logout_redirect_uri: `${redirectBase}`,
   automaticSilentRenew: true,
-  silent_redirect_uri: `${windowLocation}/origamClientCallbackRenew/`,
+  silent_redirect_uri: `${redirectBase}/origamClientCallbackRenew/`,
 };
 
 export const userManager = new UserManager(config);
@@ -43,7 +52,6 @@ export async function ensureLogin() {
   }
 
   const path = window.location.pathname;
-  debugger;
   // Handle the OIDC redirect callback coming back from the server
   if (path.startsWith("/origamClientCallback")) {
     try {
@@ -67,8 +75,6 @@ export async function ensureLogin() {
   if (user && user.access_token) {
     return user;
   } else {
-    console.log("windowLocation: " + windowLocation);
-    console.log("userManager.signinRedirect");
     await userManager.signinRedirect();
   }
 }

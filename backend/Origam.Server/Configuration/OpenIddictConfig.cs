@@ -72,11 +72,12 @@ public class OpenIddictConfig
         GoogleLogin = ConfigureGoogleLogin(openIddictSection);
         MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
         AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
+        var clientSection = openIddictSection.GetSectionOrThrow("ClientApplicationTemplates");
         ClientApplicationTemplates = new ClientApplicationTemplates
         {
-            WebClient = ConfigureWebClient(openIddictSection),
-            MobileClient = ConfigureMobileClient(openIddictSection),
-            ServerClient = ConfigureServerClient(openIddictSection),
+            WebClient = ConfigureWebClient(clientSection),
+            MobileClient = ConfigureMobileClient(clientSection),
+            ServerClient = ConfigureServerClient(clientSection),
         };
         AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
     }

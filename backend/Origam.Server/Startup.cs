@@ -334,6 +334,22 @@ public class Startup
                         .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
             });
         }
+
+        var allowedCorsOrigins = openIddictConfig.ClientApplicationTemplates.WebClient.AllowedCorsOrigins;
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "OrigamCorsPolicy",
+                builder =>
+                {
+                    builder
+                        .WithOrigins(allowedCorsOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // required for cookie auth and OIDC
+                }
+            );
+        });
     }
 
     private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders(
@@ -480,6 +496,7 @@ public class Startup
         app.UseWorkQueueApi();
 
         app.UseRouting();
+        app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseEndpoints(endpoints =>
@@ -562,8 +579,6 @@ public class Startup
                 }
             );
         }
-
-        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
         if (startUpConfiguration.EnableMiniProfiler)
         {
