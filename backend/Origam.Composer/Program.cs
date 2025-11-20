@@ -41,6 +41,7 @@ class Program
 
         var services = new ServiceCollection();
         services.AddSingleton<IVisualService, VisualService>();
+        services.AddSingleton<IConnectionStringService, ConnectionStringService>();
         services.AddSingleton<IProjectBuilderService, ProjectBuilderService>();
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
         services.AddSingleton<IFileSystemService, FileSystemService>();
@@ -60,6 +61,7 @@ class Program
         services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
         services.AddSingleton<IDockerBuilderTask, DockerBuilderTask>();
         services.AddSingleton<ICreateGitRepositoryBuilderTask, CreateGitRepositoryBuilderTask>();
+        services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);
         var app = new CommandApp(registrar);

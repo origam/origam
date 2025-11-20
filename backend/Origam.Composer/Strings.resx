@@ -90,6 +90,9 @@
     <data name="BuilderTask_Create_new_Package" xml:space="preserve">
         <value>Create new Package</value>
     </data>
+    <data name="BuilderTask_Print_Settings_object" xml:space="preserve">
+        <value>Print OrigamSettings xml object</value>
+    </data>
     <data name="BuilderTask_Create_new_Admin_user" xml:space="preserve">
         <value>Create new Admin user (Client web application)</value>
     </data>
