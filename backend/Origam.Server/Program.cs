@@ -22,9 +22,17 @@ namespace Origam.Server
                 var host = CreateWebHostBuilder(args).Build();
                 using (var scope = host.Services.CreateScope())
                 {
-                    var sp = scope.ServiceProvider;
-                    var cfg = sp.GetRequiredService<IdentityServerConfig>();
-                    OpenIddictSeeder.SeedAsync(sp, cfg).GetAwaiter().GetResult();
+                    var provider = scope.ServiceProvider;
+                    var startUpConfiguration = provider.GetRequiredService<StartUpConfiguration>();
+                    var identityServerConfig = provider.GetRequiredService<IdentityServerConfig>();
+                    var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+
+                    OrigamUtils.ConnectOrigamRuntime(
+                        loggerFactory,
+                        startUpConfiguration.ReloadModelWhenFilesChangesDetected
+                    );
+                    OrigamUtils.CleanUpDatabase();
+                    OpenIddictSeeder.SeedAsync(provider, identityServerConfig).GetAwaiter().GetResult();
                 }
 
                 host.Run();

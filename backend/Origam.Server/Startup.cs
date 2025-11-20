@@ -93,7 +93,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
-
+        services.AddSingleton(startUpConfiguration);
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
@@ -203,10 +203,10 @@ public class Startup
 
         services.AddDbContext<AuthDbContext>(opts =>
         {
-            var cs =
+            string connectionString =
                 Configuration.GetConnectionString("AuthDb")
                 ?? Configuration.GetConnectionString("DefaultConnection");
-            opts.UseSqlServer(cs);
+            opts.UseSqlServer(connectionString);
             opts.UseOpenIddict();
         });
 
@@ -576,10 +576,5 @@ public class Startup
 
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
-        OrigamUtils.ConnectOrigamRuntime(
-            loggerFactory,
-            startUpConfiguration.ReloadModelWhenFilesChangesDetected
-        );
-        OrigamUtils.CleanUpDatabase();
     }
 }
