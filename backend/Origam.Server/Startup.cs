@@ -218,7 +218,8 @@ public class Startup
             })
             .AddServer(options =>
             {
-                options.SetAuthorizationEndpointUris("/connect/authorize")
+                options
+                    .SetAuthorizationEndpointUris("/connect/authorize")
                     .SetTokenEndpointUris("/connect/token")
                     .SetIntrospectionEndpointUris("/connect/introspect")
                     .SetEndSessionEndpointUris("/connect/logout");
@@ -228,7 +229,8 @@ public class Startup
                 options.AllowClientCredentialsFlow();
                 options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
                 options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
-                options.UseAspNetCore()
+                options
+                    .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
@@ -335,7 +337,10 @@ public class Startup
             });
         }
 
-        var allowedCorsOrigins = openIddictConfig.ClientApplicationTemplates.WebClient.AllowedCorsOrigins;
+        var allowedCorsOrigins = openIddictConfig
+            .ClientApplicationTemplates
+            .WebClient
+            .AllowedCorsOrigins;
         services.AddCors(options =>
         {
             options.AddPolicy(
