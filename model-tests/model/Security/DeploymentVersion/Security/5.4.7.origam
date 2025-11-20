@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.5.1"
+    x:id="b42dfc69-58a3-4819-9045-3e12c8e3b275"
+    asi:name="5.4.7"
+    dv:version="5.4.7">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.4.7.origam___commandText___c1e3da8d-8c3b-43ca-94d1-258c8e434859.txt"
+      x:id="c1e3da8d-8c3b-43ca-94d1-258c8e434859"
+      asi:name="00020_PG_OpenIddictTables"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.4.7.origam___commandText___e865d7ac-416f-4209-a128-f9afe54eda95.txt"
+      x:id="e865d7ac-416f-4209-a128-f9afe54eda95"
+      asi:name="00010_OpenIddictTables"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>
