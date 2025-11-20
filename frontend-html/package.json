@@ -67,7 +67,7 @@
     "react-inlinesvg": "^4.2.0",
     "react-measure": "^2.5.2",
     "react-virtualized": "^9.22.6",
-    "sass": "^1.94.1",
+    "sass": "^1.94.2",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.5.0",
     "typescript": "^5.9.3",
