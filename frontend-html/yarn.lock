@@ -5955,14 +5955,14 @@ __metadata:
   linkType: hard
 
 "js-yaml@npm:^3.13.1":
-  version: 3.14.1
-  resolution: "js-yaml@npm:3.14.1"
+  version: 3.14.2
+  resolution: "js-yaml@npm:3.14.2"
   dependencies:
     argparse: "npm:^1.0.7"
     esprima: "npm:^4.0.0"
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 10c0/6746baaaeac312c4db8e75fa22331d9a04cccb7792d126ed8ce6a0bbcfef0cedaddd0c5098fade53db067c09fe00aa1c957674b4765610a8b06a5a189e46433b
+  checksum: 10c0/3261f25912f5dd76605e5993d0a126c2b6c346311885d3c483706cd722efe34f697ea0331f654ce27c00a42b426e524518ec89d65ed02ea47df8ad26dcc8ce69
   languageName: node
   linkType: hard
 
@@ -6664,12 +6664,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client-ts@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "oidc-client-ts@npm:3.4.0"
+"oidc-client-ts@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "oidc-client-ts@npm:3.4.1"
   dependencies:
     jwt-decode: "npm:^4.0.0"
-  checksum: 10c0/92aad7dcd23c1ada2f5ed2dea76d560bc5715e2e20b86fde93300c388f503ac2563a4da9c4234bd6f7184bee1eb2a91133d02c602911a7e704723c256dee4913
+  checksum: 10c0/cf22e9bdb032daa33213e70c6c0dce374aa7cfaa82fca7c82205ace67d7efc2c59200d02ac4c57bf436afd1c0e46dc99e0867ec6e1958e943cbc4e1389131fb7
   languageName: node
   linkType: hard
 
@@ -7338,7 +7338,7 @@ __metadata:
     mobx-react: "npm:6.3.1"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
-    oidc-client-ts: "npm:^3.4.0"
+    oidc-client-ts: "npm:^3.4.1"
     patch-package: "npm:^8.0.1"
     postinstall-postinstall: "npm:^2.1.0"
     react: "npm:^17.0.2"
@@ -7350,7 +7350,7 @@ __metadata:
     react-inlinesvg: "npm:^4.2.0"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
-    sass: "npm:^1.94.0"
+    sass: "npm:^1.94.1"
     stream-browserify: "npm:^3.0.0"
     string-strip-html: "npm:^13.5.0"
     ts-jest: "npm:^29.4.5"
@@ -7637,9 +7637,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.94.0":
-  version: 1.94.0
-  resolution: "sass@npm:1.94.0"
+"sass@npm:^1.94.1":
+  version: 1.94.1
+  resolution: "sass@npm:1.94.1"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -7650,7 +7650,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/e32968180d4a98b4a6468920ce77ca0428c651dbdfe139572138dc0264d8329a93d652299b1d6ffce20db3d8a4981e497a4e5c3a5e0163d47db41b1e1d913123
+  checksum: 10c0/ab6170dc272245940a271e7b24bc87ef0b5c732ff3b2b4b4ac50d6e714bc19bcc4537c058596486d82fe3d96d69821189e4b49c663c8a59ba475dbeff0cb1cd1
   languageName: node
   linkType: hard
 
