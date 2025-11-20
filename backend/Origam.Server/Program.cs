@@ -32,8 +32,8 @@ namespace Origam.Server
                         startUpConfiguration.ReloadModelWhenFilesChangesDetected
                     );
                     OrigamUtils.CleanUpDatabase();
-                    OpenIddictSeeder
-                        .SeedAsync(provider, identityServerConfig)
+                    OpenIddictConfigManager
+                        .CreateOrUpdateAsync(provider, identityServerConfig)
                         .GetAwaiter()
                         .GetResult();
                 }
