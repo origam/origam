@@ -143,19 +143,19 @@ public class Startup
             .AddDefaultTokenProviders()
             .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
 
-        services.Configure<RazorViewEngineOptions>(opts =>
+        services.Configure<RazorViewEngineOptions>(options =>
         {
-            opts.ViewLocationFormats.Add("/Identity/Views/{1}/{0}.cshtml");
-            opts.ViewLocationFormats.Add("/Identity/Views/Shared/{0}.cshtml");
+            options.ViewLocationFormats.Add("/Identity/Views/{1}/{0}.cshtml");
+            options.ViewLocationFormats.Add("/Identity/Views/Shared/{0}.cshtml");
         });
 
-        services.ConfigureApplicationCookie(o =>
+        services.ConfigureApplicationCookie(options =>
         {
-            o.LoginPath = "/Account/Login";
-            o.LogoutPath = "/Account/Logout";
-            o.AccessDeniedPath = "/Account/AccessDenied";
-            o.ExpireTimeSpan = TimeSpan.FromMinutes(openIddictConfig.CookieExpirationMinutes);
-            o.SlidingExpiration = openIddictConfig.CookieSlidingExpiration;
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(openIddictConfig.CookieExpirationMinutes);
+            options.SlidingExpiration = openIddictConfig.CookieSlidingExpiration;
         });
 
         services.Configure<IdentityOptions>(options =>
@@ -201,13 +201,13 @@ public class Startup
             Configuration.GetSection("HtmlClientConfig").Bind(options)
         );
 
-        services.AddDbContext<AuthDbContext>(opts =>
+        services.AddDbContext<AuthDbContext>(options =>
         {
             string connectionString = ConfigurationManager
                 .GetActiveConfiguration()
                 .DataConnectionString;
-            opts.UseSqlServer(connectionString);
-            opts.UseOpenIddict();
+            options.UseSqlServer(connectionString);
+            options.UseOpenIddict();
         });
 
         services
@@ -216,24 +216,24 @@ public class Startup
             {
                 opt.UseEntityFrameworkCore().UseDbContext<AuthDbContext>();
             })
-            .AddServer(opt =>
+            .AddServer(options =>
             {
-                opt.SetAuthorizationEndpointUris("/connect/authorize")
+                options.SetAuthorizationEndpointUris("/connect/authorize")
                     .SetTokenEndpointUris("/connect/token")
                     .SetIntrospectionEndpointUris("/connect/introspect")
                     .SetEndSessionEndpointUris("/connect/logout");
-                opt.AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange();
-                opt.AllowPasswordFlow();
-                opt.AllowRefreshTokenFlow();
-                opt.AllowClientCredentialsFlow();
-                opt.SetAccessTokenLifetime(TimeSpan.FromHours(1));
-                opt.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
-                opt.UseAspNetCore()
+                options.AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange();
+                options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
+                options.AllowClientCredentialsFlow();
+                options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
+                options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
+                options.UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
                     .EnableEndSessionEndpointPassthrough();
-                opt.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
-                opt.RegisterScopes(
+                options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+                options.RegisterScopes(
                     Scopes.OpenId,
                     Scopes.Profile,
                     Scopes.OfflineAccess,
@@ -241,14 +241,14 @@ public class Startup
                     "local_api"
                 );
             })
-            .AddValidation(opt =>
+            .AddValidation(options =>
             {
-                opt.UseLocalServer();
-                opt.UseAspNetCore();
-                opt.Configure(o =>
+                options.UseLocalServer();
+                options.UseAspNetCore();
+                options.Configure(opts =>
                 {
-                    o.TokenValidationParameters.NameClaimType = Claims.Name;
-                    o.TokenValidationParameters.RoleClaimType = Claims.Role;
+                    opts.TokenValidationParameters.NameClaimType = Claims.Name;
+                    opts.TokenValidationParameters.RoleClaimType = Claims.Role;
                 });
             });
 
