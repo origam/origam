@@ -203,9 +203,9 @@ public class Startup
 
         services.AddDbContext<AuthDbContext>(opts =>
         {
-            string connectionString =
-                Configuration.GetConnectionString("AuthDb")
-                ?? Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = ConfigurationManager
+                .GetActiveConfiguration()
+                .DataConnectionString;
             opts.UseSqlServer(connectionString);
             opts.UseOpenIddict();
         });
