@@ -49,38 +49,36 @@ public static class IdentityServerDefaults
     public const string WindowsAdScheme = "Windows";
 }
 
-public class IdentityServerConfig
+public class OpenIddictConfig
 {
     public GoogleLogin GoogleLogin { get; }
     public MicrosoftLogin MicrosoftLogin { get; }
     public AzureAdLogin AzureAdLogin { get; }
-    public WebClient WebClient { get; }
-    public MobileClient MobileClient { get; }
-    public ServerClient ServerClient { get; }
     public bool CookieSlidingExpiration { get; }
     public int CookieExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
+    public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
-    public IdentityServerConfig(IConfiguration configuration)
+    public OpenIddictConfig(IConfiguration configuration)
     {
-        var identityServerSection = configuration.GetSectionOrThrow("IdentityServerConfig");
-        CookieSlidingExpiration = identityServerSection.GetValue("CookieSlidingExpiration", true);
-        PrivateApiAuthentication = identityServerSection.GetValue(
+        var openIddictSection = configuration.GetSectionOrThrow("OpenIddictConfig");
+        CookieSlidingExpiration = openIddictSection.GetValue("CookieSlidingExpiration", true);
+        PrivateApiAuthentication = openIddictSection.GetValue(
             "PrivateApiAuthentication",
             AuthenticationMethod.Cookie
         );
-        CookieExpirationMinutes = identityServerSection.GetValue("CookieExpirationMinutes", 60);
-        GoogleLogin = ConfigureGoogleLogin(identityServerSection);
-        MicrosoftLogin = ConfigureMicrosoftLogin(identityServerSection);
-        AzureAdLogin = ConfigureAzureAdLogin(identityServerSection);
-        WebClient = ConfigureWebClient(identityServerSection);
-        MobileClient = ConfigureMobileClient(identityServerSection);
-        ServerClient = ConfigureServerClient(identityServerSection);
-        AuthenticationPostProcessor = identityServerSection.GetValue(
-            "AuthenticationPostProcessor",
-            ""
-        );
+        CookieExpirationMinutes = openIddictSection.GetValue("CookieExpirationMinutes", 60);
+        GoogleLogin = ConfigureGoogleLogin(openIddictSection);
+        MicrosoftLogin = ConfigureMicrosoftLogin(openIddictSection);
+        AzureAdLogin = ConfigureAzureAdLogin(openIddictSection);
+        ClientApplicationTemplates = new ClientApplicationTemplates
+        {
+            WebClient = ConfigureWebClient(openIddictSection),
+            MobileClient = ConfigureMobileClient(openIddictSection),
+            ServerClient = ConfigureServerClient(openIddictSection),
+        };
+        AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)
@@ -284,4 +282,11 @@ public class WindowsLogin : ExternalCallbackProcessingInfo
         AuthenticationType = AuthenticationType.Username;
         ClaimType = "name";
     }
+}
+
+public class ClientApplicationTemplates
+{
+    public MobileClient MobileClient { get; set; }
+    public WebClient WebClient { get; set; }
+    public ServerClient ServerClient { get; set; }
 }

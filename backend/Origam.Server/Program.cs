@@ -24,7 +24,7 @@ namespace Origam.Server
                 {
                     var provider = scope.ServiceProvider;
                     var startUpConfiguration = provider.GetRequiredService<StartUpConfiguration>();
-                    var identityServerConfig = provider.GetRequiredService<IdentityServerConfig>();
+                    var identityServerConfig = provider.GetRequiredService<OpenIddictConfig>();
                     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
 
                     OrigamUtils.ConnectOrigamRuntime(

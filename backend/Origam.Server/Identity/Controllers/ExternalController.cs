@@ -20,21 +20,21 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
     private readonly UserManager<IOrigamUser> userManager;
     private readonly SignInManager<IOrigamUser> signInManager;
     private readonly ILogger<ExternalController> logger;
-    private readonly IdentityServerConfig identityServerConfig;
+    private readonly OpenIddictConfig openIddictConfig;
     private readonly IAuthenticationPostProcessor authenticationPostProcessor;
 
     public ExternalController(
         ILogger<ExternalController> logger,
         UserManager<IOrigamUser> userManager,
         SignInManager<IOrigamUser> signInManager,
-        IdentityServerConfig identityServerConfig,
+        OpenIddictConfig openIddictConfig,
         IAuthenticationPostProcessor authenticationPostProcessor
     )
     {
         this.logger = logger;
         this.userManager = userManager;
         this.signInManager = signInManager;
-        this.identityServerConfig = identityServerConfig;
+        this.openIddictConfig = openIddictConfig;
         this.authenticationPostProcessor = authenticationPostProcessor;
     }
 
@@ -127,7 +127,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         var providerUserId = info.ProviderKey;
         var claims = externalUser.Claims.ToList();
 
-        var externalCallbackProcessingInfo = identityServerConfig.GetExternalCallbackProcessingInfo(
+        var externalCallbackProcessingInfo = openIddictConfig.GetExternalCallbackProcessingInfo(
             provider
         );
 

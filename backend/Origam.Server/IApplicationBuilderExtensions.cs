@@ -83,14 +83,14 @@ public static class IApplicationBuilderExtensions
     public static void UseUserApi(
         this IApplicationBuilder app,
         StartUpConfiguration startUpConfiguration,
-        IdentityServerConfig identityServerConfig
+        OpenIddictConfig openIddictConfig
     )
     {
         app.MapWhen(
             context => IsPublicUserApiRoute(startUpConfiguration, context),
             publicBranch =>
             {
-                publicBranch.UseUserApiAuthentication(identityServerConfig);
+                publicBranch.UseUserApiAuthentication(openIddictConfig);
                 publicBranch.UseMiddleware<UserApiMiddleware>();
             }
         );
@@ -98,7 +98,7 @@ public static class IApplicationBuilderExtensions
             context => IsRestrictedUserApiRoute(startUpConfiguration, context),
             privateBranch =>
             {
-                privateBranch.UseUserApiAuthentication(identityServerConfig);
+                privateBranch.UseUserApiAuthentication(openIddictConfig);
                 privateBranch.Use(
                     async (context, next) =>
                     {
@@ -119,10 +119,10 @@ public static class IApplicationBuilderExtensions
 
     private static void UseUserApiAuthentication(
         this IApplicationBuilder app,
-        IdentityServerConfig identityServerConfig
+        OpenIddictConfig openIddictConfig
     )
     {
-        if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
         {
             app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
         }

@@ -16,7 +16,7 @@ public static class OpenIddictConfigManager
 
     public static async Task CreateOrUpdateAsync(
         IServiceProvider serviceProvider,
-        IdentityServerConfig config
+        OpenIddictConfig config
     )
     {
         using var scope = serviceProvider.CreateScope();
@@ -36,18 +36,19 @@ public static class OpenIddictConfigManager
             );
         }
 
+        var applicationConfigs = config.ClientApplicationTemplates;
         // ===== serverClient (ROPC, confidential) =====
-        await CreateOrUpdatreServerClient(config, apps);
+        await CreateOrUpdatreServerClient(applicationConfigs, apps);
 
         // ===== origamMobileClient (public, code+PKCE) =====
-        await CreateOrUpdateMobileClient(config, apps);
+        await CreateOrUpdateMobileClient(applicationConfigs, apps);
 
         // ===== origamWebClient (public, code+PKCE) =====
-        await CreateOrUpdateWebClient(config, apps);
+        await CreateOrUpdateWebClient(applicationConfigs, apps);
     }
 
     private static async Task CreateOrUpdateWebClient(
-        IdentityServerConfig config,
+        ClientApplicationTemplates config,
         IOpenIddictApplicationManager apps
     )
     {
@@ -103,7 +104,7 @@ public static class OpenIddictConfigManager
     }
 
     private static async Task CreateOrUpdateMobileClient(
-        IdentityServerConfig config,
+        ClientApplicationTemplates config,
         IOpenIddictApplicationManager apps
     )
     {
@@ -159,7 +160,7 @@ public static class OpenIddictConfigManager
     }
 
     private static async Task CreateOrUpdatreServerClient(
-        IdentityServerConfig config,
+        ClientApplicationTemplates config,
         IOpenIddictApplicationManager apps
     )
     {

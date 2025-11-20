@@ -74,7 +74,7 @@ public class Startup
     private readonly StartUpConfiguration startUpConfiguration;
     private IConfiguration Configuration { get; }
     private readonly PasswordConfiguration passwordConfiguration;
-    private readonly IdentityServerConfig identityServerConfig;
+    private readonly OpenIddictConfig openIddictConfig;
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
@@ -84,7 +84,7 @@ public class Startup
         Configuration = configuration;
         startUpConfiguration = new StartUpConfiguration(configuration);
         passwordConfiguration = new PasswordConfiguration(configuration);
-        identityServerConfig = new IdentityServerConfig(configuration);
+        openIddictConfig = new OpenIddictConfig(configuration);
         lockoutConfig = new UserLockoutConfig(configuration);
         languageConfig = new LanguageConfig(configuration);
         chatConfig = new ChatConfig(configuration);
@@ -154,8 +154,8 @@ public class Startup
             o.LoginPath = "/Account/Login";
             o.LogoutPath = "/Account/Logout";
             o.AccessDeniedPath = "/Account/AccessDenied";
-            o.ExpireTimeSpan = TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
-            o.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
+            o.ExpireTimeSpan = TimeSpan.FromMinutes(openIddictConfig.CookieExpirationMinutes);
+            o.SlidingExpiration = openIddictConfig.CookieSlidingExpiration;
         });
 
         services.Configure<IdentityOptions>(options =>
@@ -364,61 +364,59 @@ public class Startup
     {
         var auth = services.AddAuthentication();
 
-        if (identityServerConfig.GoogleLogin != null)
+        if (openIddictConfig.GoogleLogin != null)
         {
             auth.AddGoogle(
                 GoogleDefaults.AuthenticationScheme,
                 "SignInWithGoogleAccount",
                 options =>
                 {
-                    options.ClientId = identityServerConfig.GoogleLogin.ClientId;
-                    options.ClientSecret = identityServerConfig.GoogleLogin.ClientSecret;
+                    options.ClientId = openIddictConfig.GoogleLogin.ClientId;
+                    options.ClientSecret = openIddictConfig.GoogleLogin.ClientSecret;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
 
-        if (identityServerConfig.MicrosoftLogin != null)
+        if (openIddictConfig.MicrosoftLogin != null)
         {
             auth.AddMicrosoftAccount(
                 MicrosoftAccountDefaults.AuthenticationScheme,
                 "SignInWithMicrosoftAccount",
                 microsoftOptions =>
                 {
-                    microsoftOptions.ClientId = identityServerConfig.MicrosoftLogin.ClientId;
-                    microsoftOptions.ClientSecret = identityServerConfig
-                        .MicrosoftLogin
-                        .ClientSecret;
+                    microsoftOptions.ClientId = openIddictConfig.MicrosoftLogin.ClientId;
+                    microsoftOptions.ClientSecret = openIddictConfig.MicrosoftLogin.ClientSecret;
                     microsoftOptions.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
 
-        if (identityServerConfig.AzureAdLogin != null)
+        if (openIddictConfig.AzureAdLogin != null)
         {
             auth.AddOpenIdConnect(
                 "AzureAdOIDC",
                 "SignInWithAzureAd",
                 options =>
                 {
-                    options.ClientId = identityServerConfig.AzureAdLogin.ClientId;
+                    options.ClientId = openIddictConfig.AzureAdLogin.ClientId;
                     options.Authority =
-                        $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
+                        $@"https://login.microsoftonline.com/{openIddictConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
-                        ValidAudience = identityServerConfig.AzureAdLogin.ClientId,
+                        ValidAudience = openIddictConfig.AzureAdLogin.ClientId,
                     };
                 }
             );
         }
 
-        services.AddSingleton(identityServerConfig);
+        services.AddSingleton(openIddictConfig);
 
-        if (string.IsNullOrEmpty(identityServerConfig.AuthenticationPostProcessor))
+        if (string.IsNullOrEmpty(openIddictConfig.AuthenticationPostProcessor))
         {
             services.AddSingleton<
                 IAuthenticationPostProcessor,
@@ -427,7 +425,7 @@ public class Startup
         }
         else
         {
-            var classpath = identityServerConfig.AuthenticationPostProcessor.Split(',');
+            var classpath = openIddictConfig.AuthenticationPostProcessor.Split(',');
             var authenticationPostProcessor = Reflector.ResolveTypeFromAssembly(
                 classpath[0],
                 classpath[1]
@@ -478,7 +476,7 @@ public class Startup
 
         app.UseMiddleware<FatalErrorMiddleware>();
 
-        app.UseUserApi(startUpConfiguration, identityServerConfig);
+        app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
 
         app.UseRouting();
