@@ -33,7 +33,7 @@
     "IdentityGuiLogoUrl": "/customAssets/someFile1.png",
     "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
-  "IdentityServerConfig": {
+  "OpenIddictConfig": {
     "PrivateApiAuthentication":  "Cookie",
     "CookieExpirationMinutes": 60,
     "CookieSlidingExpiration": true,
@@ -55,22 +55,34 @@
       "ClientId": "",
       "TenantId": ""
     },*/
-    "WebClient": {
-      "RedirectUris": [
-        "https://localhost:3000/#origamClientCallback/",
-        "http://localhost:3000/#origamClientCallback/",
-        "https://localhost:3000/#origamClientCallbackRenew/"
-      ],
-      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ],
-      "AllowedCorsOrigins": ["https://someOrigin"]
-    },
-    "MobileClient": {
-      "RedirectUris": [ "http://localhost/xamarincallback" ],
-      "ClientSecret": "mobileSecret",
-      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
-    },
-    "ServerClient": {
-            "ClientSecret": "serverSecret"
+    "ClientApplicationTemplates": {
+      "WebClient": {
+        "RedirectUris": [
+          "https://localhost:3000/#origamClientCallback/",
+          "http://localhost:3000/#origamClientCallback/",
+          "https://localhost:3000/#origamClientCallbackRenew/"
+        ],
+        "PostLogoutRedirectUris": [
+          "/",
+          "https://192.168.0.80:45455"
+        ],
+        "AllowedCorsOrigins": [
+          "https://someOrigin"
+        ]
+      },
+      "MobileClient": {
+        "RedirectUris": [
+          "http://localhost/xamarincallback"
+        ],
+        "ClientSecret": "mobileSecret",
+        "PostLogoutRedirectUris": [
+          "/",
+          "https://192.168.0.80:45455"
+        ]
+      },
+      "ServerClient": {
+        "ClientSecret": "serverSecret"
+      }
     }
   },
   "UserLockoutConfig": {

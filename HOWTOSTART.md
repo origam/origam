@@ -227,22 +227,24 @@ Create the file and put this in it
     "Html5ClientLogoUrl": "/customAssets/avatarTest.png",
     "FaviconLogoUrl": "/customAssets/faviconTest.png"
   },
-  "IdentityServerConfig": {
+  "OpenIddictConfig": {
     "CookieSlidingExpiration": true,
-    "WebClient": {
-      "RedirectUris": [
-        "https://localhost:44357/#origamClientCallback/",
-        "https://localhost:44357/#origamClientCallbackRenew/",
-        "https://localhost:5173/#origamClientCallback/",
-        "https://localhost:5173/#origamClientCallbackRenew/"
-      ],
-      "PostLogoutRedirectUris": [
-        "https://localhost:44357",
-        "https://localhost:5173"
-      ]
-    },
-    "ServerClient": {
-      "ClientSecret": "serverSecret"
+    "ClientApplicationTemplates": {
+      "WebClient": {
+        "RedirectUris": [
+          "https://localhost:44357/#origamClientCallback/",
+          "https://localhost:44357/#origamClientCallbackRenew/",
+          "https://localhost:5173/#origamClientCallback/",
+          "https://localhost:5173/#origamClientCallbackRenew/"
+        ],
+        "PostLogoutRedirectUris": [
+          "https://localhost:44357",
+          "https://localhost:5173"
+        ]
+      },
+      "ServerClient": {
+        "ClientSecret": "serverSecret"
+      }
     }
   },
   "UserLockoutConfig": {
