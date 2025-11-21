@@ -25,12 +25,13 @@
                 "RedirectUris": [
                     "ExternalDomain/#origamClientCallback/"
                 ],
-                "PostLogoutRedirectUris": ["/", "ExternalDomain"]
+                "PostLogoutRedirectUris": [ "ExternalDomain" ],
+                "AllowedCorsOrigins": [ "ExternalDomain" ]
             },
             "MobileClient":{
                 "RedirectUris": [ "ExternalDomain/xamarincallback" ],
                 "ClientSecret": "mobileSecret",
-                "PostLogoutRedirectUris": [ "/", "ExternalDomain" ]
+                "PostLogoutRedirectUris": [ "ExternalDomain" ]
             },
             "ServerClient":{
                 "ClientSecret": "serverSecret",
