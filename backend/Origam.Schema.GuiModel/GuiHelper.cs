@@ -223,12 +223,6 @@ public class GuiHelper
                 multiColumnAdapterFieldWrapper.Name =
                     multiColumnAdapterFieldWrapper.ControlItem.Name + tabIndex;
                 PopulateControlProperties(multiColumnAdapterFieldWrapper, properties);
-                PopulateControlBindings(
-                    multiColumnAdapterFieldWrapper,
-                    entity.Name,
-                    column.Name,
-                    "Value"
-                );
                 break;
             }
             default:
