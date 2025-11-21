@@ -64,6 +64,7 @@ public class DataStructureRule : AbstractSchemaItem
     [TypeConverter(typeof(DataQueryEntityConverter))]
     [RefreshProperties(RefreshProperties.Repaint)]
     [XmlReference("entity", "DataStructureEntityId")]
+    [NotNullModelElementRule]
     public DataStructureEntity Entity
     {
         get =>
