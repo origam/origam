@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using CSharpFunctionalExtensions;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +37,7 @@ using Origam.Server.Model.Excel;
 
 namespace Origam.Server.Controller;
 
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class ExcelExportController : AbstractController

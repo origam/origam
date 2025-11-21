@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ using Origam.Server.Attributes;
 
 namespace Origam.Server.Controller;
 
+[Authorize(Policy = "InternalApi")]
 [Controller]
 [Route("internalApi/[controller]")]
 public class SearchController : AbstractController

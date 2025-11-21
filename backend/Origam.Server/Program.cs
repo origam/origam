@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,6 +24,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Origam.Server.Configuration;
 
 namespace Origam.Server;
 
@@ -33,13 +34,31 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Log4NetProviderOptions options = new Log4NetProviderOptions();
-        options.Watch = true;
+        var options = new Log4NetProviderOptions { Watch = true };
         log4NetProvider = new Log4NetProvider(options);
         ILogger startupLogger = log4NetProvider.CreateLogger();
+
         try
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var provider = scope.ServiceProvider;
+                var startUpConfiguration = provider.GetRequiredService<StartUpConfiguration>();
+                var identityServerConfig = provider.GetRequiredService<OpenIddictConfig>();
+                var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+
+                OrigamUtils.ConnectOrigamRuntime(
+                    loggerFactory,
+                    startUpConfiguration.ReloadModelWhenFilesChangesDetected
+                );
+                OpenIddictConfigManager
+                    .CreateOrUpdateAsync(provider, identityServerConfig)
+                    .GetAwaiter()
+                    .GetResult();
+            }
+
+            host.Run();
         }
         catch (Exception e)
         {

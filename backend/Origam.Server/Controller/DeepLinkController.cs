@@ -24,6 +24,7 @@ using System.Data;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -37,6 +38,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Server.Controller;
 
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class DeepLinkController : AbstractController

@@ -29,7 +29,6 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Xml;
-using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -633,7 +632,7 @@ public class UserApiProcessor
                         // DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
                         XmlDocument xd = new XmlDocument();
                         // deserialize from JSON to XML
-                        if (ppm.DatastructureEntityName.IsNullOrEmpty())
+                        if (string.IsNullOrEmpty(ppm.DatastructureEntityName))
                         {
                             xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
                         }

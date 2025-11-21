@@ -16,7 +16,12 @@ RuntimeModelConfiguration.json
 /docker/server/client_source/
 /docker/server/Scheduler/
 /chat-html/dist
-/docker/debug/
 /docker/server/scheduler_bin/
 /docker/server/server_bin/
 /test/tests_workflow/
+/docker/debug/build-and-run-Linux.cmd
+/docker/debug/build-and-run-Windows.cmd
+/docker/debug/model-test_Linux.cmd
+/docker/debug/model-test_Linux.env
+/docker/debug/model-test_Windows.cmd
+/docker/debug/model-test_Windows.env

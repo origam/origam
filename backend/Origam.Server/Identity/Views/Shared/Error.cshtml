@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.Server
+@model Origam.Server.Identity.Models.ErrorViewModel
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+
+@{
+    var error = Model?.Error;
+    var errorDescription = Model?.ErrorDescription;
+}
+
+<h3 class="confirmation-text">
+    @SharedLocalizer["UnknownError"]
+</h3>
+@if (error != null)
+{
+    <strong>
+        <em>
+            @error
+        </em>
+    </strong>
+
+    if (errorDescription != null)
+    {
+        <div>@errorDescription</div>
+    }
+}

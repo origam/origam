@@ -53,11 +53,10 @@ using Origam.Services;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
-using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
 namespace Origam.Server.Controller;
 
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class UIServiceController : AbstractController

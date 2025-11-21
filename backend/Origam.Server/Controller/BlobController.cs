@@ -47,6 +47,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Origam.Server.Controller;
 
+[Authorize(Policy = "InternalApi")]
 [Controller]
 [Route("internalApi/[controller]")]
 public class BlobController : AbstractController

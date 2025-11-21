@@ -1,0 +1,5 @@
+﻿IF OBJECT_ID('dbo.OrigamIdentityGrantCleanup', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.OrigamIdentityGrantCleanup;
+    
+IF OBJECT_ID('dbo.OrigamIdentityGrant', 'U') IS NOT NULL
+    DROP TABLE dbo.OrigamIdentityGrant;

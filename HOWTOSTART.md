@@ -207,17 +207,6 @@ You can customize the file however you want. Here is a basic logging setup
   </root>
 </log4net>
 ```
-Next run these commands to create a *.pfx certificate file for JWT tokens. 
-```
-"C:\Program Files\Git\usr\bin\openssl.exe" req -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 365 -out serverCore.cer
-```
-```
-"C:\Program Files\Git\usr\bin\openssl.exe"   pkcs12 -export -in serverCore.cer -inkey serverCore.key -out serverCore.pfx
-```
-Then put the generated `serverCore.pfx` file to
-```
-backend\Origam.Server
-```
 The server needs some additional settings that we can pass in ***appsettings.json*** located 
 here 
 ```
@@ -238,24 +227,24 @@ Create the file and put this in it
     "Html5ClientLogoUrl": "/customAssets/avatarTest.png",
     "FaviconLogoUrl": "/customAssets/faviconTest.png"
   },
-  "IdentityServerConfig": {
+  "OpenIddictConfig": {
     "CookieSlidingExpiration": true,
-    "PathToJwtCertificate": "serverCore.pfx",
-    "PasswordForJwtCertificate": "<PasswordYouEnteredWhenCreatingTheCertificate>",
-    "WebClient": {
-      "RedirectUris": [
-        "https://localhost:44357/#origamClientCallback/",
-        "https://localhost:44357/#origamClientCallbackRenew/",
-        "https://localhost:5173/#origamClientCallback/",
-        "https://localhost:5173/#origamClientCallbackRenew/"
-      ],
-      "PostLogoutRedirectUris": [
-        "https://localhost:44357",
-        "https://localhost:5173"
-      ]
-    },
-    "ServerClient": {
-      "ClientSecret": "serverSecret"
+    "ClientApplicationTemplates": {
+      "WebClient": {
+        "RedirectUris": [
+          "https://localhost:44357/#origamClientCallback/",
+          "https://localhost:44357/#origamClientCallbackRenew/",
+          "https://localhost:5173/#origamClientCallback/",
+          "https://localhost:5173/#origamClientCallbackRenew/"
+        ],
+        "PostLogoutRedirectUris": [
+          "https://localhost:44357",
+          "https://localhost:5173"
+        ]
+      },
+      "ServerClient": {
+        "ClientSecret": "serverSecret"
+      }
     }
   },
   "UserLockoutConfig": {
@@ -305,8 +294,6 @@ Make sure you set
 - **PathToCustomAssetsFolder** to absolute path to a folder where you keep the application images. The images don't have to be there for development.
 - **PickupDirectoryLocation** to absolute path to a folder where the emails will be saved instead 
 of sending them to the actual email addresses. This is quite useful for development.
-- **PasswordForJwtCertificate** password you entered when creating the `serverCore.pfx` 
-file
 
 All back slashes in the paths should be escaped i.e. \\ instead of \.
 

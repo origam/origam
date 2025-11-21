@@ -19,50 +19,63 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { UserManager } from "oidc-client-ts";
 
-const [windowLocation] = window.location.href.split("#");
+const isDev = import.meta.env.DEV;
+
+const frontendOrigin = window.location.origin;
+
+// In dev, the identity server still runs on 44357, so fix authority accordingly
+const authority = isDev
+  ? "https://localhost:44357"
+  : frontendOrigin; // in prod, SPA is served by the server
+
+const redirectBase = frontendOrigin; // where the SPA is actually running (5173 in dev, server in prod)
 
 const config = {
-  authority: `${windowLocation}`,
+  authority,
   client_id: "origamWebClient",
-  redirect_uri: `${windowLocation}#origamClientCallback/`,
+  redirect_uri: `${redirectBase}/origamClientCallback/`,
   response_type: "code",
-  scope: "openid IdentityServerApi offline_access",
-  post_logout_redirect_uri: `${windowLocation}`,
+  scope: "openid offline_access internal_api",
+  post_logout_redirect_uri: `${redirectBase}`,
   automaticSilentRenew: true,
-  silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`,
+  silent_redirect_uri: `${redirectBase}/origamClientCallbackRenew/`,
 };
 
 export const userManager = new UserManager(config);
 
 export async function ensureLogin() {
+  console.log("ensureLogin");
   const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
   if (authOvr) {
     sessionStorage.setItem("origamAuthTokenOverride", authOvr);
-    return {access_token: authOvr};
+    return { access_token: authOvr };
   }
-  if (window.location.hash.startsWith("#origamClientCallback/")) {
+
+  const path = window.location.pathname;
+  // Handle the OIDC redirect callback coming back from the server
+  if (path.startsWith("/origamClientCallback")) {
     try {
-      const user = await userManager.signinRedirectCallback(
-        window.location.hash.replace("#origamClientCallback/", "")
-      );
-      const [urlpart] = window.location.href.split("#");
-      window.history.replaceState(null, "", urlpart);
-      if (!user.access_token) {
+      const user = await userManager.signinRedirectCallback();
+      // Clean up the URL so code/state are not visible anymore
+      window.history.replaceState(null, "", "/");
+      if (!user || !user.access_token) {
         await userManager.signinRedirect();
-      } else {
-        return user;
+        return;
       }
-    } catch (err) {
-      console.warn(err);
-      await userManager.signinRedirect();
-    }
-  } else {
-    const user = await userManager.getUser();
-    if (user && user.access_token) {
       return user;
-    } else {
+    } catch (err) {
+      console.warn("signinRedirectCallback error", err);
       await userManager.signinRedirect();
+      return;
     }
+  }
+
+  // Normal case: either we already have a user or we need to start login
+  const user = await userManager.getUser();
+  if (user && user.access_token) {
+    return user;
+  } else {
+    await userManager.signinRedirect();
   }
 }
 
