@@ -52,7 +52,6 @@ public class Program
                     loggerFactory,
                     startUpConfiguration.ReloadModelWhenFilesChangesDetected
                 );
-                OrigamUtils.CleanUpDatabase();
                 OpenIddictConfigManager
                     .CreateOrUpdateAsync(provider, identityServerConfig)
                     .GetAwaiter()

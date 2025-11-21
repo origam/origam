@@ -222,9 +222,13 @@ public class Startup
 
         services
             .AddOpenIddict()
-            .AddCore(opt =>
+            .AddCore(options =>
             {
-                opt.UseEntityFrameworkCore().UseDbContext<AuthDbContext>();
+                options.UseEntityFrameworkCore().UseDbContext<AuthDbContext>();
+                options
+                    .UseQuartz()
+                    .SetMinimumTokenLifespan(TimeSpan.FromDays(7))
+                    .SetMinimumAuthorizationLifespan(TimeSpan.FromDays(7));
             })
             .AddServer(options =>
             {

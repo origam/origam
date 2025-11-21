@@ -72,6 +72,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="OpenIddict.AspNetCore" Version="7.1.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.Quartz" Version="7.2.0" />
     <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.1.0" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
