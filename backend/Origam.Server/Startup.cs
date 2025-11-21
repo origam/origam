@@ -44,6 +44,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Origam.DA.Service;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -203,10 +204,19 @@ public class Startup
 
         services.AddDbContext<AuthDbContext>(options =>
         {
-            string connectionString = ConfigurationManager
-                .GetActiveConfiguration()
-                .DataConnectionString;
-            options.UseSqlServer(connectionString);
+            OrigamSettings origamSettings = ConfigurationManager.GetActiveConfiguration();
+            if (origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
+            {
+                options.UseSqlServer(origamSettings.DataConnectionString);
+            }
+            else if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
+            {
+                options.UseNpgsql(origamSettings.DataConnectionString);
+            }
+            else
+            {
+                throw new Exception("Unknown data service: " + origamSettings.DataDataService);
+            }
             options.UseOpenIddict();
         });
 
