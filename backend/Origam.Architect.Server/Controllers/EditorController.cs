@@ -120,6 +120,7 @@ public class EditorController(
         object data = treeNode.DefaultEditor switch
         {
             EditorSubType.GridEditor => propertyService.GetEditorProperties(item),
+            EditorSubType.DeploymentScriptsEditor => propertyService.GetEditorProperties(item),
             EditorSubType.XsltEditor => propertyService.GetEditorProperties(item),
             EditorSubType.ScreenSectionEditor => sectionService.GetSectionEditorData(item),
             EditorSubType.ScreenEditor => sectionService.GetScreenEditorData(item),

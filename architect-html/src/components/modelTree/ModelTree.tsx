@@ -78,6 +78,14 @@ const ModelTreeNode: React.FC<{
     run({ generator: editorTabViewState.openDocumentationEditor(node) });
   }
 
+  function setVersionCurrent() {
+    run({ generator: node.setVersionCurrent() });
+  }
+
+  function runUpdateScriptActivity() {
+    run({ generator: node.runUpdateScriptActivity() });
+  }
+
   function getSymbol() {
     if (node.children.length > 0 || !node.childrenInitialized) {
       return node.isExpanded ? '▼' : '▶';
@@ -93,7 +101,7 @@ const ModelTreeNode: React.FC<{
         <div
           onDoubleClick={() => onNodeDoubleClick(node)}
           onContextMenu={handleContextMenu}
-          className={S.iconAndText}
+          className={`${S.iconAndText} ${node.isCurrentVersion ? S.currentVersion : ''}`}
         >
           <div className={S.icon}>
             <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
@@ -123,6 +131,22 @@ const ModelTreeNode: React.FC<{
               </Item>
               <Item id="documentation" onClick={openDocumentationEditor}>
                 {T('Documentation', 'tree_node_documentation')}
+              </Item>
+            </>
+          )}
+          {node.isDeploymentVersion && (
+            <>
+              <Separator />
+              <Item id="setVersionCurrent" onClick={setVersionCurrent}>
+                {T('Make version current', 'tree_node_make_version_current')}
+              </Item>
+            </>
+          )}
+          {node.isUpdateScriptActivity && (
+            <>
+              <Separator />
+              <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
+                {T('Execute', 'tree_node_run_update_script_activity')}
               </Item>
             </>
           )}

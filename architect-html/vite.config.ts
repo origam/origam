@@ -68,6 +68,10 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
+      '/DeploymentScript': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
     },
   },
 });

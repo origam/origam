@@ -35,6 +35,8 @@ public class TreeNode
     public string IconUrl { get; set; }
     public List<TreeNode> Children { get; set; }
     public EditorSubType? DefaultEditor { get; set; }
+    public string ItemType { get; set; }
+    public bool? IsCurrentVersion { get; set; }
 
     public static string ToTreeNodeId(IBrowserNode2 node)
     {
@@ -55,6 +57,8 @@ public class TreeNodeFactory
             HasChildNodes = node.HasChildNodes,
             DefaultEditor = GetEditorType(node),
             IconUrl = GetIcon(node),
+            ItemType = node.GetType().FullName,
+            IsCurrentVersion = (node as Schema.DeploymentModel.DeploymentVersion)?.IsCurrentVersion,
         };
     }
 
@@ -76,6 +80,10 @@ public class TreeNodeFactory
         }
 
         string itemType = node.GetType().ToString();
+        if (itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
+        {
+            return EditorSubType.DeploymentScriptsEditor;
+        }
         if (itemType == "Origam.Schema.GuiModel.FormControlSet")
         {
             return EditorSubType.ScreenEditor;
@@ -118,6 +126,7 @@ public class TreeNodeFactory
 
 public enum EditorSubType
 {
+    DeploymentScriptsEditor,
     GridEditor,
     XsltEditor,
     ScreenSectionEditor,

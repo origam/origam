@@ -45,6 +45,8 @@ export class TreeNode implements IEditorNode {
     this.editorType = apiNode.defaultEditor;
     this.childrenIds = apiNode.childrenIds;
     this.iconUrl = apiNode.iconUrl;
+    this.itemType = apiNode.itemType;
+    this.isCurrentVersion = apiNode.isCurrentVersion;
     this.children = apiNode.children
       ? apiNode.children.map(child => new TreeNode(child, this.rootStore, this))
       : [];
@@ -61,12 +63,22 @@ export class TreeNode implements IEditorNode {
   children: TreeNode[];
   childrenIds: string[];
   iconUrl?: string;
+  itemType?: string;
+  isCurrentVersion?: boolean;
 
   @observable accessor isLoading: boolean = false;
   @observable accessor contextMenuItems: IMenuItemInfo[] = [];
 
   get isExpanded() {
     return this.rootStore.uiState.isExpanded(this.id);
+  }
+
+  get isDeploymentVersion() {
+    return this.itemType === 'Origam.Schema.DeploymentModel.DeploymentVersion';
+  }
+
+  get isUpdateScriptActivity() {
+    return this.itemType === 'Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity';
   }
 
   *loadChildren(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
@@ -97,6 +109,17 @@ export class TreeNode implements IEditorNode {
 
   *getMenuItems() {
     this.contextMenuItems = yield this.architectApi.getMenuItems(this);
+  }
+
+  *setVersionCurrent() {
+    yield this.architectApi.setVersionCurrent(this.origamId);
+    if (this.parent) {
+      yield* this.parent.loadChildren.bind(this.parent)();
+    }
+  }
+
+  *runUpdateScriptActivity() {
+    yield this.architectApi.runUpdateScriptActivity(this.origamId);
   }
 
   createNode(typeName: string) {
