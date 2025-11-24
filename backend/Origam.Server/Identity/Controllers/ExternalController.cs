@@ -58,7 +58,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
         this.openIddictConfig = openIddictConfig;
         this.authenticationPostProcessor = authenticationPostProcessor;
     }
-    
+
     // Initiate roundtrip to external authentication provider.
     [HttpGet]
     public IActionResult Challenge(string provider, string returnUrl)
@@ -79,7 +79,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
 
         return Challenge(props, provider);
     }
-    
+
     // Post-processing of external authentication.
     [HttpGet]
     public async Task<IActionResult> Callback(string returnUrl = null, string remoteError = null)

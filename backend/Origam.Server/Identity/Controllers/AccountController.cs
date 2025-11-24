@@ -164,7 +164,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         Match match = Regex.Match(decodedUrl, pattern);
         return match.Success ? match.Groups[1].Value : "/";
     }
-    
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -204,7 +204,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         // If we got this far, something failed, redisplay form
         return View(model);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(
@@ -234,7 +234,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         };
         return View(model);
     }
-    
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -277,7 +277,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         AddErrors(result);
         return View(model);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPasswordConfirmation(string returnUrl = null)
@@ -288,7 +288,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         };
         return View(model);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult RegisterConfirmation()
@@ -307,7 +307,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
-    
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -339,7 +339,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View(model);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public IActionResult RegisterInitialUser()
@@ -350,7 +350,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View();
     }
-    
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -388,7 +388,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View(model);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> ConfirmEmail(string userId, string code)
