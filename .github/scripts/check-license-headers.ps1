@@ -1,5 +1,4 @@
-﻿# Move to repo root
-$RepoRoot = Resolve-Path "$PSScriptRoot/../.."
+﻿$RepoRoot = Resolve-Path "$PSScriptRoot/../.."
 Set-Location $RepoRoot
 Write-Host "📁 Scanning from: $RepoRoot"
 
@@ -32,9 +31,15 @@ $LicensePatternOther = @"
 \/\*[\s\n]*Copyright 2005 - 20\d\d Advantage Solutions, s\. r\. o\.[\s\n]*This file is part of ORIGAM \(http:\/\/www\.origam\.org\)\.[\s\n]*ORIGAM is free software: you can redistribute it and\/or modify[\s\n]*it under the terms of the GNU General Public License as published by[\s\n]*the Free Software Foundation, either version 3 of the License, or[\s\n]*\(at your option\) any later version\.[\s\n]*ORIGAM is distributed in the hope that it will be useful,[\s\n]*but WITHOUT ANY WARRANTY; without even the implied warranty of[\s\n]*MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\. See the[\s\n]*GNU General Public License for more details\.[\s\n]*You should have received a copy of the GNU General Public License[\s\n]*along with ORIGAM\. If not, see <http:\/\/www\.gnu\.org\/licenses\/>\.[\s\n]*\*\/
 "@ -replace "`r`n", "`n"
 
+# Razor (@* ... *@) version of the header for .cshtml files
+$LicensePatternCshtml = $LicensePatternOther `
+    -replace '^\s*\\/\\\*', '@*' `
+    -replace '\\\*\\/\s*$', '*@'
+
 $LicensePatternCS = "\#region license[\s\w]*$LicensePatternOther[\s\w]*\#endregion"
 $LicenseRegexCS = [regex]::new($LicensePatternCS, "IgnoreCase, Multiline")
 $LicenseRegexOther = [regex]::new($LicensePatternOther, "IgnoreCase, Multiline")
+$LicenseRegexCshtml = [regex]::new($LicensePatternCshtml, "IgnoreCase, Multiline")
 
 $global:ErrorFiles = @()
 
@@ -76,6 +81,10 @@ foreach ($file in $FilesToCheck)
     if ($file.Extension -eq ".cs")
     {
         Check-LicenseHeader $file.FullName $LicenseRegexCS
+    }
+    elseif ($file.Extension -eq ".cshtml")
+    {
+        Check-LicenseHeader $file.FullName $LicenseRegexCshtml
     }
     else
     {
