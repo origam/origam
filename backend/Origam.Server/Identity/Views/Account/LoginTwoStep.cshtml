@@ -26,7 +26,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     <div class="detailview-module with-title">
         <h2>@SharedLocalizer["TwoFactorAuthentication"]</h2>
         <div class="input-form">
-            <form asp-action="LoginTwoStep" method="post">
+            <form id="loginForm" 
+                asp-action="LoginTwoStep" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReturnUrl" />
                 <input type="hidden" asp-for="RememberMe" />
@@ -36,9 +37,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
                     <input asp-for="TwoFactorCode" autofocus />
                 </div>
                 <div class="input-row"> 
-                    <button type="submit" id="loginButton" class="btn btn-default normal-size primary submit-link">
+                    <a id="loginButton"
+                       class="btn btn-default normal-size primary submit-link"
+                       href="#"
+                       onclick="document.getElementById('loginForm').submit(); return false;">
                         @SharedLocalizer["Login"]
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>
