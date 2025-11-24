@@ -420,14 +420,14 @@
             <Directory Id="lib" Name="lib">
               <Directory Id="win32" Name="win32">
                 <Directory Id="dir_x64" Name="x64">
-                  <Component Id="GIT2_A418D9D.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
-                    <File Id="GIT2_A418D9D.DLL_X64" Name="git2-a418d9d.dll" Source="source\lib\win32\x64\git2-a418d9d.dll">
+                  <Component Id="GIT2_3F4182D.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
+                    <File Id="GIT2_3F4182D.DLL_X64" Name="git2-3f4182d.dll" Source="source\lib\win32\x64\git2-3f4182d.dll">
                     </File>
                   </Component>
                 </Directory>
                 <Directory Id="dir_x86" Name="x86">
-                  <Component Id="GIT2_A418D9D.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
-                    <File Id="GIT2_A418D9D.DLL_X86" Name="git2-a418d9d.dll" Source="source\lib\win32\x86\git2-a418d9d.dll">
+                  <Component Id="GIT2_3F4182D.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
+                    <File Id="GIT2_3F4182D.DLL_X86" Name="git2-3f4182d.dll" Source="source\lib\win32\x86\git2-3f4182d.dll">
                     </File>
                   </Component>
                 </Directory>
@@ -688,9 +688,9 @@
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GIT.DLL">
       </ComponentRef>
-      <ComponentRef Id="GIT2_A418D9D.DLL_X86">
+      <ComponentRef Id="GIT2_3F4182D.DLL_X86">
       </ComponentRef>
-      <ComponentRef Id="GIT2_A418D9D.DLL_X64">
+      <ComponentRef Id="GIT2_3F4182D.DLL_X64">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL">
       </ComponentRef>
