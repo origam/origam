@@ -93,10 +93,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             if (!root.TryGetProperty("token_endpoint", out var tokenEndpointElement))
             {
                 throw new Exception(
-                    string.Format(
-                        Resources.ErrorTokenEndpointNotFoundInDiscovery,
-                        discoveryUrl
-                    )
+                    string.Format(Resources.ErrorTokenEndpointNotFoundInDiscovery, discoveryUrl)
                 );
             }
 
@@ -105,10 +102,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         catch (JsonException ex)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorDiscoveryDocumentParseFailed,
-                    discoveryUrl
-                ),
+                string.Format(Resources.ErrorDiscoveryDocumentParseFailed, discoveryUrl),
                 ex
             );
         }
@@ -180,10 +174,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
                     if (!expiresInElement.TryGetInt32(out expiresInSeconds))
                     {
                         throw new Exception(
-                            string.Format(
-                                Resources.ErrorExpiresInParseNumber,
-                                expiresInElement
-                            )
+                            string.Format(Resources.ErrorExpiresInParseNumber, expiresInElement)
                         );
                     }
                 }
@@ -207,11 +198,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         catch (JsonException ex)
         {
             throw new Exception(
-                string.Format(
-                    Resources.ErrorTokenResponseParseFailed,
-                    tokenEndpoint,
-                    tokenContent
-                ),
+                string.Format(Resources.ErrorTokenResponseParseFailed, tokenEndpoint, tokenContent),
                 ex
             );
         }

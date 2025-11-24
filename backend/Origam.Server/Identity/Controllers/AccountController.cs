@@ -38,6 +38,7 @@ using Origam.Security.Common;
 using Origam.Server.Authorization;
 using Origam.Server.Configuration;
 using Origam.Server.Identity.Models;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Origam.Server.Identity.Controllers;
 
@@ -116,26 +117,114 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             return View(model);
         }
 
-        var result = await signInManager.PasswordSignInAsync(
+        SignInResult result = await signInManager.PasswordSignInAsync(
             model.UserName,
             model.Password,
             model.RememberMe,
             lockoutOnFailure: true
         );
+
         if (result.Succeeded)
         {
             return RedirectToLocal(returnUrl);
         }
-        LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl);
-        newModel.UserName = model.UserName;
+
+        if (result.RequiresTwoFactor)
+        {
+            // Get user so we can send the code
+            var user = await userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login.");
+                return View(model);
+            }
+
+            // Email provider (default ASP.NET Identity email 2FA)
+            string code = await userManager.GenerateTwoFactorTokenAsync(
+                user,
+                TokenOptions.DefaultEmailProvider
+            );
+
+            mailService.SendMultiFactorAuthCode(user, code);
+
+            // Redirect to second-step screen
+            return RedirectToAction(
+                nameof(LoginTwoStep),
+                new { returnUrl, rememberMe = model.RememberMe }
+            );
+        }
+
         if (result.IsLockedOut)
         {
             ModelState.AddModelError(string.Empty, "Account locked.");
+            LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl);
+            newModel.UserName = model.UserName;
             return View(newModel);
         }
 
+        // Invalid credentials
+        LoginViewModel invalidModel = await BuildLoginViewModelAsync(returnUrl);
+        invalidModel.UserName = model.UserName;
         ModelState.AddModelError(string.Empty, "Invalid login.");
-        return View(newModel);
+        return View(invalidModel);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> LoginTwoStep(string returnUrl = null, bool rememberMe = false)
+    {
+        // User is stored in the 2FA cookie when result.RequiresTwoFactor == true
+        IOrigamUser user = await signInManager.GetTwoFactorAuthenticationUserAsync();
+        if (user == null)
+        {
+            // 2FA cookie missing/expired
+            return RedirectToAction(nameof(Login), new { returnUrl });
+        }
+
+        var model = new LoginTwoStepViewModel { ReturnUrl = returnUrl, RememberMe = rememberMe };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LoginTwoStep(LoginTwoStepViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        IOrigamUser user = await signInManager.GetTwoFactorAuthenticationUserAsync();
+        if (user == null)
+        {
+            return RedirectToAction(nameof(Login), new { returnUrl = model.ReturnUrl });
+        }
+
+        // Normalize the code (remove spaces/dashes)
+        string code = model.TwoFactorCode?.Replace(" ", string.Empty)?.Replace("-", string.Empty);
+
+        SignInResult result = await signInManager.TwoFactorSignInAsync(
+            TokenOptions.DefaultEmailProvider,
+            code,
+            isPersistent: model.RememberMe,
+            rememberClient: false
+        );
+
+        if (result.Succeeded)
+        {
+            return RedirectToLocal(model.ReturnUrl);
+        }
+
+        if (result.IsLockedOut)
+        {
+            ModelState.AddModelError(string.Empty, "Account locked.");
+            return View(model);
+        }
+
+        ModelState.AddModelError(string.Empty, "Invalid authentication code.");
+        return View(model);
     }
 
     [HttpGet]
