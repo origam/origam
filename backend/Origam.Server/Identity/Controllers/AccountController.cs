@@ -21,8 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -46,52 +44,42 @@ namespace Origam.Server.Identity.Controllers;
 [AllowAnonymous]
 public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 {
-    private readonly UserManager<IOrigamUser> _userManager;
-    private readonly SignInManager<IOrigamUser> _signInManager;
-    private readonly IAuthenticationSchemeProvider _schemeProvider;
-    private readonly IMailService _mailService;
-    private readonly UserConfig _userConfig;
-    private readonly IStringLocalizer<SharedResources> _localizer;
-    private readonly SessionObjects _sessionObjects;
-    private readonly ILogger<UserManager<IOrigamUser>> _logger;
-    private readonly IdentityGuiConfig _configOptions;
-    private readonly RequestLocalizationOptions _requestLocalizationOptions;
-    private readonly ResourceManager resourceManager = new ResourceManager(
-        "Origam.Server.SharedResources",
-        Assembly.GetExecutingAssembly()
-    );
+    private readonly UserManager<IOrigamUser> userManager;
+    private readonly SignInManager<IOrigamUser> signInManager;
+    private readonly IAuthenticationSchemeProvider schemeProvider;
+    private readonly IMailService mailService;
+    private readonly UserConfig userConfig;
+    private readonly IStringLocalizer<SharedResources> localizer;
+    private readonly ILogger<UserManager<IOrigamUser>> logger;
+    private readonly IdentityGuiConfig configOptions;
+    private readonly RequestLocalizationOptions requestLocalizationOptions;
 
     public AccountController(
         UserManager<IOrigamUser> userManager,
         SignInManager<IOrigamUser> signInManager,
-        // IIdentityServerInteractionService interaction,
-        // IClientStore clientStore,
         IAuthenticationSchemeProvider schemeProvider,
-        // IEventService events,
         IMailService mailService,
         IOptions<UserConfig> userConfig,
         IStringLocalizer<SharedResources> localizer,
-        SessionObjects sessionObjects,
         IOptions<RequestLocalizationOptions> requestLocalizationOptions,
         IOptions<IdentityGuiConfig> configOptions,
         ILogger<UserManager<IOrigamUser>> logger
     )
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _schemeProvider = schemeProvider;
-        _mailService = mailService;
-        _localizer = localizer;
-        _sessionObjects = sessionObjects;
-        _logger = logger;
-        _configOptions = configOptions.Value;
-        _userConfig = userConfig.Value;
-        _requestLocalizationOptions = requestLocalizationOptions.Value;
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+        this.schemeProvider = schemeProvider;
+        this.mailService = mailService;
+        this.localizer = localizer;
+        this.logger = logger;
+        this.configOptions = configOptions.Value;
+        this.userConfig = userConfig.Value;
+        this.requestLocalizationOptions = requestLocalizationOptions.Value;
     }
 
     private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
     {
-        var schemes = await _schemeProvider.GetAllSchemesAsync();
+        var schemes = await schemeProvider.GetAllSchemesAsync();
         var externalProviders = schemes
             .Where(x => x.DisplayName != null)
             .Select(x => new ExternalProvider
@@ -108,7 +96,8 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         };
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
@@ -116,7 +105,9 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         return View(model);
     }
 
-    [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
@@ -125,7 +116,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             return View(model);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(
+        var result = await signInManager.PasswordSignInAsync(
             model.UserName,
             model.Password,
             model.RememberMe,
@@ -151,7 +142,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     [AllowAnonymous]
     public IActionResult ForgotPassword(string returnUrl = null)
     {
-        if (!_configOptions.AllowPasswordReset)
+        if (!configOptions.AllowPasswordReset)
         {
             return RedirectToAction(nameof(Login), "Account");
         }
@@ -173,49 +164,47 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         Match match = Regex.Match(decodedUrl, pattern);
         return match.Success ? match.Groups[1].Value : "/";
     }
-
-    // POST: /Account/ForgotPassword
+    
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
     {
-        if (!_configOptions.AllowPasswordReset)
+        if (!configOptions.AllowPasswordReset)
         {
             return RedirectToAction(nameof(Login), "Account");
         }
         if (ModelState.IsValid)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                _logger.LogWarning("ForgotPassword - " + model.Email + " User does not exist.");
+                logger.LogWarning("ForgotPassword - " + model.Email + " User does not exist.");
                 return View("ForgotPasswordConfirmation");
             }
             // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
             // Send an email with this link
-            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.Action(
                 "ResetPassword",
                 "Account",
                 new { userId = user.BusinessPartnerId, code = passwordResetToken },
                 protocol: HttpContext.Request.Scheme
             );
-            _mailService.SendPasswordResetToken(
+            mailService.SendPasswordResetToken(
                 user,
                 passwordResetToken,
                 model.ReturnUrl,
                 tokenValidityHours: 24
             );
-            _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
+            logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
             return View("ForgotPasswordConfirmation");
         }
         // If we got this far, something failed, redisplay form
         return View(model);
     }
-
-    // GET: /Account/ResetPassword
+    
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(
@@ -224,18 +213,18 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         string returnUrl = null
     )
     {
-        if (!_configOptions.AllowPasswordReset)
+        if (!configOptions.AllowPasswordReset)
         {
             return RedirectToAction(nameof(Login), "Account");
         }
         if (code == null)
         {
-            _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
+            logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
             return View("Error");
         }
         if (mail == null)
         {
-            _logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
+            logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
             return View("Error");
         }
         var model = new ResetPasswordViewModel
@@ -245,14 +234,13 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         };
         return View(model);
     }
-
-    // POST: /Account/ResetPassword
+    
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
     {
-        if (!_configOptions.AllowPasswordReset)
+        if (!configOptions.AllowPasswordReset)
         {
             return RedirectToAction(nameof(Login), "Account");
         }
@@ -260,7 +248,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         {
             return View(model);
         }
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        var user = await userManager.FindByEmailAsync(model.Email);
         if (user == null)
         {
             // Don't reveal that the user does not exist
@@ -274,7 +262,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             );
         }
         user.EmailConfirmed = true;
-        var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+        var result = await userManager.ResetPasswordAsync(user, model.Code, model.Password);
         if (result.Succeeded)
         {
             return RedirectToAction(
@@ -289,8 +277,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         AddErrors(result);
         return View(model);
     }
-
-    // GET: /Account/ResetPasswordConfirmation
+    
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPasswordConfirmation(string returnUrl = null)
@@ -301,8 +288,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         };
         return View(model);
     }
-
-    // GET: /Account/RegisterConfirmation
+    
     [HttpGet]
     [AllowAnonymous]
     public IActionResult RegisterConfirmation()
@@ -310,28 +296,26 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         return View();
     }
 
-    // GET: /Account/Register
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Register(string returnUrl = null)
     {
-        if (!_userConfig.UserRegistrationAllowed)
+        if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
         }
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
-
-    // POST: /Account/Register
+    
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (!_userConfig.UserRegistrationAllowed)
+        if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
         }
         if (ModelState.IsValid)
         {
@@ -341,34 +325,32 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 Email = model.Email,
                 FirstName = model.FirstName,
                 Name = model.Name,
-                RoleId = _userConfig.NewUserRoleId,
+                RoleId = userConfig.NewUserRoleId,
             };
             IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
-            user = await _userManager.FindByNameAsync(user.UserName);
+            user = await userManager.FindByNameAsync(user.UserName);
             if (result.Succeeded)
             {
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                _mailService.SendNewUserToken(user, code);
+                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                mailService.SendNewUserToken(user, code);
                 return RedirectToAction(nameof(RegisterConfirmation), "Account");
             }
             AddErrors(result);
         }
         return View(model);
     }
-
-    // GET: /Account/RegisterInitialUser
+    
     [HttpGet]
     [AllowAnonymous]
     public IActionResult RegisterInitialUser()
     {
         if (!UserTools.IsInitialSetupNeeded())
         {
-            return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
+            return View("Error", new ErrorViewModel(localizer["AlreadySetUp"]));
         }
         return View();
     }
-
-    // POST: /Account/RegisterInitialUser
+    
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -376,7 +358,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (!UserTools.IsInitialSetupNeeded())
         {
-            return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
+            return View("Error", new ErrorViewModel(localizer["AlreadySetUp"]));
         }
 
         if (ModelState.IsValid)
@@ -391,14 +373,14 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
                 SecurityStamp = "",
             };
             IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
-            user = await _userManager.FindByNameAsync(user.UserName);
+            user = await userManager.FindByNameAsync(user.UserName);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
-                string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(
+                await signInManager.SignInAsync(user, false);
+                string emailConfirmToken = await userManager.GenerateEmailConfirmationTokenAsync(
                     user
                 );
-                await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
+                await userManager.ConfirmEmailAsync(user, emailConfirmToken);
                 UserTools.SetInitialSetupComplete();
                 return Redirect("/");
             }
@@ -406,56 +388,59 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         }
         return View(model);
     }
-
-    // GET: /Account/ConfirmEmail
+    
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> ConfirmEmail(string userId, string code)
     {
-        if (!_userConfig.UserRegistrationAllowed)
+        if (!userConfig.UserRegistrationAllowed)
         {
-            return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
+            return View("Error", new ErrorViewModel(localizer["RegistrationNotAllowed"]));
         }
         if (userId == null || code == null)
         {
-            _logger.LogWarning($"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\"");
+            logger.LogWarning($"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\"");
             return View("Error");
         }
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            _logger.LogWarning($"User not found: userId:\"{userId}\"");
+            logger.LogWarning($"User not found: userId:\"{userId}\"");
             return View("Error");
         }
-        var result = await _userManager.ConfirmEmailAsync(user, code);
+        var result = await userManager.ConfirmEmailAsync(user, code);
         if (result.Succeeded)
         {
             return View("EmailConfirmation");
         }
         string errors = string.Join("\n", result.Errors.Select(error => error.Description));
-        _logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
+        logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
 
         return View("Error");
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout(string returnUrl = null)
     {
-        await _signInManager.SignOutAsync();
+        await signInManager.SignOutAsync();
         return !string.IsNullOrEmpty(returnUrl)
             ? LocalRedirect(returnUrl)
             : RedirectToAction(nameof(Login));
     }
 
-    [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
     public IActionResult ExternalLogin(string provider, string returnUrl = null)
     {
         var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-        var props = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        var props = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return Challenge(props, provider);
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> ExternalLoginCallback(
         string returnUrl = null,
         string remoteError = null
@@ -467,13 +452,13 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             return RedirectToAction(nameof(Login), new { returnUrl });
         }
 
-        var info = await _signInManager.GetExternalLoginInfoAsync();
+        var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
             return RedirectToAction(nameof(Login), new { returnUrl });
         }
 
-        var signIn = await _signInManager.ExternalLoginSignInAsync(
+        var signIn = await signInManager.ExternalLoginSignInAsync(
             info.LoginProvider,
             info.ProviderKey,
             isPersistent: false,
@@ -491,12 +476,12 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             ?? info.Principal.FindFirstValue("preferred_username");
         var userName = email ?? info.ProviderKey;
 
-        var user = await _userManager.FindByNameAsync(userName);
+        var user = await userManager.FindByNameAsync(userName);
         if (user == null)
         {
             // implement to fit your schema; or inline a constructor
             user = new User { UserName = userName, Email = email };
-            var createRes = await _userManager.CreateAsync(user);
+            var createRes = await userManager.CreateAsync(user);
             if (!createRes.Succeeded)
             {
                 ModelState.AddModelError(string.Empty, "Cannot create local user.");
@@ -504,18 +489,19 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             }
         }
 
-        await _userManager.AddLoginAsync(user, info);
-        await _signInManager.SignInAsync(user, isPersistent: false);
+        await userManager.AddLoginAsync(user, info);
+        await signInManager.SignInAsync(user, isPersistent: false);
         return RedirectToLocal(returnUrl);
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
+    [AllowAnonymous]
     public IActionResult AccessDenied() => View();
 
     [HttpPost]
     public IActionResult SetLanguage(string culture, string returnUrl)
     {
-        var cultureProvider = _requestLocalizationOptions
+        var cultureProvider = requestLocalizationOptions
             .RequestCultureProviders.OfType<OrigamCookieRequestCultureProvider>()
             .First();
         Response.Cookies.Append(
