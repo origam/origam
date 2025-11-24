@@ -450,4 +450,7 @@
   <data name="Required" xml:space="preserve">
     <value>{0} is required</value>
   </data>
+  <data name="CannotCreateUser" xml:space="preserve">
+    <value>Cannot create local user.</value>
+  </data>
 </root>

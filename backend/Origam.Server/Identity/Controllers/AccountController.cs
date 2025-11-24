@@ -135,7 +135,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid login.");
+                ModelState.AddModelError(string.Empty, localizer["InvalidLogin"]);
                 return View(model);
             }
 
@@ -156,7 +156,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 
         if (result.IsLockedOut)
         {
-            ModelState.AddModelError(string.Empty, "Account locked.");
+            ModelState.AddModelError(string.Empty, localizer["UserLockedOut"]);
             LoginViewModel newModel = await BuildLoginViewModelAsync(returnUrl);
             newModel.UserName = model.UserName;
             return View(newModel);
@@ -165,7 +165,7 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         // Invalid credentials
         LoginViewModel invalidModel = await BuildLoginViewModelAsync(returnUrl);
         invalidModel.UserName = model.UserName;
-        ModelState.AddModelError(string.Empty, "Invalid login.");
+        ModelState.AddModelError(string.Empty, localizer["InvalidLogin"]);
         return View(invalidModel);
     }
 
@@ -219,11 +219,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
 
         if (result.IsLockedOut)
         {
-            ModelState.AddModelError(string.Empty, "Account locked.");
+            ModelState.AddModelError(string.Empty, localizer["UserLockedOut"]);
             return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid authentication code.");
+        ModelState.AddModelError(string.Empty, localizer["LoginFailedWrongCode"]);
         return View(model);
     }
 
@@ -568,12 +568,11 @@ public class AccountController : Microsoft.AspNetCore.Mvc.Controller
         var user = await userManager.FindByNameAsync(userName);
         if (user == null)
         {
-            // implement to fit your schema; or inline a constructor
             user = new User { UserName = userName, Email = email };
             var createRes = await userManager.CreateAsync(user);
             if (!createRes.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Cannot create local user.");
+                ModelState.AddModelError(string.Empty, localizer["CannotCreateUser"]);
                 return RedirectToAction(nameof(Login), new { returnUrl });
             }
         }
