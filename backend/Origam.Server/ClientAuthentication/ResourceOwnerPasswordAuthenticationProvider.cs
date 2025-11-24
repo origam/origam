@@ -74,8 +74,13 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         if (!discoveryResponse.IsSuccessStatusCode)
         {
             throw new Exception(
-                $"Error while retrieving discovery document from '{discoveryUrl}': "
-                    + $"{(int)discoveryResponse.StatusCode} {discoveryResponse.ReasonPhrase} - {discoveryContent}"
+                string.Format(
+                    Resources.ErrorDiscoveryDocumentRetrieval,
+                    discoveryUrl,
+                    (int)discoveryResponse.StatusCode,
+                    discoveryResponse.ReasonPhrase,
+                    discoveryContent
+                )
             );
         }
 
@@ -88,7 +93,10 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             if (!root.TryGetProperty("token_endpoint", out var tokenEndpointElement))
             {
                 throw new Exception(
-                    $"token_endpoint was not found in discovery document from '{discoveryUrl}'."
+                    string.Format(
+                        Resources.ErrorTokenEndpointNotFoundInDiscovery,
+                        discoveryUrl
+                    )
                 );
             }
 
@@ -96,13 +104,19 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         }
         catch (JsonException ex)
         {
-            throw new Exception($"Failed to parse discovery document from '{discoveryUrl}'.", ex);
+            throw new Exception(
+                string.Format(
+                    Resources.ErrorDiscoveryDocumentParseFailed,
+                    discoveryUrl
+                ),
+                ex
+            );
         }
 
         if (string.IsNullOrWhiteSpace(tokenEndpoint))
         {
             throw new Exception(
-                $"token_endpoint in discovery document from '{discoveryUrl}' is null or empty."
+                string.Format(Resources.ErrorTokenEndpointNullOrEmpty, discoveryUrl)
             );
         }
 
@@ -127,8 +141,13 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         if (!tokenResponse.IsSuccessStatusCode)
         {
             throw new Exception(
-                $"Error while requesting password token from '{tokenEndpoint}': "
-                    + $"{(int)tokenResponse.StatusCode} {tokenResponse.ReasonPhrase} - {tokenContent}"
+                string.Format(
+                    Resources.ErrorPasswordTokenRequest,
+                    tokenEndpoint,
+                    (int)tokenResponse.StatusCode,
+                    tokenResponse.ReasonPhrase,
+                    tokenContent
+                )
             );
         }
 
@@ -140,14 +159,17 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
             if (!root.TryGetProperty("access_token", out var accessTokenElement))
             {
                 throw new Exception(
-                    $"access_token was not found in response from '{providerConfig.AuthServerUrl}'."
+                    string.Format(
+                        Resources.ErrorAccessTokenNotFoundInResponse,
+                        providerConfig.AuthServerUrl
+                    )
                 );
             }
 
             var accessTokenValue = accessTokenElement.GetString();
             if (string.IsNullOrWhiteSpace(accessTokenValue))
             {
-                throw new Exception("access_token in token response is null or empty.");
+                throw new Exception(Resources.ErrorAccessTokenNullOrEmpty);
             }
 
             int expiresInSeconds = 3600;
@@ -158,7 +180,10 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
                     if (!expiresInElement.TryGetInt32(out expiresInSeconds))
                     {
                         throw new Exception(
-                            $"Cannot parse numeric expires_in value \"{expiresInElement}\" to integer."
+                            string.Format(
+                                Resources.ErrorExpiresInParseNumber,
+                                expiresInElement
+                            )
                         );
                     }
                 }
@@ -168,7 +193,7 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
                     if (!int.TryParse(str, out expiresInSeconds))
                     {
                         throw new Exception(
-                            $"Cannot parse string expires_in value \"{str}\" to integer."
+                            string.Format(Resources.ErrorExpiresInParseString, str)
                         );
                     }
                 }
@@ -182,7 +207,11 @@ public class ResourceOwnerPasswordAuthenticationProvider : IClientAuthentication
         catch (JsonException ex)
         {
             throw new Exception(
-                $"Failed to parse token response from '{tokenEndpoint}'. Raw content: {tokenContent}",
+                string.Format(
+                    Resources.ErrorTokenResponseParseFailed,
+                    tokenEndpoint,
+                    tokenContent
+                ),
                 ex
             );
         }

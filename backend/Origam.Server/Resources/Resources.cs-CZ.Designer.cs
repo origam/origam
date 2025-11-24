@@ -123,6 +123,24 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to access_token nebyl nalezen v odpovědi ze serveru &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorAccessTokenNotFoundInResponse {
+            get {
+                return ResourceManager.GetString("ErrorAccessTokenNotFoundInResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to access_token v odpovědi je prázdný..
+        /// </summary>
+        public static string ErrorAccessTokenNullOrEmpty {
+            get {
+                return ResourceManager.GetString("ErrorAccessTokenNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Byla přesažena maximální velikost přílohy ({0} bytů)..
         /// </summary>
         public static string ErrorAttachmentMaximumSize {
@@ -285,6 +303,42 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nepodařilo se zpracovat discovery dokument z &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorDiscoveryDocumentParseFailed {
+            get {
+                return ResourceManager.GetString("ErrorDiscoveryDocumentParseFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chyba při stahování discovery dokumentu z &apos;{0}&apos;: {1} {2} - {3}.
+        /// </summary>
+        public static string ErrorDiscoveryDocumentRetrieval {
+            get {
+                return ResourceManager.GetString("ErrorDiscoveryDocumentRetrieval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nelze převést číselnou hodnotu expires_in &quot;{0}&quot; na celé číslo..
+        /// </summary>
+        public static string ErrorExpiresInParseNumber {
+            get {
+                return ResourceManager.GetString("ErrorExpiresInParseNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nelze převést textovou hodnotu expires_in &quot;{0}&quot; na celé číslo..
+        /// </summary>
+        public static string ErrorExpiresInParseString {
+            get {
+                return ResourceManager.GetString("ErrorExpiresInParseString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export již není k dispozici..
         /// </summary>
         public static string ErrorExportNotAvailable {
@@ -366,6 +420,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chyba při požadavku na bezpečnostní token z &apos;{0}&apos;: {1} {2} - {3}.
+        /// </summary>
+        public static string ErrorPasswordTokenRequest {
+            get {
+                return ResourceManager.GetString("ErrorPasswordTokenRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pseudoparametr &apos;body&apos; nebyl definován jako parametr datové stránky API, ale byl použit během volání PUT..
         /// </summary>
         public static string ErrorPseudoparameterBodyNotDefined {
@@ -443,6 +506,33 @@ namespace Origam.Server {
         public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
             get {
                 return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to token_endpoint nebyl nalezen v discovery dokumentu z &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorTokenEndpointNotFoundInDiscovery {
+            get {
+                return ResourceManager.GetString("ErrorTokenEndpointNotFoundInDiscovery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to token_endpoint v discovery dokumentu z &apos;{0}&apos; je prázdný..
+        /// </summary>
+        public static string ErrorTokenEndpointNullOrEmpty {
+            get {
+                return ResourceManager.GetString("ErrorTokenEndpointNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nepodařilo se zpracovat odpověď s tokenem z &apos;{0}&apos;. Původní obsah: {1}.
+        /// </summary>
+        public static string ErrorTokenResponseParseFailed {
+            get {
+                return ResourceManager.GetString("ErrorTokenResponseParseFailed", resourceCulture);
             }
         }
         

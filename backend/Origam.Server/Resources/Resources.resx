@@ -303,4 +303,34 @@
   <data name="GeneralErrorMessage" xml:space="preserve">
     <value>An error has occurred. There may be some details in the log file.</value>
   </data>
+  <data name="ErrorDiscoveryDocumentRetrieval" xml:space="preserve">
+    <value>Error while retrieving discovery document from '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorTokenEndpointNotFoundInDiscovery" xml:space="preserve">
+    <value>token_endpoint was not found in discovery document from '{0}'.</value>
+  </data>
+  <data name="ErrorDiscoveryDocumentParseFailed" xml:space="preserve">
+    <value>Failed to parse discovery document from '{0}'.</value>
+  </data>
+  <data name="ErrorTokenEndpointNullOrEmpty" xml:space="preserve">
+    <value>token_endpoint in discovery document from '{0}' is null or empty.</value>
+  </data>
+  <data name="ErrorPasswordTokenRequest" xml:space="preserve">
+    <value>Error while requesting password token from '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorAccessTokenNotFoundInResponse" xml:space="preserve">
+    <value>access_token was not found in response from '{0}'.</value>
+  </data>
+  <data name="ErrorAccessTokenNullOrEmpty" xml:space="preserve">
+    <value>access_token in token response is null or empty.</value>
+  </data>
+  <data name="ErrorExpiresInParseNumber" xml:space="preserve">
+    <value>Cannot parse numeric expires_in value "{0}" to integer.</value>
+  </data>
+  <data name="ErrorExpiresInParseString" xml:space="preserve">
+    <value>Cannot parse string expires_in value "{0}" to integer.</value>
+  </data>
+  <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
+    <value>Failed to parse token response from '{0}'. Raw content: {1}</value>
+  </data>
 </root>

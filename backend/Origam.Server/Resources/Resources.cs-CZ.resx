@@ -303,4 +303,34 @@
   <data name="GeneralErrorMessage" xml:space="preserve">
     <value>Došlo k chybě. V log souboru mohou být uvedeny podrobnosti.</value>
   </data>
+  <data name="ErrorDiscoveryDocumentRetrieval" xml:space="preserve">
+    <value>Chyba při stahování discovery dokumentu z '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorTokenEndpointNotFoundInDiscovery" xml:space="preserve">
+    <value>token_endpoint nebyl nalezen v discovery dokumentu z '{0}'.</value>
+  </data>
+  <data name="ErrorDiscoveryDocumentParseFailed" xml:space="preserve">
+    <value>Nepodařilo se zpracovat discovery dokument z '{0}'.</value>
+  </data>
+  <data name="ErrorTokenEndpointNullOrEmpty" xml:space="preserve">
+    <value>token_endpoint v discovery dokumentu z '{0}' je prázdný.</value>
+  </data>
+  <data name="ErrorPasswordTokenRequest" xml:space="preserve">
+    <value>Chyba při požadavku na bezpečnostní token z '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorAccessTokenNotFoundInResponse" xml:space="preserve">
+    <value>access_token nebyl nalezen v odpovědi ze serveru '{0}'.</value>
+  </data>
+  <data name="ErrorAccessTokenNullOrEmpty" xml:space="preserve">
+    <value>access_token v odpovědi je prázdný.</value>
+  </data>
+  <data name="ErrorExpiresInParseNumber" xml:space="preserve">
+    <value>Nelze převést číselnou hodnotu expires_in "{0}" na celé číslo.</value>
+  </data>
+  <data name="ErrorExpiresInParseString" xml:space="preserve">
+    <value>Nelze převést textovou hodnotu expires_in "{0}" na celé číslo.</value>
+  </data>
+  <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
+    <value>Nepodařilo se zpracovat odpověď s tokenem z '{0}'. Původní obsah: {1}</value>
+  </data>
 </root>
