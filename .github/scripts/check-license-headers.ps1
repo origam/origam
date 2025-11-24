@@ -68,7 +68,7 @@ function Is-Excluded($filePath)
 }
 
 $FilesToCheck = Get-ChildItem -Recurse -File |
-        Where-Object { $_.Extension -in ".cs", ".ts", ".tsx", ".css", ".scss" } |
+        Where-Object { $_.Extension -in ".cs", ".ts", ".tsx", ".css", ".scss", ".cshtml" } |
         Where-Object { -not (Is-Excluded $_.FullName) }
 
 foreach ($file in $FilesToCheck)
