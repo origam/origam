@@ -87,14 +87,14 @@ public static class OpenIddictConfigManager
             Requirements = { Requirements.Features.ProofKeyForCodeExchange },
         };
 
-        foreach (var u in config.WebClient.RedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.WebClient.RedirectUris ?? Array.Empty<string>())
         {
-            descriptor.RedirectUris.Add(new Uri(u));
+            descriptor.RedirectUris.Add(new Uri(uri));
         }
 
-        foreach (var u in config.WebClient.PostLogoutRedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.WebClient.PostLogoutRedirectUris ?? Array.Empty<string>())
         {
-            descriptor.PostLogoutRedirectUris.Add(new Uri(u));
+            descriptor.PostLogoutRedirectUris.Add(new Uri(uri));
         }
 
         descriptor.Permissions.AddRange(
@@ -143,14 +143,14 @@ public static class OpenIddictConfigManager
             Requirements = { Requirements.Features.ProofKeyForCodeExchange }, // PKCE
         };
 
-        foreach (var u in config.MobileClient.RedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.MobileClient.RedirectUris ?? Array.Empty<string>())
         {
-            descriptor.RedirectUris.Add(new Uri(u));
+            descriptor.RedirectUris.Add(new Uri(uri));
         }
 
-        foreach (var u in config.MobileClient.PostLogoutRedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.MobileClient.PostLogoutRedirectUris ?? Array.Empty<string>())
         {
-            descriptor.PostLogoutRedirectUris.Add(new Uri(u));
+            descriptor.PostLogoutRedirectUris.Add(new Uri(uri));
         }
 
         descriptor.Permissions.AddRange(
