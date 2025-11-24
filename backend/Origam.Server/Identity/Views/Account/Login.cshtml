@@ -35,7 +35,6 @@
             <h2>@SharedLocalizer["LocalLogin"]</h2>
             <div class="input-form">
                 <form asp-route="Login">
-                    @* <input type="hidden" asp-for="ReturnUrl"/> *@
                     <div class="input-row">
                         <label asp-for="UserName">@SharedLocalizer["UserName"]</label>
                         <input id="userNameInput" placeholder="@SharedLocalizer["UserName"]" asp-for="UserName" autofocus>
