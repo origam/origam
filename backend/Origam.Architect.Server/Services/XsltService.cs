@@ -52,12 +52,12 @@ public class XsltService(
             || Transform(transformation.TextStore, "<ROOT/>", true, result) == null
         )
         {
-            result.Text = "XSLT validation failed. See output for details.";
+            result.Text = Strings.XsltValidationFailed;
             return result;
         }
 
-        result.AddToOutput("XSLT is valid.");
-        result.Text = "XSLT is valid.";
+        result.AddToOutput(Strings.XsltValidationSuccess);
+        result.Text = Strings.XsltValidationSuccess;
         return result;
     }
 
@@ -153,7 +153,7 @@ public class XsltService(
             ParameterData correspondingData =
                 parameterList.FirstOrDefault(parData => parData.Name == paramName)
                 ?? throw new ArgumentException(
-                    $"Parameter named {paramName} was not found among Input Parameters."
+                    string.Format(Strings.ParameterNotFound, paramName)
                 );
 
             parHashtable.Add(paramName, correspondingData.Value);
@@ -205,7 +205,8 @@ internal class ParameterData
         return Enum.GetValues(typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
                 .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException($"parameter type {type} is not OrigamDataType.");
+            ?? throw new ArgumentException(
+                string.Format(Strings.WrongParameterType, type));
     }
 
     public object Value
@@ -236,7 +237,7 @@ public class Result
 
     public Result()
     {
-        Title = "XSLT Validation";
+        Title = Strings.ValidationResultTitle;
         Text = String.Empty;
     }
 

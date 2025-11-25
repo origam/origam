@@ -67,5 +67,50 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("CategoryDocumentation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
+        /// </summary>
+        internal static string ParameterNotFound {
+            get {
+                return ResourceManager.GetString("ParameterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSLT Validation.
+        /// </summary>
+        internal static string ValidationResultTitle {
+            get {
+                return ResourceManager.GetString("ValidationResultTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter type {0} is not OrigamDataType..
+        /// </summary>
+        internal static string WrongParameterType {
+            get {
+                return ResourceManager.GetString("WrongParameterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSLT validation failed. See output for details..
+        /// </summary>
+        internal static string XsltValidationFailed {
+            get {
+                return ResourceManager.GetString("XsltValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSLT is valid..
+        /// </summary>
+        internal static string XsltValidationSuccess {
+            get {
+                return ResourceManager.GetString("XsltValidationSuccess", resourceCulture);
+            }
+        }
     }
 }
