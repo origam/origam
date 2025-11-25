@@ -52,7 +52,7 @@ public class XsltService(
 
         return ValidateXslt(transformation);
     }
-    
+
     public Result Transform(Guid schemaItemId)
     {
         EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
@@ -173,9 +173,7 @@ public class XsltService(
         {
             ParameterData correspondingData =
                 parameterList.FirstOrDefault(parData => parData.Name == paramName)
-                ?? throw new ArgumentException(
-                    string.Format(Strings.ParameterNotFound, paramName)
-                );
+                ?? throw new ArgumentException(string.Format(Strings.ParameterNotFound, paramName));
 
             parHashtable.Add(paramName, correspondingData.Value);
         }
@@ -226,8 +224,7 @@ internal class ParameterData
         return Enum.GetValues(typeof(OrigamDataType))
                 .Cast<OrigamDataType?>()
                 .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException(
-                string.Format(Strings.WrongParameterType, type));
+            ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
     }
 
     public object Value
