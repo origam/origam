@@ -32,8 +32,8 @@ public class DeploymentVersionCurrentService(
 {
     public void SetVersionCurrent(DeploymentVersion deploymentVersion)
     {
-        var dirtyDocumentExists = editorService.GetOpenEditors().Any(x => x.IsDirty);
-        if (dirtyDocumentExists)
+        var isDirtyEditorExists = editorService.GetOpenEditors().Any(x => x.IsDirty);
+        if (isDirtyEditorExists)
         {
             throw new Exception(
                 "Model not saved. Please, save the model before setting the version."
