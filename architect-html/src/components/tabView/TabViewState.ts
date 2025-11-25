@@ -25,4 +25,8 @@ export class TabViewState {
   showModelTree() {
     this.activeTabIndex = 1;
   }
+
+  shotOutput() {
+    this.activeTabIndex = 3;
+  }
 }

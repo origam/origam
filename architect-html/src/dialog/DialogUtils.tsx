@@ -21,6 +21,7 @@ import { T } from '@/main';
 import { YesNoQuestion } from '@dialogs/components/YesNoQuestion';
 import { IDialogStackState } from '@dialogs/types';
 import { action } from 'mobx';
+import { Info } from '@/dialog/components/Info.tsx';
 
 export function askYesNoQuestion(
   dialogStack: IDialogStackState,
@@ -59,4 +60,27 @@ export enum YesNoResult {
   Yes,
   No,
   Cancel,
+}
+
+export function showInfo(
+  dialogStack: IDialogStackState,
+  title: string,
+  text: string,
+): Promise<YesNoResult> {
+  return new Promise(
+    action((resolve: (value: YesNoResult) => void) => {
+      const closeDialog = dialogStack.pushDialog(
+        '',
+        <Info
+          screenTitle={title}
+          cancelLabel={T('Cancel', 'dialog_cancel')}
+          message={text}
+          onCancelClick={() => {
+            closeDialog();
+            resolve(YesNoResult.Cancel);
+          }}
+        />,
+      );
+    }),
+  );
 }

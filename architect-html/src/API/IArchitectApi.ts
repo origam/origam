@@ -101,7 +101,17 @@ export interface IArchitectApi {
   ): Promise<IUpdatePropertiesResult>;
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
+
+  validateTransformation(schemaItemId: string): Promise<Result>;
 }
+
+export interface Result {
+  title: string;
+  text: string;
+  output: string;
+  resultXml: string;
+}
+
 export interface IScreenEditorModel {
   data: IScreenEditorData;
   isDirty: boolean;

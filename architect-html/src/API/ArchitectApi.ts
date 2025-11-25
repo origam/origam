@@ -30,6 +30,7 @@ import {
   IScreenEditorModel,
   ISectionEditorModel,
   IUpdatePropertiesResult,
+  Result,
 } from '@api/IArchitectApi';
 import axios, { AxiosInstance } from 'axios';
 
@@ -117,6 +118,14 @@ export class ArchitectApi implements IArchitectApi {
     await this.axiosInstance.post(`/Documentation/PersistChanges`, {
       schemaItemId,
     });
+  }
+
+  async validateTransformation(schemaItemId: string): Promise<Result> {
+    return (
+      await this.axiosInstance.post(`/Xslt/Validate`, {
+        schemaItemId,
+      })
+    ).data;
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {

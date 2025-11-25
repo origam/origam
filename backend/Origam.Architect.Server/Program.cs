@@ -43,6 +43,8 @@ public class Program
 
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var documentation = ServiceManager.Services.GetService<IDocumentationService>();
+        var businessServicesService =
+            ServiceManager.Services.GetService<IBusinessServicesService>();
         var builder = WebApplication.CreateBuilder(args);
         builder
             .Services.AddControllers()
@@ -56,6 +58,7 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<EditorService>();
+        builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<ControlAdapterFactory>();
@@ -63,6 +66,7 @@ public class Program
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
         builder.Services.AddSingleton(documentation);
+        builder.Services.AddSingleton(businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddLogging(logging =>
         {

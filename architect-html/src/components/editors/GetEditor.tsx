@@ -43,6 +43,7 @@ import XsltEditor from '@editors/xsltEditor/XsltEditor';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import React from 'react';
+import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 
 export function getEditor(args: {
   editorType: EditorType;
@@ -76,7 +77,7 @@ export function getEditor(args: {
 
   if (editorType === 'XsltEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
-    const editorState = new GridEditorState(
+    const editorState = new XsltEditorState(
       editorData.editorId,
       node,
       properties,

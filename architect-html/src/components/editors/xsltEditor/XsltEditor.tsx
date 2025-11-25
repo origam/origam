@@ -22,13 +22,16 @@ import { RootStoreContext, T } from '@/main';
 import { TabView } from '@components/tabView/TabView';
 import { TabViewState } from '@components/tabView/TabViewState';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
-import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useContext } from 'react';
+import Button from '@components/Button/Button.tsx';
+import { VscCheck, VscPlay } from 'react-icons/vsc';
+import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
+import { showInfo } from '@/dialog/DialogUtils.tsx';
 
-const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
+const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const getFieldName = (): 'TextStore' | 'Xsl' => {
@@ -47,6 +50,17 @@ const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
     });
   };
 
+  function handleValidate() {
+    runInFlowWithHandler(rootStore.errorDialogController)({
+      generator: function* () {
+        const result = yield* editorState.validate();
+        rootStore.output = result.output;
+        rootStore.sideBarTabViewState.shotOutput();
+        yield showInfo(rootStore.dialogStack, result.title, result.text);
+      },
+    });
+  }
+
   return (
     <div className={S.root}>
       <TabView
@@ -63,7 +77,20 @@ const XsltEditor = ({ editorState }: { editorState: GridEditorState }) => {
                     ': ' +
                     (editorState.properties.find(x => x.name === 'Name')?.value || '')
                   }
-                />
+                >
+                  <Button
+                    type="secondary"
+                    title={T('Transform', 'transform_button_label')}
+                    prefix={<VscPlay />}
+                    onClick={() => {}}
+                  />
+                  <Button
+                    type="secondary"
+                    title={T('Validate', 'validate_button_label')}
+                    prefix={<VscCheck />}
+                    onClick={handleValidate}
+                  />
+                </ActionPanel>
                 <CodeEditor
                   defaultLanguage="xml"
                   value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
