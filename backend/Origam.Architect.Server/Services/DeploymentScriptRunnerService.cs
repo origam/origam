@@ -28,7 +28,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Services;
 
-public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService> logger)
+public class DeploymentScriptRunnerService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
@@ -40,18 +40,15 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
 
         try
         {
-            logger.LogInformation("Executing deployment script: {ScriptName}", script.Name);
+            log.Info($"Executing deployment script: {script.Name}");
             ExecuteActivity(script, transactionId);
             ResourceMonitor.Commit(transactionId);
-            logger.LogInformation(
-                "Deployment script executed successfully: {ScriptName}",
-                script.Name
-            );
+            log.Info($"Deployment script executed successfully: {script.Name}");
         }
         catch (Exception ex)
         {
             ResourceMonitor.Rollback(transactionId);
-            logger.LogError(ex, "Error executing deployment script: {ScriptName}", script.Name);
+            log.Error($"Error executing deployment script: {script.Name}", ex);
             throw new Exception($"Error executing deployment script '{script.Name}'", ex);
         }
     }
@@ -60,7 +57,7 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
     {
         if (log.IsInfoEnabled)
         {
-            log.Info("Executing deployment activity: " + activity.Name);
+            log.Info($"Executing deployment activity: {activity.Name}");
         }
 
         try
