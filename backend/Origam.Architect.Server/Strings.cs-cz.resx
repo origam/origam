@@ -17,4 +17,7 @@
     <data name="DeploymentScriptsSelectItemIsNotDeploymentScript" xml:space="preserve">
         <value>Vybraná položka není typu DeploymentScript</value>
     </data>
+    <data name="DeploymentScriptsModelNotSavedBeforeVersionChange" xml:space="preserve">
+        <value>Model nebyl uložen. Před nastavením verze prosím model uložte.</value>
+    </data>
 </root>

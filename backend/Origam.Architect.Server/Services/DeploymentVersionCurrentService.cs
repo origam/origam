@@ -35,9 +35,7 @@ public class DeploymentVersionCurrentService(
         var isDirtyEditorExists = editorService.GetOpenEditors().Any(x => x.IsDirty);
         if (isDirtyEditorExists)
         {
-            throw new Exception(
-                "Model not saved. Please, save the model before setting the version."
-            );
+            throw new Exception(Strings.DeploymentScriptsModelNotSavedBeforeVersionChange);
         }
 
         SecurityManager.SetServerIdentity();

@@ -27,4 +27,7 @@
     <data name="DeploymentScriptsSelectItemIsNotDeploymentScript" xml:space="preserve">
         <value>Selected item is not a DeploymentScript</value>
     </data>
+    <data name="DeploymentScriptsModelNotSavedBeforeVersionChange" xml:space="preserve">
+        <value>Model not saved. Please, save the model before setting the version.</value>
+    </data>
 </root>

@@ -69,6 +69,15 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model not saved. Please, save the model before setting the version..
+        /// </summary>
+        internal static string DeploymentScriptsModelNotSavedBeforeVersionChange {
+            get {
+                return ResourceManager.GetString("DeploymentScriptsModelNotSavedBeforeVersionChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selected item is not a DeploymentScript.
         /// </summary>
         internal static string DeploymentScriptsSelectItemIsNotDeploymentScript {
