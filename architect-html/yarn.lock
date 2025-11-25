@@ -1680,7 +1680,7 @@ __metadata:
     mobx-react-lite: "npm:^4.1.1"
     moment: "npm:^2.30.1"
     monaco-editor: "npm:^0.55.1"
-    monaco-vim: "npm:^0.4.2"
+    monaco-vim: "npm:^0.4.4"
     prettier: "npm:^3.6.2"
     react: "npm:^19.2.0"
     react-contexify: "npm:^6.0.0"
@@ -4026,12 +4026,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-vim@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "monaco-vim@npm:0.4.2"
+"monaco-vim@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "monaco-vim@npm:0.4.4"
   peerDependencies:
     monaco-editor: "*"
-  checksum: 10c0/f4ba002c9cfc645d7af2cc28786c680f344e92561fa1c756baf968b6a1a5dce3d1d4c80bb8698925350869590485f40a07d34e8e12d3ca9941d56668279fd6b5
+  checksum: 10c0/3e3d01d73e4bf576097b2379f4afc5700dbc4dd009db00e3e08e922f84fc79ab38dddc34e750c91cc783536e4854cec94a21dc7f577e4ce1b7a41b84c7ab491c
   languageName: node
   linkType: hard
 
