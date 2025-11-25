@@ -67,5 +67,23 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("CategoryDocumentation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected item is not a DeploymentScript.
+        /// </summary>
+        internal static string DeploymentScriptsSelectItemIsNotDeploymentScript {
+            get {
+                return ResourceManager.GetString("DeploymentScriptsSelectItemIsNotDeploymentScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected item is not a DeploymentVersion.
+        /// </summary>
+        internal static string DeploymentScriptsSelectItemIsNotDeploymentVersion {
+            get {
+                return ResourceManager.GetString("DeploymentScriptsSelectItemIsNotDeploymentVersion", resourceCulture);
+            }
+        }
     }
 }

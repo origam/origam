@@ -53,7 +53,7 @@ public class DeploymentScriptController(
 
             if (item is not DeploymentVersion version)
             {
-                return BadRequest("Selected item is not a DeploymentVersion");
+                return BadRequest(Strings.DeploymentScriptsSelectItemIsNotDeploymentVersion);
             }
 
             deploymentVersionCurrentService.SetVersionCurrent(version);
@@ -74,7 +74,7 @@ public class DeploymentScriptController(
 
             if (item is not AbstractUpdateScriptActivity script)
             {
-                return BadRequest("Selected item is not a deployment script");
+                return BadRequest(Strings.DeploymentScriptsSelectItemIsNotDeploymentScript);
             }
 
             SecurityManager.SetServerIdentity();
