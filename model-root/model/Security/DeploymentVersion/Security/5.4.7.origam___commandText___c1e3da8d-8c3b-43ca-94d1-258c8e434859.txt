@@ -1,0 +1,109 @@
+﻿------------------------------------------------
+-- Tables
+------------------------------------------------
+CREATE TABLE public."OpenIddictApplications" (
+    "Id"                      varchar(450)  NOT NULL,
+    "ApplicationType"         varchar(50)   NULL,
+    "ClientId"                varchar(100)  NULL,
+    "ClientSecret"            text          NULL,
+    "ClientType"              varchar(50)   NULL,
+    "ConcurrencyToken"        varchar(50)   NULL,
+    "ConsentType"             varchar(50)   NULL,
+    "DisplayName"             text          NULL,
+    "DisplayNames"            text          NULL,
+    "JsonWebKeySet"           text          NULL,
+    "Permissions"             text          NULL,
+    "PostLogoutRedirectUris"  text          NULL,
+    "Properties"              text          NULL,
+    "RedirectUris"            text          NULL,
+    "Requirements"            text          NULL,
+    "Settings"                text          NULL,
+    CONSTRAINT "PK_OpenIddictApplications"
+        PRIMARY KEY ("Id")
+);
+
+CREATE TABLE public."OpenIddictScopes" (
+    "Id"               varchar(450)  NOT NULL,
+    "ConcurrencyToken" varchar(50)   NULL,
+    "Description"      text          NULL,
+    "Descriptions"     text          NULL,
+    "DisplayName"      text          NULL,
+    "DisplayNames"     text          NULL,
+    "Name"             varchar(200)  NULL,
+    "Properties"       text          NULL,
+    "Resources"        text          NULL,
+    CONSTRAINT "PK_OpenIddictScopes"
+        PRIMARY KEY ("Id")
+);
+
+CREATE TABLE public."OpenIddictAuthorizations" (
+    "Id"               varchar(450)  NOT NULL,
+    "ApplicationId"    varchar(450)  NULL,
+    "ConcurrencyToken" varchar(50)   NULL,
+    "CreationDate"     timestamp with time zone NULL,
+    "Properties"       text          NULL,
+    "Scopes"           text          NULL,
+    "Status"           varchar(50)   NULL,
+    "Subject"          varchar(400)  NULL,
+    "Type"             varchar(50)   NULL,
+    CONSTRAINT "PK_OpenIddictAuthorizations"
+        PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_OpenIddictAuthorizations_OpenIddictApplications_ApplicationId"
+        FOREIGN KEY ("ApplicationId")
+        REFERENCES public."OpenIddictApplications" ("Id")
+);
+
+CREATE TABLE public."OpenIddictTokens" (
+    "Id"               varchar(450)  NOT NULL,
+    "ApplicationId"    varchar(450)  NULL,
+    "AuthorizationId"  varchar(450)  NULL,
+    "ConcurrencyToken" varchar(50)   NULL,
+    "CreationDate"     timestamp with time zone NULL,
+    "ExpirationDate"   timestamp with time zone NULL,
+    "Payload"          text          NULL,
+    "Properties"       text          NULL,
+    "RedemptionDate"   timestamp with time zone NULL,
+    "ReferenceId"      varchar(100)  NULL,
+    "Status"           varchar(50)   NULL,
+    "Subject"          varchar(400)  NULL,
+    "Type"             varchar(150)  NULL,
+    CONSTRAINT "PK_OpenIddictTokens"
+        PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_OpenIddictTokens_OpenIddictApplications_ApplicationId"
+        FOREIGN KEY ("ApplicationId")
+        REFERENCES public."OpenIddictApplications" ("Id"),
+    CONSTRAINT "FK_OpenIddictTokens_OpenIddictAuthorizations_AuthorizationId"
+        FOREIGN KEY ("AuthorizationId")
+        REFERENCES public."OpenIddictAuthorizations" ("Id")
+);
+
+------------------------------------------------
+-- Indexes
+------------------------------------------------
+-- OpenIddictApplications.ClientId (unique, filtered)
+CREATE UNIQUE INDEX "IX_OpenIddictApplications_ClientId"
+ON public."OpenIddictApplications" ("ClientId")
+WHERE "ClientId" IS NOT NULL;
+
+-- OpenIddictAuthorizations.ApplicationId + Status + Subject + Type
+CREATE INDEX "IX_OpenIddictAuthorizations_ApplicationId_Status_Subject_Type"
+ON public."OpenIddictAuthorizations" ("ApplicationId", "Status", "Subject", "Type");
+
+-- OpenIddictScopes.Name (unique, filtered)
+CREATE UNIQUE INDEX "IX_OpenIddictScopes_Name"
+ON public."OpenIddictScopes" ("Name")
+WHERE "Name" IS NOT NULL;
+
+-- OpenIddictTokens.ApplicationId + Status + Subject + Type
+CREATE INDEX "IX_OpenIddictTokens_ApplicationId_Status_Subject_Type"
+ON public."OpenIddictTokens" ("ApplicationId", "Status", "Subject", "Type");
+
+-- OpenIddictTokens.AuthorizationId
+CREATE INDEX "IX_OpenIddictTokens_AuthorizationId"
+ON public."OpenIddictTokens" ("AuthorizationId");
+
+-- OpenIddictTokens.ReferenceId (unique, filtered)
+CREATE UNIQUE INDEX "IX_OpenIddictTokens_ReferenceId"
+ON public."OpenIddictTokens" ("ReferenceId")
+WHERE "ReferenceId" IS NOT NULL;
+

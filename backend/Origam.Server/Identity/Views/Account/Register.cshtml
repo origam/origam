@@ -1,0 +1,63 @@
+﻿@*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.Server
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+@model Origam.Server.Identity.Models.RegisterViewModel
+
+<div class="detailview-container">
+    <div class="detailview-module with-title">
+        <h2>@SharedLocalizer["CreateAccount"]</h2>
+        <div class="input-form">
+            <form asp-controller="Account" asp-action="Register">
+                <div class="input-row">
+                    <label asp-for="UserName">@SharedLocalizer["UserName"]</label>
+                    <input asp-for="UserName" autofocus>
+                </div>                  
+                <div class="input-row">
+                    <label asp-for="Name">@SharedLocalizer["Name"]</label>
+                    <input asp-for="Name">
+                </div>                  
+                <div class="input-row">
+                    <label asp-for="FirstName">@SharedLocalizer["FirstName"]</label>
+                    <input asp-for="FirstName">
+                </div>                
+                <div class="input-row">
+                    <label asp-for="Email">@SharedLocalizer["Email"]</label>
+                    <input asp-for="Email">
+                </div>
+                <div class="input-row">
+                    <label asp-for="Password">@SharedLocalizer["Password"]</label>
+                    <input type="password" asp-for="Password" autocomplete="off">
+                </div>                
+                <div class="input-row">
+                    <label asp-for="ConfirmPassword">@SharedLocalizer["ConfirmPassword"]</label>
+                    <input type="password" asp-for="ConfirmPassword" autocomplete="off">
+                </div>
+                
+                <div class="input-row">
+                    <a id="createButton" class="btn normal-size primary submit-link" href=#>@SharedLocalizer["Create"]</a>
+                </div>
+            </form>
+        </div>
+    </div>  
+</div>
+
+<partial name="_ValidationSummary"/>

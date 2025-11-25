@@ -1,5 +1,12 @@
 #!/bin/bash
 
+trap 'rc=$?; if [[ $rc -ne 0 ]]; then
+  echo
+  echo "=== Origam server output ==="
+  cat /home/origam/server_bin/origam-output.txt 2>/dev/null || true
+  echo "============================"
+fi' EXIT
+
 # Constants
 RED='\033[0;31m' # red color
 GREEN='\033[0;32m' # green color

@@ -461,4 +461,7 @@
   <data name="PasswordsDontMatch" xml:space="preserve">
     <value>Die eingegebenen Passwörter stimmen nicht überein</value>
   </data>
+  <data name="CannotCreateUser" xml:space="preserve">
+    <value>Benutzer kann nicht erstellt werden.</value>
+  </data>
 </root>

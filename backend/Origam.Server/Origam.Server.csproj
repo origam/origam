@@ -50,17 +50,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
-    <Folder Include="IdentityServerGui\Browser" />
-    <Folder Include="logs" />
     <Folder Include="Model\Data\" />
-    <Folder Include="Views\Browser" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-    <PackageReference Include="IdentityServer4" Version="4.1.2" NoWarn="NU1902" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"
+      Version="8.0.21"
+    />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+      Version="8.0.21"
+    />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.8.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.Quartz" Version="7.2.0" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.1.0" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
@@ -117,10 +131,6 @@
     <Content Include="assets\identity\js\form-submit.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="Views\Account\LoginTwoStep.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Update="TemplateFiles\_appsettings.json">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,7 +141,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Remove="appsettings.json" />
   </ItemGroup>
   <ItemGroup>
     <None Update="assets\identity\css\login.css">
@@ -253,6 +262,9 @@
     <Reference Include="MiniProfiler.Shared">
       <HintPath>..\EnterpriseLibrary\MiniProfiler.Shared.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Diagnostics\Index.cshtml" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

@@ -51,22 +51,12 @@ switch ($env:ContainerMode) {
         try
         {
             Write-Host "Starting appsettings generation..."
-            # Generate SSL certificate for jwt tokens
-            Write-Host "Generating JWT SSL certificate..."
-            openssl rand -base64 10 | Set-Content -NoNewline certpass
-            openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer -quiet
-            openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out serverCore.pfx
-            Write-Host "JWT SSL certificate generated"
-
-            $JwtcertificatePassword = Get-Content .\certpass
-            Write-Host "Retrieved JWT certificate password"
 
             $httpsPassword = Get-Content "C:\ssl\https-cert-password.txt" -ErrorAction Stop
 
             $replacements = @{
                 "ExternalDomain" = $Env:ExternalDomain_SetOnStart
                 "pathchatapp" = $Env:pathchatapp
-                "certpassword" = $JwtcertificatePassword
                 "chatinterval" = if ( [string]::IsNullOrEmpty($Env:chatinterval))
                 {
                     "0"
