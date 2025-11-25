@@ -31,6 +31,18 @@ public class XsltService(
 
         return ValidateXslt(transformation);
     }
+    
+    public Result Transform(Guid schemaItemId)
+    {
+        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
+        ISchemaItem item = editorData.Item;
+        if (item is not XslTransformation transformation)
+        {
+            throw new Exception("Not a XslTransformation");
+        }
+
+        return ValidateXslt(transformation);
+    }
 
     private Result ValidateXslt(XslTransformation transformation)
     {
@@ -41,13 +53,6 @@ public class XsltService(
         )
         {
             result.Text = "XSLT validation failed. See output for details.";
-            // MessageBox.Show(
-            //     this,
-            //     "XSLT validation failed. See output for details.",
-            //     "XSLT Validation",
-            //     MessageBoxButtons.OK,
-            //     MessageBoxIcon.Error
-            // );
             return result;
         }
 

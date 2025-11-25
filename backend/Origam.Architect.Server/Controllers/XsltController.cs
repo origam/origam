@@ -21,4 +21,14 @@ public class XsltController(
             return Ok(result);
         });
     }
+    
+    [HttpPost("Transform")]
+    public IActionResult Transform([FromBody] XsltTransformModel input)
+    {
+        return RunWithErrorHandler(() =>
+        {
+            Result result = xsltService.Transform(input.SchemaItemId);
+            return Ok(result);
+        });
+    }
 }

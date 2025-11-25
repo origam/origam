@@ -128,6 +128,14 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async runTransformation(schemaItemId: string): Promise<Result> {
+    return (
+      await this.axiosInstance.post(`/Xslt/Transform`, {
+        schemaItemId,
+      })
+    ).data;
+  }
+
   async persistChanges(schemaItemId: string): Promise<void> {
     await this.axiosInstance.post(`/Editor/PersistChanges`, {
       schemaItemId,

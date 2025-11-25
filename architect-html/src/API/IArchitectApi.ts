@@ -103,6 +103,8 @@ export interface IArchitectApi {
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
 
   validateTransformation(schemaItemId: string): Promise<Result>;
+
+  runTransformation(schemaItemId: string): Promise<Result>;
 }
 
 export interface Result {

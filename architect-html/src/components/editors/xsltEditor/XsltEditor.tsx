@@ -61,6 +61,17 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
     });
   }
 
+  function handleTransform() {
+    runInFlowWithHandler(rootStore.errorDialogController)({
+      generator: function* () {
+        const result = yield* editorState.transform();
+        rootStore.output = result.output;
+        rootStore.sideBarTabViewState.shotOutput();
+        yield showInfo(rootStore.dialogStack, result.title, result.text);
+      },
+    });
+  }
+
   return (
     <div className={S.root}>
       <TabView
@@ -82,7 +93,7 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
                     type="secondary"
                     title={T('Transform', 'transform_button_label')}
                     prefix={<VscPlay />}
-                    onClick={() => {}}
+                    onClick={handleTransform}
                   />
                   <Button
                     type="secondary"
