@@ -28,36 +28,35 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Services;
 
-public class DeploymentScriptRunnerService
+public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService> logger)
 {
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
-    );
-
     public void RunDeploymentScript(AbstractUpdateScriptActivity script)
     {
         var transactionId = Guid.NewGuid().ToString();
 
         try
         {
-            log.Info($"Executing deployment script: {script.Name}");
+            logger.LogInformation("Executing deployment script: {ScriptName}", script.Name);
             ExecuteActivity(script, transactionId);
             ResourceMonitor.Commit(transactionId);
-            log.Info($"Deployment script executed successfully: {script.Name}");
+            logger.LogInformation(
+                "Deployment script executed successfully: {ScriptName}",
+                script.Name
+            );
         }
         catch (Exception ex)
         {
             ResourceMonitor.Rollback(transactionId);
-            log.Error($"Error executing deployment script: {script.Name}", ex);
+            logger.LogError(ex, "Error executing deployment script: {ScriptName}", script.Name);
             throw new Exception($"Error executing deployment script '{script.Name}'", ex);
         }
     }
 
     private void ExecuteActivity(AbstractUpdateScriptActivity activity, string transactionId)
     {
-        if (log.IsInfoEnabled)
+        if (logger.IsEnabled(LogLevel.Information))
         {
-            log.Info($"Executing deployment activity: {activity.Name}");
+            logger.LogInformation("Executing deployment activity: {ActivityName}", activity.Name);
         }
 
         try
@@ -82,9 +81,13 @@ public class DeploymentScriptRunnerService
         }
         catch (Exception ex)
         {
-            if (log.IsFatalEnabled)
+            if (logger.IsEnabled(LogLevel.Critical))
             {
-                log.Fatal("Error occurred while running deployment activity " + activity.Path, ex);
+                logger.LogCritical(
+                    ex,
+                    "Error occurred while running deployment activity {ActivityPath}",
+                    activity.Path
+                );
             }
             throw;
         }
@@ -126,9 +129,9 @@ public class DeploymentScriptRunnerService
             result = agent.ExecuteUpdate(activity.CommandText, transactionId);
         }
 
-        if (log.IsInfoEnabled)
+        if (logger.IsEnabled(LogLevel.Information))
         {
-            log.Info(result);
+            logger.LogInformation(result);
         }
     }
 
