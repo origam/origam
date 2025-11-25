@@ -68,16 +68,15 @@ export function showInfo(
   text: string,
 ): Promise<YesNoResult> {
   return new Promise(
-    action((resolve: (value: YesNoResult) => void) => {
+    action(() => {
       const closeDialog = dialogStack.pushDialog(
         '',
         <Info
           screenTitle={title}
-          cancelLabel={T('Cancel', 'dialog_cancel')}
+          okLabel={T('Ok', 'dialog_ok')}
           message={text}
           onCancelClick={() => {
             closeDialog();
-            resolve(YesNoResult.Cancel);
           }}
         />,
       );

@@ -27,5 +27,8 @@
   "grid_editor_title": "Editing: {0}",
   "documentation_editor_title": "Documentation: {0}",
   "screen_section_editor_title": "Screen Section Editor: {0}",
-  "screen_editor_title": "Screen Editor: {0}"
+  "screen_editor_title": "Screen Editor: {0}",
+  "transform_button_label": "Transform",
+  "validate_button_label": "Validate",
+  "dialog_ok": "Ok"
 }

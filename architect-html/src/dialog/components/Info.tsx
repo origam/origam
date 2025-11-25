@@ -25,18 +25,18 @@ import React from 'react';
 type InfoProps = {
   screenTitle: string;
   message: string;
-  cancelLabel?: string;
+  okLabel?: string;
   onCancelClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 export const Info = observer(
-  ({ screenTitle, message, cancelLabel = 'Cancel', onCancelClick }: InfoProps) => {
+  ({ screenTitle, message, okLabel = 'Ok', onCancelClick }: InfoProps) => {
     return (
       <ModalWindow
         title={screenTitle}
         buttonsCenter={
           <button id="cancelButton" tabIndex={0} onClick={onCancelClick} type="button">
-            {cancelLabel}
+            {okLabel}
           </button>
         }
       >
