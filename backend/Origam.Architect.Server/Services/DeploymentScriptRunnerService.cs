@@ -75,7 +75,7 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
                 throw new ArgumentOutOfRangeException(
                     nameof(activity),
                     activity,
-                    "Unsupported deployment activity type"
+                    Strings.DeploymentScript_UnsupportedDeploymentActivityType
                 );
             }
         }
