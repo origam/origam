@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.Models.Requests;
+using Origam.Architect.Server.Models.Requests.DeploymentScripts;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -41,13 +41,13 @@ public class DeploymentScriptController(
 {
     [HttpPost("SetVersionCurrent")]
     public IActionResult SetVersionCurrent(
-        [Required] [FromBody] MakeVersionCurrentModelRequest input
+        [Required] [FromBody] SetVersionCurrentRequestModel requestModel
     )
     {
         return RunWithErrorHandler(() =>
         {
             var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                input.SchemaItemId,
+                requestModel.SchemaItemId,
                 useCache: false
             );
 
@@ -63,7 +63,7 @@ public class DeploymentScriptController(
     }
 
     [HttpPost("Run")]
-    public IActionResult Run([Required] [FromBody] RunDeploymentScriptRequestModel requestModel)
+    public IActionResult Run([Required] [FromBody] RunRequestModel requestModel)
     {
         return RunWithErrorHandler(() =>
         {
