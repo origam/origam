@@ -53,7 +53,6 @@ public class DeploymentScriptController(
 
             if (item is not DeploymentVersion version)
             {
-                // It means this: item.GetType().FullName != "Origam.Schema.DeploymentModel.DeploymentVersion"
                 return BadRequest("Selected item is not a DeploymentVersion");
             }
 
