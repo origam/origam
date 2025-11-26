@@ -23,8 +23,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Models;
 
-public sealed class XsltTransformModel
+public class XsltTransformModel
 {
     [Required]
     public Guid SchemaItemId { get; set; }
+
+    [Required]
+    public string InputXml { get; set; }
+
+    [Required]
+    public List<Parameter> Parameters { get; set; }
 }

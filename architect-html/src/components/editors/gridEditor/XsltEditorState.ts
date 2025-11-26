@@ -22,6 +22,7 @@ import {
   IValidationResult,
   IParameterData,
   OrigamDataType,
+  ITransformResult,
 } from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 import { action, observable } from 'mobx';
@@ -30,6 +31,9 @@ export class XsltEditorState extends GridEditorState {
   @observable private accessor _parameterTypes: string[] = [];
   @observable private accessor _selectedParameterType: string | undefined;
   @observable public accessor parameters: ParameterData[] = [];
+  @observable public accessor xmlResult = '';
+  @observable public accessor inputXml = '<ROOT>\n</ROOT>';
+  // @observable public accessor parameterValues = new Map<string, string>();
 
   get selectedParameterType(): string | undefined {
     return this._selectedParameterType;
@@ -52,8 +56,12 @@ export class XsltEditorState extends GridEditorState {
   *validate(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
     return yield this.architectApi.validateTransformation(this.editorNode.origamId);
   }
-  *transform(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
-    return yield this.architectApi.runTransformation(this.editorNode.origamId);
+  *transform(): Generator<Promise<ITransformResult>, ITransformResult, ITransformResult> {
+    return yield this.architectApi.runTransformation(
+      this.editorNode.origamId,
+      this.inputXml,
+      this.parameters,
+    );
   }
   *getXsltParameters(): Generator<
     Promise<IParametersResult>,
@@ -68,10 +76,10 @@ export class XsltEditorState extends GridEditorState {
   }
 }
 
-export class ParameterData {
+export class ParameterData implements IParameterData {
   name: string;
   @observable public accessor type: OrigamDataType;
-  @observable public accessor value: string | number | undefined;
+  @observable public accessor value: string = '';
 
   constructor(parameterFromServer: IParameterData) {
     this.name = parameterFromServer.name;

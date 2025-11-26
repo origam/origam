@@ -48,7 +48,14 @@ public class XsltController(
     {
         return RunWithErrorHandler(() =>
         {
-            ValidationResult result = xsltService.Transform(input.SchemaItemId);
+            TransformationResult result = xsltService.Transform(
+                input.SchemaItemId,
+                input.InputXml,
+                inputParameters:
+                [
+                    .. input.Parameters.Select(x => new ParameterData(x.Name, x.Value)),
+                ]
+            );
             return Ok(result);
         });
     }

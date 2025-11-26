@@ -31,8 +31,9 @@ import { VscCheck, VscPlay } from 'react-icons/vsc';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { showInfo } from '@/dialog/DialogUtils.tsx';
 import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
+import { observer } from 'mobx-react-lite';
 
-const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
+const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
   const getFieldName = (): 'TextStore' | 'Xsl' => {
@@ -42,13 +43,17 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
     return 'Xsl';
   };
 
-  const handleInputChange = (value: any) => {
+  const handleTransformChange = (value: string | undefined) => {
     const textProperty = editorState.properties.find(x => x.name === getFieldName())!;
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         yield* editorState.onPropertyUpdated(textProperty, value);
       },
     });
+  };
+
+  const handleInputChange = (value: string | undefined) => {
+    editorState.inputXml = value ?? '';
   };
 
   function onParametersClick() {
@@ -80,7 +85,7 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
         const result = yield* editorState.transform();
         rootStore.output = result.output;
         rootStore.sideBarTabViewState.shotOutput();
-        yield showInfo(rootStore.dialogStack, result.title, result.text);
+        editorState.xmlResult = result.xml ?? '';
       },
     });
   }
@@ -118,19 +123,51 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
                 <CodeEditor
                   defaultLanguage="xml"
                   value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
+                  onChange={text => handleTransformChange(text)}
+                />
+              </div>
+            ),
+          },
+          {
+            label: T('Source XML', 'xsl_editor_tab2'),
+            node: (
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('Source XML', 'xsl_editor_tab2') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                >
+                  <Button
+                    type="secondary"
+                    title={T('Transform', 'transform_button_label')}
+                    prefix={<VscPlay />}
+                    onClick={handleTransform}
+                  />
+                  <Button
+                    type="secondary"
+                    title={T('Validate', 'validate_button_label')}
+                    prefix={<VscCheck />}
+                    onClick={handleValidate}
+                  />
+                </ActionPanel>
+                <CodeEditor
+                  defaultLanguage="xml"
+                  value={editorState.inputXml}
                   onChange={text => handleInputChange(text)}
                 />
               </div>
             ),
           },
           {
-            label: T('Input Parameters', 'xsl_editor_tab2'),
+            label: T('Input Parameters', 'xsl_editor_tab3'),
             onLabelClick: onParametersClick,
             node: (
               <div className={S.editorBox}>
                 <ActionPanel
                   title={
-                    T('Input Parameters', 'xsl_editor_tab2') +
+                    T('Input Parameters', 'xsl_editor_tab3') +
                     ': ' +
                     (editorState.properties.find(x => x.name === 'Name')?.value || '')
                   }
@@ -142,12 +179,27 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
             ),
           },
           {
-            label: T('Settings', 'xsl_editor_tab3'),
+            label: T('Result', 'xsl_editor_tab4'),
             node: (
               <div className={S.editorBox}>
                 <ActionPanel
                   title={
-                    T('Settings', 'xsl_editor_tab3') +
+                    T('Result', 'xsl_editor_tab4') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                ></ActionPanel>
+                <CodeEditor defaultLanguage="xml" value={editorState.xmlResult} readOnly={true} />
+              </div>
+            ),
+          },
+          {
+            label: T('Settings', 'xsl_editor_tab5'),
+            node: (
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('Settings', 'xsl_editor_tab5') +
                     ': ' +
                     (editorState.properties.find(x => x.name === 'Name')?.value || '')
                   }
@@ -165,6 +217,6 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
       />
     </div>
   );
-};
+});
 
 export default XsltEditor;

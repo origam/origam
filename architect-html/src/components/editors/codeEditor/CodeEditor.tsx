@@ -30,10 +30,12 @@ const CodeEditor = observer(
     value,
     onChange,
     defaultLanguage = 'xml',
+    readOnly,
   }: {
     value: string;
-    onChange: (value: string | undefined) => void;
+    onChange?: (value: string | undefined) => void;
     defaultLanguage: string;
+    readOnly?: boolean;
   }) => {
     const editorRef = useRef<any>(null);
     const vimStatusBarRef = useRef<HTMLDivElement | null>(null);
@@ -87,7 +89,7 @@ const CodeEditor = observer(
     };
 
     const handleEditorChange = (value: string | undefined) => {
-      onChange(value);
+      onChange?.(value);
     };
 
     return (
@@ -104,6 +106,7 @@ const CodeEditor = observer(
               lineNumbers: 'on',
               scrollBeyondLastLine: false,
               automaticLayout: true,
+              readOnly: readOnly,
             }}
           />
         </div>

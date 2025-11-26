@@ -43,19 +43,27 @@ public class XsltService(
 {
     private static readonly List<string> ParameterTypes = GetParameterTypes();
 
-    private List<ParameterData> parameterList = new();
-    private ParameterData selectedParameter = null;
-
     public ValidationResult Validate(Guid schemaItemId)
     {
         XslTransformation transformation = GetTransformation(schemaItemId);
         return ValidateXslt(transformation);
     }
 
-    public ValidationResult Transform(Guid schemaItemId)
+    public TransformationResult Transform(
+        Guid schemaItemId,
+        string inputInputXml,
+        List<ParameterData> inputParameters
+    )
     {
         XslTransformation transformation = GetTransformation(schemaItemId);
-        return ValidateXslt(transformation);
+        var result = new TransformationResult();
+        return Transform(
+            xslt: transformation.TextStore,
+            sourceXml: inputInputXml,
+            validateOnly: true,
+            parameters: inputParameters,
+            result: result
+        );
     }
 
     public ParametersResult GetParameters(Guid schemaItemId)
@@ -81,7 +89,13 @@ public class XsltService(
         var result = new ValidationResult();
         if (
             LoadXslt(transformation.TextStore, result) == null
-            || Transform(transformation.TextStore, "<ROOT/>", true, result) == null
+            || Transform(
+                xslt: transformation.TextStore,
+                sourceXml: "<ROOT/>",
+                validateOnly: true,
+                parameters: new List<ParameterData>(),
+                result: result
+            ) == null
         )
         {
             result.Text = Strings.XsltValidationFailed;
@@ -108,11 +122,12 @@ public class XsltService(
         }
     }
 
-    private ValidationResult Transform(
+    private TransformationResult Transform(
         string xslt,
         string sourceXml,
         bool validateOnly,
-        ValidationResult result
+        List<ParameterData> parameters,
+        TransformationResult result
     )
     {
         result.AddToOutput("");
@@ -135,10 +150,11 @@ public class XsltService(
 
             // resolve transformation input parameters and try to put an empty xml document to each just
             // in case it expects a node set as a parameter
-            var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
-            // RefreshParameterList(xslt, result);
-            LoadDisplayedParameterData();
-            Hashtable parameterValues = GetParameterValues(xsltParams);
+            Hashtable parameterValues = new Hashtable();
+            foreach (var parameter in parameters)
+            {
+                parameterValues.Add(parameter.Name, parameter.Value);
+            }
             transformer.Parameters.Add("Parameters", parameterValues);
             transformer.Run();
             IXmlContainer container = transformer.Result as IXmlContainer;
@@ -157,13 +173,14 @@ public class XsltService(
                     re.ProcessRules(dataDoc, ruleSet, null);
                 }
             }
-            result.SetXml(container);
+            
+            result.Xml = container.Xml.OuterXml;
             return result;
         }
         catch (Exception ex)
         {
             ErrorMessage(ex, result);
-            return null;
+            return result;
         }
         finally
         {
@@ -216,37 +233,21 @@ public class XsltService(
         }
     }
 
-    private void LoadDisplayedParameterData()
-    {
-        UpdateParameterData(selectedParameter);
-    }
+    // private Hashtable GetParameterValues(IList<string> paramNames)
+    // {
+    //     var parHashtable = new Hashtable();
+    //     foreach (var paramName in paramNames)
+    //     {
+    //         ParameterData correspondingData =
+    //             parameterList.FirstOrDefault(parData => parData.Name == paramName)
+    //             ?? throw new ArgumentException(string.Format(Strings.ParameterNotFound, paramName));
+    //
+    //         parHashtable.Add(paramName, correspondingData.Value);
+    //     }
+    //     return parHashtable;
+    // }
 
-    private Hashtable GetParameterValues(IList<string> paramNames)
-    {
-        var parHashtable = new Hashtable();
-        foreach (var paramName in paramNames)
-        {
-            ParameterData correspondingData =
-                parameterList.FirstOrDefault(parData => parData.Name == paramName)
-                ?? throw new ArgumentException(string.Format(Strings.ParameterNotFound, paramName));
-
-            parHashtable.Add(paramName, correspondingData.Value);
-        }
-        return parHashtable;
-    }
-
-    private void UpdateParameterData(ParameterData parData)
-    {
-        if (parData == null)
-        {
-            return;
-        }
-
-        // parData.Type = (OrigamDataType)parameterTypeComboBox.SelectedItem;
-        // parData.Text = paremeterEditor.Text;
-    }
-
-    private void ErrorMessage(Exception ex, ValidationResult result)
+    private void ErrorMessage(Exception ex, IResult result)
     {
         result.AddToOutput(ex.Message);
         result.AddToOutput(Environment.NewLine);
@@ -268,7 +269,7 @@ public class XsltService(
 public class ParameterData
 {
     public string Name { get; }
-    public string Text { get; set; } = "";
+    public string TextValue { get; set; } = "";
     public OrigamDataType Type { get; set; } = OrigamDataType.String;
 
     public ParameterData(string name, string type)
@@ -296,11 +297,11 @@ public class ParameterData
         {
             if (Type == OrigamDataType.Xml)
             {
-                return new XmlContainer(Text);
+                return new XmlContainer(TextValue);
             }
             Type systemType = DatasetGenerator.ConvertDataType(Type);
 
-            return DatasetTools.ConvertValue(Text, systemType);
+            return DatasetTools.ConvertValue(TextValue, systemType);
         }
     }
 
@@ -312,15 +313,11 @@ public interface IResult
     public void AddToOutput(string text);
 }
 
-public class ParametersResult(List<string> parameterTypes) : IResult
+public class ResultBase : IResult
 {
     [JsonIgnore]
     private readonly StringBuilder output = new();
-
     public string Output => output.ToString();
-
-    public List<ParameterData> Parameters { get; set; }
-    public List<string> DataTypes { get; } = parameterTypes;
 
     public void AddToOutput(string text)
     {
@@ -328,28 +325,25 @@ public class ParametersResult(List<string> parameterTypes) : IResult
     }
 }
 
-public class ValidationResult : IResult
+public class ParametersResult(List<string> parameterTypes) : ResultBase
 {
-    [JsonIgnore]
-    private readonly StringBuilder output = new();
+    public List<ParameterData> Parameters { get; set; }
+    public List<string> DataTypes { get; } = parameterTypes;
+}
+
+public class TransformationResult : ResultBase
+{
+    public string Xml { get; set; }
+}
+
+public class ValidationResult : TransformationResult
+{
     public string Title { get; init; }
     public string Text { get; set; }
-    public string Output => output.ToString();
-    public string ResultXml { get; set; }
 
     public ValidationResult()
     {
         Title = Strings.ValidationResultTitle;
         Text = String.Empty;
-    }
-
-    public void SetXml(IXmlContainer container)
-    {
-        ResultXml = container.ToString();
-    }
-
-    public void AddToOutput(string text)
-    {
-        output.AppendLine(text);
     }
 }

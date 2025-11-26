@@ -104,7 +104,11 @@ export interface IArchitectApi {
 
   validateTransformation(schemaItemId: string): Promise<IValidationResult>;
 
-  runTransformation(schemaItemId: string): Promise<IValidationResult>;
+  runTransformation(
+    schemaItemId: string,
+    inputXml: string,
+    parameters: IParameterData[],
+  ): Promise<ITransformResult>;
 
   getXsltParameters(schemaItemId: string): Promise<IParametersResult>;
 }
@@ -117,13 +121,18 @@ export interface IParametersResult {
 export interface IParameterData {
   name: string;
   type: OrigamDataType;
+  value: string;
+}
+
+export interface ITransformResult {
+  output: string;
+  xml: string;
 }
 
 export interface IValidationResult {
   title: string;
   text: string;
   output: string;
-  resultXml: string;
 }
 
 export interface IScreenEditorModel {

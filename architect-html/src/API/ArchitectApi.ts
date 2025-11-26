@@ -25,11 +25,13 @@ import {
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
+  IParameterData,
   IParametersResult,
   IPropertyChange,
   IScreenEditorItem,
   IScreenEditorModel,
   ISectionEditorModel,
+  ITransformResult,
   IUpdatePropertiesResult,
   IValidationResult,
 } from '@api/IArchitectApi';
@@ -129,10 +131,16 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async runTransformation(schemaItemId: string): Promise<IValidationResult> {
+  async runTransformation(
+    schemaItemId: string,
+    inputXml: string,
+    parameters: IParameterData[],
+  ): Promise<ITransformResult> {
     return (
       await this.axiosInstance.post(`/Xslt/Transform`, {
         schemaItemId,
+        inputXml,
+        parameters,
       })
     ).data;
   }
