@@ -174,7 +174,7 @@ public class XsltService(
                 }
             }
 
-            result.Xml = container.Xml.OuterXml;
+            result.Xml = GetFormattedXml(container.Xml);
             return result;
         }
         catch (Exception ex)
@@ -186,6 +186,30 @@ public class XsltService(
         {
             ResourceMonitor.Rollback(transactionId);
         }
+    }
+
+    private string GetFormattedXml(XmlNode node)
+    {
+        if (node == null)
+        {
+            return "";
+        }
+
+        string resultText = "";
+        StringWriter swriter = new StringWriter();
+        XmlTextWriter xwriter = new XmlTextWriter(swriter);
+        try
+        {
+            xwriter.Formatting = Formatting.Indented;
+            node.WriteTo(xwriter);
+            resultText = swriter.ToString();
+        }
+        finally
+        {
+            xwriter.Close();
+            swriter.Close();
+        }
+        return resultText;
     }
 
     private ParametersResult GetParameterList(XslTransformation transformation)
@@ -274,7 +298,7 @@ public class ParameterData
 
     public ParameterData(string name, string type)
     {
-        this.Name = name;
+        Name = name;
         Type = StringTypeToParameterDataType(type);
     }
 
