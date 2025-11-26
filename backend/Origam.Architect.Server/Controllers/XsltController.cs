@@ -53,7 +53,11 @@ public class XsltController(
                 input.InputXml,
                 inputParameters:
                 [
-                    .. input.Parameters.Select(x => new ParameterData(x.Name, x.Value)),
+                    .. input.Parameters.Select(x => new ParameterData(
+                        name: x.Name,
+                        type: x.Type,
+                        textValue: x.Value
+                    )),
                 ]
             );
             return Ok(result);

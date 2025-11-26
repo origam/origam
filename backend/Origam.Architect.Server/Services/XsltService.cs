@@ -173,7 +173,7 @@ public class XsltService(
                     re.ProcessRules(dataDoc, ruleSet, null);
                 }
             }
-            
+
             result.Xml = container.Xml.OuterXml;
             return result;
         }
@@ -269,13 +269,19 @@ public class XsltService(
 public class ParameterData
 {
     public string Name { get; }
-    public string TextValue { get; set; } = "";
-    public OrigamDataType Type { get; set; } = OrigamDataType.String;
+    public string TextValue { get; } = "";
+    public OrigamDataType Type { get; } = OrigamDataType.String;
 
     public ParameterData(string name, string type)
     {
         this.Name = name;
         Type = StringTypeToParameterDataType(type);
+    }
+
+    public ParameterData(string name, string type, string textValue)
+        : this(name, type)
+    {
+        TextValue = textValue;
     }
 
     private OrigamDataType StringTypeToParameterDataType(string type)

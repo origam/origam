@@ -18,41 +18,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  IParametersResult,
-  IValidationResult,
   IParameterData,
-  OrigamDataType,
+  IParametersResult,
   ITransformResult,
+  IValidationResult,
+  OrigamDataType,
 } from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
-import { action, observable } from 'mobx';
+import { observable } from 'mobx';
 
 export class XsltEditorState extends GridEditorState {
-  @observable private accessor _parameterTypes: string[] = [];
-  @observable private accessor _selectedParameterType: string | undefined;
-  @observable public accessor parameters: ParameterData[] = [];
+  @observable public accessor parameters: string[] = [];
   @observable public accessor xmlResult = '';
   @observable public accessor inputXml = '<ROOT>\n</ROOT>';
-  // @observable public accessor parameterValues = new Map<string, string>();
+  @observable public accessor parameterValues = new Map<string, string>();
+  @observable public accessor parameterTypes = new Map<string, OrigamDataType>();
 
-  get selectedParameterType(): string | undefined {
-    return this._selectedParameterType;
-  }
-
-  @action
-  set selectedParameterType(value: string | undefined) {
-    this._selectedParameterType = value;
-  }
-
-  get parameterTypes(): string[] {
-    return this._parameterTypes;
-  }
-
-  @action
-  set parameterTypes(value: string[]) {
-    this._selectedParameterType = value[0];
-    this._parameterTypes = value;
-  }
   *validate(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
     return yield this.architectApi.validateTransformation(this.editorNode.origamId);
   }
@@ -60,7 +41,13 @@ export class XsltEditorState extends GridEditorState {
     return yield this.architectApi.runTransformation(
       this.editorNode.origamId,
       this.inputXml,
-      this.parameters,
+      this.parameters.map(name => {
+        return {
+          name,
+          type: this.parameterTypes.get(name) ?? OrigamDataType.String,
+          value: this.parameterValues.get(name) ?? '',
+        };
+      }),
     );
   }
   *getXsltParameters(): Generator<
@@ -72,17 +59,6 @@ export class XsltEditorState extends GridEditorState {
   }
 
   setParameters(parameters: IParameterData[]) {
-    this.parameters = parameters.map(x => new ParameterData(x));
-  }
-}
-
-export class ParameterData implements IParameterData {
-  name: string;
-  @observable public accessor type: OrigamDataType;
-  @observable public accessor value: string = '';
-
-  constructor(parameterFromServer: IParameterData) {
-    this.name = parameterFromServer.name;
-    this.type = parameterFromServer.type;
+    this.parameters = parameters.map(x => x.name);
   }
 }
