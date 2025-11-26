@@ -17,14 +17,64 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Result } from '@api/IArchitectApi.ts';
+import {
+  IParametersResult,
+  IValidationResult,
+  IParameterData,
+  OrigamDataType,
+} from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
+import { action, observable } from 'mobx';
 
 export class XsltEditorState extends GridEditorState {
-  *validate(): Generator<Promise<Result>, Result, Result> {
+  @observable private accessor _parameterTypes: string[] = [];
+  @observable private accessor _selectedParameterType: string | undefined;
+  @observable public accessor parameters: ParameterData[] = [];
+
+  get selectedParameterType(): string | undefined {
+    return this._selectedParameterType;
+  }
+
+  @action
+  set selectedParameterType(value: string | undefined) {
+    this._selectedParameterType = value;
+  }
+
+  get parameterTypes(): string[] {
+    return this._parameterTypes;
+  }
+
+  @action
+  set parameterTypes(value: string[]) {
+    this._selectedParameterType = value[0];
+    this._parameterTypes = value;
+  }
+  *validate(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
     return yield this.architectApi.validateTransformation(this.editorNode.origamId);
   }
-  *transform(): Generator<Promise<Result>, Result, Result> {
+  *transform(): Generator<Promise<IValidationResult>, IValidationResult, IValidationResult> {
     return yield this.architectApi.runTransformation(this.editorNode.origamId);
+  }
+  *getXsltParameters(): Generator<
+    Promise<IParametersResult>,
+    IParametersResult,
+    IParametersResult
+  > {
+    return yield this.architectApi.getXsltParameters(this.editorNode.origamId);
+  }
+
+  setParameters(parameters: IParameterData[]) {
+    this.parameters = parameters.map(x => new ParameterData(x));
+  }
+}
+
+export class ParameterData {
+  name: string;
+  @observable public accessor type: OrigamDataType;
+  @observable public accessor value: string | number | undefined;
+
+  constructor(parameterFromServer: IParameterData) {
+    this.name = parameterFromServer.name;
+    this.type = parameterFromServer.type;
   }
 }

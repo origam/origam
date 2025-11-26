@@ -23,8 +23,11 @@ using System.Collections;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Xml;
+using System.Xml.XPath;
+using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -38,10 +41,30 @@ public class XsltService(
     IBusinessServicesService businessServicesService
 )
 {
+    private static readonly List<string> ParameterTypes = GetParameterTypes();
+
     private List<ParameterData> parameterList = new();
     private ParameterData selectedParameter = null;
 
-    public Result Validate(Guid schemaItemId)
+    public ValidationResult Validate(Guid schemaItemId)
+    {
+        XslTransformation transformation = GetTransformation(schemaItemId);
+        return ValidateXslt(transformation);
+    }
+
+    public ValidationResult Transform(Guid schemaItemId)
+    {
+        XslTransformation transformation = GetTransformation(schemaItemId);
+        return ValidateXslt(transformation);
+    }
+
+    public ParametersResult GetParameters(Guid schemaItemId)
+    {
+        XslTransformation transformation = GetTransformation(schemaItemId);
+        return GetParameterList(transformation);
+    }
+
+    private XslTransformation GetTransformation(Guid schemaItemId)
     {
         EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
         ISchemaItem item = editorData.Item;
@@ -50,24 +73,12 @@ public class XsltService(
             throw new Exception("Not a XslTransformation");
         }
 
-        return ValidateXslt(transformation);
+        return transformation;
     }
 
-    public Result Transform(Guid schemaItemId)
+    private ValidationResult ValidateXslt(XslTransformation transformation)
     {
-        EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
-        ISchemaItem item = editorData.Item;
-        if (item is not XslTransformation transformation)
-        {
-            throw new Exception("Not a XslTransformation");
-        }
-
-        return ValidateXslt(transformation);
-    }
-
-    private Result ValidateXslt(XslTransformation transformation)
-    {
-        var result = new Result();
+        var result = new ValidationResult();
         if (
             LoadXslt(transformation.TextStore, result) == null
             || Transform(transformation.TextStore, "<ROOT/>", true, result) == null
@@ -82,7 +93,7 @@ public class XsltService(
         return result;
     }
 
-    private XmlDocument LoadXslt(string xslt, Result result)
+    private XmlDocument LoadXslt(string xslt, IResult result)
     {
         try
         {
@@ -97,7 +108,12 @@ public class XsltService(
         }
     }
 
-    private Result Transform(string xslt, string sourceXml, bool validateOnly, Result result)
+    private ValidationResult Transform(
+        string xslt,
+        string sourceXml,
+        bool validateOnly,
+        ValidationResult result
+    )
     {
         result.AddToOutput("");
         string transactionId = Guid.NewGuid().ToString();
@@ -120,7 +136,7 @@ public class XsltService(
             // resolve transformation input parameters and try to put an empty xml document to each just
             // in case it expects a node set as a parameter
             var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
-            RefreshParameterList();
+            // RefreshParameterList(xslt, result);
             LoadDisplayedParameterData();
             Hashtable parameterValues = GetParameterValues(xsltParams);
             transformer.Parameters.Add("Parameters", parameterValues);
@@ -155,10 +171,49 @@ public class XsltService(
         }
     }
 
-    private void RefreshParameterList()
+    private ParametersResult GetParameterList(XslTransformation transformation)
     {
-        // XmlDocument xsltDoc = LoadXslt();
-        // parameterListUpdater.Refresh(xsltDoc);
+        var result = new ParametersResult(ParameterTypes);
+        XmlDocument xsltDoc = LoadXslt(transformation.TextStore, result);
+        if (xsltDoc == null)
+        {
+            return result;
+        }
+
+        IDictionary<string, string> aliasToNameSpace = GetNamespaceDictionary(xsltDoc);
+        IList<XmlElement> newParamNodes = XmlTools.ResolveTransformationParameterElements(xsltDoc);
+        result.Parameters = newParamNodes
+            .Select(x => NodeToParamData(x, aliasToNameSpace))
+            .ToList();
+
+        return result;
+    }
+
+    private IDictionary<string, string> GetNamespaceDictionary(XmlDocument xsltDoc)
+    {
+        XPathDocument x = new XPathDocument(new StringReader(xsltDoc.InnerXml));
+        XPathNavigator navigator = x.CreateNavigator();
+        navigator.MoveToFollowing(XPathNodeType.Element);
+        return navigator.GetNamespacesInScope(XmlNamespaceScope.All).Invert();
+    }
+
+    private ParameterData NodeToParamData(
+        XmlNode parameterNode,
+        IDictionary<string, string> aliasToNameSpace
+    )
+    {
+        string name = parameterNode.Attributes["name"].Value;
+        try
+        {
+            string asPrefix = aliasToNameSpace[XmlTools.AsNameSpace];
+            string typeAttribute = $"{asPrefix}:DataType";
+            string type = parameterNode.Attributes[typeAttribute]?.Value;
+            return new ParameterData(name, type);
+        }
+        catch (KeyNotFoundException)
+        {
+            return new ParameterData(name, null);
+        }
     }
 
     private void LoadDisplayedParameterData()
@@ -191,7 +246,7 @@ public class XsltService(
         // parData.Text = paremeterEditor.Text;
     }
 
-    private void ErrorMessage(Exception ex, Result result)
+    private void ErrorMessage(Exception ex, ValidationResult result)
     {
         result.AddToOutput(ex.Message);
         result.AddToOutput(Environment.NewLine);
@@ -200,9 +255,17 @@ public class XsltService(
             ErrorMessage(ex.InnerException, result);
         }
     }
+
+    private static List<string> GetParameterTypes()
+    {
+        return Enum.GetValues(typeof(OrigamDataType))
+            .Cast<object>()
+            .Select(x => x.ToString())
+            .ToList();
+    }
 }
 
-internal class ParameterData
+public class ParameterData
 {
     public string Name { get; }
     public string Text { get; set; } = "";
@@ -244,7 +307,28 @@ internal class ParameterData
     public override string ToString() => Name;
 }
 
-public class Result
+public interface IResult
+{
+    public void AddToOutput(string text);
+}
+
+public class ParametersResult(List<string> parameterTypes) : IResult
+{
+    [JsonIgnore]
+    private readonly StringBuilder output = new();
+
+    public string Output => output.ToString();
+
+    public List<ParameterData> Parameters { get; set; }
+    public List<string> DataTypes { get; } = parameterTypes;
+
+    public void AddToOutput(string text)
+    {
+        output.AppendLine(text);
+    }
+}
+
+public class ValidationResult : IResult
 {
     [JsonIgnore]
     private readonly StringBuilder output = new();
@@ -253,7 +337,7 @@ public class Result
     public string Output => output.ToString();
     public string ResultXml { get; set; }
 
-    public Result()
+    public ValidationResult()
     {
         Title = Strings.ValidationResultTitle;
         Text = String.Empty;

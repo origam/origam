@@ -30,6 +30,7 @@ import Button from '@components/Button/Button.tsx';
 import { VscCheck, VscPlay } from 'react-icons/vsc';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { showInfo } from '@/dialog/DialogUtils.tsx';
+import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 
 const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
@@ -49,6 +50,18 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
       },
     });
   };
+
+  function onParametersClick() {
+    runInFlowWithHandler(rootStore.errorDialogController)({
+      generator: function* () {
+        const result = yield* editorState.getXsltParameters();
+        editorState.setParameters(result.parameters);
+        if (result.output) {
+          rootStore.output = result.output;
+        }
+      },
+    });
+  }
 
   function handleValidate() {
     runInFlowWithHandler(rootStore.errorDialogController)({
@@ -111,12 +124,30 @@ const XsltEditor = ({ editorState }: { editorState: XsltEditorState }) => {
             ),
           },
           {
-            label: T('Settings', 'xsl_editor_tab2'),
+            label: T('Input Parameters', 'xsl_editor_tab2'),
+            onLabelClick: onParametersClick,
             node: (
               <div className={S.editorBox}>
                 <ActionPanel
                   title={
-                    T('Settings', 'xsl_editor_tab2') +
+                    T('Input Parameters', 'xsl_editor_tab2') +
+                    ': ' +
+                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
+                  }
+                />
+                <div className={S.propertiesBox}>
+                  <ParametersEditor editorState={editorState} />
+                </div>
+              </div>
+            ),
+          },
+          {
+            label: T('Settings', 'xsl_editor_tab3'),
+            node: (
+              <div className={S.editorBox}>
+                <ActionPanel
+                  title={
+                    T('Settings', 'xsl_editor_tab3') +
                     ': ' +
                     (editorState.properties.find(x => x.name === 'Name')?.value || '')
                   }

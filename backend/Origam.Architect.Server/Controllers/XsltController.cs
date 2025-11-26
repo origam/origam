@@ -38,7 +38,7 @@ public class XsltController(
     {
         return RunWithErrorHandler(() =>
         {
-            Result result = xsltService.Validate(input.SchemaItemId);
+            ValidationResult result = xsltService.Validate(input.SchemaItemId);
             return Ok(result);
         });
     }
@@ -48,8 +48,14 @@ public class XsltController(
     {
         return RunWithErrorHandler(() =>
         {
-            Result result = xsltService.Transform(input.SchemaItemId);
+            ValidationResult result = xsltService.Transform(input.SchemaItemId);
             return Ok(result);
         });
+    }
+
+    [HttpGet("Parameters")]
+    public IActionResult Parameters([FromQuery] Guid schemaItemId)
+    {
+        return RunWithErrorHandler(() => Ok(xsltService.GetParameters(schemaItemId)));
     }
 }

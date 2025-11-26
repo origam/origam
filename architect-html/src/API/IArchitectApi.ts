@@ -102,12 +102,24 @@ export interface IArchitectApi {
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
 
-  validateTransformation(schemaItemId: string): Promise<Result>;
+  validateTransformation(schemaItemId: string): Promise<IValidationResult>;
 
-  runTransformation(schemaItemId: string): Promise<Result>;
+  runTransformation(schemaItemId: string): Promise<IValidationResult>;
+
+  getXsltParameters(schemaItemId: string): Promise<IParametersResult>;
 }
 
-export interface Result {
+export interface IParametersResult {
+  output: string;
+  parameters: IParameterData[];
+}
+
+export interface IParameterData {
+  name: string;
+  type: OrigamDataType;
+}
+
+export interface IValidationResult {
   title: string;
   text: string;
   output: string;

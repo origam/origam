@@ -25,12 +25,13 @@ import {
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
+  IParametersResult,
   IPropertyChange,
   IScreenEditorItem,
   IScreenEditorModel,
   ISectionEditorModel,
   IUpdatePropertiesResult,
-  Result,
+  IValidationResult,
 } from '@api/IArchitectApi';
 import axios, { AxiosInstance } from 'axios';
 
@@ -120,7 +121,7 @@ export class ArchitectApi implements IArchitectApi {
     });
   }
 
-  async validateTransformation(schemaItemId: string): Promise<Result> {
+  async validateTransformation(schemaItemId: string): Promise<IValidationResult> {
     return (
       await this.axiosInstance.post(`/Xslt/Validate`, {
         schemaItemId,
@@ -128,12 +129,16 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
-  async runTransformation(schemaItemId: string): Promise<Result> {
+  async runTransformation(schemaItemId: string): Promise<IValidationResult> {
     return (
       await this.axiosInstance.post(`/Xslt/Transform`, {
         schemaItemId,
       })
     ).data;
+  }
+
+  async getXsltParameters(schemaItemId: string): Promise<IParametersResult> {
+    return (await this.axiosInstance.get(`/Xslt/Parameters`, { params: { schemaItemId } })).data;
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {

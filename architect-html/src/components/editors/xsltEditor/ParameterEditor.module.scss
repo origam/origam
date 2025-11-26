@@ -1,6 +1,5 @@
-﻿#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,14 +16,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using System.ComponentModel.DataAnnotations;
+.parameter {
+  display: flex;
+  gap: 1rem;
+}
 
-namespace Origam.Architect.Server.Models;
-
-public class XsltValidateModel
-{
-    [Required]
-    public Guid SchemaItemId { get; set; }
+.parameterList{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
 }
