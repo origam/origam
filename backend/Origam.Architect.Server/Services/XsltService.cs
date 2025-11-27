@@ -357,7 +357,7 @@ public class ResultBase : IResult
 
 public class ParametersResult(List<string> parameterTypes) : ResultBase
 {
-    public List<ParameterData> Parameters { get; set; }
+    public List<ParameterData> Parameters { get; set; } = new();
     public List<string> DataTypes { get; } = parameterTypes;
 }
 
