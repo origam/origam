@@ -90,6 +90,31 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
     });
   }
 
+  function renderActionPanel() {
+    return (
+      <ActionPanel
+        title={
+          T('Source XML', 'xsl_editor_tab2') +
+          ': ' +
+          (editorState.properties.find(x => x.name === 'Name')?.value || '')
+        }
+      >
+        <Button
+          type="secondary"
+          title={T('Transform', 'transform_button_label')}
+          prefix={<VscPlay />}
+          onClick={handleTransform}
+        />
+        <Button
+          type="secondary"
+          title={T('Validate', 'validate_button_label')}
+          prefix={<VscCheck />}
+          onClick={handleValidate}
+        />
+      </ActionPanel>
+    );
+  }
+
   return (
     <div className={S.root}>
       <TabView
@@ -100,26 +125,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             label: T('XSL', 'xsl_editor_tab1'),
             node: (
               <div className={S.editorBox}>
-                <ActionPanel
-                  title={
-                    T('XSL', 'xsl_editor_tab1') +
-                    ': ' +
-                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
-                  }
-                >
-                  <Button
-                    type="secondary"
-                    title={T('Transform', 'transform_button_label')}
-                    prefix={<VscPlay />}
-                    onClick={handleTransform}
-                  />
-                  <Button
-                    type="secondary"
-                    title={T('Validate', 'validate_button_label')}
-                    prefix={<VscCheck />}
-                    onClick={handleValidate}
-                  />
-                </ActionPanel>
+                {renderActionPanel()}
                 <CodeEditor
                   defaultLanguage="xml"
                   value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
@@ -132,26 +138,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             label: T('Source XML', 'xsl_editor_tab2'),
             node: (
               <div className={S.editorBox}>
-                <ActionPanel
-                  title={
-                    T('Source XML', 'xsl_editor_tab2') +
-                    ': ' +
-                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
-                  }
-                >
-                  <Button
-                    type="secondary"
-                    title={T('Transform', 'transform_button_label')}
-                    prefix={<VscPlay />}
-                    onClick={handleTransform}
-                  />
-                  <Button
-                    type="secondary"
-                    title={T('Validate', 'validate_button_label')}
-                    prefix={<VscCheck />}
-                    onClick={handleValidate}
-                  />
-                </ActionPanel>
+                {renderActionPanel()}
                 <CodeEditor
                   defaultLanguage="xml"
                   value={editorState.inputXml}
@@ -165,13 +152,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             onLabelClick: onParametersClick,
             node: (
               <div className={S.editorBox}>
-                <ActionPanel
-                  title={
-                    T('Input Parameters', 'xsl_editor_tab3') +
-                    ': ' +
-                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
-                  }
-                />
+                {renderActionPanel()}
                 <div className={S.propertiesBox}>
                   <ParametersEditor editorState={editorState} />
                 </div>
@@ -182,13 +163,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             label: T('Result', 'xsl_editor_tab4'),
             node: (
               <div className={S.editorBox}>
-                <ActionPanel
-                  title={
-                    T('Result', 'xsl_editor_tab4') +
-                    ': ' +
-                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
-                  }
-                ></ActionPanel>
+                {renderActionPanel()}
                 <CodeEditor defaultLanguage="xml" value={editorState.xmlResult} readOnly={true} />
               </div>
             ),
@@ -197,13 +172,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
             label: T('Settings', 'xsl_editor_tab5'),
             node: (
               <div className={S.editorBox}>
-                <ActionPanel
-                  title={
-                    T('Settings', 'xsl_editor_tab5') +
-                    ': ' +
-                    (editorState.properties.find(x => x.name === 'Name')?.value || '')
-                  }
-                />
+                {renderActionPanel()}
                 <div className={S.propertiesBox}>
                   <PropertyEditor
                     propertyManager={editorState}
