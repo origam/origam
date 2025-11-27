@@ -18,14 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import S from '@components/tabView/TabView.module.scss';
-import { TabViewState } from '@components/tabView/TabViewState';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { ReactNode } from 'react';
+import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 
 export const TabView: React.FC<{
   items: ITabViewItem[];
-  state: TabViewState;
+  state: ITabViewState;
   width: number;
 }> = observer(({ items, state, width }) => {
   const onLabelClick = action((item: ITabViewItem, index: number) => {

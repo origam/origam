@@ -18,8 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { observable } from 'mobx';
+import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 
-export class TabViewState {
+export class TabViewState implements ITabViewState {
   @observable accessor activeTabIndex = 0;
 
   showModelTree() {

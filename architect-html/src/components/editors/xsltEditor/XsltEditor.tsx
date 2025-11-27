@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import { RootStoreContext, T } from '@/main';
 import { TabView } from '@components/tabView/TabView';
-import { TabViewState } from '@components/tabView/TabViewState';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
@@ -86,6 +85,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
         rootStore.output = result.output;
         rootStore.sideBarTabViewState.shotOutput();
         editorState.xmlResult = result.xml ?? '';
+        editorState.activeTabIndex = 3;
       },
     });
   }
@@ -119,7 +119,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
     <div className={S.root}>
       <TabView
         width={400}
-        state={new TabViewState()}
+        state={editorState}
         items={[
           {
             label: T('XSL', 'xsl_editor_tab1'),

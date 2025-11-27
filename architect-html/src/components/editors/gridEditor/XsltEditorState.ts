@@ -26,8 +26,10 @@ import {
 } from '@api/IArchitectApi.ts';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState.ts';
 import { observable } from 'mobx';
+import { ITabViewState } from '@components/tabView/ITabViewState.ts';
 
-export class XsltEditorState extends GridEditorState {
+export class XsltEditorState extends GridEditorState implements ITabViewState {
+  @observable public accessor activeTabIndex = 0;
   @observable public accessor parameters: string[] = [];
   @observable public accessor xmlResult = '';
   @observable public accessor inputXml = '<ROOT>\n</ROOT>';
