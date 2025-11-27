@@ -47,13 +47,13 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
         state={new TabViewState()}
         items={[
           {
-            label: T('SQL', 'editor_deployment_scripts_tab_sql'),
+            label: T('SQL', 'editor_DeploymentScripts_TabLabel_Sql'),
             node: (
               <div className={S.editorBox}>
                 <ActionPanel
                   title={T(
                     'SQL Editor: {0}',
-                    'editor_deployment_scripts_tab_sql_title',
+                    'editor_DeploymentScripts_ActionPanelTitle_Sql',
                     editorState.properties.find(x => x.name === 'Name')?.value || '',
                   )}
                 />
@@ -66,13 +66,13 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
             ),
           },
           {
-            label: T('Settings', 'editor_deployment_scripts_tab_settings'),
+            label: T('Settings', 'editor_DeploymentScripts_TabLabel_Settings'),
             node: (
               <div className={S.editorBox}>
                 <ActionPanel
                   title={T(
                     'Settings: {0}',
-                    'editor_deployment_scripts_tab_settings_title',
+                    'editor_DeploymentScripts_ActionPanelTitle_Settings',
                     editorState.properties.find(x => x.name === 'Name')?.value || '',
                   )}
                 />
