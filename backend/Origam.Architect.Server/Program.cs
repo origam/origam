@@ -86,6 +86,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseMiddleware<CustomThreadPrincipalMiddleware>();
         app.UseAuthorization();
         app.UseStaticFiles();
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -105,5 +106,6 @@ public class Program
             spa.Options.SourcePath = spaConfig.PathToClientApplication;
         });
         app.Run();
+        SecurityManager.SetDIServiceProvider(((IApplicationBuilder)app).ApplicationServices);
     }
 }
