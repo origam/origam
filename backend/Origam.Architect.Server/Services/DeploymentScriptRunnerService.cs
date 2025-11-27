@@ -65,11 +65,10 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
             {
                 ExecuteServiceCommandActivity(serviceActivity, transactionId);
             }
-            // TODO: FileRestoreUpdateScriptActivity
-            // else if (activity is FileRestoreUpdateScriptActivity fileActivity)
-            // {
-            //     ExecuteFileRestoreActivity(fileActivity);
-            // }
+            else if (activity is FileRestoreUpdateScriptActivity fileActivity)
+            {
+                ExecuteFileRestoreActivity(fileActivity);
+            }
             else
             {
                 throw new ArgumentOutOfRangeException(
@@ -135,11 +134,8 @@ public class DeploymentScriptRunnerService(ILogger<DeploymentScriptRunnerService
         }
     }
 
-    // TODO: FileRestoreUpdateScriptActivity
-    // private void ExecuteFileRestoreActivity(FileRestoreUpdateScriptActivity activity)
-    // {
-    //     throw new NotImplementedException(
-    //         "File restore deployment activities are not supported in this context"
-    //     );
-    // }
+    private void ExecuteFileRestoreActivity(FileRestoreUpdateScriptActivity activity)
+    {
+        throw new NotImplementedException();
+    }
 }
