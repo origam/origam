@@ -87,7 +87,6 @@ public class Program
         }
 
         app.UseMiddleware<CustomThreadPrincipalMiddleware>();
-        app.UseAuthorization();
         app.UseStaticFiles();
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
