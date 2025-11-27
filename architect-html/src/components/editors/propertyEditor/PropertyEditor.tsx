@@ -28,7 +28,11 @@ import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
 
 const PropertyEditor = observer(
-  (props: { properties: EditorProperty[]; propertyManager: IPropertyManager }) => {
+  (props: {
+    properties: EditorProperty[];
+    propertyManager: IPropertyManager;
+    compact?: boolean;
+  }) => {
     const rootStore = useContext(RootStoreContext);
 
     if (!props.properties) {
@@ -94,10 +98,10 @@ const PropertyEditor = observer(
     }
 
     return (
-      <div className={S.root}>
+      <div className={cn(S.root, { [S.compact]: props.compact })}>
         {sortedCategories.map(category => (
           <div className={S.category} key={category}>
-            <h4>{category ?? 'Misc'}</h4>
+            {!props.compact && <h4>{category ?? 'Misc'}</h4>}
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
                 <div

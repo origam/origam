@@ -175,8 +175,11 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
                 {renderActionPanel()}
                 <div className={S.propertiesBox}>
                   <PropertyEditor
+                    compact={true}
                     propertyManager={editorState}
-                    properties={editorState.properties.filter(x => x.name !== getFieldName())}
+                    properties={editorState.properties.filter(
+                      x => x.name !== getFieldName() && x.name !== 'Package',
+                    )}
                   />
                 </div>
               </div>
