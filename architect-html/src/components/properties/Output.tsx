@@ -17,17 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
-import { ITabViewState } from '@components/tabView/ITabViewState.ts';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { RootStoreContext } from '@/main.tsx';
 
-export class TabViewState implements ITabViewState {
-  @observable accessor activeTabIndex = 0;
+const Output = observer(() => {
+  const rootStore = useContext(RootStoreContext);
 
-  showModelTree() {
-    this.activeTabIndex = 1;
-  }
+  return <div>{rootStore.output}</div>;
+});
 
-  shotOutput() {
-    this.activeTabIndex = 3;
-  }
-}
+export default Output;

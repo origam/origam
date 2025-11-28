@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,18 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-import { observable } from 'mobx';
-import { ITabViewState } from '@components/tabView/ITabViewState.ts';
+namespace Origam.Architect.Server.Services.Xslt;
 
-export class TabViewState implements ITabViewState {
-  @observable accessor activeTabIndex = 0;
-
-  showModelTree() {
-    this.activeTabIndex = 1;
-  }
-
-  shotOutput() {
-    this.activeTabIndex = 3;
-  }
+public record TransformationInput(
+    Guid SchemaItemId,
+    Guid SourceDataStructureId,
+    Guid TargetDataStructureId,
+    Guid RuleSetId,
+    string InputXml = "<ROOT/>",
+    IReadOnlyList<ParameterData> Parameters = null
+)
+{
+    public IReadOnlyList<ParameterData> Parameters { get; init; } = Parameters ?? [];
 }

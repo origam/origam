@@ -17,17 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
-import { ITabViewState } from '@components/tabView/ITabViewState.ts';
+.inputs{
+  display: flex;
+  flex-direction: column;
+}
 
-export class TabViewState implements ITabViewState {
-  @observable accessor activeTabIndex = 0;
-
-  showModelTree() {
-    this.activeTabIndex = 1;
+.inputRow{
+  padding: 0.5rem;
+  display: flex;
+  div{
+    width: 17rem;
+    margin-right: 1rem;
+   }
+  select{
+    min-width: 25rem;
   }
+}
 
-  shotOutput() {
-    this.activeTabIndex = 3;
-  }
+.propertyEditorContainer > *{
+  min-width: 25rem;
 }

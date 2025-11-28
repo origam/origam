@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,17 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observable } from 'mobx';
-import { ITabViewState } from '@components/tabView/ITabViewState.ts';
-
-export class TabViewState implements ITabViewState {
-  @observable accessor activeTabIndex = 0;
-
-  showModelTree() {
-    this.activeTabIndex = 1;
-  }
-
-  shotOutput() {
-    this.activeTabIndex = 3;
-  }
+export interface ITabViewState {
+  activeTabIndex: number;
 }

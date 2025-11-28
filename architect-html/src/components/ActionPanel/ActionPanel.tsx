@@ -20,12 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import S from '@components/ActionPanel/ActionPanel.module.scss';
 
-const ActionPanel = ({ title }: { title: string }) => {
+const ActionPanel = ({ title, children }: { title: string; children?: React.ReactNode }) => {
   return (
     <div className={S.root}>
       <div className={S.header}>
         <div className={S.title}>{title}</div>
-        <SaveButtonHOC />
+        <div className={S.buttons}>
+          {children}
+          <SaveButtonHOC />
+        </div>
       </div>
       <div className={S.content}></div>
     </div>

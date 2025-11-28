@@ -41,3 +41,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   .content {
   }
 }
+
+.buttons{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
