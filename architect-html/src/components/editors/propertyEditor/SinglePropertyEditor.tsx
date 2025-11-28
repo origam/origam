@@ -28,7 +28,7 @@ const SinglePropertyEditor = observer(
             onChange={e => onValueChange(property, e.target.value)}
           >
             {property.dropDownValues.map(x => (
-              <option key={property.value + x.name} value={x.value}>
+              <option key={x.value + x.name} value={x.value}>
                 {x.name}
               </option>
             ))}
