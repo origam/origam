@@ -52,9 +52,9 @@ public class ParameterData
         }
 
         return Enum.GetValues(typeof(OrigamDataType))
-                   .Cast<OrigamDataType?>()
-                   .FirstOrDefault(origamType => origamType.ToString() == type)
-               ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
+                .Cast<OrigamDataType?>()
+                .FirstOrDefault(origamType => origamType.ToString() == type)
+            ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
     }
 
     public object Value
