@@ -50,13 +50,6 @@ export class GridEditorState implements IEditorState, IPropertyManager {
     return this._isDirty && !someHasError;
   }
 
-  get TransformFieldName(): 'TextStore' | 'Xsl' {
-    if (this.properties.find(x => x.name === 'TextStore')) {
-      return 'TextStore';
-    }
-    return 'Xsl';
-  }
-
   get label() {
     return this.properties.find(x => x.name === 'Name')?.value || '';
   }

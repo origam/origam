@@ -35,13 +35,10 @@ import { Settings } from '@editors/xsltEditor/Settings.tsx';
 const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const { TransformFieldName } = editorState;
-
   const handleTransformChange = (value: string | undefined) => {
-    const textProperty = editorState.properties.find(x => x.name === TransformFieldName)!;
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
-        yield* editorState.onPropertyUpdated(textProperty, value);
+        yield* editorState.onTransformChange(value);
       },
     });
   };
@@ -95,13 +92,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
 
   function renderActionPanel() {
     return (
-      <ActionPanel
-        title={
-          T('Source XML', 'xsl_editor_tab2') +
-          ': ' +
-          (editorState.properties.find(x => x.name === 'Name')?.value || '')
-        }
-      >
+      <ActionPanel title={T('Source XML', 'xsl_editor_tab2') + ': ' + editorState.label}>
         <Button
           type="secondary"
           title={T('Transform', 'transform_button_label')}
@@ -131,9 +122,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
                 {renderActionPanel()}
                 <CodeEditor
                   defaultLanguage="xml"
-                  value={
-                    editorState.properties.find(x => x.name === TransformFieldName)?.value ?? ''
-                  }
+                  value={editorState.xsl}
                   onChange={text => handleTransformChange(text)}
                 />
               </div>

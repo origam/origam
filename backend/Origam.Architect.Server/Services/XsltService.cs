@@ -31,6 +31,7 @@ using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -47,26 +48,21 @@ public class XsltService(
 
     public ValidationResult Validate(TransformationInput input)
     {
-        XslTransformation transformation = GetTransformation(input.SchemaItemId);
-        return ValidateXslt(transformation, input);
+        string xsl = GetXsl(input.SchemaItemId);
+        return ValidateXslt(xsl, input);
     }
 
     public TransformationResult Transform(TransformationInput input)
     {
-        XslTransformation transformation = GetTransformation(input.SchemaItemId);
+        string xsl = GetXsl(input.SchemaItemId);
         var result = new TransformationResult();
-        return Transform(
-            input: input,
-            xslt: transformation.TextStore,
-            validateOnly: true,
-            result: result
-        );
+        return Transform(input: input, xslt: xsl, validateOnly: true, result: result);
     }
 
     public ParametersResult GetParameters(Guid schemaItemId)
     {
-        XslTransformation transformation = GetTransformation(schemaItemId);
-        return GetParameterList(transformation);
+        string xsl = GetXsl(schemaItemId);
+        return GetParameterList(xsl);
     }
 
     public IEnumerable<ShemaItemInfo> GetSettings()
@@ -84,32 +80,27 @@ public class XsltService(
             .OrderBy(x => x.Name);
     }
 
-    private XslTransformation GetTransformation(Guid schemaItemId)
+    private string GetXsl(Guid schemaItemId)
     {
         EditorData editorData = editorService.OpenDefaultEditor(schemaItemId);
         ISchemaItem item = editorData.Item;
-        if (item is not XslTransformation transformation)
+        if (item is XslTransformation transformation)
         {
-            throw new Exception("Not a XslTransformation");
+            return transformation.TextStore;
         }
-
-        return transformation;
+        if (item is XslRule xslRule)
+        {
+            return xslRule.Xsl;
+        }
+        throw new Exception("Not a XslTransformation or XslRule");
     }
 
-    private ValidationResult ValidateXslt(
-        XslTransformation transformation,
-        TransformationInput input
-    )
+    private ValidationResult ValidateXslt(string xsl, TransformationInput input)
     {
         var result = new ValidationResult();
         if (
-            LoadXslt(transformation.TextStore, result) == null
-            || Transform(
-                input: input,
-                xslt: transformation.TextStore,
-                validateOnly: true,
-                result: result
-            ) == null
+            LoadXslt(xsl, result) == null
+            || Transform(input: input, xslt: xsl, validateOnly: true, result: result) == null
         )
         {
             result.Text = Strings.XsltValidationFailed;
@@ -232,10 +223,10 @@ public class XsltService(
         return resultText;
     }
 
-    private ParametersResult GetParameterList(XslTransformation transformation)
+    private ParametersResult GetParameterList(string xsl)
     {
         var result = new ParametersResult(ParameterTypes);
-        XmlDocument xsltDoc = LoadXslt(transformation.TextStore, result);
+        XmlDocument xsltDoc = LoadXslt(xsl, result);
         if (xsltDoc == null)
         {
             return result;
