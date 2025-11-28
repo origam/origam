@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
-using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Xslt;
 
 namespace Origam.Architect.Server.Controllers;
 

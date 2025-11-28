@@ -20,13 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.XPath;
-using MoreLinq;
-using Origam.DA;
-using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema;
@@ -36,7 +31,7 @@ using Origam.Service.Core;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Architect.Server.Services;
+namespace Origam.Architect.Server.Services.Xslt;
 
 public class XsltService(
     EditorService editorService,
@@ -295,110 +290,4 @@ public class XsltService(
             .Select(rule => new ShemaItemInfo { Name = rule.Name, SchemaItemId = rule.Id })
             .OrderBy(x => x.Name);
     }
-}
-
-public class ParameterData
-{
-    public string Name { get; }
-    public string TextValue { get; } = "";
-    public OrigamDataType Type { get; } = OrigamDataType.String;
-
-    public ParameterData(string name, string type)
-    {
-        Name = name;
-        Type = StringTypeToParameterDataType(type);
-    }
-
-    public ParameterData(string name, string type, string textValue)
-        : this(name, type)
-    {
-        TextValue = textValue;
-    }
-
-    private OrigamDataType StringTypeToParameterDataType(string type)
-    {
-        if (type == null)
-        {
-            return OrigamDataType.String;
-        }
-
-        return Enum.GetValues(typeof(OrigamDataType))
-                .Cast<OrigamDataType?>()
-                .FirstOrDefault(origamType => origamType.ToString() == type)
-            ?? throw new ArgumentException(string.Format(Strings.WrongParameterType, type));
-    }
-
-    public object Value
-    {
-        get
-        {
-            if (Type == OrigamDataType.Xml)
-            {
-                return new XmlContainer(TextValue);
-            }
-            Type systemType = DatasetGenerator.ConvertDataType(Type);
-
-            return DatasetTools.ConvertValue(TextValue, systemType);
-        }
-    }
-
-    public override string ToString() => Name;
-}
-
-public interface IResult
-{
-    public void AddToOutput(string text);
-}
-
-public class ResultBase : IResult
-{
-    [JsonIgnore]
-    private readonly StringBuilder output = new();
-    public string Output => output.ToString();
-
-    public void AddToOutput(string text)
-    {
-        output.AppendLine(text);
-    }
-}
-
-public class ParametersResult(List<string> parameterTypes) : ResultBase
-{
-    public List<ParameterData> Parameters { get; set; } = new();
-    public List<string> DataTypes { get; } = parameterTypes;
-}
-
-public class TransformationResult : ResultBase
-{
-    public string Xml { get; set; }
-}
-
-public class ValidationResult : TransformationResult
-{
-    public string Title { get; init; }
-    public string Text { get; set; }
-
-    public ValidationResult()
-    {
-        Title = Strings.ValidationResultTitle;
-        Text = String.Empty;
-    }
-}
-
-public class ShemaItemInfo
-{
-    public string Name { get; set; }
-    public Guid SchemaItemId { get; set; }
-}
-
-public record TransformationInput(
-    Guid SchemaItemId,
-    Guid SourceDataStructureId,
-    Guid TargetDataStructureId,
-    Guid RuleSetId,
-    string InputXml = "<ROOT/>",
-    IReadOnlyList<ParameterData> Parameters = null
-)
-{
-    public IReadOnlyList<ParameterData> Parameters { get; init; } = Parameters ?? [];
 }
