@@ -21,7 +21,6 @@ import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import { RootStoreContext, T } from '@/main';
 import { TabView } from '@components/tabView/TabView';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
-import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { useContext } from 'react';
@@ -31,19 +30,15 @@ import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { showInfo } from '@/dialog/DialogUtils.tsx';
 import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 import { observer } from 'mobx-react-lite';
+import { Settings } from '@editors/xsltEditor/Settings.tsx';
 
 const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const getFieldName = (): 'TextStore' | 'Xsl' => {
-    if (editorState.properties.find(x => x.name === 'TextStore')) {
-      return 'TextStore';
-    }
-    return 'Xsl';
-  };
+  const { TransformFieldName } = editorState;
 
   const handleTransformChange = (value: string | undefined) => {
-    const textProperty = editorState.properties.find(x => x.name === getFieldName())!;
+    const textProperty = editorState.properties.find(x => x.name === TransformFieldName)!;
     runInFlowWithHandler(rootStore.errorDialogController)({
       generator: function* () {
         yield* editorState.onPropertyUpdated(textProperty, value);
@@ -63,6 +58,14 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
         if (result.output) {
           rootStore.output = result.output;
         }
+      },
+    });
+  }
+
+  function onSettingsClick() {
+    runInFlowWithHandler(rootStore.errorDialogController)({
+      generator: function* () {
+        yield* editorState.loadSettings();
       },
     });
   }
@@ -128,7 +131,9 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
                 {renderActionPanel()}
                 <CodeEditor
                   defaultLanguage="xml"
-                  value={editorState.properties.find(x => x.name === getFieldName())?.value ?? ''}
+                  value={
+                    editorState.properties.find(x => x.name === TransformFieldName)?.value ?? ''
+                  }
                   onChange={text => handleTransformChange(text)}
                 />
               </div>
@@ -170,17 +175,12 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
           },
           {
             label: T('Settings', 'xsl_editor_tab5'),
+            onLabelClick: onSettingsClick,
             node: (
               <div className={S.editorBox}>
                 {renderActionPanel()}
                 <div className={S.propertiesBox}>
-                  <PropertyEditor
-                    compact={true}
-                    propertyManager={editorState}
-                    properties={editorState.properties.filter(
-                      x => x.name !== getFieldName() && x.name !== 'Package',
-                    )}
-                  />
+                  <Settings editorState={editorState} />
                 </div>
               </div>
             ),

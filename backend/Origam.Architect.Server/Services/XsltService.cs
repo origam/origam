@@ -32,36 +32,33 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
+using Origam.Services;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
 public class XsltService(
     EditorService editorService,
-    IBusinessServicesService businessServicesService
+    IBusinessServicesService businessServicesService,
+    IPersistenceService persistenceService
 )
 {
     private static readonly List<string> ParameterTypes = GetParameterTypes();
 
-    public ValidationResult Validate(Guid schemaItemId)
+    public ValidationResult Validate(TransformationInput input)
     {
-        XslTransformation transformation = GetTransformation(schemaItemId);
-        return ValidateXslt(transformation);
+        XslTransformation transformation = GetTransformation(input.SchemaItemId);
+        return ValidateXslt(transformation, input);
     }
 
-    public TransformationResult Transform(
-        Guid schemaItemId,
-        string inputInputXml,
-        List<ParameterData> inputParameters
-    )
+    public TransformationResult Transform(TransformationInput input)
     {
-        XslTransformation transformation = GetTransformation(schemaItemId);
+        XslTransformation transformation = GetTransformation(input.SchemaItemId);
         var result = new TransformationResult();
         return Transform(
+            input: input,
             xslt: transformation.TextStore,
-            sourceXml: inputInputXml,
             validateOnly: true,
-            parameters: inputParameters,
             result: result
         );
     }
@@ -70,6 +67,21 @@ public class XsltService(
     {
         XslTransformation transformation = GetTransformation(schemaItemId);
         return GetParameterList(transformation);
+    }
+
+    public IEnumerable<ShemaItemInfo> GetSettings()
+    {
+        ISchemaService schema = ServiceManager.Services.GetService<ISchemaService>();
+        DataStructureSchemaItemProvider structures =
+            schema.GetProvider<DataStructureSchemaItemProvider>();
+
+        return structures
+            .ChildItems.Select(item => new ShemaItemInfo
+            {
+                Name = item.Name,
+                SchemaItemId = item.Id,
+            })
+            .OrderBy(x => x.Name);
     }
 
     private XslTransformation GetTransformation(Guid schemaItemId)
@@ -84,16 +96,18 @@ public class XsltService(
         return transformation;
     }
 
-    private ValidationResult ValidateXslt(XslTransformation transformation)
+    private ValidationResult ValidateXslt(
+        XslTransformation transformation,
+        TransformationInput input
+    )
     {
         var result = new ValidationResult();
         if (
             LoadXslt(transformation.TextStore, result) == null
             || Transform(
+                input: input,
                 xslt: transformation.TextStore,
-                sourceXml: "<ROOT/>",
                 validateOnly: true,
-                parameters: new List<ParameterData>(),
                 result: result
             ) == null
         )
@@ -123,10 +137,9 @@ public class XsltService(
     }
 
     private TransformationResult Transform(
+        TransformationInput input,
         string xslt,
-        string sourceXml,
         bool validateOnly,
-        List<ParameterData> parameters,
         TransformationResult result
     )
     {
@@ -139,19 +152,23 @@ public class XsltService(
                 RuleEngine.Create(new Hashtable(), null),
                 null
             );
-            var doc = new XmlContainer(sourceXml);
+
+            var doc = new XmlContainer(input.InputXml);
             transformer.MethodName = "TransformText";
             transformer.Parameters.Add("XslScript", xslt);
             transformer.Parameters.Add("Data", doc);
             transformer.Parameters.Add("ValidateOnly", validateOnly);
             transformer.TransactionId = transactionId;
-            //
-            // transformer.OutputStructure = cboDataStructure.SelectedItem as IDataStructure;
+            transformer.OutputStructure = input.TargetDataStructureId.IsDefault()
+                ? null
+                : persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
+                    input.TargetDataStructureId
+                );
 
             // resolve transformation input parameters and try to put an empty xml document to each just
             // in case it expects a node set as a parameter
             Hashtable parameterValues = new Hashtable();
-            foreach (var parameter in parameters)
+            foreach (var parameter in input.Parameters)
             {
                 parameterValues.Add(parameter.Name, parameter.Value);
             }
@@ -163,9 +180,12 @@ public class XsltService(
                 return result;
             }
             // rule handling
-            DataStructureRuleSet ruleSet = null; //cboRuleSet.SelectedItem as DataStructureRuleSet;
-            IDataDocument dataDoc = container as IDataDocument;
-            if (dataDoc != null)
+            DataStructureRuleSet ruleSet = input.RuleSetId.IsDefault()
+                ? null
+                : persistenceService.SchemaListProvider.RetrieveInstance<DataStructureRuleSet>(
+                    input.RuleSetId
+                );
+            if (container is IDataDocument dataDoc)
             {
                 if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
                 {
@@ -257,20 +277,6 @@ public class XsltService(
         }
     }
 
-    // private Hashtable GetParameterValues(IList<string> paramNames)
-    // {
-    //     var parHashtable = new Hashtable();
-    //     foreach (var paramName in paramNames)
-    //     {
-    //         ParameterData correspondingData =
-    //             parameterList.FirstOrDefault(parData => parData.Name == paramName)
-    //             ?? throw new ArgumentException(string.Format(Strings.ParameterNotFound, paramName));
-    //
-    //         parHashtable.Add(paramName, correspondingData.Value);
-    //     }
-    //     return parHashtable;
-    // }
-
     private void ErrorMessage(Exception ex, IResult result)
     {
         result.AddToOutput(ex.Message);
@@ -287,6 +293,16 @@ public class XsltService(
             .Cast<object>()
             .Select(x => x.ToString())
             .ToList();
+    }
+
+    public IEnumerable<ShemaItemInfo> GetRuleSets(Guid dataStructureId)
+    {
+        DataStructure structure =
+            persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(dataStructureId);
+        return structure
+            .ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst)
+            .Select(rule => new ShemaItemInfo { Name = rule.Name, SchemaItemId = rule.Id })
+            .OrderBy(x => x.Name);
     }
 }
 
@@ -376,4 +392,22 @@ public class ValidationResult : TransformationResult
         Title = Strings.ValidationResultTitle;
         Text = String.Empty;
     }
+}
+
+public class ShemaItemInfo
+{
+    public string Name { get; set; }
+    public Guid SchemaItemId { get; set; }
+}
+
+public record TransformationInput(
+    Guid SchemaItemId,
+    Guid SourceDataStructureId,
+    Guid TargetDataStructureId,
+    Guid RuleSetId,
+    string InputXml = "<ROOT/>",
+    IReadOnlyList<ParameterData> Parameters = null
+)
+{
+    public IReadOnlyList<ParameterData> Parameters { get; init; } = Parameters ?? [];
 }

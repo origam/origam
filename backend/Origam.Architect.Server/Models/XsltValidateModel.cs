@@ -27,4 +27,7 @@ public class XsltValidateModel
 {
     [Required]
     public Guid SchemaItemId { get; set; }
+    public Guid SourceDataStructureId { get; set; }
+    public Guid TargetDataStructureId { get; set; }
+    public Guid RuleSetId { get; set; }
 }

@@ -102,15 +102,29 @@ export interface IArchitectApi {
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
 
-  validateTransformation(schemaItemId: string): Promise<IValidationResult>;
+  validateTransformation(input: ITransformationInput): Promise<IValidationResult>;
 
-  runTransformation(
-    schemaItemId: string,
-    inputXml: string,
-    parameters: IParameterData[],
-  ): Promise<ITransformResult>;
+  runTransformation(input: ITransformationInput): Promise<ITransformResult>;
 
   getXsltParameters(schemaItemId: string): Promise<IParametersResult>;
+
+  getXsltSettings(): Promise<ShemaItemInfo[]>;
+
+  getRuleSets(dataStructureId: string): Promise<ShemaItemInfo[]>;
+}
+
+export interface ITransformationInput {
+  schemaItemId: string;
+  sourceDataStructureId: string | undefined;
+  targetDataStructureId: string | undefined;
+  ruleSetId: string | undefined;
+  inputXml?: string;
+  parameters?: IParameterData[];
+}
+
+export interface ShemaItemInfo {
+  name: string;
+  schemaItemId: string;
 }
 
 export interface IParametersResult {

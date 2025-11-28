@@ -34,32 +34,44 @@ public class XsltController(
 ) : OrigamController(log, environment)
 {
     [HttpPost("Validate")]
-    public IActionResult Validate([FromBody] XsltValidateModel input)
+    public IActionResult Validate([FromBody] XsltValidateModel model)
     {
         return RunWithErrorHandler(() =>
         {
-            ValidationResult result = xsltService.Validate(input.SchemaItemId);
+            var input = new TransformationInput(
+                SchemaItemId: model.SchemaItemId,
+                SourceDataStructureId: model.SourceDataStructureId,
+                TargetDataStructureId: model.TargetDataStructureId,
+                RuleSetId: model.RuleSetId,
+                InputXml: null,
+                Parameters: null
+            );
+            ValidationResult result = xsltService.Validate(input);
             return Ok(result);
         });
     }
 
     [HttpPost("Transform")]
-    public IActionResult Transform([FromBody] XsltTransformModel input)
+    public IActionResult Transform([FromBody] XsltTransformModel model)
     {
         return RunWithErrorHandler(() =>
         {
-            TransformationResult result = xsltService.Transform(
-                input.SchemaItemId,
-                input.InputXml,
-                inputParameters:
+            var input = new TransformationInput(
+                SchemaItemId: model.SchemaItemId,
+                SourceDataStructureId: model.SourceDataStructureId,
+                TargetDataStructureId: model.TargetDataStructureId,
+                RuleSetId: model.RuleSetId,
+                InputXml: model.InputXml,
+                Parameters:
                 [
-                    .. input.Parameters.Select(x => new ParameterData(
+                    .. model.Parameters.Select(x => new ParameterData(
                         name: x.Name,
                         type: x.Type,
                         textValue: x.Value
                     )),
                 ]
             );
+            TransformationResult result = xsltService.Transform(input);
             return Ok(result);
         });
     }
@@ -68,5 +80,17 @@ public class XsltController(
     public IActionResult Parameters([FromQuery] Guid schemaItemId)
     {
         return RunWithErrorHandler(() => Ok(xsltService.GetParameters(schemaItemId)));
+    }
+
+    [HttpGet("Settings")]
+    public IActionResult Settings()
+    {
+        return RunWithErrorHandler(() => Ok(xsltService.GetSettings()));
+    }
+
+    [HttpGet("RuleSets")]
+    public IActionResult RuleSets([FromQuery] Guid dataStructureId)
+    {
+        return RunWithErrorHandler(() => Ok(xsltService.GetRuleSets(dataStructureId)));
     }
 }
