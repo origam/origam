@@ -63,15 +63,13 @@ export function getEditor(args: {
       isDirty,
       architectApi,
     );
-    return new Editor(
-      editorState,
-      (
-        <GridEditor
-          editorState={editorState}
-          title={T('Editing: {0}', 'grid_editor_title', editorState.label)}
-        />
-      ),
+    const editorComponent = (
+      <GridEditor
+        editorState={editorState}
+        title={T('Editing: {0}', 'grid_editor_title', editorState.label)}
+      />
     );
+    return new Editor(editorState, editorComponent);
   }
 
   if (editorType === 'XsltEditor') {
@@ -83,7 +81,8 @@ export function getEditor(args: {
       isDirty,
       architectApi,
     );
-    return new Editor(editorState, <XsltEditor editorState={editorState} />);
+    const editorComponent = <XsltEditor editorState={editorState} />;
+    return new Editor(editorState, editorComponent);
   }
 
   if (editorType === 'ScreenSectionEditor') {
@@ -99,7 +98,8 @@ export function getEditor(args: {
       architectApi,
       args.runGeneratorHandled,
     );
-    return new Editor(state, <ScreenSectionEditor designerState={state} />);
+    const editorComponent = <ScreenSectionEditor designerState={state} />;
+    return new Editor(state, editorComponent);
   }
 
   if (editorType === 'ScreenEditor') {
@@ -115,7 +115,8 @@ export function getEditor(args: {
       architectApi,
       args.runGeneratorHandled,
     );
-    return new Editor(state, <ScreenEditor designerState={state} />);
+    const editorComponent = <ScreenEditor designerState={state} />;
+    return new Editor(state, editorComponent);
   }
 
   if (editorType === 'DocumentationEditor') {
@@ -127,15 +128,13 @@ export function getEditor(args: {
       isDirty,
       architectApi,
     );
-    return new Editor(
-      editorState,
-      (
-        <GridEditor
-          editorState={editorState}
-          title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
-        />
-      ),
+    const editorComponent = (
+      <GridEditor
+        editorState={editorState}
+        title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
+      />
     );
+    return new Editor(editorState, editorComponent);
   }
 
   return null;
