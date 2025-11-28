@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -31,6 +32,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Server.Controller;
 
+[Authorize(Policy = "InternalApi")]
 [ApiController]
 public class WorkQueueController : ControllerBase
 {

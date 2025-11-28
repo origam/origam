@@ -21,7 +21,6 @@ import { RootStoreContext } from '@/main';
 import S from '@editors/codeEditor/CodeEditor.module.scss';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import { observer } from 'mobx-react-lite';
-// @ts-expect-error types for monaco-vim are missing
 import * as monacoVim from 'monaco-vim';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 

@@ -58,6 +58,7 @@ import { hexToRgb } from "utils/colorUtils";
 import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 import { EventHandler } from "utils/EventHandler";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import { ClosedSessionTracker } from "./ClosedSessionTracker";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -77,6 +78,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   logoUrl: string | undefined;
   @observable
   customAssetsRoute: string | undefined;
+
+  closedSessionTracker = new ClosedSessionTracker();
 
   keyBuffer =  new KeyBuffer(this);
   mainMenuItemClickHandler = new EventHandler();
@@ -392,11 +395,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (openedScreen.content) {
       if (openedScreen.content.formScreen) {
         openedScreen.content.formScreen.dispose();
-        yield api.destroyUI({FormSessionId: getSessionId(openedScreen.content.formScreen)});
+        yield *this.callCDestroyUI(getSessionId(openedScreen.content.formScreen));
       } else if (openedScreen.content.preloadedSessionId) {
-        yield api.destroyUI({FormSessionId: openedScreen.content.preloadedSessionId});
+        yield *this.callCDestroyUI(openedScreen.content.preloadedSessionId);
       }
     }
+  }
+
+  private *callCDestroyUI(sessionId: string): Generator {
+    const api = getApi(this);
+    yield api.destroyUI({FormSessionId: sessionId});
+    this.closedSessionTracker.push(sessionId);
   }
 
   @bind
@@ -613,7 +622,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
     } else {
       for (let session of portalInfo.sessions) {
-        yield api.destroyUI({FormSessionId: session.formSessionId});
+        yield this.callCDestroyUI(session.formSessionId);
       }
     }
     const openedScreens = getOpenedScreens(this);
@@ -651,6 +660,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   *run(): Generator {
     yield*this.initPortal();
+  }
+
+  wasRecentlyClosed(sessionId: string){
+    return this.closedSessionTracker.has(sessionId);
   }
 
   parent?: any;

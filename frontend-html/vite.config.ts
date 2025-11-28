@@ -107,6 +107,29 @@ export default defineConfig({
 	server: {
 		https: true,
 		proxy: {
+      // OpenIddict endpoints
+      '/.well-known': {
+        target: 'https://localhost:44357',
+        secure: false,
+        changeOrigin: true,
+      },
+      '/connect': {
+        target: 'https://localhost:44357',
+        secure: false,
+        changeOrigin: true,
+      },
+      // ASP.NET Identity endpoints
+      '/Account': {
+        target: 'https://localhost:44357',
+        secure: false,
+        changeOrigin: true,
+      },
+      '/account': {
+        target: 'https://localhost:44357',
+        secure: false,
+        changeOrigin: true,
+      },
+      // Origam.Server endpoints
 			'/internalApi':{
 				target: "https://localhost:44357",
 				secure: false
@@ -123,23 +146,7 @@ export default defineConfig({
 				target: "https://localhost:44357",
 				secure: false
 			},
-			'/connect':{
-				target: "https://localhost:44357",
-				secure: false
-			},
 			'/assets':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/Account':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/account':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/.well-known':{
 				target: "https://localhost:44357",
 				secure: false
 			},

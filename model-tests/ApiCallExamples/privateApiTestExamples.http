@@ -15,7 +15,7 @@
 // The "password" grant type used in this example is only suitable for
 // server to server communication! Do not use it for anything else.
 //
-// First make sure the "PrivateApiAuthentication" property under "IdentityServerConfig" 
+// First make sure the "PrivateApiAuthentication" property under "OpenIddictConfig" 
 // in the appsettings.json is set to "Token". The default is "Cookie" which would not work 
 // because there is no way of getting a cookie in server to server comminication as of now.
 //

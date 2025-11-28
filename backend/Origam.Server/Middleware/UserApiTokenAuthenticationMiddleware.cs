@@ -22,11 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Origam.Server.Middleware;
 
@@ -73,10 +73,8 @@ public class UserApiTokenAuthenticationMiddleware
             }
         }
 
-        // Using the IdentityServerConstants.LocalApi.AuthenticationScheme here
-        // causes the authentication to use the IdentityServerAccessToken.
         var result = await context.AuthenticateAsync(
-            IdentityServerConstants.LocalApi.AuthenticationScheme
+            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
         );
         if (result?.Principal != null)
         {
@@ -88,13 +86,12 @@ public class UserApiTokenAuthenticationMiddleware
             var authFeatures = new OrigamAuthenticationFeatures(result);
             context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
             context.Features.Set<IAuthenticateResultFeature>(authFeatures);
+            await _next(context);
         }
         else
         {
-            await _next(context);
-            return;
+            context.Response.StatusCode = 401;
         }
-        await _next(context);
     }
 }
 

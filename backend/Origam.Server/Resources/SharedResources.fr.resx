@@ -363,4 +363,7 @@
   <data name="ExcelExportForbidden" xml:space="preserve">
     <value>L'exportation vers Excel est interdite.</value>
   </data>
+  <data name="CannotCreateUser" xml:space="preserve">
+    <value>Impossible de créer l’utilisateur.</value>
+  </data>
 </root>

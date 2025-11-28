@@ -136,6 +136,9 @@ export interface IParameterData {
   name: string;
   type: OrigamDataType;
   value: string;
+
+  setVersionCurrent(schemaItemId: string): Promise<void>;
+  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
 
 export interface ITransformResult {
@@ -252,6 +255,7 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
+  | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
   | 'ScreenSectionEditor'
@@ -273,6 +277,8 @@ export interface IApiTreeNode extends INodeLoadData {
   childrenIds: string[];
   children?: IApiTreeNode[];
   iconUrl?: string;
+  itemType?: string;
+  isCurrentVersion?: boolean;
 }
 
 export interface IPackagesInfo {

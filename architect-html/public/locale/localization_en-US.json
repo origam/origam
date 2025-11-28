@@ -34,4 +34,11 @@
   "transform_button_label": "Transform",
   "validate_button_label": "Validate",
   "dialog_ok": "Ok"
+  "screen_editor_title": "Screen Editor: {0}",
+  "editor_DeploymentScripts_ActionPanelTitle_Sql": "SQL Editor: {0}",
+  "editor_DeploymentScripts_TabLabel_Sql": "SQL",
+  "editor_DeploymentScripts_ActionPanelTitle_Settings": "Settings: {0}",
+  "editor_DeploymentScripts_TabLabel_Settings": "Settings",
+  "tree_node_make_version_current": "Make version current",
+  "tree_node_run_update_script_activity": "Execute"
 }

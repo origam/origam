@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
@@ -45,7 +46,12 @@ public static class IApplicationBuilderExtensions
                 {
                     return next();
                 }
-                if (context.Request.Path == "/")
+                // If it's a GET to a non-file path, serve index.html (classic SPA fallback)
+                if (
+                    context.Request.Method == "GET"
+                    && !Path.HasExtension(context.Request.Path.Value)
+                    && !context.Request.Path.Value.StartsWith("/assets")
+                )
                 {
                     context.Request.Path = "/index.html";
                 }
@@ -77,14 +83,14 @@ public static class IApplicationBuilderExtensions
     public static void UseUserApi(
         this IApplicationBuilder app,
         StartUpConfiguration startUpConfiguration,
-        IdentityServerConfig identityServerConfig
+        OpenIddictConfig openIddictConfig
     )
     {
         app.MapWhen(
             context => IsPublicUserApiRoute(startUpConfiguration, context),
             publicBranch =>
             {
-                publicBranch.UseUserApiAuthentication(identityServerConfig);
+                publicBranch.UseUserApiAuthentication(openIddictConfig);
                 publicBranch.UseMiddleware<UserApiMiddleware>();
             }
         );
@@ -92,7 +98,7 @@ public static class IApplicationBuilderExtensions
             context => IsRestrictedUserApiRoute(startUpConfiguration, context),
             privateBranch =>
             {
-                privateBranch.UseUserApiAuthentication(identityServerConfig);
+                privateBranch.UseUserApiAuthentication(openIddictConfig);
                 privateBranch.Use(
                     async (context, next) =>
                     {
@@ -113,10 +119,10 @@ public static class IApplicationBuilderExtensions
 
     private static void UseUserApiAuthentication(
         this IApplicationBuilder app,
-        IdentityServerConfig identityServerConfig
+        OpenIddictConfig openIddictConfig
     )
     {
-        if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+        if (openIddictConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
         {
             app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
         }
@@ -133,9 +139,16 @@ public static class IApplicationBuilderExtensions
             apiBranch =>
             {
                 apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
-                apiBranch.UseMvc(routes =>
+                apiBranch.UseRouting();
+                apiBranch.UseAuthentication();
+                apiBranch.UseAuthorization();
+
+                apiBranch.UseEndpoints(endpoints =>
                 {
-                    routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+                    endpoints.MapControllerRoute(
+                        name: "workQueue",
+                        pattern: "{controller=WorkQueue}/{action=Index}/{id?}"
+                    );
                 });
             }
         );

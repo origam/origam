@@ -303,4 +303,34 @@
   <data name="GeneralErrorMessage" xml:space="preserve">
     <value>Ein Fehler ist aufgetreten. In der Protokolldatei befinden sich möglicherweise weitere Details.</value>
   </data>
+  <data name="ErrorDiscoveryDocumentRetrieval" xml:space="preserve">
+    <value>Fehler beim Abrufen des Discovery-Dokuments von '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorTokenEndpointNotFoundInDiscovery" xml:space="preserve">
+    <value>token_endpoint wurde im Discovery-Dokument von '{0}' nicht gefunden.</value>
+  </data>
+  <data name="ErrorDiscoveryDocumentParseFailed" xml:space="preserve">
+    <value>Discovery-Dokument von '{0}' konnte nicht geparst werden.</value>
+  </data>
+  <data name="ErrorTokenEndpointNullOrEmpty" xml:space="preserve">
+    <value>token_endpoint im Discovery-Dokument von '{0}' ist leer.</value>
+  </data>
+  <data name="ErrorPasswordTokenRequest" xml:space="preserve">
+    <value>Fehler bei der Anforderung des Passwort-Tokens von '{0}': {1} {2} - {3}</value>
+  </data>
+  <data name="ErrorAccessTokenNotFoundInResponse" xml:space="preserve">
+    <value>access_token wurde in der Antwort von '{0}' nicht gefunden.</value>
+  </data>
+  <data name="ErrorAccessTokenNullOrEmpty" xml:space="preserve">
+    <value>access_token in der Token-Antwort ist leer.</value>
+  </data>
+  <data name="ErrorExpiresInParseNumber" xml:space="preserve">
+    <value>Numerischer Wert von expires_in "{0}" kann nicht in eine ganze Zahl konvertiert werden.</value>
+  </data>
+  <data name="ErrorExpiresInParseString" xml:space="preserve">
+    <value>Zeichenfolgenwert von expires_in "{0}" kann nicht in eine ganze Zahl konvertiert werden.</value>
+  </data>
+  <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
+    <value>Token-Antwort von '{0}' konnte nicht geparst werden. Rohinhalt: {1}</value>
+  </data>
 </root>

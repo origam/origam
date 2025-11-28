@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,10 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +35,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,7 +44,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MoreLinq;
+using Origam.DA.Service;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -55,15 +53,29 @@ using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Service.Core;
 using SoapCore;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults;
 
 namespace Origam.Server;
+
+public class AuthDbContext : DbContext
+{
+    public AuthDbContext(DbContextOptions<AuthDbContext> options)
+        : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.UseOpenIddict();
+    }
+}
 
 public class Startup
 {
     private readonly StartUpConfiguration startUpConfiguration;
     private IConfiguration Configuration { get; }
     private readonly PasswordConfiguration passwordConfiguration;
-    private readonly IdentityServerConfig identityServerConfig;
+    private readonly OpenIddictConfig openIddictConfig;
     private readonly UserLockoutConfig lockoutConfig;
     private readonly LanguageConfig languageConfig;
     private readonly ChatConfig chatConfig;
@@ -73,7 +85,7 @@ public class Startup
         Configuration = configuration;
         startUpConfiguration = new StartUpConfiguration(configuration);
         passwordConfiguration = new PasswordConfiguration(configuration);
-        identityServerConfig = new IdentityServerConfig(configuration);
+        openIddictConfig = new OpenIddictConfig(configuration);
         lockoutConfig = new UserLockoutConfig(configuration);
         languageConfig = new LanguageConfig(configuration);
         chatConfig = new ChatConfig(configuration);
@@ -82,52 +94,71 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         ServicePointManager.SecurityProtocol = startUpConfiguration.SecurityProtocol;
+        services.AddSingleton(startUpConfiguration);
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
         });
-        // If using IIS:
         services.Configure<IISServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;
             options.AuthenticationDisplayName = "Windows";
             options.AutomaticAuthentication = true;
         });
-        // remove limit for multipart body length
+
         services.Configure<FormOptions>(options =>
         {
             options.ValueLengthLimit = startUpConfiguration.ValueLengthLimit;
             options.MultipartBodyLengthLimit = startUpConfiguration.MultipartBodyLengthLimit;
             options.MultipartHeadersLengthLimit = startUpConfiguration.MultipartHeadersLengthLimit;
         });
-        services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
-        var builder = services.AddMvc().AddNewtonsoftJson();
+
         services.Configure<IdentityOptions>(options =>
         {
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(
                 lockoutConfig.LockoutTimeMinutes
             );
             options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
+            options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+            options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+            options.ClaimsIdentity.RoleClaimType = Claims.Role;
         });
+
         services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
         services.AddScoped<IManager, CoreManagerAdapter>();
         services.AddSingleton<IMailService, MailService>();
         services.AddSingleton<SearchHandler>();
         services.AddSingleton<SessionObjects, SessionObjects>();
+
         services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
         services.AddScoped<SignInManager<IOrigamUser>>();
-        services.AddScoped<
-            IUserClaimsPrincipalFactory<IOrigamUser>,
-            UserClaimsPrincipalFactory<IOrigamUser>
-        >();
+        services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, ClaimsFactory>();
         services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
         services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
+
         services.AddSingleton<LanguageConfig>();
         services.AddLocalization();
+
         services
             .AddIdentity<IOrigamUser, Role>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
+
+        services.Configure<RazorViewEngineOptions>(options =>
+        {
+            options.ViewLocationFormats.Add("/Identity/Views/{1}/{0}.cshtml");
+            options.ViewLocationFormats.Add("/Identity/Views/Shared/{0}.cshtml");
+        });
+
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(openIddictConfig.CookieExpirationMinutes);
+            options.SlidingExpiration = openIddictConfig.CookieSlidingExpiration;
+        });
+
         services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = passwordConfiguration.RequireDigit;
@@ -135,6 +166,7 @@ public class Startup
             options.Password.RequireNonAlphanumeric = passwordConfiguration.RequireNonAlphanumeric;
             options.Password.RequireUppercase = passwordConfiguration.RequireUppercase;
             options.Password.RequireLowercase = passwordConfiguration.RequireLowercase;
+
             var userConfig = new UserConfig();
             Configuration.GetSection("UserConfig").Bind(userConfig);
             if (!string.IsNullOrEmpty(userConfig.AllowedUserNameCharacters))
@@ -147,6 +179,7 @@ public class Startup
         services.AddTransient<IPrincipal>(provider =>
             provider.GetService<IHttpContextAccessor>().HttpContext?.User
         );
+
         services.Configure<UserConfig>(options =>
             Configuration.GetSection("UserConfig").Bind(options)
         );
@@ -168,37 +201,110 @@ public class Startup
         services.Configure<HtmlClientConfig>(options =>
             Configuration.GetSection("HtmlClientConfig").Bind(options)
         );
-        services
-            .AddIdentityServer()
-            .AddInMemoryApiResources(Settings.GetIdentityApiResources())
-            .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
-            .AddInMemoryIdentityResources(Settings.GetIdentityResources())
-            .AddAspNetIdentity<IOrigamUser>()
-            .AddSigningCredential(
-                new X509Certificate2(
-                    identityServerConfig.PathToJwtCertificate,
-                    identityServerConfig.PasswordForJwtCertificate
-                )
-            )
-            .AddInMemoryApiScopes(Settings.GetApiScopes())
-            .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
 
-        if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
+        services.AddDbContext<AuthDbContext>(options =>
         {
-            services.ConfigureApplicationCookie(options =>
+            OrigamSettings origamSettings = ConfigurationManager.GetActiveConfiguration();
+            if (origamSettings.DataDataService.Contains(nameof(MsSqlDataService)))
             {
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(
-                    identityServerConfig.CookieExpirationMinutes
+                options.UseSqlServer(origamSettings.DataConnectionString);
+            }
+            else if (origamSettings.DataDataService.Contains(nameof(PgSqlDataService)))
+            {
+                options.UseNpgsql(origamSettings.DataConnectionString);
+            }
+            else
+            {
+                throw new Exception("Unknown data service: " + origamSettings.DataDataService);
+            }
+            options.UseOpenIddict();
+        });
+
+        services
+            .AddOpenIddict()
+            .AddCore(options =>
+            {
+                options.UseEntityFrameworkCore().UseDbContext<AuthDbContext>();
+                options
+                    .UseQuartz()
+                    .SetMinimumTokenLifespan(TimeSpan.FromDays(7))
+                    .SetMinimumAuthorizationLifespan(TimeSpan.FromDays(7));
+            })
+            .AddServer(options =>
+            {
+                options
+                    .SetAuthorizationEndpointUris("/connect/authorize")
+                    .SetTokenEndpointUris("/connect/token")
+                    .SetIntrospectionEndpointUris("/connect/introspect")
+                    .SetEndSessionEndpointUris("/connect/logout");
+                options.AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange();
+                options.AllowPasswordFlow();
+                options.AllowRefreshTokenFlow();
+                options.AllowClientCredentialsFlow();
+                options.SetAccessTokenLifetime(TimeSpan.FromHours(1));
+                options.SetRefreshTokenLifetime(TimeSpan.FromDays(30));
+                options
+                    .UseAspNetCore()
+                    .EnableAuthorizationEndpointPassthrough()
+                    .EnableTokenEndpointPassthrough()
+                    .EnableEndSessionEndpointPassthrough();
+                options.AddDevelopmentEncryptionCertificate().AddDevelopmentSigningCertificate();
+                options.RegisterScopes(
+                    Scopes.OpenId,
+                    Scopes.Profile,
+                    Scopes.OfflineAccess,
+                    "internal_api",
+                    "local_api"
                 );
-                options.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
+            })
+            .AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
+                options.Configure(opts =>
+                {
+                    opts.TokenValidationParameters.NameClaimType = Claims.Name;
+                    opts.TokenValidationParameters.RoleClaimType = Claims.Role;
+                });
             });
-        }
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // cookie
+            options.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // cookie
+            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // cookie
+        });
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                "InternalApi",
+                policy =>
+                {
+                    policy.AddAuthenticationSchemes(AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+
+                    policy.RequireAssertion(ctx =>
+                    {
+                        var scopes = ctx
+                            .User.FindAll(Claims.Scope)
+                            .SelectMany(c =>
+                                c.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                            );
+
+                        return scopes.Contains("internal_api");
+                    });
+                }
+            );
+        });
+
         services.AddSoapCore();
         services.AddSingleton<DataServiceSoap>();
         services.AddSingleton<WorkflowServiceSoap>();
-        services.AddScoped<IProfileService, ProfileService>();
+
         services
-            .AddMvc(options => options.EnableEndpointRouting = false)
+            .AddControllersWithViews()
+            .AddNewtonsoftJson()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization(options =>
             {
@@ -219,16 +325,19 @@ public class Startup
                 new OrigamCookieRequestCultureProvider(languageConfig)
             );
         });
+
         foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
         {
             var customControllerAssembly = Assembly.LoadFrom(controllerDllName);
             services.AddControllers().AddApplicationPart(customControllerAssembly);
         }
+
         var providerFactory = LoadClientAuthenticationProviders(
             Configuration,
             startUpConfiguration
         );
         services.AddSingleton(providerFactory);
+
         if (startUpConfiguration.EnableMiniProfiler)
         {
             services.AddMiniProfiler(options =>
@@ -241,6 +350,25 @@ public class Startup
                         .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
             });
         }
+
+        var allowedCorsOrigins = openIddictConfig
+            .ClientApplicationTemplates
+            .WebClient
+            .AllowedCorsOrigins;
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "OrigamCorsPolicy",
+                builder =>
+                {
+                    builder
+                        .WithOrigins(allowedCorsOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // required for cookie auth and OIDC
+                }
+            );
+        });
     }
 
     private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders(
@@ -257,6 +385,7 @@ public class Startup
                 .Where(type => typeof(IClientAuthenticationProvider).IsAssignableFrom(type))
                 .Select(type => (IClientAuthenticationProvider)Activator.CreateInstance(type))
                 .Append(new ResourceOwnerPasswordAuthenticationProvider())
+                .ToList()
                 .ForEach(provider =>
                 {
                     provider.Configure(configuration);
@@ -268,67 +397,61 @@ public class Startup
 
     private void ConfigureAuthentication(IServiceCollection services)
     {
-        var authenticationBuilder = services.AddLocalApiAuthentication().AddAuthentication();
-        if (identityServerConfig.GoogleLogin != null)
+        var auth = services.AddAuthentication();
+
+        if (openIddictConfig.GoogleLogin != null)
         {
-            authenticationBuilder.AddGoogle(
+            auth.AddGoogle(
                 GoogleDefaults.AuthenticationScheme,
                 "SignInWithGoogleAccount",
                 options =>
                 {
-                    options.ClientId = identityServerConfig.GoogleLogin.ClientId;
-                    options.ClientSecret = identityServerConfig.GoogleLogin.ClientSecret;
-                    options.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    options.ClientId = openIddictConfig.GoogleLogin.ClientId;
+                    options.ClientSecret = openIddictConfig.GoogleLogin.ClientSecret;
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
-        if (identityServerConfig.MicrosoftLogin != null)
+
+        if (openIddictConfig.MicrosoftLogin != null)
         {
-            authenticationBuilder.AddMicrosoftAccount(
+            auth.AddMicrosoftAccount(
                 MicrosoftAccountDefaults.AuthenticationScheme,
                 "SignInWithMicrosoftAccount",
                 microsoftOptions =>
                 {
-                    microsoftOptions.ClientId = identityServerConfig.MicrosoftLogin.ClientId;
-                    microsoftOptions.ClientSecret = identityServerConfig
-                        .MicrosoftLogin
-                        .ClientSecret;
-                    microsoftOptions.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    microsoftOptions.ClientId = openIddictConfig.MicrosoftLogin.ClientId;
+                    microsoftOptions.ClientSecret = openIddictConfig.MicrosoftLogin.ClientSecret;
+                    microsoftOptions.SignInScheme = IdentityConstants.ExternalScheme;
                 }
             );
         }
-        if (identityServerConfig.AzureAdLogin != null)
+
+        if (openIddictConfig.AzureAdLogin != null)
         {
-            authenticationBuilder.AddOpenIdConnect(
-                IdentityServerDefaults.AzureAdScheme,
+            auth.AddOpenIdConnect(
+                "AzureAdOIDC",
                 "SignInWithAzureAd",
                 options =>
                 {
-                    options.ClientId = identityServerConfig.AzureAdLogin.ClientId;
+                    options.ClientId = openIddictConfig.AzureAdLogin.ClientId;
                     options.Authority =
-                        $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
+                        $@"https://login.microsoftonline.com/{openIddictConfig.AzureAdLogin.TenantId}/";
                     options.CallbackPath = "/signin-oidc";
                     options.SaveTokens = true;
-                    options.SignInScheme = IdentityServer4
-                        .IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false,
-                        ValidAudience = $"{identityServerConfig.AzureAdLogin.ClientId}",
+                        ValidAudience = openIddictConfig.AzureAdLogin.ClientId,
                     };
                 }
             );
         }
-        // ExternalController needs to tap the info for the callback
-        // resolution
-        services.AddSingleton(identityServerConfig);
-        // Setup authentication post processor
-        if (string.IsNullOrEmpty(identityServerConfig.AuthenticationPostProcessor))
+
+        services.AddSingleton(openIddictConfig);
+
+        if (string.IsNullOrEmpty(openIddictConfig.AuthenticationPostProcessor))
         {
             services.AddSingleton<
                 IAuthenticationPostProcessor,
@@ -337,7 +460,7 @@ public class Startup
         }
         else
         {
-            var classpath = identityServerConfig.AuthenticationPostProcessor.Split(',');
+            var classpath = openIddictConfig.AuthenticationPostProcessor.Split(',');
             var authenticationPostProcessor = Reflector.ResolveTypeFromAssembly(
                 classpath[0],
                 classpath[1]
@@ -366,6 +489,7 @@ public class Startup
             app.UseExceptionHandler("/Error/Error");
             app.UseHsts();
         }
+
         if (Configuration.GetValue<bool>("BehindProxy"))
         {
             var forwardedHeadersOptions = new ForwardedHeadersOptions()
@@ -379,16 +503,32 @@ public class Startup
             forwardedHeadersOptions.KnownProxies.Clear();
             app.UseForwardedHeaders(forwardedHeadersOptions);
         }
+
         var localizationOptions = app
             .ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>()
             .Value;
         app.UseRequestLocalization(localizationOptions);
-        app.UseIdentityServer();
+
         app.UseMiddleware<FatalErrorMiddleware>();
-        app.UseUserApi(startUpConfiguration, identityServerConfig);
+
+        app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();
+
+        app.UseRouting();
+        app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoints =>
+        {
+            // conventional routes (lets /Account/Login hit AccountController.Login)
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
+        });
+
         app.UseHttpsRedirection();
+
         if (startUpConfiguration.EnableSoapInterface)
         {
             app.UseSoapApi(
@@ -396,6 +536,7 @@ public class Startup
                 startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
             );
         }
+
         app.UseStaticFiles(
             new StaticFileOptions()
             {
@@ -405,6 +546,7 @@ public class Startup
                 RequestPath = new PathString("/assets"),
             }
         );
+
         if (startUpConfiguration.HasCustomAssets)
         {
             app.UseStaticFiles(
@@ -417,13 +559,16 @@ public class Startup
                 }
             );
         }
+
         app.UseCustomWebAppExtenders(Configuration, startUpConfiguration);
+
         app.UseStaticFiles(
             new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp),
             }
         );
+
         if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
         {
             app.UseStaticFiles(
@@ -453,25 +598,15 @@ public class Startup
                 }
             );
         }
-        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
         if (startUpConfiguration.EnableMiniProfiler)
         {
             app.UseMiniProfiler();
         }
-        app.UseMvc(routes =>
-        {
-            routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
-        });
+
         app.UseCustomSpa(startUpConfiguration.PathToClientApp);
-        // add DI to origam, in order to be able to resolve IPrincipal from
-        // https://davidpine.net/blog/principal-architecture-changes/
-        // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
+
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
-        OrigamUtils.ConnectOrigamRuntime(
-            loggerFactory,
-            startUpConfiguration.ReloadModelWhenFilesChangesDetected
-        );
-        OrigamUtils.CleanUpDatabase();
     }
 }

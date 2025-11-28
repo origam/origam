@@ -450,4 +450,7 @@
   <data name="ErrorBlobNoData" xml:space="preserve">
     <value>Zdroj dat nevrátil žádná data.</value>
   </data>
+  <data name="CannotCreateUser" xml:space="preserve">
+    <value>Nelze vytvořit uživatele.</value>
+  </data>
 </root>

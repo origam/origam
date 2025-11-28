@@ -19,25 +19,23 @@
     "IdentityGuiConfig": {
         "PathToBrandIcon": "icons/origam.png"
     },
-	"IdentityServerConfig": {
-        "PathToJwtCertificate": "serverCore.pfx",
-        "PasswordForJwtCertificate": "certpassword",
-        "UseGoogleLogin": "false",
-        "GoogleClientId": "",
-        "GoogleClientSecret": "",
-        "WebClient": {
-            "RedirectUris": [
-                "ExternalDomain/#origamClientCallback/"
-            ],
-            "PostLogoutRedirectUris": ["/", "ExternalDomain"]
-        },
-        "MobileClient":{
-            "RedirectUris": [ "ExternalDomain/xamarincallback" ],
-            "ClientSecret": "mobileSecret",
-            "PostLogoutRedirectUris": [ "/", "ExternalDomain" ]
-        },
-        "ServerClient":{
-            "ClientSecret": "serverSecret",
+	"OpenIddictConfig": {
+        "ClientApplicationTemplates": {
+            "WebClient": {
+                "RedirectUris": [
+                    "ExternalDomain/#origamClientCallback/"
+                ],
+                "PostLogoutRedirectUris": [ "ExternalDomain" ],
+                "AllowedCorsOrigins": [ "ExternalDomain" ]
+            },
+            "MobileClient":{
+                "RedirectUris": [ "ExternalDomain/xamarincallback" ],
+                "ClientSecret": "mobileSecret",
+                "PostLogoutRedirectUris": [ "ExternalDomain" ]
+            },
+            "ServerClient":{
+                "ClientSecret": "serverSecret",
+            }
         }
     },
     "UserLockoutConfig": {

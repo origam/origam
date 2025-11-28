@@ -1,0 +1,2 @@
+﻿DROP PROCEDURE IF EXISTS "OrigamIdentityGrantCleanup"();
+DROP TABLE IF EXISTS "OrigamIdentityGrant";

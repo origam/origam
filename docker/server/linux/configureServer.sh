@@ -133,13 +133,8 @@ if [ ! -d "$PROJECT_DATA_DIRECTORY" ]; then
 	echo "Server has no model!!! Review the instance setup.";
 	exit 1
 fi
-# generate certificate every start.
-openssl rand -base64 10 >certpass
-run_silently openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
-openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/server_bin/serverCore.pfx
-cp _appsettings.template appsettings.prepare
-  sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
 
+cp _appsettings.template appsettings.prepare
 
 if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
 	rm -f appsettings.json

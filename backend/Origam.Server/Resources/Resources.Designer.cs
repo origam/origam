@@ -123,6 +123,24 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to access_token was not found in response from &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorAccessTokenNotFoundInResponse {
+            get {
+                return ResourceManager.GetString("ErrorAccessTokenNotFoundInResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to access_token in token response is null or empty..
+        /// </summary>
+        public static string ErrorAccessTokenNullOrEmpty {
+            get {
+                return ResourceManager.GetString("ErrorAccessTokenNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum attachment size exceeded ({0} bytes)..
         /// </summary>
         public static string ErrorAttachmentMaximumSize {
@@ -285,6 +303,42 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to parse discovery document from &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorDiscoveryDocumentParseFailed {
+            get {
+                return ResourceManager.GetString("ErrorDiscoveryDocumentParseFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while retrieving discovery document from &apos;{0}&apos;: {1} {2} - {3}.
+        /// </summary>
+        public static string ErrorDiscoveryDocumentRetrieval {
+            get {
+                return ResourceManager.GetString("ErrorDiscoveryDocumentRetrieval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot parse numeric expires_in value &quot;{0}&quot; to integer..
+        /// </summary>
+        public static string ErrorExpiresInParseNumber {
+            get {
+                return ResourceManager.GetString("ErrorExpiresInParseNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot parse string expires_in value &quot;{0}&quot; to integer..
+        /// </summary>
+        public static string ErrorExpiresInParseString {
+            get {
+                return ResourceManager.GetString("ErrorExpiresInParseString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export no longer available..
         /// </summary>
         public static string ErrorExportNotAvailable {
@@ -366,6 +420,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while requesting password token from &apos;{0}&apos;: {1} {2} - {3}.
+        /// </summary>
+        public static string ErrorPasswordTokenRequest {
+            get {
+                return ResourceManager.GetString("ErrorPasswordTokenRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pseudoparameter &apos;body&apos; not defined as a parametr of a API data page but attempted to use during PUT call..
         /// </summary>
         public static string ErrorPseudoparameterBodyNotDefined {
@@ -443,6 +506,33 @@ namespace Origam.Server {
         public static string ErrorSpecifiedCustomWorkQueueScreenNotFound {
             get {
                 return ResourceManager.GetString("ErrorSpecifiedCustomWorkQueueScreenNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to token_endpoint was not found in discovery document from &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorTokenEndpointNotFoundInDiscovery {
+            get {
+                return ResourceManager.GetString("ErrorTokenEndpointNotFoundInDiscovery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to token_endpoint in discovery document from &apos;{0}&apos; is null or empty..
+        /// </summary>
+        public static string ErrorTokenEndpointNullOrEmpty {
+            get {
+                return ResourceManager.GetString("ErrorTokenEndpointNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to parse token response from &apos;{0}&apos;. Raw content: {1}.
+        /// </summary>
+        public static string ErrorTokenResponseParseFailed {
+            get {
+                return ResourceManager.GetString("ErrorTokenResponseParseFailed", resourceCulture);
             }
         }
         

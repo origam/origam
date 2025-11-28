@@ -263,6 +263,16 @@ export class ArchitectApi implements IArchitectApi {
       })
     ).data;
   }
+
+  async setVersionCurrent(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScript/SetVersionCurrent', {
+      schemaItemId: schemaItemId,
+    });
+  }
+
+  async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScript/Run', { schemaItemId: schemaItemId });
+  }
 }
 
 export function simpleErrorHandler(error: any) {
