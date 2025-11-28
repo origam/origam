@@ -1,11 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
-    </xsd:schema>
+﻿<root>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -18,19 +11,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="CategoryDocumentation" xml:space="preserve">
-        <value>Documentation</value>
-    </data>
     <data name="DeploymentScripts_SelectItemIsNotDeploymentVersion" xml:space="preserve">
-        <value>Selected item is not a DeploymentVersion</value>
+        <value>Vybraná položka není typu DeploymentVersion</value>
     </data>
     <data name="DeploymentScripts_SelectItemIsNotDeploymentScript" xml:space="preserve">
-        <value>Selected item is not a DeploymentScript</value>
+        <value>Vybraná položka není typu DeploymentScript</value>
     </data>
     <data name="DeploymentScripts_ModelNotSavedBeforeVersionChange" xml:space="preserve">
-        <value>Model not saved. Please, save the model before setting the version.</value>
+        <value>Model nebyl uložen. Před nastavením verze prosím model uložte.</value>
     </data>
     <data name="DeploymentScript_UnsupportedDeploymentActivityType" xml:space="preserve">
-        <value>Unsupported deployment activity type</value>
+        <value>Nepodporovaný typ aktivity deploymentu</value>
     </data>
 </root>

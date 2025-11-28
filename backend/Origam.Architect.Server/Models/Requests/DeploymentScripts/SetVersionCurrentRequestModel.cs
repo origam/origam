@@ -1,3 +1,4 @@
+#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -16,40 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.treeNode {
-  margin-left: 20px;
-}
+using Origam.Server.Attributes;
 
-.treeNodeTitle {
-  height: 20px;
-  display: flex;
-  cursor: pointer;
-}
+namespace Origam.Architect.Server.Models.Requests.DeploymentScripts;
 
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
-
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+public class SetVersionCurrentRequestModel
+{
+    [RequiredNonDefault]
+    public Guid SchemaItemId { get; set; }
 }

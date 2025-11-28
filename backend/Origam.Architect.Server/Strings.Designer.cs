@@ -67,5 +67,41 @@ namespace Origam.Architect.Server {
                 return ResourceManager.GetString("CategoryDocumentation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported deployment activity type.
+        /// </summary>
+        internal static string DeploymentScript_UnsupportedDeploymentActivityType {
+            get {
+                return ResourceManager.GetString("DeploymentScript_UnsupportedDeploymentActivityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model not saved. Please, save the model before setting the version..
+        /// </summary>
+        internal static string DeploymentScripts_ModelNotSavedBeforeVersionChange {
+            get {
+                return ResourceManager.GetString("DeploymentScripts_ModelNotSavedBeforeVersionChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected item is not a DeploymentScript.
+        /// </summary>
+        internal static string DeploymentScripts_SelectItemIsNotDeploymentScript {
+            get {
+                return ResourceManager.GetString("DeploymentScripts_SelectItemIsNotDeploymentScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected item is not a DeploymentVersion.
+        /// </summary>
+        internal static string DeploymentScripts_SelectItemIsNotDeploymentVersion {
+            get {
+                return ResourceManager.GetString("DeploymentScripts_SelectItemIsNotDeploymentVersion", resourceCulture);
+            }
+        }
     }
 }

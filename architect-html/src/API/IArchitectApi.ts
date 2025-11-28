@@ -101,6 +101,9 @@ export interface IArchitectApi {
   ): Promise<IUpdatePropertiesResult>;
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
+
+  setVersionCurrent(schemaItemId: string): Promise<void>;
+  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
 export interface IScreenEditorModel {
   data: IScreenEditorData;
@@ -205,6 +208,7 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
+  | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
   | 'ScreenSectionEditor'
@@ -226,6 +230,8 @@ export interface IApiTreeNode extends INodeLoadData {
   childrenIds: string[];
   children?: IApiTreeNode[];
   iconUrl?: string;
+  itemType?: string;
+  isCurrentVersion?: boolean;
 }
 
 export interface IPackagesInfo {
