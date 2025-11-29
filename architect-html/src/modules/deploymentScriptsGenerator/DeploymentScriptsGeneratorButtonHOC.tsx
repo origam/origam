@@ -40,7 +40,7 @@ const DeploymentScriptsGeneratorButtonHOC = observer(() => {
   return (
     <Button
       type="secondary"
-      title={T('Deployment Scripts Generator', 'deployment_scripts_generator_button_open_label')}
+      title={T('Deployment Scripts Generator', 'deploymentScripts_GeneratorButtonHOC_label')}
       prefix={<VscSymbolMisc />}
       onClick={handleOnClick}
     />
