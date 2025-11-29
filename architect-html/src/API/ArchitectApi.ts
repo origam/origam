@@ -22,6 +22,7 @@ import {
   IApiEditorData,
   IApiTreeNode,
   IArchitectApi,
+  IDatabaseResultResponse,
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
@@ -272,6 +273,14 @@ export class ArchitectApi implements IArchitectApi {
 
   async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
     await this.axiosInstance.post('/DeploymentScript/Run', { schemaItemId: schemaItemId });
+  }
+
+  async fetchDeploymentScriptsList(platform: string): Promise<IDatabaseResultResponse> {
+    return (
+      await this.axiosInstance.post('/DeploymentScript/List', {
+        params: { platform: platform },
+      })
+    ).data;
   }
 }
 
