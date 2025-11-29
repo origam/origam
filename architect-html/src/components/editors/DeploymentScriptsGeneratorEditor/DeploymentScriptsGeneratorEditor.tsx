@@ -45,14 +45,32 @@ const DeploymentScriptsGeneratorEditor = observer(
                       editorState.results.length,
                     )}
                     buttons={
-                      <Button
-                        title="Add to Deployment"
-                        type="primary"
-                        isDisabled
-                        onClick={function (): void {
-                          throw new Error('Function not implemented.');
-                        }}
-                      />
+                      <>
+                        <Button
+                          title={
+                            <>
+                              Add to <strong>Model</strong>
+                            </>
+                          }
+                          type="primary"
+                          isDisabled
+                          onClick={function (): void {
+                            throw new Error('Function not implemented.');
+                          }}
+                        />
+                        <Button
+                          title={
+                            <>
+                              Add to <strong>Deployment</strong>
+                            </>
+                          }
+                          type="primary"
+                          isDisabled
+                          onClick={function (): void {
+                            throw new Error('Function not implemented.');
+                          }}
+                        />
+                      </>
                     }
                   />
                   <div className={S.tableWrapper}>
