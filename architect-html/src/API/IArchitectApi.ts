@@ -104,7 +104,24 @@ export interface IArchitectApi {
 
   setVersionCurrent(schemaItemId: string): Promise<void>;
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
+  fetchDeploymentScriptsList(platform: string): Promise<IDatabaseResultResponse>;
 }
+
+export interface IDatabaseResultResponse {
+  results: IDatabaseResult[];
+}
+
+export interface IDatabaseResult {
+  resultType: 'MissingInDatabase' | 'MissingInSchema' | 'ExistingButDifferent';
+  itemName: string;
+  remark: string;
+  script: string;
+  script2: string;
+  schemaItemId: string;
+  schemaItemType: 'TableMappingItem';
+  platformName: 'MsSql' | 'PgSql';
+}
+
 export interface IScreenEditorModel {
   data: IScreenEditorData;
   isDirty: boolean;
@@ -208,6 +225,7 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
+  | 'DeploymentScriptsGeneratorEditor'
   | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
@@ -246,6 +264,10 @@ export interface IPackage {
 
 export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
 
+export interface IDeploymentScriptsGeneratorEditorData {
+  results: IDatabaseResult[];
+}
+
 export interface DocumentationEditorData {
   label: string;
   properties: IApiEditorProperty[];
@@ -273,7 +295,12 @@ export interface IApiEditorData {
   editorType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData | DocumentationEditorData;
+  data:
+    | IApiEditorProperty[]
+    | ISectionEditorData
+    | IScreenEditorData
+    | DocumentationEditorData
+    | IDeploymentScriptsGeneratorEditorData;
   isDirty: boolean;
 }
 
