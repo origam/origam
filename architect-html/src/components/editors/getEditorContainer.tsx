@@ -23,6 +23,7 @@ import {
   EditorType,
   IApiEditorProperty,
   IArchitectApi,
+  IDeploymentScriptsGeneratorEditorData,
   IScreenEditorData,
   ISectionEditorData,
 } from '@api/IArchitectApi';
@@ -44,6 +45,8 @@ import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
+import DeploymentScriptsGeneratorEditor from './DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
+import DeploymentScriptsGeneratorEditorState from './DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
 
 export function getEditorContainer(args: {
   editorType: EditorType;
@@ -54,6 +57,18 @@ export function getEditorContainer(args: {
 }) {
   const { editorType, editorData, propertiesState, architectApi } = args;
   const { node, data, isDirty } = editorData;
+
+  if (editorType === 'DeploymentScriptsGeneratorEditor') {
+    const results = (data as IDeploymentScriptsGeneratorEditorData).results ?? [];
+
+    const editorState = new DeploymentScriptsGeneratorEditorState(
+      editorData.editorId,
+      results,
+      architectApi,
+    );
+
+    return new Editor(editorState, <DeploymentScriptsGeneratorEditor editorState={editorState} />);
+  }
 
   if (editorType === 'DeploymentScriptsEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));
