@@ -39,6 +39,8 @@
   "editor_DeploymentScripts_TabLabel_Sql": "SQL",
   "editor_DeploymentScripts_ActionPanelTitle_Settings": "Settings: {0}",
   "editor_DeploymentScripts_TabLabel_Settings": "Settings",
+  "editor_DeploymentScriptsGenerator_TabLabel_List": "Deployment scripts",
+  "editor_DeploymentScriptsGenerator_ActionPanelTitle_List": "Deployment scripts ({0})",
   "deploymentScripts_GeneratorButtonHOC_label": "Deployment Scripts Generator",
   "tree_node_make_version_current": "Make version current",
   "tree_node_run_update_script_activity": "Execute"
