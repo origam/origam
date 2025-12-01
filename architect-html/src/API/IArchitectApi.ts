@@ -111,6 +111,10 @@ export interface IArchitectApi {
   getXsltSettings(): Promise<ShemaItemInfo[]>;
 
   getRuleSets(dataStructureId: string): Promise<ShemaItemInfo[]>;
+
+  setVersionCurrent(schemaItemId: string): Promise<void>;
+
+  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
 
 export interface ITransformationInput {
@@ -136,9 +140,6 @@ export interface IParameterData {
   name: string;
   type: OrigamDataType;
   value: string;
-
-  setVersionCurrent(schemaItemId: string): Promise<void>;
-  runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
 
 export interface ITransformResult {
