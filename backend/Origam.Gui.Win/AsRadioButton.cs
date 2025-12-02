@@ -132,6 +132,11 @@ public class AsRadioButton : RadioButton, IAsControl
     /// <returns></returns>
     private object GetValue()
     {
+        if (DataConstantId == Guid.Empty)
+        {
+            return false;
+        }
+
         IParameterService pms =
             ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         return pms.GetParameterValue(this.DataConstantId);
