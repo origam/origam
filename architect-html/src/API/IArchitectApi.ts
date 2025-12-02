@@ -115,7 +115,7 @@ export interface IArchitectApi {
   setVersionCurrent(schemaItemId: string): Promise<void>;
 
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
-  fetchDeploymentScriptsList(platform: string): Promise<IDatabaseResultResponse>;
+  fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
 }
 
 export interface ITransformationInput {

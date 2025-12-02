@@ -275,10 +275,10 @@ export class ArchitectApi implements IArchitectApi {
     await this.axiosInstance.post('/DeploymentScript/Run', { schemaItemId: schemaItemId });
   }
 
-  async fetchDeploymentScriptsList(platform: string): Promise<IDatabaseResultResponse> {
+  async fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse> {
     return (
       await this.axiosInstance.post('/DeploymentScript/List', {
-        platform: platform,
+        platform,
       })
     ).data;
   }
