@@ -116,7 +116,10 @@ public class AsRadioButton : RadioButton, IAsControl
             try
             {
                 _value = value;
-                this.Checked = this.Value != null && this.Value.Equals(GetValue());
+                
+                // This causes all radiobuttons to be unchecked at all times. 
+                // That is ok in architect. The desktop client is not supported/used anymore.
+                this.Checked = false;
                 OnValueChanged();
             }
             finally
@@ -132,11 +135,6 @@ public class AsRadioButton : RadioButton, IAsControl
     /// <returns></returns>
     private object GetValue()
     {
-        if (DataConstantId == Guid.Empty)
-        {
-            return false;
-        }
-
         IParameterService pms =
             ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         return pms.GetParameterValue(this.DataConstantId);
