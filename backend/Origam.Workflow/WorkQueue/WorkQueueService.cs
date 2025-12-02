@@ -61,11 +61,20 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private readonly Timer _loadExternalWorkQueuesTimer = new(60000);
     private readonly Timer _queueAutoProcessTimer;
     private Boolean serviceBeingUnloaded = false;
-    private readonly RetryManager retryManager = new();
+    public WorkQueueService(): this(10_000) { }
+    private readonly RetryManager retryManager = new ();
+    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES
+        = new Guid("0b45c721-65d2-4305-b34a-cd0d07387ea1");
+    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUESBYPROCESSOR
+        = new Guid("b1f1abcd-c8bc-4680-8f21-06a68e8305f0");
+    private static readonly Guid DS_WORKQUEUE
+        = new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e");
+    private static readonly Guid DS_SORTSET_WQ_SORT
+        = new Guid("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34");
 
-    public WorkQueueService()
-        : this(10_000) { }
-
+    public WorkQueueService(): this(10_000)
+    {
+    }   
     public WorkQueueService(int queueProcessIntervalMillis)
     {
         _queueAutoProcessTimer = new Timer(queueProcessIntervalMillis);
@@ -1666,22 +1675,24 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     {
         dataService.StoreData(wqc.WorkQueueStructureId, selectedRows.DataSet, true, transactionId);
     }
-
-    public WorkQueueData GetQueues(bool activeOnly = true, string transactionId = null)
+    public WorkQueueData GetQueues(bool activeOnly=true, bool ignoreQueueProcessors=false,
+        string transactionId = null)
     {
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         WorkQueueData queues = new WorkQueueData();
 
         Guid filterMethodGuid = activeOnly
-            ? new Guid("b1f1abcd-c8bc-4680-8f21-06a68e8305f0")
+            ? (ignoreQueueProcessors ?
+                DS_METHOD_WQ_GETACTIVEQUEUES
+                : DS_METHOD_WQ_GETACTIVEQUEUESBYPROCESSOR)
             : Guid.Empty;
-
-        queues.Merge(
-            dataService.LoadData(
-                new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e"),
+        
+        queues.Merge
+            (dataService.LoadData(
+                DS_WORKQUEUE,
                 filterMethodGuid,
                 Guid.Empty,
-                new Guid("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34"),
+                DS_SORTSET_WQ_SORT,
                 transactionId,
                 "WorkQueue_parQueueProcessor",
                 settings.Name
