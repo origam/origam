@@ -23,13 +23,11 @@ import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 
-const ModelTreeNode: React.FC<{
-  node: TreeNode;
-}> = observer(({ node }) => {
+const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
   const menuId = 'SideMenu' + node.id;
@@ -164,11 +162,14 @@ const ModelTreeNode: React.FC<{
   );
 });
 
-const ModelTree: React.FC = observer(() => {
+const ModelTree = observer(() => {
   const modelTreeState = useContext(RootStoreContext).modelTreeState;
 
   return (
     <div>
+      {modelTreeState.activePackageName && (
+        <div className={S.packageName}>{modelTreeState.activePackageName}</div>
+      )}
       {modelTreeState.modelNodes.map(node => (
         <ModelTreeNode key={node.id + node.nodeText} node={node} />
       ))}
