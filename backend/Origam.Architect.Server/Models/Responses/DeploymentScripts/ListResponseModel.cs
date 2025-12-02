@@ -19,25 +19,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema.DeploymentModel;
-
 namespace Origam.Architect.Server.Models.Responses.DeploymentScripts;
 
 public class ListResponseModel
 {
     public List<SchemaDbCompareResultDto> Results { get; set; } = [];
-    public string SelectedDeploymentVersionId { get; set; }
-    public List<DeploymentVersion> DeploymentVersions { get; set; }
+    public Guid? CurrentDeploymentVersionId { get; set; }
+    public List<SchemaDeploymentVersionDto> DeploymentVersions { get; set; }
 }
 
 public class SchemaDbCompareResultDto
 {
+    public string SchemaItemId { get; set; } = string.Empty;
+    public string SchemaItemType { get; set; } = string.Empty;
     public string ResultType { get; set; } = string.Empty;
     public string ItemName { get; set; } = string.Empty;
     public string Remark { get; set; } = string.Empty;
     public string Script { get; set; } = string.Empty;
     public string Script2 { get; set; } = string.Empty;
-    public string SchemaItemId { get; set; } = string.Empty;
-    public string SchemaItemType { get; set; } = string.Empty;
     public string PlatformName { get; set; } = string.Empty;
+}
+
+public class SchemaDeploymentVersionDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
