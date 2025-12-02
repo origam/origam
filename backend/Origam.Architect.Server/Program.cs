@@ -93,7 +93,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.UseMiddleware<CustomThreadPrincipalMiddleware>();
+        app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
