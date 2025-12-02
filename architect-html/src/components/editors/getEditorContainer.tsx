@@ -30,6 +30,8 @@ import {
 import { EditorData } from '@components/modelTree/EditorData';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
+import DeploymentScriptsGeneratorEditor from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
+import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
