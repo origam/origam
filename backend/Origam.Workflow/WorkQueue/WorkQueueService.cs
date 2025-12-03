@@ -62,14 +62,14 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private readonly Timer _queueAutoProcessTimer;
     private Boolean serviceBeingUnloaded = false;
     private readonly RetryManager retryManager = new ();
-    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES
-        = new Guid("0b45c721-65d2-4305-b34a-cd0d07387ea1");
-    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUESBYPROCESSOR
-        = new Guid("b1f1abcd-c8bc-4680-8f21-06a68e8305f0");
-    private static readonly Guid DS_WORKQUEUE
-        = new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e");
-    private static readonly Guid DS_SORTSET_WQ_SORT
-        = new Guid("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34");
+    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES = new Guid(
+        "0b45c721-65d2-4305-b34a-cd0d07387ea1");
+    private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUESBYPROCESSOR = new Guid(
+        "b1f1abcd-c8bc-4680-8f21-06a68e8305f0");
+    private static readonly Guid DS_WORKQUEUE = new Guid(
+        "7b44a488-ac98-4fe1-a427-55de0ff9e12e");
+    private static readonly Guid DS_SORTSET_WQ_SORT = new Guid(
+        "c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34");
 
     public WorkQueueService(): this(10_000)
     {
