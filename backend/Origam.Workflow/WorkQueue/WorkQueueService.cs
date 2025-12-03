@@ -61,7 +61,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private readonly Timer _loadExternalWorkQueuesTimer = new(60000);
     private readonly Timer _queueAutoProcessTimer;
     private Boolean serviceBeingUnloaded = false;
-    private readonly RetryManager retryManager = new ();
+    private readonly RetryManager retryManager = new();
     private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES = new Guid(
         "0b45c721-65d2-4305-b34a-cd0d07387ea1");
     private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUESBYPROCESSOR = new Guid(
