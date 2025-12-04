@@ -31,6 +31,7 @@ import { ApplicationDialogStack } from '@dialogs/DialogStack';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect } from 'react';
+import Output from '@components/properties/Output.tsx';
 
 const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -73,6 +74,10 @@ const App = observer(() => {
               {
                 label: T('Properties', 'app_properties'),
                 node: <Properties />,
+              },
+              {
+                label: T('Output', 'app_output'),
+                node: <Output />,
               },
             ]}
           />

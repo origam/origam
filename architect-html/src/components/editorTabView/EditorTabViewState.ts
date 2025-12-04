@@ -21,14 +21,15 @@ import { EditorType, IApiEditorData, IApiEditorNode, IArchitectApi } from '@api/
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
-import { Editor, getEditor } from '@editors/GetEditor';
+import { getEditorContainer } from '@editors/getEditorContainer.tsx';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
+import { EditorContainer } from '@editors/EditorContainer.tsx';
 
 export class EditorTabViewState {
-  @observable accessor editors: Editor[] = [];
+  @observable accessor editorsContainers: EditorContainer[] = [];
   architectApi: IArchitectApi;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 
@@ -39,9 +40,11 @@ export class EditorTabViewState {
 
   *initializeOpenEditors(): Generator<Promise<IApiEditorData[]>, void, IApiEditorData[]> {
     const openEditorsData = (yield this.architectApi.getOpenEditors()) as IApiEditorData[];
-    this.editors = openEditorsData.map(data => this.toEditor(data)) as Editor[];
-    if (this.editors.length > 0) {
-      this.setActiveEditor(this.editors[this.editors.length - 1].state.editorId);
+    this.editorsContainers = openEditorsData.map(data => this.toEditor(data)) as EditorContainer[];
+    if (this.editorsContainers.length > 0) {
+      this.setActiveEditor(
+        this.editorsContainers[this.editorsContainers.length - 1].state.editorId,
+      );
     }
   }
 
@@ -49,7 +52,7 @@ export class EditorTabViewState {
     const treeNode = this.rootStore.modelTreeState.findNodeById(data.node.id);
     const editorData = new EditorData(data, treeNode);
 
-    return getEditor({
+    return getEditorContainer({
       editorType: editorData.editorType,
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
@@ -79,7 +82,7 @@ export class EditorTabViewState {
   }
 
   openEditor(editorData: EditorData, editorType?: EditorType) {
-    const alreadyOpenEditor = this.editors.find(
+    const alreadyOpenEditor = this.editorsContainers.find(
       editor => editor.state.editorId === editorData.editorId,
     );
     if (alreadyOpenEditor) {
@@ -87,7 +90,7 @@ export class EditorTabViewState {
       return;
     }
 
-    const editor = getEditor({
+    const editor = getEditorContainer({
       editorType: editorType === undefined ? editorData.editorType : editorType,
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
@@ -98,16 +101,16 @@ export class EditorTabViewState {
       return;
     }
 
-    this.editors.push(editor);
+    this.editorsContainers.push(editor);
     this.setActiveEditor(editor.state.editorId);
   }
 
   get activeEditorState() {
-    return this.editors.find(editor => editor.state.isActive)?.state;
+    return this.editorsContainers.find(editor => editor.state.isActive)?.state;
   }
 
   setActiveEditor(schemaItemId: string) {
-    for (const editor of this.editors) {
+    for (const editor of this.editorsContainers) {
       editor.state.isActive = editor.state.editorId === schemaItemId;
     }
   }
@@ -130,10 +133,12 @@ export class EditorTabViewState {
             break;
         }
       }
-      this.editors = this.editors.filter((editor: Editor) => editor.state.editorId !== editorId);
+      this.editorsContainers = this.editorsContainers.filter(
+        (editor: EditorContainer) => editor.state.editorId !== editorId,
+      );
       yield this.architectApi.closeEditor(editorId);
-      if (this.editors.length > 0) {
-        const editorToActivate = this.editors[this.editors.length - 1];
+      if (this.editorsContainers.length > 0) {
+        const editorToActivate = this.editorsContainers[this.editorsContainers.length - 1];
         this.setActiveEditor(editorToActivate.state.editorId);
       }
     }.bind(this);

@@ -66,7 +66,7 @@ public class PropertyEditorService(EditorPropertyFactory propertyFactory)
         {
             IEnumerable<EditorProperty> xsltProperties = GetEditorPropertiesByName(
                 xslRule,
-                ["Xsl", "Name"]
+                ["Xsl", "Name", "Structure"]
             );
             return xsltProperties;
         }

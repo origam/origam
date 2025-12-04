@@ -49,17 +49,11 @@ export const YesNoQuestion: React.FC<YesNoQuestionProps> = observer(
         title={screenTitle}
         buttonsCenter={
           <>
-            <button id="yesButton" tabIndex={0} autoFocus onClick={onYesClick}>
+            <button autoFocus onClick={onYesClick}>
               {yesLabel}
             </button>
-            <button id="noButton" tabIndex={0} onClick={onNoClick}>
-              {noLabel}
-            </button>
-            {onCancelClick && cancelLabel && (
-              <button id="cancelButton" tabIndex={0} onClick={onCancelClick}>
-                {cancelLabel}
-              </button>
-            )}
+            <button onClick={onNoClick}>{noLabel}</button>
+            {onCancelClick && cancelLabel && <button onClick={onCancelClick}>{cancelLabel}</button>}
           </>
         }
       >

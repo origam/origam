@@ -48,7 +48,7 @@ export const TabHeader = observer(({ editor }: { editor: IEditorState }) => {
   function closeAllTabsExcept(ignoreId: string | null) {
     run({
       generator: function* () {
-        const editors = state.editors.map(x => x.state);
+        const editors = state.editorsContainers.map(x => x.state);
         for (const editor of editors) {
           if (ignoreId && editor.editorId === ignoreId) {
             continue;

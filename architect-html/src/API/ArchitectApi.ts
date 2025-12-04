@@ -25,11 +25,16 @@ import {
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
+  IParametersResult,
   IPropertyChange,
   IScreenEditorItem,
   IScreenEditorModel,
   ISectionEditorModel,
+  ITransformationInput,
+  ITransformResult,
   IUpdatePropertiesResult,
+  IValidationResult,
+  ShemaItemInfo,
 } from '@api/IArchitectApi';
 import axios, { AxiosInstance } from 'axios';
 
@@ -117,6 +122,26 @@ export class ArchitectApi implements IArchitectApi {
     await this.axiosInstance.post(`/Documentation/PersistChanges`, {
       schemaItemId,
     });
+  }
+
+  async validateTransformation(input: ITransformationInput): Promise<IValidationResult> {
+    return (await this.axiosInstance.post(`/Xslt/Validate`, input)).data;
+  }
+
+  async runTransformation(input: ITransformationInput): Promise<ITransformResult> {
+    return (await this.axiosInstance.post(`/Xslt/Transform`, input)).data;
+  }
+
+  async getXsltParameters(schemaItemId: string): Promise<IParametersResult> {
+    return (await this.axiosInstance.get(`/Xslt/Parameters`, { params: { schemaItemId } })).data;
+  }
+
+  async getXsltSettings(): Promise<ShemaItemInfo[]> {
+    return (await this.axiosInstance.get(`/Xslt/Settings`)).data;
+  }
+
+  async getRuleSets(dataStructureId: string): Promise<ShemaItemInfo[]> {
+    return (await this.axiosInstance.get(`/Xslt/RuleSets`, { params: { dataStructureId } })).data;
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {
