@@ -25,9 +25,11 @@ using Origam.Architect.Server.Models.Requests.DeploymentScripts;
 using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.Architect.Server.Services;
 using Origam.DA;
+using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -181,5 +183,177 @@ public class DeploymentScriptController(
 
             return Ok(response);
         });
+    }
+
+    [HttpPost("ProcessSelection")]
+    public IActionResult ProcessSelection(
+        [Required] [FromBody] ProcessSelectionRequestModel requestModel
+    )
+    {
+        return RunWithErrorHandler(() =>
+        {
+            if (
+                schemaService.ActiveExtension == null
+                || schemaService.ActiveExtension.Id == Guid.Empty
+            )
+            {
+                throw new InvalidOperationException(
+                    "Active extension (package) is not set (activeExtensionId missing)."
+                );
+            }
+
+            SecurityManager.SetServerIdentity();
+
+            var da = (AbstractSqlDataService)DataServiceFactory.GetDataService();
+            da.PersistenceProvider = persistenceService.SchemaProvider;
+
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            var platforms = settings.GetAllPlatforms();
+
+            Platform platform;
+            if (string.IsNullOrWhiteSpace(requestModel.Platform))
+            {
+                platform = platforms.FirstOrDefault();
+                if (platform == null)
+                {
+                    throw new InvalidOperationException("No platforms are configured.");
+                }
+            }
+            else
+            {
+                var requestedPlatformName = requestModel.Platform.Trim();
+                platform = platforms.FirstOrDefault(p =>
+                    string.Equals(p.Name, requestedPlatformName, StringComparison.OrdinalIgnoreCase)
+                );
+
+                if (platform == null)
+                {
+                    var available = string.Join(", ", platforms.Select(p => p.Name));
+                    throw new InvalidOperationException(
+                        $"Unknown platform '{requestedPlatformName}'. Available platforms: {available}."
+                    );
+                }
+            }
+
+            var requiredVersion =
+                persistenceService.SchemaProvider.RetrieveInstance<DeploymentVersion>(
+                    requestModel.DeploymentVersionId,
+                    useCache: false
+                );
+
+            if (requiredVersion is null)
+            {
+                return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
+            }
+
+            var selectedResults = GetSchemaDbCompareResults(requestModel, platform);
+            RunAllDeploymentActivities(requiredVersion, selectedResults);
+
+            return Ok();
+        });
+    }
+
+    private List<SchemaDbCompareResult> GetSchemaDbCompareResults(
+        ProcessSelectionRequestModel requestModel,
+        Platform platform
+    )
+    {
+        var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
+        daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
+        var dbCompareResults = daPlatform.CompareSchema(persistenceService.SchemaProvider);
+        foreach (SchemaDbCompareResult r in dbCompareResults)
+        {
+            r.Platform = platform;
+        }
+
+        var idSet = new HashSet<Guid>();
+        if (requestModel.SchemaItemIds != null)
+        {
+            foreach (var idStr in requestModel.SchemaItemIds)
+            {
+                if (Guid.TryParse(idStr, out Guid id))
+                {
+                    idSet.Add(id);
+                }
+            }
+        }
+
+        var selectedResults = dbCompareResults
+            .Where(r => r.SchemaItem != null && idSet.Contains(r.SchemaItem.Id))
+            .ToList();
+
+        return selectedResults;
+    }
+
+    private void RunAllDeploymentActivities(
+        DeploymentVersion version,
+        List<SchemaDbCompareResult> selectedResults
+    )
+    {
+        IService dataService = schemaService
+            .GetProvider<ServiceSchemaItemProvider>()
+            .ChildItems.Cast<IService>()
+            .FirstOrDefault(service => service.Name == "DataService");
+
+        foreach (SchemaDbCompareResult result in selectedResults)
+        {
+            if (string.IsNullOrEmpty(result.Script))
+            {
+                continue;
+            }
+
+            var dbType = (DatabaseType)
+                Enum.Parse(
+                    typeof(DatabaseType),
+                    result.Platform.GetParseEnum(result.Platform.DataService)
+                );
+            CreateAndPersistActivity(
+                result.SchemaItem.ModelDescription() + "_" + result.ItemName,
+                result.Script,
+                version,
+                dataService,
+                dbType
+            );
+        }
+
+        foreach (SchemaDbCompareResult result in selectedResults)
+        {
+            if (string.IsNullOrEmpty(result.Script2))
+            {
+                continue;
+            }
+
+            var dbType = (DatabaseType)
+                Enum.Parse(
+                    typeof(DatabaseType),
+                    result.Platform.GetParseEnum(result.Platform.DataService)
+                );
+            CreateAndPersistActivity(
+                result.SchemaItem.ModelDescription() + "_" + result.ItemName,
+                result.Script2,
+                version,
+                dataService,
+                dbType
+            );
+        }
+    }
+
+    private void CreateAndPersistActivity(
+        string name,
+        string command,
+        DeploymentVersion version,
+        IService dataService,
+        DatabaseType databaseType
+    )
+    {
+        var activity = version.NewItem<ServiceCommandUpdateScriptActivity>(
+            schemaService.ActiveSchemaExtensionId,
+            null
+        );
+        activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
+        activity.Service = dataService;
+        activity.CommandText = command;
+        activity.DatabaseType = databaseType;
+        activity.Persist();
     }
 }
