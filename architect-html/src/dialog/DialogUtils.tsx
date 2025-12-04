@@ -75,7 +75,7 @@ export function showInfo(
           screenTitle={title}
           okLabel={T('Ok', 'dialog_ok')}
           message={text}
-          onCancelClick={() => {
+          onOkClick={() => {
             closeDialog();
           }}
         />,

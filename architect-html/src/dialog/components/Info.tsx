@@ -26,22 +26,20 @@ type InfoProps = {
   screenTitle: string;
   message: string;
   okLabel?: string;
-  onCancelClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onOkClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-export const Info = observer(
-  ({ screenTitle, message, okLabel = 'Ok', onCancelClick }: InfoProps) => {
-    return (
-      <ModalWindow
-        title={screenTitle}
-        buttonsCenter={
-          <button id="cancelButton" tabIndex={0} onClick={onCancelClick} type="button">
-            {okLabel}
-          </button>
-        }
-      >
-        <div className={S.dialogContent}>{message}</div>
-      </ModalWindow>
-    );
-  },
-);
+export const Info = observer(({ screenTitle, message, okLabel = 'Ok', onOkClick }: InfoProps) => {
+  return (
+    <ModalWindow
+      title={screenTitle}
+      buttonsCenter={
+        <button tabIndex={0} onClick={onOkClick} type="button">
+          {okLabel}
+        </button>
+      }
+    >
+      <div className={S.dialogContent}>{message}</div>
+    </ModalWindow>
+  );
+});

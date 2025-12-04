@@ -32,6 +32,8 @@ import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 import { observer } from 'mobx-react-lite';
 import { Settings } from '@editors/xsltEditor/Settings.tsx';
 
+export const ResultTabIndex = 3;
+
 const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) => {
   const rootStore = useContext(RootStoreContext);
 
@@ -72,7 +74,7 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
       generator: function* () {
         const result = yield* editorState.validate();
         rootStore.output = result.output;
-        rootStore.sideBarTabViewState.shotOutput();
+        rootStore.sideBarTabViewState.showOutput();
         yield showInfo(rootStore.dialogStack, result.title, result.text);
       },
     });
@@ -83,9 +85,9 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
       generator: function* () {
         const result = yield* editorState.transform();
         rootStore.output = result.output;
-        rootStore.sideBarTabViewState.shotOutput();
+        rootStore.sideBarTabViewState.showOutput();
         editorState.xmlResult = result.xml ?? '';
-        editorState.activeTabIndex = 3;
+        editorState.activeTabIndex = ResultTabIndex;
       },
     });
   }

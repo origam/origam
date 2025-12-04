@@ -27,7 +27,7 @@ export class TabViewState implements ITabViewState {
     this.activeTabIndex = 1;
   }
 
-  shotOutput() {
+  showOutput() {
     this.activeTabIndex = 3;
   }
 }
