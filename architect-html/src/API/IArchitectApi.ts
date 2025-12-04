@@ -156,7 +156,14 @@ export interface IValidationResult {
 
 
 export interface IDatabaseResultResponse {
+  deploymentVersions: IDeploymentVersion[];
+  currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
+}
+
+export interface IDeploymentVersion {
+  id: string;
+  name: string;
 }
 
 export interface IDatabaseResult {
@@ -313,6 +320,8 @@ export interface IPackage {
 export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
 
 export interface IDeploymentScriptsGeneratorEditorData {
+  possibleDeploymentVersions: IDeploymentVersion[];
+  currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
 }
 
