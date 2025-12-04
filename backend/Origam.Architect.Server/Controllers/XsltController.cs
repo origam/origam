@@ -43,7 +43,7 @@ public class XsltController(
                 SourceDataStructureId: model.SourceDataStructureId,
                 TargetDataStructureId: model.TargetDataStructureId,
                 RuleSetId: model.RuleSetId,
-                InputXml: null,
+                InputXml: "<ROOT/>",
                 Parameters: null
             );
             ValidationResult result = xsltService.Validate(input);

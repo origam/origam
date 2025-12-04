@@ -26,7 +26,7 @@ public record TransformationInput(
     Guid SourceDataStructureId,
     Guid TargetDataStructureId,
     Guid RuleSetId,
-    string InputXml = "<ROOT/>",
+    string InputXml,
     IReadOnlyList<ParameterData> Parameters = null
 )
 {
