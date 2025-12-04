@@ -76,6 +76,26 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
+      x:id="0b45c721-65d2-4305-b34a-cd0d07387ea1"
+      asi:name="GetActiveQueues">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/WorkQueueNotification/c521075f-3627-40e2-a6df-73db65032f32"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="0df250ab-acb8-42b9-9907-dc1bd24653fd"
+        asi:name="WorkQueueNotification_GetActive"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/d074c972-5288-438a-b126-1a5b580befbd"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="af3c0e66-f4f8-4edd-95da-d62fce2a9f36"
+        asi:name="WorkQueue_GetActive"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
       x:id="2543bbd3-3592-4b14-9d74-86d0e9c65d98"
       asi:name="GetId">
       <dsfsf:DataStructureFilterSetFilter
