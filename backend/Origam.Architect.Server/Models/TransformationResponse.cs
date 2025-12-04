@@ -19,17 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Text;
+namespace Origam.Architect.Server.Models;
 
-namespace Origam.Architect.Server.Services.Xslt;
-
-public class ResultBase : IResult
+public class TransformationResponse
 {
-    private readonly StringBuilder output = new();
-    public string Output => output.ToString();
-
-    public void AddToOutput(string text)
-    {
-        output.AppendLine(text);
-    }
+    public string Output { get; set; }
+    public string Xml { get; set; }
 }

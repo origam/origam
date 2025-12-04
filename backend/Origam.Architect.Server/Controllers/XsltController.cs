@@ -47,7 +47,15 @@ public class XsltController(
                 Parameters: null
             );
             ValidationResult result = xsltService.Validate(input);
-            return Ok(result);
+            return Ok(
+                new ValidationResponse
+                {
+                    Text = result.Text,
+                    Title = result.Title,
+                    Xml = result.Xml,
+                    Output = result.Output,
+                }
+            );
         });
     }
 
@@ -72,7 +80,7 @@ public class XsltController(
                 ]
             );
             TransformationResult result = xsltService.Transform(input);
-            return Ok(result);
+            return Ok(new TransformationResponse { Output = result.Output, Xml = result.Xml });
         });
     }
 
