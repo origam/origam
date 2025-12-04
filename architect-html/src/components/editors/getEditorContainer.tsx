@@ -26,7 +26,6 @@ import {
   IScreenEditorData,
   ISectionEditorData,
 } from '@api/IArchitectApi';
-import { IEditorState } from '@components/editorTabView/IEditorState';
 import { EditorData } from '@components/modelTree/EditorData';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
@@ -43,10 +42,10 @@ import { GridEditorState } from '@editors/gridEditor/GridEditorState';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import React from 'react';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
+import { EditorContainer } from '@editors/EditorContainer.tsx';
 
-export function getEditor(args: {
+export function getEditorContainer(args: {
   editorType: EditorType;
   editorData: EditorData;
   propertiesState: PropertiesState;
@@ -65,7 +64,7 @@ export function getEditor(args: {
       isDirty,
       architectApi,
     );
-    return new Editor(editorState, <DeploymentScriptsEditor editorState={editorState} />);
+    return new EditorContainer(editorState, <DeploymentScriptsEditor editorState={editorState} />);
   }
 
   if (editorType === 'GridEditor') {
@@ -83,7 +82,7 @@ export function getEditor(args: {
         title={T('Editing: {0}', 'grid_editor_title', editorState.label)}
       />
     );
-    return new Editor(editorState, editorComponent);
+    return new EditorContainer(editorState, editorComponent);
   }
 
   if (editorType === 'XsltEditor') {
@@ -96,7 +95,7 @@ export function getEditor(args: {
       architectApi,
     );
     const editorComponent = <XsltEditor editorState={editorState} />;
-    return new Editor(editorState, editorComponent);
+    return new EditorContainer(editorState, editorComponent);
   }
 
   if (editorType === 'ScreenSectionEditor') {
@@ -113,7 +112,7 @@ export function getEditor(args: {
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenSectionEditor designerState={state} />;
-    return new Editor(state, editorComponent);
+    return new EditorContainer(state, editorComponent);
   }
 
   if (editorType === 'ScreenEditor') {
@@ -130,7 +129,7 @@ export function getEditor(args: {
       args.runGeneratorHandled,
     );
     const editorComponent = <ScreenEditor designerState={state} />;
-    return new Editor(state, editorComponent);
+    return new EditorContainer(state, editorComponent);
   }
 
   if (editorType === 'DocumentationEditor') {
@@ -148,15 +147,8 @@ export function getEditor(args: {
         title={T('Documentation: {0}', 'documentation_editor_title', documentationData.label)}
       />
     );
-    return new Editor(editorState, editorComponent);
+    return new EditorContainer(editorState, editorComponent);
   }
 
   return null;
-}
-
-export class Editor {
-  constructor(
-    public state: IEditorState,
-    public element: React.ReactElement,
-  ) {}
 }
