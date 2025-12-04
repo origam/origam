@@ -98,7 +98,7 @@ public class EditorController(
         EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
         ISchemaItem item = editor.Item;
         TreeNode treeNode = treeNodeFactory.Create(item);
-        
+
         var openEditorData = new OpenEditorData(
             editorId: editor.Id,
             node: treeNode,
