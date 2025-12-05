@@ -102,6 +102,7 @@ public class AsRadioButton : RadioButton, IAsControl
     /// have the same value. The radio button will only be checked if the value equals to the
     /// data constant specifed under ValueConstant.
     /// </summary>
+    [Browsable(false)]
     public object Value
     {
         get { return _value; }
