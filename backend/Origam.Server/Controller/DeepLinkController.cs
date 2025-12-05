@@ -59,7 +59,7 @@ public class DeepLinkController : AbstractController
     [HttpGet("categories")]
     public IActionResult GetCategoriesRequest()
     {
-        return RunWithErrorHandler(() => Ok(GetCategories()));
+        return Ok(GetCategories());
     }
 
     [HttpGet("{categoryId}/objects")]
@@ -70,7 +70,7 @@ public class DeepLinkController : AbstractController
         [FromQuery] string searchPhrase
     )
     {
-        return RunWithErrorHandler(() => GetObjets(categoryId, limit, pageNumber, searchPhrase));
+        return GetObjets(categoryId, limit, pageNumber, searchPhrase);
     }
 
     [HttpPost("{categoryId}/labels")]
@@ -79,7 +79,7 @@ public class DeepLinkController : AbstractController
         [FromBody] DeepLinkLabelInput label
     )
     {
-        return RunWithErrorHandler(() => GetLookupLabel(categoryId, label.LabelIds));
+        return GetLookupLabel(categoryId, label.LabelIds);
     }
 
     private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
@@ -134,9 +134,7 @@ public class DeepLinkController : AbstractController
     [HttpPost("[action]")]
     public IActionResult GetMenuId([FromBody] GetDeepLinkMenuInput input)
     {
-        return RunWithErrorHandler(() =>
-            Ok(GetMenuId(deepLinkCategory: input.Category, referenceId: input.ReferenceId))
-        );
+        return Ok(GetMenuId(deepLinkCategory: input.Category, referenceId: input.ReferenceId));
     }
 
     private string GetMenuId(string deepLinkCategory, object referenceId)
