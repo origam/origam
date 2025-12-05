@@ -57,6 +57,7 @@ public class OpenIddictConfig
     public bool CookieSlidingExpiration { get; }
     public int CookieExpirationMinutes { get; }
     public string AuthenticationPostProcessor { get; }
+    public string AccessTokenIssuer { get; }
     public AuthenticationMethod PrivateApiAuthentication { get; }
     public ClientApplicationTemplates ClientApplicationTemplates { get; set; }
 
@@ -80,6 +81,7 @@ public class OpenIddictConfig
             ServerClient = ConfigureServerClient(clientSection),
         };
         AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
+        AccessTokenIssuer = openIddictSection.GetStringOrThrow("AccessTokenIssuer");
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)
