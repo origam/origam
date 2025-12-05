@@ -88,6 +88,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseMiddleware<OrigamErrorHandlingMiddleware>();
         app.UseAuthorization();
         app.UseStaticFiles();
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

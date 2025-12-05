@@ -35,52 +35,45 @@ public class DeploymentScriptController(
     IPersistenceService persistenceService,
     DeploymentScriptRunnerService deploymentScriptRunner,
     DeploymentVersionCurrentService deploymentVersionCurrentService,
-    IWebHostEnvironment environment,
     ILogger<DeploymentScriptController> log
-) : OrigamController(log, environment)
+) : OrigamController(log)
 {
     [HttpPost("SetVersionCurrent")]
     public IActionResult SetVersionCurrent(
         [Required] [FromBody] SetVersionCurrentRequestModel requestModel
     )
     {
-        return RunWithErrorHandler(() =>
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            requestModel.SchemaItemId,
+            useCache: false
+        );
+
+        if (item is not DeploymentVersion version)
         {
-            var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                requestModel.SchemaItemId,
-                useCache: false
-            );
+            return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
+        }
 
-            if (item is not DeploymentVersion version)
-            {
-                return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
-            }
+        deploymentVersionCurrentService.SetVersionCurrent(version);
 
-            deploymentVersionCurrentService.SetVersionCurrent(version);
-
-            return Ok();
-        });
+        return Ok();
     }
 
     [HttpPost("Run")]
     public IActionResult Run([Required] [FromBody] RunRequestModel requestModel)
     {
-        return RunWithErrorHandler(() =>
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+            requestModel.SchemaItemId,
+            useCache: false
+        );
+
+        if (item is not AbstractUpdateScriptActivity script)
         {
-            var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
-                requestModel.SchemaItemId,
-                useCache: false
-            );
+            return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentScript);
+        }
 
-            if (item is not AbstractUpdateScriptActivity script)
-            {
-                return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentScript);
-            }
+        SecurityManager.SetServerIdentity();
+        deploymentScriptRunner.RunDeploymentScript(script);
 
-            SecurityManager.SetServerIdentity();
-            deploymentScriptRunner.RunDeploymentScript(script);
-
-            return Ok();
-        });
+        return Ok();
     }
 }
