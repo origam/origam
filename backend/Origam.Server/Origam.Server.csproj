@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>

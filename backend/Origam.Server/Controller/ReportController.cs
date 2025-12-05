@@ -128,13 +128,10 @@ public class ReportController : AbstractController
     [HttpGet("[action]")]
     public IActionResult GetReportInfo(Guid reportRequestId)
     {
-        return RunWithErrorHandler(() =>
-        {
-            var (_, report) = GetReport(reportRequestId);
-            return report == null
-                ? NotFound(localizer["ErrorReportNotAvailable"].ToString())
-                : Ok(new ReportInfo { IsWebReport = report is WebReport });
-        });
+        var (_, report) = GetReport(reportRequestId);
+        return report == null
+            ? NotFound(localizer["ErrorReportNotAvailable"].ToString())
+            : Ok(new ReportInfo { IsWebReport = report is WebReport });
     }
 
     private (ReportRequest, AbstractReport) GetReport(Guid reportRequestId)

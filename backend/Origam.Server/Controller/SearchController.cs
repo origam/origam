@@ -53,6 +53,6 @@ public class SearchController : AbstractController
     [DecodeQueryParameter("searchTerm")]
     public IActionResult Get(string searchTerm)
     {
-        return RunWithErrorHandler(() => Ok(searchHandler.Search(searchTerm)));
+        return Ok(searchHandler.Search(searchTerm));
     }
 }

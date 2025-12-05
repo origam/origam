@@ -51,70 +51,58 @@ public class SessionController : AbstractController
     [HttpPost("[action]")]
     public async Task<IActionResult> CreateSessionAsync([FromBody] CreateSessionData sessionData)
     {
-        return await RunWithErrorHandlerAsync(async () =>
+        UserProfile profile = SecurityTools.CurrentUserProfile();
+        PortalSessionStore pss = new PortalSessionStore(profile.Id);
+        sessionObjects.SessionManager.AddPortalSessionIfNotExist(
+            id: profile.Id,
+            createSession: id => new PortalSessionStore(id)
+        );
+        Guid newSessionId = Guid.NewGuid();
+        UIRequest uiRequest = new UIRequest
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
-            PortalSessionStore pss = new PortalSessionStore(profile.Id);
-            sessionObjects.SessionManager.AddPortalSessionIfNotExist(
-                id: profile.Id,
-                createSession: id => new PortalSessionStore(id)
-            );
-            Guid newSessionId = Guid.NewGuid();
-            UIRequest uiRequest = new UIRequest
-            {
-                FormSessionId = newSessionId.ToString(),
-                ObjectId = sessionData.MenuId.ToString(),
-                Parameters = sessionData.Parameters,
-                RegisterSession = true,
-            };
-            UIResult uiResult = sessionObjects.UIManager.InitUI(
-                request: uiRequest,
-                addChildSession: false,
-                parentSession: null,
-                basicUIService: sessionObjects.UIService
-            );
-            await Task.CompletedTask; //CS1998
-            return Ok(newSessionId);
-        });
+            FormSessionId = newSessionId.ToString(),
+            ObjectId = sessionData.MenuId.ToString(),
+            Parameters = sessionData.Parameters,
+            RegisterSession = true,
+        };
+        UIResult uiResult = sessionObjects.UIManager.InitUI(
+            request: uiRequest,
+            addChildSession: false,
+            parentSession: null,
+            basicUIService: sessionObjects.UIService
+        );
+        await Task.CompletedTask; //CS1998
+        return Ok(newSessionId);
     }
 
     [HttpPost("[action]")]
     public IActionResult DeleteSession([FromBody] DeleteSessionData sessionData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            new SessionHelper(sessionObjects.SessionManager).DeleteSession(sessionData.SessionId);
-            CallOrigamUserUpdate();
-            return Ok();
-        });
+        new SessionHelper(sessionObjects.SessionManager).DeleteSession(sessionData.SessionId);
+        CallOrigamUserUpdate();
+        return Ok();
     }
 
     [HttpPost("[action]")]
     public IActionResult DeleteRow([FromBody] DeleteRowData sessionData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(
-                sessionData.SessionFormIdentifier
-            );
-            IList output = ss.DeleteObject(sessionData.Entity, sessionData.RowId);
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(
+            sessionData.SessionFormIdentifier
+        );
+        IList output = ss.DeleteObject(sessionData.Entity, sessionData.RowId);
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpPost("[action]")]
     public IActionResult ChangeMasterRecord([FromBody] ChangeMasterRecordData sessionData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(
-                sessionData.SessionFormIdentifier
-            );
-            List<ChangeInfo> output = ss.GetRowData(sessionData.Entity, sessionData.RowId, false);
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(
+            sessionData.SessionFormIdentifier
+        );
+        List<ChangeInfo> output = ss.GetRowData(sessionData.Entity, sessionData.RowId, false);
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpGet("[action]")]
@@ -125,63 +113,51 @@ public class SessionController : AbstractController
         [FromQuery] [Required] string rootRecordId
     )
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
-            IList output = ss.GetData(childEntity, parentRecordId, rootRecordId);
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
+        IList output = ss.GetData(childEntity, parentRecordId, rootRecordId);
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpPost("[action]")]
     public IActionResult SaveData([FromBody] SaveDataData saveData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(saveData.SessionId);
-            IList output = (IList)ss.ExecuteAction(SessionStore.ACTION_SAVE);
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(saveData.SessionId);
+        IList output = (IList)ss.ExecuteAction(SessionStore.ACTION_SAVE);
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpPost("[action]")]
     public IActionResult CreateRow([FromBody] NewRowData newRowData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(
-                newRowData.SessionFormIdentifier
-            );
-            IList output = ss.CreateObject(
-                newRowData.Entity,
-                newRowData.Values,
-                newRowData.Parameters,
-                newRowData.RequestingGridId.ToString()
-            );
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(
+            newRowData.SessionFormIdentifier
+        );
+        IList output = ss.CreateObject(
+            newRowData.Entity,
+            newRowData.Values,
+            newRowData.Parameters,
+            newRowData.RequestingGridId.ToString()
+        );
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpPost("[action]")]
     public IActionResult UpdateRow([FromBody] UpdateRowData updateData)
     {
-        return RunWithErrorHandler(() =>
-        {
-            SessionStore ss = sessionObjects.SessionManager.GetSession(
-                updateData.SessionFormIdentifier
-            );
-            IEnumerable<ChangeInfo> output = ss.UpdateObject(
-                entity: updateData.Entity,
-                id: updateData.Id,
-                property: updateData.Property,
-                newValue: updateData.NewValue
-            );
-            CallOrigamUserUpdate();
-            return Ok(output);
-        });
+        SessionStore ss = sessionObjects.SessionManager.GetSession(
+            updateData.SessionFormIdentifier
+        );
+        IEnumerable<ChangeInfo> output = ss.UpdateObject(
+            entity: updateData.Entity,
+            id: updateData.Id,
+            property: updateData.Property,
+            newValue: updateData.NewValue
+        );
+        CallOrigamUserUpdate();
+        return Ok(output);
     }
 
     [HttpPost("[action]")]

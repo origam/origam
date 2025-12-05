@@ -58,81 +58,75 @@ public class ExcelExportController : AbstractController
     [HttpPost("[action]")]
     public IActionResult GetFile([FromBody] [Required] ExcelExportInput input)
     {
-        return RunWithErrorHandler(() =>
+        SessionStore sessionStore = sessionObjects.SessionManager.GetSession(
+            input.SessionFormIdentifier
+        );
+        if (!sessionStore.RuleEngine.IsExportAllowed(sessionStore.GetEntityId(input.Entity)))
         {
-            SessionStore sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier
-            );
-            if (!sessionStore.RuleEngine.IsExportAllowed(sessionStore.GetEntityId(input.Entity)))
+            return StatusCode(403, localizer["ExcelExportForbidden"].ToString());
+        }
+        bool isLazyLoaded = sessionStore.IsLazyLoadedEntity(input.Entity);
+        switch (isLazyLoaded)
+        {
+            case true when input.LazyLoadedEntityInput == null:
             {
-                return StatusCode(403, localizer["ExcelExportForbidden"].ToString());
+                return BadRequest(
+                    $"Export from lazy loaded entities requires {nameof(input.LazyLoadedEntityInput)}"
+                );
             }
-            bool isLazyLoaded = sessionStore.IsLazyLoadedEntity(input.Entity);
-            switch (isLazyLoaded)
+            case false when input.RowIds == null || input.RowIds.Count == 0:
             {
-                case true when input.LazyLoadedEntityInput == null:
-                {
-                    return BadRequest(
-                        $"Export from lazy loaded entities requires {nameof(input.LazyLoadedEntityInput)}"
-                    );
-                }
-                case false when input.RowIds == null || input.RowIds.Count == 0:
-                {
-                    return BadRequest(
-                        $"Export from non lazy loaded entities requires {nameof(input.RowIds)}"
-                    );
-                }
-                default:
-                {
-                    var entityExportInfo = new EntityExportInfo
-                    {
-                        Entity = input.Entity,
-                        Fields = input.Fields,
-                        RowIds = input.RowIds,
-                        SessionFormIdentifier = input.SessionFormIdentifier.ToString(),
-                        Store = sessionStore,
-                        LazyLoadedEntityInput = input.LazyLoadedEntityInput,
-                    };
-                    return GetExcelFile(entityExportInfo);
-                }
+                return BadRequest(
+                    $"Export from non lazy loaded entities requires {nameof(input.RowIds)}"
+                );
             }
-        });
+            default:
+            {
+                var entityExportInfo = new EntityExportInfo
+                {
+                    Entity = input.Entity,
+                    Fields = input.Fields,
+                    RowIds = input.RowIds,
+                    SessionFormIdentifier = input.SessionFormIdentifier.ToString(),
+                    Store = sessionStore,
+                    LazyLoadedEntityInput = input.LazyLoadedEntityInput,
+                };
+                return GetExcelFile(entityExportInfo);
+            }
+        }
     }
 
     private IActionResult GetExcelFile(EntityExportInfo entityExportInfo)
     {
-        return RunWithErrorHandler(() =>
+        var excelEntityExporter = new ExcelEntityExporter();
+        Result<IWorkbook, IActionResult> workbookResult = FillWorkbook(
+            entityExportInfo,
+            excelEntityExporter
+        );
+        if (workbookResult.IsFailure)
         {
-            var excelEntityExporter = new ExcelEntityExporter();
-            Result<IWorkbook, IActionResult> workbookResult = FillWorkbook(
-                entityExportInfo,
-                excelEntityExporter
-            );
-            if (workbookResult.IsFailure)
-            {
-                return workbookResult.Error;
-            }
-            if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
-            {
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.Headers.Append("content-disposition", "attachment; filename=export.xls");
-            }
-            else
-            {
-                Response.ContentType =
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.Headers.Append("content-disposition", "attachment; filename=export.xlsx");
-            }
+            return workbookResult.Error;
+        }
+        if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
+        {
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.Headers.Append("content-disposition", "attachment; filename=export.xls");
+        }
+        else
+        {
+            Response.ContentType =
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.Headers.Append("content-disposition", "attachment; filename=export.xlsx");
+        }
 #pragma warning disable 1998
-            return new FileCallbackResult(
-                new MediaTypeHeaderValue(Response.ContentType),
-                async (outputStream, _) =>
-                {
-                    workbookResult.Value.Write(outputStream);
-                }
-            );
+        return new FileCallbackResult(
+            new MediaTypeHeaderValue(Response.ContentType),
+            async (outputStream, _) =>
+            {
+                workbookResult.Value.Write(outputStream);
+            }
+        );
 #pragma warning restore 1998
-        });
     }
 
     private class ReadResult
