@@ -232,6 +232,8 @@ public class Startup
             })
             .AddServer(options =>
             {
+                var url = GetAccessTokenIssuer();
+                options.SetIssuer(new Uri(url));
                 options
                     .SetAuthorizationEndpointUris("/connect/authorize")
                     .SetTokenEndpointUris("/connect/token")
@@ -369,6 +371,14 @@ public class Startup
                 }
             );
         });
+    }
+
+    private string GetAccessTokenIssuer()
+    {
+        return Configuration
+            .GetValue<string>("urls")
+            .Split(";")
+            .First(x => x.StartsWith("https"));
     }
 
     private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders(
