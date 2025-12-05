@@ -81,7 +81,7 @@ public class OpenIddictConfig
             ServerClient = ConfigureServerClient(clientSection),
         };
         AuthenticationPostProcessor = openIddictSection.GetValue("AuthenticationPostProcessor", "");
-        AccessTokenIssuer = openIddictSection.GetStringOrThrow("AccessTokenIssuer");
+        AccessTokenIssuer = openIddictSection.GetValue("AccessTokenIssuer", "");
     }
 
     private ServerClient ConfigureServerClient(IConfigurationSection identityServerSection)
