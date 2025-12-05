@@ -23,6 +23,7 @@ import {
   EditorType,
   IApiEditorProperty,
   IArchitectApi,
+  IDeploymentScriptsGeneratorEditorData,
   IScreenEditorData,
   ISectionEditorData,
 } from '@api/IArchitectApi';
@@ -30,6 +31,8 @@ import { IEditorState } from '@components/editorTabView/IEditorState';
 import { EditorData } from '@components/modelTree/EditorData';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
+import DeploymentScriptsGeneratorEditor from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
+import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
@@ -54,6 +57,18 @@ export function getEditor(args: {
 }) {
   const { editorType, editorData, propertiesState, architectApi } = args;
   const { node, data, isDirty } = editorData;
+
+  if (editorType === 'DeploymentScriptsGeneratorEditor') {
+    const results = (data as IDeploymentScriptsGeneratorEditorData).results ?? [];
+
+    const editorState = new DeploymentScriptsGeneratorEditorState(
+      editorData.editorId,
+      results,
+      architectApi,
+    );
+
+    return new Editor(editorState, <DeploymentScriptsGeneratorEditor editorState={editorState} />);
+  }
 
   if (editorType === 'DeploymentScriptsEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));

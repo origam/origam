@@ -28,7 +28,7 @@ const Button = ({
   isAnimated,
   onClick,
 }: {
-  title: string;
+  title: string | React.ReactNode;
   type: 'primary' | 'secondary';
   prefix?: React.ReactNode;
   isDisabled?: boolean;
