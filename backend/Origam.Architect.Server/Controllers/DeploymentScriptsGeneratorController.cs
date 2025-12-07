@@ -37,66 +37,61 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class DeploymentScriptsGeneratorController(
     IPersistenceService persistenceService,
-    SchemaService schemaService,
-    IWebHostEnvironment environment,
-    ILogger<DeploymentScriptsGeneratorController> log
-) : OrigamController(log, environment)
+    SchemaService schemaService
+) : ControllerBase
 {
     [HttpPost("List")]
     public IActionResult List([Required] [FromBody] ListRequestModel requestModel)
     {
-        return RunWithErrorHandler(() =>
+        GuardIsActiveExtensionSet();
+
+        SecurityManager.SetServerIdentity();
+
+        var platform = ResolvePlatform(requestModel.Platform);
+        var dbCompareResults = CompareSchemaForPlatform(platform);
+
+        var deploymentVersions = schemaService
+            .GetProvider<DeploymentSchemaItemProvider>()
+            .ChildItems.Cast<DeploymentVersion>()
+            .OrderBy(deploymentVersion => deploymentVersion.Version);
+
+        List<SchemaDeploymentVersionDto> possibleDeploymentVersions = [];
+        DeploymentVersion currentVersion = null;
+        foreach (DeploymentVersion version in deploymentVersions)
         {
-            GuardIsActiveExtensionSet();
-
-            SecurityManager.SetServerIdentity();
-
-            var platform = ResolvePlatform(requestModel.Platform);
-            var dbCompareResults = CompareSchemaForPlatform(platform);
-
-            var deploymentVersions = schemaService
-                .GetProvider<DeploymentSchemaItemProvider>()
-                .ChildItems.Cast<DeploymentVersion>()
-                .OrderBy(deploymentVersion => deploymentVersion.Version);
-
-            List<SchemaDeploymentVersionDto> possibleDeploymentVersions = [];
-            DeploymentVersion currentVersion = null;
-            foreach (DeploymentVersion version in deploymentVersions)
+            if (version.Package.PrimaryKey.Equals(schemaService.ActiveExtension.PrimaryKey))
             {
-                if (version.Package.PrimaryKey.Equals(schemaService.ActiveExtension.PrimaryKey))
+                if (version.IsCurrentVersion)
                 {
-                    if (version.IsCurrentVersion)
-                    {
-                        currentVersion = version;
-                    }
-
-                    possibleDeploymentVersions.Add(
-                        new SchemaDeploymentVersionDto { Id = version.Id, Name = version.Name }
-                    );
+                    currentVersion = version;
                 }
+
+                possibleDeploymentVersions.Add(
+                    new SchemaDeploymentVersionDto { Id = version.Id, Name = version.Name }
+                );
             }
+        }
 
-            var response = new ListResponseModel
-            {
-                CurrentDeploymentVersionId = currentVersion != null ? currentVersion.Id : null,
-                DeploymentVersions = possibleDeploymentVersions,
-                Results = dbCompareResults
-                    .Select(result => new SchemaDbCompareResultDto
-                    {
-                        SchemaItemId = result.SchemaItem?.Id.ToString() ?? string.Empty,
-                        SchemaItemType = result.SchemaItemType?.Name ?? string.Empty,
-                        ResultType = result.ResultType.ToString(),
-                        ItemName = result.ItemName ?? string.Empty,
-                        Remark = result.Remark ?? string.Empty,
-                        Script = result.Script ?? string.Empty,
-                        Script2 = result.Script2 ?? string.Empty,
-                        PlatformName = result.Platform?.Name ?? string.Empty,
-                    })
-                    .ToList(),
-            };
+        var response = new ListResponseModel
+        {
+            CurrentDeploymentVersionId = currentVersion != null ? currentVersion.Id : null,
+            DeploymentVersions = possibleDeploymentVersions,
+            Results = dbCompareResults
+                .Select(result => new SchemaDbCompareResultDto
+                {
+                    SchemaItemId = result.SchemaItem?.Id.ToString() ?? string.Empty,
+                    SchemaItemType = result.SchemaItemType?.Name ?? string.Empty,
+                    ResultType = result.ResultType.ToString(),
+                    ItemName = result.ItemName ?? string.Empty,
+                    Remark = result.Remark ?? string.Empty,
+                    Script = result.Script ?? string.Empty,
+                    Script2 = result.Script2 ?? string.Empty,
+                    PlatformName = result.Platform?.Name ?? string.Empty,
+                })
+                .ToList(),
+        };
 
-            return Ok(response);
-        });
+        return Ok(response);
     }
 
     [HttpPost("ProcessSelection")]
@@ -104,30 +99,26 @@ public class DeploymentScriptsGeneratorController(
         [Required] [FromBody] ProcessSelectionRequestModel requestModel
     )
     {
-        return RunWithErrorHandler(() =>
+        GuardIsActiveExtensionSet();
+
+        SecurityManager.SetServerIdentity();
+
+        var platform = ResolvePlatform(requestModel.Platform);
+
+        var requiredVersion = persistenceService.SchemaProvider.RetrieveInstance<DeploymentVersion>(
+            requestModel.DeploymentVersionId,
+            useCache: false
+        );
+
+        if (requiredVersion is null)
         {
-            GuardIsActiveExtensionSet();
+            return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
+        }
 
-            SecurityManager.SetServerIdentity();
+        var selectedResults = GetSchemaDbCompareResults(requestModel, platform);
+        RunAllDeploymentActivities(requiredVersion, selectedResults);
 
-            var platform = ResolvePlatform(requestModel.Platform);
-
-            var requiredVersion =
-                persistenceService.SchemaProvider.RetrieveInstance<DeploymentVersion>(
-                    requestModel.DeploymentVersionId,
-                    useCache: false
-                );
-
-            if (requiredVersion is null)
-            {
-                return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
-            }
-
-            var selectedResults = GetSchemaDbCompareResults(requestModel, platform);
-            RunAllDeploymentActivities(requiredVersion, selectedResults);
-
-            return Ok();
-        });
+        return Ok();
     }
 
     private List<SchemaDbCompareResult> GetSchemaDbCompareResults(
