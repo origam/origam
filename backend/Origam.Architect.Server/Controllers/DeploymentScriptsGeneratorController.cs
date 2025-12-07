@@ -121,6 +121,12 @@ public class DeploymentScriptsGeneratorController(
         return Ok();
     }
 
+    [HttpPost("AddToModel")]
+    public IActionResult AddToModel([Required] [FromBody] AddToModelRequestModel requestModel)
+    {
+        throw new NotImplementedException();
+    }
+
     private List<SchemaDbCompareResult> GetSchemaDbCompareResults(
         AddToDeploymentRequestModel requestModel,
         Platform platform
