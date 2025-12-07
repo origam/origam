@@ -63,11 +63,7 @@ const DeploymentScriptsGeneratorEditor = observer(
                             </>
                           }
                           type="primary"
-                          isDisabled={
-                            editorState.selectedItems.size === 0 ||
-                            !editorState.currentDeploymentVersionId ||
-                            !editorState.getSelectedPlatform()
-                          }
+                          isDisabled={!editorState.isAddToDeploymentReady()}
                           onClick={() => editorState.addToDeployment()}
                         />
                       </>

@@ -96,6 +96,23 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     return selectedResults[0].platformName;
   }
 
+  isAddToDeploymentReady(): boolean {
+    if (this.selectedItems.size === 0) {
+      return false;
+    }
+    if (!this.currentDeploymentVersionId) {
+      return false;
+    }
+    const platform = this.getSelectedPlatform();
+    if (!platform) {
+      return false;
+    }
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.every(
+      r => r.resultType === 'MissingInDatabase' || r.resultType === 'ExistingButDifferent',
+    );
+  }
+
   addToDeployment = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
     const platform = this.getSelectedPlatform();
     if (!platform || !this.currentDeploymentVersionId) {
