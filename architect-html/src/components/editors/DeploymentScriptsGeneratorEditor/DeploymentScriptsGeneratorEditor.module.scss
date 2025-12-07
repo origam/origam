@@ -81,6 +81,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
           }
         }
       }
+
+      .headerWithFilter {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .filterSelect {
+          font-size: 11px;
+          padding: 0.125rem 0.25rem;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          background-color: #fff;
+          cursor: pointer;
+
+          &:focus {
+            outline: none;
+            border-color: #007bff;
+          }
+        }
+      }
     }
   }
 }

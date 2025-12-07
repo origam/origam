@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IEditorState } from '@/components/editorTabView/IEditorState';
 import { ModelTreeState } from '@/components/modelTree/ModelTreeState';
 import { IArchitectApi, IDatabaseResult, IDeploymentVersion } from '@api/IArchitectApi';
-import { flow, observable } from 'mobx';
+import { computed, flow, observable } from 'mobx';
 
 export default class DeploymentScriptsGeneratorEditorState implements IEditorState {
   @observable accessor results: IDatabaseResult[];
@@ -29,8 +29,18 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   @observable accessor selectedItems: Set<string> = new Set();
   @observable accessor possibleDeploymentVersions: IDeploymentVersion[];
   @observable accessor currentDeploymentVersionId: string | null;
+  @observable accessor resultFilter: string = 'MissingInDatabase';
 
   label = 'Deployment Scripts Generator';
+
+  @computed get uniqueResultTypes(): string[] {
+    const types = new Set(this.results.map(r => r.resultType).filter(Boolean));
+    return Array.from(types).sort();
+  }
+
+  @computed get filteredResults(): IDatabaseResult[] {
+    return this.results.filter(r => r.resultType === this.resultFilter);
+  }
   isDirty = false;
 
   constructor(
@@ -60,7 +70,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
 
   selectAll() {
     this.selectedItems = new Set(
-      this.results.filter(item => item.schemaItemId).map(item => item.schemaItemId!),
+      this.filteredResults.filter(item => item.schemaItemId).map(item => item.schemaItemId!),
     );
   }
 

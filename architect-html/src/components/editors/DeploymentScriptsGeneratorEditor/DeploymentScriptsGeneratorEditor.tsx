@@ -42,7 +42,7 @@ const DeploymentScriptsGeneratorEditor = observer(
                     title={T(
                       'Deployment scripts: ({0})',
                       'editor_DeploymentScriptsGenerator_ActionPanelTitle_List',
-                      editorState.results.length,
+                      editorState.filteredResults.length,
                     )}
                     buttons={
                       <>
@@ -83,7 +83,9 @@ const DeploymentScriptsGeneratorEditor = observer(
                             <input
                               type="checkbox"
                               checked={
-                                editorState.selectedItems.size === editorState.results.length
+                                editorState.selectedItems.size ===
+                                  editorState.filteredResults.length &&
+                                editorState.filteredResults.length > 0
                               }
                               onChange={e => {
                                 if (e.target.checked) {
@@ -94,7 +96,24 @@ const DeploymentScriptsGeneratorEditor = observer(
                               }}
                             />
                           </th>
-                          <th>{T('Result', 'editor_DeploymentScriptsGenerator_Column_Result')}</th>
+                          <th>
+                            <div className={S.headerWithFilter}>
+                              {T('Result', 'editor_DeploymentScriptsGenerator_Column_Result')}
+                              <select
+                                className={S.filterSelect}
+                                value={editorState.resultFilter}
+                                onChange={e => {
+                                  editorState.resultFilter = e.target.value;
+                                }}
+                              >
+                                {editorState.uniqueResultTypes.map(type => (
+                                  <option key={type} value={type}>
+                                    {type}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </th>
                           <th>
                             {T('Platform', 'editor_DeploymentScriptsGenerator_Column_Platform')}
                           </th>
@@ -109,7 +128,7 @@ const DeploymentScriptsGeneratorEditor = observer(
                         </tr>
                       </thead>
                       <tbody>
-                        {editorState.results.map((x, index) => (
+                        {editorState.filteredResults.map((x, index) => (
                           <tr key={x.schemaItemId || index}>
                             <td>
                               <input
