@@ -18,14 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IEditorState } from '@/components/editorTabView/IEditorState';
-import { IArchitectApi, IDatabaseResult } from '@api/IArchitectApi';
-import { observable } from 'mobx';
+import { ModelTreeState } from '@/components/modelTree/ModelTreeState';
+import { IArchitectApi, IDatabaseResult, IDeploymentVersion } from '@api/IArchitectApi';
+import { flow, observable } from 'mobx';
 
 export default class DeploymentScriptsGeneratorEditorState implements IEditorState {
   @observable accessor results: IDatabaseResult[];
   @observable accessor isSaving = false;
   @observable accessor isActive = false;
   @observable accessor selectedItems: Set<string> = new Set();
+  @observable accessor possibleDeploymentVersions: IDeploymentVersion[];
+  @observable accessor currentDeploymentVersionId: string | null;
 
   label = 'Deployment Scripts Generator';
   isDirty = false;
@@ -33,9 +36,14 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   constructor(
     public editorId: string,
     results: IDatabaseResult[],
+    possibleDeploymentVersions: IDeploymentVersion[],
+    currentDeploymentVersionId: string | null,
     protected architectApi: IArchitectApi,
+    protected modelTreeState: ModelTreeState,
   ) {
     this.results = results ?? [];
+    this.possibleDeploymentVersions = possibleDeploymentVersions ?? [];
+    this.currentDeploymentVersionId = currentDeploymentVersionId;
   }
 
   save(): Generator<Promise<any>, void, any> {
@@ -63,4 +71,33 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   isSelected(schemaItemId: string): boolean {
     return this.selectedItems.has(schemaItemId);
   }
+
+  getSelectedPlatform(): string | null {
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    if (selectedResults.length === 0) {
+      return null;
+    }
+
+    const platforms = new Set(selectedResults.map(r => r.platformName));
+    if (platforms.size !== 1) {
+      return null;
+    }
+
+    return selectedResults[0].platformName;
+  }
+
+  addToDeployment = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    const platform = this.getSelectedPlatform();
+    if (!platform || !this.currentDeploymentVersionId) {
+      return;
+    }
+
+    yield this.architectApi.addToDeployment({
+      platform,
+      deploymentVersionId: this.currentDeploymentVersionId,
+      schemaItemIds: Array.from(this.selectedItems),
+    });
+
+    yield* this.modelTreeState.loadPackageNodes();
+  });
 }

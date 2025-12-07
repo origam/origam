@@ -65,10 +65,12 @@ const DeploymentScriptsGeneratorEditor = observer(
                             </>
                           }
                           type="primary"
-                          isDisabled
-                          onClick={function (): void {
-                            throw new Error('Function not implemented.');
-                          }}
+                          isDisabled={
+                            editorState.selectedItems.size === 0 ||
+                            !editorState.currentDeploymentVersionId ||
+                            !editorState.getSelectedPlatform()
+                          }
+                          onClick={() => editorState.addToDeployment()}
                         />
                       </>
                     }

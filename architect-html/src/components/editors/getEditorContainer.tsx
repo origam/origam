@@ -28,6 +28,7 @@ import {
   ISectionEditorData,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
 import DeploymentScriptsGeneratorEditor from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
@@ -55,18 +56,25 @@ export function getEditorContainer(args: {
   editorData: EditorData;
   propertiesState: PropertiesState;
   architectApi: IArchitectApi;
+  modelTreeState: ModelTreeState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
-  const { editorType, editorData, propertiesState, architectApi } = args;
+  const { editorType, editorData, propertiesState, architectApi, modelTreeState } = args;
   const { node, data, isDirty } = editorData;
 
   if (editorType === 'DeploymentScriptsGeneratorEditor') {
-    const results = (data as IDeploymentScriptsGeneratorEditorData).results ?? [];
+    const editorDataTyped = data as IDeploymentScriptsGeneratorEditorData;
+    const results = editorDataTyped.results ?? [];
+    const possibleDeploymentVersions = editorDataTyped.possibleDeploymentVersions ?? [];
+    const currentDeploymentVersionId = editorDataTyped.currentDeploymentVersionId ?? null;
 
     const editorState = new DeploymentScriptsGeneratorEditorState(
       editorData.editorId,
       results,
+      possibleDeploymentVersions,
+      currentDeploymentVersionId,
       architectApi,
+      modelTreeState,
     );
 
     return new Editor(editorState, <DeploymentScriptsGeneratorEditor editorState={editorState} />);

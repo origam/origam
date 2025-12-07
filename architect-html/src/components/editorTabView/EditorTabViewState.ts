@@ -63,6 +63,7 @@ export class EditorTabViewState {
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
+      modelTreeState: this.rootStore.modelTreeState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
   }
@@ -130,6 +131,7 @@ export class EditorTabViewState {
       editorData: editorData,
       propertiesState: this.rootStore.propertiesState,
       architectApi: this.architectApi,
+      modelTreeState: this.rootStore.modelTreeState,
       runGeneratorHandled: this.runGeneratorHandled,
     });
     if (!editor) {
