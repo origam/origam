@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+  IAddToDeploymentRequest,
   IApiControl,
   IApiEditorData,
   IApiTreeNode,
@@ -281,6 +282,10 @@ export class ArchitectApi implements IArchitectApi {
         platform,
       })
     ).data;
+  }
+
+  async addToDeployment(request: IAddToDeploymentRequest): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToDeployment', request);
   }
 }
 

@@ -94,9 +94,9 @@ public class DeploymentScriptsGeneratorController(
         return Ok(response);
     }
 
-    [HttpPost("ProcessSelection")]
-    public IActionResult ProcessSelection(
-        [Required] [FromBody] ProcessSelectionRequestModel requestModel
+    [HttpPost("AddToDeployment")]
+    public IActionResult AddToDeployment(
+        [Required] [FromBody] AddToDeploymentRequestModel requestModel
     )
     {
         GuardIsActiveExtensionSet();
@@ -122,7 +122,7 @@ public class DeploymentScriptsGeneratorController(
     }
 
     private List<SchemaDbCompareResult> GetSchemaDbCompareResults(
-        ProcessSelectionRequestModel requestModel,
+        AddToDeploymentRequestModel requestModel,
         Platform platform
     )
     {

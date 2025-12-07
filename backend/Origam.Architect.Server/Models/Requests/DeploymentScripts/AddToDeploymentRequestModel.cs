@@ -23,7 +23,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origam.Architect.Server.Models.Requests.DeploymentScripts;
 
-public class ProcessSelectionRequestModel
+public class AddToDeploymentRequestModel
 {
     [Required]
     public string Platform { get; set; } = string.Empty;
