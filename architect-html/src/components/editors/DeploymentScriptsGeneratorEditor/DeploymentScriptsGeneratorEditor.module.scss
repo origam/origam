@@ -30,6 +30,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       margin: 0 1rem 1rem;
     }
 
+    .deploymentControls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      align-items: flex-end;
+
+      .controlLabel {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 12px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .controlSelect {
+        border: 1px solid red;
+        font-size: 12px;
+        padding: 0.25rem 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        background-color: #fff;
+        cursor: pointer;
+        min-width: 150px;
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+    }
+
     .tableWrapper {
       flex: 1;
       min-width: 0;

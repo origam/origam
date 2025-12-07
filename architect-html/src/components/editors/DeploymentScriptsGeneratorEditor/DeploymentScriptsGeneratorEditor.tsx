@@ -60,16 +60,59 @@ const DeploymentScriptsGeneratorEditor = observer(
                         )}
                         {(editorState.resultFilter === 'MissingInDatabase' ||
                           editorState.resultFilter === 'ExistingButDifferent') && (
-                          <Button
-                            title={
-                              <>
-                                Add to <strong>Deployment</strong>
-                              </>
-                            }
-                            type="primary"
-                            isDisabled={!editorState.isAddToDeploymentReady()}
-                            onClick={() => editorState.addToDeployment()}
-                          />
+                          <>
+                            <div className={S.deploymentControls}>
+                              <label className={S.controlLabel}>
+                                {T(
+                                  'Platform',
+                                  'editor_DeploymentScriptsGenerator_AddToDeploymentLabel_Platform',
+                                )}
+                                <select
+                                  className={S.controlSelect}
+                                  value={editorState.selectedPlatform ?? ''}
+                                  onChange={e => {
+                                    editorState.selectedPlatform = e.target.value || null;
+                                  }}
+                                >
+                                  {editorState.uniquePlatforms.map(platform => (
+                                    <option key={platform} value={platform}>
+                                      {platform}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+                              <label className={S.controlLabel}>
+                                {T(
+                                  'Deployment Version',
+                                  'editor_DeploymentScriptsGenerator_AddToDeploymentLabel_DeploymentVersion',
+                                )}
+                                <select
+                                  className={S.controlSelect}
+                                  value={editorState.selectedDeploymentVersionId ?? ''}
+                                  onChange={e => {
+                                    editorState.selectedDeploymentVersionId =
+                                      e.target.value || null;
+                                  }}
+                                >
+                                  {editorState.possibleDeploymentVersions.map(version => (
+                                    <option key={version.id} value={version.id}>
+                                      {version.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+                            </div>
+                            <Button
+                              title={
+                                <>
+                                  Add to <strong>Deployment</strong>
+                                </>
+                              }
+                              type="primary"
+                              isDisabled={!editorState.isAddToDeploymentReady()}
+                              onClick={() => editorState.addToDeployment()}
+                            />
+                          </>
                         )}
                       </>
                     }

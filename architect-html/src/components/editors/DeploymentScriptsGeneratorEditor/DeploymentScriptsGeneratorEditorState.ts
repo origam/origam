@@ -30,6 +30,8 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   @observable accessor possibleDeploymentVersions: IDeploymentVersion[];
   @observable accessor currentDeploymentVersionId: string | null;
   @observable accessor resultFilter: string = 'MissingInDatabase';
+  @observable accessor selectedDeploymentVersionId: string | null = null;
+  @observable accessor selectedPlatform: string | null = null;
 
   label = 'Deployment Scripts Generator';
 
@@ -41,6 +43,12 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   @computed get filteredResults(): IDatabaseResult[] {
     return this.results.filter(r => r.resultType === this.resultFilter);
   }
+
+  @computed get uniquePlatforms(): string[] {
+    const platforms = new Set(this.results.map(r => r.platformName).filter(Boolean));
+    return Array.from(platforms).sort();
+  }
+
   isDirty = false;
 
   constructor(
@@ -54,6 +62,10 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     this.results = results ?? [];
     this.possibleDeploymentVersions = possibleDeploymentVersions ?? [];
     this.currentDeploymentVersionId = currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = currentDeploymentVersionId;
+    if (this.uniquePlatforms.length > 0) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
   }
 
   save(): Generator<Promise<any>, void, any> {
@@ -100,11 +112,10 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     if (this.selectedItems.size === 0) {
       return false;
     }
-    if (!this.currentDeploymentVersionId) {
+    if (!this.selectedDeploymentVersionId) {
       return false;
     }
-    const platform = this.getSelectedPlatform();
-    if (!platform) {
+    if (!this.selectedPlatform) {
       return false;
     }
     const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
@@ -114,14 +125,13 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   }
 
   addToDeployment = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
-    const platform = this.getSelectedPlatform();
-    if (!platform || !this.currentDeploymentVersionId) {
+    if (!this.selectedPlatform || !this.selectedDeploymentVersionId) {
       return;
     }
 
     yield this.architectApi.addToDeployment({
-      platform,
-      deploymentVersionId: this.currentDeploymentVersionId,
+      platform: this.selectedPlatform,
+      deploymentVersionId: this.selectedDeploymentVersionId,
       schemaItemIds: Array.from(this.selectedItems),
     });
 
