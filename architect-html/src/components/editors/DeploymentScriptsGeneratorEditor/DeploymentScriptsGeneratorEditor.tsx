@@ -53,10 +53,8 @@ const DeploymentScriptsGeneratorEditor = observer(
                             </>
                           }
                           type="primary"
-                          isDisabled
-                          onClick={function (): void {
-                            throw new Error('Function not implemented.');
-                          }}
+                          isDisabled={!editorState.canAddToModel()}
+                          onClick={() => editorState.addToModel()}
                         />
                         <Button
                           title={

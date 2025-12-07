@@ -117,6 +117,7 @@ export interface IArchitectApi {
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
   fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
   addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
+  addToModel(request: IAddToModelRequest): Promise<void>;
 }
 
 export interface ITransformationInput {
@@ -165,6 +166,11 @@ export interface IDatabaseResultResponse {
 export interface IAddToDeploymentRequest {
   platform: string;
   deploymentVersionId: string;
+  schemaItemIds: string[];
+}
+
+export interface IAddToModelRequest {
+  platform: string;
   schemaItemIds: string[];
 }
 

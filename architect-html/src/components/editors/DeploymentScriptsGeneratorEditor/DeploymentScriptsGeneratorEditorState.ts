@@ -110,4 +110,30 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
 
     yield* this.modelTreeState.loadPackageNodes();
   });
+
+  canAddToModel(): boolean {
+    if (this.selectedItems.size === 0) {
+      return false;
+    }
+    const platform = this.getSelectedPlatform();
+    if (!platform) {
+      return false;
+    }
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.every(r => r.resultType === 'MissingInSchema');
+  }
+
+  addToModel = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    const platform = this.getSelectedPlatform();
+    if (!platform) {
+      return;
+    }
+
+    yield this.architectApi.addToModel({
+      platform,
+      schemaItemIds: Array.from(this.selectedItems),
+    });
+
+    yield* this.modelTreeState.loadPackageNodes();
+  });
 }

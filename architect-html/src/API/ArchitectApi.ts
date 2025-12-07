@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   IAddToDeploymentRequest,
+  IAddToModelRequest,
   IApiControl,
   IApiEditorData,
   IApiTreeNode,
@@ -286,6 +287,10 @@ export class ArchitectApi implements IArchitectApi {
 
   async addToDeployment(request: IAddToDeploymentRequest): Promise<void> {
     await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToDeployment', request);
+  }
+
+  async addToModel(request: IAddToModelRequest): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToModel', request);
   }
 }
 
