@@ -46,26 +46,31 @@ const DeploymentScriptsGeneratorEditor = observer(
                     )}
                     buttons={
                       <>
-                        <Button
-                          title={
-                            <>
-                              Add to <strong>Model</strong>
-                            </>
-                          }
-                          type="primary"
-                          isDisabled={!editorState.isAddToModelReady()}
-                          onClick={() => editorState.addToModel()}
-                        />
-                        <Button
-                          title={
-                            <>
-                              Add to <strong>Deployment</strong>
-                            </>
-                          }
-                          type="primary"
-                          isDisabled={!editorState.isAddToDeploymentReady()}
-                          onClick={() => editorState.addToDeployment()}
-                        />
+                        {editorState.resultFilter === 'MissingInSchema' && (
+                          <Button
+                            title={
+                              <>
+                                Add to <strong>Model</strong>
+                              </>
+                            }
+                            type="primary"
+                            isDisabled={!editorState.isAddToModelReady()}
+                            onClick={() => editorState.addToModel()}
+                          />
+                        )}
+                        {(editorState.resultFilter === 'MissingInDatabase' ||
+                          editorState.resultFilter === 'ExistingButDifferent') && (
+                          <Button
+                            title={
+                              <>
+                                Add to <strong>Deployment</strong>
+                              </>
+                            }
+                            type="primary"
+                            isDisabled={!editorState.isAddToDeploymentReady()}
+                            onClick={() => editorState.addToDeployment()}
+                          />
+                        )}
                       </>
                     }
                   />
