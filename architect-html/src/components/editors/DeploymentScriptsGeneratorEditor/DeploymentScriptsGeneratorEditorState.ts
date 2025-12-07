@@ -128,7 +128,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     yield* this.modelTreeState.loadPackageNodes();
   });
 
-  canAddToModel(): boolean {
+  isAddToModelReady(): boolean {
     if (this.selectedItems.size === 0) {
       return false;
     }

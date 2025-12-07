@@ -53,7 +53,7 @@ const DeploymentScriptsGeneratorEditor = observer(
                             </>
                           }
                           type="primary"
-                          isDisabled={!editorState.canAddToModel()}
+                          isDisabled={!editorState.isAddToModelReady()}
                           onClick={() => editorState.addToModel()}
                         />
                         <Button
