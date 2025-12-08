@@ -102,6 +102,7 @@ public class AsRadioButton : RadioButton, IAsControl
     /// have the same value. The radio button will only be checked if the value equals to the
     /// data constant specifed under ValueConstant.
     /// </summary>
+    [Browsable(false)]
     public object Value
     {
         get { return _value; }
@@ -116,7 +117,10 @@ public class AsRadioButton : RadioButton, IAsControl
             try
             {
                 _value = value;
-                this.Checked = this.Value != null && this.Value.Equals(GetValue());
+
+                // This causes all radiobuttons to be unchecked at all times.
+                // That is ok in architect. The desktop client is not supported/used anymore.
+                this.Checked = false;
                 OnValueChanged();
             }
             finally

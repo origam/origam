@@ -39,9 +39,8 @@ public class EditorController(
     TreeNodeFactory treeNodeFactory,
     EditorService editorService,
     DocumentationHelperService documentationHelper,
-    IWebHostEnvironment environment,
     ILogger<OrigamController> log
-) : OrigamController(log, environment)
+) : OrigamController(log)
 {
     [HttpPost("CreateNode")]
     public OpenEditorData CreateNode([Required] [FromBody] NewItemModel input)
@@ -62,57 +61,51 @@ public class EditorController(
     [HttpGet("GetOpenEditors")]
     public IActionResult GetOpenEditors()
     {
-        return RunWithErrorHandler(() =>
-        {
-            var items = editorService
-                .GetOpenEditors()
-                .Select(editor =>
-                {
-                    var item = editor.Item;
-                    TreeNode treeNode = treeNodeFactory.Create(item);
+        var items = editorService
+            .GetOpenEditors()
+            .Select(editor =>
+            {
+                var item = editor.Item;
+                TreeNode treeNode = treeNodeFactory.Create(item);
 
-                    return editor.Id.Type switch
-                    {
-                        EditorType.Default => new OpenEditorData(
-                            editorId: editor.Id,
-                            node: treeNode,
-                            data: GetData(treeNode, item),
-                            isPersisted: item.IsPersisted,
-                            parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
-                            isDirty: editor.IsDirty
-                        ),
-                        EditorType.DocumentationEditor => new OpenEditorData(
-                            editorId: editor.Id,
-                            node: treeNode,
-                            data: documentationHelper.GetData(editor.DocumentationData, item.Name),
-                            isPersisted: item.IsPersisted,
-                            isDirty: editor.IsDirty
-                        ),
-                        _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
-                    };
-                })
-                .ToList();
-            return Ok(items);
-        });
+                return editor.Id.Type switch
+                {
+                    EditorType.Default => new OpenEditorData(
+                        editorId: editor.Id,
+                        node: treeNode,
+                        data: GetData(treeNode, item),
+                        isPersisted: item.IsPersisted,
+                        parentNodeId: TreeNode.ToTreeNodeId(item.ParentItem),
+                        isDirty: editor.IsDirty
+                    ),
+                    EditorType.DocumentationEditor => new OpenEditorData(
+                        editorId: editor.Id,
+                        node: treeNode,
+                        data: documentationHelper.GetData(editor.DocumentationData, item.Name),
+                        isPersisted: item.IsPersisted,
+                        isDirty: editor.IsDirty
+                    ),
+                    _ => throw new Exception("Unknown editor type: " + editor.Id.Type),
+                };
+            })
+            .ToList();
+        return Ok(items);
     }
 
     [HttpPost("OpenEditor")]
     public IActionResult OpenEditor([Required] [FromBody] OpenEditorModel input)
     {
-        return RunWithErrorHandler(() =>
-        {
-            EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
-            ISchemaItem item = editor.Item;
-            TreeNode treeNode = treeNodeFactory.Create(item);
+        EditorData editor = editorService.OpenDefaultEditor(input.SchemaItemId);
+        ISchemaItem item = editor.Item;
+        TreeNode treeNode = treeNodeFactory.Create(item);
 
-            var openEditorData = new OpenEditorData(
-                editorId: editor.Id,
-                node: treeNode,
-                data: GetData(treeNode, item),
-                isPersisted: true
-            );
-            return Ok(openEditorData);
-        });
+        var openEditorData = new OpenEditorData(
+            editorId: editor.Id,
+            node: treeNode,
+            data: GetData(treeNode, item),
+            isPersisted: true
+        );
+        return Ok(openEditorData);
     }
 
     private object GetData(TreeNode treeNode, ISchemaItem item)
@@ -130,38 +123,32 @@ public class EditorController(
     }
 
     [HttpPost("CloseEditor")]
-    public void CloseEditor([Required] [FromBody] CloseEditorModel input)
+    public IActionResult CloseEditor([Required] [FromBody] CloseEditorModel input)
     {
-        RunWithErrorHandler(() =>
-        {
-            editorService.CloseEditor(input.GetTypedEditorId());
-            return Ok();
-        });
+        editorService.CloseEditor(input.GetTypedEditorId());
+        return Ok();
     }
 
     [HttpPost("PersistChanges")]
     public IActionResult PersistChanges([FromBody] PersistModel input)
     {
-        return RunWithErrorHandler(() =>
+        EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
+        ISchemaItem item = editorData.Item;
+        if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
         {
-            EditorData editorData = editorService.OpenDefaultEditor(input.SchemaItemId);
-            ISchemaItem item = editorData.Item;
-            if (item is AbstractControlSet controlSet && controlSet.DataSourceId == Guid.Empty)
-            {
-                return BadRequest("No Datasource selected can't save");
-            }
+            return BadRequest("No Datasource selected can't save");
+        }
 
-            try
-            {
-                persistenceService.SchemaProvider.BeginTransaction();
-                item.Persist();
-                editorData.IsDirty = false;
-                return Ok();
-            }
-            finally
-            {
-                persistenceService.SchemaProvider.EndTransaction();
-            }
-        });
+        try
+        {
+            persistenceService.SchemaProvider.BeginTransaction();
+            item.Persist();
+            editorData.IsDirty = false;
+            return Ok();
+        }
+        finally
+        {
+            persistenceService.SchemaProvider.EndTransaction();
+        }
     }
 }

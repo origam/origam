@@ -286,6 +286,10 @@
               <File Id="NEWTONSOFT.JSON.DLL" Name="Newtonsoft.Json.dll" Source="source\Newtonsoft.Json.dll">
               </File>
             </Component>
+            <Component Id="MICROSOFT.DATA.SQLCLIENT.DLL" DiskId="1" Guid="6B1E9C2E-0B6E-4A2B-A8D4-9E6BF94E9F3C">
+              <File Id="MICROSOFT.DATA.SQLCLIENT.DLL" Name="Microsoft.Data.SqlClient.dll" Source="source\Microsoft.Data.SqlClient.dll">
+              </File>
+            </Component>
             <Component Id="NPGSQL.DLL" DiskId="1" Guid="16966EAC-430D-4F97-8D79-BA9F34E8FCCD">
               <File Id="NPGSQL.DLL" Name="Npgsql.dll" Source="source\Npgsql.dll">
               </File>
@@ -771,6 +775,8 @@
       <ComponentRef Id="MAILKIT.DLL">
       </ComponentRef>
       <ComponentRef Id="NEWTONSOFT.JSON.DLL">
+      </ComponentRef>
+      <ComponentRef Id="MICROSOFT.DATA.SQLCLIENT.DLL">
       </ComponentRef>
       <ComponentRef Id="NPGSQL.DLL">
       </ComponentRef>

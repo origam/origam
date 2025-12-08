@@ -48,7 +48,7 @@ There are automated code checks and tests for each pull request. If they don't p
 
 ## Coding conventions
 
-The coding conventions are W.I.P. and will be published later. At the moment the new code should follow the convention of the class/file it is contributed to. The comments should be used only to explain the motivation for the used solution when it is not clear.
+The coding conventions are enforced by linting in most parts of the project, and the details should be published in the README files in the respective sections. Where linting is not yet implemented, new code should follow the conventions of the class or file it is added to. Comments should be used only to explain the motivation behind the chosen solution when it is not immediately clear.
 The new files should contain licensing information:
 ```
 Copyright 2005 - 2022 Advantage Solutions, s. r. o.
