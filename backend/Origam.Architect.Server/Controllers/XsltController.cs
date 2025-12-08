@@ -27,78 +27,69 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class XsltController(
-    XsltService xsltService,
-    IWebHostEnvironment environment,
-    ILogger<OrigamController> log
-) : OrigamController(log, environment)
+public class XsltController(XsltService xsltService, ILogger<OrigamController> log)
+    : OrigamController(log)
 {
     [HttpPost("Validate")]
     public IActionResult Validate([FromBody] XsltValidateModel model)
     {
-        return RunWithErrorHandler(() =>
-        {
-            var input = new TransformationInput(
-                SchemaItemId: model.SchemaItemId,
-                SourceDataStructureId: model.SourceDataStructureId,
-                TargetDataStructureId: model.TargetDataStructureId,
-                RuleSetId: model.RuleSetId,
-                InputXml: "<ROOT/>",
-                Parameters: null
-            );
-            ValidationResult result = xsltService.Validate(input);
-            return Ok(
-                new ValidationResponse
-                {
-                    Text = result.Text,
-                    Title = result.Title,
-                    Xml = result.Xml,
-                    Output = result.Output,
-                }
-            );
-        });
+        var input = new TransformationInput(
+            SchemaItemId: model.SchemaItemId,
+            SourceDataStructureId: model.SourceDataStructureId,
+            TargetDataStructureId: model.TargetDataStructureId,
+            RuleSetId: model.RuleSetId,
+            InputXml: "<ROOT/>",
+            Parameters: null
+        );
+        ValidationResult result = xsltService.Validate(input);
+        return Ok(
+            new ValidationResponse
+            {
+                Text = result.Text,
+                Title = result.Title,
+                Xml = result.Xml,
+                Output = result.Output,
+            }
+        );
     }
 
     [HttpPost("Transform")]
     public IActionResult Transform([FromBody] XsltTransformModel model)
     {
-        return RunWithErrorHandler(() =>
-        {
-            var input = new TransformationInput(
-                SchemaItemId: model.SchemaItemId,
-                SourceDataStructureId: model.SourceDataStructureId,
-                TargetDataStructureId: model.TargetDataStructureId,
-                RuleSetId: model.RuleSetId,
-                InputXml: model.InputXml,
-                Parameters:
-                [
-                    .. model.Parameters.Select(x => new ParameterData(
-                        name: x.Name,
-                        type: x.Type,
-                        textValue: x.Value
-                    )),
-                ]
-            );
-            TransformationResult result = xsltService.Transform(input);
-            return Ok(new TransformationResponse { Output = result.Output, Xml = result.Xml });
-        });
+        var input = new TransformationInput(
+            SchemaItemId: model.SchemaItemId,
+            SourceDataStructureId: model.SourceDataStructureId,
+            TargetDataStructureId: model.TargetDataStructureId,
+            RuleSetId: model.RuleSetId,
+            InputXml: model.InputXml,
+            Parameters:
+            [
+                .. model.Parameters.Select(x => new ParameterData(
+                    name: x.Name,
+                    type: x.Type,
+                    textValue: x.Value
+                )),
+            ]
+        );
+        TransformationResult result = xsltService.Transform(input);
+        return Ok(new TransformationResponse { Output = result.Output, Xml = result.Xml });
     }
 
     [HttpGet("Parameters")]
     public IActionResult Parameters([FromQuery] Guid schemaItemId)
     {
-        return RunWithErrorHandler(() => Ok(xsltService.GetParameters(schemaItemId)));
+        return Ok(xsltService.GetParameters(schemaItemId));
     }
 
     [HttpGet("Settings")]
     public IActionResult Settings()
     {
-        return RunWithErrorHandler(() => Ok(xsltService.GetSettings()));
+        return Ok(xsltService.GetSettings());
     }
 
     [HttpGet("RuleSets")]
     public IActionResult RuleSets([FromQuery] Guid dataStructureId)
     {
-        return RunWithErrorHandler(() => Ok(xsltService.GetRuleSets(dataStructureId)));
+        return Ok(xsltService.GetRuleSets(dataStructureId));
     }
 }
