@@ -290,6 +290,14 @@
               <File Id="MICROSOFT.DATA.SQLCLIENT.DLL" Name="Microsoft.Data.SqlClient.dll" Source="source\Microsoft.Data.SqlClient.dll">
               </File>
             </Component>
+            <Component Id="MICROSOFT.DATA.SQLCLIENT.SNI.X64.DLL" DiskId="1" Guid="5f1d9a47-9c0b-4e4a-9e4d-3a3e8c4f2e6d">
+              <File Id="MICROSOFT.DATA.SQLCLIENT.SNI.X64.DLL" Name="Microsoft.Data.SqlClient.SNI.x64.dll" Source="source\Microsoft.Data.SqlClient.SNI.x64.dll">
+              </File>
+            </Component>
+            <Component Id="MICROSOFT.IDENTITY.CLIENT.DLL" DiskId="1" Guid="c7b3a8f2-44d1-4f9d-9d6b-12e4fa9870bb">
+              <File Id="MICROSOFT.IDENTITY.CLIENT.DLL" Name="Microsoft.Identity.Client.dll" Source="source\Microsoft.Identity.Client.dll">
+              </File>
+            </Component>
             <Component Id="NPGSQL.DLL" DiskId="1" Guid="16966EAC-430D-4F97-8D79-BA9F34E8FCCD">
               <File Id="NPGSQL.DLL" Name="Npgsql.dll" Source="source\Npgsql.dll">
               </File>
@@ -777,6 +785,10 @@
       <ComponentRef Id="NEWTONSOFT.JSON.DLL">
       </ComponentRef>
       <ComponentRef Id="MICROSOFT.DATA.SQLCLIENT.DLL">
+      </ComponentRef>
+      <ComponentRef Id="MICROSOFT.DATA.SQLCLIENT.SNI.X64.DLL">
+      </ComponentRef>
+      <ComponentRef Id="MICROSOFT.IDENTITY.CLIENT.DLL">
       </ComponentRef>
       <ComponentRef Id="NPGSQL.DLL">
       </ComponentRef>
