@@ -516,6 +516,7 @@ public class Startup
         app.UseRequestLocalization(localizationOptions);
 
         app.UseMiddleware<FatalErrorMiddleware>();
+        app.UseMiddleware<OrigamErrorHandlingMiddleware>();
 
         app.UseUserApi(startUpConfiguration, openIddictConfig);
         app.UseWorkQueueApi();

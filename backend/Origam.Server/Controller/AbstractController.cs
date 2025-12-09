@@ -23,12 +23,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
@@ -41,7 +39,6 @@ using Origam.Server.Extensions;
 using Origam.Server.Model;
 using Origam.Server.Model.UIService;
 using Origam.Server.Session_Stores;
-using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -89,72 +86,6 @@ public abstract class AbstractController : ControllerBase
             }
             var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[allowedLookups];
             return lookupIndex;
-        }
-    }
-
-    protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
-    {
-        Task<IActionResult> AsynFunc() => Task.FromResult(func());
-        return RunWithErrorHandlerAsync(AsynFunc).Result;
-    }
-
-    protected async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
-    {
-        object GetReturnObject(Exception ex, string defaultMessage = null)
-        {
-            return environment.IsDevelopment()
-                ? ex
-                : new { message = defaultMessage ?? Resources.GeneralErrorMessage };
-        }
-
-        try
-        {
-            return await func();
-        }
-        catch (SessionExpiredException ex)
-        {
-            return NotFound(GetReturnObject(ex, ex.Message));
-        }
-        catch (RowNotFoundException ex)
-        {
-            object returnObject = new
-            {
-                message = "row not found",
-                exception = environment.IsDevelopment() ? ex : null,
-            };
-            return NotFound(returnObject);
-        }
-        catch (DBConcurrencyException ex)
-        {
-            log.LogError(ex, ex.Message);
-            return StatusCode(409, GetReturnObject(ex));
-        }
-        catch (ServerObjectDisposedException ex)
-        {
-            return StatusCode(474, GetReturnObject(ex)); // Suggests to the client that this error could be ignored
-        }
-        catch (Exception ex)
-        {
-            switch (ex)
-            {
-                case OrigamDataException or OrigamSecurityException:
-                {
-                    return StatusCode(400, GetReturnObject(ex));
-                }
-                case OrigamValidationException:
-                {
-                    return StatusCode(400, GetReturnObject(ex, ex.Message));
-                }
-                case IUserException:
-                {
-                    return StatusCode(420, GetReturnObject(ex, ex.Message));
-                }
-                default:
-                {
-                    log.LogOrigamError(ex, ex.Message);
-                    return StatusCode(500, GetReturnObject(ex));
-                }
-            }
         }
     }
 
