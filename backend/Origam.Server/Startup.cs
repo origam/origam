@@ -232,6 +232,12 @@ public class Startup
             })
             .AddServer(options =>
             {
+                string accessTokenIssuer = openIddictConfig.AccessTokenIssuer;
+                if (!string.IsNullOrWhiteSpace(accessTokenIssuer))
+                {
+                    options.SetIssuer(new Uri(accessTokenIssuer));
+                }
+
                 options
                     .SetAuthorizationEndpointUris("/connect/authorize")
                     .SetTokenEndpointUris("/connect/token")
