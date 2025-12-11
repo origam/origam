@@ -156,7 +156,6 @@ export interface IValidationResult {
   output: string;
 }
 
-
 export interface IDatabaseResultResponse {
   deploymentVersions: IDeploymentVersion[];
   currentDeploymentVersionId: string | null;
