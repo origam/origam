@@ -33,8 +33,7 @@
   "screen_editor_title": "Screen Editor: {0}",
   "transform_button_label": "Transform",
   "validate_button_label": "Validate",
-  "dialog_ok": "Ok"
-  "screen_editor_title": "Screen Editor: {0}",
+  "dialog_ok": "Ok",
   "editor_DeploymentScripts_ActionPanelTitle_Sql": "SQL Editor: {0}",
   "editor_DeploymentScripts_TabLabel_Sql": "SQL",
   "editor_DeploymentScripts_ActionPanelTitle_Settings": "Settings: {0}",

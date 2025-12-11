@@ -179,8 +179,6 @@ export class EditorTabViewState {
         yield this.architectApi.closeEditor(editorId);
       }
 
-      yield this.architectApi.closeEditor(editorId);
-
       if (this.editorsContainers.length > 0) {
         const editorToActivate = this.editorsContainers[this.editorsContainers.length - 1];
         this.setActiveEditor(editorToActivate.state.editorId);
