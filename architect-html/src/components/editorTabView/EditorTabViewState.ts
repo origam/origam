@@ -27,12 +27,12 @@ import {
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
+import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import { EditorContainer } from '@editors/EditorContainer.tsx';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -170,15 +170,19 @@ export class EditorTabViewState {
             break;
         }
       }
+
       this.editorsContainers = this.editorsContainers.filter(
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
-      yield this.architectApi.closeEditor(editorId);
-      if (this.editorsContainers.length > 0) {
-        const editorToActivate = this.editorsContainers[this.editorsContainers.length - 1];
+
       if (editorId !== 'DeploymentScriptsGeneratorEditor-Id') {
         yield this.architectApi.closeEditor(editorId);
       }
+
+      yield this.architectApi.closeEditor(editorId);
+
+      if (this.editorsContainers.length > 0) {
+        const editorToActivate = this.editorsContainers[this.editorsContainers.length - 1];
         this.setActiveEditor(editorToActivate.state.editorId);
       }
     }.bind(this);
