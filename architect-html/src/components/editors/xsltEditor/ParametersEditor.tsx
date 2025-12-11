@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from 'mobx-react-lite';
 import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import { OrigamDataType } from '@api/IArchitectApi.ts';
-import S from '@editors/xsltEditor/ParameterEditor.module.scss';
+import S from '@editors/xsltEditor/ParametersEditor.module.scss';
 
 const ORIGAM_DATA_TYPES: string[] = Object.values(OrigamDataType);
 
