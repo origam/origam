@@ -154,8 +154,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
     if (this.selectedItems.size === 0) {
       return false;
     }
-    const platform = this.getSelectedPlatform();
-    if (!platform) {
+    if (!this.selectedPlatform) {
       return false;
     }
     const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
@@ -163,16 +162,15 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   }
 
   addToModel = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
-    const platform = this.getSelectedPlatform();
-    if (!platform) {
-      return false;
+    if (!this.selectedPlatform) {
+      return;
     }
     const selectedNames = Array.from(this.selectedItems)
       .map(id => this.results.find(r => r.schemaItemId === id)?.itemName)
       .filter((name): name is string => name !== undefined);
 
     yield this.architectApi.addToModel({
-      platform,
+      platform: this.selectedPlatform,
       schemaItemNames: selectedNames,
     });
 

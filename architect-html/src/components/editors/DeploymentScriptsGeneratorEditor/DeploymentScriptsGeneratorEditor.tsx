@@ -47,16 +47,39 @@ const DeploymentScriptsGeneratorEditor = observer(
                     buttons={
                       <>
                         {editorState.resultFilter === 'MissingInSchema' && (
-                          <Button
-                            title={
-                              <>
-                                Add to <strong>Model</strong>
-                              </>
-                            }
-                            type="primary"
-                            isDisabled={!editorState.isAddToModelReady()}
-                            onClick={() => editorState.addToModel()}
-                          />
+                          <>
+                            <div className={S.deploymentControls}>
+                              <label className={S.controlLabel}>
+                                {T(
+                                  'Platform',
+                                  'editor_DeploymentScriptsGenerator_ActionPanelLabel_Platform',
+                                )}
+                                <select
+                                  className={S.controlSelect}
+                                  value={editorState.selectedPlatform ?? ''}
+                                  onChange={e => {
+                                    editorState.selectedPlatform = e.target.value || null;
+                                  }}
+                                >
+                                  {editorState.uniquePlatforms.map(platform => (
+                                    <option key={platform} value={platform}>
+                                      {platform}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
+                            </div>
+                            <Button
+                              title={
+                                <>
+                                  Add to <strong>Model</strong>
+                                </>
+                              }
+                              type="primary"
+                              isDisabled={!editorState.isAddToModelReady()}
+                              onClick={() => editorState.addToModel()}
+                            />
+                          </>
                         )}
                         {(editorState.resultFilter === 'MissingInDatabase' ||
                           editorState.resultFilter === 'ExistingButDifferent') && (
@@ -65,7 +88,7 @@ const DeploymentScriptsGeneratorEditor = observer(
                               <label className={S.controlLabel}>
                                 {T(
                                   'Platform',
-                                  'editor_DeploymentScriptsGenerator_AddToDeploymentLabel_Platform',
+                                  'editor_DeploymentScriptsGenerator_ActionPanelLabel_Platform',
                                 )}
                                 <select
                                   className={S.controlSelect}
