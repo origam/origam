@@ -47,7 +47,7 @@ export class ModelTreeState {
     this.packagesInfo = packagesInfo;
 
     const apiNodes = yield this.architectApi.getTopModelNodes();
-    this.modelNodes = apiNodes.map(node => new TreeNode(node, this.rootStore));
+    this.modelNodes = apiNodes.map((node: any) => new TreeNode(node, this.rootStore));
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {
