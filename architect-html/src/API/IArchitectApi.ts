@@ -170,7 +170,8 @@ export interface IAddToDeploymentRequest {
 }
 
 export interface IAddToModelRequest {
-  schemaItemIds: string[];
+  platform: string;
+  schemaItemNames: string[];
 }
 
 export interface IDeploymentVersion {

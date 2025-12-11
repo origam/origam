@@ -26,5 +26,8 @@ namespace Origam.Architect.Server.Models.Requests.DeploymentScripts;
 public class AddToModelRequestModel
 {
     [Required]
-    public List<string> SchemaItemIds { get; set; } = [];
+    public string Platform { get; set; } = string.Empty;
+
+    [Required]
+    public List<string> SchemaItemNames { get; set; } = [];
 }

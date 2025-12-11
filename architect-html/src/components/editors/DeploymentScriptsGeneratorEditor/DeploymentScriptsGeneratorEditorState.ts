@@ -135,6 +135,18 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
       schemaItemIds: Array.from(this.selectedItems),
     });
 
+    const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
+
+    this.results = response.results;
+    this.possibleDeploymentVersions = response.deploymentVersions;
+    this.currentDeploymentVersionId = response.currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = response.currentDeploymentVersionId;
+    this.clearSelection();
+
+    if (this.uniquePlatforms.length > 0 && !this.uniquePlatforms.includes(this.selectedPlatform!)) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
+
     yield* this.modelTreeState.loadPackageNodes();
   });
 
@@ -151,10 +163,35 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   }
 
   addToModel = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    const platform = this.getSelectedPlatform();
+    if (!platform) {
+      return false;
+    }
+    const selectedNames = Array.from(this.selectedItems)
+      .map(id => this.results.find(r => r.schemaItemId === id)?.itemName)
+      .filter((name): name is string => name !== undefined);
+
     yield this.architectApi.addToModel({
-      schemaItemIds: Array.from(this.selectedItems),
+      platform,
+      schemaItemNames: selectedNames,
     });
 
+    yield this.reload();
+
     yield* this.modelTreeState.loadPackageNodes();
+  });
+
+  reload = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
+
+    this.results = response.results;
+    this.possibleDeploymentVersions = response.deploymentVersions;
+    this.currentDeploymentVersionId = response.currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = response.currentDeploymentVersionId;
+    this.clearSelection();
+
+    if (this.uniquePlatforms.length > 0 && !this.uniquePlatforms.includes(this.selectedPlatform!)) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
   });
 }

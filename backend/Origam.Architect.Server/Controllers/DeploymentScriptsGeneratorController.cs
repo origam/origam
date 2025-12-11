@@ -27,6 +27,7 @@ using Origam.DA;
 using Origam.DA.Common.DatabasePlatform;
 using Origam.DA.Service;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -48,7 +49,7 @@ public class DeploymentScriptsGeneratorController(
         SecurityManager.SetServerIdentity();
 
         var platform = ResolvePlatform(requestModel.Platform);
-        var dbCompareResults = CompareSchemaForPlatform(platform);
+        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
 
         var deploymentVersions = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
@@ -115,7 +116,7 @@ public class DeploymentScriptsGeneratorController(
             return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
         }
 
-        var selectedResults = GetSchemaDbCompareResults(requestModel, platform);
+        var selectedResults = GetSchemaDbCompareResultsByIds(requestModel.SchemaItemIds, platform);
         RunAllDeploymentActivities(requiredVersion, selectedResults);
 
         return Ok();
@@ -124,20 +125,44 @@ public class DeploymentScriptsGeneratorController(
     [HttpPost("AddToModel")]
     public IActionResult AddToModel([Required] [FromBody] AddToModelRequestModel requestModel)
     {
-        throw new NotImplementedException();
+        GuardIsActiveExtensionSet();
+
+        SecurityManager.SetServerIdentity();
+
+        Platform platform = ResolvePlatform(requestModel.Platform);
+
+        var compareResults = GetSchemaDbCompareResultsByNames(
+            requestModel.SchemaItemNames,
+            platform
+        );
+
+        foreach (SchemaDbCompareResult result in compareResults)
+        {
+            if (result.ResultType == DbCompareResultType.MissingInSchema)
+            {
+                var schemaItem = result.SchemaItem;
+                schemaItem.Group = schemaService
+                    .GetProvider<EntityModelSchemaItemProvider>()
+                    .GetGroup(schemaService.ActiveExtension.Name);
+                schemaItem.RootProvider.ChildItems.Add(schemaItem);
+                schemaItem.Persist();
+            }
+        }
+
+        return Ok(compareResults.Count);
     }
 
-    private List<SchemaDbCompareResult> GetSchemaDbCompareResults(
-        AddToDeploymentRequestModel requestModel,
+    private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
+        List<string> schemaItemIds,
         Platform platform
     )
     {
-        var dbCompareResults = CompareSchemaForPlatform(platform);
+        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
 
         var idSet = new HashSet<Guid>();
-        if (requestModel.SchemaItemIds != null)
+        if (schemaItemIds != null)
         {
-            foreach (var idStr in requestModel.SchemaItemIds)
+            foreach (var idStr in schemaItemIds)
             {
                 if (Guid.TryParse(idStr, out Guid id))
                 {
@@ -148,6 +173,21 @@ public class DeploymentScriptsGeneratorController(
 
         var selectedResults = dbCompareResults
             .Where(r => r.SchemaItem != null && idSet.Contains(r.SchemaItem.Id))
+            .ToList();
+
+        return selectedResults;
+    }
+
+    private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByNames(
+        List<string> schemaItemNames,
+        Platform platform
+    )
+    {
+        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
+
+        var selectedResults = dbCompareResults
+            .Where(r => r.SchemaItem != null)
+            .Where(r => schemaItemNames.Contains(r.SchemaItem.Name))
             .ToList();
 
         return selectedResults;
@@ -250,7 +290,7 @@ public class DeploymentScriptsGeneratorController(
         return match;
     }
 
-    private List<SchemaDbCompareResult> CompareSchemaForPlatform(Platform platform)
+    private List<SchemaDbCompareResult> GetCompareDbSchemaByPlatform(Platform platform)
     {
         var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
         daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
