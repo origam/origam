@@ -27,7 +27,7 @@ import { useContext, useEffect, useMemo } from 'react';
 export const EditorTabView = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const state = rootStore.editorTabViewState;
-  const editors = state.editors.map(x => x.state);
+  const editors = state.editorsContainers.map(x => x.state);
   const initializeOpenEditors = useMemo(() => state.initializeOpenEditors.bind(state), [state]);
 
   const run = runInFlowWithHandler(rootStore.errorDialogController);
@@ -49,7 +49,7 @@ export const EditorTabView = observer(() => {
         ))}
       </div>
       <div className={S.content}>
-        {state.editors.map(editorContainer => (
+        {state.editorsContainers.map(editorContainer => (
           <div
             key={editorContainer.state.editorId}
             className={editorContainer.state.isActive ? S.visible : S.hidden}

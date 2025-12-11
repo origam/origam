@@ -27,6 +27,7 @@ using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
+using Origam.Architect.Server.Services.Xslt;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 
@@ -44,6 +45,8 @@ public class Program
         var deploymentService = ServiceManager.Services.GetService<IDeploymentService>();
         var persistence = ServiceManager.Services.GetService<IPersistenceService>();
         var documentation = ServiceManager.Services.GetService<IDocumentationService>();
+        var businessServicesService =
+            ServiceManager.Services.GetService<IBusinessServicesService>();
 
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSingleton(deploymentService);
@@ -51,6 +54,7 @@ public class Program
         builder.Services.AddSingleton<EditorPropertyFactory>();
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<EditorService>();
+        builder.Services.AddTransient<XsltService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
@@ -60,6 +64,7 @@ public class Program
         builder.Services.AddSingleton(workbench);
         builder.Services.AddSingleton(persistence);
         builder.Services.AddSingleton(documentation);
+        builder.Services.AddSingleton(businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -89,7 +94,7 @@ public class Program
         }
 
         app.UseMiddleware<OrigamErrorHandlingMiddleware>();
-        app.UseAuthorization();
+        app.UseMiddleware<ServerIdentityMiddleware>();
         app.UseStaticFiles();
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         app.UseStaticFiles(
@@ -108,5 +113,6 @@ public class Program
             spa.Options.SourcePath = spaConfig.PathToClientApplication;
         });
         app.Run();
+        SecurityManager.SetDIServiceProvider(((IApplicationBuilder)app).ApplicationServices);
     }
 }

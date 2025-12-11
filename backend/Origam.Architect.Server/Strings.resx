@@ -21,6 +21,21 @@
     <data name="CategoryDocumentation" xml:space="preserve">
         <value>Documentation</value>
     </data>
+    <data name="XsltValidationFailed" xml:space="preserve">
+        <value>XSLT validation failed. See output for details.</value>
+    </data>
+    <data name="XsltValidationSuccess" xml:space="preserve">
+        <value>XSLT is valid.</value>
+    </data>
+    <data name="ParameterNotFound" xml:space="preserve">
+        <value>Parameter named {0} was not found among Input Parameters.</value>
+    </data>
+    <data name="WrongParameterType" xml:space="preserve">
+        <value>Parameter type {0} is not OrigamDataType.</value>
+    </data>
+    <data name="ValidationResultTitle" xml:space="preserve">
+        <value>XSLT Validation</value>
+    </data>
     <data name="DeploymentScripts_SelectItemIsNotDeploymentVersion" xml:space="preserve">
         <value>Selected item is not a DeploymentVersion</value>
     </data>

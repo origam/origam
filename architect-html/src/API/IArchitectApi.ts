@@ -102,9 +102,57 @@ export interface IArchitectApi {
 
   persistDocumentationChanges(schemaItemId: string): Promise<void>;
 
+  validateTransformation(input: ITransformationInput): Promise<IValidationResult>;
+
+  runTransformation(input: ITransformationInput): Promise<ITransformResult>;
+
+  getXsltParameters(schemaItemId: string): Promise<IParametersResult>;
+
+  getXsltSettings(): Promise<ShemaItemInfo[]>;
+
+  getRuleSets(dataStructureId: string): Promise<ShemaItemInfo[]>;
+
   setVersionCurrent(schemaItemId: string): Promise<void>;
+
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
 }
+
+export interface ITransformationInput {
+  schemaItemId: string;
+  sourceDataStructureId: string | undefined;
+  targetDataStructureId: string | undefined;
+  ruleSetId: string | undefined;
+  inputXml?: string;
+  parameters?: IParameterData[];
+}
+
+export interface ShemaItemInfo {
+  name: string;
+  schemaItemId: string;
+}
+
+export interface IParametersResult {
+  output: string;
+  parameters: IParameterData[];
+}
+
+export interface IParameterData {
+  name: string;
+  type: OrigamDataType;
+  value: string;
+}
+
+export interface ITransformResult {
+  output: string;
+  xml: string;
+}
+
+export interface IValidationResult {
+  title: string;
+  text: string;
+  output: string;
+}
+
 export interface IScreenEditorModel {
   data: IScreenEditorData;
   isDirty: boolean;

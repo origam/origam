@@ -113,3 +113,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
   }
 }
+
+.compact {
+
+  div.category {
+    margin: 0;
+    max-width: unset;
+    h4 {
+      display: none;
+    }
+    .property {
+      justify-content: flex-start;
+      .propertyName {
+        width: 17rem;
+      }
+    }
+    .property {
+      margin: 0;
+      input{
+        width: 25rem;
+      }
+    }
+  }
+
+}

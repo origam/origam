@@ -17,87 +17,30 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { RootStoreContext } from '@/main';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
-import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput';
 import S from '@editors/propertyEditor/PropertyEditor.module.scss';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
+import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.tsx';
 
 const PropertyEditor = observer(
-  (props: { properties: EditorProperty[]; propertyManager: IPropertyManager }) => {
-    const rootStore = useContext(RootStoreContext);
-
+  (props: {
+    properties: EditorProperty[];
+    propertyManager: IPropertyManager;
+    compact?: boolean;
+  }) => {
     if (!props.properties) {
       return null;
     }
 
-    function onValueChange(property: EditorProperty, value: any) {
-      runInFlowWithHandler(rootStore.errorDialogController)({
-        generator: function* () {
-          const parsedValue = property.type === 'enum' ? parseInt(value) : value;
-          yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
-        },
-      });
-    }
-
     const { groupedProperties, sortedCategories } = getSortedProperties(props.properties);
 
-    function renderPropertyEditor(property: EditorProperty) {
-      if (property.type === 'enum' || property.type === 'looukup') {
-        return (
-          <select
-            value={property.value ?? ''}
-            onChange={e => onValueChange(property, e.target.value)}
-          >
-            {property.dropDownValues.map(x => (
-              <option key={property.value + x.name} value={x.value}>
-                {x.name}
-              </option>
-            ))}
-          </select>
-        );
-      }
-      if (property.type === 'boolean') {
-        return (
-          <div className={S.checkboxContainer}>
-            <input
-              type="checkbox"
-              checked={property.value}
-              onChange={e => onValueChange(property, e.target.checked)}
-              disabled={property.readOnly}
-              className={S.checkbox}
-            />
-          </div>
-        );
-      }
-      if (property.type === 'integer' || property.type === 'float') {
-        return (
-          <NumericPropertyInput
-            property={property}
-            type={property.type}
-            onChange={value => onValueChange(property, value)}
-          />
-        );
-      }
-      return (
-        <input
-          type="text"
-          disabled={property.readOnly}
-          value={property.value != null ? property.value : undefined}
-          onChange={e => onValueChange(property, e.target.value)}
-        />
-      );
-    }
-
     return (
-      <div className={S.root}>
+      <div className={cn(S.root, { [S.compact]: props.compact })}>
         {sortedCategories.map(category => (
           <div className={S.category} key={category}>
-            <h4>{category ?? 'Misc'}</h4>
+            {!props.compact && <h4>{category ?? 'Misc'}</h4>}
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
                 <div
@@ -106,7 +49,11 @@ const PropertyEditor = observer(
                 >
                   {property.name}
                 </div>
-                {renderPropertyEditor(property)}
+                <SinglePropertyEditor
+                  property={property}
+                  propertyManager={props.propertyManager}
+                  compact={props.compact}
+                />
               </div>
             ))}
           </div>

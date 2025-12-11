@@ -17,22 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
-import S from '@components/ActionPanel/ActionPanel.module.scss';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { RootStoreContext } from '@/main.tsx';
 
-const ActionPanel = ({ title, children }: { title: string; children?: React.ReactNode }) => {
-  return (
-    <div className={S.root}>
-      <div className={S.header}>
-        <div className={S.title}>{title}</div>
-        <div className={S.buttons}>
-          {children}
-          <SaveButtonHOC />
-        </div>
-      </div>
-      <div className={S.content}></div>
-    </div>
-  );
-};
+const Output = observer(() => {
+  const rootStore = useContext(RootStoreContext);
 
-export default ActionPanel;
+  return <div>{rootStore.output}</div>;
+});
+
+export default Output;

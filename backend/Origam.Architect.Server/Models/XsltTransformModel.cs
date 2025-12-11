@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,23 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
-import S from '@components/ActionPanel/ActionPanel.module.scss';
+using System.ComponentModel.DataAnnotations;
 
-const ActionPanel = ({ title, children }: { title: string; children?: React.ReactNode }) => {
-  return (
-    <div className={S.root}>
-      <div className={S.header}>
-        <div className={S.title}>{title}</div>
-        <div className={S.buttons}>
-          {children}
-          <SaveButtonHOC />
-        </div>
-      </div>
-      <div className={S.content}></div>
-    </div>
-  );
-};
+namespace Origam.Architect.Server.Models;
 
-export default ActionPanel;
+public class XsltTransformModel
+{
+    [Required]
+    public Guid SchemaItemId { get; set; }
+    public Guid SourceDataStructureId { get; set; }
+    public Guid TargetDataStructureId { get; set; }
+    public Guid RuleSetId { get; set; }
+
+    [Required]
+    public string InputXml { get; set; }
+
+    [Required]
+    public List<Parameter> Parameters { get; set; }
+}

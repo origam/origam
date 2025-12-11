@@ -30,6 +30,7 @@ import { IDialogStackState } from '@dialogs/types';
 import { ErrorDialogController } from '@errors/ErrorDialog';
 import { TranslationsStore } from '@stores/TranslationsStore';
 import { UIState } from '@stores/UiState';
+import { observable } from 'mobx';
 
 export class RootStore {
   public editorTabViewState: EditorTabViewState;
@@ -43,6 +44,7 @@ export class RootStore {
   public progressBarState = new ProgressBarState();
   public propertiesState = new PropertiesState();
   public translations = new TranslationsStore();
+  @observable public accessor output: string = '';
 
   constructor() {
     this.errorDialogController = new ErrorDialogController(this.dialogStack);
