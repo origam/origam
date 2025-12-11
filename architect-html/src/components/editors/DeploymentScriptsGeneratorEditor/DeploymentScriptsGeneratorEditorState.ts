@@ -69,7 +69,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   }
 
   save(): Generator<Promise<any>, void, any> {
-    throw new Error('Method not implemented.');
+    throw new Error('Method is unnecessary.');
   }
 
   toggleSelection(schemaItemId: string) {
