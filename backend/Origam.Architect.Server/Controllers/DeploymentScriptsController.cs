@@ -31,12 +31,11 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DeploymentScriptController(
+public class DeploymentScriptsController(
     IPersistenceService persistenceService,
     DeploymentScriptRunnerService deploymentScriptRunner,
-    DeploymentVersionCurrentService deploymentVersionCurrentService,
-    ILogger<DeploymentScriptController> log
-) : OrigamController(log)
+    DeploymentVersionCurrentService deploymentVersionCurrentService
+) : ControllerBase
 {
     [HttpPost("SetVersionCurrent")]
     public IActionResult SetVersionCurrent(

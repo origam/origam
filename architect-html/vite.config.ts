@@ -72,7 +72,11 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
-      '/DeploymentScript': {
+      '/DeploymentScripts': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
+      '/DeploymentScriptsGenerator': {
         target: 'http://localhost:5003',
         secure: false,
       },

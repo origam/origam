@@ -17,22 +17,37 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApiTreeNode, IArchitectApi } from '@api/IArchitectApi';
+import { IArchitectApi, IPackagesInfo } from '@api/IArchitectApi';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { RootStore } from '@stores/RootStore';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
+  @observable accessor packagesInfo: IPackagesInfo | null = null;
   private architectApi: IArchitectApi;
 
   constructor(private rootStore: RootStore) {
     this.architectApi = this.rootStore.architectApi;
   }
 
-  *loadPackageNodes(): Generator<Promise<IApiTreeNode[]>, void, IApiTreeNode[]> {
+  @computed
+  get activePackageName(): string | null {
+    if (!this.packagesInfo) {
+      return null;
+    }
+    const activePackage = this.packagesInfo.packages.find(
+      pkg => pkg.id === this.packagesInfo!.activePackageId,
+    );
+    return activePackage?.name ?? null;
+  }
+
+  *loadPackageNodes(): Generator<Promise<any>, void, any> {
+    const packagesInfo = yield this.architectApi.getPackages();
+    this.packagesInfo = packagesInfo;
+
     const apiNodes = yield this.architectApi.getTopModelNodes();
-    this.modelNodes = apiNodes.map(node => new TreeNode(node, this.rootStore));
+    this.modelNodes = apiNodes.map((node: any) => new TreeNode(node, this.rootStore));
   }
 
   findNodeById(nodeId: string | undefined): TreeNode | null {

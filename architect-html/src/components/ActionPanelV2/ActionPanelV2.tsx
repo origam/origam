@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,46 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.packageName {
-  font-weight: bold;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ccc;
-}
+import S from '@components/ActionPanelV2/ActionPanelV2.module.scss';
 
-.treeNode {
-  margin-left: 20px;
-}
+const ActionPanelV2 = ({
+  title,
+  buttons,
+  body,
+}: {
+  title: string;
+  buttons?: React.ReactNode;
+  body?: React.ReactNode;
+}) => {
+  return (
+    <div className={S.root}>
+      <div className={S.header}>
+        <div className={S.title}>{title}</div>
+        <div className={S.buttons}>{buttons}</div>
+      </div>
+      <div className={S.body}>{body}</div>
+    </div>
+  );
+};
 
-.treeNodeTitle {
-  height: 20px;
-  display: flex;
-  cursor: pointer;
-}
-
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
-
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+export default ActionPanelV2;
