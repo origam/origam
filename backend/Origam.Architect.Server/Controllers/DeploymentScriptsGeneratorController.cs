@@ -149,7 +149,7 @@ public class DeploymentScriptsGeneratorController(
             }
         }
 
-        return Ok(compareResults.Count);
+        return Ok();
     }
 
     private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
