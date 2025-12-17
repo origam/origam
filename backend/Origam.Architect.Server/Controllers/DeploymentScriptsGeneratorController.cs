@@ -26,12 +26,10 @@ using Origam.Architect.Server.Models.Requests.DeploymentScripts;
 using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.DA;
 using Origam.DA.Common.DatabasePlatform;
-using Origam.DA.Service;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -40,7 +38,8 @@ namespace Origam.Architect.Server.Controllers;
 public class DeploymentScriptsGeneratorController(
     IPersistenceService persistenceService,
     SchemaService schemaService,
-    IPlatformResolveService platformResolveService
+    IPlatformResolveService platformResolveService,
+    ICompareDbSchemaService compareDbSchemaService
 ) : ControllerBase
 {
     [HttpPost("List")]
@@ -51,7 +50,7 @@ public class DeploymentScriptsGeneratorController(
         SecurityManager.SetServerIdentity();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
-        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
+        var dbCompareResults = compareDbSchemaService.GetCompareDbSchemaByPlatform(platform);
 
         var deploymentVersions = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
@@ -118,7 +117,10 @@ public class DeploymentScriptsGeneratorController(
             return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
         }
 
-        var selectedResults = GetSchemaDbCompareResultsByIds(requestModel.SchemaItemIds, platform);
+        var selectedResults = compareDbSchemaService.GetSchemaDbCompareResultsByIds(
+            requestModel.SchemaItemIds,
+            platform
+        );
         RunAllDeploymentActivities(requiredVersion, selectedResults);
 
         return Ok();
@@ -133,7 +135,7 @@ public class DeploymentScriptsGeneratorController(
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
-        var compareResults = GetSchemaDbCompareResultsByNames(
+        var compareResults = compareDbSchemaService.GetSchemaDbCompareResultsByNames(
             requestModel.SchemaItemNames,
             platform
         );
@@ -152,35 +154,6 @@ public class DeploymentScriptsGeneratorController(
         }
 
         return Ok();
-    }
-
-    private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
-        List<Guid> schemaItemIds,
-        Platform platform
-    )
-    {
-        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
-
-        var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null && schemaItemIds.Contains(r.SchemaItem.Id))
-            .ToList();
-
-        return selectedResults;
-    }
-
-    private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByNames(
-        List<string> schemaItemNames,
-        Platform platform
-    )
-    {
-        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
-
-        var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null)
-            .Where(r => schemaItemNames.Contains(r.SchemaItem.Name))
-            .ToList();
-
-        return selectedResults;
     }
 
     private void RunAllDeploymentActivities(
@@ -247,17 +220,5 @@ public class DeploymentScriptsGeneratorController(
                 "Active extension (package) is not set (activeExtensionId missing)."
             );
         }
-    }
-
-    private List<SchemaDbCompareResult> GetCompareDbSchemaByPlatform(Platform platform)
-    {
-        var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
-        daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
-        var dbCompareResults = daPlatform.CompareSchema(persistenceService.SchemaProvider);
-        foreach (SchemaDbCompareResult result in dbCompareResults)
-        {
-            result.Platform = platform;
-        }
-        return dbCompareResults;
     }
 }
