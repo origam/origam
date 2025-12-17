@@ -26,6 +26,7 @@ using Origam.Architect.Server.Models.Requests.DeploymentScripts;
 using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.DA;
 using Origam.DA.Common.DatabasePlatform;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
@@ -45,9 +46,7 @@ public class DeploymentScriptsGeneratorController(
     [HttpPost("List")]
     public IActionResult List([Required] [FromBody] ListRequestModel requestModel)
     {
-        GuardIsActiveExtensionSet();
-
-        SecurityManager.SetServerIdentity();
+        ContextGuardAndResolver();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
         var dbCompareResults = schemaDbCompareResultsService.GetByPlatform(platform);
@@ -101,9 +100,7 @@ public class DeploymentScriptsGeneratorController(
         [Required] [FromBody] AddToDeploymentRequestModel requestModel
     )
     {
-        GuardIsActiveExtensionSet();
-
-        SecurityManager.SetServerIdentity();
+        ContextGuardAndResolver();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
@@ -129,9 +126,7 @@ public class DeploymentScriptsGeneratorController(
     [HttpPost("AddToModel")]
     public IActionResult AddToModel([Required] [FromBody] AddToModelRequestModel requestModel)
     {
-        GuardIsActiveExtensionSet();
-
-        SecurityManager.SetServerIdentity();
+        ContextGuardAndResolver();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
@@ -142,15 +137,17 @@ public class DeploymentScriptsGeneratorController(
 
         foreach (SchemaDbCompareResult result in compareResults)
         {
-            if (result.ResultType == DbCompareResultType.MissingInSchema)
+            if (result.ResultType != DbCompareResultType.MissingInSchema)
             {
-                var schemaItem = result.SchemaItem;
-                schemaItem.Group = schemaService
-                    .GetProvider<EntityModelSchemaItemProvider>()
-                    .GetGroup(schemaService.ActiveExtension.Name);
-                schemaItem.RootProvider.ChildItems.Add(schemaItem);
-                schemaItem.Persist();
+                continue;
             }
+
+            ISchemaItem schemaItem = result.SchemaItem;
+            schemaItem.Group = schemaService
+                .GetProvider<EntityModelSchemaItemProvider>()
+                .GetGroup(schemaService.ActiveExtension.Name);
+            schemaItem.RootProvider.ChildItems.Add(schemaItem);
+            schemaItem.Persist();
         }
 
         return Ok();
@@ -212,7 +209,7 @@ public class DeploymentScriptsGeneratorController(
         activity.Persist();
     }
 
-    private void GuardIsActiveExtensionSet()
+    private void ContextGuardAndResolver()
     {
         if (schemaService.ActiveExtension == null || schemaService.ActiveExtension.Id == Guid.Empty)
         {
@@ -220,5 +217,7 @@ public class DeploymentScriptsGeneratorController(
                 "Active extension (package) is not set (activeExtensionId missing)."
             );
         }
+
+        SecurityManager.SetServerIdentity();
     }
 }
