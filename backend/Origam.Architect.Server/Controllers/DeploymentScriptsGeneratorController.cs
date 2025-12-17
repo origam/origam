@@ -154,26 +154,14 @@ public class DeploymentScriptsGeneratorController(
     }
 
     private List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
-        List<string> schemaItemIds,
+        List<Guid> schemaItemIds,
         Platform platform
     )
     {
         var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
 
-        var idSet = new HashSet<Guid>();
-        if (schemaItemIds != null)
-        {
-            foreach (var idStr in schemaItemIds)
-            {
-                if (Guid.TryParse(idStr, out Guid id))
-                {
-                    idSet.Add(id);
-                }
-            }
-        }
-
         var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null && idSet.Contains(r.SchemaItem.Id))
+            .Where(r => r.SchemaItem != null && schemaItemIds.Contains(r.SchemaItem.Id))
             .ToList();
 
         return selectedResults;

@@ -32,5 +32,5 @@ public class AddToDeploymentRequestModel
     public Guid DeploymentVersionId { get; set; }
 
     [Required]
-    public List<string> SchemaItemIds { get; set; } = [];
+    public List<Guid> SchemaItemIds { get; set; } = [];
 }
