@@ -295,9 +295,9 @@ public class DeploymentScriptsGeneratorController(
         var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
         daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
         var dbCompareResults = daPlatform.CompareSchema(persistenceService.SchemaProvider);
-        foreach (SchemaDbCompareResult r in dbCompareResults)
+        foreach (SchemaDbCompareResult result in dbCompareResults)
         {
-            r.Platform = platform;
+            result.Platform = platform;
         }
         return dbCompareResults;
     }
