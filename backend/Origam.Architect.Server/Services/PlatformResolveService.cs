@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Architect.Server.Interfaces.Services;
+
 namespace Origam.Architect.Server.Services;
 
 public class PlatformResolveService : IPlatformResolveService
