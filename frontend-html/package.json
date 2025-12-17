@@ -29,7 +29,7 @@
     "@types/numeral": "^2.0.5",
     "@types/react-color": "^3.0.13",
     "@types/react-draft-wysiwyg": "^1.13.9",
-    "@types/react-highlight-words": "^0.20.0",
+    "@types/react-highlight-words": "^0.20.1",
     "@types/react-inlinesvg": "^1.0.0",
     "@types/react-measure": "^2.0.12",
     "@types/react-virtualized": "^9.22.3",
