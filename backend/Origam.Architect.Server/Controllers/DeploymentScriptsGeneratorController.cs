@@ -118,7 +118,7 @@ public class DeploymentScriptsGeneratorController(
             requestModel.SchemaItemIds,
             platform
         );
-        RunAllDeploymentActivities(requiredVersion, selectedResults);
+        ProcessAllDeploymentActivities(requiredVersion, selectedResults);
 
         return Ok();
     }
@@ -153,7 +153,7 @@ public class DeploymentScriptsGeneratorController(
         return Ok();
     }
 
-    private void RunAllDeploymentActivities(
+    private void ProcessAllDeploymentActivities(
         DeploymentVersion version,
         List<SchemaDbCompareResult> selectedResults
     )
