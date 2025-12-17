@@ -68,7 +68,10 @@ public class Program
         builder.Services.AddSingleton(businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
         builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
-        builder.Services.AddSingleton<ICompareDbSchemaService, CompareDbSchemaService>();
+        builder.Services.AddSingleton<
+            ISchemaDbCompareResultsService,
+            SchemaDbCompareResultsService
+        >();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

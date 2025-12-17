@@ -39,7 +39,7 @@ public class DeploymentScriptsGeneratorController(
     IPersistenceService persistenceService,
     SchemaService schemaService,
     IPlatformResolveService platformResolveService,
-    ICompareDbSchemaService compareDbSchemaService
+    ISchemaDbCompareResultsService schemaDbCompareResultsService
 ) : ControllerBase
 {
     [HttpPost("List")]
@@ -50,7 +50,7 @@ public class DeploymentScriptsGeneratorController(
         SecurityManager.SetServerIdentity();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
-        var dbCompareResults = compareDbSchemaService.GetByPlatform(platform);
+        var dbCompareResults = schemaDbCompareResultsService.GetByPlatform(platform);
 
         var deploymentVersions = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
@@ -117,7 +117,10 @@ public class DeploymentScriptsGeneratorController(
             return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
         }
 
-        var selectedResults = compareDbSchemaService.GetByIds(requestModel.SchemaItemIds, platform);
+        var selectedResults = schemaDbCompareResultsService.GetByIds(
+            requestModel.SchemaItemIds,
+            platform
+        );
         RunAllDeploymentActivities(requiredVersion, selectedResults);
 
         return Ok();
@@ -132,7 +135,7 @@ public class DeploymentScriptsGeneratorController(
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
-        var compareResults = compareDbSchemaService.GetByNames(
+        var compareResults = schemaDbCompareResultsService.GetByNames(
             requestModel.SchemaItemNames,
             platform
         );

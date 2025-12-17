@@ -27,8 +27,8 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Services;
 
-public class CompareDbSchemaService(IPersistenceService persistenceService)
-    : ICompareDbSchemaService
+public class SchemaDbCompareResultsService(IPersistenceService persistenceService)
+    : ISchemaDbCompareResultsService
 {
     public List<SchemaDbCompareResult> GetByPlatform(Platform platform)
     {

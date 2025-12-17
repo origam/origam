@@ -23,7 +23,7 @@ using Origam.DA;
 
 namespace Origam.Architect.Server.Interfaces.Services;
 
-public interface ICompareDbSchemaService
+public interface ISchemaDbCompareResultsService
 {
     public List<SchemaDbCompareResult> GetByPlatform(Platform platform);
     public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform);
