@@ -30,10 +30,11 @@ namespace Origam.Architect.Server.Services;
 public class CompareDbSchemaService(IPersistenceService persistenceService)
     : ICompareDbSchemaService
 {
-    public List<SchemaDbCompareResult> GetCompareDbSchemaByPlatform(Platform platform)
+    public List<SchemaDbCompareResult> GetByPlatform(Platform platform)
     {
         var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
         daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
+
         var dbCompareResults = daPlatform.CompareSchema(persistenceService.SchemaProvider);
         foreach (SchemaDbCompareResult result in dbCompareResults)
         {
@@ -42,30 +43,24 @@ public class CompareDbSchemaService(IPersistenceService persistenceService)
         return dbCompareResults;
     }
 
-    public List<SchemaDbCompareResult> GetSchemaDbCompareResultsByNames(
-        List<string> schemaItemNames,
-        Platform platform
-    )
+    public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform)
     {
-        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
+        var dbCompareResults = GetByPlatform(platform);
 
         var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null)
-            .Where(r => schemaItemNames.Contains(r.SchemaItem.Name))
+            .Where(r => r.SchemaItem != null && schemaItemIds.Contains(r.SchemaItem.Id))
             .ToList();
 
         return selectedResults;
     }
 
-    public List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
-        List<Guid> schemaItemIds,
-        Platform platform
-    )
+    public List<SchemaDbCompareResult> GetByNames(List<string> schemaItemNames, Platform platform)
     {
-        var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
+        var dbCompareResults = GetByPlatform(platform);
 
         var selectedResults = dbCompareResults
-            .Where(r => r.SchemaItem != null && schemaItemIds.Contains(r.SchemaItem.Id))
+            .Where(r => r.SchemaItem != null)
+            .Where(r => schemaItemNames.Contains(r.SchemaItem.Name))
             .ToList();
 
         return selectedResults;

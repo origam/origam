@@ -50,7 +50,7 @@ public class DeploymentScriptsGeneratorController(
         SecurityManager.SetServerIdentity();
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
-        var dbCompareResults = compareDbSchemaService.GetCompareDbSchemaByPlatform(platform);
+        var dbCompareResults = compareDbSchemaService.GetByPlatform(platform);
 
         var deploymentVersions = schemaService
             .GetProvider<DeploymentSchemaItemProvider>()
@@ -117,10 +117,7 @@ public class DeploymentScriptsGeneratorController(
             return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
         }
 
-        var selectedResults = compareDbSchemaService.GetSchemaDbCompareResultsByIds(
-            requestModel.SchemaItemIds,
-            platform
-        );
+        var selectedResults = compareDbSchemaService.GetByIds(requestModel.SchemaItemIds, platform);
         RunAllDeploymentActivities(requiredVersion, selectedResults);
 
         return Ok();
@@ -135,7 +132,7 @@ public class DeploymentScriptsGeneratorController(
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
-        var compareResults = compareDbSchemaService.GetSchemaDbCompareResultsByNames(
+        var compareResults = compareDbSchemaService.GetByNames(
             requestModel.SchemaItemNames,
             platform
         );

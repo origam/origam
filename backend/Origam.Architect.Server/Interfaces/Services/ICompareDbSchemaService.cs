@@ -25,15 +25,7 @@ namespace Origam.Architect.Server.Interfaces.Services;
 
 public interface ICompareDbSchemaService
 {
-    public List<SchemaDbCompareResult> GetCompareDbSchemaByPlatform(Platform platform);
-
-    public List<SchemaDbCompareResult> GetSchemaDbCompareResultsByNames(
-        List<string> schemaItemNames,
-        Platform platform
-    );
-
-    public List<SchemaDbCompareResult> GetSchemaDbCompareResultsByIds(
-        List<Guid> schemaItemIds,
-        Platform platform
-    );
+    public List<SchemaDbCompareResult> GetByPlatform(Platform platform);
+    public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform);
+    public List<SchemaDbCompareResult> GetByNames(List<string> schemaItemNames, Platform platform);
 }
