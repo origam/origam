@@ -66,6 +66,7 @@ public class Program
         builder.Services.AddSingleton(documentation);
         builder.Services.AddSingleton(businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
+        builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

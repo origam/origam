@@ -38,7 +38,8 @@ namespace Origam.Architect.Server.Controllers;
 [Route("[controller]")]
 public class DeploymentScriptsGeneratorController(
     IPersistenceService persistenceService,
-    SchemaService schemaService
+    SchemaService schemaService,
+    IPlatformResolveService platformResolveService
 ) : ControllerBase
 {
     [HttpPost("List")]
@@ -48,7 +49,7 @@ public class DeploymentScriptsGeneratorController(
 
         SecurityManager.SetServerIdentity();
 
-        var platform = ResolvePlatform(requestModel.Platform);
+        Platform platform = platformResolveService.Resolve(requestModel.Platform);
         var dbCompareResults = GetCompareDbSchemaByPlatform(platform);
 
         var deploymentVersions = schemaService
@@ -104,7 +105,7 @@ public class DeploymentScriptsGeneratorController(
 
         SecurityManager.SetServerIdentity();
 
-        var platform = ResolvePlatform(requestModel.Platform);
+        Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
         var requiredVersion = persistenceService.SchemaProvider.RetrieveInstance<DeploymentVersion>(
             requestModel.DeploymentVersionId,
@@ -129,7 +130,7 @@ public class DeploymentScriptsGeneratorController(
 
         SecurityManager.SetServerIdentity();
 
-        Platform platform = ResolvePlatform(requestModel.Platform);
+        Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
         var compareResults = GetSchemaDbCompareResultsByNames(
             requestModel.SchemaItemNames,
@@ -257,37 +258,6 @@ public class DeploymentScriptsGeneratorController(
                 "Active extension (package) is not set (activeExtensionId missing)."
             );
         }
-    }
-
-    private Platform ResolvePlatform(string requestedPlatformName)
-    {
-        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-        var platforms = settings.GetAllPlatforms();
-
-        if (string.IsNullOrWhiteSpace(requestedPlatformName))
-        {
-            var platform = platforms.FirstOrDefault();
-            if (platform == null)
-            {
-                throw new InvalidOperationException("No platforms are configured.");
-            }
-            return platform;
-        }
-
-        var requested = requestedPlatformName.Trim();
-        var match = platforms.FirstOrDefault(p =>
-            string.Equals(p.Name, requested, StringComparison.OrdinalIgnoreCase)
-        );
-
-        if (match == null)
-        {
-            var available = string.Join(", ", platforms.Select(p => p.Name));
-            throw new InvalidOperationException(
-                $"Unknown platform '{requested}'. Available platforms: {available}."
-            );
-        }
-
-        return match;
     }
 
     private List<SchemaDbCompareResult> GetCompareDbSchemaByPlatform(Platform platform)
