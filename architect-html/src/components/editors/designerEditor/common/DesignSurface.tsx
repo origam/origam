@@ -48,7 +48,7 @@ export const DesignSurface: React.FC<{
       window.removeEventListener('keydown', handleKeyDown);
       surfaceState.onClose();
     };
-  }, [designerState, run, surfaceState]);
+  }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
