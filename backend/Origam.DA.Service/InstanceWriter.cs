@@ -221,10 +221,7 @@ namespace Origam.DA.Service
                     }
 
                     string path =
-                        persistentValue
-                        + "#"
-                        + subPath
-                        + persistentValue.PrimaryKey["Id"];
+                        persistentValue + "#" + subPath + persistentValue.PrimaryKey["Id"];
                     path = path.Replace("\\", "/");
                     node.SetAttribute(
                         localName: attribute.AttributeName,
