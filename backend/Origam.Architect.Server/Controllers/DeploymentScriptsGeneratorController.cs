@@ -130,22 +130,22 @@ public class DeploymentScriptsGeneratorController(
 
         Platform platform = platformResolveService.Resolve(requestModel.Platform);
 
-        var compareResults = schemaDbCompareResultsService.GetByNames(
+        var results = schemaDbCompareResultsService.GetByNames(
             requestModel.SchemaItemNames,
             platform
         );
+        var missingInSchemaResults = results.Where(r =>
+            r.ResultType == DbCompareResultType.MissingInSchema
+        );
 
-        foreach (SchemaDbCompareResult result in compareResults)
+        var activeExtensionName = schemaService.ActiveExtension.Name;
+        var entityModelProvider = schemaService.GetProvider<EntityModelSchemaItemProvider>();
+        SchemaItemGroup targetGroup = entityModelProvider.GetGroup(activeExtensionName);
+
+        foreach (SchemaDbCompareResult result in missingInSchemaResults)
         {
-            if (result.ResultType != DbCompareResultType.MissingInSchema)
-            {
-                continue;
-            }
-
             ISchemaItem schemaItem = result.SchemaItem;
-            schemaItem.Group = schemaService
-                .GetProvider<EntityModelSchemaItemProvider>()
-                .GetGroup(schemaService.ActiveExtension.Name);
+            schemaItem.Group = targetGroup;
             schemaItem.RootProvider.ChildItems.Add(schemaItem);
             schemaItem.Persist();
         }
