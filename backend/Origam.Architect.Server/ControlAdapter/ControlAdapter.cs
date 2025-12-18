@@ -155,6 +155,7 @@ public class ControlAdapter(
                 continue;
             }
 
+            // The PropertyValueItem was not found, maybe it is one of the standard properties defined on this class.
             PropertyInfo schemaItemProperty = GetSchemaItemProperties()
                 .FirstOrDefault(x => x.Name == propertyChange.Name);
             if (schemaItemProperty != null)
@@ -162,7 +163,22 @@ public class ControlAdapter(
                 object parsedValue = propertyParser.Parse(schemaItemProperty, propertyChange.Value);
                 schemaItemProperty.SetValue(this, parsedValue);
                 changesMade = true;
+                continue;
             }
+
+            // The PropertyValueItem was not found, that is ok. Not found means it had the default value before we started editing. We have to create it.
+            if (!propertyChange.ControlPropertyId.HasValue)
+            {
+                throw new Exception($"{nameof(propertyChange.ControlPropertyId)} cannot be null");
+            }
+            valueItem = controlSetItem.NewItem<PropertyValueItem>(
+                schemaService.ActiveSchemaExtensionId,
+                null
+            );
+            valueItem.ControlPropertyId = propertyChange.ControlPropertyId.Value;
+            valueItem.Name = propertyChange.Name;
+            valueItem.Value = propertyChange.Value;
+            changesMade = true;
         }
 
         return changesMade;
@@ -187,7 +203,30 @@ public class ControlAdapter(
                 PropertyValueItem valueItem = controlSetItem
                     .ChildItems.OfType<PropertyValueItem>()
                     .FirstOrDefault(item => item.ControlPropertyItem.Name == property.Name);
-                return propertyFactory.Create(property, valueItem);
+                if (valueItem != null)
+                {
+                    return propertyFactory.Create(
+                        property,
+                        valueItem.ControlPropertyId,
+                        valueItem.TypedValue
+                    );
+                }
+
+                // So the PropertyValueItem does not exist in the xml that means the property has the default value
+                ControlPropertyItem controlPropertyItem = controlSetItem
+                    .ControlItem.ChildItems.OfType<ControlPropertyItem>()
+                    .FirstOrDefault(x => x.Name == property.Name);
+                if (controlPropertyItem == null)
+                {
+                    throw new Exception(
+                        $"Cannot find {nameof(ControlPropertyItem)} for property {property.Name} of the control {Control.GetType()}"
+                    );
+                }
+
+                object defaultValue = controlPropertyItem.SystemType.IsValueType
+                    ? Activator.CreateInstance(controlPropertyItem.SystemType)
+                    : null;
+                return propertyFactory.Create(property, controlPropertyItem.Id, defaultValue);
             });
         var schemaItemProperties = GetSchemaItemProperties()
             .Select(property => propertyFactory.Create(property, this));
