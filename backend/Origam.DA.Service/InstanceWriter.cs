@@ -222,10 +222,8 @@ namespace Origam.DA.Service
                     }
 
                     string path =
-                        persistentValue.RelativeFilePath.Replace("\\", "/")
-                        + "#"
-                        + subPath
-                        + persistentValue.PrimaryKey["Id"];
+                        persistentValue + "#" + subPath + persistentValue.PrimaryKey["Id"];
+                    path = path.Replace("\\", "/");
                     node.SetAttribute(
                         localName: attribute.AttributeName,
                         namespaceURI: namespaceMapping.GetNamespaceByPropertyName(
