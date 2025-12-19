@@ -91,6 +91,11 @@ public static class IApplicationBuilderExtensions
             publicBranch =>
             {
                 publicBranch.UseUserApiAuthentication(openIddictConfig);
+
+                if (startUpConfiguration.EnableMiniProfiler)
+                {
+                    publicBranch.UseMiniProfiler();
+                }
                 publicBranch.UseMiddleware<UserApiMiddleware>();
             }
         );
@@ -112,6 +117,11 @@ public static class IApplicationBuilderExtensions
                         await next.Invoke();
                     }
                 );
+
+                if (startUpConfiguration.EnableMiniProfiler)
+                {
+                    privateBranch.UseMiniProfiler();
+                }
                 privateBranch.UseMiddleware<UserApiMiddleware>();
             }
         );
