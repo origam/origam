@@ -26,9 +26,7 @@ using Origam.Architect.Server.Models.Requests.DeploymentScripts;
 using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.DA;
 using Origam.DA.Common.DatabasePlatform;
-using Origam.Schema;
 using Origam.Schema.DeploymentModel;
-using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
@@ -40,7 +38,8 @@ public class DeploymentScriptsGeneratorController(
     IPersistenceService persistenceService,
     SchemaService schemaService,
     IPlatformResolveService platformResolveService,
-    ISchemaDbCompareResultsService schemaDbCompareResultsService
+    ISchemaDbCompareResultsService schemaDbCompareResultsService,
+    IAddToModelService addToModelService
 ) : ControllerBase
 {
     [HttpPost("List")]
@@ -128,27 +127,7 @@ public class DeploymentScriptsGeneratorController(
     {
         ContextGuardAndResolver();
 
-        Platform platform = platformResolveService.Resolve(requestModel.Platform);
-
-        var results = schemaDbCompareResultsService.GetByNames(
-            requestModel.SchemaItemNames,
-            platform
-        );
-        var missingInSchemaResults = results.Where(r =>
-            r.ResultType == DbCompareResultType.MissingInSchema
-        );
-
-        var activeExtensionName = schemaService.ActiveExtension.Name;
-        var entityModelProvider = schemaService.GetProvider<EntityModelSchemaItemProvider>();
-        SchemaItemGroup targetGroup = entityModelProvider.GetGroup(activeExtensionName);
-
-        foreach (SchemaDbCompareResult result in missingInSchemaResults)
-        {
-            ISchemaItem schemaItem = result.SchemaItem;
-            schemaItem.Group = targetGroup;
-            schemaItem.RootProvider.ChildItems.Add(schemaItem);
-            schemaItem.Persist();
-        }
+        addToModelService.Process(requestModel.Platform, requestModel.SchemaItemNames);
 
         return Ok();
     }
