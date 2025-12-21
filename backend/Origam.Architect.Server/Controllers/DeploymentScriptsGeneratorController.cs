@@ -37,13 +37,13 @@ public class DeploymentScriptsGeneratorController(
     IAddToModelService addToModelService
 ) : ControllerBase
 {
-    [HttpPost("List")]
-    public IActionResult List([Required] [FromBody] ListRequestModel requestModel)
+    [HttpGet("List")]
+    public IActionResult List([FromQuery] string platform)
     {
         ContextGuardAndResolver();
 
         ListResponseModel response = schemaDbCompareResultsService.PrepareListResponseModel(
-            requestModel.Platform
+            platform
         );
 
         return Ok(response);
