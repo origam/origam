@@ -20,15 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Architect.Server.Interfaces.Services;
+using Origam.Architect.Server.Models.Responses.DeploymentScripts;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Schema.DeploymentModel;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Architect.Server.Services;
 
-public class SchemaDbCompareResultsService(IPersistenceService persistenceService)
-    : ISchemaDbCompareResultsService
+public class SchemaDbCompareResultsService(
+    IPersistenceService persistenceService,
+    SchemaService schemaService,
+    IPlatformResolveService platformResolveService
+) : ISchemaDbCompareResultsService
 {
     public List<SchemaDbCompareResult> GetByPlatform(Platform platform)
     {
@@ -64,5 +69,54 @@ public class SchemaDbCompareResultsService(IPersistenceService persistenceServic
             .ToList();
 
         return selectedResults;
+    }
+
+    public ListResponseModel PrepareListResponseModel(string platform)
+    {
+        Platform platformParsed = platformResolveService.Resolve(platform);
+        var schemaDbCompareResults = GetByPlatform(platformParsed);
+
+        var deploymentVersions = schemaService
+            .GetProvider<DeploymentSchemaItemProvider>()
+            .ChildItems.Cast<DeploymentVersion>()
+            .OrderBy(deploymentVersion => deploymentVersion.Version);
+
+        List<SchemaDeploymentVersionDto> possibleDeploymentVersions = [];
+        DeploymentVersion currentVersion = null;
+        foreach (DeploymentVersion version in deploymentVersions)
+        {
+            if (version.Package.PrimaryKey.Equals(schemaService.ActiveExtension.PrimaryKey))
+            {
+                if (version.IsCurrentVersion)
+                {
+                    currentVersion = version;
+                }
+
+                possibleDeploymentVersions.Add(
+                    new SchemaDeploymentVersionDto { Id = version.Id, Name = version.Name }
+                );
+            }
+        }
+
+        var listResponseModel = new ListResponseModel
+        {
+            CurrentDeploymentVersionId = currentVersion != null ? currentVersion.Id : null,
+            DeploymentVersions = possibleDeploymentVersions,
+            Results = schemaDbCompareResults
+                .Select(result => new SchemaDbCompareResultDto
+                {
+                    SchemaItemId = result.SchemaItem?.Id.ToString() ?? string.Empty,
+                    SchemaItemType = result.SchemaItemType?.Name ?? string.Empty,
+                    ResultType = result.ResultType.ToString(),
+                    ItemName = result.ItemName ?? string.Empty,
+                    Remark = result.Remark ?? string.Empty,
+                    Script = result.Script ?? string.Empty,
+                    Script2 = result.Script2 ?? string.Empty,
+                    PlatformName = result.Platform?.Name ?? string.Empty,
+                })
+                .ToList(),
+        };
+
+        return listResponseModel;
     }
 }

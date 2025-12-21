@@ -19,15 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Architect.Server.Models.Responses.DeploymentScripts;
-using Origam.DA;
-
 namespace Origam.Architect.Server.Interfaces.Services;
 
-public interface ISchemaDbCompareResultsService
+public interface IAddToDeploymentService
 {
-    public List<SchemaDbCompareResult> GetByPlatform(Platform platform);
-    public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform);
-    public List<SchemaDbCompareResult> GetByNames(List<string> schemaItemNames, Platform platform);
-    public ListResponseModel PrepareListResponseModel(string platform);
+    public void Process(string platform, Guid deploymentVersionId, List<Guid> schemaItemIdList);
 }
