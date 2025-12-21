@@ -87,24 +87,6 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected item is not a DeploymentScript.
-        /// </summary>
-        internal static string DeploymentScripts_SelectItemIsNotDeploymentScript {
-            get {
-                return ResourceManager.GetString("DeploymentScripts_SelectItemIsNotDeploymentScript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Selected item is not a DeploymentVersion.
-        /// </summary>
-        internal static string DeploymentScripts_SelectItemIsNotDeploymentVersion {
-            get {
-                return ResourceManager.GetString("DeploymentScripts_SelectItemIsNotDeploymentVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Parameter named {0} was not found among Input Parameters..
         /// </summary>
         internal static string ParameterNotFound {
