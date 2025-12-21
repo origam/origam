@@ -22,6 +22,7 @@ import Button from '@/components/Button/Button';
 import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
 import { T } from '@/main';
+import { ModalWindow } from '@dialogs/ModalWindow';
 import S from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor.module.scss';
 import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
 import { observer } from 'mobx-react-lite';
@@ -125,16 +126,27 @@ const DeploymentScriptsGeneratorEditor = observer(
                                 </select>
                               </label>
                             </div>
-                            <Button
-                              title={
-                                <>
-                                  Add to <strong>Deployment</strong>
-                                </>
-                              }
-                              type="primary"
-                              isDisabled={!editorState.isAddToDeploymentReady()}
-                              onClick={() => editorState.addToDeployment()}
-                            />
+                            <div className={S.flex}>
+                              <Button
+                                title={T(
+                                  'Preview',
+                                  'editor_DeploymentScriptsGenerator_Button_Preview',
+                                )}
+                                type="secondary"
+                                isDisabled={editorState.selectedItems.size === 0}
+                                onClick={() => editorState.openPreview()}
+                              />
+                              <Button
+                                title={
+                                  <>
+                                    Add to <strong>Deployment</strong>
+                                  </>
+                                }
+                                type="primary"
+                                isDisabled={!editorState.isAddToDeploymentReady()}
+                                onClick={() => editorState.addToDeployment()}
+                              />
+                            </div>
                           </>
                         )}
                       </>
@@ -225,6 +237,30 @@ const DeploymentScriptsGeneratorEditor = observer(
             },
           ]}
         />
+        {editorState.isPreviewOpen && (
+          <div className={S.modalOverlay}>
+            <ModalWindow
+              title={T('Scripts Preview', 'editor_DeploymentScriptsGenerator_PreviewModal_Title')}
+              width={800}
+              height={600}
+              buttonsRight={
+                <button onClick={() => editorState.closePreview()}>
+                  {T('Close', 'editor_DeploymentScriptsGenerator_PreviewModal_Close')}
+                </button>
+              }
+            >
+              <div className={S.previewContent}>
+                {editorState.selectedScripts.map((item, index) => (
+                  <div key={index} className={S.scriptBlock}>
+                    <h3 className={S.title}>{item.itemName}</h3>
+                    {item.script && <pre className={S.code}>{item.script}</pre>}
+                    {item.script2 && <pre className={S.code}>{item.script2}</pre>}
+                  </div>
+                ))}
+              </div>
+            </ModalWindow>
+          </div>
+        )}
       </div>
     );
   },

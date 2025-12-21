@@ -62,6 +62,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       }
     }
 
+    .flex {
+      display: flex;
+      gap: 0.5rem;
+    }
+
     .tableWrapper {
       flex: 1;
       min-width: 0;
@@ -132,6 +137,57 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
             border-color: #007bff;
           }
         }
+      }
+    }
+  }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .previewContent {
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 500px;
+    background-color: #fafafa;
+
+    .scriptBlock {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .title {
+        margin: 0 0 0.5rem 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .code {
+        padding: 0.5rem;
+        background-color: #f5f5f5;
+        border-radius: 3px;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
       }
     }
   }

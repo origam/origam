@@ -42,6 +42,8 @@
   "editor_DeploymentScriptsGenerator_ActionPanelTitle_List": "Deployment scripts ({0})",
   "editor_DeploymentScriptsGenerator_ActionPanelLabel_Platform": "Platform",
   "editor_DeploymentScriptsGenerator_AddToDeploymentLabel_DeploymentVersion": "Deployment Version",
+  "editor_DeploymentScriptsGenerator_PreviewModal_Title": "Scripts Preview",
+  "editor_DeploymentScriptsGenerator_PreviewModal_Close": "Close",
   "deploymentScripts_GeneratorButtonHOC_label": "Deployment Scripts Generator",
   "tree_node_make_version_current": "Make version current",
   "tree_node_run_update_script_activity": "Execute"

@@ -32,6 +32,7 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
   @observable accessor resultFilter: string = 'MissingInDatabase';
   @observable accessor selectedDeploymentVersionId: string | null = null;
   @observable accessor selectedPlatform: string | null = null;
+  @observable accessor isPreviewOpen = false;
 
   label = 'Deployment Scripts Generator';
 
@@ -192,4 +193,21 @@ export default class DeploymentScriptsGeneratorEditorState implements IEditorSta
       this.selectedPlatform = this.uniquePlatforms[0];
     }
   });
+
+  openPreview() {
+    this.isPreviewOpen = true;
+  }
+
+  closePreview() {
+    this.isPreviewOpen = false;
+  }
+
+  @computed get selectedScripts(): { itemName: string; script: string; script2: string }[] {
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.map(r => ({
+      itemName: r.itemName,
+      script: r.script || '',
+      script2: r.script2 || '',
+    }));
+  }
 }
