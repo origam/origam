@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
+import * as path from "node:path";
+import * as fs from "node:fs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,7 +25,6 @@ export default defineConfig({
 			},
 		}),
 		tsconfigPaths(),
-		basicSsl()
 	],
 	resolve: {
 		alias: [
@@ -105,7 +105,11 @@ export default defineConfig({
 		},
 	},
 	server: {
-		https: true,
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, "certs", "localhost+2-key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "certs", "localhost+2.pem")),
+    },
+    host: "localhost",
 		proxy: {
       // OpenIddict endpoints
       '/.well-known': {
