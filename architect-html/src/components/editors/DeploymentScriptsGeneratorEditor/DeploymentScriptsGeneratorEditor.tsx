@@ -73,7 +73,13 @@ const DeploymentScriptsGeneratorEditor = observer(
                             <Button
                               title={
                                 <>
-                                  Add to <strong>Model</strong>
+                                  {T('Add to', 'editor_DeploymentScriptsGenerator_AddToButton')}{' '}
+                                  <strong>
+                                    {T(
+                                      'Model',
+                                      'editor_DeploymentScriptsGenerator_AddToButton_Model',
+                                    )}
+                                  </strong>
                                 </>
                               }
                               type="primary"
@@ -139,7 +145,13 @@ const DeploymentScriptsGeneratorEditor = observer(
                               <Button
                                 title={
                                   <>
-                                    Add to <strong>Deployment</strong>
+                                    {T('Add to', 'editor_DeploymentScriptsGenerator_AddToButton')}{' '}
+                                    <strong>
+                                      {T(
+                                        'Deployment',
+                                        'editor_DeploymentScriptsGenerator_AddToButton_Deployment',
+                                      )}
+                                    </strong>
                                   </>
                                 }
                                 type="primary"

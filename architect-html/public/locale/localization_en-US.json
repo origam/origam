@@ -44,6 +44,9 @@
   "editor_DeploymentScriptsGenerator_AddToDeploymentLabel_DeploymentVersion": "Deployment Version",
   "editor_DeploymentScriptsGenerator_PreviewModal_Title": "Scripts Preview",
   "editor_DeploymentScriptsGenerator_PreviewModal_Close": "Close",
+  "editor_DeploymentScriptsGenerator_AddToButton": "Add to",
+  "editor_DeploymentScriptsGenerator_AddToButton_Model": "Model",
+  "editor_DeploymentScriptsGenerator_AddToButton_Deployment": "Deployment",
   "deploymentScripts_GeneratorButtonHOC_label": "Deployment Scripts Generator",
   "tree_node_make_version_current": "Make version current",
   "tree_node_run_update_script_activity": "Execute"
