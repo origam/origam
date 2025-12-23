@@ -19,14 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Origam.Server.Identity.Controllers;
 
+[AllowAnonymous]
 public class ErrorController : Microsoft.AspNetCore.Mvc.Controller
 {
-    [Route("Error")]
+    [Route("~/Error")]
     public IActionResult Error()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
