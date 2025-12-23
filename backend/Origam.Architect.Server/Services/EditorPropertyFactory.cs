@@ -82,7 +82,7 @@ public class EditorPropertyFactory
         );
     }
 
-    public EditorProperty Create(PropertyInfo property, PropertyValueItem valueItem)
+    public EditorProperty Create(PropertyInfo property, Guid controlPropertyId, object typedValue)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
@@ -92,9 +92,9 @@ public class EditorPropertyFactory
 
         return new EditorProperty(
             name: name,
-            controlPropertyId: valueItem.ControlPropertyId,
+            controlPropertyId: controlPropertyId,
             type: ToPropertyTypeName(property),
-            value: valueItem.TypedValue,
+            value: typedValue,
             dropDownValues: GetAvailableValues(property, instance: null),
             category: category,
             description: description,
