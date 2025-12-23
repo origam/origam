@@ -333,4 +333,7 @@
   <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
     <value>Nepodařilo se zpracovat odpověď s tokenem z '{0}'. Původní obsah: {1}</value>
   </data>
+  <data name="ErrorDetailsInLog" xml:space="preserve">
+    <value>Došlo k chybě. Podrobnosti mohou být uvedeny v logu.</value>
+  </data>
 </root>

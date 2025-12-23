@@ -333,4 +333,7 @@
   <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
     <value>Token-Antwort von '{0}' konnte nicht geparst werden. Rohinhalt: {1}</value>
   </data>
+  <data name="ErrorDetailsInLog" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten. Möglicherweise befinden sich weitere Details in der Protokolldatei.</value>
+  </data>
 </root>

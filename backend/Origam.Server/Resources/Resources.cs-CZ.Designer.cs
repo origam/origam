@@ -303,6 +303,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Došlo k chybě. Podrobnosti mohou být uvedeny v logu..
+        /// </summary>
+        public static string ErrorDetailsInLog {
+            get {
+                return ResourceManager.GetString("ErrorDetailsInLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nepodařilo se zpracovat discovery dokument z &apos;{0}&apos;..
         /// </summary>
         public static string ErrorDiscoveryDocumentParseFailed {
