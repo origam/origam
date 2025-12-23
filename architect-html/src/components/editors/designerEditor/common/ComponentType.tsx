@@ -34,6 +34,7 @@ export enum ComponentType {
   TabControl = 'Origam.Gui.Win.AsTabControl',
   TabPage = 'System.Windows.Forms.TabPage',
   AsTree = 'Origam.Gui.Win.AsTreeView',
+  Label = 'System.Windows.Forms.Label',
 }
 
 export function parseComponentType(value: string): ComponentType {

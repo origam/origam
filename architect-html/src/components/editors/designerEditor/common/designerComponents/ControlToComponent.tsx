@@ -37,6 +37,7 @@ import { SplitPanel } from '@editors/designerEditor/common/designerComponents/Sp
 import { TabControl, TabPage } from '@editors/designerEditor/common/designerComponents/TabControl';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
+import { Label } from '@editors/designerEditor/common/designerComponents/Label.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -71,6 +72,17 @@ export async function controlToComponent(
 
     case ComponentType.AsTextBox:
       return new AsTextBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.Label:
+      return new Label({
         id: control.id,
         parent: parent,
         data: {
