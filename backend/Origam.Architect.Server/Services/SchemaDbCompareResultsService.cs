@@ -37,10 +37,10 @@ public class SchemaDbCompareResultsService(
 {
     public List<SchemaDbCompareResult> GetByPlatform(Platform platform)
     {
-        var daPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
-        daPlatform.PersistenceProvider = persistenceService.SchemaProvider;
+        var dataService = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
+        dataService.PersistenceProvider = persistenceService.SchemaProvider;
 
-        var dbCompareResults = daPlatform.CompareSchema(persistenceService.SchemaProvider);
+        var dbCompareResults = dataService.CompareSchema(persistenceService.SchemaProvider);
         foreach (SchemaDbCompareResult result in dbCompareResults)
         {
             result.Platform = platform;
