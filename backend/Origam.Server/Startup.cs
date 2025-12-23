@@ -492,7 +492,7 @@ public class Startup
         }
         else
         {
-            app.UseExceptionHandler("/Error/Error");
+            app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
 

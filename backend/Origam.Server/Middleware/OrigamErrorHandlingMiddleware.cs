@@ -88,6 +88,12 @@ public class OrigamErrorHandlingMiddleware(
         }
         catch (Exception ex)
         {
+            // Let MVC handle Account UI errors => redirect to /Error (generic error page)
+            if (context.Request.Path.StartsWithSegments("/Account"))
+            {
+                throw;
+            }
+
             switch (ex)
             {
                 case OrigamDataException or OrigamSecurityException:
