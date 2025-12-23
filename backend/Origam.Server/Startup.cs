@@ -45,6 +45,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Origam.DA.Service;
+using Origam.Mail;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -615,5 +616,6 @@ public class Startup
 
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
+        MailServiceFactory.SetDIServiceProvider(app.ApplicationServices);
     }
 }
