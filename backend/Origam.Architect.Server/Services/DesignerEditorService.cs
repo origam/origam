@@ -234,16 +234,22 @@ public class DesignerEditorService(
 
         if (controlSetItem.RootItem is PanelControlSet controlSet)
         {
-            var bindingInfo = controlSetItem
-                .ChildItems.OfType<PropertyBindingInfo>()
-                .FirstOrDefault();
-            var caption =
-                controlSet
-                    .DataEntity?.ChildItemsByType<IDataEntityColumn>(
-                        AbstractDataEntityColumn.CategoryConst
-                    )
-                    ?.FirstOrDefault(x => x.Name == bindingInfo?.Value)
-                    ?.Caption ?? bindingInfo?.Value;
+            var caption = apiControl
+                .Properties.FirstOrDefault(x => x.Name == "Caption")
+                ?.Value?.ToString();
+            if (string.IsNullOrEmpty(caption))
+            {
+                var bindingInfo = controlSetItem
+                    .ChildItems.OfType<PropertyBindingInfo>()
+                    .FirstOrDefault();
+                caption =
+                    controlSet
+                        .DataEntity?.ChildItemsByType<IDataEntityColumn>(
+                            AbstractDataEntityColumn.CategoryConst
+                        )
+                        ?.FirstOrDefault(x => x.Name == bindingInfo?.Value)
+                        ?.Caption ?? bindingInfo?.Value;
+            }
             apiControl.Name = caption ?? controlSetItem.Name;
         }
         else
