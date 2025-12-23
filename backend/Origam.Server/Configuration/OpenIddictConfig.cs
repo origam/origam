@@ -131,8 +131,8 @@ public class OpenIddictConfig
                     .Select(x => x.Replace("#", ""))
                     .ToArray(),
                 AllowedCorsOrigins = webClientSection
-                    .GetSectionOrThrow("AllowedCorsOrigins")
-                    .GetStringArrayOrThrow(),
+                    .GetSection("AllowedCorsOrigins")
+                    ?.Get<string[]>(),
             };
         }
         return null;
