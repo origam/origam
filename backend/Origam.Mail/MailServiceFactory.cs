@@ -20,21 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 #pragma warning disable IDE0005
+using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 #pragma warning restore IDE0005
+#if NETSTANDARD
+using Microsoft.Extensions.DependencyInjection;
+#endif
 
 namespace Origam.Mail;
 
 public class MailServiceFactory
 {
 #if NETSTANDARD
-    private static readonly IConfiguration configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddEnvironmentVariables()
-        .Build();
+    private static IServiceProvider DIServiceProvider;
+
+    public static void SetDIServiceProvider(IServiceProvider diServiceProvider)
+    {
+        DIServiceProvider = diServiceProvider;
+    }
 #endif
 
     private MailServiceFactory() { }
@@ -42,6 +47,7 @@ public class MailServiceFactory
     public static IMailService GetMailService()
     {
 #if NETSTANDARD
+        var configuration = DIServiceProvider.GetService<IConfiguration>();
         var mailConfig = configuration.GetSection("MailConfig");
         string username = mailConfig["UserName"];
         bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
