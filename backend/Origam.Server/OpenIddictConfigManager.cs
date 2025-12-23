@@ -87,14 +87,22 @@ public static class OpenIddictConfigManager
             Requirements = { Requirements.Features.ProofKeyForCodeExchange },
         };
 
-        foreach (var uri in config.WebClient.RedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.WebClient.RedirectUris ?? [])
         {
-            descriptor.RedirectUris.Add(new Uri(uri));
+            Uri uriObject = CreateAbsoluteUri(
+                uri,
+                nameof(config.WebClient) + "." + nameof(config.WebClient.RedirectUris)
+            );
+            descriptor.RedirectUris.Add(uriObject);
         }
 
-        foreach (var uri in config.WebClient.PostLogoutRedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.WebClient.PostLogoutRedirectUris ?? [])
         {
-            descriptor.PostLogoutRedirectUris.Add(new Uri(uri));
+            Uri uriObject = CreateAbsoluteUri(
+                uri,
+                nameof(config.WebClient) + "." + nameof(config.WebClient.PostLogoutRedirectUris)
+            );
+            descriptor.PostLogoutRedirectUris.Add(uriObject);
         }
 
         descriptor.Permissions.AddRange(
@@ -143,19 +151,28 @@ public static class OpenIddictConfigManager
             Requirements = { Requirements.Features.ProofKeyForCodeExchange }, // PKCE
         };
 
-        foreach (var uri in config.MobileClient.RedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.MobileClient.RedirectUris ?? [])
         {
-            descriptor.RedirectUris.Add(new Uri(uri));
+            Uri uriObject = CreateAbsoluteUri(
+                uri,
+                nameof(config.MobileClient) + "." + nameof(config.MobileClient.RedirectUris)
+            );
+            descriptor.RedirectUris.Add(uriObject);
         }
 
-        foreach (var uri in config.MobileClient.PostLogoutRedirectUris ?? Array.Empty<string>())
+        foreach (var uri in config.MobileClient.PostLogoutRedirectUris ?? [])
         {
-            descriptor.PostLogoutRedirectUris.Add(new Uri(uri));
+            Uri uriObject = CreateAbsoluteUri(
+                uri,
+                nameof(config.MobileClient)
+                    + "."
+                    + nameof(config.MobileClient.PostLogoutRedirectUris)
+            );
+            descriptor.PostLogoutRedirectUris.Add(uriObject);
         }
 
         descriptor.Permissions.AddRange(
-            new[]
-            {
+            [
                 Permissions.Endpoints.Authorization,
                 Permissions.Endpoints.Token,
                 Permissions.Endpoints.EndSession,
@@ -166,7 +183,7 @@ public static class OpenIddictConfigManager
                 Permissions.Scopes.Profile,
                 Permissions.Prefixes.Scope + "offline_access",
                 Permissions.Prefixes.Scope + InternalApiScope,
-            }
+            ]
         );
 
         var result = await apps.FindByClientIdAsync("origamMobileClient");
@@ -214,5 +231,18 @@ public static class OpenIddictConfigManager
         {
             await apps.UpdateAsync(application, descriptor);
         }
+    }
+
+    private static Uri CreateAbsoluteUri(string uri, string configOrigin)
+    {
+        if (!Uri.TryCreate(uri, UriKind.Absolute, out var result))
+        {
+            throw new ArgumentException(
+                $"Invalid absolute URI '{uri}' configured at '{configOrigin}'. Check appsettings or environment configuration.",
+                nameof(uri)
+            );
+        }
+
+        return result;
     }
 }
