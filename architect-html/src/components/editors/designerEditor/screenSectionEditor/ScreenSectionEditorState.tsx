@@ -107,11 +107,7 @@ export class ScreenSectionEditorState extends DesignerEditorState {
     yield* super.save();
   }
 
-  protected update(): Generator<Promise<any>, void, any> {
-    return this.updateGenerator();
-  }
-
-  protected *updateGenerator(): Generator<Promise<any>, void, any> {
+  protected *update(): Generator<Promise<any>, void, any> {
     const modelChanges = this.surface.components.map(x => {
       return {
         schemaItemId: x.id,
