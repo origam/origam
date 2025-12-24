@@ -3,7 +3,7 @@ using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class MultiColumnAdapterFieldWrapper: IControl
+public class MultiColumnAdapterFieldWrapper : IControl
 {
     [Browsable(false)]
     public int Top { get; set; }
@@ -13,7 +13,7 @@ public class MultiColumnAdapterFieldWrapper: IControl
 
     [Category("Multi Column Adapter Field")]
     public string ControlMember { get; set; }
-    
+
     public int TabIndex { get; set; }
 
     [Browsable(false)]
@@ -21,8 +21,6 @@ public class MultiColumnAdapterFieldWrapper: IControl
 
     [Browsable(false)]
     public int Left { get; set; }
-    
-    public void Initialize(ControlSetItem controlSetItem)
-    {
-    }
+
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

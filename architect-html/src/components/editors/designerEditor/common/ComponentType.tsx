@@ -37,6 +37,7 @@ export enum ComponentType {
   Label = 'System.Windows.Forms.Label',
   CheckList = 'Origam.Gui.Win.Checklist',
   BlobControl = 'Origam.Gui.Win.BlobControl',
+  ColorPicker = 'Origam.Gui.Win.ColorPicker',
 }
 
 export function parseComponentType(value: string): ComponentType {

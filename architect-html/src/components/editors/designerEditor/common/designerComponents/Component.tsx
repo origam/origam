@@ -235,6 +235,8 @@ export abstract class Component {
 
 export class AsCombo extends Component {}
 
+export class ColorPicker extends Component {}
+
 export class AsTextBox extends Component {}
 
 export class TagInput extends Component {}

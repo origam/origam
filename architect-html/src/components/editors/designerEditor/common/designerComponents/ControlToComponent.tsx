@@ -27,6 +27,7 @@ import {
   AsDateBox,
   AsTextBox,
   AsTree,
+  ColorPicker,
   Component,
   TagInput,
   TextArea,
@@ -96,6 +97,17 @@ export async function controlToComponent(
 
     case ComponentType.BlobControl:
       return new BlobControl({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.ColorPicker:
+      return new ColorPicker({
         id: control.id,
         parent: parent,
         data: {
