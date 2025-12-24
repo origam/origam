@@ -31,26 +31,25 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DeploymentScriptController(
+public class DeploymentScriptsController(
     IPersistenceService persistenceService,
     DeploymentScriptRunnerService deploymentScriptRunner,
-    DeploymentVersionCurrentService deploymentVersionCurrentService,
-    ILogger<DeploymentScriptController> log
-) : OrigamController(log)
+    DeploymentVersionCurrentService deploymentVersionCurrentService
+) : ControllerBase
 {
     [HttpPost("SetVersionCurrent")]
     public IActionResult SetVersionCurrent(
         [Required] [FromBody] SetVersionCurrentRequestModel requestModel
     )
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+        var targetVersion = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
             requestModel.SchemaItemId,
             useCache: false
         );
 
-        if (item is not DeploymentVersion version)
+        if (targetVersion is not DeploymentVersion version)
         {
-            return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentVersion);
+            throw new Exception("DeploymentVersion is not found.");
         }
 
         deploymentVersionCurrentService.SetVersionCurrent(version);
@@ -61,14 +60,14 @@ public class DeploymentScriptController(
     [HttpPost("Run")]
     public IActionResult Run([Required] [FromBody] RunRequestModel requestModel)
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
+        var updateScriptActivity = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(
             requestModel.SchemaItemId,
             useCache: false
         );
 
-        if (item is not AbstractUpdateScriptActivity script)
+        if (updateScriptActivity is not AbstractUpdateScriptActivity script)
         {
-            return BadRequest(Strings.DeploymentScripts_SelectItemIsNotDeploymentScript);
+            throw new Exception("UpdateScriptActivity is not found.");
         }
 
         SecurityManager.SetServerIdentity();

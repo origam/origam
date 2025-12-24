@@ -1,0 +1,213 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import { IEditorState } from '@/components/editorTabView/IEditorState';
+import { ModelTreeState } from '@/components/modelTree/ModelTreeState';
+import { IArchitectApi, IDatabaseResult, IDeploymentVersion } from '@api/IArchitectApi';
+import { computed, flow, observable } from 'mobx';
+
+export default class DeploymentScriptsGeneratorEditorState implements IEditorState {
+  @observable accessor results: IDatabaseResult[];
+  @observable accessor isSaving = false;
+  @observable accessor isActive = false;
+  @observable accessor selectedItems: Set<string> = new Set();
+  @observable accessor possibleDeploymentVersions: IDeploymentVersion[];
+  @observable accessor currentDeploymentVersionId: string | null;
+  @observable accessor resultFilter: string = 'MissingInDatabase';
+  @observable accessor selectedDeploymentVersionId: string | null = null;
+  @observable accessor selectedPlatform: string | null = null;
+  @observable accessor isPreviewOpen = false;
+
+  label = 'Deployment Scripts Generator';
+
+  @computed get uniqueResultTypes(): string[] {
+    const types = new Set(this.results.map(r => r.resultType).filter(Boolean));
+    return Array.from(types).sort();
+  }
+
+  @computed get filteredResults(): IDatabaseResult[] {
+    return this.results.filter(r => r.resultType === this.resultFilter);
+  }
+
+  @computed get uniquePlatforms(): string[] {
+    const platforms = new Set(this.results.map(r => r.platformName).filter(Boolean));
+    return Array.from(platforms).sort();
+  }
+
+  isDirty = false;
+
+  constructor(
+    public editorId: string,
+    results: IDatabaseResult[],
+    possibleDeploymentVersions: IDeploymentVersion[],
+    currentDeploymentVersionId: string | null,
+    protected architectApi: IArchitectApi,
+    protected modelTreeState: ModelTreeState,
+  ) {
+    this.results = results ?? [];
+    this.possibleDeploymentVersions = possibleDeploymentVersions ?? [];
+    this.currentDeploymentVersionId = currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = currentDeploymentVersionId;
+    if (this.uniquePlatforms.length > 0) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
+  }
+
+  save(): Generator<Promise<any>, void, any> {
+    throw new Error('Method is unnecessary.');
+  }
+
+  toggleSelection(schemaItemId: string) {
+    if (this.selectedItems.has(schemaItemId)) {
+      this.selectedItems.delete(schemaItemId);
+    } else {
+      this.selectedItems.add(schemaItemId);
+    }
+  }
+
+  selectAll() {
+    this.selectedItems = new Set(
+      this.filteredResults.filter(item => item.schemaItemId).map(item => item.schemaItemId!),
+    );
+  }
+
+  clearSelection() {
+    this.selectedItems = new Set();
+  }
+
+  isSelected(schemaItemId: string): boolean {
+    return this.selectedItems.has(schemaItemId);
+  }
+
+  getSelectedPlatform(): string | null {
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    if (selectedResults.length === 0) {
+      return null;
+    }
+
+    const platforms = new Set(selectedResults.map(r => r.platformName));
+    if (platforms.size !== 1) {
+      return null;
+    }
+
+    return selectedResults[0].platformName;
+  }
+
+  isAddToDeploymentReady(): boolean {
+    if (this.selectedItems.size === 0) {
+      return false;
+    }
+    if (!this.selectedDeploymentVersionId) {
+      return false;
+    }
+    if (!this.selectedPlatform) {
+      return false;
+    }
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.every(
+      r => r.resultType === 'MissingInDatabase' || r.resultType === 'ExistingButDifferent',
+    );
+  }
+
+  addToDeployment = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    if (!this.selectedPlatform || !this.selectedDeploymentVersionId) {
+      return;
+    }
+
+    yield this.architectApi.addToDeployment({
+      platform: this.selectedPlatform,
+      deploymentVersionId: this.selectedDeploymentVersionId,
+      schemaItemIds: Array.from(this.selectedItems),
+    });
+
+    const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
+
+    this.results = response.results;
+    this.possibleDeploymentVersions = response.deploymentVersions;
+    this.currentDeploymentVersionId = response.currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = response.currentDeploymentVersionId;
+    this.clearSelection();
+
+    if (this.uniquePlatforms.length > 0 && !this.uniquePlatforms.includes(this.selectedPlatform!)) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
+
+    yield* this.modelTreeState.loadPackageNodes();
+  });
+
+  isAddToModelReady(): boolean {
+    if (this.selectedItems.size === 0) {
+      return false;
+    }
+    if (!this.selectedPlatform) {
+      return false;
+    }
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.every(r => r.resultType === 'MissingInSchema');
+  }
+
+  addToModel = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    if (!this.selectedPlatform) {
+      return;
+    }
+    const selectedNames = Array.from(this.selectedItems)
+      .map(id => this.results.find(r => r.schemaItemId === id)?.itemName)
+      .filter((name): name is string => name !== undefined);
+
+    yield this.architectApi.addToModel({
+      platform: this.selectedPlatform,
+      schemaItemNames: selectedNames,
+    });
+
+    yield this.reload();
+
+    yield* this.modelTreeState.loadPackageNodes();
+  });
+
+  reload = flow(function* (this: DeploymentScriptsGeneratorEditorState) {
+    const response = yield this.architectApi.fetchDeploymentScriptsList(this.selectedPlatform);
+
+    this.results = response.results;
+    this.possibleDeploymentVersions = response.deploymentVersions;
+    this.currentDeploymentVersionId = response.currentDeploymentVersionId;
+    this.selectedDeploymentVersionId = response.currentDeploymentVersionId;
+    this.clearSelection();
+
+    if (this.uniquePlatforms.length > 0 && !this.uniquePlatforms.includes(this.selectedPlatform!)) {
+      this.selectedPlatform = this.uniquePlatforms[0];
+    }
+  });
+
+  openPreview() {
+    this.isPreviewOpen = true;
+  }
+
+  closePreview() {
+    this.isPreviewOpen = false;
+  }
+
+  @computed get selectedScripts(): { itemName: string; script: string; script2: string }[] {
+    const selectedResults = this.results.filter(r => this.selectedItems.has(r.schemaItemId));
+    return selectedResults.map(r => ({
+      itemName: r.itemName,
+      script: r.script || '',
+      script2: r.script2 || '',
+    }));
+  }
+}

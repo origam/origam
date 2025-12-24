@@ -23,12 +23,16 @@ import {
   EditorType,
   IApiEditorProperty,
   IArchitectApi,
+  IDeploymentScriptsGeneratorEditorData,
   IScreenEditorData,
   ISectionEditorData,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
+import { ModelTreeState } from '@components/modelTree/ModelTreeState';
 import { PropertiesState } from '@components/properties/PropertiesState';
 import DeploymentScriptsEditor from '@editors/DeploymentScriptsEditor/DeploymentScriptsEditor';
+import DeploymentScriptsGeneratorEditor from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditor';
+import DeploymentScriptsGeneratorEditorState from '@editors/DeploymentScriptsGeneratorEditor/DeploymentScriptsGeneratorEditorState';
 import ScreenEditor from '@editors/designerEditor/screenEditor/ScreenEditor';
 import { ScreenEditorState } from '@editors/designerEditor/screenEditor/ScreenEditorState';
 import { ScreenToolboxState } from '@editors/designerEditor/screenEditor/ScreenToolboxState';
@@ -36,24 +40,46 @@ import ScreenSectionEditor from '@editors/designerEditor/screenSectionEditor/Scr
 import { ScreenSectionEditorState } from '@editors/designerEditor/screenSectionEditor/ScreenSectionEditorState';
 import { SectionToolboxState } from '@editors/designerEditor/screenSectionEditor/SectionToolboxState';
 import { DocumentationEditorState } from '@editors/documentationEditor/DocumentationEditorState';
+import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import GridEditor from '@editors/gridEditor/GridEditor';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
+import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
 import XsltEditor from '@editors/xsltEditor/XsltEditor';
 import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
-import { EditorContainer } from '@editors/EditorContainer.tsx';
 
 export function getEditorContainer(args: {
   editorType: EditorType;
   editorData: EditorData;
   propertiesState: PropertiesState;
   architectApi: IArchitectApi;
+  modelTreeState: ModelTreeState;
   runGeneratorHandled: (args: FlowHandlerInput) => CancellablePromise<any>;
 }) {
-  const { editorType, editorData, propertiesState, architectApi } = args;
+  const { editorType, editorData, propertiesState, architectApi, modelTreeState } = args;
   const { node, data, isDirty } = editorData;
+
+  if (editorType === 'DeploymentScriptsGeneratorEditor') {
+    const editorDataTyped = data as IDeploymentScriptsGeneratorEditorData;
+    const results = editorDataTyped.results ?? [];
+    const possibleDeploymentVersions = editorDataTyped.possibleDeploymentVersions ?? [];
+    const currentDeploymentVersionId = editorDataTyped.currentDeploymentVersionId ?? null;
+
+    const editorState = new DeploymentScriptsGeneratorEditorState(
+      editorData.editorId,
+      results,
+      possibleDeploymentVersions,
+      currentDeploymentVersionId,
+      architectApi,
+      modelTreeState,
+    );
+
+    return new EditorContainer(
+      editorState,
+      <DeploymentScriptsGeneratorEditor editorState={editorState} />,
+    );
+  }
 
   if (editorType === 'DeploymentScriptsEditor') {
     const properties = (data as IApiEditorProperty[]).map(property => new EditorProperty(property));

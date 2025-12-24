@@ -33,12 +33,21 @@
   "screen_editor_title": "Screen Editor: {0}",
   "transform_button_label": "Transform",
   "validate_button_label": "Validate",
-  "dialog_ok": "Ok"
-  "screen_editor_title": "Screen Editor: {0}",
+  "dialog_ok": "Ok",
   "editor_DeploymentScripts_ActionPanelTitle_Sql": "SQL Editor: {0}",
   "editor_DeploymentScripts_TabLabel_Sql": "SQL",
   "editor_DeploymentScripts_ActionPanelTitle_Settings": "Settings: {0}",
   "editor_DeploymentScripts_TabLabel_Settings": "Settings",
+  "editor_DeploymentScriptsGenerator_TabLabel_List": "Deployment scripts",
+  "editor_DeploymentScriptsGenerator_ActionPanelTitle_List": "Deployment scripts ({0})",
+  "editor_DeploymentScriptsGenerator_ActionPanelLabel_Platform": "Platform",
+  "editor_DeploymentScriptsGenerator_AddToDeploymentLabel_DeploymentVersion": "Deployment Version",
+  "editor_DeploymentScriptsGenerator_PreviewModal_Title": "Scripts Preview",
+  "editor_DeploymentScriptsGenerator_PreviewModal_Close": "Close",
+  "editor_DeploymentScriptsGenerator_AddToButton": "Add to",
+  "editor_DeploymentScriptsGenerator_AddToButton_Model": "Model",
+  "editor_DeploymentScriptsGenerator_AddToButton_Deployment": "Deployment",
+  "deploymentScripts_GeneratorButtonHOC_label": "Deployment Scripts Generator",
   "tree_node_make_version_current": "Make version current",
   "tree_node_run_update_script_activity": "Execute"
 }

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import DeploymentScriptsGeneratorButtonHOC from '@/modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorButtonHOC';
 import Logo from '@components/logo/Logo';
 import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
@@ -29,6 +30,7 @@ const TopBar = () => {
       <div className={S.panel}>
         <Logo />
         <div className={S.actionBar}>
+          <DeploymentScriptsGeneratorButtonHOC />
           <SettingsButtonHOC />
         </div>
       </div>
