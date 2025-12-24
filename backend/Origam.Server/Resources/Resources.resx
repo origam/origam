@@ -333,4 +333,7 @@
   <data name="ErrorTokenResponseParseFailed" xml:space="preserve">
     <value>Failed to parse token response from '{0}'. Raw content: {1}</value>
   </data>
+  <data name="ErrorDetailsInLog" xml:space="preserve">
+    <value>An error has occured. There may be some details in the log file.</value>
+  </data>
 </root>

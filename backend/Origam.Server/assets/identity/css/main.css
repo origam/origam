@@ -175,7 +175,7 @@ input[type="checkbox"], input[type="radio"] {
   margin-top: -8px;
 }
 
-#languageSelectForm, .reset-password-statement, .initial-user-statement {
+#languageSelectForm, .reset-password-statement, .initial-user-statement, .go-to-login-statement {
     font-size: 0.9em;
     padding: 0 1.5em;
 }
