@@ -36,6 +36,7 @@ export enum ComponentType {
   AsTree = 'Origam.Gui.Win.AsTreeView',
   Label = 'System.Windows.Forms.Label',
   CheckList = 'Origam.Gui.Win.Checklist',
+  BlobControl = 'Origam.Gui.Win.BlobControl',
 }
 
 export function parseComponentType(value: string): ComponentType {

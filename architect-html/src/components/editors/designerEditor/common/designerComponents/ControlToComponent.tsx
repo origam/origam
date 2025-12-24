@@ -39,6 +39,7 @@ import { ReactElement } from 'react';
 import { Label } from '@editors/designerEditor/common/designerComponents/Label.tsx';
 import { CheckList } from '@editors/designerEditor/common/designerComponents/CheckList.tsx';
 import { GroupBox } from '@editors/designerEditor/common/designerComponents/GroupBox.tsx';
+import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -84,6 +85,17 @@ export async function controlToComponent(
 
     case ComponentType.CheckList:
       return new CheckList({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.BlobControl:
+      return new BlobControl({
         id: control.id,
         parent: parent,
         data: {

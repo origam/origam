@@ -92,7 +92,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       padding: 5px;
       flex-shrink: 0;
       overflow: hidden;
-      //cursor: pointer;
     }
 
     div {
@@ -103,4 +102,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       margin-right: 20px;
     }
   }
+}
+
+.blobControl {
+  flex-grow: 1;
+  border: 1px solid var(--background5);
+  background-color: var(--foreground1);
+  color: var(--background1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
