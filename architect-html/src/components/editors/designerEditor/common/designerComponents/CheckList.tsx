@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { T } from '@/main';
 
 export class CheckList extends Component {
   getDesignerRepresentation(): ReactElement | null {
@@ -28,15 +29,15 @@ export class CheckList extends Component {
         <div className={S.checkList}>
           <div className={S.checklistItem}>
             <input type="checkbox" className="checkbox undefined" readOnly />
-            <div>Option A</div>
+            <div>{T('Option A', 'check_list_option_A')}</div>
           </div>
           <div className={S.checklistItem}>
             <input type="checkbox" className="checkbox undefined" readOnly />
-            <div>Option B</div>
+            <div>{T('Option B', 'check_list_option_B')}</div>
           </div>
           <div className={S.checklistItem}>
             <input type="checkbox" className="checkbox undefined" readOnly />
-            <div>Option C</div>
+            <div>{T('Option C', 'check_list_option_C')}</div>
           </div>
         </div>
       </div>

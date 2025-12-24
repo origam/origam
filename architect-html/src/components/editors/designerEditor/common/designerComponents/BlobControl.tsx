@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ReactElement } from 'react';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { T } from '@/main';
 
 export class BlobControl extends Component {
   getDesignerRepresentation(): ReactElement | null {
     return (
       <div className={S.designSurfaceEditorContainer}>
-        <label className={S.blobControl}>Load</label>
+        <label className={S.blobControl}>{T('Load', 'blob_control_label')}</label>
       </div>
     );
   }
