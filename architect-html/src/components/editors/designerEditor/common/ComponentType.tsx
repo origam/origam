@@ -35,6 +35,7 @@ export enum ComponentType {
   TabPage = 'System.Windows.Forms.TabPage',
   AsTree = 'Origam.Gui.Win.AsTreeView',
   Label = 'System.Windows.Forms.Label',
+  CheckList = 'Origam.Gui.Win.Checklist',
 }
 
 export function parseComponentType(value: string): ComponentType {

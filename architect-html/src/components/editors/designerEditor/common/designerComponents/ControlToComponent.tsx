@@ -38,6 +38,7 @@ import { TabControl, TabPage } from '@editors/designerEditor/common/designerComp
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
 import { Label } from '@editors/designerEditor/common/designerComponents/Label.tsx';
+import { CheckList } from '@editors/designerEditor/common/designerComponents/CheckList.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -72,6 +73,17 @@ export async function controlToComponent(
 
     case ComponentType.AsTextBox:
       return new AsTextBox({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.CheckList:
+      return new CheckList({
         id: control.id,
         parent: parent,
         data: {
