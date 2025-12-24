@@ -28,7 +28,6 @@ import {
   AsTextBox,
   AsTree,
   Component,
-  GroupBox,
   TagInput,
   TextArea,
 } from '@editors/designerEditor/common/designerComponents/Component';
@@ -39,6 +38,7 @@ import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
 import { Label } from '@editors/designerEditor/common/designerComponents/Label.tsx';
 import { CheckList } from '@editors/designerEditor/common/designerComponents/CheckList.tsx';
+import { GroupBox } from '@editors/designerEditor/common/designerComponents/GroupBox.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
