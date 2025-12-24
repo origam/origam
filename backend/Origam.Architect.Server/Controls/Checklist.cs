@@ -34,11 +34,10 @@ public class Checklist : ControlBase
     public Guid LookupId { get; set; }
 
     [Category("(ORIGAM)")]
-    [DefaultValue(100)]
     [Description(
         "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
     )]
-    public int GridColumnWidth { get; set; }
+    public int GridColumnWidth { get; set; } = 100;
 
     public int ColumnWidth { get; set; }
 
