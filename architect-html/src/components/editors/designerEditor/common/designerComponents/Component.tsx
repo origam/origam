@@ -25,7 +25,7 @@ import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
 import { ReactElement } from 'react';
 
-export abstract class Component {
+export class Component {
   id: string;
   @observable.ref accessor parent: Component | null;
   data: IComponentData;
@@ -232,17 +232,3 @@ export abstract class Component {
 
   update() {}
 }
-
-export class AsCombo extends Component {}
-
-export class ColorPicker extends Component {}
-
-export class AsTextBox extends Component {}
-
-export class TagInput extends Component {}
-
-export class AsDateBox extends Component {}
-
-export class TextArea extends Component {}
-
-export class AsTree extends Component {}
