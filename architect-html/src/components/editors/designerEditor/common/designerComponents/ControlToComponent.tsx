@@ -32,6 +32,7 @@ import { Label } from '@editors/designerEditor/common/designerComponents/Label.t
 import { CheckList } from '@editors/designerEditor/common/designerComponents/CheckList.tsx';
 import { GroupBox } from '@editors/designerEditor/common/designerComponents/GroupBox.tsx';
 import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
+import { RadioButton } from '@editors/designerEditor/common/designerComponents/RadioButton.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -44,6 +45,17 @@ export async function controlToComponent(
   switch (componentType) {
     case ComponentType.CheckList:
       return new CheckList({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.RadioButton:
+      return new RadioButton({
         id: control.id,
         parent: parent,
         data: {
@@ -184,6 +196,8 @@ export async function controlToComponent(
     case ComponentType.TagInput:
     case ComponentType.AsDateBox:
     case ComponentType.TextArea:
+    case ComponentType.MultiColumnAdapterFieldWrapper:
+    case ComponentType.ImageBox:
       return new Component({
         id: control.id,
         parent: parent,

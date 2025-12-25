@@ -38,6 +38,9 @@ export enum ComponentType {
   CheckList = 'Origam.Gui.Win.Checklist',
   BlobControl = 'Origam.Gui.Win.BlobControl',
   ColorPicker = 'Origam.Gui.Win.ColorPicker',
+  MultiColumnAdapterFieldWrapper = 'Origam.Gui.Win.MultiColumnAdapterFieldWrapper',
+  ImageBox = 'Origam.Gui.Win.ImageBox',
+  RadioButton = 'Origam.Gui.Win.RadioButton',
 }
 
 export function parseComponentType(value: string): ComponentType {
