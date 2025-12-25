@@ -71,3 +71,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     font-weight: bold;
   }
 }
+
+.checkList {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .checklistItem {
+    min-width: 25%;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    transition: all .3s linear;
+    margin-bottom: 3px;
+
+    input {
+      padding: 5px;
+      flex-shrink: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    div {
+      flex-grow: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      margin-left: 5px;
+      margin-right: 20px;
+    }
+  }
+}
+
+.blobControl {
+  flex-grow: 1;
+  border: 1px solid var(--background5);
+  background-color: var(--foreground1);
+  color: var(--background1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

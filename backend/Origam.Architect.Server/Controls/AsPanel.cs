@@ -56,9 +56,6 @@ public class AsPanel : ControlBase
     [Category("Pipeline View")]
     public bool IsPipelineSupported { get; set; }
 
-    [Category("Behavior")]
-    public int TabIndex { get; set; }
-
     [Category("Map View")]
     public bool IsMapVisible { get; set; } = false;
 

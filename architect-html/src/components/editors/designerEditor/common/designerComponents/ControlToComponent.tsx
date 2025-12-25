@@ -22,21 +22,17 @@ import { ComponentType, parseComponentType } from '@editors/designerEditor/commo
 import { AsCheckBox } from '@editors/designerEditor/common/designerComponents/AsCheckBox';
 import { AsForm } from '@editors/designerEditor/common/designerComponents/AsForm';
 import { AsPanel } from '@editors/designerEditor/common/designerComponents/AsPanel';
-import {
-  AsCombo,
-  AsDateBox,
-  AsTextBox,
-  AsTree,
-  Component,
-  GroupBox,
-  TagInput,
-  TextArea,
-} from '@editors/designerEditor/common/designerComponents/Component';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component';
 import { FormPanel } from '@editors/designerEditor/common/designerComponents/FormPanel';
 import { SplitPanel } from '@editors/designerEditor/common/designerComponents/SplitPanel';
 import { TabControl, TabPage } from '@editors/designerEditor/common/designerComponents/TabControl';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { ReactElement } from 'react';
+import { Label } from '@editors/designerEditor/common/designerComponents/Label.tsx';
+import { CheckList } from '@editors/designerEditor/common/designerComponents/CheckList.tsx';
+import { GroupBox } from '@editors/designerEditor/common/designerComponents/GroupBox.tsx';
+import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
+import { RadioButton } from '@editors/designerEditor/common/designerComponents/RadioButton.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -47,8 +43,8 @@ export async function controlToComponent(
   const properties = control.properties.map(prop => new EditorProperty(prop));
   const componentType = parseComponentType(control.type);
   switch (componentType) {
-    case ComponentType.AsCombo:
-      return new AsCombo({
+    case ComponentType.CheckList:
+      return new CheckList({
         id: control.id,
         parent: parent,
         data: {
@@ -58,8 +54,8 @@ export async function controlToComponent(
         properties: properties,
       });
 
-    case ComponentType.AsTree:
-      return new AsTree({
+    case ComponentType.RadioButton:
+      return new RadioButton({
         id: control.id,
         parent: parent,
         data: {
@@ -69,8 +65,8 @@ export async function controlToComponent(
         properties: properties,
       });
 
-    case ComponentType.AsTextBox:
-      return new AsTextBox({
+    case ComponentType.BlobControl:
+      return new BlobControl({
         id: control.id,
         parent: parent,
         data: {
@@ -80,8 +76,8 @@ export async function controlToComponent(
         properties: properties,
       });
 
-    case ComponentType.TagInput:
-      return new TagInput({
+    case ComponentType.Label:
+      return new Label({
         id: control.id,
         parent: parent,
         data: {
@@ -93,17 +89,6 @@ export async function controlToComponent(
 
     case ComponentType.AsPanel:
       return new AsPanel({
-        id: control.id,
-        parent: parent,
-        data: {
-          type: componentType,
-          identifier: control.name,
-        },
-        properties: properties,
-      });
-
-    case ComponentType.AsDateBox:
-      return new AsDateBox({
         id: control.id,
         parent: parent,
         data: {
@@ -126,17 +111,6 @@ export async function controlToComponent(
 
     case ComponentType.GroupBox:
       return new GroupBox({
-        id: control.id,
-        parent: parent,
-        data: {
-          type: componentType,
-          identifier: control.name,
-        },
-        properties: properties,
-      });
-
-    case ComponentType.TextArea:
-      return new TextArea({
         id: control.id,
         parent: parent,
         data: {
@@ -206,6 +180,25 @@ export async function controlToComponent(
 
     case ComponentType.TabControl:
       return new TabControl({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.AsCombo:
+    case ComponentType.AsTree:
+    case ComponentType.AsTextBox:
+    case ComponentType.ColorPicker:
+    case ComponentType.TagInput:
+    case ComponentType.AsDateBox:
+    case ComponentType.TextArea:
+    case ComponentType.MultiColumnAdapterFieldWrapper:
+    case ComponentType.ImageBox:
+      return new Component({
         id: control.id,
         parent: parent,
         data: {

@@ -20,29 +20,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class MultiColumnAdapterFieldWrapper : IControl
 {
-    public bool HideOnForm { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
+    [Browsable(false)]
+    public int Top { get; set; }
 
     [Browsable(false)]
-    public Guid LookupId { get; set; }
+    public int Width { get; set; }
 
-    public bool ShowUniqueValues { get; set; }
+    [Category("Multi Column Adapter Field")]
+    public string ControlMember { get; set; }
 
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
 
-    public bool ReadOnly { get; set; }
+    [Browsable(false)]
+    public int Height { get; set; }
 
-    public Object LookupValue { get; set; }
+    [Browsable(false)]
+    public int Left { get; set; }
 
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "LookupValue";
+    public void Initialize(ControlSetItem controlSetItem) { }
 }

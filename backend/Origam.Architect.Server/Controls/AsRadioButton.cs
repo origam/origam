@@ -20,29 +20,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class AsRadioButton : ControlBase
 {
-    public bool HideOnForm { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
     [Browsable(false)]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
+    public Guid DataConstantId { get; set; }
 
     public bool ReadOnly { get; set; }
 
-    public Object LookupValue { get; set; }
+    public string Text { get; set; }
 
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "LookupValue";
+    [Browsable(false)]
+    public Object Value { get; set; }
 }
