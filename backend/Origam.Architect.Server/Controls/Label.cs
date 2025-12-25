@@ -35,8 +35,7 @@ public class Label : IControl
     [Browsable(false)]
     public int Height { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
+    [Category("Behavior")]
     public int TabIndex { get; set; }
 
     [Browsable(false)]

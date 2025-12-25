@@ -36,8 +36,6 @@ public class ColorPicker : ControlBase
 
     public Object SelectedColor { get; set; }
 
-    public int TabIndex { get; set; }
-
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 

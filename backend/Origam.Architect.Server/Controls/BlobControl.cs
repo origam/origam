@@ -58,10 +58,6 @@ public class BlobControl : ControlBase
 
     public bool HideOnForm { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     [Category("Data Members")]
     public string RemarkMember { get; set; }
 

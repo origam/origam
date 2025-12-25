@@ -35,6 +35,7 @@ public class MultiColumnAdapterFieldWrapper : IControl
     [Category("Multi Column Adapter Field")]
     public string ControlMember { get; set; }
 
+    [Category("Behavior")]
     public int TabIndex { get; set; }
 
     [Browsable(false)]

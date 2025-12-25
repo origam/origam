@@ -32,9 +32,6 @@ public class ImageBox : ControlBase
     )]
     public int GridColumnWidth { get; set; } = 100;
 
-    [Browsable(true)]
-    public int TabIndex { get; set; }
-
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 

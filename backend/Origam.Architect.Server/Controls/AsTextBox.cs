@@ -42,11 +42,6 @@ public class AsTextBox : LabeledEditor, IAsControl
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Localizable(true)]
-    [Category("Behavior")]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     public bool HideOnForm { get; set; }
 
     public bool IsRichText { get; set; } = false;

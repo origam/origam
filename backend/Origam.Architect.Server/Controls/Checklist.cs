@@ -41,10 +41,6 @@ public class Checklist : ControlBase
 
     public int ColumnWidth { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     [Category("(ORIGAM)")]
     public int CaptionLength { get; set; }
 

@@ -32,8 +32,6 @@ public class AsRadioButton : ControlBase
 
     public string Text { get; set; }
 
-    public int TabIndex { get; set; }
-
     [Browsable(false)]
     public Object Value { get; set; }
 }
