@@ -61,6 +61,7 @@ public class SchemaActionsMenuBuilder : ISubmenuBuilder
         var list = new List<AsMenuCommand>();
         //			CreateMenuItem(list, "Generate &Test Documentation", new Commands.GenerateTestDocumentation(), null);
         //			CreateMenuItem(list, "Generate &Use Case Documentation", new Commands.GenerateUseCaseDocumentation(), null);
+        CreateMenuItem(list, "Show SQL", new ShowDataStructureSql(), null);
         CreateMenuItem(list, "Show SQL", new ShowDataStructureFilterSetSql(), null);
         CreateMenuItem(list, "Show SQL", new ShowDataStructureSortSetSql(), null);
         CreateMenuItem(list, "Show SQL", new ShowDataStructureEntitySql(), null);
