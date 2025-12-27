@@ -21,8 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.Text;
-
-
 namespace Origam.Gui.Win.Commands;
 
 public class ShowDataStructureSql : AbstractMenuCommand
