@@ -20,7 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
+using Origam.DA.Service;
+using Origam.Schema.EntityModel;
+using Origam.UI;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
+
 namespace Origam.Gui.Win.Commands;
 
 public class ShowDataStructureSql : AbstractMenuCommand
