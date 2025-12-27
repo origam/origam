@@ -309,6 +309,7 @@
     <Compile Include="Commands\SchemaActionMenuBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\ShowDataStructureSql.cs" />
     <Compile Include="Commands\ShowDataStructureEntitySql.cs" />
     <Compile Include="Commands\ShowDataStructureFilterSetSql.cs" />
     <Compile Include="Commands\ShowDataStructureSortSetSql.cs" />
