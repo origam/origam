@@ -33,6 +33,7 @@ import { CheckList } from '@editors/designerEditor/common/designerComponents/Che
 import { GroupBox } from '@editors/designerEditor/common/designerComponents/GroupBox.tsx';
 import { BlobControl } from '@editors/designerEditor/common/designerComponents/BlobControl.tsx';
 import { RadioButton } from '@editors/designerEditor/common/designerComponents/RadioButton.tsx';
+import { MultiColumnAdapterFieldWrapper } from '@editors/designerEditor/common/designerComponents/MultiColumnAdapterFieldWrapper.tsx';
 
 export async function controlToComponent(
   control: IApiControl,
@@ -89,6 +90,17 @@ export async function controlToComponent(
 
     case ComponentType.AsPanel:
       return new AsPanel({
+        id: control.id,
+        parent: parent,
+        data: {
+          type: componentType,
+          identifier: control.name,
+        },
+        properties: properties,
+      });
+
+    case ComponentType.MultiColumnAdapterFieldWrapper:
+      return new MultiColumnAdapterFieldWrapper({
         id: control.id,
         parent: parent,
         data: {
