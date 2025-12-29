@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -25,62 +25,60 @@ using System.Text;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.UI;
-using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win.Commands;
 
 public class ShowDataStructureSql : AbstractMenuCommand
 {
-    private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(typeof(SchemaService)) as WorkbenchSchemaService;
     public override bool IsEnabled
     {
-        get { return Owner is DataStructure; }
-        set { base.IsEnabled = value; }
+        get => Owner is DataStructure;
+        set => base.IsEnabled = value;
     }
 
     public override void Run()
     {
-        AbstractSqlDataService abstractSqlDataService =
-            DataServiceFactory.GetDataService() as AbstractSqlDataService;
-        AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)
-            abstractSqlDataService.DbDataAdapterFactory.Clone();
-        DataStructure ds = Owner as DataStructure;
-        generator.PrettyFormat = true;
-        generator.GenerateConsoleUseSyntax = true;
-        StringBuilder builder = new StringBuilder();
-        builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
+        var dataService = DataServiceFactory.GetDataService() 
+            as AbstractSqlDataService;
+        var sqlGenerator = (AbstractSqlCommandGenerator)dataService
+            .DbDataAdapterFactory.Clone();
+        sqlGenerator.PrettyFormat = true;
+        sqlGenerator.GenerateConsoleUseSyntax = true;
+        var dataStructure = Owner as DataStructure;
+        var output = new StringBuilder();
+        output.AppendLine(
+            $"-- SQL statements for data structure: {dataStructure.Name}");
         List<string> tmpTables = new List<string>();
-        foreach (DataStructureEntity entity in ds.Entities)
+        foreach (var dsEntity in dataStructure.Entities)
         {
-            if (entity.Columns.Count > 0)
+            if (dsEntity.Columns.Count <= 0)
             {
-                string tmpTable = "tmptable" + System.Guid.NewGuid();
-                tmpTables.Add(tmpTable);
-                builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
-                builder.AppendLine(
-                    "-----------------------------------------------------------------"
-                );
-                builder.AppendLine("-- " + entity.Name);
-                builder.AppendLine(
-                    "-----------------------------------------------------------------"
-                );
-                builder.AppendLine(
-                    generator.SelectSql(
-                        ds,
-                        entity,
-                        null,
-                        null,
-                        DA.ColumnsInfo.Empty,
-                        new Hashtable(),
-                        null,
-                        false
-                    ) + ";"
-                );
+                continue;
             }
+            string tmpTable = $"tmptable{System.Guid.NewGuid()}";
+            tmpTables.Add(tmpTable);
+            output.AppendLine(sqlGenerator.CreateOutputTableSql(tmpTable));
+            output.AppendLine(
+                "-----------------------------------------------------------------");
+            output.AppendLine($"-- {dsEntity.Name}");
+            output.AppendLine(
+                "-----------------------------------------------------------------");
+            output.Append(
+                sqlGenerator.SelectSql(
+                    ds: dataStructure,
+                    entity: dsEntity,
+                    filter: null,
+                    sortSet: null,
+                    columnsInfo: DA.ColumnsInfo.Empty,
+                    parameters: new Hashtable(),
+                    selectParameterReferences: null,
+                    paging: false
+                )
+            );
+            output.AppendLine(";");
         }
-        builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
-        new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
+        output.AppendLine(sqlGenerator.CreateDataStructureFooterSql(tmpTables));
+        new ShowSqlConsole(new SqlConsoleParameters(output.ToString())).Run();
     }
 }
