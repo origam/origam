@@ -21,6 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Architect.Server.Attributes;
 
+// This goes over a property of type Guid that holds a model id (for example "EntityId").
+// The name parameter is the actual name of the property to show in UI (for example "Entity").
+// The property shown in the UI will not be the Guid (id), it will be the actual object with that id loaded from the model.
 public class ReferencePropertyAttribute(string name) : Attribute
 {
     public string Name { get; } = name;

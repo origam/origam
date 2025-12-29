@@ -21,17 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor, IAsControl
+public class AsDropDown : LabeledEditor
 {
     public bool HideOnForm { get; set; }
 
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Browsable(false)]
+    [ReferenceProperty("DataLookup")]
+    [TypeConverter(typeof(DataLookupConverter))]
     public Guid LookupId { get; set; }
 
     public bool ShowUniqueValues { get; set; }
@@ -40,9 +42,4 @@ public class AsDropDown : LabeledEditor, IAsControl
     public string GridColumnCaption { get; set; }
 
     public bool ReadOnly { get; set; }
-
-    public Object LookupValue { get; set; }
-
-    [NotAModelProperty]
-    public string DefaultBindableProperty => "LookupValue";
 }
