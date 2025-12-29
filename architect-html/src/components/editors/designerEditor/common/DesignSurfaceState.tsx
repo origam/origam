@@ -115,6 +115,7 @@ export class DesignSurfaceState implements IComponentProvider {
 
   @action
   selectComponent(component: Component | null | undefined) {
+    this.propertiesState.setComponentProvider(this);
     this.selectedComponent = component ?? null;
   }
 

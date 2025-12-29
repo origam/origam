@@ -208,7 +208,6 @@ export async function controlToComponent(
     case ComponentType.TagInput:
     case ComponentType.AsDateBox:
     case ComponentType.TextArea:
-    case ComponentType.MultiColumnAdapterFieldWrapper:
     case ComponentType.ImageBox:
       return new Component({
         id: control.id,

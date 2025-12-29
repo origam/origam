@@ -23,22 +23,42 @@ import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { observable } from 'mobx';
 
 import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
 
 export class PropertiesState implements IPropertyManager {
-  @observable accessor provider: IComponentProvider | undefined;
+  @observable private accessor provider: IComponentProvider | undefined;
 
   setComponentProvider(provider: IComponentProvider | undefined) {
-    this.provider = provider;
+    if (this.provider !== provider) {
+      this.provider = provider;
+    }
   }
 
-  get editedItemName() {
-    const component = this.provider?.selectedComponent;
-    return component?.data.identifier ?? component?.getProperty('Text')?.value ?? '';
+  get selectedComponent() {
+    return this.provider?.selectedComponent;
   }
 
   get properties() {
-    const component = this.provider?.selectedComponent;
-    return component?.properties ?? [];
+    return this.selectedComponent?.properties ?? [];
+  }
+
+  get components() {
+    return this.provider?.components ?? [];
+  }
+
+  getComponentLabel(component: Component | undefined) {
+    if (!component) {
+      return '';
+    }
+    const name = component?.data.identifier ?? component?.getProperty('Text')?.value ?? '';
+    const type = (component?.data.type ?? '').replace('Origam.Gui.Win.', '');
+    return `${name} [${type}]`;
+  }
+
+  setSelectedComponent(id: string | undefined): void {
+    if (this.provider) {
+      this.provider.selectedComponent = this.provider?.components.find(x => x.id === id) ?? null;
+    }
   }
 
   onPropertyUpdated(
