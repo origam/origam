@@ -21,12 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Mvc;
 using Origam.Architect.Server.Models;
-using Origam.Architect.Server.Models.Requests;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
@@ -94,21 +92,5 @@ public class SectionEditorController(
         }
 
         return BadRequest($"item id: {input.SchemaItemId} is not a PanelControlSet");
-    }
-}
-
-[ApiController]
-[Route("[controller]")]
-public class SearchController(
-    IPersistenceService persistenceService
-) : ControllerBase
-{
-    [HttpGet("Text")]
-    public ActionResult Text(string text)
-    {
-        ISchemaItem[] results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(
-            text
-        );
-        return Ok(results.Select(x => new SearchResult { Name = x.Name, SchemaId = x.Id }));
     }
 }

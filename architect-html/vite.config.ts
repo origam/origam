@@ -80,6 +80,10 @@ export default defineConfig({
         target: 'http://localhost:5003',
         secure: false,
       },
+      '/Search': {
+        target: 'http://localhost:5003',
+        secure: false,
+      },
     },
   },
 });
