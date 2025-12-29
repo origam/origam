@@ -790,17 +790,6 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
-    ami:displayName="UnlockQueues"
-    x:id="9341bb8b-2214-4a29-8f5c-ed686984b779"
-    asi:name="UnlockQueues"
-    ami:openExclusively="false"
-    ami:order="100"
-    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    ami:roles="*"
-    wrmi:workflow="UnlockQueues#UnlockQueues/ec66df00-07d3-4b14-b3ea-63985db56ad4" />
-  <wrmi:MenuItem
-    asi:abstract="false"
-    ami:alwaysOpenNew="false"
     ami:displayName="Workflow Trace Test"
     x:id="9e820d35-0fe0-4684-9a7a-3afd303c139f"
     asi:name="WorkflowTraceTest"
