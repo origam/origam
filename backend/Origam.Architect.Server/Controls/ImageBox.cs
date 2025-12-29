@@ -21,10 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using Origam.Gui;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class ImageBox : ControlBase
+public class ImageBox : IControl
 {
     [Category("(ORIGAM)")]
     [Description(
@@ -39,4 +40,25 @@ public class ImageBox : ControlBase
     public ImageBoxSourceType SourceType { get; set; }
 
     public Object ImageData { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Top { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Left { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Height { get; set; } = 200;
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Width { get; set; } = 200;
+
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
+
+    public virtual void Initialize(ControlSetItem controlSetItem) { }
 }
