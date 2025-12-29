@@ -39,17 +39,14 @@ public class ShowDataStructureSql : AbstractMenuCommand
 
     public override void Run()
     {
-        var dataService = DataServiceFactory.GetDataService() 
-            as AbstractSqlDataService;
-        var sqlGenerator = (AbstractSqlCommandGenerator)dataService
-            .DbDataAdapterFactory.Clone();
+        var dataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
+        var sqlGenerator = (AbstractSqlCommandGenerator)dataService.DbDataAdapterFactory.Clone();
         sqlGenerator.PrettyFormat = true;
         sqlGenerator.GenerateConsoleUseSyntax = true;
         var dataStructure = Owner as DataStructure;
-        var output = new StringBuilder();
-        output.AppendLine(
-            $"-- SQL statements for data structure: {dataStructure.Name}");
-        List<string> tmpTables = new List<string>();
+        StringBuilder output = new();
+        output.AppendLine($"-- SQL statements for data structure: {dataStructure.Name}");
+        List<string> tmpTables = new();
         foreach (var dsEntity in dataStructure.Entities)
         {
             if (dsEntity.Columns.Count <= 0)
@@ -59,11 +56,9 @@ public class ShowDataStructureSql : AbstractMenuCommand
             string tmpTable = $"tmptable{System.Guid.NewGuid()}";
             tmpTables.Add(tmpTable);
             output.AppendLine(sqlGenerator.CreateOutputTableSql(tmpTable));
-            output.AppendLine(
-                "-----------------------------------------------------------------");
+            output.AppendLine("-----------------------------------------------------------------");
             output.AppendLine($"-- {dsEntity.Name}");
-            output.AppendLine(
-                "-----------------------------------------------------------------");
+            output.AppendLine("-----------------------------------------------------------------");
             output.Append(
                 sqlGenerator.SelectSql(
                     ds: dataStructure,
