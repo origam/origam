@@ -40,5 +40,6 @@
   "editor_DeploymentScripts_ActionPanelTitle_Settings": "Settings: {0}",
   "editor_DeploymentScripts_TabLabel_Settings": "Settings",
   "tree_node_make_version_current": "Make version current",
-  "tree_node_run_update_script_activity": "Execute"
+  "tree_node_run_update_script_activity": "Execute",
+  "search_placeholder": "Search"
 }

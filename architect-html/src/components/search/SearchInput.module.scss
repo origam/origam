@@ -1,0 +1,15 @@
+
+.inputContainer {
+  display: flex;
+}
+
+.input {
+  height: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  border-radius: 0.25rem;
+  border: 1px solid var(--brand);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
