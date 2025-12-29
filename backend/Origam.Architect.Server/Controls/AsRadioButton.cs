@@ -20,18 +20,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
+using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsRadioButton : ControlBase
+public class AsRadioButton : IControl
 {
-    [Browsable(false)]
-    public Guid DataConstantId { get; set; }
-
     public bool ReadOnly { get; set; }
 
+    [Category("Appearance")]
     public string Text { get; set; }
 
     [Browsable(false)]
     public Object Value { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Top { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Left { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Height { get; set; } = 200;
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Width { get; set; } = 200;
+
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
+
+    [ReferenceProperty("ValueConstant")]
+    [TypeConverter(typeof(DataConstantConverter))]
+    public Guid DataConstantId { get; set; }
+
+    public virtual void Initialize(ControlSetItem controlSetItem) { }
 }
