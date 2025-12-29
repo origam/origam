@@ -115,7 +115,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .compact {
-
   div.category {
     margin: 0;
     max-width: unset;
@@ -130,10 +129,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
     .property {
       margin: 0;
-      input{
+      input {
         width: 25rem;
       }
     }
   }
-
 }
