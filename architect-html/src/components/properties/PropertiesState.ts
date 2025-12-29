@@ -22,13 +22,23 @@ import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import { observable } from 'mobx';
 
-export class PropertiesState implements IPropertyManager {
-  @observable accessor properties: EditorProperty[] = [];
-  @observable accessor editedItemName = '';
+import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
 
-  setEdited(itemName: string, properties: EditorProperty[]): void {
-    this.properties = properties;
-    this.editedItemName = itemName;
+export class PropertiesState implements IPropertyManager {
+  @observable accessor provider: IComponentProvider | undefined;
+
+  setComponentProvider(provider: IComponentProvider | undefined) {
+    this.provider = provider;
+  }
+
+  get editedItemName() {
+    const component = this.provider?.selectedComponent;
+    return component?.data.identifier ?? component?.getProperty('Text')?.value ?? '';
+  }
+
+  get properties() {
+    const component = this.provider?.selectedComponent;
+    return component?.properties ?? [];
   }
 
   onPropertyUpdated(

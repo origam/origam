@@ -26,11 +26,12 @@ import { FlowHandlerInput } from '@errors/runInFlowWithHandler';
 import { action, observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
 import { ReactElement } from 'react';
+import { IComponentProvider } from '@editors/designerEditor/common/IComponentProvider.tsx';
 
-export class DesignSurfaceState {
-  @observable accessor components: Component[] = [];
+export class DesignSurfaceState implements IComponentProvider {
+  @observable public accessor components: Component[] = [];
   @observable accessor draggedComponentData: IComponentData | null = null;
-  @observable accessor selectedComponent: Component | null = null;
+  @observable public accessor selectedComponent: Component | null = null;
   @observable accessor dragState: DragState = {
     component: null,
     startX: 0,
@@ -89,6 +90,7 @@ export class DesignSurfaceState {
       this.loadComponent,
     );
     this.components = components;
+    this.propertiesState.setComponentProvider(this);
     this.panel = this.components.find(x => x.id === this.panelId)!;
     this.reselectComponent();
   }
@@ -113,16 +115,7 @@ export class DesignSurfaceState {
 
   @action
   selectComponent(component: Component | null | undefined) {
-    if (component) {
-      this.selectedComponent = component;
-      this.propertiesState.setEdited(
-        component.data.identifier ?? component.getProperty('Text')?.value ?? '',
-        component.properties,
-      );
-    } else {
-      this.selectedComponent = null;
-      this.propertiesState.setEdited('', []);
-    }
+    this.selectedComponent = component ?? null;
   }
 
   @action
@@ -381,7 +374,7 @@ export class DesignSurfaceState {
 
   @action
   onClose() {
-    this.propertiesState.setEdited('', []);
+    this.propertiesState.setComponentProvider(undefined);
   }
 }
 
