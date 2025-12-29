@@ -18,10 +18,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+  IAddToDeploymentRequest,
+  IAddToModelRequest,
   IApiControl,
   IApiEditorData,
   IApiTreeNode,
   IArchitectApi,
+  IDatabaseResultResponse,
   IMenuItemInfo,
   IModelChange,
   IPackagesInfo,
@@ -265,13 +268,31 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async setVersionCurrent(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScript/SetVersionCurrent', {
+    await this.axiosInstance.post('/DeploymentScripts/SetVersionCurrent', {
       schemaItemId: schemaItemId,
     });
   }
 
   async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScript/Run', { schemaItemId: schemaItemId });
+    await this.axiosInstance.post('/DeploymentScripts/Run', { schemaItemId: schemaItemId });
+  }
+
+  async fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse> {
+    return (
+      await this.axiosInstance.get('/DeploymentScriptsGenerator/List', {
+        params: {
+          platform,
+        },
+      })
+    ).data;
+  }
+
+  async addToDeployment(request: IAddToDeploymentRequest): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToDeployment', request);
+  }
+
+  async addToModel(request: IAddToModelRequest): Promise<void> {
+    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToModel', request);
   }
 }
 

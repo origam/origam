@@ -1,3 +1,4 @@
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -16,47 +17,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.packageName {
-  font-weight: bold;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ccc;
-}
+using System.ComponentModel.DataAnnotations;
 
-.treeNode {
-  margin-left: 20px;
-}
+namespace Origam.Architect.Server.Models.Requests.DeploymentScripts;
 
-.treeNodeTitle {
-  height: 20px;
-  display: flex;
-  cursor: pointer;
-}
+public class AddToDeploymentRequestModel
+{
+    [Required]
+    public string Platform { get; set; } = string.Empty;
 
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
+    [Required]
+    public Guid DeploymentVersionId { get; set; }
 
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    [Required]
+    public List<Guid> SchemaItemIds { get; set; } = [];
 }

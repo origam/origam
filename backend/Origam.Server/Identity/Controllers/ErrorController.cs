@@ -1,3 +1,4 @@
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -16,47 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.packageName {
-  font-weight: bold;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ccc;
-}
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
-.treeNode {
-  margin-left: 20px;
-}
+namespace Origam.Server.Identity.Controllers;
 
-.treeNodeTitle {
-  height: 20px;
-  display: flex;
-  cursor: pointer;
-}
+[AllowAnonymous]
+public class ErrorController : Microsoft.AspNetCore.Mvc.Controller
+{
+    [Route("~/Error")]
+    public IActionResult Error()
+    {
+        var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        ViewData["OriginalPath"] = feature?.Path ?? "";
+        ViewData["ErrorMessage"] = feature?.Error?.Message ?? Resources.ErrorDetailsInLog;
 
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
-
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+        return View("~/Identity/Views/Shared/Error.cshtml");
+    }
 }

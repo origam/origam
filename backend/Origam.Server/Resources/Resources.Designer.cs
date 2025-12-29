@@ -303,6 +303,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error has occured. There may be some details in the log file..
+        /// </summary>
+        public static string ErrorDetailsInLog {
+            get {
+                return ResourceManager.GetString("ErrorDetailsInLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to parse discovery document from &apos;{0}&apos;..
         /// </summary>
         public static string ErrorDiscoveryDocumentParseFailed {

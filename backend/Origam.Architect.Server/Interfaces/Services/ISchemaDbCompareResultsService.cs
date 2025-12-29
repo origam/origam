@@ -1,3 +1,4 @@
+﻿#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -16,47 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.packageName {
-  font-weight: bold;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ccc;
-}
+using Origam.Architect.Server.Models.Responses.DeploymentScripts;
+using Origam.DA;
 
-.treeNode {
-  margin-left: 20px;
-}
+namespace Origam.Architect.Server.Interfaces.Services;
 
-.treeNodeTitle {
-  height: 20px;
-  display: flex;
-  cursor: pointer;
-}
-
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
-
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+public interface ISchemaDbCompareResultsService
+{
+    public List<SchemaDbCompareResult> GetByPlatform(Platform platform);
+    public List<SchemaDbCompareResult> GetByIds(List<Guid> schemaItemIds, Platform platform);
+    public List<SchemaDbCompareResult> GetByNames(List<string> schemaItemNames, Platform platform);
+    public ListResponseModel PrepareListResponseModel(string platform);
 }
