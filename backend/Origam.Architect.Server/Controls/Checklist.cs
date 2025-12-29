@@ -20,7 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
+using Origam.Architect.Server.Attributes;
 using Origam.Gui;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Architect.Server.Controls;
 
@@ -30,7 +32,8 @@ public class Checklist : ControlBase
 
     public string Value { get; set; }
 
-    [Browsable(false)]
+    [ReferenceProperty("DataLookup")]
+    [TypeConverter(typeof(DataLookupConverter))]
     public Guid LookupId { get; set; }
 
     [Category("(ORIGAM)")]
