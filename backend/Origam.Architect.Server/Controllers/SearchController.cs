@@ -1,4 +1,5 @@
 ﻿#region license
+
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -17,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
@@ -28,16 +30,19 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class SearchController(
-    IPersistenceService persistenceService
-) : ControllerBase
+public class SearchController(IPersistenceService persistenceService) : ControllerBase
 {
     [HttpGet("Text")]
-    public ActionResult Text([FromQuery]string text)
+    public ActionResult Text([FromQuery] string text)
     {
-        ISchemaItem[] results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(
-            text
+        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
+        return Ok(
+            results.Select(result => new SearchResult
+            {
+                Name = result.Name,
+                SchemaId = result.Id,
+                ParentSchemaItemIds = result.Parameters.Select(parent => parent.Id).ToList(),
+            })
         );
-        return Ok(results.Select(x => new SearchResult { Name = x.Name, SchemaId = x.Id }));
     }
 }
