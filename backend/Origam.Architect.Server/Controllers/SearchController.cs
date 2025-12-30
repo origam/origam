@@ -22,110 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
-using Origam.Architect.Server.Models.Requests;
-using Origam.Schema;
-using Origam.Workbench.Services;
+using Origam.Architect.Server.Services;
 
 namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class SearchController(IPersistenceService persistenceService, SchemaService schemaService)
-    : ControllerBase
+public class SearchController(SearchService searchService) : ControllerBase
 {
     [HttpGet("Text")]
     public ActionResult Text([FromQuery] string text)
     {
-        var referencePackages = schemaService
-            .ActiveExtension.IncludedPackages.Select(x => x.Id)
-            .ToList();
-        var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
-        return Ok(results.Select(result => GetResult(result, referencePackages)));
+        return Ok(searchService.SearchByText(text));
     }
 
     [HttpGet("References")]
     public ActionResult References([FromQuery] Guid schemaItemId)
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-        var referencePackages = schemaService
-            .ActiveExtension.IncludedPackages.Select(x => x.Id)
-            .ToList();
-        return Ok(item.GetUsage().Select(result => GetResult(result, referencePackages)));
+        return Ok(searchService.FindReferences(schemaItemId));
     }
 
     [HttpGet("Dependencies")]
     public ActionResult Dependencies([FromQuery] Guid schemaItemId)
     {
-        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-
-        return Ok(
-            item.GetDependencies(false)
-                .Select(result => new SearchResult
-                {
-                    FoundIn = result.Name,
-                    SchemaId = result.Id,
-                    ParentNodeIds = GetParentNodeIds(result),
-                })
-        );
-    }
-
-    private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
-    {
-        if (item == null)
-        {
-            return new SearchResult();
-        }
-        string name = item.ModelDescription() ?? item.ItemType;
-        string rootName = item.RootItem.ModelDescription() ?? item.RootItem.ItemType;
-        var searchResult = new SearchResult
-        {
-            FoundIn = item.Path,
-            RootType = rootName,
-            Type = name,
-            SchemaId = item.Id,
-            Folder = item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
-            Package = item.PackageName,
-            PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-            ParentNodeIds = GetParentNodeIds(item),
-        };
-        return searchResult;
-    }
-
-    private static List<string> GetParentNodeIds(ISchemaItem item)
-    {
-        if (item?.RootItem?.RootProvider is not AbstractSchemaItemProvider provider)
-        {
-            return [];
-        }
-
-        var ids = new List<string>();
-
-        AddFolderNameIfAny(ids, item);
-
-        for (var parent = item.ParentItem; parent != null; parent = parent.ParentItem)
-        {
-            AddFolderNameIfAny(ids, parent);
-            ids.Add(parent.Id.ToString());
-        }
-
-        for (var group = item.RootItem.Group; group != null; group = group.ParentGroup)
-        {
-            ids.Add(group.Id.ToString());
-        }
-
-        ids.Add(provider.NodeId);
-        ids.Add(provider.Group);
-
-        ids.Reverse();
-        return ids;
-
-        static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
-        {
-            var folderName = schemaItem?.GetType().SchemaItemDescription()?.FolderName;
-            if (!string.IsNullOrWhiteSpace(folderName))
-            {
-                target.Add(folderName);
-            }
-        }
+        return Ok(searchService.FindDependencies(schemaItemId));
     }
 }
