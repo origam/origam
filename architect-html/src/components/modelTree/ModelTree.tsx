@@ -147,36 +147,36 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
           </Submenu>
           <Separator />
           {!node.isNonPersistentItem && (
-            <>
-              <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
-                {T('Edit', 'tree_node_edit')}
-              </Item>
-              <Item id="delete" onClick={onDelete}>
-                {T('Delete', 'tree_node_delete')}
-              </Item>
-              <Item id="documentation" onClick={openDocumentationEditor}>
-                {T('Documentation', 'tree_node_documentation')}
-              </Item>
-              <Item id="references" onClick={findReferences}>
-                {T('Find references', 'tree_node_references')}
-              </Item>
-            </>
+            <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
+              {T('Edit', 'tree_node_edit')}
+            </Item>
           )}
+          {!node.isNonPersistentItem && (
+            <Item id="delete" onClick={onDelete}>
+              {T('Delete', 'tree_node_delete')}
+            </Item>
+          )}
+          {!node.isNonPersistentItem && (
+            <Item id="documentation" onClick={openDocumentationEditor}>
+              {T('Documentation', 'tree_node_documentation')}
+            </Item>
+          )}
+          {!node.isNonPersistentItem && (
+            <Item id="references" onClick={findReferences}>
+              {T('Find references', 'tree_node_references')}
+            </Item>
+          )}
+          {node.isDeploymentVersion && <Separator />}
           {node.isDeploymentVersion && (
-            <>
-              <Separator />
-              <Item id="setVersionCurrent" onClick={setVersionCurrent}>
-                {T('Make version current', 'tree_node_make_version_current')}
-              </Item>
-            </>
+            <Item id="setVersionCurrent" onClick={setVersionCurrent}>
+              {T('Make version current', 'tree_node_make_version_current')}
+            </Item>
           )}
+          {node.isUpdateScriptActivity && <Separator />}
           {node.isUpdateScriptActivity && (
-            <>
-              <Separator />
-              <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
-                {T('Execute', 'tree_node_run_update_script_activity')}
-              </Item>
-            </>
+            <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
+              {T('Execute', 'tree_node_run_update_script_activity')}
+            </Item>
           )}
         </Menu>
         {node.isLoading && ' Loading...'}
