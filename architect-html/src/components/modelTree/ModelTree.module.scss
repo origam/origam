@@ -32,6 +32,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 20px;
   display: flex;
   cursor: pointer;
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
+.highlighted {
+  background-color: var(--background1);
+  box-shadow: inset 3px 0 0 var(--brand), 0 0 0 1px var(--background4);
 }
 
 .iconAndText {

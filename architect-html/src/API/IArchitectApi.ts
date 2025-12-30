@@ -167,6 +167,7 @@ export interface IDatabaseResultResponse {
 export interface ISearchResult {
   name: string;
   schemaId: string;
+  parentNodeIds: string[];
 }
 
 export interface ISearchResultsEditorData {

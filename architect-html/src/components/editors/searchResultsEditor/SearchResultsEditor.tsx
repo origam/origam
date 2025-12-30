@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { RootStoreContext, T } from '@/main';
 import { EditorData } from '@components/modelTree/EditorData';
+import { ISearchResult } from '@api/IArchitectApi';
 import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import S from '@editors/searchResultsEditor/SearchResultsEditor.module.scss';
@@ -30,10 +31,14 @@ const SearchResultsEditor = observer(
     const rootStore = useContext(RootStoreContext);
     const run = runInFlowWithHandler(rootStore.errorDialogController);
 
-    function openSchemaItem(schemaId: string) {
+    function openSchemaItem(result: ISearchResult) {
       run({
         generator: function* () {
-          const apiEditorData = yield rootStore.architectApi.openEditor(schemaId);
+          yield* rootStore.modelTreeState.expandAndHighlightSchemaItem({
+            parentNodeIds: result.parentNodeIds ?? [],
+            schemaItemId: result.schemaId,
+          });
+          const apiEditorData = yield rootStore.architectApi.openEditor(result.schemaId);
           const editorData = new EditorData(apiEditorData, null);
           rootStore.editorTabViewState.openEditor(editorData);
         },
@@ -63,10 +68,7 @@ const SearchResultsEditor = observer(
                   <td>{result.name}</td>
                   <td className={S.mono}>{result.schemaId}</td>
                   <td>
-                    <button
-                      className={S.openButton}
-                      onClick={() => openSchemaItem(result.schemaId)}
-                    >
+                    <button className={S.openButton} onClick={() => openSchemaItem(result)}>
                       {T('Open', 'editor_search_results_open')}
                     </button>
                   </td>

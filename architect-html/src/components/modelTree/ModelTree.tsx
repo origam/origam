@@ -23,15 +23,18 @@ import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 
 const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
+  const highlightedNodeId = rootStore.modelTreeState.highlightedNodeId;
+  const highlightToken = rootStore.modelTreeState.highlightToken;
   const menuId = 'SideMenu' + node.id;
   const run = runInFlowWithHandler(rootStore.errorDialogController);
+  const nodeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (node.isExpanded && !node.childrenInitialized && node.children.length === 0) {
@@ -90,9 +93,17 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
     }
   }
 
+  const isHighlighted = highlightedNodeId === node.id;
+
+  useEffect(() => {
+    if (isHighlighted) {
+      nodeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [isHighlighted, highlightToken]);
+
   return (
     <div className={S.treeNode}>
-      <div className={S.treeNodeTitle}>
+      <div ref={nodeRef} className={`${S.treeNodeTitle} ${isHighlighted ? S.highlighted : ''}`}>
         <div className={S.symbol} onClick={onToggle}>
           {getSymbol()}
         </div>

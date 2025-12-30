@@ -41,8 +41,46 @@ public class SearchController(IPersistenceService persistenceService) : Controll
             {
                 Name = result.Name,
                 SchemaId = result.Id,
-                ParentSchemaItemIds = result.Parameters.Select(parent => parent.Id).ToList(),
+                ParentNodeIds = GetParentNodeIds(result),
             })
         );
+    }
+
+    private static List<string> GetParentNodeIds(ISchemaItem item)
+    {
+        if (item?.RootItem?.RootProvider is not AbstractSchemaItemProvider provider)
+        {
+            return [];
+        }
+
+        var ids = new List<string>();
+
+        AddFolderNameIfAny(ids, item);
+
+        for (var parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+        {
+            AddFolderNameIfAny(ids, parent);
+            ids.Add(parent.Id.ToString());
+        }
+
+        for (var group = item.RootItem.Group; group != null; group = group.ParentGroup)
+        {
+            ids.Add(group.Id.ToString());
+        }
+
+        ids.Add(provider.NodeId);
+        ids.Add(provider.Group);
+
+        ids.Reverse();
+        return ids;
+
+        static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
+        {
+            var folderName = schemaItem?.GetType().SchemaItemDescription()?.FolderName;
+            if (!string.IsNullOrWhiteSpace(folderName))
+            {
+                target.Add(folderName);
+            }
+        }
     }
 }
