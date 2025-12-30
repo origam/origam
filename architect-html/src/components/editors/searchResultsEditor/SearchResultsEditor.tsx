@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { EditorData } from '@components/modelTree/EditorData';
 import { ISearchResult } from '@api/IArchitectApi';
 import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
@@ -31,16 +30,13 @@ const SearchResultsEditor = observer(
     const rootStore = useContext(RootStoreContext);
     const run = runInFlowWithHandler(rootStore.errorDialogController);
 
-    function openSchemaItem(result: ISearchResult) {
+    function highlightInModelTree(result: ISearchResult) {
       run({
         generator: function* () {
           yield* rootStore.modelTreeState.expandAndHighlightSchemaItem({
             parentNodeIds: result.parentNodeIds ?? [],
             schemaItemId: result.schemaId,
           });
-          const apiEditorData = yield rootStore.architectApi.openEditor(result.schemaId);
-          const editorData = new EditorData(apiEditorData, null);
-          rootStore.editorTabViewState.openEditor(editorData);
         },
       });
     }
@@ -63,14 +59,17 @@ const SearchResultsEditor = observer(
                 <th>{T('Folder', 'editor_search_results_column_folder')}</th>
                 <th>{T('Package', 'editor_search_results_column_package')}</th>
                 <th>{T('Package reference', 'editor_search_results_column_package_reference')}</th>
-                <th>{T('Open', 'editor_search_results_column_open')}</th>
               </tr>
             </thead>
             <tbody>
               {[...editorState.results]
                 .sort((left, right) => left.foundIn.localeCompare(right.foundIn))
                 .map(result => (
-                  <tr key={result.schemaId} className={S.row}>
+                  <tr
+                    key={result.schemaId}
+                    className={S.row}
+                    onClick={() => highlightInModelTree(result)}
+                  >
                     <td>{result.foundIn}</td>
                     <td>{result.rootType}</td>
                     <td>{result.type}</td>
@@ -78,11 +77,6 @@ const SearchResultsEditor = observer(
                     <td>{result.package}</td>
                     <td>
                       {result.packageReference ? T('Yes', 'dialog_yes') : T('No', 'dialog_no')}
-                    </td>
-                    <td>
-                      <button className={S.openButton} onClick={() => openSchemaItem(result)}>
-                        {T('Open', 'editor_search_results_open')}
-                      </button>
                     </td>
                   </tr>
                 ))}
