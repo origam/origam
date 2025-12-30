@@ -30,6 +30,8 @@ export interface IArchitectApi {
 
   searchText(text: string): Promise<ISearchResult[]>;
 
+  searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
+
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
   closeEditor(editorId: string): Promise<void>;

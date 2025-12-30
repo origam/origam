@@ -105,6 +105,16 @@ export class ArchitectApi implements IArchitectApi {
     ).data;
   }
 
+  async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
+    return (
+      await this.axiosInstance.get('/Search/References', {
+        params: {
+          schemaItemId,
+        },
+      })
+    ).data;
+  }
+
   async openEditor(schemaItemId: string): Promise<IApiEditorData> {
     return (await this.axiosInstance.post('/Editor/OpenEditor', { schemaItemId: schemaItemId }))
       .data;
