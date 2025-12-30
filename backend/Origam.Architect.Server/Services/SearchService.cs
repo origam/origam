@@ -31,9 +31,7 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
 {
     public IEnumerable<SearchResult> SearchByText(string text)
     {
-        var referencePackages = schemaService
-            .ActiveExtension.IncludedPackages.Select(x => x.Id)
-            .ToList();
+        List<Guid> referencePackages = GetReferencePackages();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
         return results.Select(result => GetResult(result, referencePackages));
     }
@@ -41,19 +39,24 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
     public IEnumerable<SearchResult> FindReferences(Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-        var referencePackages = schemaService
-            .ActiveExtension.IncludedPackages.Select(x => x.Id)
-            .ToList();
+        List<Guid> referencePackages = GetReferencePackages();
         return item.GetUsage().Select(result => GetResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        List<Guid> referencePackages = GetReferencePackages();
+        return item.GetDependencies(false).Select(result => GetResult(result, referencePackages));
+    }
+
+    private List<Guid> GetReferencePackages()
+    {
         var referencePackages = schemaService
             .ActiveExtension.IncludedPackages.Select(x => x.Id)
+            .Append(schemaService.ActiveExtension.Id)
             .ToList();
-        return item.GetDependencies(false).Select(result => GetResult(result, referencePackages));
+        return referencePackages;
     }
 
     private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
