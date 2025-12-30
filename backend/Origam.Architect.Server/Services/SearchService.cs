@@ -94,8 +94,8 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
 
         for (var parent = item.ParentItem; parent != null; parent = parent.ParentItem)
         {
-            AddFolderNameIfAny(ids, parent);
             ids.Add(parent.Id.ToString());
+            AddFolderNameIfAny(ids, parent);
         }
 
         for (var group = item.RootItem.Group; group != null; group = group.ParentGroup)
