@@ -64,7 +64,7 @@ export class ModelTreeState {
 
     let currentNodes = this.modelNodes;
     for (const parentId of args.parentNodeIds) {
-      const parentNode = this.findNodeByIdOrOrigamId(parentId, currentNodes);
+      const parentNode = this.findNodeByIdRecursively(parentId, currentNodes);
       if (!parentNode) {
         break;
       }
@@ -75,28 +75,28 @@ export class ModelTreeState {
       currentNodes = parentNode.children;
     }
 
-    const targetNode = this.findNodeByIdOrOrigamId(args.schemaItemId, this.modelNodes);
+    const targetNode = this.findNodeByIdRecursively(args.schemaItemId, this.modelNodes);
     this.highlightedNodeId = targetNode ? targetNode.id : null;
     this.highlightToken += 1;
   }
 
-  private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
-    if (!nodeId) {
-      return null;
-    }
-    for (const node of nodes) {
-      if (node.id === nodeId) {
-        return node;
-      }
-      const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
-      if (foundNode) {
-        return foundNode;
-      }
-    }
-    return null;
-  }
+  // private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
+  //   if (!nodeId) {
+  //     return null;
+  //   }
+  //   for (const node of nodes) {
+  //     if (node.id === nodeId) {
+  //       return node;
+  //     }
+  //     const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
+  //     if (foundNode) {
+  //       return foundNode;
+  //     }
+  //   }
+  //   return null;
+  // }
 
-  private findNodeByIdOrOrigamId(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
+  private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
     if (!nodeId) {
       return null;
     }
@@ -104,7 +104,7 @@ export class ModelTreeState {
       if (node.id === nodeId || node.origamId === nodeId || node.nodeText === nodeId) {
         return node;
       }
-      const foundNode = this.findNodeByIdOrOrigamId(nodeId, node.children);
+      const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
       if (foundNode) {
         return foundNode;
       }
