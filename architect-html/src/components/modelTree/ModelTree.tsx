@@ -22,7 +22,6 @@ import { ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
-import { openSearchResults } from '@components/search/openSearchResults';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
@@ -87,8 +86,7 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
         const results = (yield rootStore.architectApi.searchReferences(
           node.origamId,
         )) as ISearchResult[];
-        openSearchResults(
-          rootStore,
+        rootStore.editorTabViewState.openSearchResults(
           node.nodeText,
           results,
           T('References: {0}', 'editor_search_results_references_title', node.nodeText),

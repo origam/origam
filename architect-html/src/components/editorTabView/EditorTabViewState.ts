@@ -23,6 +23,7 @@ import {
   IApiEditorNode,
   IArchitectApi,
   IDatabaseResultResponse,
+  ISearchResult,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
@@ -33,6 +34,9 @@ import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHan
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
+import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState.ts';
+
+export const searchEditorId = 'SearchResultsEditor-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -117,6 +121,40 @@ export class EditorTabViewState {
     }.bind(this);
   }
 
+  openSearchResults(queryText: string, results: ISearchResult[], label: string) {
+    const existingEditor = this.editorsContainers.find(
+      editor => editor.state instanceof SearchResultsEditorState,
+    );
+    if (existingEditor) {
+      const editorState = existingEditor.state as SearchResultsEditorState;
+      editorState.query = queryText;
+      editorState.results = results;
+      editorState.label = label;
+      this.setActiveEditor(editorState.editorId);
+      return;
+    }
+
+    const tempEditorData: IApiEditorData = {
+      editorId: searchEditorId,
+      editorType: 'SearchResultsEditor',
+      parentNodeId: undefined,
+      isDirty: false,
+      node: {
+        id: '',
+        origamId: '',
+        nodeText: '',
+        editorType: null,
+      },
+      data: {
+        query: queryText,
+        results,
+      },
+    };
+
+    const editorData = new EditorData(tempEditorData, null);
+    this.openEditor(editorData);
+  }
+
   openEditor(editorData: EditorData, editorType?: EditorType) {
     const alreadyOpenEditor = this.editorsContainers.find(
       editor => editor.state.editorId === editorData.editorId,
@@ -175,7 +213,7 @@ export class EditorTabViewState {
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId !== 'DeploymentScriptsGeneratorEditor-Id') {
+      if (editorId !== 'DeploymentScriptsGeneratorEditor-Id' && editorId !== searchEditorId) {
         yield this.architectApi.closeEditor(editorId);
       }
 

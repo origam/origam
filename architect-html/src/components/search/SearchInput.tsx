@@ -1,5 +1,4 @@
 import { ISearchResult } from '@api/IArchitectApi';
-import { openSearchResults } from '@components/search/openSearchResults';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { type KeyboardEvent, useContext, useRef, useState } from 'react';
@@ -27,8 +26,7 @@ const SearchInput = observer(() => {
         if (latestQueryRef.current !== trimmedText) {
           return;
         }
-        openSearchResults(
-          rootStore,
+        rootStore.editorTabViewState.openSearchResults(
           trimmedText,
           results,
           T('Search: {0}', 'editor_search_results_title', trimmedText),
