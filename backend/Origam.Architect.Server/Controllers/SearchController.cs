@@ -30,36 +30,27 @@ namespace Origam.Architect.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class SearchController(IPersistenceService persistenceService) : ControllerBase
+public class SearchController(IPersistenceService persistenceService, SchemaService schemaService)
+    : ControllerBase
 {
     [HttpGet("Text")]
     public ActionResult Text([FromQuery] string text)
     {
+        var referencePackages = schemaService
+            .ActiveExtension.IncludedPackages.Select(x => x.Id)
+            .ToList();
         var results = persistenceService.SchemaProvider.FullTextSearch<ISchemaItem>(text);
-        return Ok(
-            results.Select(result => new SearchResult
-            {
-                Name = result.Name,
-                SchemaId = result.Id,
-                ParentNodeIds = GetParentNodeIds(result),
-            })
-        );
+        return Ok(results.Select(result => GetResult(result, referencePackages)));
     }
 
     [HttpGet("References")]
     public ActionResult References([FromQuery] Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-
-        return Ok(
-            item.GetUsage()
-                .Select(result => new SearchResult
-                {
-                    Name = result.Name,
-                    SchemaId = result.Id,
-                    ParentNodeIds = GetParentNodeIds(result),
-                })
-        );
+        var referencePackages = schemaService
+            .ActiveExtension.IncludedPackages.Select(x => x.Id)
+            .ToList();
+        return Ok(item.GetUsage().Select(result => GetResult(result, referencePackages)));
     }
 
     [HttpGet("Dependencies")]
@@ -71,11 +62,33 @@ public class SearchController(IPersistenceService persistenceService) : Controll
             item.GetDependencies(false)
                 .Select(result => new SearchResult
                 {
-                    Name = result.Name,
+                    FoundIn = result.Name,
                     SchemaId = result.Id,
                     ParentNodeIds = GetParentNodeIds(result),
                 })
         );
+    }
+
+    private SearchResult GetResult(ISchemaItem item, List<Guid> referencePackages)
+    {
+        if (item == null)
+        {
+            return new SearchResult();
+        }
+        string name = item.ModelDescription() ?? item.ItemType;
+        string rootName = item.RootItem.ModelDescription() ?? item.RootItem.ItemType;
+        var searchResult = new SearchResult
+        {
+            FoundIn = item.Path,
+            RootType = rootName,
+            Type = name,
+            SchemaId = item.Id,
+            Folder = item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
+            Package = item.PackageName,
+            PackageReference = referencePackages.Contains(item.SchemaExtensionId),
+            ParentNodeIds = GetParentNodeIds(item),
+        };
+        return searchResult;
     }
 
     private static List<string> GetParentNodeIds(ISchemaItem item)
