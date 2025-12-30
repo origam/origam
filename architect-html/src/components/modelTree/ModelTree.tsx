@@ -18,19 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext, T } from '@/main';
-import { IApiEditorData, ISearchResult } from '@api/IArchitectApi';
+import { ISearchResult } from '@api/IArchitectApi';
 import { Icon } from '@components/icon/Icon';
-import { EditorData } from '@components/modelTree/EditorData';
 import S from '@components/modelTree/ModelTree.module.scss';
 import { TreeNode } from '@components/modelTree/TreeNode';
-import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState';
+import { openSearchResults } from '@components/search/openSearchResults';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useRef } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
-
-const searchEditorId = 'SearchResultsEditor-Id';
 
 const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
   const rootStore = useContext(RootStoreContext);
@@ -84,40 +81,6 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
     run({ generator: editorTabViewState.openDocumentationEditor(node) });
   }
 
-  function openSearchResults(queryText: string, results: ISearchResult[], label: string) {
-    const existingEditor = rootStore.editorTabViewState.editorsContainers.find(
-      editor => editor.state instanceof SearchResultsEditorState,
-    );
-    if (existingEditor) {
-      const editorState = existingEditor.state as SearchResultsEditorState;
-      editorState.query = queryText;
-      editorState.results = results;
-      editorState.label = label;
-      rootStore.editorTabViewState.setActiveEditor(editorState.editorId);
-      return;
-    }
-
-    const tempEditorData: IApiEditorData = {
-      editorId: searchEditorId,
-      editorType: 'SearchResultsEditor',
-      parentNodeId: undefined,
-      isDirty: false,
-      node: {
-        id: '',
-        origamId: '',
-        nodeText: '',
-        editorType: null,
-      },
-      data: {
-        query: queryText,
-        results,
-      },
-    };
-
-    const editorData = new EditorData(tempEditorData, null);
-    rootStore.editorTabViewState.openEditor(editorData);
-  }
-
   function findReferences() {
     run({
       generator: function* () {
@@ -125,6 +88,7 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
           node.origamId,
         )) as ISearchResult[];
         openSearchResults(
+          rootStore,
           node.nodeText,
           results,
           T('References: {0}', 'editor_search_results_references_title', node.nodeText),

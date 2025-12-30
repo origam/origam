@@ -50,29 +50,31 @@ public class SearchController(IPersistenceService persistenceService) : Controll
     public ActionResult References([FromQuery] Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-        
+
         return Ok(
-            item.GetUsage().Select(result => new SearchResult
-            {
-                Name = result.Name,
-                SchemaId = result.Id,
-                ParentNodeIds = GetParentNodeIds(result),
-            })
+            item.GetUsage()
+                .Select(result => new SearchResult
+                {
+                    Name = result.Name,
+                    SchemaId = result.Id,
+                    ParentNodeIds = GetParentNodeIds(result),
+                })
         );
     }
-    
+
     [HttpGet("Dependencies")]
     public ActionResult Dependencies([FromQuery] Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
-        
+
         return Ok(
-            item.GetDependencies(false).Select(result => new SearchResult
-            {
-                Name = result.Name,
-                SchemaId = result.Id,
-                ParentNodeIds = GetParentNodeIds(result),
-            })
+            item.GetDependencies(false)
+                .Select(result => new SearchResult
+                {
+                    Name = result.Name,
+                    SchemaId = result.Id,
+                    ParentNodeIds = GetParentNodeIds(result),
+                })
         );
     }
 
