@@ -38,7 +38,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .highlighted {
   background-color: var(--background1);
-  box-shadow: inset 3px 0 0 var(--brand), 0 0 0 1px var(--background4);
+  box-shadow:
+    inset 3px 0 0 var(--brand),
+    0 0 0 1px var(--background4);
 }
 
 .iconAndText {
