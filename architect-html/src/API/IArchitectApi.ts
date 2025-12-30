@@ -167,7 +167,12 @@ export interface IDatabaseResultResponse {
 }
 
 export interface ISearchResult {
-  name: string;
+  foundIn: string;
+  rootType: string;
+  type: string;
+  folder: string;
+  package: string;
+  packageReference: boolean;
   schemaId: string;
   parentNodeIds: string[];
 }
