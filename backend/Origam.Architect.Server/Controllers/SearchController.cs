@@ -46,6 +46,36 @@ public class SearchController(IPersistenceService persistenceService) : Controll
         );
     }
 
+    [HttpGet("References")]
+    public ActionResult References([FromQuery] Guid schemaItemId)
+    {
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        
+        return Ok(
+            item.GetUsage().Select(result => new SearchResult
+            {
+                Name = result.Name,
+                SchemaId = result.Id,
+                ParentNodeIds = GetParentNodeIds(result),
+            })
+        );
+    }
+    
+    [HttpGet("Dependencies")]
+    public ActionResult Dependencies([FromQuery] Guid schemaItemId)
+    {
+        var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
+        
+        return Ok(
+            item.GetDependencies(false).Select(result => new SearchResult
+            {
+                Name = result.Name,
+                SchemaId = result.Id,
+                ParentNodeIds = GetParentNodeIds(result),
+            })
+        );
+    }
+
     private static List<string> GetParentNodeIds(ISchemaItem item)
     {
         if (item?.RootItem?.RootProvider is not AbstractSchemaItemProvider provider)
