@@ -85,7 +85,11 @@ export class ModelTreeState {
       return null;
     }
     for (const node of nodes) {
-      if (node.id === nodeId || node.origamId === nodeId || node.nodeText === nodeId) {
+      if (
+        node.id === nodeId ||
+        node.origamId === nodeId ||
+        (node.isNonPersistentItem && node.nodeText === nodeId)
+      ) {
         return node;
       }
       const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
