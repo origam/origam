@@ -20,12 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IComponentData } from '@editors/designerEditor/common/ComponentType';
 import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 import { LabelPosition, parseLabelPosition } from '@editors/designerEditor/common/LabelPosition';
-import { controlLayer, sectionLayer } from '@editors/designerEditor/common/Layers';
+import { controlLayer } from '@editors/designerEditor/common/Layers';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { action, observable } from 'mobx';
 import { ReactElement } from 'react';
 
-export abstract class Component {
+export class Component {
   id: string;
   @observable.ref accessor parent: Component | null;
   data: IComponentData;
@@ -232,35 +232,3 @@ export abstract class Component {
 
   update() {}
 }
-
-export class GroupBox extends Component {
-  get canHaveChildren(): boolean {
-    return true;
-  }
-
-  get zIndex(): number {
-    return this.countParents() + sectionLayer;
-  }
-
-  getDesignerRepresentation(): ReactElement | null {
-    return (
-      <div className={S.groupBoxContent}>
-        <div className={S.groupBoxHeader}>
-          {this.properties.find(x => x.name === 'Text')?.value}
-        </div>
-      </div>
-    );
-  }
-}
-
-export class AsCombo extends Component {}
-
-export class AsTextBox extends Component {}
-
-export class TagInput extends Component {}
-
-export class AsDateBox extends Component {}
-
-export class TextArea extends Component {}
-
-export class AsTree extends Component {}

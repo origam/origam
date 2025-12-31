@@ -1,4 +1,3 @@
-#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -17,29 +16,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
+import { ReactElement } from 'react';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 
-namespace Origam.Architect.Server.Controls;
+export class MultiColumnAdapterFieldWrapper extends Component {
+  get canHaveChildren(): boolean {
+    return true;
+  }
 
-public class AsDropDown : LabeledEditor
-{
-    public bool HideOnForm { get; set; }
+  get zIndex(): number {
+    return sectionLayer + 1;
+  }
 
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
-
-    public bool ReadOnly { get; set; }
+  getDesignerRepresentation(): ReactElement | null {
+    return <div className={S.panel}></div>;
+  }
 }
