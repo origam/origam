@@ -37,6 +37,7 @@ import { CancellablePromise } from 'mobx/dist/api/flow';
 import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState.ts';
 
 export const searchEditorId = 'SearchResultsEditor-Id';
+export const DeploymentScriptsGeneratorEditorId = 'DeploymentScriptsGeneratorEditor-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -99,7 +100,7 @@ export class EditorTabViewState {
       const response = yield this.architectApi.fetchDeploymentScriptsList(null);
 
       const tempEditorData: IApiEditorData = {
-        editorId: 'DeploymentScriptsGeneratorEditor-Id',
+        editorId: DeploymentScriptsGeneratorEditorId,
         editorType: 'DeploymentScriptsGeneratorEditor' as EditorType,
         parentNodeId: undefined,
         isDirty: false,
@@ -213,7 +214,7 @@ export class EditorTabViewState {
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId !== 'DeploymentScriptsGeneratorEditor-Id' && editorId !== searchEditorId) {
+      if (editorId !== DeploymentScriptsGeneratorEditorId && editorId !== searchEditorId) {
         yield this.architectApi.closeEditor(editorId);
       }
 
