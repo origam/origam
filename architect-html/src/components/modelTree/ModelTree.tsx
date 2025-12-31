@@ -89,7 +89,22 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
         rootStore.editorTabViewState.openSearchResults(
           node.nodeText,
           results,
-          T('References: {0}', 'editor_search_results_references_title', node.nodeText),
+          T('References of: {0}', 'editor_search_results_references_title', node.nodeText),
+        );
+      },
+    });
+  }
+
+  function findDependencies() {
+    run({
+      generator: function* () {
+        const results = (yield rootStore.architectApi.searchDependencies(
+          node.origamId,
+        )) as ISearchResult[];
+        rootStore.editorTabViewState.openSearchResults(
+          node.nodeText,
+          results,
+          T('Dependencies of: {0}', 'editor_search_results_dependencies_title', node.nodeText),
         );
       },
     });
@@ -169,6 +184,11 @@ const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number
             {!node.isNonPersistentItem && (
               <Item id="references" onClick={findReferences}>
                 {T('Find references', 'tree_node_references')}
+              </Item>
+            )}
+            {!node.isNonPersistentItem && (
+              <Item id="dependencies" onClick={findDependencies}>
+                {T('Find dependencies', 'tree_node_dependencies')}
               </Item>
             )}
             {node.isDeploymentVersion && <Separator />}

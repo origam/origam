@@ -32,6 +32,8 @@ export interface IArchitectApi {
 
   searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
 
+  searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
+
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
   closeEditor(editorId: string): Promise<void>;

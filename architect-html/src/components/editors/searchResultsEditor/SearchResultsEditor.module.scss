@@ -72,6 +72,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .row {
   border-bottom: 1px solid var(--background3);
+  cursor: pointer;
 
   &:hover {
     background-color: var(--background2);
