@@ -80,22 +80,6 @@ export class ModelTreeState {
     this.highlightToken += 1;
   }
 
-  // private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
-  //   if (!nodeId) {
-  //     return null;
-  //   }
-  //   for (const node of nodes) {
-  //     if (node.id === nodeId) {
-  //       return node;
-  //     }
-  //     const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
-  //     if (foundNode) {
-  //       return foundNode;
-  //     }
-  //   }
-  //   return null;
-  // }
-
   private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
     if (!nodeId) {
       return null;
