@@ -40,14 +40,23 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
         List<Guid> referencePackages = GetReferencePackages();
-        return item.GetUsage().Select(result => GetResult(result, referencePackages));
+        List<ISchemaItem> schemaItems = item.GetUsage();
+        if (schemaItems == null)
+        {
+            return [];
+        }
+        return schemaItems
+            .Where(x => x != null)
+            .Select(result => GetResult(result, referencePackages));
     }
 
     public IEnumerable<SearchResult> FindDependencies(Guid schemaItemId)
     {
         var item = persistenceService.SchemaProvider.RetrieveInstance<ISchemaItem>(schemaItemId);
         List<Guid> referencePackages = GetReferencePackages();
-        return item.GetDependencies(false).Select(result => GetResult(result, referencePackages));
+        return item.GetDependencies(false)
+            .Where(x => x != null)
+            .Select(result => GetResult(result, referencePackages));
     }
 
     private List<Guid> GetReferencePackages()
