@@ -24,10 +24,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-bottom: 1px solid #ccc;
 }
 
-.treeNode {
-  margin-left: 20px;
-}
-
 .treeNodeTitle {
   height: 20px;
   display: flex;
@@ -56,16 +52,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .symbol {
   width: 20px;
+  min-width: 20px;
   font-size: 12px;
 }
 
 .icon {
   width: 20px;
   height: 18px;
-}
-
-.children {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }

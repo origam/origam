@@ -28,7 +28,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { Item, Menu, Separator, Submenu, TriggerEvent, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 
-const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
+const ModelTreeNode = observer(({ node, level }: { node: TreeNode; level: number }) => {
   const rootStore = useContext(RootStoreContext);
   const editorTabViewState = rootStore.editorTabViewState;
   const highlightedNodeId = rootStore.modelTreeState.highlightedNodeId;
@@ -118,77 +118,85 @@ const ModelTreeNode = observer(({ node }: { node: TreeNode }) => {
   }, [isHighlighted, highlightToken]);
 
   return (
-    <div className={S.treeNode}>
-      <div ref={nodeRef} className={`${S.treeNodeTitle} ${isHighlighted ? S.highlighted : ''}`}>
-        <div className={S.symbol} onClick={onToggle}>
-          {getSymbol()}
-        </div>
-        <div
-          onDoubleClick={() => onNodeDoubleClick(node)}
-          onContextMenu={handleContextMenu}
-          className={`${S.iconAndText} ${node.isCurrentVersion ? S.currentVersion : ''}`}
-        >
-          <div className={S.icon}>
-            <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
+    <>
+      <div
+        ref={nodeRef}
+        className={isHighlighted ? S.highlighted : ''}
+        style={{ paddingLeft: `${level * 20}px` }}
+      >
+        <div className={S.treeNodeTitle}>
+          <div className={S.symbol} onClick={onToggle}>
+            {getSymbol()}
           </div>
-          {node.nodeText}
-        </div>
-        <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
-          <Submenu label="New">
-            {node.contextMenuItems.map(item => (
-              <Item
-                key={item.typeName + item.caption}
-                id={item.typeName}
-                onClick={() => run({ generator: node.createNode(item.typeName) })}
-              >
-                {item.caption}
+          <div
+            onDoubleClick={() => onNodeDoubleClick(node)}
+            onContextMenu={handleContextMenu}
+            className={`${S.iconAndText} ${node.isCurrentVersion ? S.currentVersion : ''}`}
+          >
+            <div className={S.icon}>
+              <Icon src={node.iconUrl ?? '/Icons/generic.svg'} />
+            </div>
+            {node.nodeText}
+          </div>
+          <Menu id={menuId} onVisibilityChange={onMenuVisibilityChange}>
+            <Submenu label="New">
+              {node.contextMenuItems.map(item => (
+                <Item
+                  key={item.typeName + item.caption}
+                  id={item.typeName}
+                  onClick={() => run({ generator: node.createNode(item.typeName) })}
+                >
+                  {item.caption}
+                </Item>
+              ))}
+            </Submenu>
+            <Separator />
+            {!node.isNonPersistentItem && (
+              <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
+                {T('Edit', 'tree_node_edit')}
               </Item>
-            ))}
-          </Submenu>
-          <Separator />
-          {!node.isNonPersistentItem && (
-            <Item id="edit" onClick={() => onNodeDoubleClick(node)}>
-              {T('Edit', 'tree_node_edit')}
-            </Item>
-          )}
-          {!node.isNonPersistentItem && (
-            <Item id="delete" onClick={onDelete}>
-              {T('Delete', 'tree_node_delete')}
-            </Item>
-          )}
-          {!node.isNonPersistentItem && (
-            <Item id="documentation" onClick={openDocumentationEditor}>
-              {T('Documentation', 'tree_node_documentation')}
-            </Item>
-          )}
-          {!node.isNonPersistentItem && (
-            <Item id="references" onClick={findReferences}>
-              {T('Find references', 'tree_node_references')}
-            </Item>
-          )}
-          {node.isDeploymentVersion && <Separator />}
-          {node.isDeploymentVersion && (
-            <Item id="setVersionCurrent" onClick={setVersionCurrent}>
-              {T('Make version current', 'tree_node_make_version_current')}
-            </Item>
-          )}
-          {node.isUpdateScriptActivity && <Separator />}
-          {node.isUpdateScriptActivity && (
-            <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
-              {T('Execute', 'tree_node_run_update_script_activity')}
-            </Item>
-          )}
-        </Menu>
-        {node.isLoading && ' Loading...'}
-      </div>
-      {node.isExpanded && node.children.length > 0 && (
-        <div className={S.children}>
-          {node.children.map(childNode => (
-            <ModelTreeNode key={childNode.id + childNode.nodeText} node={childNode} />
-          ))}
+            )}
+            {!node.isNonPersistentItem && (
+              <Item id="delete" onClick={onDelete}>
+                {T('Delete', 'tree_node_delete')}
+              </Item>
+            )}
+            {!node.isNonPersistentItem && (
+              <Item id="documentation" onClick={openDocumentationEditor}>
+                {T('Documentation', 'tree_node_documentation')}
+              </Item>
+            )}
+            {!node.isNonPersistentItem && (
+              <Item id="references" onClick={findReferences}>
+                {T('Find references', 'tree_node_references')}
+              </Item>
+            )}
+            {node.isDeploymentVersion && <Separator />}
+            {node.isDeploymentVersion && (
+              <Item id="setVersionCurrent" onClick={setVersionCurrent}>
+                {T('Make version current', 'tree_node_make_version_current')}
+              </Item>
+            )}
+            {node.isUpdateScriptActivity && <Separator />}
+            {node.isUpdateScriptActivity && (
+              <Item id="runUpdateScriptActivity" onClick={runUpdateScriptActivity}>
+                {T('Execute', 'tree_node_run_update_script_activity')}
+              </Item>
+            )}
+          </Menu>
+          {node.isLoading && ' Loading...'}
         </div>
-      )}
-    </div>
+      </div>
+      {node.isExpanded &&
+        node.children.length > 0 &&
+        node.children.map(childNode => (
+          <ModelTreeNode
+            key={childNode.id + childNode.nodeText}
+            node={childNode}
+            level={level + 1}
+          />
+        ))}
+    </>
   );
 });
 
@@ -201,7 +209,7 @@ const ModelTree = observer(() => {
         <div className={S.packageName}>{modelTreeState.activePackageName}</div>
       )}
       {modelTreeState.modelNodes.map(node => (
-        <ModelTreeNode key={node.id + node.nodeText} node={node} />
+        <ModelTreeNode key={node.id + node.nodeText} node={node} level={0} />
       ))}
     </div>
   );
