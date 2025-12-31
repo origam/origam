@@ -56,6 +56,7 @@ public class Program
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<EditorService>();
         builder.Services.AddTransient<XsltService>();
+        builder.Services.AddTransient<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();

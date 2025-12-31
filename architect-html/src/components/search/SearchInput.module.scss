@@ -17,46 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.packageName {
-  font-weight: bold;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ccc;
-}
-
-.treeNodeTitle {
-  height: 20px;
+.inputContainer {
   display: flex;
-  cursor: pointer;
-  padding-bottom: 2px;
-  padding-top: 2px;
 }
 
-.highlighted {
-  background-color: var(--background1);
-  box-shadow:
-    inset 3px 0 0 var(--brand),
-    0 0 0 1px var(--background4);
-}
-
-.iconAndText {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-wrap-mode: nowrap;
-}
-
-.currentVersion {
-  font-weight: bold;
-}
-
-.symbol {
-  width: 20px;
-  min-width: 20px;
-  font-size: 12px;
-}
-
-.icon {
-  width: 20px;
-  height: 18px;
+.input {
+  height: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  border-radius: 0.25rem;
+  border: 1px solid var(--brand);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }

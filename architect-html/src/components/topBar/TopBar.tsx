@@ -22,6 +22,7 @@ import Logo from '@components/logo/Logo';
 import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
+import SearchInput from '@components/search/SearchInput.tsx';
 
 const TopBar = () => {
   return (
@@ -31,6 +32,7 @@ const TopBar = () => {
         <Logo />
         <div className={S.actionBar}>
           <DeploymentScriptsGeneratorButtonHOC />
+          <SearchInput />
           <SettingsButtonHOC />
         </div>
       </div>

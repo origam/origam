@@ -25,6 +25,8 @@ import { computed, observable } from 'mobx';
 export class ModelTreeState {
   @observable accessor modelNodes: TreeNode[] = [];
   @observable accessor packagesInfo: IPackagesInfo | null = null;
+  @observable accessor highlightedNodeId: string | null = null;
+  @observable accessor highlightToken: number = 0;
   private architectApi: IArchitectApi;
 
   constructor(private rootStore: RootStore) {
@@ -54,12 +56,40 @@ export class ModelTreeState {
     return this.findNodeByIdRecursively(nodeId, this.modelNodes);
   }
 
+  *expandAndHighlightSchemaItem(args: {
+    parentNodeIds: string[];
+    schemaItemId: string;
+  }): Generator<Promise<any>, void, any> {
+    this.highlightedNodeId = null;
+
+    let currentNodes = this.modelNodes;
+    for (const parentId of args.parentNodeIds) {
+      const parentNode = this.findNodeByIdRecursively(parentId, currentNodes);
+      if (!parentNode) {
+        break;
+      }
+      this.rootStore.uiState.setExpanded(parentNode.id, true);
+      if (!parentNode.childrenInitialized) {
+        yield* parentNode.loadChildren.bind(parentNode)();
+      }
+      currentNodes = parentNode.children;
+    }
+
+    const targetNode = this.findNodeByIdRecursively(args.schemaItemId, this.modelNodes);
+    this.highlightedNodeId = targetNode ? targetNode.id : null;
+    this.highlightToken += 1;
+  }
+
   private findNodeByIdRecursively(nodeId: string | undefined, nodes: TreeNode[]): TreeNode | null {
     if (!nodeId) {
       return null;
     }
     for (const node of nodes) {
-      if (node.id === nodeId) {
+      if (
+        node.id === nodeId ||
+        node.origamId === nodeId ||
+        (node.isNonPersistentItem && node.nodeText === nodeId)
+      ) {
         return node;
       }
       const foundNode = this.findNodeByIdRecursively(nodeId, node.children);
