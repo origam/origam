@@ -31,6 +31,7 @@ const SearchInput = observer(() => {
   const [query, setQuery] = useState('');
   const debounceRef = useRef<number>(undefined);
   const latestQueryRef = useRef('');
+  const packagesState = rootStore.packagesState;
 
   function executeSearch(searchText: string) {
     const trimmedText = searchText.trim();
@@ -68,6 +69,10 @@ const SearchInput = observer(() => {
     }
     window.clearTimeout(debounceRef.current);
     executeSearch(query);
+  }
+
+  if (!packagesState.activePackageId) {
+    return null;
   }
 
   return (
