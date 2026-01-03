@@ -25,11 +25,17 @@ import S from '@editors/propertyEditor/PropertyEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
-import { VscChevronDown } from 'react-icons/vsc';
+import { VscChevronDown, VscCopy } from 'react-icons/vsc';
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
+
+    const handleCopyToClipboard = async () => {
+      if (props.property.value != null) {
+        await navigator.clipboard.writeText(props.property.value.toString());
+      }
+    };
 
     const onValueChange = (property: EditorProperty, value: any) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
@@ -43,54 +49,94 @@ const SinglePropertyEditor = observer(
     const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
         return (
-          <div className={S.selectWrapper}>
-            <select
-              value={property.value ?? ''}
-              onChange={e => onValueChange(property, e.target.value)}
+          <div className={S.inputWithCopyButton}>
+            <div className={S.selectWrapper}>
+              <select
+                value={property.value ?? ''}
+                onChange={e => onValueChange(property, e.target.value)}
+              >
+                {property.dropDownValues.map(x => (
+                  <option key={x.value + x.name} value={x.value}>
+                    {x.name}
+                  </option>
+                ))}
+              </select>
+              <VscChevronDown className={S.selectIcon} />
+            </div>
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
             >
-              {property.dropDownValues.map(x => (
-                <option key={x.value + x.name} value={x.value}>
-                  {x.name}
-                </option>
-              ))}
-            </select>
-            <VscChevronDown className={S.selectIcon} />
+              <VscCopy />
+            </button>
           </div>
         );
       }
 
       if (property.type === 'boolean') {
         return (
-          <div className={S.checkboxContainer}>
-            <input
-              type="checkbox"
-              checked={property.value}
-              onChange={e => onValueChange(property, e.target.checked)}
-              disabled={property.readOnly}
-              className={S.checkbox}
-            />
+          <div className={S.inputWithCopyButton}>
+            <div className={S.checkboxContainer}>
+              <input
+                type="checkbox"
+                checked={property.value}
+                onChange={e => onValueChange(property, e.target.checked)}
+                disabled={property.readOnly}
+                className={S.checkbox}
+              />
+            </div>
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
+            >
+              <VscCopy />
+            </button>
           </div>
         );
       }
 
       if (property.type === 'integer' || property.type === 'float') {
         return (
-          <NumericPropertyInput
-            property={property}
-            type={property.type}
-            onChange={value => onValueChange(property, value)}
-          />
+          <div className={S.inputWithCopyButton}>
+            <NumericPropertyInput
+              property={property}
+              type={property.type}
+              onChange={value => onValueChange(property, value)}
+            />
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
+            >
+              <VscCopy />
+            </button>
+          </div>
         );
       }
 
       return (
-        <input
-          type="text"
-          disabled={property.readOnly}
-          value={property.value != null ? property.value : undefined}
-          onChange={e => onValueChange(property, e.target.value)}
-          title={property.value != null ? property.value.toString() : ''}
-        />
+        <div className={S.inputWithCopyButton}>
+          <input
+            type="text"
+            disabled={property.readOnly}
+            value={property.value != null ? property.value : undefined}
+            onChange={e => onValueChange(property, e.target.value)}
+            title={property.value != null ? property.value.toString() : ''}
+          />
+          <button
+            type="button"
+            className={S.copyButton}
+            onClick={handleCopyToClipboard}
+            title="Copy to clipboard"
+          >
+            <VscCopy />
+          </button>
+        </div>
       );
     };
 
