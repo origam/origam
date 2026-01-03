@@ -21,7 +21,7 @@ import { RootStoreContext } from '@/main.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
-import S from '@editors/propertyEditor/PropertyEditor.module.scss';
+import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
@@ -140,7 +140,7 @@ const SinglePropertyEditor = observer(
       );
     };
 
-    return renderControl(props.property);
+    return <div className={S.root}>{renderControl(props.property)}</div>;
   },
 );
 
