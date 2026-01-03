@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -31,16 +31,16 @@ const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
 
-    function onValueChange(property: EditorProperty, value: any) {
+    const onValueChange = (property: EditorProperty, value: any) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
         generator: function* () {
           const parsedValue = property.type === 'enum' ? parseInt(value) : value;
           yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
         },
       });
-    }
+    };
 
-    function renderPropertyEditor(property: EditorProperty) {
+    const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
         return (
           <div className={S.selectWrapper}>
@@ -58,6 +58,7 @@ const SinglePropertyEditor = observer(
           </div>
         );
       }
+
       if (property.type === 'boolean') {
         return (
           <div className={S.checkboxContainer}>
@@ -71,6 +72,7 @@ const SinglePropertyEditor = observer(
           </div>
         );
       }
+
       if (property.type === 'integer' || property.type === 'float') {
         return (
           <NumericPropertyInput
@@ -80,6 +82,7 @@ const SinglePropertyEditor = observer(
           />
         );
       }
+
       return (
         <input
           type="text"
@@ -88,9 +91,9 @@ const SinglePropertyEditor = observer(
           onChange={e => onValueChange(property, e.target.value)}
         />
       );
-    }
+    };
 
-    return renderPropertyEditor(props.property);
+    return renderControl(props.property);
   },
 );
 
