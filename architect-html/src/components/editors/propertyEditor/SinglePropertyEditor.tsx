@@ -89,6 +89,7 @@ const SinglePropertyEditor = observer(
           disabled={property.readOnly}
           value={property.value != null ? property.value : undefined}
           onChange={e => onValueChange(property, e.target.value)}
+          title={property.value != null ? property.value.toString() : ''}
         />
       );
     };
