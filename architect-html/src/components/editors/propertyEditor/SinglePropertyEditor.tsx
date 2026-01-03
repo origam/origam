@@ -17,14 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from '@/main.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
-import { useContext } from 'react';
-import { RootStoreContext } from '@/main.tsx';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
-import S from '@editors/propertyEditor/PropertyEditor.module.scss';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
+import S from '@editors/propertyEditor/PropertyEditor.module.scss';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { VscChevronDown } from 'react-icons/vsc';
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
@@ -42,16 +43,19 @@ const SinglePropertyEditor = observer(
     function renderPropertyEditor(property: EditorProperty) {
       if (property.type === 'enum' || property.type === 'looukup') {
         return (
-          <select
-            value={property.value ?? ''}
-            onChange={e => onValueChange(property, e.target.value)}
-          >
-            {property.dropDownValues.map(x => (
-              <option key={x.value + x.name} value={x.value}>
-                {x.name}
-              </option>
-            ))}
-          </select>
+          <div className={S.selectWrapper}>
+            <select
+              value={property.value ?? ''}
+              onChange={e => onValueChange(property, e.target.value)}
+            >
+              {property.dropDownValues.map(x => (
+                <option key={x.value + x.name} value={x.value}>
+                  {x.name}
+                </option>
+              ))}
+            </select>
+            <VscChevronDown className={S.selectIcon} />
+          </div>
         );
       }
       if (property.type === 'boolean') {
