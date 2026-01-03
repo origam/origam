@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import ActionPanelV2 from '@/components/ActionPanelV2/ActionPanelV2';
+import ActionPanel from '@/components/ActionPanel/ActionPanel';
 import Button from '@/components/Button/Button';
 import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
@@ -39,7 +39,7 @@ const DeploymentScriptsGeneratorEditor = observer(
               label: T('Deployment scripts', 'editor_DeploymentScriptsGenerator_TabLabel_List'),
               node: (
                 <div className={S.editorBox}>
-                  <ActionPanelV2
+                  <ActionPanel
                     title={T(
                       'Deployment scripts: ({0})',
                       'editor_DeploymentScriptsGenerator_ActionPanelTitle_List',

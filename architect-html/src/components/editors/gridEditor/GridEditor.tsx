@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import ActionPanel from '@components/ActionPanel/ActionPanel';
 import S from '@editors/gridEditor/GridEditor.module.scss';
 import { GridEditorState } from '@editors/gridEditor/GridEditorState';
@@ -27,7 +28,7 @@ const GridEditor = observer(
   ({ editorState, title }: { editorState: GridEditorState; title: string }) => {
     return (
       <div className={S.root}>
-        <ActionPanel title={title} />
+        <ActionPanel title={title} buttons={<SaveButtonHOC />} />
         <div className={S.propertiesBox}>
           <PropertyEditor propertyManager={editorState} properties={editorState.properties} />
         </div>

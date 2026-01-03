@@ -18,19 +18,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
+import { showInfo } from '@/dialog/DialogUtils.tsx';
 import { RootStoreContext, T } from '@/main';
+import Button from '@components/Button/Button.tsx';
 import { TabView } from '@components/tabView/TabView';
 import CodeEditor from '@editors/codeEditor/CodeEditor';
+import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
+import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
+import { Settings } from '@editors/xsltEditor/Settings.tsx';
 import S from '@editors/xsltEditor/XsltEditor.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
-import { useContext } from 'react';
-import Button from '@components/Button/Button.tsx';
-import { VscCheck, VscPlay } from 'react-icons/vsc';
-import { XsltEditorState } from '@editors/gridEditor/XsltEditorState.ts';
-import { showInfo } from '@/dialog/DialogUtils.tsx';
-import { ParametersEditor } from '@editors/xsltEditor/ParametersEditor.tsx';
 import { observer } from 'mobx-react-lite';
-import { Settings } from '@editors/xsltEditor/Settings.tsx';
+import { useContext } from 'react';
+import { VscCheck, VscPlay } from 'react-icons/vsc';
 
 export const ResultTabIndex = 3;
 
@@ -94,20 +95,26 @@ const XsltEditor = observer(({ editorState }: { editorState: XsltEditorState }) 
 
   function renderActionPanel() {
     return (
-      <ActionPanel title={T('Source XML', 'xsl_editor_tab2') + ': ' + editorState.label}>
-        <Button
-          type="secondary"
-          title={T('Transform', 'transform_button_label')}
-          prefix={<VscPlay />}
-          onClick={handleTransform}
-        />
-        <Button
-          type="secondary"
-          title={T('Validate', 'validate_button_label')}
-          prefix={<VscCheck />}
-          onClick={handleValidate}
-        />
-      </ActionPanel>
+      <ActionPanel
+        title={T('Source XML', 'xsl_editor_tab2') + ': ' + editorState.label}
+        buttons={
+          <>
+            <Button
+              type="secondary"
+              title={T('Transform', 'transform_button_label')}
+              prefix={<VscPlay />}
+              onClick={handleTransform}
+            />
+            <Button
+              type="secondary"
+              title={T('Validate', 'validate_button_label')}
+              prefix={<VscCheck />}
+              onClick={handleValidate}
+            />
+            <SaveButtonHOC />
+          </>
+        }
+      />
     );
   }
 

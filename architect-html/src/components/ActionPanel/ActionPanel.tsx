@@ -17,20 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import S from '@components/ActionPanel/ActionPanel.module.scss';
 
-const ActionPanel = ({ title, children }: { title: string; children?: React.ReactNode }) => {
+const ActionPanel = ({
+  title,
+  buttons,
+  body,
+}: {
+  title: string;
+  buttons?: React.ReactNode;
+  body?: React.ReactNode;
+}) => {
   return (
     <div className={S.root}>
       <div className={S.header}>
         <div className={S.title}>{title}</div>
-        <div className={S.buttons}>
-          {children}
-          <SaveButtonHOC />
-        </div>
+        <div className={S.buttons}>{buttons}</div>
       </div>
-      <div className={S.content}></div>
+      <div className={S.body}>{body}</div>
     </div>
   );
 };

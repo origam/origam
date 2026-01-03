@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import ActionPanel from '@/components/ActionPanel/ActionPanel';
+import SaveButtonHOC from '@/components/SaveButtonHOC/SaveButtonHOC';
 import { TabView } from '@/components/tabView/TabView';
 import { TabViewState } from '@/components/tabView/TabViewState';
 import { RootStoreContext, T } from '@/main';
@@ -56,6 +57,7 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
                     'editor_DeploymentScripts_ActionPanelTitle_Sql',
                     editorState.properties.find(x => x.name === 'Name')?.value || '',
                   )}
+                  buttons={<SaveButtonHOC />}
                 />
                 <CodeEditor
                   defaultLanguage="sql"
@@ -75,6 +77,7 @@ const DeploymentScriptsEditor = ({ editorState }: { editorState: GridEditorState
                     'editor_DeploymentScripts_ActionPanelTitle_Settings',
                     editorState.properties.find(x => x.name === 'Name')?.value || '',
                   )}
+                  buttons={<SaveButtonHOC />}
                 />
                 <div className={S.propertiesBox}>
                   <PropertyEditor
