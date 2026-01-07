@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -23,6 +23,7 @@ import S from '@components/search/SearchInput.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { type KeyboardEvent, useContext, useRef, useState } from 'react';
+import { VscClose, VscSearch } from 'react-icons/vsc';
 
 const DebounceMs = 300;
 
@@ -72,12 +73,19 @@ const SearchInput = observer(() => {
     executeSearch(query);
   }
 
+  function onClearClick() {
+    setQuery('');
+    window.clearTimeout(debounceRef.current);
+    latestQueryRef.current = '';
+  }
+
   if (!packagesState.activePackageId) {
     return null;
   }
 
   return (
-    <div className={S.inputContainer}>
+    <div className={S.root}>
+      <VscSearch className={S.searchIcon} />
       <input
         className={S.input}
         placeholder={T('Search', 'search_placeholder')}
@@ -85,6 +93,11 @@ const SearchInput = observer(() => {
         onChange={event => onQueryChange(event.target.value)}
         onKeyDown={onKeyDown}
       />
+      {query && (
+        <button className={S.clearButton} onClick={onClearClick} title={T('Clear', 'search_clear')}>
+          <VscClose />
+        </button>
+      )}
     </div>
   );
 });
