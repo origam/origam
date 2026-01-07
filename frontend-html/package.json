@@ -93,7 +93,7 @@
     "identity-obj-proxy": "^3.0.0",
     "ts-jest": "^29.4.6",
     "vite": "^7.3.0",
-    "ws": "^8.18.3"
+    "ws": "^8.19.0"
   },
   "resolutions": {
     "@types/react": "17.0.2",
