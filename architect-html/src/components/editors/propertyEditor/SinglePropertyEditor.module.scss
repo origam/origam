@@ -67,6 +67,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     }
   }
 
+  .selectWrapper {
+    position: relative;
+    width: 200px;
+    display: inline-block;
+
+    .selectIcon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 16px;
+      color: #000000;
+    }
+  }
+
   .checkboxContainer {
     width: 200px;
     display: flex;
@@ -76,29 +92,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     align-items: center;
     gap: 0.25rem;
-
-    input,
-    select,
-    .selectWrapper,
-    .checkboxContainer {
-      flex: 1;
-    }
-
-    .selectWrapper {
-      position: relative;
-      width: 200px;
-      display: inline-block;
-
-      .selectIcon {
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        font-size: 16px;
-        color: #000000;
-      }
-    }
 
     .copyButton {
       background: transparent;
@@ -113,6 +106,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       min-width: 24px;
       height: 24px;
       transition: all 0.2s ease;
+      opacity: 0;
+      visibility: hidden;
 
       &:hover {
         background-color: var(--background2);
@@ -122,6 +117,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       &:active {
         background-color: var(--background3);
       }
+    }
+
+    &:hover .copyButton {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }

@@ -49,52 +49,32 @@ const SinglePropertyEditor = observer(
     const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
         return (
-          <div className={S.inputWithCopyButton}>
-            <div className={S.selectWrapper}>
-              <select
-                value={property.value ?? ''}
-                onChange={e => onValueChange(property, e.target.value)}
-              >
-                {property.dropDownValues.map(x => (
-                  <option key={x.value + x.name} value={x.value}>
-                    {x.name}
-                  </option>
-                ))}
-              </select>
-              <VscChevronDown className={S.selectIcon} />
-            </div>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
+          <div className={S.selectWrapper}>
+            <select
+              value={property.value ?? ''}
+              onChange={e => onValueChange(property, e.target.value)}
             >
-              <VscCopy />
-            </button>
+              {property.dropDownValues.map(x => (
+                <option key={x.value + x.name} value={x.value}>
+                  {x.name}
+                </option>
+              ))}
+            </select>
+            <VscChevronDown className={S.selectIcon} />
           </div>
         );
       }
 
       if (property.type === 'boolean') {
         return (
-          <div className={S.inputWithCopyButton}>
-            <div className={S.checkboxContainer}>
-              <input
-                type="checkbox"
-                checked={property.value}
-                onChange={e => onValueChange(property, e.target.checked)}
-                disabled={property.readOnly}
-                className={S.checkbox}
-              />
-            </div>
-            <button
-              type="button"
-              className={S.copyButton}
-              onClick={handleCopyToClipboard}
-              title="Copy to clipboard"
-            >
-              <VscCopy />
-            </button>
+          <div className={S.checkboxContainer}>
+            <input
+              type="checkbox"
+              checked={property.value}
+              onChange={e => onValueChange(property, e.target.checked)}
+              disabled={property.readOnly}
+              className={S.checkbox}
+            />
           </div>
         );
       }
@@ -121,13 +101,6 @@ const SinglePropertyEditor = observer(
 
       return (
         <div className={S.inputWithCopyButton}>
-          <input
-            type="text"
-            disabled={property.readOnly}
-            value={property.value != null ? property.value : undefined}
-            onChange={e => onValueChange(property, e.target.value)}
-            title={property.value != null ? property.value.toString() : ''}
-          />
           <button
             type="button"
             className={S.copyButton}
@@ -136,6 +109,13 @@ const SinglePropertyEditor = observer(
           >
             <VscCopy />
           </button>
+          <input
+            type="text"
+            disabled={property.readOnly}
+            value={property.value != null ? property.value : undefined}
+            onChange={e => onValueChange(property, e.target.value)}
+            title={property.value != null ? property.value.toString() : ''}
+          />
         </div>
       );
     };
