@@ -17,14 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { RootStoreContext, T } from '@/main.tsx';
 import { ISearchResult } from '@api/IArchitectApi';
+import S from '@components/search/SearchInput.module.scss';
 import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { type KeyboardEvent, useContext, useRef, useState } from 'react';
-import { RootStoreContext, T } from '@/main.tsx';
-import S from '@components/search/SearchInput.module.scss';
 
-const debounceMs = 300;
+const DebounceMs = 300;
+
 const SearchInput = observer(() => {
   const rootStore = useContext(RootStoreContext);
   const run = runInFlowWithHandler(rootStore.errorDialogController);
@@ -60,7 +61,7 @@ const SearchInput = observer(() => {
     window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
       executeSearch(value);
-    }, debounceMs);
+    }, DebounceMs);
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {

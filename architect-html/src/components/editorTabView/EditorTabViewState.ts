@@ -30,14 +30,14 @@ import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
+import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState.ts';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
-import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState.ts';
 
-export const searchEditorId = 'SearchResultsEditor-Id';
-export const DeploymentScriptsGeneratorEditorId = 'DeploymentScriptsGeneratorEditor-Id';
+const SearchEditorId = 'SearchResultsEditor-Id';
+const DeploymentScriptsGeneratorEditorId = 'DeploymentScriptsGeneratorEditor-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -136,7 +136,7 @@ export class EditorTabViewState {
     }
 
     const tempEditorData: IApiEditorData = {
-      editorId: searchEditorId,
+      editorId: SearchEditorId,
       editorType: 'SearchResultsEditor',
       parentNodeId: undefined,
       isDirty: false,
@@ -214,7 +214,7 @@ export class EditorTabViewState {
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId !== DeploymentScriptsGeneratorEditorId && editorId !== searchEditorId) {
+      if (editorId !== DeploymentScriptsGeneratorEditorId && editorId !== SearchEditorId) {
         yield this.architectApi.closeEditor(editorId);
       }
 
