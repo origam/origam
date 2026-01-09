@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { RootStoreContext } from '@/main';
-import S from '@components/properties/Properties.module.scss';
 import PropertyEditor from '@editors/propertyEditor/PropertyEditor';
 import { observer } from 'mobx-react-lite';
 import { useContext } from 'react';
@@ -29,7 +28,18 @@ const Properties = observer(() => {
 
   return (
     <div>
-      <div className={S.editedItemLabel}>{propertiesState.editedItemName}</div>
+      {propertiesState.components.length ? (
+        <select
+          value={propertiesState.selectedComponent?.id}
+          onChange={e => propertiesState.setSelectedComponent(e.target.value)}
+        >
+          {[undefined, ...propertiesState.components].map(component => (
+            <option key={component?.id ?? 'None'} value={component?.id}>
+              {propertiesState.getComponentLabel(component)}
+            </option>
+          ))}
+        </select>
+      ) : null}
       <PropertyEditor propertyManager={propertiesState} properties={propertiesState.properties} />
     </div>
   );

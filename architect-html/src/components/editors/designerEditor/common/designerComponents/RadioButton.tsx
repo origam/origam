@@ -1,4 +1,3 @@
-#region license
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
@@ -17,29 +16,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { ReactElement } from 'react';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 
-namespace Origam.Architect.Server.Controls;
-
-public class AsDropDown : LabeledEditor
-{
-    public bool HideOnForm { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
-
-    public bool ReadOnly { get; set; }
+export class RadioButton extends Component {
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.designSurfaceEditorContainer}>
+        <div className={S.checkList}>
+          <div className={S.checklistItem}>
+            <input type="radio" className="checkbox undefined" />
+            <div>{this.properties.find(x => x.name === 'Text')?.value}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }

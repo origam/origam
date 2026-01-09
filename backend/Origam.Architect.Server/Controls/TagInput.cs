@@ -36,10 +36,6 @@ public class TagInput : LabeledEditor, IAsControl
 
     public string Value { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
