@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -20,9 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { EditorProperty } from '@editors/gridEditor/EditorProperty';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager';
 import S from '@editors/propertyEditor/PropertyEditor.module.scss';
+import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.tsx';
+import { getSortedProperties } from '@editors/propertyEditor/utils';
 import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
-import SinglePropertyEditor from '@editors/propertyEditor/SinglePropertyEditor.tsx';
 
 const PropertyEditor = observer(
   (props: {
@@ -64,44 +65,3 @@ const PropertyEditor = observer(
 );
 
 export default PropertyEditor;
-
-function getSortedProperties(properties: EditorProperty[]) {
-  const groupedProperties = properties.reduce(
-    (
-      groups: {
-        [key: string]: EditorProperty[];
-      },
-      property,
-    ) => {
-      (groups[property.category ?? 'Misc'] = groups[property.category ?? 'Misc'] || []).push(
-        property,
-      );
-      return groups;
-    },
-    {},
-  );
-
-  const sortedCategories = Object.keys(groupedProperties).sort();
-  for (const category of sortedCategories) {
-    groupedProperties[category].sort(category === 'Layout' ? sortLayoutProperties : sortProperties);
-  }
-  return { groupedProperties, sortedCategories };
-}
-
-function sortProperties(a: EditorProperty, b: EditorProperty) {
-  return a.name.localeCompare(b.name);
-}
-
-function sortLayoutProperties(a: EditorProperty, b: EditorProperty) {
-  const order: { [key: string]: number } = {
-    Left: 1,
-    Top: 2,
-    Width: 3,
-    Height: 4,
-  };
-
-  const priorityA = order[a.name] ?? Number.MAX_SAFE_INTEGER;
-  const priorityB = order[b.name] ?? Number.MAX_SAFE_INTEGER;
-
-  return priorityA - priorityB;
-}

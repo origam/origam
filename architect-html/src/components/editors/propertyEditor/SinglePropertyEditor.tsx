@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,43 +17,54 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observer } from 'mobx-react-lite';
+import { RootStoreContext } from '@/main.tsx';
 import { EditorProperty } from '@editors/gridEditor/EditorProperty.ts';
 import { IPropertyManager } from '@editors/propertyEditor/IPropertyManager.tsx';
-import { useContext } from 'react';
-import { RootStoreContext } from '@/main.tsx';
-import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
-import S from '@editors/propertyEditor/PropertyEditor.module.scss';
 import { NumericPropertyInput } from '@editors/propertyEditor/NumericPropertyInput.tsx';
+import S from '@editors/propertyEditor/SinglePropertyEditor.module.scss';
+import { runInFlowWithHandler } from '@errors/runInFlowWithHandler.ts';
+import { observer } from 'mobx-react-lite';
+import { useContext } from 'react';
+import { VscChevronDown, VscCopy } from 'react-icons/vsc';
 
 const SinglePropertyEditor = observer(
   (props: { property: EditorProperty; propertyManager: IPropertyManager; compact?: boolean }) => {
     const rootStore = useContext(RootStoreContext);
 
-    function onValueChange(property: EditorProperty, value: any) {
+    const handleCopyToClipboard = async () => {
+      if (props.property.value != null) {
+        await navigator.clipboard.writeText(props.property.value.toString());
+      }
+    };
+
+    const onValueChange = (property: EditorProperty, value: any) => {
       runInFlowWithHandler(rootStore.errorDialogController)({
         generator: function* () {
           const parsedValue = property.type === 'enum' ? parseInt(value) : value;
           yield* props.propertyManager.onPropertyUpdated(property, parsedValue);
         },
       });
-    }
+    };
 
-    function renderPropertyEditor(property: EditorProperty) {
+    const renderControl = (property: EditorProperty) => {
       if (property.type === 'enum' || property.type === 'looukup') {
         return (
-          <select
-            value={property.value ?? ''}
-            onChange={e => onValueChange(property, e.target.value)}
-          >
-            {property.dropDownValues.map(x => (
-              <option key={x.value + x.name} value={x.value}>
-                {x.name}
-              </option>
-            ))}
-          </select>
+          <div className={S.selectWrapper}>
+            <select
+              value={property.value ?? ''}
+              onChange={e => onValueChange(property, e.target.value)}
+            >
+              {property.dropDownValues.map(x => (
+                <option key={x.value + x.name} value={x.value}>
+                  {x.name}
+                </option>
+              ))}
+            </select>
+            <VscChevronDown className={S.selectIcon} />
+          </div>
         );
       }
+
       if (property.type === 'boolean') {
         return (
           <div className={S.checkboxContainer}>
@@ -67,26 +78,49 @@ const SinglePropertyEditor = observer(
           </div>
         );
       }
+
       if (property.type === 'integer' || property.type === 'float') {
         return (
-          <NumericPropertyInput
-            property={property}
-            type={property.type}
-            onChange={value => onValueChange(property, value)}
-          />
+          <div className={S.inputWithCopyButton}>
+            <NumericPropertyInput
+              property={property}
+              type={property.type}
+              onChange={value => onValueChange(property, value)}
+            />
+            <button
+              type="button"
+              className={S.copyButton}
+              onClick={handleCopyToClipboard}
+              title="Copy to clipboard"
+            >
+              <VscCopy />
+            </button>
+          </div>
         );
       }
-      return (
-        <input
-          type="text"
-          disabled={property.readOnly}
-          value={property.value != null ? property.value : undefined}
-          onChange={e => onValueChange(property, e.target.value)}
-        />
-      );
-    }
 
-    return renderPropertyEditor(props.property);
+      return (
+        <div className={S.inputWithCopyButton}>
+          <button
+            type="button"
+            className={S.copyButton}
+            onClick={handleCopyToClipboard}
+            title="Copy to clipboard"
+          >
+            <VscCopy />
+          </button>
+          <input
+            type="text"
+            disabled={property.readOnly}
+            value={property.value != null ? property.value : undefined}
+            onChange={e => onValueChange(property, e.target.value)}
+            title={property.value != null ? property.value.toString() : ''}
+          />
+        </div>
+      );
+    };
+
+    return <div className={S.root}>{renderControl(props.property)}</div>;
   },
 );
 
