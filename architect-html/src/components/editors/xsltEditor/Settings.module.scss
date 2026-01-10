@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.inputs{
+.inputs {
   display: flex;
   flex-direction: column;
 }
 
-.inputRow{
+.inputRow {
   padding: 0.5rem;
   display: flex;
-  div{
+  div {
     width: 17rem;
     margin-right: 1rem;
-   }
-  select{
+  }
+  select {
     min-width: 25rem;
   }
 }
 
-.propertyEditorContainer > *{
+.propertyEditorContainer > * {
   min-width: 25rem;
 }

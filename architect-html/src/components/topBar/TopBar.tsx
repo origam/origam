@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import DeploymentScriptsGeneratorButtonHOC from '@/modules/deploymentScriptsGenerator/DeploymentScriptsGeneratorButtonHOC';
 import Logo from '@components/logo/Logo';
+import SearchInput from '@components/search/SearchInput.tsx';
 import ProgressBar from '@components/topBar/ProgressBar';
 import S from '@components/topBar/TopBar.module.scss';
 import SettingsButtonHOC from '@modules/settings/SettingsButtonHOC';
@@ -30,6 +31,7 @@ const TopBar = () => {
       <div className={S.panel}>
         <Logo />
         <div className={S.actionBar}>
+          <SearchInput />
           <DeploymentScriptsGeneratorButtonHOC />
           <SettingsButtonHOC />
         </div>

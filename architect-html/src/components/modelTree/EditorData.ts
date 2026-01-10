@@ -25,6 +25,7 @@ import {
   IApiEditorNode,
   IApiEditorProperty,
   IDeploymentScriptsGeneratorEditorData,
+  ISearchResultsEditorData,
   IScreenEditorData,
   ISectionEditorData,
 } from '@api/IArchitectApi';
@@ -58,7 +59,8 @@ export class EditorData implements IApiEditorData {
     | ISectionEditorData
     | IScreenEditorData
     | DocumentationEditorData
-    | IDeploymentScriptsGeneratorEditorData;
+    | IDeploymentScriptsGeneratorEditorData
+    | ISearchResultsEditorData;
 
   constructor(data: IApiEditorData, parent: TreeNode | null) {
     this.editorId = data.editorId;

@@ -28,6 +28,12 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
+  searchText(text: string): Promise<ISearchResult[]>;
+
+  searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
+
+  searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
+
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
   closeEditor(editorId: string): Promise<void>;
@@ -160,6 +166,22 @@ export interface IDatabaseResultResponse {
   deploymentVersions: IDeploymentVersion[];
   currentDeploymentVersionId: string | null;
   results: IDatabaseResult[];
+}
+
+export interface ISearchResult {
+  foundIn: string;
+  rootType: string;
+  type: string;
+  folder: string;
+  package: string;
+  packageReference: boolean;
+  schemaId: string;
+  parentNodeIds: string[];
+}
+
+export interface ISearchResultsEditorData {
+  query: string;
+  results: ISearchResult[];
 }
 
 export interface IAddToDeploymentRequest {
@@ -300,7 +322,7 @@ export type EditorSubType =
   | 'ScreenEditor'
   | null;
 
-export type EditorType = EditorSubType | 'DocumentationEditor';
+export type EditorType = EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -369,7 +391,8 @@ export interface IApiEditorData {
     | ISectionEditorData
     | IScreenEditorData
     | DocumentationEditorData
-    | IDeploymentScriptsGeneratorEditorData;
+    | IDeploymentScriptsGeneratorEditorData
+    | ISearchResultsEditorData;
   isDirty: boolean;
 }
 
