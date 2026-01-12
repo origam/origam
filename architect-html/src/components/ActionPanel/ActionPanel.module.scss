@@ -36,14 +36,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       font-weight: bold;
       color: #000;
     }
-  }
-
-  .content {
-  }
-}
 
 .buttons {
   display: flex;
   align-items: center;
   gap: 1rem;
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+
+  .body {
+  }
 }

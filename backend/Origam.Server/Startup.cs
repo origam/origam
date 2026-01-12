@@ -526,6 +526,12 @@ public class Startup
         app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
+
+        if (startUpConfiguration.EnableMiniProfiler)
+        {
+            app.UseMiniProfiler();
+        }
+
         app.UseEndpoints(endpoints =>
         {
             // conventional routes (lets /Account/Login hit AccountController.Login)
@@ -605,11 +611,6 @@ public class Startup
                     ),
                 }
             );
-        }
-
-        if (startUpConfiguration.EnableMiniProfiler)
-        {
-            app.UseMiniProfiler();
         }
 
         app.UseCustomSpa(startUpConfiguration.PathToClientApp);

@@ -22,24 +22,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 using Origam.Architect.Server.Attributes;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor
+public class AsRadioButton : IControl
 {
-    public bool HideOnForm { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
-
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
-
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
-
     public bool ReadOnly { get; set; }
+
+    [Category("Appearance")]
+    public string Text { get; set; }
+
+    [Browsable(false)]
+    public Object Value { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Top { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Left { get; set; }
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Height { get; set; } = 200;
+
+    [Category("Layout")]
+    [Browsable(false)]
+    public int Width { get; set; } = 200;
+
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
+
+    [ReferenceProperty("ValueConstant")]
+    [TypeConverter(typeof(DataConstantConverter))]
+    public Guid DataConstantId { get; set; }
+
+    public virtual void Initialize(ControlSetItem controlSetItem) { }
 }

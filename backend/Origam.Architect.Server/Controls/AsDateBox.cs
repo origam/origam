@@ -38,10 +38,6 @@ public class AsDateBox : LabeledEditor, IAsControl
     [Category("(ORIGAM)")]
     public string Caption { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     public Object DateValue { get; set; }
 
     [NotAModelProperty]

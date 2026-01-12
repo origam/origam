@@ -35,10 +35,6 @@ public class AsTreeView : ControlBase
     [Description("Identifier member, in most cases this is primary column of the table.")]
     public string IDColumn { get; set; }
 
-    [Localizable(true)]
-    [MergableProperty(false)]
-    public int TabIndex { get; set; }
-
     [Editor(
         "System.Drawing.Design.UITypeEditor, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
         "System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"

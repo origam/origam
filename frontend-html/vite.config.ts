@@ -5,6 +5,26 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
+import * as path from "node:path";
+import * as fs from "node:fs";
+
+
+function readLocalHttps() {
+  const keyPath = path.resolve(__dirname, "certs", "localhost+2-key.pem");
+  const certPath = path.resolve(__dirname, "certs", "localhost+2.pem");
+
+  if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
+    return {
+      key: fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath),
+    };
+  }
+  return null;
+}
+
+const localHttpsCertificate = readLocalHttps();
+const useBasicSsl = !localHttpsCertificate;
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,7 +44,7 @@ export default defineConfig({
 			},
 		}),
 		tsconfigPaths(),
-		basicSsl()
+    ...(useBasicSsl ? [basicSsl()] : []),
 	],
 	resolve: {
 		alias: [
@@ -105,7 +125,8 @@ export default defineConfig({
 		},
 	},
 	server: {
-		https: true,
+    https: localHttpsCertificate ?? {},
+    host: "localhost",
 		proxy: {
       // OpenIddict endpoints
       '/.well-known': {

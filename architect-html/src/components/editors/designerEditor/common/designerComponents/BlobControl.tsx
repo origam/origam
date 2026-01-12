@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,33 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--background2);
-  border-bottom: 1px solid var(--background3);
+import { ReactElement } from 'react';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { T } from '@/main';
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .buttons {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-  }
-
-  .body {
+export class BlobControl extends Component {
+  getDesignerRepresentation(): ReactElement | null {
+    return (
+      <div className={S.designSurfaceEditorContainer}>
+        <label className={S.blobControl}>{T('Load', 'blob_control_label')}</label>
+      </div>
+    );
   }
 }

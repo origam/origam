@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,26 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from '@components/ActionPanelV2/ActionPanelV2.module.scss';
+import { Component } from '@editors/designerEditor/common/designerComponents/Component.tsx';
+import { sectionLayer } from '@editors/designerEditor/common/Layers.ts';
+import { ReactElement } from 'react';
+import S from '@editors/designerEditor/common/designerComponents/Components.module.scss';
 
-const ActionPanelV2 = ({
-  title,
-  buttons,
-  body,
-}: {
-  title: string;
-  buttons?: React.ReactNode;
-  body?: React.ReactNode;
-}) => {
-  return (
-    <div className={S.root}>
-      <div className={S.header}>
-        <div className={S.title}>{title}</div>
-        <div className={S.buttons}>{buttons}</div>
-      </div>
-      <div className={S.body}>{body}</div>
-    </div>
-  );
-};
+export class MultiColumnAdapterFieldWrapper extends Component {
+  get canHaveChildren(): boolean {
+    return true;
+  }
 
-export default ActionPanelV2;
+  get zIndex(): number {
+    return sectionLayer + 1;
+  }
+
+  getDesignerRepresentation(): ReactElement | null {
+    return <div className={S.panel}></div>;
+  }
+}

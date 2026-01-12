@@ -20,26 +20,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
+using Origam.Gui;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor
+public class ColorPicker : ControlBase
 {
-    public bool HideOnForm { get; set; }
+    public bool ReadOnly { get; set; }
 
     [Category("(ORIGAM)")]
-    public string Caption { get; set; }
+    [Description(
+        "Column Width (in pixels) to be used in grid-view. If the value is less than then zero, then the column is hidden by default. However, when it's enabled, the abs(configured value) is used."
+    )]
+    public int GridColumnWidth { get; set; } = 100;
 
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
-
-    public bool ShowUniqueValues { get; set; }
+    public Object SelectedColor { get; set; }
 
     [Category("(ORIGAM)")]
     public string GridColumnCaption { get; set; }
 
-    public bool ReadOnly { get; set; }
+    [Category("(ORIGAM)")]
+    public string Caption { get; set; }
+
+    [Category("(ORIGAM)")]
+    public CaptionPosition CaptionPosition { get; set; }
+
+    public bool HideOnForm { get; set; }
+
+    [Category("(ORIGAM)")]
+    public int CaptionLength { get; set; }
 }
