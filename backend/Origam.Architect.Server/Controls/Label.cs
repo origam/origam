@@ -20,26 +20,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.ComponentModel;
-using Origam.Architect.Server.Attributes;
-using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Architect.Server.Controls;
 
-public class AsDropDown : LabeledEditor
+public class Label : IControl
 {
-    public bool HideOnForm { get; set; }
+    [Browsable(false)]
+    public int Left { get; set; }
 
-    [Category("(ORIGAM)")]
-    public string Caption { get; set; }
+    [Browsable(false)]
+    public int Width { get; set; }
 
-    [ReferenceProperty("DataLookup")]
-    [TypeConverter(typeof(DataLookupConverter))]
-    public Guid LookupId { get; set; }
+    [Browsable(false)]
+    public int Height { get; set; }
 
-    public bool ShowUniqueValues { get; set; }
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
 
-    [Category("(ORIGAM)")]
-    public string GridColumnCaption { get; set; }
+    [Browsable(false)]
+    public int Top { get; set; }
 
-    public bool ReadOnly { get; set; }
+    [Editor(
+        "System.Drawing.Design.UITypeEditor, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    )]
+    [SettingsBindable(true)]
+    public string Text { get; set; }
+
+    public void Initialize(ControlSetItem controlSetItem) { }
 }
