@@ -44,13 +44,16 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         );
     }
 
-    public string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
+    public string BuildConnectionStringCreateDatabase(
+        IConnectionStringData project,
+        string databaseName
+    )
     {
         return DataService(_databaseType)
             .BuildConnectionString(
                 project.DatabaseServerName,
                 project.DatabasePort,
-                creatingDatabase,
+                databaseName,
                 project.DatabaseUserName,
                 project.DatabasePassword,
                 project.DatabaseIntegratedAuthentication,
@@ -63,7 +66,7 @@ public class DataDatabaseBuilder : AbstractDatabaseBuilder
         DataService();
     }
 
-    public string BuildConnectionString(Project project, bool pooling)
+    public string BuildConnectionString(IConnectionStringData project, bool pooling)
     {
         _databaseType = project.DatabaseType;
         return DataService(project.DatabaseType)
