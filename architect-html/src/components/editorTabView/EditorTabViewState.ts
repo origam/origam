@@ -23,16 +23,21 @@ import {
   IApiEditorNode,
   IArchitectApi,
   IDatabaseResultResponse,
+  ISearchResult,
 } from '@api/IArchitectApi';
 import { EditorData } from '@components/modelTree/EditorData';
 import { TreeNode } from '@components/modelTree/TreeNode';
 import { askYesNoQuestion, YesNoResult } from '@dialogs/DialogUtils';
 import { EditorContainer } from '@editors/EditorContainer.tsx';
 import { getEditorContainer } from '@editors/getEditorContainer.tsx';
+import { SearchResultsEditorState } from '@editors/searchResultsEditor/SearchResultsEditorState.ts';
 import { FlowHandlerInput, runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { RootStore } from '@stores/RootStore';
 import { observable } from 'mobx';
 import { CancellablePromise } from 'mobx/dist/api/flow';
+
+const SearchEditorId = 'SearchResultsEditor-Id';
+const DeploymentScriptsGeneratorEditorId = 'DeploymentScriptsGeneratorEditor-Id';
 
 export class EditorTabViewState {
   @observable accessor editorsContainers: EditorContainer[] = [];
@@ -95,7 +100,7 @@ export class EditorTabViewState {
       const response = yield this.architectApi.fetchDeploymentScriptsList(null);
 
       const tempEditorData: IApiEditorData = {
-        editorId: 'DeploymentScriptsGeneratorEditor-Id',
+        editorId: DeploymentScriptsGeneratorEditorId,
         editorType: 'DeploymentScriptsGeneratorEditor' as EditorType,
         parentNodeId: undefined,
         isDirty: false,
@@ -115,6 +120,40 @@ export class EditorTabViewState {
       const editorData = new EditorData(tempEditorData, null);
       this.openEditor(editorData, 'DeploymentScriptsGeneratorEditor');
     }.bind(this);
+  }
+
+  openSearchResults(queryText: string, results: ISearchResult[], label: string) {
+    const existingEditor = this.editorsContainers.find(
+      editor => editor.state instanceof SearchResultsEditorState,
+    );
+    if (existingEditor) {
+      const editorState = existingEditor.state as SearchResultsEditorState;
+      editorState.query = queryText;
+      editorState.results = results;
+      editorState.label = label;
+      this.setActiveEditor(editorState.editorId);
+      return;
+    }
+
+    const tempEditorData: IApiEditorData = {
+      editorId: SearchEditorId,
+      editorType: 'SearchResultsEditor',
+      parentNodeId: undefined,
+      isDirty: false,
+      node: {
+        id: '',
+        origamId: '',
+        nodeText: '',
+        editorType: null,
+      },
+      data: {
+        query: queryText,
+        results,
+      },
+    };
+
+    const editorData = new EditorData(tempEditorData, null);
+    this.openEditor(editorData);
   }
 
   openEditor(editorData: EditorData, editorType?: EditorType) {
@@ -175,7 +214,7 @@ export class EditorTabViewState {
         (editor: EditorContainer) => editor.state.editorId !== editorId,
       );
 
-      if (editorId !== 'DeploymentScriptsGeneratorEditor-Id') {
+      if (editorId !== DeploymentScriptsGeneratorEditorId && editorId !== SearchEditorId) {
         yield this.architectApi.closeEditor(editorId);
       }
 

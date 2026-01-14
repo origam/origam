@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2025 Advantage Solutions, s. r. o. 
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,31 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.root {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--background2);
-  border-bottom: 1px solid var(--background3);
+namespace Origam.Architect.Server.Models.Requests;
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .buttons {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-  }
+public class SearchResult
+{
+    public string FoundIn { get; set; }
+    public string RootType { get; set; }
+    public string Type { get; set; }
+    public string Folder { get; set; }
+    public string Package { get; set; }
+    public bool PackageReference { get; set; }
+    public Guid SchemaId { get; set; }
+    public List<string> ParentNodeIds { get; set; }
 }

@@ -30,6 +30,7 @@ import {
   IPackagesInfo,
   IParametersResult,
   IPropertyChange,
+  ISearchResult,
   IScreenEditorItem,
   IScreenEditorModel,
   ISectionEditorModel,
@@ -89,6 +90,36 @@ export class ArchitectApi implements IArchitectApi {
           id: node.origamId,
           nodeText: node.nodeText,
           isNonPersistentItem: node.isNonPersistentItem,
+        },
+      })
+    ).data;
+  }
+
+  async searchText(text: string): Promise<ISearchResult[]> {
+    return (
+      await this.axiosInstance.get('/Search/Text', {
+        params: {
+          text,
+        },
+      })
+    ).data;
+  }
+
+  async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
+    return (
+      await this.axiosInstance.get('/Search/References', {
+        params: {
+          schemaItemId,
+        },
+      })
+    ).data;
+  }
+
+  async searchDependencies(schemaItemId: string): Promise<ISearchResult[]> {
+    return (
+      await this.axiosInstance.get('/Search/Dependencies', {
+        params: {
+          schemaItemId,
         },
       })
     ).data;
