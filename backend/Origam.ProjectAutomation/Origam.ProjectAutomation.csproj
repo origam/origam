@@ -20,7 +20,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp></NuGetPackageImportStamp>
-    <LangVersion>10</LangVersion>
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'"
@@ -95,7 +95,9 @@
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
     <Compile Include="Builders\NewPackageBuilder.cs" />
     <Compile Include="Builders\NewUserBuilder.cs" />
+    <Compile Include="ConnectionStringData.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="IConnectionStringData.cs" />
     <Compile Include="IProjectBuilder.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectBuilder.cs" />
