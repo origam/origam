@@ -42,6 +42,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
 {
     private const string MimeJson = "application/json";
     private const string MimeHtml = "text/html";
+    private readonly IPersistenceService persistenceService =
+        ServiceManager.Services.GetService<IPersistenceService>();
 
     public override void Execute(
         AbstractPage page,
@@ -51,7 +53,6 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
     )
     {
         var xsltPage = page as XsltDataPage;
-        var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         var ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
         var transformParams = new Hashtable();
         var queryParameterCollection = new QueryParameterCollection();
@@ -90,14 +91,22 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         else
         {
-            data = CoreServices.DataService.Instance.LoadData(
-                xsltPage.DataStructureId,
-                xsltPage.DataStructureMethodId,
-                defaultSetId: Guid.Empty,
-                xsltPage.DataStructureSortSetId,
-                transactionId: null,
-                queryParameterCollection
-            );
+            if (parameters.ContainsKey("Filters"))
+            {
+                data = LoadWithFilters(xsltPage, parameters);
+            }
+            else
+            {
+                data = CoreServices.DataService.Instance.LoadData(
+                    xsltPage.DataStructureId,
+                    xsltPage.DataStructureMethodId,
+                    defaultSetId: Guid.Empty,
+                    xsltPage.DataStructureSortSetId,
+                    transactionId: null,
+                    queryParameterCollection
+                );
+            }
+
             if ((request.HttpMethod != "DELETE") && (request.HttpMethod != "PUT"))
             {
                 if (xsltPage.ProcessReadFieldRowLevelRulesForGetRequests)
@@ -255,6 +264,116 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             } while (currentNode.MoveToNextAttribute());
             Analytics.Instance.Log(type, message, properties);
         }
+    }
+
+    private DataSet LoadWithFilters(XsltDataPage xsltPage, Dictionary<string, object> parameters)
+    {
+        DataStructure dataStructure =
+            persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
+                xsltPage.DataStructureId
+            );
+        DataStructureEntity entity = dataStructure.Entities.First();
+
+        List<ColumnData> columns = entity
+            .Columns.Select(column =>
+            {
+                IDataEntityColumn field = column.Field;
+                return new ColumnData(
+                    name: column.Name,
+                    isVirtual: (field is DetachedField || column.IsWriteOnly),
+                    defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+                    hasRelation: (field as DetachedField)?.ArrayRelation != null
+                );
+            })
+            .ToList();
+        var query = new DataStructureQuery
+        {
+            Entity = entity.Name,
+            DataSourceId = xsltPage.DataStructureId,
+            CustomFilters = new CustomFilters
+            {
+                Filters = parameters["Filters"].ToString(),
+                FilterLookups = ParseFilterLookups(parameters),
+            },
+            ColumnsInfo = new ColumnsInfo(
+                columns: columns,
+                renderSqlForDetachedFields: true
+            ),
+            ForceDatabaseCalculation = true,
+        };
+        IDataService dataService = CoreServices.DataServiceFactory.GetDataService();
+        IEnumerable<Dictionary<string, object>> lines = dataService.ExecuteDataReaderReturnPairs(
+            query
+        );
+
+        DataSet data = dataService.GetEmptyDataSet(xsltPage.DataStructureId);
+        DataTable dataTable = data.Tables[entity.Name];
+        foreach (Dictionary<string, object> line in lines)
+        {
+            DataRow row = dataTable.NewRow();
+            foreach (KeyValuePair<string, object> cell in line)
+            {
+                if (!dataTable.Columns.Contains(cell.Key))
+                {
+                    continue;
+                }
+                object value = cell.Value ?? DBNull.Value;
+                if (
+                    value is ICollection collection
+                    && (
+                        dataTable.Columns[cell.Key].DataType == typeof(long)
+                        || dataTable.Columns[cell.Key].DataType == typeof(int)
+                    )
+                )
+                {
+                    value = collection.Count;
+                }
+                row[cell.Key] = value;
+            }
+            dataTable.Rows.Add(row);
+        }
+
+        return data;
+    }
+
+    private static Dictionary<string, Guid> ParseFilterLookups(
+        Dictionary<string, object> parameters
+    )
+    {
+        if (!parameters.ContainsKey("FilterLookups"))
+        {
+            return new Dictionary<string, Guid>();
+        }
+
+        if (parameters["FilterLookups"] is not IEnumerable<string> lookupStrings)
+        {
+            if (parameters["FilterLookups"] is string singleParameter)
+            {
+                lookupStrings = [singleParameter];
+            }
+            else
+            {
+                throw new ArgumentException(
+                    "FilterLookups parsing failed. The value is not a string or an array of strings"
+                );
+            }
+        }
+
+        return lookupStrings
+            .Select(lookupString => lookupString.Split(":"))
+            .ToDictionary(
+                x => x[0],
+                x =>
+                {
+                    if (!Guid.TryParse(x[1], out Guid lookupId))
+                    {
+                        throw new ArgumentException(
+                            $"Error when parsing FilterLookups, key \"{x[0]}\". The value \"{x[1]}\" cannot be parsed to Guid"
+                        );
+                    }
+                    return lookupId;
+                }
+            );
     }
 
     private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)

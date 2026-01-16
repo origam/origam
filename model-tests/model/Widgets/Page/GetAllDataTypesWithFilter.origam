@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.1"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  <xdp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    xdp:dataStructure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    xdp:disableConstraintForInputValidation="false"
+    x:id="8a7020e6-46f2-4bae-b593-cebbaf52f538"
+    ap:mimeType="application/json"
+    asi:name="GetAllDataTypesWithFilter"
+    xdp:omitJsonMainElement="false"
+    xdp:omitJsonRootElement="false"
+    xdp:processGetReadRowLevelRules="false"
+    ap:roles="*"
+    ap:url="api/public/allDataWithFilter/{filters}/{filterLookups}">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="2ec8e6ec-aa86-4080-8bb1-ee26ba1740f3"
+      ppm:isList="true"
+      ppm:listSeparator="Comma#Comma/26332e2b-2b07-44b2-b697-ba35ec9deca9"
+      ppm:mappedParameter="filterLookups"
+      asi:name="FilterLookups" />
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="7abcc528-023c-4cbd-8380-ccbf13bc6266"
+      ppm:isList="false"
+      ppm:mappedParameter="filters"
+      asi:name="Filters" />
+  </xdp:Page>
+</x:file>
