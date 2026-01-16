@@ -364,11 +364,19 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
 
         return lookupStrings
+            .Where(x => !string.IsNullOrWhiteSpace(x))
             .Select(lookupString => lookupString.Split(":"))
             .ToDictionary(
                 x => x[0],
                 x =>
                 {
+                    if (x.Length != 2)
+                    {
+                        throw new ArgumentException(
+                            $"Error when parsing {nameof(XsltDataPage.FilterLookupsParameterName)}, keys and values have to be separated by \":\" "
+                        );
+                    }
+
                     if (!Guid.TryParse(x[1], out Guid lookupId))
                     {
                         throw new ArgumentException(
