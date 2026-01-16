@@ -7,24 +7,31 @@
   xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.2.0">
   <xdp:Page
     asi:abstract="false"
+    xdp:allowCustomFilters="true"
     ap:allowDelete="false"
     ap:allowPut="false"
-    xdp:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    xdp:dataStructure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
     xdp:disableConstraintForInputValidation="false"
-    x:id="25ffec97-ed70-4580-98e8-05a3a30355e5"
-    xdp:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/LookupWithArrayParameterTest/bcc840f2-a3ea-4bab-aa84-7cc4c0afebf2"
+    x:id="8a7020e6-46f2-4bae-b593-cebbaf52f538"
     ap:mimeType="application/json"
-    asi:name="ArrayParameterTest"
+    asi:name="GetAllDataTypesWithFilter"
     xdp:omitJsonMainElement="false"
     xdp:omitJsonRootElement="false"
     xdp:processGetReadRowLevelRules="false"
     ap:roles="*"
-    ap:url="api/public/arrayParameter/{id}">
+    ap:url="api/public/allDataWithFilter/{filters}/{filterLookups}">
     <ppm:PageParameterMapping
       asi:abstract="false"
-      x:id="48a3957e-945e-4195-9570-a69b9f9fa5e1"
+      x:id="2ec8e6ec-aa86-4080-8bb1-ee26ba1740f3"
       ppm:isList="true"
-      ppm:mappedParameter="id"
-      asi:name="AllDataTypesIds" />
+      ppm:listSeparator="Comma#Comma/26332e2b-2b07-44b2-b697-ba35ec9deca9"
+      ppm:mappedParameter="filterLookups"
+      asi:name="FilterLookups" />
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="7abcc528-023c-4cbd-8380-ccbf13bc6266"
+      ppm:isList="false"
+      ppm:mappedParameter="filters"
+      asi:name="Filters" />
   </xdp:Page>
 </x:file>
