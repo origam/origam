@@ -13,7 +13,6 @@ _Resharper*/
 !/web/bin/
 /Origam.Mail/MailData.xsc
 /Origam.Mail/MailData.xss
-/Origam.Server/Properties/launchSettings.json
 /Origam.Server/appsettings.json
 /Origam.Architect.Server/appsettings.json
 /Origam.Architect.Server/appsettings.Development.json
