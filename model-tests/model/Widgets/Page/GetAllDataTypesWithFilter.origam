@@ -4,9 +4,10 @@
   xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.1"
-  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.1.0">
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.2.0">
   <xdp:Page
     asi:abstract="false"
+    xdp:allowCustomFilters="true"
     ap:allowDelete="false"
     ap:allowPut="false"
     xdp:dataStructure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"

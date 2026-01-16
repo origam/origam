@@ -33,9 +33,12 @@ namespace Origam.Schema.GuiModel;
 
 [SchemaItemDescription("Data Page", "data-page.png")]
 [HelpTopic("Data+Page")]
-[ClassMetaVersion("6.1.0")]
+[ClassMetaVersion("6.2.0")]
 public class XsltDataPage : AbstractPage, IDataStructureReference
 {
+    public static readonly string FiltersParameterName = "Filters";
+    public static readonly string FilterLookupsParameterName = "FilterLookups";
+
     public XsltDataPage()
         : base()
     {
@@ -294,5 +297,16 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
             + " checked and applied if this is turned on."
     )]
     public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
+
+    [XmlAttribute("allowCustomFilters")]
+    [Description(
+        "If true can you send a custom filer in the parameter named "
+            + nameof(FiltersParameterName)
+            + " and filter lookups in parameter "
+            + nameof(FilterLookupsParameterName)
+            + "."
+    )]
+    public bool AllowCustomFilters { get; set; }
+
     #endregion
 }

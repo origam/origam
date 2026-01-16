@@ -35,5 +35,6 @@ public class XsltDataPageScriptContainer : UpgradeScriptContainer
     public XsltDataPageScriptContainer()
     {
         AddEmptyUpgrade("6.0.0", "6.1.0");
+        AddEmptyUpgrade("6.1.0", "6.2.0");
     }
 }

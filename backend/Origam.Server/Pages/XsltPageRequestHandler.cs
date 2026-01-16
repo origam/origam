@@ -91,7 +91,10 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         else
         {
-            if (parameters.ContainsKey("Filters"))
+            if (
+                xsltPage.AllowCustomFilters
+                && parameters.ContainsKey(XsltDataPage.FiltersParameterName)
+            )
             {
                 data = LoadWithFilters(xsltPage, parameters);
             }
@@ -292,13 +295,10 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             DataSourceId = xsltPage.DataStructureId,
             CustomFilters = new CustomFilters
             {
-                Filters = parameters["Filters"].ToString(),
+                Filters = parameters[XsltDataPage.FiltersParameterName].ToString(),
                 FilterLookups = ParseFilterLookups(parameters),
             },
-            ColumnsInfo = new ColumnsInfo(
-                columns: columns,
-                renderSqlForDetachedFields: true
-            ),
+            ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
         };
         IDataService dataService = CoreServices.DataServiceFactory.GetDataService();
@@ -340,21 +340,25 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         Dictionary<string, object> parameters
     )
     {
-        if (!parameters.ContainsKey("FilterLookups"))
+        if (!parameters.ContainsKey(XsltDataPage.FilterLookupsParameterName))
         {
             return new Dictionary<string, Guid>();
         }
 
-        if (parameters["FilterLookups"] is not IEnumerable<string> lookupStrings)
+        if (
+            parameters[XsltDataPage.FilterLookupsParameterName]
+            is not IEnumerable<string> lookupStrings
+        )
         {
-            if (parameters["FilterLookups"] is string singleParameter)
+            if (parameters[XsltDataPage.FilterLookupsParameterName] is string singleParameter)
             {
                 lookupStrings = [singleParameter];
             }
             else
             {
                 throw new ArgumentException(
-                    "FilterLookups parsing failed. The value is not a string or an array of strings"
+                    nameof(XsltDataPage.FilterLookupsParameterName)
+                        + " parsing failed. The value is not a string or an array of strings"
                 );
             }
         }
@@ -368,7 +372,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     if (!Guid.TryParse(x[1], out Guid lookupId))
                     {
                         throw new ArgumentException(
-                            $"Error when parsing FilterLookups, key \"{x[0]}\". The value \"{x[1]}\" cannot be parsed to Guid"
+                            $"Error when parsing {nameof(XsltDataPage.FilterLookupsParameterName)}, key \"{x[0]}\". The value \"{x[1]}\" cannot be parsed to Guid"
                         );
                     }
                     return lookupId;
