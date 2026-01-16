@@ -351,7 +351,6 @@ public class Startup
             {
                 options.RouteBasePath = "/profiler";
                 options.PopupDecimalPlaces = 1;
-                // options.ResultsAuthorize = IsMiniProfilerResultsAuthorized;
                 options.ResultsAuthorize = request =>
                     SecurityManager
                         .GetAuthorizationProvider()
