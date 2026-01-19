@@ -114,4 +114,30 @@ public class FileSystemXsltFunctionContainerTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
+
+    [Test]
+    public void ShouldCombinePathWithThreeSegments()
+    {
+        string expectedResult = Path.Combine("root", "folder", "file.txt");
+        string xsltCall = "fs:CombinePath('root', 'folder', 'file.txt')";
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+
+    [Test]
+    public void ShouldCombinePathWithFourSegments()
+    {
+        string expectedResult = Path.Combine("root", "folder", "child", "file.txt");
+        string xsltCall = "fs:CombinePath('root', 'folder', 'child', 'file.txt')";
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
 }

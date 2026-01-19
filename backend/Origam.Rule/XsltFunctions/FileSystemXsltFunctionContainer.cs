@@ -34,4 +34,14 @@ public class FileSystemXsltFunctionContainer
     {
         return Path.Combine(path1, path2);
     }
+
+    public string CombinePath(string path1, string path2, string path3)
+    {
+        return Path.Combine(path1, path2, path3);
+    }
+
+    public string CombinePath(string path1, string path2, string path3, string path4)
+    {
+        return Path.Combine(path1, path2, path3, path4);
+    }
 }
