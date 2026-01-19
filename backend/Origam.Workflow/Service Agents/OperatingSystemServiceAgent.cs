@@ -21,98 +21,102 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using Origam.Service.Core;
 
 namespace Origam.Workflow;
 
 public class OperatingSystemServiceAgent : AbstractServiceAgent
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
     #region IServiceAgent Members
-    private object _result;
-    public override object Result
-    {
-        get
-        {
-            object temp = _result;
-            _result = null;
-            return temp;
-        }
-    }
+    private object result;
+    public override object Result => result;
 
     public override void Run()
     {
-        switch (this.MethodName)
+        result = MethodName switch
         {
-            case "StartProcess":
-            {
-                // Check input parameters
-                if (!(Parameters["FileName"] is string))
-                {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
-                }
-                if (!(Parameters["Arguments"] is string || Parameters["Arguments"] == null))
-                {
-                    throw new InvalidCastException(
-                        ResourceUtils.GetString("ErrorArgumentsNotString")
-                    );
-                }
-                if (!(Parameters["Timeout"] is int || Parameters["Timeout"] == null))
-                {
-                    throw new InvalidCastException(ResourceUtils.GetString("ErrorTimeoutNotInt"));
-                }
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(
-                    (string)Parameters["FileName"],
-                    (string)Parameters["Arguments"]
-                );
-                processStartInfo.CreateNoWindow = false;
-                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                processStartInfo.UseShellExecute = false;
-                processStartInfo.RedirectStandardError = true;
-                Process process = new Process();
-                process.StartInfo = processStartInfo;
-                if (log.IsDebugEnabled)
-                {
-                    log.DebugFormat(
-                        "Executing {0} {1}",
-                        processStartInfo.FileName,
-                        processStartInfo.Arguments
-                    );
-                }
-                process.Start();
-                string error = process.StandardError.ReadToEnd();
-                if (Parameters["Timeout"] is int)
-                {
-                    process.WaitForExit((int)Parameters["Timeout"]);
-                }
-                else
-                {
-                    process.WaitForExit();
-                }
-                if (!String.IsNullOrEmpty(error))
-                {
-                    throw new Exception(
-                        ResourceUtils.GetString(
-                            "ExternalProcessError",
-                            processStartInfo.FileName,
-                            error
-                        )
-                    );
-                }
-                _result = true;
-                break;
-            }
-
-            default:
-            {
-                throw new ArgumentOutOfRangeException(
-                    "MethodName",
-                    MethodName,
-                    ResourceUtils.GetString("InvalidMethodName")
-                );
-            }
-        }
+            "StartProcess" => StartProcess(
+                Parameters.Get<string>("FileName"),
+                Parameters.Get<string>("Arguments"),
+                Parameters.Get<int>("Timeout")
+            ),
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(MethodName),
+                MethodName,
+                ResourceUtils.GetString("InvalidMethodName")
+            ),
+        };
     }
     #endregion
+
+    private bool StartProcess(string filename, string arguments, int timeout)
+    {
+        using var process = new Process();
+        process.StartInfo.FileName = filename;
+        process.StartInfo.Arguments = arguments;
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.RedirectStandardError = true;
+        var standardOutput = new StringBuilder();
+        var standardError = new StringBuilder();
+        using var outputWaitHandle = new AutoResetEvent(false);
+        using var errorWaitHandle = new AutoResetEvent(false);
+        process.OutputDataReceived += (sender, e) =>
+        {
+            if (e.Data == null)
+            {
+                outputWaitHandle.Set();
+            }
+            else
+            {
+                standardOutput.AppendLine(e.Data);
+            }
+        };
+        process.ErrorDataReceived += (sender, e) =>
+        {
+            if (e.Data == null)
+            {
+                errorWaitHandle.Set();
+            }
+            else
+            {
+                standardError.AppendLine(e.Data);
+            }
+        };
+        if (log.IsDebugEnabled)
+        {
+            log.DebugFormat("Executing {0} {1}", filename, arguments);
+        }
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        if (
+            !process.WaitForExit(timeout)
+            || !outputWaitHandle.WaitOne(timeout)
+            || !errorWaitHandle.WaitOne(timeout)
+        )
+        {
+            try
+            {
+                process.Kill();
+            }
+            catch
+            {
+                /* ignore failure */
+            }
+            throw new Exception($"Timeout while executing process: {filename} {arguments}");
+        }
+        if (standardError.Length > 0)
+        {
+            throw new Exception(
+                $"Error while executing process: {filename} {arguments}\n{standardError}"
+            );
+        }
+        return true;
+    }
 }
