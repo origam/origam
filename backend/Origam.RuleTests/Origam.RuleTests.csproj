@@ -87,6 +87,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FileSystemXsltFunctionContainerTests.cs" />
     <Compile Include="XsltTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LegacyXsltFunctionContainerTests.cs" />

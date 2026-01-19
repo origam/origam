@@ -29,4 +29,9 @@ public class FileSystemXsltFunctionContainer
     {
         return File.Exists(path);
     }
+
+    public string CombinePath(string path1, string path2)
+    {
+        return Path.Combine(path1, path2);
+    }
 }
