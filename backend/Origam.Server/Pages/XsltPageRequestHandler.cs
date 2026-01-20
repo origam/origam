@@ -293,8 +293,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         {
             Entity = entity.Name,
             DataSourceId = xsltPage.DataStructureId,
-            RowLimit = GetIntParameterValue(parameters, "pageSize"),
-            RowOffset = GetIntParameterValue(parameters, "pageNumber"),
+            RowLimit = GetIntParameterValue(parameters, "_pageSize"),
+            RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
             CustomFilters = new CustomFilters
             {
                 Filters = parameters[XsltDataPage.FiltersParameterName].ToString(),

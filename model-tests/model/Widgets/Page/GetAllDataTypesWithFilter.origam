@@ -36,23 +36,9 @@
       asi:name="filterLookups" />
     <ppm:PageParameterMapping
       asi:abstract="false"
-      ppm:defaultValue="_Number_0#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
-      x:id="3940cf5e-c3c4-4403-a5e6-4c8d108432aa"
-      ppm:isList="false"
-      ppm:mappedParameter="pageNumber"
-      asi:name="pageNumber" />
-    <ppm:PageParameterMapping
-      asi:abstract="false"
       x:id="7abcc528-023c-4cbd-8380-ccbf13bc6266"
       ppm:isList="false"
       ppm:mappedParameter="filters"
       asi:name="filters" />
-    <ppm:PageParameterMapping
-      asi:abstract="false"
-      ppm:defaultValue="_Number_10#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
-      x:id="d907139c-689a-45e9-92f7-18ddcdb16c9c"
-      ppm:isList="false"
-      ppm:mappedParameter="pageSize"
-      asi:name="pageSize" />
   </xdp:Page>
 </x:file>

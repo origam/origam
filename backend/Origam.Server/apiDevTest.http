@@ -35,7 +35,7 @@ Authorization: Bearer {{access_token}}
 # Filters = [\"refTagInputSourceId\", \"contains\", \"L\"]
 # SortBy = Date1:ASC,Integer1:DESC
 # FilterLookups = refTagInputSourceId:991a8bec-5169-4506-9457-7f91c27bb5fd
-GET https://localhost:{{port}}/api/public/allDataWithFilter?filters=%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D&filterLookups=refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd&pageSize=1&pageNumber=1&SortBy=Date1%3AASC%2CInteger1%3ADESC
+GET https://localhost:{{port}}/api/public/allDataWithFilter?filters=%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D&filterLookups=refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd&_pageSize=1&_pageNumber=1&SortBy=Date1%3AASC%2CInteger1%3ADESC
 Authorization: Bearer {{access_token}}
 
 ###
