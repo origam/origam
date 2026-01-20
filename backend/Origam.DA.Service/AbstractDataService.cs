@@ -252,7 +252,7 @@ public abstract class AbstractDataService : IDataService
         }
         if (adParameters.RowOffset is > 0)
         {
-            id += "adParameters.RowOffset=true";
+            id += "_RowOffset=true";
         }
         Hashtable adapterCache = GetCache();
         // Caching adapters
