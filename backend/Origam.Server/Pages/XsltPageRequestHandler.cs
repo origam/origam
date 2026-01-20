@@ -269,6 +269,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
     }
 
+    // Loads the data with custom filters defined in the request
     private DataSet LoadWithFilters(
         XsltDataPage xsltPage,
         Dictionary<string, object> parameters,
