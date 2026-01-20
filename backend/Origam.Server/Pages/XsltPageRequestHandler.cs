@@ -306,8 +306,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
             CustomFilters = new CustomFilters
             {
-                Filters = filterInput?.Filter, 
-                FilterLookups = filterInput?.FilterLookups ?? []
+                Filters = filterInput?.Filter,
+                FilterLookups = filterInput?.FilterLookups ?? [],
             },
             MethodId = xsltPage.DataStructureMethodId,
             SortSetId = xsltPage.DataStructureSortSetId,
@@ -388,7 +388,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         {
             return null;
         }
-        
+
         return JsonConvert.DeserializeObject<XsltDatPageFilerInput>(body);
     }
 
