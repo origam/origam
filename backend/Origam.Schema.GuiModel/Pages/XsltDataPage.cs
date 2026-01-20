@@ -300,11 +300,7 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
 
     [XmlAttribute("allowCustomFilters")]
     [Description(
-        "If true can you send a custom filer in the parameter named "
-            + nameof(FiltersParameterName)
-            + " and filter lookups in parameter "
-            + nameof(FilterLookupsParameterName)
-            + "."
+        "If true can you send a custom filter nad orderings in the request body."
     )]
     public bool AllowCustomFilters { get; set; }
 
