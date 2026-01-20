@@ -293,11 +293,18 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         {
             Entity = entity.Name,
             DataSourceId = xsltPage.DataStructureId,
+            RowLimit = GetIntParameterValue(parameters, "pageSize"),
+            RowOffset = GetIntParameterValue(parameters, "pageNumber"),
             CustomFilters = new CustomFilters
             {
                 Filters = parameters[XsltDataPage.FiltersParameterName].ToString(),
                 FilterLookups = ParseFilterLookups(parameters),
             },
+            MethodId = xsltPage.DataStructureMethodId,
+            SortSetId = xsltPage.DataStructureSortSetId,
+            CustomOrderings = new CustomOrderings(
+                [new Ordering(columnName: "Date1", direction: "ASC", sortOrder: 0)]
+            ),
             ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
         };
@@ -334,6 +341,21 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
 
         return data;
+    }
+
+    private int GetIntParameterValue(Dictionary<string, object> parameters, string parameterName)
+    {
+        if (!parameters.TryGetValue(parameterName, out object objValue))
+        {
+            return 0;
+        }
+        if (!int.TryParse(objValue.ToString(), out int value))
+        {
+            throw new ArgumentException(
+                $"{parameterName}, value: \"{objValue}\" cannot be parsed to integer"
+            );
+        }
+        return value;
     }
 
     private static Dictionary<string, Guid> ParseFilterLookups(

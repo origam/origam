@@ -27,20 +27,21 @@ scope=internal_api offline_access
 ###
 # parameters:
 # Filters = [\"Text1\", \"neq\", \"sdssd\"]
-GET https://localhost:{{port}}/api/public/allDataWithFilter/%5B%22Text1%22%2C%22neq%22%2C%22sdssd%22%5D/
+GET https://localhost:{{port}}/api/public/allDataWithFilter?filters=%5B%22Text1%22%2C%22neq%22%2C%22sdssd%22%5D
 Authorization: Bearer {{access_token}}
 
 ###
 # parameters:
 # Filters = [\"refTagInputSourceId\", \"contains\", \"L\"]
+# SortBy = Date1:ASC,Integer1:DESC
 # FilterLookups = refTagInputSourceId:991a8bec-5169-4506-9457-7f91c27bb5fd
-GET https://localhost:{{port}}/api/public/allDataWithFilter/%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D/refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd
+GET https://localhost:{{port}}/api/public/allDataWithFilter?filters=%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D&filterLookups=refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd&pageSize=1&pageNumber=1&SortBy=Date1%3AASC%2CInteger1%3ADESC
 Authorization: Bearer {{access_token}}
 
 ###
 # parameters:
 # Filters = [\"refTagInputSourceId\", \"contains\", \"L\"]
 # FilterLookups = refTagInputSourceId:991a8bec-5169-4506-9457-7f91c27bb5fd,test:191a8bec-5169-4506-9457-7f91c27bb5fd
-GET https://localhost:{{port}}/api/public/allDataWithFilter/%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D/refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd%2Ctest%3A191a8bec-5169-4506-9457-7f91c27bb5fd
+GET https://localhost:{{port}}/api/public/allDataWithFilter?filters=%5B%22refTagInputSourceId%22%2C%20%22contains%22%2C%20%22L%22%5D&filterLookups=refTagInputSourceId%3A991a8bec-5169-4506-9457-7f91c27bb5fd
 
 Authorization: Bearer {{access_token}}

@@ -36,8 +36,8 @@ namespace Origam.Schema.GuiModel;
 [ClassMetaVersion("6.2.0")]
 public class XsltDataPage : AbstractPage, IDataStructureReference
 {
-    public static readonly string FiltersParameterName = "Filters";
-    public static readonly string FilterLookupsParameterName = "FilterLookups";
+    public static readonly string FiltersParameterName = "filters";
+    public static readonly string FilterLookupsParameterName = "filterLookups";
 
     public XsltDataPage()
         : base()
