@@ -1621,6 +1621,7 @@ public class StateMachineService : AbstractService, IStateMachineService
         if (_WorkQueueLastRefreshed.AddMinutes(1).CompareTo(DateTime.Now) < 0)
         {
             _WorkQueueCache = (WQService as WorkQueueService).GetQueues(
+                ignoreQueueProcessors: true,
                 transactionId: transactionId
             );
             _WorkQueueLastRefreshed = DateTime.Now;
