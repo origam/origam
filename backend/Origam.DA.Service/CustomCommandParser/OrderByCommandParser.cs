@@ -95,7 +95,7 @@ class ColumnOrderingRenderer
             }
             default:
             {
-                throw new NotImplementedException(orderingName);
+                throw new ArgumentException(orderingName);
             }
         }
     }
