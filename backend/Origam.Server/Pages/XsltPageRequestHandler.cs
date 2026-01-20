@@ -23,15 +23,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
+using Newtonsoft.Json;
 using Origam.DA;
 using Origam.JSON;
 using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Server.Model.UIService;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 using CoreServices = Origam.Workbench.Services.CoreServices;
@@ -91,12 +94,9 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         else
         {
-            if (
-                xsltPage.AllowCustomFilters
-                && parameters.ContainsKey(XsltDataPage.FiltersParameterName)
-            )
+            if (xsltPage.AllowCustomFilters)
             {
-                data = LoadWithFilters(xsltPage, parameters);
+                data = LoadWithFilters(xsltPage, parameters, request);
             }
             else
             {
@@ -269,7 +269,11 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
     }
 
-    private DataSet LoadWithFilters(XsltDataPage xsltPage, Dictionary<string, object> parameters)
+    private DataSet LoadWithFilters(
+        XsltDataPage xsltPage,
+        Dictionary<string, object> parameters,
+        IRequestWrapper request
+    )
     {
         DataStructure dataStructure =
             persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
@@ -289,6 +293,11 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                 );
             })
             .ToList();
+
+        string body = ReadRequestBody(request);
+        XsltDatPageFilerInput filterInput = DeserializeFilterInput(body);
+        List<Ordering> orderings = GetOrderings(filterInput);
+
         var query = new DataStructureQuery
         {
             Entity = entity.Name,
@@ -297,14 +306,12 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
             CustomFilters = new CustomFilters
             {
-                Filters = parameters[XsltDataPage.FiltersParameterName].ToString(),
-                FilterLookups = ParseFilterLookups(parameters),
+                Filters = filterInput?.Filter, 
+                FilterLookups = filterInput?.FilterLookups ?? []
             },
             MethodId = xsltPage.DataStructureMethodId,
             SortSetId = xsltPage.DataStructureSortSetId,
-            CustomOrderings = new CustomOrderings(
-                [new Ordering(columnName: "Date1", direction: "ASC", sortOrder: 0)]
-            ),
+            CustomOrderings = new CustomOrderings(orderings),
             ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
             ForceDatabaseCalculation = true,
         };
@@ -341,6 +348,68 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
 
         return data;
+    }
+
+    private static string ReadRequestBody(IRequestWrapper request)
+    {
+        if (request.ContentLength == 0)
+        {
+            return string.Empty;
+        }
+
+        Stream inputStream = request.InputStream;
+        if (inputStream == null)
+        {
+            return string.Empty;
+        }
+
+        if (inputStream.CanSeek)
+        {
+            inputStream.Position = 0;
+        }
+
+        using var reader = new StreamReader(
+            inputStream,
+            request.ContentEncoding ?? Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: true,
+            leaveOpen: true
+        );
+        string body = reader.ReadToEnd();
+        if (inputStream.CanSeek)
+        {
+            inputStream.Position = 0;
+        }
+        return body;
+    }
+
+    private static XsltDatPageFilerInput DeserializeFilterInput(string body)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            return null;
+        }
+        
+        return JsonConvert.DeserializeObject<XsltDatPageFilerInput>(body);
+    }
+
+    private static List<Ordering> GetOrderings(XsltDatPageFilerInput filterInput)
+    {
+        if (filterInput?.Ordering == null)
+        {
+            return [];
+        }
+
+        return filterInput
+            .Ordering.Select(
+                (ordering, index) =>
+                    new Ordering(
+                        columnName: ordering.ColumnId,
+                        direction: ordering.Direction,
+                        lookupId: ordering.LookupId,
+                        sortOrder: index
+                    )
+            )
+            .ToList();
     }
 
     private int GetIntParameterValue(Dictionary<string, object> parameters, string parameterName)

@@ -44,6 +44,10 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     {
         this.httpContext = httpContext;
         this.request = httpContext.Request;
+        if (!request.Body.CanSeek)
+        {
+            request.EnableBuffering();
+        }
         headerDictionary = this.httpContext.Request.Headers;
         clientInfo = GetClientInfo();
         Params = GetParameters();
