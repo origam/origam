@@ -35,15 +35,12 @@ scope=internal_api offline_access
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter
-Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter?_pageSize=1&_pageNumber=1
-Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter
-Authorization: Bearer {{access_token}}
 
 {
   "filter": "[\"refTagInputSourceId\", \"contains\", \"L\"]",
@@ -54,7 +51,6 @@ Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter
-Authorization: Bearer {{access_token}}
 
 {
   "filter": "[\"refTagInputSourceId\", \"contains\", \"L\"]",
@@ -62,7 +58,6 @@ Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter?_pageSize=2&_pageNumber=1
-Authorization: Bearer {{access_token}}
 
 {
   "filter": "[\"refTagInputSourceId\", \"contains\", \"L\"]",
@@ -73,7 +68,6 @@ Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter?_pageSize=2&_pageNumber=1
-Authorization: Bearer {{access_token}}
 
 {
   "filter": "[\"refTagInputSourceId\", \"contains\", \"L\"]",
@@ -87,7 +81,6 @@ Authorization: Bearer {{access_token}}
 
 ###
 POST https://localhost:{{port}}/api/public/allDataWithFilter?_pageSize=2&_pageNumber=1
-Authorization: Bearer {{access_token}}
 
 {
   "ordering": [

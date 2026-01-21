@@ -428,68 +428,6 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         return value;
     }
 
-    private static Dictionary<string, Guid> ParseFilterLookups(
-        Dictionary<string, object> parameters
-    )
-    {
-        if (!parameters.ContainsKey(XsltDataPage.FilterLookupsParameterName))
-        {
-            return new Dictionary<string, Guid>();
-        }
-
-        if (
-            parameters[XsltDataPage.FilterLookupsParameterName]
-            is not IEnumerable<string> lookupStrings
-        )
-        {
-            if (parameters[XsltDataPage.FilterLookupsParameterName] is string singleParameter)
-            {
-                lookupStrings = [singleParameter];
-            }
-            else
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        Resources.ErrorFilterLookupsInvalidType,
-                        nameof(XsltDataPage.FilterLookupsParameterName)
-                    )
-                );
-            }
-        }
-
-        return lookupStrings
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(lookupString => lookupString.Split(":"))
-            .ToDictionary(
-                x => x[0],
-                x =>
-                {
-                    if (x.Length != 2)
-                    {
-                        throw new ArgumentException(
-                            string.Format(
-                                Resources.ErrorFilterLookupsMissingSeparator,
-                                nameof(XsltDataPage.FilterLookupsParameterName)
-                            )
-                        );
-                    }
-
-                    if (!Guid.TryParse(x[1], out Guid lookupId))
-                    {
-                        throw new ArgumentException(
-                            string.Format(
-                                Resources.ErrorFilterLookupsInvalidGuid,
-                                nameof(XsltDataPage.FilterLookupsParameterName),
-                                x[0],
-                                x[1]
-                            )
-                        );
-                    }
-                    return lookupId;
-                }
-            );
-    }
-
     private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
     {
         DataTableCollection dataTables = data.Tables;
