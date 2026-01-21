@@ -89,14 +89,10 @@ public class MsSqlDataService : AbstractSqlDataService
         builder.IntegratedSecurity = integratedAuthentication;
         builder.UserID = userName;
         builder.Password = password;
-        builder.DataSource = serverName;
+        builder.DataSource = serverName + "," + port;
         builder.InitialCatalog = databaseName;
         builder.Pooling = pooling;
         builder.Encrypt = false;
-        if (!integratedAuthentication && port != 1433)
-        {
-            builder.DataSource = serverName + "," + port;
-        }
         return builder.ConnectionString;
     }
 
