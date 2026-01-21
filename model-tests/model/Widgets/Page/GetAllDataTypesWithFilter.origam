@@ -9,7 +9,7 @@
     xdp:allowCustomFilters="true"
     ap:allowDelete="false"
     ap:allowPut="false"
-    xdp:dataStructure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+    xdp:dataStructure="AllDataTypesSingleEntity#AllDataTypesSingleEntity/a1f20c05-3854-408b-8c89-5663bfa3335d"
     xdp:disableConstraintForInputValidation="false"
     x:id="8a7020e6-46f2-4bae-b593-cebbaf52f538"
     ap:mimeType="application/json"
@@ -18,6 +18,6 @@
     xdp:omitJsonRootElement="false"
     xdp:processGetReadRowLevelRules="false"
     ap:roles="*"
-    xdp:sortSet="Default#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518"
+    xdp:sortSet="Default#AllDataTypesSingleEntity/Default/15faf27b-2849-4f5c-a1cb-3486a964b59f"
     ap:url="api/public/allDataWithFilter" />
 </x:file>
