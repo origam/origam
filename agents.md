@@ -187,7 +187,9 @@ Below are examples of typical tasks Codex might be asked to perform, along with 
 - **Versioning**: Whenever creating or updating Docker tags in `docker/`, follow the `YYYY.MAJOR.MINOR` scheme that Origam uses.  
 - **Documentation**: If generating XML comments for methods (using `/// <summary> ... </summary>`), keep them concise and relevant to business logic.  
 - **Error Messages**: Origam often surfaces localized error strings; when adding new exceptions, follow the existing pattern (e.g., `throw new InvalidOperationException("Feature X is not available.")`).
-
----
+- **Localization**: Use Strings.Designer for localization. When localizing user-facing strings, add keys to
+Strings.resx (or similar file in the same project if Strings.resx is not there), access them via Strings.<Key> (optionally with
+string.Format), and avoid ResourceUtils.GetString in new or updated
+code unless explicitly requested.
 
 *End of agents.md*
