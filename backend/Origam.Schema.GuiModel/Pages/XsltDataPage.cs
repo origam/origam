@@ -316,7 +316,9 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
     {
         if (instance is not XsltDataPage page)
         {
-            throw new Exception($"Instance must be of type {nameof(XsltDataPage)}.");
+            throw new Exception(
+                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+            );
         }
 
         if (!page.AllowCustomFilters)
@@ -330,7 +332,10 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         if (topEntities.Count != 1)
         {
             return new InvalidOperationException(
-                $"{nameof(XsltDataPage.AllowCustomFilters)} can only be enabled when the data structure contains a single top entity."
+                string.Format(
+                    Strings.ErrorAllowCustomFiltersSingleTopEntity,
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
             );
         }
         var topEntity = topEntities.First();
@@ -340,7 +345,7 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         if (otherEntities.Any(entity => entity.Columns.Count > 0))
         {
             return new InvalidOperationException(
-                "The selected data structure can only contain one top entity. Only that entity can select fields. It can have sub entities but these can only be used for filtering."
+                Strings.ErrorAllowCustomFiltersSingleTopEntityFieldsOnly
             );
         }
 
@@ -352,7 +357,11 @@ public class SingleEntityDataStructureForCustomFiltersRuleAttribute
         if (memberName != nameof(XsltDataPage.AllowCustomFilters))
         {
             throw new Exception(
-                $"{nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute)} can only be applied to {nameof(XsltDataPage.AllowCustomFilters)}."
+                string.Format(
+                    Strings.ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget,
+                    nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute),
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
             );
         }
         return CheckRule(instance);
@@ -366,13 +375,19 @@ public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElement
     {
         if (instance is not XsltDataPage page)
         {
-            throw new Exception($"Instance must be of type {nameof(XsltDataPage)}.");
+            throw new Exception(
+                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+            );
         }
 
         if (page.AllowCustomFilters && page.SortSet == null)
         {
             return new InvalidOperationException(
-                $"{nameof(XsltDataPage.SortSet)} cannot be null if {nameof(XsltDataPage.AllowCustomFilters)} is set to true."
+                string.Format(
+                    Strings.ErrorSortSetRequiredForCustomFilters,
+                    nameof(XsltDataPage.SortSet),
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
             );
         }
 
@@ -384,7 +399,11 @@ public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElement
         if (memberName != nameof(XsltDataPage.SortSet))
         {
             throw new Exception(
-                $"{nameof(SortSetRequiredForCustomFiltersRuleAttribute)} can only be applied to {nameof(XsltDataPage.SortSet)}."
+                string.Format(
+                    Strings.ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget,
+                    nameof(SortSetRequiredForCustomFiltersRuleAttribute),
+                    nameof(XsltDataPage.SortSet)
+                )
             );
         }
         return CheckRule(instance);

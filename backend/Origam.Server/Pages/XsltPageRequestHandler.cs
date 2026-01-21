@@ -422,7 +422,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         if (!int.TryParse(objValue.ToString(), out int value))
         {
             throw new ArgumentException(
-                $"{parameterName}, value: \"{objValue}\" cannot be parsed to integer"
+                string.Format(Resources.ErrorInvalidIntParameterValue, parameterName, objValue)
             );
         }
         return value;
@@ -449,8 +449,10 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             else
             {
                 throw new ArgumentException(
-                    nameof(XsltDataPage.FilterLookupsParameterName)
-                        + " parsing failed. The value is not a string or an array of strings"
+                    string.Format(
+                        Resources.ErrorFilterLookupsInvalidType,
+                        nameof(XsltDataPage.FilterLookupsParameterName)
+                    )
                 );
             }
         }
@@ -465,14 +467,22 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                     if (x.Length != 2)
                     {
                         throw new ArgumentException(
-                            $"Error when parsing {nameof(XsltDataPage.FilterLookupsParameterName)}, keys and values have to be separated by \":\" "
+                            string.Format(
+                                Resources.ErrorFilterLookupsMissingSeparator,
+                                nameof(XsltDataPage.FilterLookupsParameterName)
+                            )
                         );
                     }
 
                     if (!Guid.TryParse(x[1], out Guid lookupId))
                     {
                         throw new ArgumentException(
-                            $"Error when parsing {nameof(XsltDataPage.FilterLookupsParameterName)}, key \"{x[0]}\". The value \"{x[1]}\" cannot be parsed to Guid"
+                            string.Format(
+                                Resources.ErrorFilterLookupsInvalidGuid,
+                                nameof(XsltDataPage.FilterLookupsParameterName),
+                                x[0],
+                                x[1]
+                            )
                         );
                     }
                     return lookupId;

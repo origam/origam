@@ -84,4 +84,25 @@
 	<data name="ErrorConstantNotFound" xml:space="preserve">
 		<value>DataConstant referenced by '{0}' in {1} '{2}' was not found in the model.</value>
 	</data>
+	<data name="AllowCustomFiltersDescription">
+		<value>If true can you send a custom filter nad orderings in the request body.</value>
+	</data>
+	<data name="ErrorXsltDataPageInstanceType">
+		<value>Instance must be of type {0}.</value>
+	</data>
+	<data name="ErrorAllowCustomFiltersSingleTopEntity">
+		<value>{0} can only be enabled when the data structure contains a single top entity.</value>
+	</data>
+	<data name="ErrorAllowCustomFiltersSingleTopEntityFieldsOnly">
+		<value>The selected data structure can only contain one top entity. Only that entity can select fields. It can have sub entities but these can only be used for filtering.</value>
+	</data>
+	<data name="ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget">
+		<value>{0} can only be applied to {1}.</value>
+	</data>
+	<data name="ErrorSortSetRequiredForCustomFilters">
+		<value>{0} cannot be null if {1} is set to true.</value>
+	</data>
+	<data name="ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget">
+		<value>{0} can only be applied to {1}.</value>
+	</data>
 </root>
