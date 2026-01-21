@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -158,6 +159,7 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
 
     [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
     [XmlReference("sortSet", "DataStructureSortSetId")]
+    [SortSetRequiredForCustomFiltersRule]
     public DataStructureSortSet SortSet
     {
         get => PersistenceProvider.RetrieveInstance<DataStructureSortSet>(DataStructureSortSetId);
@@ -299,10 +301,92 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
     public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
 
     [XmlAttribute("allowCustomFilters")]
-    [Description(
-        "If true can you send a custom filter nad orderings in the request body."
-    )]
+    [Description("If true can you send a custom filter nad orderings in the request body.")]
+    [SingleEntityDataStructureForCustomFiltersRule]
     public bool AllowCustomFilters { get; set; }
 
     #endregion
+}
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class SingleEntityDataStructureForCustomFiltersRuleAttribute
+    : AbstractModelElementRuleAttribute
+{
+    public override Exception CheckRule(object instance)
+    {
+        if (instance is not XsltDataPage page)
+        {
+            throw new Exception($"Instance must be of type {nameof(XsltDataPage)}.");
+        }
+
+        if (!page.AllowCustomFilters)
+        {
+            return null;
+        }
+
+        var topEntities = page
+            .DataStructure.Entities.Where(entity => entity.Parents.Count() == 1)
+            .ToList();
+        if (topEntities.Count != 1)
+        {
+            return new InvalidOperationException(
+                $"{nameof(XsltDataPage.AllowCustomFilters)} can only be enabled when the data structure contains a single top entity."
+            );
+        }
+        var topEntity = topEntities.First();
+        var otherEntities = page
+            .DataStructure.Entities.Where(entity => entity.Id != topEntity.Id)
+            .ToList();
+        if (otherEntities.Any(entity => entity.Columns.Count > 0))
+        {
+            return new InvalidOperationException(
+                "The selected data structure can only contain one top entity. Only that entity can select fields. It can have sub entities but these can only be used for filtering."
+            );
+        }
+
+        return null;
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (memberName != nameof(XsltDataPage.AllowCustomFilters))
+        {
+            throw new Exception(
+                $"{nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute)} can only be applied to {nameof(XsltDataPage.AllowCustomFilters)}."
+            );
+        }
+        return CheckRule(instance);
+    }
+}
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElementRuleAttribute
+{
+    public override Exception CheckRule(object instance)
+    {
+        if (instance is not XsltDataPage page)
+        {
+            throw new Exception($"Instance must be of type {nameof(XsltDataPage)}.");
+        }
+
+        if (page.AllowCustomFilters && page.SortSet == null)
+        {
+            return new InvalidOperationException(
+                $"{nameof(XsltDataPage.SortSet)} cannot be null if {nameof(XsltDataPage.AllowCustomFilters)} is set to true."
+            );
+        }
+
+        return null;
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (memberName != nameof(XsltDataPage.SortSet))
+        {
+            throw new Exception(
+                $"{nameof(SortSetRequiredForCustomFiltersRuleAttribute)} can only be applied to {nameof(XsltDataPage.SortSet)}."
+            );
+        }
+        return CheckRule(instance);
+    }
 }
