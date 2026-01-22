@@ -87,7 +87,7 @@
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
     "@vitejs/plugin-react": "^5.1.2",
-    "sass": "^1.97.2",
+    "sass": "^1.97.3",
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.0.4",
     "ws": "^8.19.0"
