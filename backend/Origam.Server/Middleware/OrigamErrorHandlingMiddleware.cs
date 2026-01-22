@@ -41,9 +41,18 @@ public class OrigamErrorHandlingMiddleware(
     {
         object GetReturnObject(Exception ex, string defaultMessage = null)
         {
-            return env.IsDevelopment()
-                ? ex
-                : new { message = defaultMessage ?? Resources.GeneralErrorMessage };
+            if (env.IsDevelopment())
+            {
+                return new
+                {
+                    type = ex.GetType().FullName,
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    detail = ex.ToString(),
+                };
+            }
+
+            return new { message = defaultMessage ?? Resources.ErrorDetailsInLog };
         }
 
         try
@@ -79,6 +88,12 @@ public class OrigamErrorHandlingMiddleware(
         }
         catch (Exception ex)
         {
+            // Let MVC handle Account UI errors => redirect to /Error (generic error page)
+            if (context.Request.Path.StartsWithSegments("/Account"))
+            {
+                throw;
+            }
+
             switch (ex)
             {
                 case OrigamDataException or OrigamSecurityException:

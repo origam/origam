@@ -18,17 +18,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+
 using System;
 using System.Data;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Controller;
 
-[Authorize(Policy = "InternalApi")]
 [Route("chatrooms/[controller]")]
 [Route("internalApi/[controller]")]
 [ApiController]

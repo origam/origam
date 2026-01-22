@@ -28,6 +28,12 @@ export interface IArchitectApi {
 
   getNodeChildren(node: INodeLoadData): Promise<IApiTreeNode[]>;
 
+  searchText(text: string): Promise<ISearchResult[]>;
+
+  searchReferences(schemaItemId: string): Promise<ISearchResult[]>;
+
+  searchDependencies(schemaItemId: string): Promise<ISearchResult[]>;
+
   openEditor(schemaItemId: string): Promise<IApiEditorData>;
 
   closeEditor(editorId: string): Promise<void>;
@@ -115,6 +121,9 @@ export interface IArchitectApi {
   setVersionCurrent(schemaItemId: string): Promise<void>;
 
   runUpdateScriptActivity(schemaItemId: string): Promise<void>;
+  fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse>;
+  addToDeployment(request: IAddToDeploymentRequest): Promise<void>;
+  addToModel(request: IAddToModelRequest): Promise<void>;
 }
 
 export interface ITransformationInput {
@@ -151,6 +160,55 @@ export interface IValidationResult {
   title: string;
   text: string;
   output: string;
+}
+
+export interface IDatabaseResultResponse {
+  deploymentVersions: IDeploymentVersion[];
+  currentDeploymentVersionId: string | null;
+  results: IDatabaseResult[];
+}
+
+export interface ISearchResult {
+  foundIn: string;
+  rootType: string;
+  type: string;
+  folder: string;
+  package: string;
+  packageReference: boolean;
+  schemaId: string;
+  parentNodeIds: string[];
+}
+
+export interface ISearchResultsEditorData {
+  query: string;
+  results: ISearchResult[];
+}
+
+export interface IAddToDeploymentRequest {
+  platform: string;
+  deploymentVersionId: string;
+  schemaItemIds: string[];
+}
+
+export interface IAddToModelRequest {
+  platform: string;
+  schemaItemNames: string[];
+}
+
+export interface IDeploymentVersion {
+  id: string;
+  name: string;
+}
+
+export interface IDatabaseResult {
+  resultType: 'MissingInDatabase' | 'MissingInSchema' | 'ExistingButDifferent';
+  itemName: string;
+  remark: string;
+  script: string;
+  script2: string;
+  schemaItemId: string;
+  schemaItemType: 'TableMappingItem';
+  platformName: 'MsSql' | 'PgSql';
 }
 
 export interface IScreenEditorModel {
@@ -256,6 +314,7 @@ export interface IMenuItemInfo {
 }
 
 export type EditorSubType =
+  | 'DeploymentScriptsGeneratorEditor'
   | 'DeploymentScriptsEditor'
   | 'GridEditor'
   | 'XsltEditor'
@@ -263,7 +322,7 @@ export type EditorSubType =
   | 'ScreenEditor'
   | null;
 
-export type EditorType = EditorSubType | 'DocumentationEditor';
+export type EditorType = EditorSubType | 'DocumentationEditor' | 'SearchResultsEditor';
 
 export interface INodeLoadData {
   id: string;
@@ -294,6 +353,12 @@ export interface IPackage {
 
 export type PropertyType = 'boolean' | 'enum' | 'string' | 'integer' | 'float' | 'looukup';
 
+export interface IDeploymentScriptsGeneratorEditorData {
+  possibleDeploymentVersions: IDeploymentVersion[];
+  currentDeploymentVersionId: string | null;
+  results: IDatabaseResult[];
+}
+
 export interface DocumentationEditorData {
   label: string;
   properties: IApiEditorProperty[];
@@ -321,7 +386,13 @@ export interface IApiEditorData {
   editorType: EditorType;
   parentNodeId: string | undefined;
   node: IApiEditorNode;
-  data: IApiEditorProperty[] | ISectionEditorData | IScreenEditorData | DocumentationEditorData;
+  data:
+    | IApiEditorProperty[]
+    | ISectionEditorData
+    | IScreenEditorData
+    | DocumentationEditorData
+    | IDeploymentScriptsGeneratorEditorData
+    | ISearchResultsEditorData;
   isDirty: boolean;
 }
 

@@ -30,9 +30,12 @@ public class ProjectBuilder
     private readonly List<IProjectBuilder> tasks = new();
     private readonly SettingsBuilder settingsBuilder = new();
     private readonly DataDatabaseBuilder dataDatabaseBuilder = new();
-    private readonly DockerBuilder dockerBuilder = new();
+    private readonly DockerBuilder dockerBuilder;
 
-    public ProjectBuilder() { }
+    public ProjectBuilder()
+    {
+        dockerBuilder = new DockerBuilder(dataDatabaseBuilder);
+    }
 
     public void Create(Project project)
     {
@@ -89,7 +92,7 @@ public class ProjectBuilder
             tasks.Add(new NewPackageBuilder());
         }
         tasks.Add(new NewUserBuilder());
-        tasks.Add(new DockerBuilder());
+        tasks.Add(dockerBuilder);
         AddGitTasks(project);
     }
 

@@ -47,5 +47,8 @@ public abstract class ControlBase : IControl
     [Browsable(false)]
     public int Width { get; set; } = 200;
 
+    [Category("Behavior")]
+    public int TabIndex { get; set; }
+
     public virtual void Initialize(ControlSetItem controlSetItem) { }
 }

@@ -24,7 +24,7 @@ using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.ProjectAutomation;
 
-public class Project
+public class Project : IConnectionStringData
 {
     public string GitUsername { get; set; }
     public string GitEmail { get; set; }

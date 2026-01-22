@@ -25,6 +25,7 @@ using Microsoft.Extensions.FileProviders;
 using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Configuration;
 using Origam.Architect.Server.ControlAdapter;
+using Origam.Architect.Server.Interfaces.Services;
 using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Services;
 using Origam.Architect.Server.Services.Xslt;
@@ -55,6 +56,7 @@ public class Program
         builder.Services.AddSingleton<PropertyParser>();
         builder.Services.AddSingleton<EditorService>();
         builder.Services.AddTransient<XsltService>();
+        builder.Services.AddTransient<SearchService>();
         builder.Services.AddSingleton<PropertyEditorService>();
         builder.Services.AddSingleton<DesignerEditorService>();
         builder.Services.AddSingleton<DeploymentVersionCurrentService>();
@@ -66,6 +68,13 @@ public class Program
         builder.Services.AddSingleton(documentation);
         builder.Services.AddSingleton(businessServicesService);
         builder.Services.AddSingleton<DocumentationHelperService>();
+        builder.Services.AddSingleton<IAddToDeploymentService, AddToDeploymentService>();
+        builder.Services.AddSingleton<IAddToModelService, AddToModelService>();
+        builder.Services.AddSingleton<IPlatformResolveService, PlatformResolveService>();
+        builder.Services.AddSingleton<
+            ISchemaDbCompareResultsService,
+            SchemaDbCompareResultsService
+        >();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

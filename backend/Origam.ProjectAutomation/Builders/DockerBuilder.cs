@@ -27,9 +27,15 @@ namespace Origam.ProjectAutomation.Builders;
 
 public class DockerBuilder : AbstractBuilder
 {
+    private readonly DataDatabaseBuilder dataDatabaseBuilder;
     private static readonly string DockerFolderName = "Docker";
     public override string Name => "Create Docker run script";
     private string newProjectFolder;
+
+    public DockerBuilder(DataDatabaseBuilder dataDatabaseBuilder)
+    {
+        this.dataDatabaseBuilder = dataDatabaseBuilder;
+    }
 
     public override void Execute(Project project)
     {
@@ -65,14 +71,24 @@ public class DockerBuilder : AbstractBuilder
             project.DatabaseType == DatabaseType.PgSql
                 ? project.UserPassword
                 : project.DatabasePassword;
+
+        string connectionString = dataDatabaseBuilder.BuildConnectionString(
+            new ConnectionStringData(
+                databaseType: project.DatabaseType,
+                databaseServerName: "host.docker.internal",
+                databasePort: project.DatabasePort,
+                dataDatabaseName: project.DataDatabaseName,
+                databaseUserName: project.DatabaseUserName,
+                databasePassword: project.DatabasePassword,
+                databaseIntegratedAuthentication: project.DatabaseIntegratedAuthentication
+            ),
+            true
+        );
+
         string content =
             $"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}\n"
-            + $"OrigamSettings__DatabaseHost={GetDbHost(project)}\n"
-            + $"OrigamSettings__DatabasePort={project.DatabasePort}\n"
-            + $"OrigamSettings__DatabaseUsername={dbUserName}\n"
-            + $"OrigamSettings__DatabasePassword={dbPassword}\n"
+            + $"OrigamSettings__DataConnectionString={connectionString}\n"
             + $"OrigamSettings__Name={project.Name}\n"
-            + $"OrigamSettings__DatabaseName={project.DataDatabaseName.ToLower()}\n"
             + $"CustomAssetsConfig__PathToCustomAssetsFolder={config.CustomAssetsPath}\n"
             + $"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets\n"
             + $"DatabaseType={dbType}\n"
@@ -117,7 +133,7 @@ public class DockerBuilder : AbstractBuilder
                 CustomAssetsPath = @"C:\home\origam\projectData\customAssets",
                 ModelPath = @"C:\home\origam\projectData\model",
                 CmdFilePath = project.DockerCmdPathWindows,
-                BaseImage = "origam/server:master-latest.win",
+                BaseImage = "origam/server:master-latest.win-core",
             },
             _ => throw new ArgumentOutOfRangeException(nameof(platform), "Unknown platform"),
         };

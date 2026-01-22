@@ -1,0 +1,127 @@
+/*
+Copyright 2005 - 2026 Advantage Solutions, s. r. o. 
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  input,
+  select {
+    width: 200px;
+    &:disabled {
+      background-color: var(--background3);
+      cursor: not-allowed;
+    }
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 24px;
+    width: 100%;
+  }
+
+  .checkbox {
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    min-width: 25px;
+    max-width: 25px;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+
+    &:checked {
+      background-color: var(--foreground1);
+      border-color: var(--foreground1);
+
+      &::after {
+        content: '\2714';
+        font-size: 16px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--background1);
+      }
+    }
+
+    &:disabled {
+      background-color: var(--background3);
+      border-color: var(--background4);
+    }
+  }
+
+  .selectWrapper {
+    position: relative;
+    width: 200px;
+    display: inline-block;
+
+    .selectIcon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 16px;
+      color: #000000;
+    }
+  }
+
+  .checkboxContainer {
+    width: 200px;
+    display: flex;
+  }
+
+  .inputWithCopyButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    .copyButton {
+      background: transparent;
+      border: 1px solid var(--background4);
+      border-radius: 0.25rem;
+      padding: 0.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+      min-width: 24px;
+      height: 24px;
+      transition: all 0.2s ease;
+      opacity: 0;
+      visibility: hidden;
+
+      &:hover {
+        background-color: var(--background2);
+        border-color: var(--brand);
+      }
+
+      &:active {
+        background-color: var(--background3);
+      }
+    }
+
+    &:hover .copyButton {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

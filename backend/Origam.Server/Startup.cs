@@ -45,6 +45,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Origam.DA.Service;
+using Origam.Mail;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -354,6 +355,8 @@ public class Startup
                     SecurityManager
                         .GetAuthorizationProvider()
                         .Authorize(SecurityManager.CurrentPrincipal, "SYS_ViewMiniProfilerResults");
+                options.ShouldProfile = request =>
+                    ShouldProfileRequest(request, startUpConfiguration, chatConfig);
             });
         }
 
@@ -478,6 +481,60 @@ public class Startup
         }
     }
 
+    private static bool ShouldProfileRequest(
+        HttpRequest request,
+        StartUpConfiguration startUpConfiguration,
+        ChatConfig chatConfig
+    )
+    {
+        if (request == null)
+        {
+            return false;
+        }
+
+        string path = request.Path.Value;
+        if (string.IsNullOrEmpty(path))
+        {
+            return true;
+        }
+
+        if (Path.HasExtension(path))
+        {
+            return false;
+        }
+
+        if (path.StartsWith("/assets", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (
+            startUpConfiguration.HasCustomAssets
+            && path.StartsWith(
+                startUpConfiguration.RouteToCustomAssetsFolder,
+                StringComparison.OrdinalIgnoreCase
+            )
+        )
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(chatConfig.PathToChatApp))
+        {
+            if (path.StartsWith("/chatrooms", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (path.StartsWith("/chatAssets", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void Configure(
         IApplicationBuilder app,
         IWebHostEnvironment env,
@@ -492,7 +549,7 @@ public class Startup
         }
         else
         {
-            app.UseExceptionHandler("/Error/Error");
+            app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
 
@@ -525,24 +582,6 @@ public class Startup
         app.UseCors("OrigamCorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            // conventional routes (lets /Account/Login hit AccountController.Login)
-            endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}"
-            );
-        });
-
-        app.UseHttpsRedirection();
-
-        if (startUpConfiguration.EnableSoapInterface)
-        {
-            app.UseSoapApi(
-                startUpConfiguration.SoapInterfaceRequiresAuthentication,
-                startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
-            );
-        }
 
         app.UseStaticFiles(
             new StaticFileOptions()
@@ -564,6 +603,33 @@ public class Startup
                     ),
                     RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder),
                 }
+            );
+        }
+
+        if (startUpConfiguration.EnableMiniProfiler)
+        {
+            app.UseWhen(
+                context => ShouldProfileRequest(context.Request, startUpConfiguration, chatConfig),
+                profilerBranch => profilerBranch.UseMiniProfiler()
+            );
+        }
+
+        app.UseEndpoints(endpoints =>
+        {
+            // conventional routes (lets /Account/Login hit AccountController.Login)
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
+        });
+
+        app.UseHttpsRedirection();
+
+        if (startUpConfiguration.EnableSoapInterface)
+        {
+            app.UseSoapApi(
+                startUpConfiguration.SoapInterfaceRequiresAuthentication,
+                startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences
             );
         }
 
@@ -606,14 +672,10 @@ public class Startup
             );
         }
 
-        if (startUpConfiguration.EnableMiniProfiler)
-        {
-            app.UseMiniProfiler();
-        }
-
         app.UseCustomSpa(startUpConfiguration.PathToClientApp);
 
         SecurityManager.SetDIServiceProvider(app.ApplicationServices);
         HttpTools.SetDIServiceProvider(app.ApplicationServices);
+        MailServiceFactory.SetDIServiceProvider(app.ApplicationServices);
     }
 }

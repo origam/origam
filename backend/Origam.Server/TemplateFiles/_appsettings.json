@@ -64,7 +64,6 @@
           "https://localhost:3000/#origamClientCallbackRenew/"
         ],
         "PostLogoutRedirectUris": [
-          "/",
           "https://192.168.0.80:45455"
         ],
         "AllowedCorsOrigins": [
@@ -77,7 +76,6 @@
         ],
         "ClientSecret": "mobileSecret",
         "PostLogoutRedirectUris": [
-          "/",
           "https://192.168.0.80:45455"
         ]
       },

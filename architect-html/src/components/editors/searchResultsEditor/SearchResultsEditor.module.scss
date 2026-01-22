@@ -1,0 +1,109 @@
+/*
+Copyright 2005 - 2025 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--background7);
+}
+
+.count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--background6);
+  background-color: var(--background3);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+
+.tableWrapper {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead {
+    background-color: var(--background2);
+    border-bottom: 1px solid var(--background4);
+
+    th {
+      text-align: left;
+      padding: 0.25rem 0.5rem;
+      color: var(--background7);
+      font-weight: 600;
+    }
+  }
+}
+
+.row {
+  border-bottom: 1px solid var(--background3);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--background2);
+  }
+
+  td {
+    padding: 0.25rem 0.5rem;
+    color: var(--background6);
+  }
+}
+
+.mono {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.openButton {
+  font-size: 14px;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--background4);
+  border-radius: 3px;
+  background-color: var(--background1);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--background3);
+  }
+}
+
+.empty {
+  text-align: center;
+  color: var(--background6);
+  padding: 0.75rem 0.5rem;
+}

@@ -36,12 +36,6 @@
     <data name="ValidationResultTitle" xml:space="preserve">
         <value>XSLT Validation</value>
     </data>
-    <data name="DeploymentScripts_SelectItemIsNotDeploymentVersion" xml:space="preserve">
-        <value>Selected item is not a DeploymentVersion</value>
-    </data>
-    <data name="DeploymentScripts_SelectItemIsNotDeploymentScript" xml:space="preserve">
-        <value>Selected item is not a DeploymentScript</value>
-    </data>
     <data name="DeploymentScripts_ModelNotSavedBeforeVersionChange" xml:space="preserve">
         <value>Model not saved. Please, save the model before setting the version.</value>
     </data>
