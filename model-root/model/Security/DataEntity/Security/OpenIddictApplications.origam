@@ -38,7 +38,7 @@
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="0d0bc8e4-7042-4d16-80c1-ac2bfaf74890"
-      adec:isPrimaryKey="false"
+      adec:isPrimaryKey="true"
       fmi:mappedColumnName="Id"
       asi:name="Id"
       adec:onCopyAction="Copy"
