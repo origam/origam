@@ -42,6 +42,6 @@
       x:id="e865d7ac-416f-4209-a128-f9afe54eda95"
       asi:name="00010_OpenIddictTables"
       scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
