@@ -28,7 +28,7 @@ try {
 
 # Install portable OpenSSL
 Write-Host "Installing portable OpenSSL..."
-$opensslUrl = "https://www.firedaemon.com/download-firedaemon-openssl-3-5-zip"
+$opensslUrl = "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-3.5.4.zip"
 $opensslZip = "$env:TEMP\openssl.zip"
 $opensslPath = "$installDir\openssl-3\x64\bin"
 $opensslInstallFolder = "$installDir\openssl-3"
