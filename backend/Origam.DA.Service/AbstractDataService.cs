@@ -246,6 +246,14 @@ public abstract class AbstractDataService : IDataService
         {
             id += "_" + adParameters.ColumnsInfo;
         }
+        if (adParameters.RowLimit is > 0)
+        {
+            id += "_RowLimit=true";
+        }
+        if (adParameters.RowOffset is > 0)
+        {
+            id += "_RowOffset=true";
+        }
         Hashtable adapterCache = GetCache();
         // Caching adapters
         DbDataAdapter adapter;

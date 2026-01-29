@@ -18,3 +18,4 @@ _Resharper*/
 /Origam.Architect.Server/appsettings.Development.json
 /Origam.Architect.Server/log4net.config
 /Origam.Architect.Server/OrigamSettings.config
+/Origam.Server/http-client.env.json
