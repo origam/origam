@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="a1f20c05-3854-408b-8c89-5663bfa3335d"
+    ds1:localized="false"
+    asi:name="AllDataTypesSingleEntity">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="AllDataTypes#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="d51a18b6-c770-4cb1-8665-92b2e066dd01"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Id#AllDataTypes/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="31baaedd-85f3-4b30-b56f-c4b60997567a"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Integer1#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+        dsc:hideInOutput="false"
+        x:id="56ab11f7-15d4-4918-b983-d45f7a3d6a52"
+        asi:name="Integer1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Date1#AllDataTypes/Date1/591b8777-70c9-4526-99f9-c3de3ebc3a91"
+        dsc:hideInOutput="false"
+        x:id="a80d8762-4f47-4461-af53-796748ffb2bd"
+        asi:name="Date1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Text1#AllDataTypes/Text1/8954ae10-e0db-49b8-b04c-351e03249c36"
+        dsc:hideInOutput="false"
+        x:id="bf9af8aa-f8b8-4273-b730-3201e8b6701c"
+        asi:name="Text1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        dsc:hideInOutput="false"
+        x:id="d151a7a5-7a08-45dd-89f7-b8d73a2d6e2a"
+        dsc:lookup="TagInputSource_Label_GetId#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+        asi:name="refTagInputSourceId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="TagInputBinding#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="dcb37271-b687-430f-84ce-0133777dda9b"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="15faf27b-2849-4f5c-a1cb-3486a964b59f"
+      asi:name="Default">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="AllDataTypes#AllDataTypesSingleEntity/AllDataTypes/d51a18b6-c770-4cb1-8665-92b2e066dd01"
+        dsssi:fieldName="Date1"
+        x:id="70e31ad9-7475-473e-9c59-820006a303c8"
+        asi:name="AllDataTypes_0_Date1"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds1:DataStructure>
+</x:file>
