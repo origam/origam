@@ -48,5 +48,10 @@ export function isDuplicateRecordShortcut(event: any) {
 }
 
 export function isFilterRecordShortcut(event: any) {
+  // disabled until a new shortcut is decided
+  return false;
+}
+
+export function isSearchShortcut(event: any) {
   return (event.ctrlKey || event.metaKey) && event.key === "f";
 }
