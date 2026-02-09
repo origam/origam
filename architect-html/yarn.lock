@@ -1887,7 +1887,7 @@ __metadata:
     sass: "npm:^1.97.3"
     typescript: "npm:^5.9.3"
     vite: "npm:^7.3.1"
-    vite-plugin-babel: "npm:^1.4.1"
+    vite-plugin-babel: "npm:^1.5.1"
     vite-plugin-mkcert: "npm:^1.17.9"
     vite-tsconfig-paths: "npm:^6.0.5"
   languageName: unknown
@@ -5554,13 +5554,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-babel@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "vite-plugin-babel@npm:1.4.1"
+"vite-plugin-babel@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "vite-plugin-babel@npm:1.5.1"
   peerDependencies:
     "@babel/core": ^7.0.0
     vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 10c0/6941eb05c6f4ac24da49adf7bf738330f8a95a223317023fbac8cf7f022b69169f8ce06100ca3f12c01aec23b275b623643adb526d3c1cc3e9a8b23cfe2b53d3
+  checksum: 10c0/9fd401c0792a6650e4b99b29aab427806f364f209ad55385277c9152073b57b055eb3d6a24e82b96fd237c7201bfeabafe35b51f67888944a2476482035d78d2
   languageName: node
   linkType: hard
 
