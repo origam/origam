@@ -301,7 +301,7 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
     public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
 
     [XmlAttribute("allowCustomFilters")]
-    [Description("If true can you send a custom filter nad orderings in the request body.")]
+    [LocalizedDescription(nameof(Strings.AllowCustomFiltersDescription), typeof(Strings))]
     [SingleEntityDataStructureForCustomFiltersRule]
     public bool AllowCustomFilters { get; set; }
 

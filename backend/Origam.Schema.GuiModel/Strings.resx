@@ -85,7 +85,7 @@
 		<value>DataConstant referenced by '{0}' in {1} '{2}' was not found in the model.</value>
 	</data>
 	<data name="AllowCustomFiltersDescription">
-		<value>If true can you send a custom filter nad orderings in the request body.</value>
+		<value>If true can you send a custom filter and orderings in the request body.</value>
 	</data>
 	<data name="ErrorXsltDataPageInstanceType">
 		<value>Instance must be of type {0}.</value>

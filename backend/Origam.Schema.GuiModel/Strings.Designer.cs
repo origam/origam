@@ -60,7 +60,7 @@ namespace Origam.Schema.GuiModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If true can you send a custom filter nad orderings in the request body..
+        ///   Looks up a localized string similar to If true can you send a custom filter and orderings in the request body..
         /// </summary>
         internal static string AllowCustomFiltersDescription {
             get {
