@@ -52,7 +52,7 @@ import { About } from "model/entities/AboutInfo";
 import { showDialog } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
 import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
-import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { isRefreshShortcut, isSaveShortcut, isSearchShortcut } from "utils/keyShortcuts";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -296,6 +296,10 @@ export class CScreenToolbar extends React.Component<{}> {
         )}
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
+          onShortcut={event => {
+              openSearchWindow(this.application);
+          }}
+          shortcutPredicate={isSearchShortcut}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
