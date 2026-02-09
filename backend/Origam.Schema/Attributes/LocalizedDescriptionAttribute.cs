@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -30,25 +30,25 @@ namespace Origam.Schema;
 [AttributeUsage(AttributeTargets.All)]
 public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
 {
-    private readonly string _resourceKey;
-    private readonly Type _resourceType;
-    private bool _isLocalized;
+    private readonly string resourceKey;
+    private readonly Type resourceType;
+    private bool isLocalized;
 
     public LocalizedDescriptionAttribute(string resourceKey, Type resourceType)
         : base(resourceKey)
     {
-        _resourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
-        _resourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType));
+        this.resourceKey = resourceKey ?? throw new ArgumentNullException(nameof(resourceKey));
+        this.resourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType));
     }
 
     public override string Description
     {
         get
         {
-            if (!_isLocalized)
+            if (!isLocalized)
             {
                 DescriptionValue = ResolveDescription();
-                _isLocalized = true;
+                isLocalized = true;
             }
 
             return base.Description;
@@ -57,25 +57,25 @@ public sealed class LocalizedDescriptionAttribute : DescriptionAttribute
 
     private string ResolveDescription()
     {
-        var resourceProperty = _resourceType.GetProperty(
-            _resourceKey,
+        var resourceProperty = resourceType.GetProperty(
+            resourceKey,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
         );
         if (resourceProperty?.PropertyType == typeof(string))
         {
-            return resourceProperty.GetValue(null, null) as string ?? _resourceKey;
+            return resourceProperty.GetValue(null, null) as string ?? resourceKey;
         }
 
-        var resourceManagerProperty = _resourceType.GetProperty(
+        var resourceManagerProperty = resourceType.GetProperty(
             "ResourceManager",
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
         );
         if (resourceManagerProperty?.GetValue(null, null) is ResourceManager resourceManager)
         {
-            return resourceManager.GetString(_resourceKey, CultureInfo.CurrentUICulture)
-                ?? _resourceKey;
+            return resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture)
+                ?? resourceKey;
         }
 
-        return _resourceKey;
+        return resourceKey;
     }
 }
