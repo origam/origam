@@ -180,6 +180,18 @@
   <data name="ErrorInForm" xml:space="preserve">
     <value>Form data contain errors (some mandatory fields are empty). Correct these errors before proceding.</value>
   </data>
+  <data name="ErrorInvalidIntParameterValue" xml:space="preserve">
+    <value>{0}, value: "{1}" cannot be parsed to integer.</value>
+  </data>
+  <data name="ErrorFilterLookupsInvalidType" xml:space="preserve">
+    <value>{0} parsing failed. The value is not a string or an array of strings.</value>
+  </data>
+  <data name="ErrorFilterLookupsMissingSeparator" xml:space="preserve">
+    <value>Error when parsing {0}, keys and values have to be separated by ":"</value>
+  </data>
+  <data name="ErrorFilterLookupsInvalidGuid" xml:space="preserve">
+    <value>Error when parsing {0}, key "{1}". The value "{2}" cannot be parsed to Guid.</value>
+  </data>
   <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
     <value>Could not load work queue list.</value>
   </data>

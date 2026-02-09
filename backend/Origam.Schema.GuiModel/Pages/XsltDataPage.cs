@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -33,9 +34,12 @@ namespace Origam.Schema.GuiModel;
 
 [SchemaItemDescription("Data Page", "data-page.png")]
 [HelpTopic("Data+Page")]
-[ClassMetaVersion("6.1.0")]
+[ClassMetaVersion("6.2.0")]
 public class XsltDataPage : AbstractPage, IDataStructureReference
 {
+    public static readonly string FiltersParameterName = "filters";
+    public static readonly string FilterLookupsParameterName = "filterLookups";
+
     public XsltDataPage()
         : base()
     {
@@ -155,6 +159,7 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
 
     [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
     [XmlReference("sortSet", "DataStructureSortSetId")]
+    [SortSetRequiredForCustomFiltersRule]
     public DataStructureSortSet SortSet
     {
         get => PersistenceProvider.RetrieveInstance<DataStructureSortSet>(DataStructureSortSetId);
@@ -294,5 +299,113 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
             + " checked and applied if this is turned on."
     )]
     public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
+
+    [XmlAttribute("allowCustomFilters")]
+    [LocalizedDescription(nameof(Strings.AllowCustomFiltersDescription), typeof(Strings))]
+    [SingleEntityDataStructureForCustomFiltersRule]
+    public bool AllowCustomFilters { get; set; }
+
     #endregion
+}
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class SingleEntityDataStructureForCustomFiltersRuleAttribute
+    : AbstractModelElementRuleAttribute
+{
+    public override Exception CheckRule(object instance)
+    {
+        if (instance is not XsltDataPage page)
+        {
+            throw new Exception(
+                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+            );
+        }
+
+        if (!page.AllowCustomFilters)
+        {
+            return null;
+        }
+
+        var topEntities = page
+            .DataStructure.Entities.Where(entity => entity.Parents.Count() == 1)
+            .ToList();
+        if (topEntities.Count != 1)
+        {
+            return new InvalidOperationException(
+                string.Format(
+                    Strings.ErrorAllowCustomFiltersSingleTopEntity,
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
+            );
+        }
+        var topEntity = topEntities.First();
+        var otherEntities = page
+            .DataStructure.Entities.Where(entity => entity.Id != topEntity.Id)
+            .ToList();
+        if (otherEntities.Any(entity => entity.Columns.Count > 0))
+        {
+            return new InvalidOperationException(
+                Strings.ErrorAllowCustomFiltersSingleTopEntityFieldsOnly
+            );
+        }
+
+        return null;
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (memberName != nameof(XsltDataPage.AllowCustomFilters))
+        {
+            throw new Exception(
+                string.Format(
+                    Strings.ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget,
+                    nameof(SingleEntityDataStructureForCustomFiltersRuleAttribute),
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
+            );
+        }
+        return CheckRule(instance);
+    }
+}
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+public class SortSetRequiredForCustomFiltersRuleAttribute : AbstractModelElementRuleAttribute
+{
+    public override Exception CheckRule(object instance)
+    {
+        if (instance is not XsltDataPage page)
+        {
+            throw new Exception(
+                string.Format(Strings.ErrorXsltDataPageInstanceType, nameof(XsltDataPage))
+            );
+        }
+
+        if (page.AllowCustomFilters && page.SortSet == null)
+        {
+            return new InvalidOperationException(
+                string.Format(
+                    Strings.ErrorSortSetRequiredForCustomFilters,
+                    nameof(XsltDataPage.SortSet),
+                    nameof(XsltDataPage.AllowCustomFilters)
+                )
+            );
+        }
+
+        return null;
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (memberName != nameof(XsltDataPage.SortSet))
+        {
+            throw new Exception(
+                string.Format(
+                    Strings.ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget,
+                    nameof(SortSetRequiredForCustomFiltersRuleAttribute),
+                    nameof(XsltDataPage.SortSet)
+                )
+            );
+        }
+        return CheckRule(instance);
+    }
 }

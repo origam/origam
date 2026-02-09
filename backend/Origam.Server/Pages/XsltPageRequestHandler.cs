@@ -23,15 +23,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
+using Newtonsoft.Json;
 using Origam.DA;
 using Origam.JSON;
 using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Server.Model.UIService;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 using CoreServices = Origam.Workbench.Services.CoreServices;
@@ -42,6 +45,8 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
 {
     private const string MimeJson = "application/json";
     private const string MimeHtml = "text/html";
+    private readonly IPersistenceService persistenceService =
+        ServiceManager.Services.GetService<IPersistenceService>();
 
     public override void Execute(
         AbstractPage page,
@@ -51,7 +56,6 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
     )
     {
         var xsltPage = page as XsltDataPage;
-        var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         var ruleEngine = RuleEngine.Create(contextStores: null, transactionId: null);
         var transformParams = new Hashtable();
         var queryParameterCollection = new QueryParameterCollection();
@@ -90,14 +94,22 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         }
         else
         {
-            data = CoreServices.DataService.Instance.LoadData(
-                xsltPage.DataStructureId,
-                xsltPage.DataStructureMethodId,
-                defaultSetId: Guid.Empty,
-                xsltPage.DataStructureSortSetId,
-                transactionId: null,
-                queryParameterCollection
-            );
+            if (xsltPage.AllowCustomFilters)
+            {
+                data = LoadWithFilters(xsltPage, parameters, request);
+            }
+            else
+            {
+                data = CoreServices.DataService.Instance.LoadData(
+                    xsltPage.DataStructureId,
+                    xsltPage.DataStructureMethodId,
+                    defaultSetId: Guid.Empty,
+                    xsltPage.DataStructureSortSetId,
+                    transactionId: null,
+                    queryParameterCollection
+                );
+            }
+
             if ((request.HttpMethod != "DELETE") && (request.HttpMethod != "PUT"))
             {
                 if (xsltPage.ProcessReadFieldRowLevelRulesForGetRequests)
@@ -255,6 +267,165 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             } while (currentNode.MoveToNextAttribute());
             Analytics.Instance.Log(type, message, properties);
         }
+    }
+
+    // Loads the data with custom filters defined in the request
+    private DataSet LoadWithFilters(
+        XsltDataPage xsltPage,
+        Dictionary<string, object> parameters,
+        IRequestWrapper request
+    )
+    {
+        DataStructure dataStructure =
+            persistenceService.SchemaListProvider.RetrieveInstance<DataStructure>(
+                xsltPage.DataStructureId
+            );
+        DataStructureEntity entity = dataStructure.Entities.First();
+
+        List<ColumnData> columns = entity
+            .Columns.Select(column =>
+            {
+                IDataEntityColumn field = column.Field;
+                return new ColumnData(
+                    name: column.Name,
+                    isVirtual: (field is DetachedField || column.IsWriteOnly),
+                    defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+                    hasRelation: (field as DetachedField)?.ArrayRelation != null
+                );
+            })
+            .ToList();
+
+        string body = ReadRequestBody(request);
+        XsltDataPageFilterInput filterInput = DeserializeFilterInput(body);
+        List<Ordering> orderings = GetOrderings(filterInput);
+
+        var query = new DataStructureQuery
+        {
+            Entity = entity.Name,
+            DataSourceId = xsltPage.DataStructureId,
+            RowLimit = GetIntParameterValue(parameters, "_pageSize"),
+            RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
+            CustomFilters = new CustomFilters
+            {
+                Filters = filterInput?.Filter,
+                FilterLookups = filterInput?.FilterLookups ?? [],
+            },
+            MethodId = xsltPage.DataStructureMethodId,
+            SortSetId = xsltPage.DataStructureSortSetId,
+            CustomOrderings = new CustomOrderings(orderings),
+            ColumnsInfo = new ColumnsInfo(columns: columns, renderSqlForDetachedFields: true),
+            ForceDatabaseCalculation = true,
+        };
+        IDataService dataService = CoreServices.DataServiceFactory.GetDataService();
+        IEnumerable<Dictionary<string, object>> lines = dataService.ExecuteDataReaderReturnPairs(
+            query
+        );
+
+        DataSet data = dataService.GetEmptyDataSet(xsltPage.DataStructureId);
+        DataTable dataTable = data.Tables[entity.Name];
+        foreach (Dictionary<string, object> line in lines)
+        {
+            DataRow row = dataTable.NewRow();
+            foreach (KeyValuePair<string, object> cell in line)
+            {
+                if (!dataTable.Columns.Contains(cell.Key))
+                {
+                    continue;
+                }
+                object value = cell.Value ?? DBNull.Value;
+                if (
+                    value is ICollection collection
+                    && (
+                        dataTable.Columns[cell.Key].DataType == typeof(long)
+                        || dataTable.Columns[cell.Key].DataType == typeof(int)
+                    )
+                )
+                {
+                    value = collection.Count;
+                }
+                row[cell.Key] = value;
+            }
+            dataTable.Rows.Add(row);
+        }
+
+        return data;
+    }
+
+    private static string ReadRequestBody(IRequestWrapper request)
+    {
+        if (request.ContentLength == 0)
+        {
+            return string.Empty;
+        }
+
+        Stream inputStream = request.InputStream;
+        if (inputStream == null)
+        {
+            return string.Empty;
+        }
+
+        if (inputStream.CanSeek)
+        {
+            inputStream.Position = 0;
+        }
+
+        using var reader = new StreamReader(
+            inputStream,
+            request.ContentEncoding ?? Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: true,
+            leaveOpen: true
+        );
+        string body = reader.ReadToEnd();
+        if (inputStream.CanSeek)
+        {
+            inputStream.Position = 0;
+        }
+        return body;
+    }
+
+    private static XsltDataPageFilterInput DeserializeFilterInput(string body)
+    {
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            return null;
+        }
+
+        return JsonConvert.DeserializeObject<XsltDataPageFilterInput>(body);
+    }
+
+    private static List<Ordering> GetOrderings(XsltDataPageFilterInput filterInput)
+    {
+        if (filterInput?.Ordering == null)
+        {
+            return [];
+        }
+
+        return filterInput
+            .Ordering.Select(
+                (ordering, index) =>
+                    new Ordering(
+                        columnName: ordering.ColumnId,
+                        direction: ordering.Direction,
+                        lookupId: ordering.LookupId,
+                        sortOrder: index
+                    )
+            )
+            .ToList();
+    }
+
+    private int GetIntParameterValue(Dictionary<string, object> parameters, string parameterName)
+    {
+        if (!parameters.TryGetValue(parameterName, out object objValue))
+        {
+            return 0;
+        }
+        if (!int.TryParse(objValue.ToString(), out int value))
+        {
+            throw new ArgumentException(
+                string.Format(Resources.ErrorInvalidIntParameterValue, parameterName, objValue)
+            );
+        }
+        return value;
     }
 
     private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)

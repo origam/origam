@@ -60,11 +60,38 @@ namespace Origam.Schema.GuiModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If true can you send a custom filter and orderings in the request body..
+        /// </summary>
+        internal static string AllowCustomFiltersDescription {
+            get {
+                return ResourceManager.GetString("AllowCustomFiltersDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
         internal static string DashboardWidgetValueProperty {
             get {
                 return ResourceManager.GetString("DashboardWidgetValueProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} can only be enabled when the data structure contains a single top entity..
+        /// </summary>
+        internal static string ErrorAllowCustomFiltersSingleTopEntity {
+            get {
+                return ResourceManager.GetString("ErrorAllowCustomFiltersSingleTopEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The selected data structure can only contain one top entity. Only that entity can select fields. It can have sub entities but these can only be used for filtering..
+        /// </summary>
+        internal static string ErrorAllowCustomFiltersSingleTopEntityFieldsOnly {
+            get {
+                return ResourceManager.GetString("ErrorAllowCustomFiltersSingleTopEntityFieldsOnly", resourceCulture);
             }
         }
         
@@ -186,11 +213,47 @@ namespace Origam.Schema.GuiModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} can only be applied to {1}..
+        /// </summary>
+        internal static string ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget {
+            get {
+                return ResourceManager.GetString("ErrorSingleEntityDataStructureForCustomFiltersRuleAttributeInvalidTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} cannot be null if {1} is set to true..
+        /// </summary>
+        internal static string ErrorSortSetRequiredForCustomFilters {
+            get {
+                return ResourceManager.GetString("ErrorSortSetRequiredForCustomFilters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} can only be applied to {1}..
+        /// </summary>
+        internal static string ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget {
+            get {
+                return ResourceManager.GetString("ErrorSortSetRequiredForCustomFiltersRuleAttributeInvalidTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workflow referenced by &apos;{0}&apos; in {1} &apos;{2}&apos; was not found in the model..
         /// </summary>
         internal static string ErrorWorkflowNotFound {
             get {
                 return ResourceManager.GetString("ErrorWorkflowNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instance must be of type {0}..
+        /// </summary>
+        internal static string ErrorXsltDataPageInstanceType {
+            get {
+                return ResourceManager.GetString("ErrorXsltDataPageInstanceType", resourceCulture);
             }
         }
     }

@@ -357,6 +357,33 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error when parsing {0}, key &quot;{1}&quot;. The value &quot;{2}&quot; cannot be parsed to Guid..
+        /// </summary>
+        public static string ErrorFilterLookupsInvalidGuid {
+            get {
+                return ResourceManager.GetString("ErrorFilterLookupsInvalidGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} parsing failed. The value is not a string or an array of strings..
+        /// </summary>
+        public static string ErrorFilterLookupsInvalidType {
+            get {
+                return ResourceManager.GetString("ErrorFilterLookupsInvalidType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error when parsing {0}, keys and values have to be separated by &quot;:&quot;.
+        /// </summary>
+        public static string ErrorFilterLookupsMissingSeparator {
+            get {
+                return ResourceManager.GetString("ErrorFilterLookupsMissingSeparator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have to save the form&apos;s data before executing the current action..
         /// </summary>
         public static string ErrorFormNotSavedBeforeAction {
@@ -371,6 +398,15 @@ namespace Origam.Server {
         public static string ErrorInForm {
             get {
                 return ResourceManager.GetString("ErrorInForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, value: &quot;{1}&quot; cannot be parsed to integer..
+        /// </summary>
+        public static string ErrorInvalidIntParameterValue {
+            get {
+                return ResourceManager.GetString("ErrorInvalidIntParameterValue", resourceCulture);
             }
         }
         

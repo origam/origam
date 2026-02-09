@@ -1,6 +1,6 @@
-#region license
+﻿#region license
 /*
-Copyright 2005 - 2024 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,22 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
-using Origam.Schema.GuiModel;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+namespace Origam.Server.Model.UIService;
 
-public class XsltDataPageScriptContainer : UpgradeScriptContainer
+public class XsltDataPageFilterInput
 {
-    public override string FullTypeName { get; } = typeof(XsltDataPage).FullName;
+    public string Filter { get; set; }
 
-    public override string[] OldPropertyXmlNames { get; } = { };
-    public override List<string> OldFullTypeNames { get; } =
-        new() { "Origam.Schema.GuiModel.XsltDataPage" };
-
-    public XsltDataPageScriptContainer()
-    {
-        AddEmptyUpgrade("6.0.0", "6.1.0");
-        AddEmptyUpgrade("6.1.0", "6.2.0");
-    }
+    public Dictionary<string, Guid> FilterLookups { get; set; } = new();
+    public List<InputRowOrdering> Ordering { get; set; } = new();
 }
