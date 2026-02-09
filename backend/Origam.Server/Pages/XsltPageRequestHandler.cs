@@ -296,7 +296,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
             .ToList();
 
         string body = ReadRequestBody(request);
-        XsltDataPageFilerInput filterInput = DeserializeFilterInput(body);
+        XsltDataPageFilterInput filterInput = DeserializeFilterInput(body);
         List<Ordering> orderings = GetOrderings(filterInput);
 
         var query = new DataStructureQuery
@@ -383,17 +383,17 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         return body;
     }
 
-    private static XsltDataPageFilerInput DeserializeFilterInput(string body)
+    private static XsltDataPageFilterInput DeserializeFilterInput(string body)
     {
         if (string.IsNullOrWhiteSpace(body))
         {
             return null;
         }
 
-        return JsonConvert.DeserializeObject<XsltDataPageFilerInput>(body);
+        return JsonConvert.DeserializeObject<XsltDataPageFilterInput>(body);
     }
 
-    private static List<Ordering> GetOrderings(XsltDataPageFilerInput filterInput)
+    private static List<Ordering> GetOrderings(XsltDataPageFilterInput filterInput)
     {
         if (filterInput?.Ordering == null)
         {
