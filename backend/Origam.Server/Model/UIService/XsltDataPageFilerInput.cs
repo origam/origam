@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService;
 
-public class XsltDatPageFilerInput
+public class XsltDataPageFilerInput
 {
     public string Filter { get; set; }
 
