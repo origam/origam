@@ -143,11 +143,11 @@ public abstract class AbstractSchemaItem
     {
         get
         {
-            return ParentItem switch
+            if (ParentItem == null)
             {
-                null => Name,
-                _ => ParentItem.Path + "/" + Name,
-            };
+                return Name;
+            }
+            return System.IO.Path.Combine(ParentItem.Path, Name);
         }
     }
 
