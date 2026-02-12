@@ -112,11 +112,11 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, IFilePer
     #endregion
     private string GetPath(SchemaItemGroup item)
     {
-        return ParentItem switch
+        if (ParentGroup == null)
         {
-            null => Name,
-            _ => ParentItem.Path + "/" + Name,
-        };
+            return Name;
+        }
+        return System.IO.Path.Combine(ParentGroup.Path, Name);
     }
 
     [Browsable(false)]
