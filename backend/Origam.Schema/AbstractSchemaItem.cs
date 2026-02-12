@@ -1194,7 +1194,7 @@ public abstract class AbstractSchemaItem
         return ParentItem switch
         {
             null => Name,
-            _ => ParentItem.Path + "/" + Name,
+            _ => ParentItem.Path + System.IO.Path.DirectorySeparatorChar + Name,
         };
     }
 
