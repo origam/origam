@@ -139,17 +139,10 @@ public abstract class AbstractSchemaItem
     }
 
     [Browsable(false)]
-    public string Path
-    {
-        get
-        {
-            if (ParentItem == null)
-            {
-                return Name;
-            }
-            return System.IO.Path.Combine(ParentItem.Path, Name);
-        }
-    }
+    public string Path =>
+        ParentItem == null
+            ? Name
+            : ParentItem.Path + System.IO.Path.DirectorySeparatorChar + Name;
 
     [Browsable(false)]
     public bool IsFileRootElement => FileParentId == Guid.Empty;
