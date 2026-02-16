@@ -38,6 +38,11 @@ On `MacOS` you can use something like this: `--p-folder "/Users/JohnDoe/OrigamPr
 
 You can use custom git identity `--git-user "Origam Dev"` `--git-email "no-reply@origam.com"`
 
+NOTES: 
+For running the Composer you need to have the .NET runtime installed.
+The model used in new project is taken from Master so the versions of Server and Architect should be the same version otherwise there can be version issues.
+Both parameters (--p-docker-image-linux and --p-docker-image-windows) are obligatory for both Server and Architect even if you will use just one container type.
+
 Example for `MS SQL`:
 ```
 Origam.Composer.exe create 
