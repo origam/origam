@@ -206,45 +206,301 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
     private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
     {
-        if (this.Engine == null)
-            return; // finished already
+        WorkflowEngine call = _call;
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+        try
         {
-            if (e.Exception != null)
+            if (Engine == null)
+                return; // finished already
+
+            if (e == null)
             {
-                UnsubscribeEvents();
-                OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                log.Error("ForEachBlockEngineTask.Host_WorkflowFinished received null event args.");
                 return;
             }
-            if (!block.IgnoreSourceContextChanges)
+
+            string eventWorkflowUniqueId =
+                e.Engine == null ? "<null>" : e.Engine.WorkflowUniqueId.ToString();
+            string callWorkflowUniqueId = call?.WorkflowUniqueId.ToString() ?? "<null>";
+            string parentWorkflowUniqueId = Engine.WorkflowUniqueId.ToString() ?? "<null>";
+            string logContext =
+                ", EventWorkflowUniqueId="
+                + eventWorkflowUniqueId
+                + ", CallWorkflowUniqueId="
+                + callWorkflowUniqueId
+                + ", ParentWorkflowUniqueId="
+                + parentWorkflowUniqueId
+                + ", EventWorkflowUniqueIdIsEmpty="
+                + (e.Engine?.WorkflowUniqueId == Guid.Empty)
+                + ", CallWorkflowUniqueIdIsEmpty="
+                + (call?.WorkflowUniqueId == Guid.Empty)
+                + ", ExceptionPresent="
+                + (e.Exception != null);
+
+            if (call == null || e.Engine == null)
             {
-                // Merge data back after success
-                foreach (DictionaryEntry entry in _call.ParentContexts)
+                log.Error(
+                    "ForEachBlockEngineTask.Host_WorkflowFinished encountered null reference candidate. "
+                        + "CallIsNull="
+                        + (call == null)
+                        + ", EventEngineIsNull="
+                        + (e.Engine == null)
+                        + ", EventWorkflowUniqueIdIsEmpty="
+                        + (e.Engine?.WorkflowUniqueId == Guid.Empty)
+                        + ", CurrentStep="
+                        + (this.Step?.GetType().FullName ?? "<null>")
+                        + logContext
+                );
+                return;
+            }
+
+            if (block == null)
+            {
+                log.Error(
+                    "ForEachBlockEngineTask.Host_WorkflowFinished Step is not ForeachWorkflowBlock. "
+                        + "StepType="
+                        + (this.Step?.GetType().FullName ?? "<null>")
+                        + logContext
+                );
+                return;
+            }
+
+            if (block.SourceContextStore == null)
+            {
+                log.Error(
+                    "ForEachBlockEngineTask.Host_WorkflowFinished block.SourceContextStore is null. "
+                        + "BlockPath="
+                        + block.Path
+                        + logContext
+                );
+                return;
+            }
+
+            if (e.Engine.WorkflowUniqueId.Equals(call.WorkflowUniqueId))
+            {
+                if (e.Exception != null)
                 {
-                    if (entry.Key.Equals(block.SourceContextStore.PrimaryKey))
+                    UnsubscribeEvents();
+                    OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+                    return;
+                }
+                if (!block.IgnoreSourceContextChanges)
+                {
+                    if (call.ParentContexts == null)
                     {
-                        bool fullMerge = (!entry.Key.Equals(block.SourceContextStore.PrimaryKey));
-                        sourceContextChanged = Engine.MergeContext(
-                            (Key)entry.Key,
-                            _call.RuleEngine.GetContext(entry.Key as Key),
-                            block,
-                            this.Engine.ContextStoreName((Key)entry.Key),
-                            (
-                                fullMerge
-                                    ? ServiceOutputMethod.FullMerge
-                                    : ServiceOutputMethod.AppendMergeExisting
-                            )
+                        log.Error(
+                            "ForEachBlockEngineTask.Host_WorkflowFinished _call.ParentContexts is null. "
+                                + "CallWorkflowUniqueId="
+                                + (call.WorkflowUniqueId.ToString() ?? "<null>")
+                                + logContext
                         );
-                        //					}
+                        return;
+                    }
+
+                    if (call.RuleEngine == null)
+                    {
+                        log.Error(
+                            "ForEachBlockEngineTask.Host_WorkflowFinished _call.RuleEngine is null. "
+                                + "CallWorkflowUniqueId="
+                                + (call.WorkflowUniqueId.ToString() ?? "<null>")
+                                + logContext
+                        );
+                        return;
+                    }
+
+                    int parentContextsCountBefore =
+                        call.ParentContexts is ICollection contextsCollection
+                            ? contextsCollection.Count
+                            : -1;
+                    string parentContextsType = call.ParentContexts.GetType().FullName;
+
+                    // Merge data back after success
+                    try
+                    {
+                        foreach (DictionaryEntry entry in call.ParentContexts)
+                        {
+                            if (entry.Key == null)
+                            {
+                                log.Error(
+                                    "ForEachBlockEngineTask.Host_WorkflowFinished _call.ParentContexts contains null key."
+                                        + logContext
+                                );
+                                continue;
+                            }
+
+                            if (entry.Key.Equals(block.SourceContextStore.PrimaryKey))
+                            {
+                                if (block.SourceContextStore.PrimaryKey == null)
+                                {
+                                    log.Error(
+                                        "ForEachBlockEngineTask.Host_WorkflowFinished SourceContextStore.PrimaryKey is null. "
+                                            + "BlockPath="
+                                            + block.Path
+                                            + logContext
+                                    );
+                                    return;
+                                }
+
+                                Key entryKey = entry.Key as Key;
+                                if (entryKey == null)
+                                {
+                                    log.Error(
+                                        "ForEachBlockEngineTask.Host_WorkflowFinished entry.Key is not Key. "
+                                            + "EntryKeyType="
+                                            + entry.Key.GetType().FullName
+                                            + logContext
+                                    );
+                                    continue;
+                                }
+
+                                object contextToMerge = call.RuleEngine.GetContext(entryKey);
+                                if (contextToMerge == null)
+                                {
+                                    log.Error(
+                                        "ForEachBlockEngineTask.Host_WorkflowFinished _call.RuleEngine.GetContext(entryKey) returned null. "
+                                            + "EntryKey="
+                                            + entryKey
+                                            + logContext
+                                    );
+                                    continue;
+                                }
+
+                                string contextStoreName = Engine.ContextStoreName(entryKey);
+                                if (contextStoreName == null)
+                                {
+                                    log.Error(
+                                        "ForEachBlockEngineTask.Host_WorkflowFinished Engine.ContextStoreName(entryKey) returned null. "
+                                            + "EntryKey="
+                                            + entryKey
+                                            + logContext
+                                    );
+                                    continue;
+                                }
+
+                                bool fullMerge = (!entry.Key.Equals(block.SourceContextStore.PrimaryKey));
+                                sourceContextChanged = Engine.MergeContext(
+                                    entryKey,
+                                    contextToMerge,
+                                    block,
+                                    contextStoreName,
+                                    (
+                                        fullMerge
+                                            ? ServiceOutputMethod.FullMerge
+                                            : ServiceOutputMethod.AppendMergeExisting
+                                    )
+                                );
+                                //					}
+                            }
+                        }
+                    }
+                    catch (InvalidOperationException ioex)
+                    {
+                        int parentContextsCountAfter =
+                            call.ParentContexts is ICollection contextsCollectionAfter
+                                ? contextsCollectionAfter.Count
+                                : -1;
+                        log.Error(
+                            "ForEachBlockEngineTask.Host_WorkflowFinished failed while enumerating _call.ParentContexts. "
+                                + "ParentContextsType="
+                                + parentContextsType
+                                + ", ParentContextsCountBefore="
+                                + parentContextsCountBefore
+                                + ", ParentContextsCountAfter="
+                                + parentContextsCountAfter
+                                + logContext,
+                            ioex
+                        );
+                        throw;
                     }
                 }
-            }
-            if (log.IsInfoEnabled)
-            {
-                log.Info("Finishing iteration no. " + _iter.CurrentPosition);
+                if (log.IsInfoEnabled)
+                {
+                    log.Info("Finishing iteration no. " + _iter.CurrentPosition);
+                }
             }
         }
+        catch (Exception ex)
+        {
+            try
+            {
+                UnsubscribeEvents();
+            }
+            catch (Exception unsubscribeEx)
+            {
+                log.Error(
+                    "ForEachBlockEngineTask.Host_WorkflowFinished failed to unsubscribe events in catch.",
+                    unsubscribeEx
+                );
+            }
+            log.Error(
+                "ForEachBlockEngineTask.Host_WorkflowFinished failed. "
+                    + BuildHostWorkflowFinishedStateDump(Engine, call, block, e),
+                ex
+            );
+            throw;
+        }
+    }
+
+    private string BuildHostWorkflowFinishedStateDump(
+        WorkflowEngine engine,
+        WorkflowEngine call,
+        ForeachWorkflowBlock block,
+        WorkflowHostEventArgs e
+    )
+    {
+        string parentContextsCount = "<null>";
+        if (call?.ParentContexts is ICollection parentContexts)
+        {
+            parentContextsCount = parentContexts.Count.ToString();
+        }
+
+        string iteratorState;
+        try
+        {
+            iteratorState =
+                _iter == null
+                    ? "<null>"
+                    : "CurrentPosition=" + _iter.CurrentPosition + ", Count=" + _iter.Count;
+        }
+        catch (Exception iteratorEx)
+        {
+            iteratorState = "<error:" + iteratorEx.GetType().FullName + ">";
+        }
+
+        return "EngineIsNull="
+            + (engine == null)
+            + ", EngineWorkflowUniqueId="
+            + (engine?.WorkflowUniqueId.ToString() ?? "<null>")
+            + ", CallIsNull="
+            + (call == null)
+            + ", CallWorkflowUniqueId="
+            + (call?.WorkflowUniqueId.ToString() ?? "<null>")
+            + ", EventArgsIsNull="
+            + (e == null)
+            + ", EventEngineIsNull="
+            + (e?.Engine == null)
+            + ", EventWorkflowUniqueId="
+            + (e?.Engine == null ? "<null>" : e.Engine.WorkflowUniqueId.ToString())
+            + ", EventWorkflowUniqueIdIsEmpty="
+            + (e?.Engine?.WorkflowUniqueId == Guid.Empty)
+            + ", EventExceptionIsNull="
+            + (e?.Exception == null)
+            + ", StepType="
+            + (this.Step?.GetType().FullName ?? "<null>")
+            + ", BlockIsNull="
+            + (block == null)
+            + ", BlockPath="
+            + (block?.Path ?? "<null>")
+            + ", SourceContextStoreIsNull="
+            + (block?.SourceContextStore == null)
+            + ", SourceContextPrimaryKey="
+            + (block?.SourceContextStore?.PrimaryKey?.ToString() ?? "<null>")
+            + ", CallRuleEngineIsNull="
+            + (call?.RuleEngine == null)
+            + ", CallParentContextsCount="
+            + parentContextsCount
+            + ", Iter="
+            + iteratorState;
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
