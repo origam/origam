@@ -75,6 +75,12 @@ public class ForEachBlockEngineTask : BlockEngineTask
         {
             log.Info("ForEach Block started.");
         }
+        if (this.Engine?.Host == null)
+        {
+            throw new InvalidOperationException(
+                "ForEachBlockEngineTask cannot subscribe events because Engine.Host is null."
+            );
+        }
         this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
         IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
@@ -87,6 +93,12 @@ public class ForEachBlockEngineTask : BlockEngineTask
         this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
         _iter = navigator.Select(expr);
         ResumeIteration();
+    }
+
+    protected override void OnFinished(WorkflowEngineTaskEventArgs e)
+    {
+        UnsubscribeEvents();
+        base.OnFinished(e);
     }
 
     private void ResumeIteration()
@@ -216,6 +228,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
             if (e == null)
             {
                 log.Error("ForEachBlockEngineTask.Host_WorkflowFinished received null event args.");
+                UnsubscribeEvents();
                 return;
             }
 
@@ -251,6 +264,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
+                UnsubscribeEvents();
                 return;
             }
 
@@ -262,6 +276,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
+                UnsubscribeEvents();
                 return;
             }
 
@@ -273,6 +288,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + block.Path
                         + logContext
                 );
+                UnsubscribeEvents();
                 return;
             }
 
@@ -294,6 +310,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
+                        UnsubscribeEvents();
                         return;
                     }
 
@@ -305,13 +322,14 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
+                        UnsubscribeEvents();
                         return;
                     }
 
-                    int parentContextsCountBefore =
-                        call.ParentContexts is ICollection contextsCollection
-                            ? contextsCollection.Count
-                            : -1;
+                    int parentContextsCountBefore = call.ParentContexts
+                        is ICollection contextsCollection
+                        ? contextsCollection.Count
+                        : -1;
                     string parentContextsType = call.ParentContexts.GetType().FullName;
 
                     // Merge data back after success
@@ -338,6 +356,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                             + block.Path
                                             + logContext
                                     );
+                                    UnsubscribeEvents();
                                     return;
                                 }
 
@@ -377,7 +396,9 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                     continue;
                                 }
 
-                                bool fullMerge = (!entry.Key.Equals(block.SourceContextStore.PrimaryKey));
+                                bool fullMerge = (
+                                    !entry.Key.Equals(block.SourceContextStore.PrimaryKey)
+                                );
                                 sourceContextChanged = Engine.MergeContext(
                                     entryKey,
                                     contextToMerge,
@@ -395,10 +416,10 @@ public class ForEachBlockEngineTask : BlockEngineTask
                     }
                     catch (InvalidOperationException ioex)
                     {
-                        int parentContextsCountAfter =
-                            call.ParentContexts is ICollection contextsCollectionAfter
-                                ? contextsCollectionAfter.Count
-                                : -1;
+                        int parentContextsCountAfter = call.ParentContexts
+                            is ICollection contextsCollectionAfter
+                            ? contextsCollectionAfter.Count
+                            : -1;
                         log.Error(
                             "ForEachBlockEngineTask.Host_WorkflowFinished failed while enumerating _call.ParentContexts. "
                                 + "ParentContextsType="
@@ -505,6 +526,11 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
+        if (e == null || e.Engine == null || _call == null)
+        {
+            UnsubscribeEvents();
+            return;
+        }
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
         {
             if (e.Exception != null)
@@ -517,7 +543,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
     private void UnsubscribeEvents()
     {
-        if (this.Engine != null)
+        if (this.Engine?.Host != null)
         {
             this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
             this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
