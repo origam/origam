@@ -180,6 +180,7 @@ export class ColumnsDialog extends React.Component<{
       <ModalDialog
         title={T("Columns", "column_config_title")}
         titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
+        onEscape={()=> this.props.model.onColumnConfCancel()}
         buttonsCenter={
           <Observer>
             {() => (

@@ -105,6 +105,11 @@ export const DialogScreen: React.FC<{
               getIsScreenOrAnyDataViewWorking(props.openedScreen.content.formScreen!) ||
               !!window.localStorage.getItem("debugKeepProgressIndicatorsOn")
             }
+            onEscape={
+              props.showCloseButton
+                ? (event) => onScreenTabCloseClick(props.openedScreen)(event)
+                : () => {}
+            }
             titleButtons={
             props.showCloseButton
               ? <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
