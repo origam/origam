@@ -1191,14 +1191,11 @@ public abstract class AbstractSchemaItem
 
     private string GetPath(ISchemaItem item)
     {
-        if (ParentItem == null)
+        return ParentItem switch
         {
-            return Name;
-        }
-        else
-        {
-            return System.IO.Path.Combine(ParentItem.Path, Name);
-        }
+            null => Name,
+            _ => ParentItem.Path + System.IO.Path.DirectorySeparatorChar + Name,
+        };
     }
 
     private ISchemaItemCollection GetChildItems(ISchemaItem parentItem)
