@@ -40,10 +40,6 @@ export interface IApi {
 
   onApiResponse: EventHandler<{}>;
 
-  login(credentials: { UserName: string; Password: string }): Promise<string>;
-
-  logout(): Promise<any>;
-
   getScreen(id: string): Promise<any>;
 
   getEntities(query: {

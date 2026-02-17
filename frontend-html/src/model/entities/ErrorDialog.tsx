@@ -179,6 +179,7 @@ export class ErrorDialogComponent extends React.Component<{
       <ModalDialog
         title={T("Error", "error_window_title")}
         titleButtons={null}
+        onEscape={this.props.onOkClick || (() => {})}
         buttonsCenter={
           <>
             <button tabIndex={0} autoFocus={true} onClick={this.props.onOkClick}>

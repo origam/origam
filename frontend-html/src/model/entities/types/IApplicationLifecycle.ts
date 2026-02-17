@@ -29,12 +29,6 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
 
   loginPageMessage?: string;
 
-  onLoginFormSubmit(args: {
-    event: any;
-    userName: string;
-    password: string;
-  }): Generator;
-
   onSignOutClick(args: { event: any }): Generator;
 
   performLogout(): Generator;

@@ -33,11 +33,22 @@ export const ModalDialog: React.FC<{
   width?: number;
   height?: number;
   topPosiotionProc?: number;
+  onEscape?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onWindowMove?: (top: number, left: number)=>void;
   mustRunFullScreenInMobile?: boolean;
 }> = (props) => {
-  const application = useContext(MobXProviderContext).application
+  const application = useContext(MobXProviderContext).application;
+
+  const onModalKeyDown = (event: any) => {
+    props.onKeyDown?.(event);
+
+    if (event?.defaultPrevented || event?.key !== "Escape") {
+      return;
+    }
+
+    props.onEscape?.(event);
+  };
 
   return (
     <ModalWindow
@@ -51,7 +62,7 @@ export const ModalDialog: React.FC<{
       height={props.height}
       fullScreen={isPhoneLayoutActive(application) || isMobileLayoutActive (application) && props.mustRunFullScreenInMobile}
       topPosiotionProc={props.topPosiotionProc}
-      onKeyDown={props.onKeyDown}
+      onKeyDown={onModalKeyDown}
       onWindowMove={props.onWindowMove}
     >
       {props.children}

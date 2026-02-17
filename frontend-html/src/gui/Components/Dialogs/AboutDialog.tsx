@@ -36,6 +36,7 @@ export class AboutDialog extends React.Component<{
       <ModalDialog
         title={T("About", "about_application")}
         titleButtons={null}
+        onEscape={() => this.props.onOkClick()}
         buttonsCenter={
           <>
             <button tabIndex={0} onClick={() => this.props.onOkClick()}>
