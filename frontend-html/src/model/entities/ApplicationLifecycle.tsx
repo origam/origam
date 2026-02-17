@@ -42,16 +42,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     return this.inFlow > 0;
   }
 
-  *onLoginFormSubmit(args: { event: any; userName: string; password: string }) {
-    try {
-      this.inFlow++;
-      args.event.preventDefault();
-      yield*this.performLogin(args);
-    } finally {
-      this.inFlow--;
-    }
-  }
-
   *onSignOutClick(args: { event: any }) {
     yield*this.requestSignout();
   }
@@ -90,21 +80,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     yield*this.reuseAuthToken();
   }
 
-  *performLogin(args: { userName: string; password: string }): any {
-    try {
-      const api = getApi(this);
-      const token = yield api.login({
-        UserName: args.userName,
-        Password: args.password,
-      });
-      yield*this.anounceAuthToken(token);
-    } catch (error) {
-      // TODO: Distinguish between connection error and bad credentials etc.
-      this.setLoginPageMessage("Login failed.");
-      throw error;
-    }
-  }
-
   *performLogout() {
     const api = getApi(this);
     const application = getApplication(this);
@@ -120,11 +95,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     yield*stopAllFormsAutorefresh(application.workbench!)();
     yield*stopWorkQueues(application.workbench!)();
     application.resetWorkbench();
-    try {
-      yield api.logout();
-    } finally {
-      api.resetAccessToken();
-    }
+    api.resetAccessToken();
     return null;
   }
 

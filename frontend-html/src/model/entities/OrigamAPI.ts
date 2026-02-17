@@ -115,18 +115,6 @@ export class OrigamAPI implements IApi {
     return canceller as any;
   }
 
-  _getCancelToken(canceller: any) {
-    return canceller.any;
-  }
-
-  async login(credentials: { UserName: string; Password: string }) {
-    return (await this.axiosInstance.post("/User/Login", credentials)).data;
-  }
-
-  async logout() {
-    return await this.axiosInstance.post("/User/Logout", {});
-  }
-
   async getScreen(id: string) {
     return xmlJs.xml2js(
       (
