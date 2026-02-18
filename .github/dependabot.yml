@@ -21,6 +21,9 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "DEV: "
+    ignore:
+      - dependency-name: "eslint"
+        versions: [">=10.0.0 <10.1.0"]
   - package-ecosystem: "npm"
     directory: "/chat-html"
     open-pull-requests-limit: 20
