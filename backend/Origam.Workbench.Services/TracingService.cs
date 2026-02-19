@@ -34,7 +34,7 @@ public class TracingService : ITracingService
     );
 
     private SchemaService _schema;
-    IServiceAgent _dataServiceAgent;
+    private IBusinessServicesService _businessServicesService;
     private bool? _enabled;
 
     public TracingService() { }
@@ -215,33 +215,40 @@ public class TracingService : ITracingService
 
     private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
     {
+        IServiceAgent dataServiceAgent = CreateDataServiceAgent();
         DataStructureQuery query = new DataStructureQuery(new Guid(dataStructureQueryId));
-        _dataServiceAgent.MethodName = "StoreDataByQuery";
-        _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Parameters.Add("Data", dataSet);
-        _dataServiceAgent.Run();
+        dataServiceAgent.MethodName = "StoreDataByQuery";
+        dataServiceAgent.Parameters.Clear();
+        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add("Data", dataSet);
+        dataServiceAgent.Run();
     }
 
     private DataSet LoadWorkflowInstanceData(Guid workflowInstanceId)
     {
+        IServiceAgent dataServiceAgent = CreateDataServiceAgent();
         DataStructureQuery query = new DataStructureQuery(
             new Guid("309843cc-39ec-4eca-8848-8c69c885790c"),
             new Guid("4e6594b7-0462-4c1f-bc36-8fa37016995a")
         );
         query.Parameters.Add(new QueryParameter("OrigamTraceWorkflow_parId", workflowInstanceId));
-        _dataServiceAgent.MethodName = "LoadDataByQuery";
-        _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Run();
-        return _dataServiceAgent.Result as DataSet;
+        dataServiceAgent.MethodName = "LoadDataByQuery";
+        dataServiceAgent.Parameters.Clear();
+        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Run();
+        return dataServiceAgent.Result as DataSet;
+    }
+
+    private IServiceAgent CreateDataServiceAgent()
+    {
+        return _businessServicesService.GetAgent("DataService", null, null);
     }
 
     #endregion
     #region IService Members
     public void UnloadService()
     {
-        _dataServiceAgent = null;
+        _businessServicesService = null;
         _schema = null;
     }
 
@@ -261,10 +268,9 @@ public class TracingService : ITracingService
 
     public void InitializeService()
     {
-        _dataServiceAgent = (
+        _businessServicesService =
             ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-            as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
+            as IBusinessServicesService;
         _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
     }
     #endregion
