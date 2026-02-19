@@ -32,8 +32,7 @@ public class TracingService : ITracingService
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         MethodBase.GetCurrentMethod().DeclaringType
     );
-
-    private SchemaService _schema;
+    
     private IBusinessServicesService _businessServicesService;
     private bool? _enabled;
 
@@ -249,7 +248,6 @@ public class TracingService : ITracingService
     public void UnloadService()
     {
         _businessServicesService = null;
-        _schema = null;
     }
 
     public bool Enabled
@@ -271,7 +269,6 @@ public class TracingService : ITracingService
         _businessServicesService =
             ServiceManager.Services.GetService(typeof(IBusinessServicesService))
             as IBusinessServicesService;
-        _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
     }
     #endregion
 }
