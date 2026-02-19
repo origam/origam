@@ -33,9 +33,8 @@ public class TracingService : ITracingService
         MethodBase.GetCurrentMethod().DeclaringType
     );
 
-    private SchemaService _schema;
-    IServiceAgent _dataServiceAgent;
-    private bool? _enabled;
+    private IBusinessServicesService businessServicesService;
+    private bool? enabled;
 
     public TracingService() { }
 
@@ -51,26 +50,36 @@ public class TracingService : ITracingService
             return;
         }
 
-        DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
-        bool alreadyInitialized =
-            loadWorkflowData.Tables.Count > 0 && loadWorkflowData.Tables[0].Rows.Count > 0;
-        if (alreadyInitialized)
+        try
         {
-            return;
-        }
+            DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
+            bool alreadyInitialized =
+                loadWorkflowData.Tables.Count > 0 && loadWorkflowData.Tables[0].Rows.Count > 0;
+            if (alreadyInitialized)
+            {
+                return;
+            }
 
-        UserProfile profile = SecurityManager.CurrentUserProfile();
-        // create the record
-        OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
-        OrigamTraceWorkflowData.OrigamTraceWorkflowRow row =
-            data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
-        row.Id = workflowInstanceId;
-        row.RecordCreated = DateTime.Now;
-        row.RecordCreatedBy = profile.Id;
-        row.WorkflowName = workflowName;
-        row.WorkflowId = workflowId;
-        data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
-        StoreTraceData(dataSet: data, dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c");
+            UserProfile profile = SecurityManager.CurrentUserProfile();
+            // create the record
+            OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
+            OrigamTraceWorkflowData.OrigamTraceWorkflowRow row =
+                data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
+            row.Id = workflowInstanceId;
+            row.RecordCreated = DateTime.Now;
+            row.RecordCreatedBy = profile.Id;
+            row.WorkflowName = workflowName;
+            row.WorkflowId = workflowId;
+            data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
+            StoreTraceData(
+                dataSet: data,
+                dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
+            );
+        }
+        catch (Exception ex)
+        {
+            log.LogOrigamError(ex);
+        }
     }
 
     public void TraceStep(
@@ -205,57 +214,59 @@ public class TracingService : ITracingService
 
     private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
     {
+        IServiceAgent dataServiceAgent = CreateDataServiceAgent();
         DataStructureQuery query = new DataStructureQuery(new Guid(dataStructureQueryId));
-        _dataServiceAgent.MethodName = "StoreDataByQuery";
-        _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Parameters.Add("Data", dataSet);
-        _dataServiceAgent.Run();
+        dataServiceAgent.MethodName = "StoreDataByQuery";
+        dataServiceAgent.Parameters.Clear();
+        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Parameters.Add("Data", dataSet);
+        dataServiceAgent.Run();
     }
 
     private DataSet LoadWorkflowInstanceData(Guid workflowInstanceId)
     {
+        IServiceAgent dataServiceAgent = CreateDataServiceAgent();
         DataStructureQuery query = new DataStructureQuery(
             new Guid("309843cc-39ec-4eca-8848-8c69c885790c"),
             new Guid("4e6594b7-0462-4c1f-bc36-8fa37016995a")
         );
         query.Parameters.Add(new QueryParameter("OrigamTraceWorkflow_parId", workflowInstanceId));
-        _dataServiceAgent.MethodName = "LoadDataByQuery";
-        _dataServiceAgent.Parameters.Clear();
-        _dataServiceAgent.Parameters.Add("Query", query);
-        _dataServiceAgent.Run();
-        return _dataServiceAgent.Result as DataSet;
+        dataServiceAgent.MethodName = "LoadDataByQuery";
+        dataServiceAgent.Parameters.Clear();
+        dataServiceAgent.Parameters.Add("Query", query);
+        dataServiceAgent.Run();
+        return dataServiceAgent.Result as DataSet;
+    }
+
+    private IServiceAgent CreateDataServiceAgent()
+    {
+        return businessServicesService.GetAgent("DataService", null, null);
     }
 
     #endregion
     #region IService Members
     public void UnloadService()
     {
-        _dataServiceAgent = null;
-        _schema = null;
+        businessServicesService = null;
     }
 
     public bool Enabled
     {
         get
         {
-            if (_enabled.HasValue)
+            if (enabled.HasValue)
             {
-                return _enabled.Value;
+                return enabled.Value;
             }
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             return settings.TraceEnabled;
         }
-        set => _enabled = value;
+        set => enabled = value;
     }
 
     public void InitializeService()
     {
-        _dataServiceAgent = (
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-            as IBusinessServicesService
-        ).GetAgent("DataService", null, null);
-        _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        businessServicesService = ServiceManager.Services.GetService<IBusinessServicesService>();
     }
     #endregion
 }
