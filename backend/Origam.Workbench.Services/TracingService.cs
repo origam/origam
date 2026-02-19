@@ -32,7 +32,7 @@ public class TracingService : ITracingService
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
         MethodBase.GetCurrentMethod().DeclaringType
     );
-    
+
     private IBusinessServicesService businessServicesService;
     private bool? enabled;
 
@@ -266,9 +266,7 @@ public class TracingService : ITracingService
 
     public void InitializeService()
     {
-        businessServicesService =
-            ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-            as IBusinessServicesService;
+        businessServicesService = ServiceManager.Services.GetService<IBusinessServicesService>();
     }
     #endregion
 }
