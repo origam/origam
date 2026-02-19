@@ -33,8 +33,8 @@ public class TracingService : ITracingService
         MethodBase.GetCurrentMethod().DeclaringType
     );
     
-    private IBusinessServicesService _businessServicesService;
-    private bool? _enabled;
+    private IBusinessServicesService businessServicesService;
+    private bool? enabled;
 
     public TracingService() { }
 
@@ -222,33 +222,33 @@ public class TracingService : ITracingService
 
     private IServiceAgent CreateDataServiceAgent()
     {
-        return _businessServicesService.GetAgent("DataService", null, null);
+        return businessServicesService.GetAgent("DataService", null, null);
     }
 
     #endregion
     #region IService Members
     public void UnloadService()
     {
-        _businessServicesService = null;
+        businessServicesService = null;
     }
 
     public bool Enabled
     {
         get
         {
-            if (_enabled.HasValue)
+            if (enabled.HasValue)
             {
-                return _enabled.Value;
+                return enabled.Value;
             }
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             return settings.TraceEnabled;
         }
-        set => _enabled = value;
+        set => enabled = value;
     }
 
     public void InitializeService()
     {
-        _businessServicesService =
+        businessServicesService =
             ServiceManager.Services.GetService(typeof(IBusinessServicesService))
             as IBusinessServicesService;
     }
