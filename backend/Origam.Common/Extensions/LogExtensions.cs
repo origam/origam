@@ -44,13 +44,18 @@ public static class LogExtensions
         }
     }
 
+    // This method prevents multiple logging of workflow exceptions.
     public static void LogOrigamError(this ILog log, string message, Exception ex)
     {
         if (ex.Data.Contains(IsLoggedKey) && Equals(ex.Data[IsLoggedKey], true))
         {
             return;
         }
-        log.Error(message, ex);
+
+        if (log.IsErrorEnabled)
+        {
+            log.Error(message, ex);
+        }
         ex.Data[IsLoggedKey] = true;
     }
 
@@ -60,7 +65,11 @@ public static class LogExtensions
         {
             return;
         }
-        log.Error(ex);
+
+        if (log.IsErrorEnabled)
+        {
+            log.Error(ex);
+        }
         ex.Data[IsLoggedKey] = true;
     }
 }
