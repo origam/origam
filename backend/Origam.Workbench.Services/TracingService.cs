@@ -51,26 +51,36 @@ public class TracingService : ITracingService
             return;
         }
 
-        DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
-        bool alreadyInitialized =
-            loadWorkflowData.Tables.Count > 0 && loadWorkflowData.Tables[0].Rows.Count > 0;
-        if (alreadyInitialized)
+        try
         {
-            return;
-        }
+            DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
+            bool alreadyInitialized =
+                loadWorkflowData.Tables.Count > 0 && loadWorkflowData.Tables[0].Rows.Count > 0;
+            if (alreadyInitialized)
+            {
+                return;
+            }
 
-        UserProfile profile = SecurityManager.CurrentUserProfile();
-        // create the record
-        OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
-        OrigamTraceWorkflowData.OrigamTraceWorkflowRow row =
-            data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
-        row.Id = workflowInstanceId;
-        row.RecordCreated = DateTime.Now;
-        row.RecordCreatedBy = profile.Id;
-        row.WorkflowName = workflowName;
-        row.WorkflowId = workflowId;
-        data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
-        StoreTraceData(dataSet: data, dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c");
+            UserProfile profile = SecurityManager.CurrentUserProfile();
+            // create the record
+            OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
+            OrigamTraceWorkflowData.OrigamTraceWorkflowRow row =
+                data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
+            row.Id = workflowInstanceId;
+            row.RecordCreated = DateTime.Now;
+            row.RecordCreatedBy = profile.Id;
+            row.WorkflowName = workflowName;
+            row.WorkflowId = workflowId;
+            data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
+            StoreTraceData(
+                dataSet: data,
+                dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
+            );
+        }
+        catch (Exception ex)
+        {
+            log.LogOrigamError(ex);
+        }
     }
 
     public void TraceStep(
