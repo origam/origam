@@ -130,5 +130,5 @@
     "Edge >=88",
     "iOS >= 14"
   ],
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.12.0"
 }
