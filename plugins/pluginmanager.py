@@ -2,6 +2,7 @@ import json
 import os
 import re
 import shutil
+import argparse
 from pathlib import Path
 from ui import select_option, run_and_wait_for_key
 
@@ -218,6 +219,96 @@ def ask_for_plugin_config(config) -> PluginConfig:
         yarn_lock_path=plugin_config_dict["yarnLockPath"])
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Manage Origam front-end plugins.")
+    parser.add_argument(
+        "--task",
+        choices=["create", "copy-from", "copy-to"],
+        help="Task to run. If omitted, interactive mode is used.",
+    )
+    parser.add_argument(
+        "--plugin-name",
+        help="Plugin name from config for copy tasks. Required for non-interactive copy tasks unless full plugin paths are provided.",
+    )
+    parser.add_argument(
+        "--config",
+        help="Path to pluginmanager config file. Defaults to plugins/pluginmanager_config.json",
+    )
+    parser.add_argument(
+        "--path-to-origam-repo",
+        help="Override pathToOrigamRepo from config.",
+    )
+    parser.add_argument("--plugin-source-path", help="Override pluginSourcePath")
+    parser.add_argument("--package-json-path", help="Override packageJsonPath")
+    parser.add_argument("--registration-file-path", help="Override registrationFilePath")
+    parser.add_argument(
+        "--yarn-lock-path",
+        help="Override yarnLockPath. Use empty string if no lock file is needed.",
+    )
+    parser.add_argument(
+        "--no-wait",
+        action="store_true",
+        help="Do not wait for ENTER at the end. Useful for CI.",
+    )
+    return parser.parse_args()
+
+
+def has_full_plugin_overrides(args):
+    return (
+        args.plugin_source_path is not None
+        and args.package_json_path is not None
+        and args.registration_file_path is not None
+    )
+
+
+def resolve_plugin_config(config_content, args, require_plugin_name_from_config=True):
+    has_any_override = any(
+        [
+            args.plugin_source_path is not None,
+            args.package_json_path is not None,
+            args.registration_file_path is not None,
+            args.yarn_lock_path is not None,
+        ]
+    )
+
+    if has_any_override:
+        missing = []
+        if args.plugin_source_path is None:
+            missing.append("--plugin-source-path")
+        if args.package_json_path is None:
+            missing.append("--package-json-path")
+        if args.registration_file_path is None:
+            missing.append("--registration-file-path")
+        if missing:
+            raise Exception(f"When overriding plugin paths, also provide: {', '.join(missing)}")
+        plugin_name = args.plugin_name or "Plugin"
+        return PluginConfig(
+            name=plugin_name,
+            plugin_source_path=args.plugin_source_path,
+            package_json_path=args.package_json_path,
+            registration_file_path=args.registration_file_path,
+            yarn_lock_path=args.yarn_lock_path or "",
+        )
+
+    if args.plugin_name:
+        plugins = config_content.get("plugins", {})
+        if args.plugin_name not in plugins:
+            available = ", ".join(plugins.keys()) if plugins else "<none>"
+            raise Exception(f"Plugin '{args.plugin_name}' not found in config. Available: {available}")
+        plugin_config_dict = plugins[args.plugin_name]
+        return PluginConfig(
+            name=args.plugin_name,
+            plugin_source_path=plugin_config_dict["pluginSourcePath"],
+            package_json_path=plugin_config_dict["packageJsonPath"],
+            registration_file_path=plugin_config_dict["registrationFilePath"],
+            yarn_lock_path=plugin_config_dict["yarnLockPath"],
+        )
+
+    if require_plugin_name_from_config:
+        raise Exception("Non-interactive copy tasks require --plugin-name or explicit plugin path overrides.")
+    return ask_for_plugin_config(config_content)
+
+
 def get_origam_plugin_src(plugin_config: PluginConfig):
     return origam_plugin_folder / plugin_config.name / "src"
 
@@ -226,9 +317,27 @@ def get_origam_plugin_root(plugin_config: PluginConfig):
     return origam_plugin_folder / plugin_config.name
 
 
-def main():
+def main(args=None):
+    args = args or parse_args()
+
     global config
-    config = read_config(path_to_config)
+    config_path = args.config or str(path_to_config)
+    copy_tasks = {"copy-from", "copy-to"}
+    use_cli_only_mode = (
+        args.task in copy_tasks
+        and args.path_to_origam_repo is not None
+        and has_full_plugin_overrides(args)
+    )
+    if use_cli_only_mode:
+        config = {
+            "pathToOrigamRepo": args.path_to_origam_repo,
+            "plugins": {},
+        }
+    else:
+        config = read_config(config_path)
+        if args.path_to_origam_repo:
+            config["pathToOrigamRepo"] = args.path_to_origam_repo
+
     global origam_repo_path
     origam_repo_path = Path(config['pathToOrigamRepo'])
     global frontend_path
@@ -236,28 +345,50 @@ def main():
     global origam_plugin_folder
     origam_plugin_folder = origam_repo_path / "frontend-html/src/plugins/implementations"
 
-    print("This script will help you manage Origam front end plugins.")
-    print("What do you want to do? Type an option number and hit Enter.")
     crete_new_plugin = "Create new plugin"
     copy_from_plugin_repo = "Copy from plugin repository to Origam repository"
     copy_to_plugin_repo = "Copy back to plugin repository from Origam repository"
-    options = [crete_new_plugin]
-    if config["plugins"] and len(config["plugins"].keys()) > 0:
-        options.append(copy_from_plugin_repo)
-        options.append(copy_to_plugin_repo)
-    task = select_option(options, default=0)
+    if args.task:
+        task_map = {
+            "create": crete_new_plugin,
+            "copy-from": copy_from_plugin_repo,
+            "copy-to": copy_to_plugin_repo,
+        }
+        task = task_map[args.task]
+    else:
+        print("This script will help you manage Origam front end plugins.")
+        print("What do you want to do? Type an option number and hit Enter.")
+        options = [crete_new_plugin]
+        if config["plugins"] and len(config["plugins"].keys()) > 0:
+            options.append(copy_from_plugin_repo)
+            options.append(copy_to_plugin_repo)
+        task = select_option(options, default=0)
 
     if task == copy_from_plugin_repo:
-        plugin_config = ask_for_plugin_config(config)
+        plugin_config = resolve_plugin_config(config, args, require_plugin_name_from_config=bool(args.task))
         copy_from_plugin(plugin_config)
     elif task == copy_to_plugin_repo:
-        plugin_config = ask_for_plugin_config(config)
+        plugin_config = resolve_plugin_config(config, args, require_plugin_name_from_config=bool(args.task))
         copy_to_plugin(plugin_config)
     elif task == crete_new_plugin:
+        if args.task and any(
+            [
+                args.plugin_name,
+                args.plugin_source_path,
+                args.package_json_path,
+                args.registration_file_path,
+                args.yarn_lock_path is not None,
+            ]
+        ):
+            print("Ignoring plugin copy arguments for 'create' task.")
         init_new_plugin()
     else:
         raise Exception(f"{task} not implemented")
 
 
 if __name__ == "__main__":
-    run_and_wait_for_key(main)
+    cli_args = parse_args()
+    if cli_args.no_wait:
+        main(cli_args)
+    else:
+        run_and_wait_for_key(lambda: main(cli_args))
