@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="2b194dfa-ef37-4c06-a9cf-d8b43c739a87"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="LookupTagInputSource_LabelAndNumber#LookupTagInputSource_LabelAndNumber/c6f4393a-1547-4e09-9c17-80b982196e4a"
+    adl:listDisplayMember="Label;Number"
+    adl:listValueMember="Id"
+    asi:name="TagInputSource_LabelAndNumber"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="LookupTagInputSource_LabelAndNumber#LookupTagInputSource_LabelAndNumber/c6f4393a-1547-4e09-9c17-80b982196e4a"
+    adl:valueDisplayMember="Label;Number"
+    adl:valueMethod="GetId#LookupTagInputSource_LabelAndNumber/GetId/354b2a8f-ebbb-404a-a6cf-ddabbbc1e3ed"
+    adl:valueValueMember="Id" />
+</x:file>

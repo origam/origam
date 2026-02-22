@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="09b5af4a-e826-4173-a0ef-900ef5e2d8e0"
+    asi:name="MultiValueLookupTest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="3a2cb7b0-ed9d-4b8e-aac9-79957e81aecc"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="5e47834e-3667-4990-9cb8-59be2db087be"
+      asi:name="LoadData_AllDataTypes"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="AllDataTypes#MultiValueLookupTest/AllDataTypes/3a2cb7b0-ed9d-4b8e-aac9-79957e81aecc"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="LoadData#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="1bb2ed37-f85d-4a10-b6a1-9638435a9b78"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="DataStructure#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="AllDataTypes#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="39a2460f-0367-42ad-8ece-ee6a3a040153"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="2bf55460-0f02-4d9d-87a6-53ad1a0c4275"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Parameters#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

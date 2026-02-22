@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="c6f4393a-1547-4e09-9c17-80b982196e4a"
+    ds1:localized="false"
+    asi:name="LookupTagInputSource_LabelAndNumber">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="TagInputSource#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      x:id="546f21a1-2c16-4858-8c0d-9ae9a0af7f9c"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="TagInputSource"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Id#TagInputSource/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="393e47eb-588d-4bc2-9633-00119fb0ec51"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Number#TagInputSource/Number/3220b91a-532f-46ce-82dc-0a8af2786937"
+        dsc:hideInOutput="false"
+        x:id="5de97ad9-3542-437c-b5ab-ef16f6f96e69"
+        asi:name="Number"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Label#TagInputSource/Label/25ba0ff2-4452-40be-a748-4428bce1c18f"
+        dsc:hideInOutput="false"
+        x:id="6ac35f73-e058-407a-840b-7c887583d725"
+        asi:name="Label"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="354b2a8f-ebbb-404a-a6cf-ddabbbc1e3ed"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="TagInputSource#LookupTagInputSource_LabelAndNumber/TagInputSource/546f21a1-2c16-4858-8c0d-9ae9a0af7f9c"
+        dsfsf:filter="GetId#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="9327cbe6-0f58-4117-ac8d-9c19f0aa43e0"
+        asi:name="TagInputSource_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

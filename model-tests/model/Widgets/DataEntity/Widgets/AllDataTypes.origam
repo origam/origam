@@ -637,6 +637,16 @@
     <lf:DataEntityColumn
       asi:abstract="false"
       lf:allowNulls="true"
+      lf:defaultLookup="TagInputSource_LabelAndNumber#TagInputSource_LabelAndNumber/2b194dfa-ef37-4c06-a9cf-d8b43c739a87"
+      lf:excludeFromAllFields="false"
+      lf:field="refTagInputSourceId#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+      x:id="1488c1af-f53f-4237-8e0b-e4bf7e75cf5c"
+      lf:isPrimaryKey="false"
+      asi:name="TagInputSource_LabelAndNumber"
+      lf:xmlMappingType="Attribute" />
+    <lf:DataEntityColumn
+      asi:abstract="false"
+      lf:allowNulls="true"
       lf:defaultLookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
       lf:excludeFromAllFields="false"
       lf:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
