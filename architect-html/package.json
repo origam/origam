@@ -53,7 +53,7 @@
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-babel": "^1.5.1",
-    "vite-plugin-mkcert": "^1.17.9",
+    "vite-plugin-mkcert": "^1.17.10",
     "vite-tsconfig-paths": "^6.1.1"
   },
   "packageManager": "yarn@4.5.0"
