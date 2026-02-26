@@ -1,6 +1,8 @@
 # Origam.Composer
 This tool downloads the model, initializes a database (MS SQL/Postgres), and generates bash/cmd scripts for the ORIGAM project.
 
+Currently, **Origam.Composer is only available for Windows as part of standard releases**. If you want to use it on MacOS, you need to build your own executable application as described below.
+
 ## Install database (optional)
 You can use docker to install `MS SQL` database:
 ```
