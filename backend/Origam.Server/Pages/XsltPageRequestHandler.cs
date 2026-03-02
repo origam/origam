@@ -299,12 +299,19 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
         XsltDataPageFilterInput filterInput = DeserializeFilterInput(body);
         List<Ordering> orderings = GetOrderings(filterInput);
 
+        var parameterCollection = new QueryParameterCollection();
+        foreach (KeyValuePair<string, object> parameter in parameters)
+        {
+            parameterCollection.Add(new QueryParameter(parameter.Key, parameter.Value));
+        }
+
         var query = new DataStructureQuery
         {
             Entity = entity.Name,
             DataSourceId = xsltPage.DataStructureId,
             RowLimit = GetIntParameterValue(parameters, "_pageSize"),
             RowOffset = GetIntParameterValue(parameters, "_pageNumber"),
+            Parameters = parameterCollection,
             CustomFilters = new CustomFilters
             {
                 Filters = filterInput?.Filter,
