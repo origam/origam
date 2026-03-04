@@ -3233,7 +3233,7 @@ __metadata:
     draftjs-to-html: "npm:^0.9.1"
     draftjs-utils: "npm:^0.10.2"
     emoji-mart: "npm:^5.6.0"
-    immutable: "npm:^5.1.4"
+    immutable: "npm:^5.1.5"
     lodash: "npm:^4.17.23"
     mobx: "npm:5"
     mobx-react: "npm:6.3.1"
@@ -4264,10 +4264,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immutable@npm:^5.1.4":
-  version: 5.1.4
-  resolution: "immutable@npm:5.1.4"
-  checksum: 10c0/f1c98382e4cde14a0b218be3b9b2f8441888da8df3b8c064aa756071da55fbed6ad696e5959982508456332419be9fdeaf29b2e58d0eadc45483cc16963c0446
+"immutable@npm:^5.1.5":
+  version: 5.1.5
+  resolution: "immutable@npm:5.1.5"
+  checksum: 10c0/8017ece1578e3c5939ba3305176aee059def1b8a90c7fa2a347ef583ebbd38cbe77ce1bbd786a5fab57e2da00bbcb0493b92e4332cdc4e1fe5cfb09a4688df31
   languageName: node
   linkType: hard
 
