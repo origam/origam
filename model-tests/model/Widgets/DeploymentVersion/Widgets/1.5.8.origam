@@ -29,6 +29,30 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.5.8.origam___commandText___50106111-9008-4515-a4c4-a2adbfc8f13c.txt"
+      x:id="50106111-9008-4515-a4c4-a2adbfc8f13c"
+      asi:name="00080_Database_Entity_CarWheeIntId"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.5.8.origam___commandText___63099cee-d775-4ad3-a69b-f4caf28c941b.txt"
+      x:id="63099cee-d775-4ad3-a69b-f4caf28c941b"
+      asi:name="00060_Database_Entity_CarTestId"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.5.8.origam___commandText___63afb8a8-4ba6-4d9e-b3ec-0de78d815c9f.txt"
+      x:id="63afb8a8-4ba6-4d9e-b3ec-0de78d815c9f"
+      asi:name="00090_INSERT_CarTest_CarWheel"
+      scusa:platform="MsSql"
+      scusa:service="DataService#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.5.8.origam___commandText___af2cae45-63e5-4876-aa0c-5c26dc20ac51.txt"
       x:id="af2cae45-63e5-4876-aa0c-5c26dc20ac51"

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="8588c036-d66f-4df2-ab6a-a80d6bb63e42"
+    ade:label="CarWheel"
+    tmi:mappedObjectName="CarWheeIntId"
+    asi:name="CarWheeIntId"
+    ade:readOnly="false">
+    <fc1:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="20"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fc1:forceDatabaseCalculation="false"
+      fc1:function="Concat#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
+      x:id="960df2ae-1214-4e41-b0b7-5b00f9391753"
+      adec:isPrimaryKey="false"
+      asi:name="refCarIdString"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <fcp:FunctionCallParameter
+        asi:abstract="false"
+        x:id="7f0728f9-bbdf-4d47-8476-4a7990d5e869"
+        asi:name="Strings"
+        fcp:parameter="Strings#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
+        <dcr:DataConstantReference
+          asi:abstract="false"
+          dcr:constant="_empty_string#_empty_string/64f5a294-26ab-4ac2-b4e3-0cb7f353671e"
+          x:id="7128f3e5-9825-4198-8846-b3e17fea5a58"
+          asi:name="_empty_string" />
+        <ecr:EntityColumnReference
+          asi:abstract="false"
+          ecr:field="refCarldInt#CarWheeIntId/refCarldInt/3bc23785-8fda-464a-a8a7-aa56f112848a"
+          x:id="751d2f37-2626-4b55-a20d-05743dcf1042"
+          asi:name="idString" />
+      </fcp:FunctionCallParameter>
+    </fc1:DataEntityColumn>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="3bc23785-8fda-464a-a8a7-aa56f112848a"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refCarldInt"
+      asi:name="refCarldInt"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="88a04fdd-7b8a-4275-bdda-43c7ebbb6dcf"
+      adec:isPrimaryKey="true"
+      fmi:mappedColumnName="IdInt"
+      asi:name="IdInt"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+  </tmi:DataEntity>
+</x:file>

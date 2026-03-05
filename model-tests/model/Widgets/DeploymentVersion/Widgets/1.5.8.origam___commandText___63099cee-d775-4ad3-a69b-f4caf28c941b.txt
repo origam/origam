@@ -1,0 +1,6 @@
+﻿CREATE TABLE [CarTestId] (
+	[IdInt] Int NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);
