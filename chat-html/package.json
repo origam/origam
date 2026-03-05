@@ -31,7 +31,7 @@
     "draftjs-to-html": "^0.9.1",
     "draftjs-utils": "^0.10.2",
     "emoji-mart": "^5.6.0",
-    "immutable": "^5.1.4",
+    "immutable": "^5.1.5",
     "lodash": "^4.17.23",
     "mobx": "5",
     "mobx-react": "6.3.1",
