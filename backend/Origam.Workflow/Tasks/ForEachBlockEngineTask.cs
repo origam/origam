@@ -520,7 +520,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
         builder.Append(", ExceptionType=").Append(exception.GetType().FullName ?? "<null>");
         builder.Append(", ExceptionMessage=").Append(exception.Message ?? "<null>");
         builder.Append(", ExceptionSource=").Append(exception.Source ?? "<null>");
-        builder.Append(", ExceptionTargetSite=")
+        builder
+            .Append(", ExceptionTargetSite=")
             .Append(exception.TargetSite?.DeclaringType?.FullName ?? "<null>")
             .Append(".")
             .Append(exception.TargetSite?.Name ?? "<null>");
@@ -548,7 +549,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 {
                     builder.Append("; ");
                 }
-                builder.Append("[")
+                builder
+                    .Append("[")
                     .Append(entry.Key ?? "<null>")
                     .Append("=")
                     .Append(entry.Value ?? "<null>")
@@ -559,7 +561,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
         if (exception is AggregateException aggregateException)
         {
-            builder.Append(", AggregateInnerExceptionsCount=")
+            builder
+                .Append(", AggregateInnerExceptionsCount=")
                 .Append(aggregateException.InnerExceptions.Count);
         }
 
@@ -568,29 +571,35 @@ public class ForEachBlockEngineTask : BlockEngineTask
         while (current != null)
         {
             depth++;
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("Type=")
                 .Append(current.GetType().FullName ?? "<null>");
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("Message=")
                 .Append(current.Message ?? "<null>");
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("Source=")
                 .Append(current.Source ?? "<null>");
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("TargetSite=")
                 .Append(current.TargetSite?.DeclaringType?.FullName ?? "<null>")
                 .Append(".")
                 .Append(current.TargetSite?.Name ?? "<null>");
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("HResult=")
                 .Append(current.HResult);
-            builder.Append(", InnerException")
+            builder
+                .Append(", InnerException")
                 .Append(depth)
                 .Append("StackTrace=")
                 .Append(SanitizeForLog(current.StackTrace));
