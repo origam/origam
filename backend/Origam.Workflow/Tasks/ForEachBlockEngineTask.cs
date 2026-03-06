@@ -83,8 +83,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 "ForEachBlockEngineTask cannot subscribe events because Engine.Host is null."
             );
         }
-        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
         XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
         OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), Engine.TransactionId);
@@ -92,6 +92,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
         expr.SetContext(ctx);
         // code might fail and this handler doesn't get cleared
         // and will interfer with other workflow invocations
+        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
         _iter = navigator.Select(expr);
         ResumeIteration();
@@ -106,7 +107,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private void ResumeIteration()
     {
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         _call.IterationTotal = _iter.Count;
         for (int currentPosition = 1; currentPosition <= _call.IterationTotal; currentPosition++)
         {
@@ -230,7 +230,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
             if (e == null)
             {
                 log.Error("ForEachBlockEngineTask.Host_WorkflowFinished received null event args.");
-                UnsubscribeEvents();
                 return;
             }
 
@@ -267,8 +266,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
-                UnsubscribeEvents();
-                throw new Exception($"Error in Host_WorkflowFinished. call is null: {call == null}");
+                return;
             }
 
             if (block == null)
@@ -279,7 +277,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
-                UnsubscribeEvents();
                 return;
             }
 
@@ -291,7 +288,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + block.Path
                         + logContext
                 );
-                UnsubscribeEvents();
                 return;
             }
 
@@ -313,7 +309,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
-                        UnsubscribeEvents();
                         return;
                     }
 
@@ -325,7 +320,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
-                        UnsubscribeEvents();
                         return;
                     }
 
@@ -359,7 +353,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                             + block.Path
                                             + logContext
                                     );
-                                    UnsubscribeEvents();
                                     return;
                                 }
 
@@ -445,17 +438,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
         }
         catch (Exception ex)
         {
-            try
-            {
-                UnsubscribeEvents();
-            }
-            catch (Exception unsubscribeEx)
-            {
-                log.Error(
-                    "ForEachBlockEngineTask.Host_WorkflowFinished failed to unsubscribe events in catch.",
-                    unsubscribeEx
-                );
-            }
             log.Error(
                 "ForEachBlockEngineTask.Host_WorkflowFinished failed. "
                     + BuildHostWorkflowFinishedStateDump(Engine, call, block, e),
@@ -630,9 +612,21 @@ public class ForEachBlockEngineTask : BlockEngineTask
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e == null || e.Engine == null || _call == null)
+        if (e == null || e.Engine == null)
         {
-            UnsubscribeEvents();
+            return;
+        }
+        if (_call == null)
+        {
+            log.Error(
+                "ForEachBlockEngineTask.Host_WorkflowMessage encountered null reference candidate. "
+                    + "EventEngineIsNull="
+                    + (e.Engine == null)
+                    + ", CurrentStep="
+                    + (this.Step?.GetType().FullName ?? "<null>")
+                    + ", EventWorkflowUniqueId="
+                    + e.Engine.WorkflowUniqueId
+            );
             return;
         }
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
