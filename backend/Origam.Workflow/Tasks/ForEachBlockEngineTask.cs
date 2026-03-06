@@ -268,7 +268,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + logContext
                 );
                 UnsubscribeEvents();
-                return;
+                throw new Exception($"Error in Host_WorkflowFinished. call is null: {call == null}");
             }
 
             if (block == null)
