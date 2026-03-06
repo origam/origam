@@ -22,7 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
@@ -248,7 +250,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 + ", CallWorkflowUniqueIdIsEmpty="
                 + (call?.WorkflowUniqueId == Guid.Empty)
                 + ", ExceptionPresent="
-                + (e.Exception != null);
+                + (e.Exception != null)
+                + BuildExceptionLogContext(e.Exception);
 
             if (call == null || e.Engine == null)
             {
@@ -522,6 +525,107 @@ public class ForEachBlockEngineTask : BlockEngineTask
             + parentContextsCount
             + ", Iter="
             + iteratorState;
+    }
+
+    private static string BuildExceptionLogContext(Exception exception)
+    {
+        if (exception == null)
+        {
+            return string.Empty;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append(", ExceptionType=").Append(exception.GetType().FullName ?? "<null>");
+        builder.Append(", ExceptionMessage=").Append(exception.Message ?? "<null>");
+        builder.Append(", ExceptionSource=").Append(exception.Source ?? "<null>");
+        builder.Append(", ExceptionTargetSite=")
+            .Append(exception.TargetSite?.DeclaringType?.FullName ?? "<null>")
+            .Append(".")
+            .Append(exception.TargetSite?.Name ?? "<null>");
+        builder.Append(", ExceptionHResult=").Append(exception.HResult);
+        builder.Append(", ExceptionStackTrace=").Append(SanitizeForLog(exception.StackTrace));
+
+        if (exception is SqlException sqlException)
+        {
+            builder.Append(", SqlErrorNumber=").Append(sqlException.Number);
+            builder.Append(", SqlErrorState=").Append(sqlException.State);
+            builder.Append(", SqlErrorClass=").Append(sqlException.Class);
+            builder.Append(", SqlProcedure=").Append(sqlException.Procedure ?? "<null>");
+            builder.Append(", SqlLineNumber=").Append(sqlException.LineNumber);
+            builder.Append(", SqlServer=").Append(sqlException.Server ?? "<null>");
+            builder.Append(", SqlClientConnectionId=").Append(sqlException.ClientConnectionId);
+        }
+
+        if (exception.Data != null && exception.Data.Count > 0)
+        {
+            builder.Append(", ExceptionData=");
+            bool first = true;
+            foreach (DictionaryEntry entry in exception.Data)
+            {
+                if (!first)
+                {
+                    builder.Append("; ");
+                }
+                builder.Append("[")
+                    .Append(entry.Key ?? "<null>")
+                    .Append("=")
+                    .Append(entry.Value ?? "<null>")
+                    .Append("]");
+                first = false;
+            }
+        }
+
+        if (exception is AggregateException aggregateException)
+        {
+            builder.Append(", AggregateInnerExceptionsCount=")
+                .Append(aggregateException.InnerExceptions.Count);
+        }
+
+        Exception current = exception.InnerException;
+        int depth = 0;
+        while (current != null)
+        {
+            depth++;
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("Type=")
+                .Append(current.GetType().FullName ?? "<null>");
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("Message=")
+                .Append(current.Message ?? "<null>");
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("Source=")
+                .Append(current.Source ?? "<null>");
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("TargetSite=")
+                .Append(current.TargetSite?.DeclaringType?.FullName ?? "<null>")
+                .Append(".")
+                .Append(current.TargetSite?.Name ?? "<null>");
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("HResult=")
+                .Append(current.HResult);
+            builder.Append(", InnerException")
+                .Append(depth)
+                .Append("StackTrace=")
+                .Append(SanitizeForLog(current.StackTrace));
+            current = current.InnerException;
+        }
+
+        return builder.ToString();
+    }
+
+    private static string SanitizeForLog(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return "<null>";
+        }
+
+        return value.Replace("\r", "\\r").Replace("\n", "\\n");
     }
 
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
