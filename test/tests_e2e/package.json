@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@babel/helper-get-function-arity": "^7.16.7",
-    "jest": "^27.3.1",
+    "jest": "^30.2.0",
     "jest-trx-results-processor": "^3.0.2",
-    "msnodesqlv8": "^4.1.2",
-    "mssql": "^7.2.1",
-    "puppeteer": "^10.1.0"
+    "msnodesqlv8": "^5.1.1",
+    "mssql": "^11.0.1",
+    "puppeteer": "^24.4.0"
   },
   "homepage": "./",
   "jest": {
@@ -25,7 +25,7 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.1",
-    "jest-image-snapshot": "^4.5.1"
+    "@types/uuid": "^11.0.0",
+    "jest-image-snapshot": "^6.5.1"
   }
 }
