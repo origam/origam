@@ -22,7 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
@@ -81,8 +83,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 "ForEachBlockEngineTask cannot subscribe events because Engine.Host is null."
             );
         }
-        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
         XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
         OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), Engine.TransactionId);
@@ -90,6 +92,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
         expr.SetContext(ctx);
         // code might fail and this handler doesn't get cleared
         // and will interfer with other workflow invocations
+        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
         _iter = navigator.Select(expr);
         ResumeIteration();
@@ -104,7 +107,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private void ResumeIteration()
     {
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         _call.IterationTotal = _iter.Count;
         for (int currentPosition = 1; currentPosition <= _call.IterationTotal; currentPosition++)
         {
@@ -228,7 +230,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
             if (e == null)
             {
                 log.Error("ForEachBlockEngineTask.Host_WorkflowFinished received null event args.");
-                UnsubscribeEvents();
                 return;
             }
 
@@ -248,7 +249,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
                 + ", CallWorkflowUniqueIdIsEmpty="
                 + (call?.WorkflowUniqueId == Guid.Empty)
                 + ", ExceptionPresent="
-                + (e.Exception != null);
+                + (e.Exception != null)
+                + BuildExceptionLogContext(e.Exception);
 
             if (call == null || e.Engine == null)
             {
@@ -264,7 +266,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
-                UnsubscribeEvents();
                 return;
             }
 
@@ -276,7 +277,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + (this.Step?.GetType().FullName ?? "<null>")
                         + logContext
                 );
-                UnsubscribeEvents();
                 return;
             }
 
@@ -288,7 +288,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                         + block.Path
                         + logContext
                 );
-                UnsubscribeEvents();
                 return;
             }
 
@@ -310,7 +309,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
-                        UnsubscribeEvents();
                         return;
                     }
 
@@ -322,7 +320,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                 + (call.WorkflowUniqueId.ToString() ?? "<null>")
                                 + logContext
                         );
-                        UnsubscribeEvents();
                         return;
                     }
 
@@ -356,7 +353,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
                                             + block.Path
                                             + logContext
                                     );
-                                    UnsubscribeEvents();
                                     return;
                                 }
 
@@ -442,17 +438,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
         }
         catch (Exception ex)
         {
-            try
-            {
-                UnsubscribeEvents();
-            }
-            catch (Exception unsubscribeEx)
-            {
-                log.Error(
-                    "ForEachBlockEngineTask.Host_WorkflowFinished failed to unsubscribe events in catch.",
-                    unsubscribeEx
-                );
-            }
             log.Error(
                 "ForEachBlockEngineTask.Host_WorkflowFinished failed. "
                     + BuildHostWorkflowFinishedStateDump(Engine, call, block, e),
@@ -524,11 +509,133 @@ public class ForEachBlockEngineTask : BlockEngineTask
             + iteratorState;
     }
 
+    private static string BuildExceptionLogContext(Exception exception)
+    {
+        if (exception == null)
+        {
+            return string.Empty;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append(", ExceptionType=").Append(exception.GetType().FullName ?? "<null>");
+        builder.Append(", ExceptionMessage=").Append(exception.Message ?? "<null>");
+        builder.Append(", ExceptionSource=").Append(exception.Source ?? "<null>");
+        builder
+            .Append(", ExceptionTargetSite=")
+            .Append(exception.TargetSite?.DeclaringType?.FullName ?? "<null>")
+            .Append(".")
+            .Append(exception.TargetSite?.Name ?? "<null>");
+        builder.Append(", ExceptionHResult=").Append(exception.HResult);
+        builder.Append(", ExceptionStackTrace=").Append(SanitizeForLog(exception.StackTrace));
+
+        if (exception is SqlException sqlException)
+        {
+            builder.Append(", SqlErrorNumber=").Append(sqlException.Number);
+            builder.Append(", SqlErrorState=").Append(sqlException.State);
+            builder.Append(", SqlErrorClass=").Append(sqlException.Class);
+            builder.Append(", SqlProcedure=").Append(sqlException.Procedure ?? "<null>");
+            builder.Append(", SqlLineNumber=").Append(sqlException.LineNumber);
+            builder.Append(", SqlServer=").Append(sqlException.Server ?? "<null>");
+            builder.Append(", SqlClientConnectionId=").Append(sqlException.ClientConnectionId);
+        }
+
+        if (exception.Data != null && exception.Data.Count > 0)
+        {
+            builder.Append(", ExceptionData=");
+            bool first = true;
+            foreach (DictionaryEntry entry in exception.Data)
+            {
+                if (!first)
+                {
+                    builder.Append("; ");
+                }
+                builder
+                    .Append("[")
+                    .Append(entry.Key ?? "<null>")
+                    .Append("=")
+                    .Append(entry.Value ?? "<null>")
+                    .Append("]");
+                first = false;
+            }
+        }
+
+        if (exception is AggregateException aggregateException)
+        {
+            builder
+                .Append(", AggregateInnerExceptionsCount=")
+                .Append(aggregateException.InnerExceptions.Count);
+        }
+
+        Exception current = exception.InnerException;
+        int depth = 0;
+        while (current != null)
+        {
+            depth++;
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("Type=")
+                .Append(current.GetType().FullName ?? "<null>");
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("Message=")
+                .Append(current.Message ?? "<null>");
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("Source=")
+                .Append(current.Source ?? "<null>");
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("TargetSite=")
+                .Append(current.TargetSite?.DeclaringType?.FullName ?? "<null>")
+                .Append(".")
+                .Append(current.TargetSite?.Name ?? "<null>");
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("HResult=")
+                .Append(current.HResult);
+            builder
+                .Append(", InnerException")
+                .Append(depth)
+                .Append("StackTrace=")
+                .Append(SanitizeForLog(current.StackTrace));
+            current = current.InnerException;
+        }
+
+        return builder.ToString();
+    }
+
+    private static string SanitizeForLog(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return "<null>";
+        }
+
+        return value.Replace("\r", "\\r").Replace("\n", "\\n");
+    }
+
     private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
     {
-        if (e == null || e.Engine == null || _call == null)
+        if (e == null || e.Engine == null)
         {
-            UnsubscribeEvents();
+            return;
+        }
+        if (_call == null)
+        {
+            log.Error(
+                "ForEachBlockEngineTask.Host_WorkflowMessage encountered null reference candidate. "
+                    + "EventEngineIsNull="
+                    + (e.Engine == null)
+                    + ", CurrentStep="
+                    + (this.Step?.GetType().FullName ?? "<null>")
+                    + ", EventWorkflowUniqueId="
+                    + e.Engine.WorkflowUniqueId
+            );
             return;
         }
         if (e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
