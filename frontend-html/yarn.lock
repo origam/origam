@@ -3068,15 +3068,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/classnames@npm:^2.3.4":
-  version: 2.3.4
-  resolution: "@types/classnames@npm:2.3.4"
-  dependencies:
-    classnames: "npm:*"
-  checksum: 10c0/25de08662e5c68314d23527671a29c2125e399c015d67ffd4b304aa3330f1aacd452bcc74964e04eaad35999c4d474ded4fbb8c4c920026e43783f76560d6b0c
-  languageName: node
-  linkType: hard
-
 "@types/draft-js@npm:*":
   version: 0.11.15
   resolution: "@types/draft-js@npm:0.11.15"
@@ -3285,15 +3276,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-inlinesvg@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@types/react-inlinesvg@npm:1.0.0"
-  dependencies:
-    react-inlinesvg: "npm:*"
-  checksum: 10c0/e0e67c2885bf62597e8f4c36f58ec10763a8d078d45fb99ca69d2163dee26140bc31bbdee2570659d0cde358d8b46fb3d334af521c60e49d13cfc068d5ff3004
-  languageName: node
-  linkType: hard
-
 "@types/react-measure@npm:^2.0.12":
   version: 2.0.12
   resolution: "@types/react-measure@npm:2.0.12"
@@ -3348,15 +3330,6 @@ __metadata:
   version: 2.0.3
   resolution: "@types/stack-utils@npm:2.0.3"
   checksum: 10c0/1f4658385ae936330581bcb8aa3a066df03867d90281cdf89cc356d404bd6579be0f11902304e1f775d92df22c6dd761d4451c804b0a4fba973e06211e9bd77c
-  languageName: node
-  linkType: hard
-
-"@types/string-strip-html@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "@types/string-strip-html@npm:5.0.1"
-  dependencies:
-    string-strip-html: "npm:*"
-  checksum: 10c0/a604b34d32e674d2e64c41fc6bc3a80ebcbf37d9921b32d3d37b0785d5911a09527be588c2e3404e86a29b41ac5584d65ec600cf068a571b47b319f7fc156c35
   languageName: node
   linkType: hard
 
@@ -4059,7 +4032,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:*, classnames@npm:^2.2.6, classnames@npm:^2.5.1":
+"classnames@npm:^2.2.6, classnames@npm:^2.5.1":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: 10c0/afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69
@@ -4102,15 +4075,6 @@ __metadata:
   version: 4.6.0
   resolution: "co@npm:4.6.0"
   checksum: 10c0/c0e85ea0ca8bf0a50cbdca82efc5af0301240ca88ebe3644a6ffb8ffe911f34d40f8fbcf8f1d52c5ddd66706abd4d3bfcd64259f1e8e2371d4f47573b0dc8c28
-  languageName: node
-  linkType: hard
-
-"codsen-utils@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "codsen-utils@npm:1.6.4"
-  dependencies:
-    rfdc: "npm:^1.3.1"
-  checksum: 10c0/c2ca709b2c7cade614f9266df8542ecb770cad89dfcf4f17637134d4a8084554f97fbc05bce65b314f5199dfa9fba2f28cf9b704abb4e7525d4d57bec8c6b29a
   languageName: node
   linkType: hard
 
@@ -5233,13 +5197,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-entities@npm:^2.5.2":
-  version: 2.5.2
-  resolution: "html-entities@npm:2.5.2"
-  checksum: 10c0/f20ffb4326606245c439c231de40a7c560607f639bf40ffbfb36b4c70729fd95d7964209045f1a4e62fe17f2364cef3d6e49b02ea09016f207fde51c2211e481
-  languageName: node
-  linkType: hard
-
 "html-entities@npm:^2.6.0":
   version: 2.6.0
   resolution: "html-entities@npm:2.6.0"
@@ -6342,7 +6299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21, lodash-es@npm:^4.17.22":
+"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.22":
   version: 4.17.23
   resolution: "lodash-es@npm:4.17.23"
   checksum: 10c0/3150fb6660c14c7a6b5f23bd11597d884b140c0e862a17fdb415aaa5ef7741523182904a6b7929f04e5f60a11edb5a79499eb448734381c99ffb3c4734beeddd
@@ -7239,16 +7196,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ranges-apply@npm:^7.0.16":
-  version: 7.0.16
-  resolution: "ranges-apply@npm:7.0.16"
-  dependencies:
-    ranges-merge: "npm:^9.0.15"
-    tiny-invariant: "npm:^1.3.3"
-  checksum: 10c0/0d8796f6b72170c6c08ecf57b2df8a12ab645416176bea0d0dc3b7cc2aa68142843f25bbc5e256d3569b2e74648e5f0821f88f732a77a5d3483385426428eaa2
-  languageName: node
-  linkType: hard
-
 "ranges-apply@npm:^7.1.3":
   version: 7.1.3
   resolution: "ranges-apply@npm:7.1.3"
@@ -7256,16 +7203,6 @@ __metadata:
     ranges-merge: "npm:^9.1.3"
     tiny-invariant: "npm:^1.3.3"
   checksum: 10c0/6a26b60eaddd57b314299de713327ee0ee2beffdc6feb04349f9bdf4f15eecae3573645c270690e36d2ec6670f1524dfe46e322bccb7a62ae278f8af0b0d2179
-  languageName: node
-  linkType: hard
-
-"ranges-merge@npm:^9.0.15":
-  version: 9.0.15
-  resolution: "ranges-merge@npm:9.0.15"
-  dependencies:
-    ranges-push: "npm:^7.0.15"
-    ranges-sort: "npm:^6.0.11"
-  checksum: 10c0/2963c3dcd149cd7c684d1f3ec190f4850fd2d34b7e0611263a87712c45dc92e136fd58c8be5e9136c3c4513a90f22de524d0b9da99bb15354d9f480c5f6409f5
   languageName: node
   linkType: hard
 
@@ -7279,18 +7216,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ranges-push@npm:^7.0.15":
-  version: 7.0.15
-  resolution: "ranges-push@npm:7.0.15"
-  dependencies:
-    codsen-utils: "npm:^1.6.4"
-    ranges-sort: "npm:^6.0.11"
-    string-collapse-leading-whitespace: "npm:^7.0.7"
-    string-trim-spaces-only: "npm:^5.0.10"
-  checksum: 10c0/b83e514243bc21bfd3b80f6757faf9b0850933b8f7ae9130d2bb09dedfc3d57a8721163af57b6d904b402f0f9167cf34f67e36d56b1222ccebb7b20621e277be
-  languageName: node
-  linkType: hard
-
 "ranges-push@npm:^7.1.3":
   version: 7.1.3
   resolution: "ranges-push@npm:7.1.3"
@@ -7300,13 +7225,6 @@ __metadata:
     string-collapse-leading-whitespace: "npm:^7.1.3"
     string-trim-spaces-only: "npm:^5.1.3"
   checksum: 10c0/09b3c3b1a452d317d707bfb0ab733af92af2158cbfaede588fdc40ebbd794266aad3ed35a92c58d21ee96202926577ced5cc7441349dbad201c11b55fc814d48
-  languageName: node
-  linkType: hard
-
-"ranges-sort@npm:^6.0.11":
-  version: 6.0.11
-  resolution: "ranges-sort@npm:6.0.11"
-  checksum: 10c0/fb4f80a29a49e1bbad5cc5ce2c6371f807c82bebd1ca4f8da01b6fd5131aa5cc19ae333b468d5f1c7a3601da150770e1a2995e7036a3d79a4dbace015d4676fd
   languageName: node
   linkType: hard
 
@@ -7383,15 +7301,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-from-dom@npm:^0.7.3":
-  version: 0.7.3
-  resolution: "react-from-dom@npm:0.7.3"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/8893cb3c412d89a554b3ef1f6810f6b6afe2c475438bc45b941508ed9b033414a4378e2915978a5f663a4c1fbc4f78376a7fee9e15496f7785f9466eb9c01663
-  languageName: node
-  linkType: hard
-
 "react-from-dom@npm:^0.7.5":
   version: 0.7.5
   resolution: "react-from-dom@npm:0.7.5"
@@ -7410,17 +7319,6 @@ __metadata:
   peerDependencies:
     react: ^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0
   checksum: 10c0/8704097b6ca2b08a943e55e66493fab21d523362c8ea754ef4c7a351b4625b684d7ed1e9155f97d033be78783dacdd88bb83e2766cfc3d462c311551552b8ad5
-  languageName: node
-  linkType: hard
-
-"react-inlinesvg@npm:*":
-  version: 4.1.4
-  resolution: "react-inlinesvg@npm:4.1.4"
-  dependencies:
-    react-from-dom: "npm:^0.7.3"
-  peerDependencies:
-    react: 16.8 - 18
-  checksum: 10c0/adf8a19a78c7f286f4734aed060da386ae644f5ca5ec739c62cdf0a60b3130ac455c0a574fa652d9911212eb581ea58b167adfc0b6fd7284ed9db40a9ee4f74e
   languageName: node
   linkType: hard
 
@@ -7522,7 +7420,6 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.2"
     "@testing-library/user-event": "npm:^14.6.1"
-    "@types/classnames": "npm:^2.3.4"
     "@types/jest": "npm:^30.0.0"
     "@types/js-cookie": "npm:^3.0.6"
     "@types/leaflet": "npm:1.7.11"
@@ -7536,10 +7433,8 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     "@types/react-draft-wysiwyg": "npm:^1.13.9"
     "@types/react-highlight-words": "npm:^0.20.1"
-    "@types/react-inlinesvg": "npm:^1.0.0"
     "@types/react-measure": "npm:^2.0.12"
     "@types/react-virtualized": "npm:^9.22.3"
-    "@types/string-strip-html": "npm:^5.0.0"
     "@types/uuid": "npm:^11.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.1.4"
     "@vitejs/plugin-react": "npm:^5.1.4"
@@ -7710,13 +7605,6 @@ __metadata:
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
   checksum: 10c0/59933e8501727ba13ad73ef4a04d5280b3717fd650408460c987392efe9d7be2040778ed8ebe933c5cbd63da3dcc37919c141ef8af0a54a6e4fca5a2af177bfe
-  languageName: node
-  linkType: hard
-
-"rfdc@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "rfdc@npm:1.3.1"
-  checksum: 10c0/69f65e3ed30970f8055fac9fbbef9ce578800ca19554eab1dcbffe73a4b8aef536bc4248313889cf25e3b4e38b212c721eabe30856575bf2b2bc3d90f8ba93ef
   languageName: node
   linkType: hard
 
@@ -8123,27 +8011,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-collapse-leading-whitespace@npm:^7.0.7":
-  version: 7.0.7
-  resolution: "string-collapse-leading-whitespace@npm:7.0.7"
-  checksum: 10c0/f54c5a650c2d64b9c6d1b8a48366620f242958fbc289f52c94e18d80b7cf63476baa7b03a8d4f8a4e6bffb0916867c9d0cbbcbb91344f69d4b9073f941dba24c
-  languageName: node
-  linkType: hard
-
 "string-collapse-leading-whitespace@npm:^7.1.3":
   version: 7.1.3
   resolution: "string-collapse-leading-whitespace@npm:7.1.3"
   checksum: 10c0/c72cb7f72b78db2b452b01818c3d572b4ae3d0db3f3ece6efb63d35c668a596288c7aaed03ea4af1dbc69ce2daa2e3e5309266f09ba7b87cb3faf33c222b3ff8
-  languageName: node
-  linkType: hard
-
-"string-left-right@npm:^6.0.17":
-  version: 6.0.17
-  resolution: "string-left-right@npm:6.0.17"
-  dependencies:
-    codsen-utils: "npm:^1.6.4"
-    rfdc: "npm:^1.3.1"
-  checksum: 10c0/d07830f8027c8bd518fb82ed58bd5fbb2c8acc3d8c8c61b73488ca9126f86e21acfed999e533cf84533fcd7b9f770cb002f7306333380d5deb9a77e2d85bf463
   languageName: node
   linkType: hard
 
@@ -8167,21 +8038,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-strip-html@npm:*":
-  version: 13.4.8
-  resolution: "string-strip-html@npm:13.4.8"
-  dependencies:
-    "@types/lodash-es": "npm:^4.17.12"
-    codsen-utils: "npm:^1.6.4"
-    html-entities: "npm:^2.5.2"
-    lodash-es: "npm:^4.17.21"
-    ranges-apply: "npm:^7.0.16"
-    ranges-push: "npm:^7.0.15"
-    string-left-right: "npm:^6.0.17"
-  checksum: 10c0/e93f104ce7a86ce5124fbfbd10374728a9488b55c8f16f22fb91800df39eb03bb789eaf41d32c5d01b7f5cea5a3f3d1398bb58cb73be3b6083dec0c6852c328f
-  languageName: node
-  linkType: hard
-
 "string-strip-html@npm:^13.5.3":
   version: 13.5.3
   resolution: "string-strip-html@npm:13.5.3"
@@ -8194,13 +8050,6 @@ __metadata:
     ranges-push: "npm:^7.1.3"
     string-left-right: "npm:^6.1.3"
   checksum: 10c0/5f9864fdf9f97a230ccc11e6704d6939fa033c92118ef9be0651b1abe28c0eb9a86053f8747fa743677f5d103286c6e867d21405087bd8c12e1e656501492835
-  languageName: node
-  linkType: hard
-
-"string-trim-spaces-only@npm:^5.0.10":
-  version: 5.0.10
-  resolution: "string-trim-spaces-only@npm:5.0.10"
-  checksum: 10c0/23a1480ab58acd3b5bec20cb5a8a01ab0592304c068cf8438dd45a66633b04feec5099737168fbe1730a504fb40be9d564a35938bef1db325a9c0a20fe0e9ddb
   languageName: node
   linkType: hard
 
