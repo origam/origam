@@ -37,7 +37,7 @@ export default defineConfig({
 						{ legacy: true }
 					],
 					[
-						"@babel/plugin-proposal-class-properties",
+						"@babel/plugin-transform-class-properties",
 						{ loose: true },
 					],
 				],
