@@ -95,6 +95,7 @@
   "resolutions": {
     "glob@^10.2.2": "^10.5.0",
     "immutable@~3.7.4": "3.8.3",
+    "lodash": "^4.17.23",
     "minimatch": "^9.0.7",
     "node-gyp": "^11.4.2",
     "tar": "^7.5.4",
