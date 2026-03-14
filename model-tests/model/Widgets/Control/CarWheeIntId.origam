@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="15f0721e-1fc6-47af-a0f7-9db9ce94c2ab"
+    ci:isComplex="true"
+    asi:name="CarWheeIntId"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="CarWheeIntId#CarWheeIntId/ffc49b24-e80d-4381-a7f6-cdf695a719fe"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="AsPanel#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="157be8a6-b660-4fd2-ba42-54bea9c2c0c1" />
+  </ci:Control>
+</x:file>

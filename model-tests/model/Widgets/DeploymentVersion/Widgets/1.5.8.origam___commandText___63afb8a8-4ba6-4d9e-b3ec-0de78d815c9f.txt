@@ -1,0 +1,2 @@
+﻿INSERT INTO CarTestId (IdInt, RecordCreated, RecordUpdatedBy, RecordCreatedBy, RecordUpdated) VALUES (1, null, null, null, null)
+INSERT INTO CarWheeIntId (refCarldInt, IdInt) VALUES (1, 11)

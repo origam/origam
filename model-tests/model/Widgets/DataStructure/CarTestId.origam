@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="e1d75649-117d-40a2-bd5c-410e4c4eb070"
+    ds1:localized="false"
+    asi:name="CarTestId">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="CarTestId#CarTestId/2ceb4e38-e119-40b4-addb-027eb9bdab8d"
+      x:id="cea2da93-e58c-48e5-8b0d-2c7c1c549a86"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="CarTestId"
+      dse:relationType="Normal"
+      dse:serializeAsSingleJsonObject="false"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="CarWheeIntId#CarTestId/CarWheeIntId/1753c24a-201a-4a11-ace7-eff7a5525802"
+        x:id="17ae141f-b831-482b-8b87-88c9bd77c817"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="CarWheeIntId"
+        dse:relationType="Normal"
+        dse:serializeAsSingleJsonObject="false"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+  </ds1:DataStructure>
+</x:file>
