@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
@@ -28,7 +27,7 @@ const useBasicSsl = !localHttpsCertificate;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
+	plugins: [
 		react({
 			babel: {
 				plugins: [
@@ -43,10 +42,10 @@ export default defineConfig({
 				],
 			},
 		}),
-		tsconfigPaths(),
     ...(useBasicSsl ? [basicSsl()] : []),
 	],
 	resolve: {
+		tsconfigPaths: true,
 		alias: [
 			{
 				// this is required for the SCSS modules
