@@ -6527,12 +6527,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client-ts@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "oidc-client-ts@npm:3.4.1"
+"oidc-client-ts@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "oidc-client-ts@npm:3.5.0"
   dependencies:
     jwt-decode: "npm:^4.0.0"
-  checksum: 10c0/cf22e9bdb032daa33213e70c6c0dce374aa7cfaa82fca7c82205ace67d7efc2c59200d02ac4c57bf436afd1c0e46dc99e0867ec6e1958e943cbc4e1389131fb7
+  checksum: 10c0/93cbb62adbfeee4bf705199a94e5790217f211b85dd988827e555481d4e605a5263292b740f29765ac01528b99486f57bbd96679ffca53d7ef76d8f7f7c9f979
   languageName: node
   linkType: hard
 
@@ -7137,7 +7137,7 @@ __metadata:
     mobx-react: "npm:6.3.1"
     moment: "npm:^2.30.1"
     numeral: "npm:^2.0.6"
-    oidc-client-ts: "npm:^3.4.1"
+    oidc-client-ts: "npm:^3.5.0"
     patch-package: "npm:^8.0.1"
     postinstall-postinstall: "npm:^2.1.0"
     react: "npm:^17.0.2"
