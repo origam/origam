@@ -21,7 +21,7 @@ import { TypeSymbol } from "dic/Container";
 import { flow, observable } from "mobx";
 import { getIdent, IIId } from "utils/common";
 import { IPerspective, IPerspectiveContrib } from "../Perspective";
-import bind from "bind-decorator";
+import { bind } from "bind-decorator";
 import { IViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 

@@ -78,12 +78,14 @@ export default defineConfig({
     }
 	},
 	optimizeDeps: {
-		esbuildOptions: {
-			// Node.js global to browser globalThis
-			define: {
-				global: 'globalThis'
+		rolldownOptions: {
+			transform: {
+				// Node.js global to browser globalThis
+				define: {
+					global: 'globalThis'
+				},
 			},
-			// Enable esbuild polyfill plugins
+			// Keep the existing dependency polyfills during dep optimization.
 			plugins: [
 				NodeGlobalsPolyfillPlugin({
 					process: true,

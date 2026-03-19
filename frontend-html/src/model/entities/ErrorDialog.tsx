@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import bind from "bind-decorator";
+import { bind } from "bind-decorator";
 import _ from "lodash";
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
