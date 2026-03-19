@@ -36,3 +36,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     cursor: not-allowed;
   }
 }
+
+div.centered {
+  justify-content: center;
+  margin-top: 0;
+
+  input {
+    height: 12px;
+    width: 12px;
+  }
+}
