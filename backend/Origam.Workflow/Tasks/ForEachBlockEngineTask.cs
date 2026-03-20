@@ -273,7 +273,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
             }
         }
     }
-    
+
     private void UnsubscribeEvents()
     {
         if (this.Engine?.Host != null)
