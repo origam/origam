@@ -70,8 +70,8 @@ public class ForEachBlockEngineTask : BlockEngineTask
         {
             log.Info("ForEach Block started.");
         }
-        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
         XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
         OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable(), Engine.TransactionId);
@@ -79,6 +79,7 @@ public class ForEachBlockEngineTask : BlockEngineTask
         expr.SetContext(ctx);
         // code might fail and this handler doesn't get cleared
         // and will interfer with other workflow invocations
+        this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
         this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
         _iter = navigator.Select(expr);
         ResumeIteration();
@@ -87,7 +88,6 @@ public class ForEachBlockEngineTask : BlockEngineTask
     private void ResumeIteration()
     {
         ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-        _call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
         _call.IterationTotal = _iter.Count;
         for (int currentPosition = 1; currentPosition <= _call.IterationTotal; currentPosition++)
         {
