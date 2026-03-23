@@ -30,10 +30,12 @@ export class TabbedViewHandle extends React.Component<{
   isActive?: boolean;
   hasCloseBtn?: boolean;
   isDirty?: boolean;
+  onContextMenu?(event: any): void;
   onClick?(event: any): void;
   onCloseClick?(event: any): void;
   onCloseMouseDown?(event: any): void;
   isInitializing?: boolean;
+  refDom?: any;
 }> {
 
   renderCloseButton(){
@@ -57,7 +59,9 @@ export class TabbedViewHandle extends React.Component<{
   render() {
     return (
       <div
+        ref={this.props.refDom}
         onClick={this.props.onClick}
+        onContextMenu={this.props.onContextMenu}
         className={cx(S.root, {isActive: this.props.isActive, isDirty: this.props.isDirty})}
         title={this.props.title}
         id={this.props.id}

@@ -28,6 +28,7 @@ import { IQuestionDeleteDataAnswer } from "model/entities/FormScreenLifecycle/qu
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { T } from "utils/translation";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 export function onScreenTabCloseMouseDown(ctx: any) {
   return function (event: any) {
@@ -73,5 +74,21 @@ export function onScreenTabCloseClick(ctx: any) {
     } finally {
       closingScreens.delete(openedScreen);
     }
+  });
+}
+
+export function onScreenTabCloseAllUnchangedClick(ctx: any) {
+  return flow(function*onScreenTabCloseAllUnchangedClick() {
+    const openedScreen = getOpenedScreen(ctx);
+    const lifecycle = getWorkbenchLifecycle(ctx);
+    yield*lifecycle.closeAllUnchanged(openedScreen);
+  });
+}
+
+export function onScreenTabCloseAllUnchangedButThisClick(ctx: any) {
+  return flow(function*onScreenTabCloseAllUnchangedButThisClick() {
+    const openedScreen = getOpenedScreen(ctx);
+    const lifecycle = getWorkbenchLifecycle(ctx);
+    yield*lifecycle.closeAllUnchanged(openedScreen, true);
   });
 }

@@ -59,6 +59,7 @@ import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 import { EventHandler } from "utils/EventHandler";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { ClosedSessionTracker } from "./ClosedSessionTracker";
+import { closeForm } from "model/actions/closeForm";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -388,6 +389,23 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     openedScreen.isClosed = true;
     openedScreen.content.formScreen?.formScreenLifecycle?.onClose?.();
+  }
+
+  *closeAllUnchanged(clickedScreen: IOpenedScreen, keepClickedScreen?: boolean): Generator {
+    const openedScreens = getOpenedScreens(this);
+    const tabsToClose = openedScreens.items.filter((item) => {
+      if (item.isDialog) {
+        return false;
+      }
+      if (keepClickedScreen && item === clickedScreen) {
+        return false;
+      }
+      return !getIsFormScreenDirty(item);
+    });
+
+    for (const tab of tabsToClose) {
+      yield*closeForm(tab)();
+    }
   }
 
   *destroyUI(openedScreen: IOpenedScreen) {
