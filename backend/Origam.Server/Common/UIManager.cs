@@ -312,7 +312,11 @@ public class UIManager
             UIPanelConfig panelConfig = GetPanelConfig(workflowId, profile, data, panel, element);
             result.PanelConfigurations.Add(panelConfig);
             // default sort
-            if (sortSet != null && element.AttributeIsFalseOrMissing("IsHeadless"))
+            if (
+                sortSet != null
+                && element.AttributeIsFalseOrMissing("IsHeadless")
+                && element.AttributeIsFalseOrMissing("DisableActionButtons")
+            )
             {
                 List<DataStructureSortSetItem> sorts = new List<DataStructureSortSetItem>();
                 foreach (
