@@ -65,14 +65,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .label {
+  flex: 1 1 auto;
+  min-width: 0;
   border-bottom: 2px solid transparent;
   //margin: 0 5px 0 5px;
- white-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .closeBtn {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -94,6 +97,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .spinner {
+  flex: 0 0 auto;
   cursor: not-allowed;
   margin: 0 0 0 0.5em;
   width: 16px;
