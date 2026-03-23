@@ -28,6 +28,8 @@
   "copyright_attributions": "Copyright-Vermerk",
   "log": "Log",
   "close": "Schliessen",
+  "close_all_unchanged": "Alle unveränderten schliessen",
+  "close_all_unchanged_but_this": "Alle unveränderten ausser diesem schliessen",
   "do_you_wish_to_save": "Möchten Sie die Änderungen in {0} speichern?",
   "save": "Speichern",
   "close_without_saving": "Nicht speichern",

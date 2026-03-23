@@ -28,6 +28,8 @@
   "copyright_attributions": "Attribution des droits d'auteur",
   "log": "Log",
   "close": "fermer",
+  "close_all_unchanged": "Fermer tous les onglets inchangés",
+  "close_all_unchanged_but_this": "Fermer tous les onglets inchangés sauf celui-ci",
   "do_you_wish_to_save": "Do you wish to save changes in {0}?",
   "save": "Save",
   "close_without_saving": "Don't Save",
