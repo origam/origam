@@ -60,6 +60,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The root section with the root entity can’t have action buttons disabled..
+        /// </summary>
+        public static string ActionButtonsCannotBeDisabled {
+            get {
+                return ResourceManager.GetString("ActionButtonsCannotBeDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File is not available..
         /// </summary>
         public static string BlobFileNotAvailable {

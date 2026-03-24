@@ -348,4 +348,7 @@
   <data name="ErrorDetailsInLog" xml:space="preserve">
     <value>An error has occured. There may be some details in the log file.</value>
   </data>
+  <data name="ActionButtonsCannotBeDisabled" xml:space="preserve">
+    <value>The root section with the root entity can’t have action buttons disabled.</value>
+  </data>
 </root>
