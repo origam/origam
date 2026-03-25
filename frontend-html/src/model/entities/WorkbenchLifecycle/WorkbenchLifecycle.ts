@@ -394,7 +394,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *closeAllUnchanged(clickedScreen: IOpenedScreen, keepClickedScreen?: boolean): Generator {
     const openedScreens = getOpenedScreens(this);
     const tabsToClose = openedScreens.items.filter((item) => {
-      if (item.isDialog) {
+      const isWorkflow = item.content.formScreen?.workflowTaskId;
+      if (item.isDialog || isWorkflow) {
         return false;
       }
       if (keepClickedScreen && item === clickedScreen) {
