@@ -2578,12 +2578,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-basic-ssl@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@vitejs/plugin-basic-ssl@npm:2.2.0"
+"@vitejs/plugin-basic-ssl@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@vitejs/plugin-basic-ssl@npm:2.3.0"
   peerDependencies:
     vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-  checksum: 10c0/d3082fc3d08499b6b48870a6421c29e51a8c322544316c19eaa10c9eb3ecf1982ec5ddbc4bde82f3807d2029b8b648ed98c920895cc32cf89d2a434c0e0d28dd
+  checksum: 10c0/754ebe29a61ac694e665477187f425b7c3b41e30af8d392613250bf65f9b2741e7f5a6ec00a3f88f1a14bfda96e93c6b5e0f75e86357737bc4e92c8dc455c1c0
   languageName: node
   linkType: hard
 
@@ -2958,7 +2958,7 @@ __metadata:
     "@types/react-router-dom": "npm:^5.3.2"
     "@types/react-virtualized": "npm:^9.22.2"
     "@types/uuid": "npm:^11.0.0"
-    "@vitejs/plugin-basic-ssl": "npm:^2.2.0"
+    "@vitejs/plugin-basic-ssl": "npm:^2.3.0"
     "@vitejs/plugin-react": "npm:^6.0.1"
     "@xstate/inspect": "npm:^0.8.0"
     animated-scroll-to: "npm:^2.3.2"
