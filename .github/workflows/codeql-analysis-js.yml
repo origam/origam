@@ -9,7 +9,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       actions: read
       contents: read
@@ -22,7 +22,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -30,8 +30,51 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.14.0'
+        cache: yarn
+        cache-dependency-path: |
+          frontend-html/yarn.lock
+          chat-html/yarn.lock
+          architect-html/yarn.lock
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Prepare Yarn
+      run: corepack prepare yarn@4.12.0 --activate
+
+    - name: Log versions
+      run: |
+        node --version
+        yarn --version
+        node -p "process.versions"
+
+    - name: Build frontend-html
+      working-directory: frontend-html
+      env:
+        CI: true
+      run: |
+        yarn install --immutable --check-cache
+        yarn build --check-cache
+
+    - name: Build chat-html
+      working-directory: chat-html
+      env:
+        CI: true
+      run: |
+        yarn install --immutable --check-cache
+        yarn build --check-cache
+
+    - name: Build architect-html
+      working-directory: architect-html
+      env:
+        CI: true
+      run: |
+        yarn install --immutable --check-cache
+        yarn build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

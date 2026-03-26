@@ -19,28 +19,31 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
-        node-version: [ 22.x ]
+        node-version: [ 22.14.0 ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: frontend-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Prepare Yarn
-        run: corepack prepare yarn@stable --activate
+        run: corepack prepare yarn@4.12.0 --activate
         shell: bash
 
       - name: Log versions
         run: |
           yarn --version
           node --version
+          node -p "process.versions"
         shell: bash
 
       - name: Build Frontend
@@ -80,28 +83,31 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp' ]
-        node-version: [ 22.x ]
+        node-version: [ 22.14.0 ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: chat-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Prepare Yarn
-        run: corepack prepare yarn@stable --activate
+        run: corepack prepare yarn@4.12.0 --activate
         shell: bash
 
       - name: Log versions
         run: |
           yarn --version
           node --version
+          node -p "process.versions"
         shell: bash
 
       - name: Build Chat
@@ -124,28 +130,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 22.x ]
+        node-version: [ 22.14.0 ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: architect-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Prepare Yarn
-        run: corepack prepare yarn@stable --activate
+        run: corepack prepare yarn@4.12.0 --activate
         shell: bash
 
       - name: Log versions
         run: |
           yarn --version
           node --version
+          node -p "process.versions"
         shell: bash
 
       - name: Build Html Architect
@@ -172,7 +181,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
@@ -201,7 +210,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1
@@ -238,7 +247,7 @@ jobs:
   build-server-image:
     name: build-server-image
     needs: [ build-frontend, build-server ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       actions: read
       contents: read
@@ -246,7 +255,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download server_bin artifact (for server build context)
         uses: actions/download-artifact@v4
@@ -286,7 +295,7 @@ jobs:
   integration-tests-mssql:
     needs: [ build-frontend, build-server, build-server-image ]
     name: integration-tests-mssql
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       actions: read
@@ -301,7 +310,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
@@ -356,7 +365,7 @@ jobs:
   integration-tests-postgres:
     needs: [ build-frontend, build-server, build-server-image ]
     name: integration-tests-pgsql
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       actions: read
@@ -371,7 +380,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download workflow integration tests artifact
         uses: actions/download-artifact@v4
@@ -425,7 +434,7 @@ jobs:
 
   cleanup-artifacts:
     name: cleanup-artifacts
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - integration-tests-mssql
       - integration-tests-postgres

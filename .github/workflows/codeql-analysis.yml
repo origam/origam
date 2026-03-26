@@ -22,7 +22,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Run license header check
       shell: pwsh
@@ -35,6 +35,11 @@ jobs:
 
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.401'
 
     - name: Build Architect
       run: |
