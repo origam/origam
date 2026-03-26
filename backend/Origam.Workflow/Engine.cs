@@ -565,7 +565,11 @@ public class WorkflowEngine : IDisposable
     private void HandleStepException(IWorkflowStep step, Exception exception)
     {
         SetStepStatus(step, WorkflowStepResult.Failure);
-        if (log.IsErrorEnabled)
+        if (exception is RuleException && log.IsDebugEnabled)
+        {
+            log.Debug($"{step?.GetType().Name} {step?.Path} failed.");
+        }
+        else if (log.IsErrorEnabled)
         {
             log.Error($"{step?.GetType().Name} {step?.Path} failed.");
         }

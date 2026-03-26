@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using log4net;
 using Microsoft.Extensions.Logging;
+using Origam.Service.Core;
 
 namespace Origam.Extensions;
 
@@ -51,8 +52,11 @@ public static class LogExtensions
         {
             return;
         }
-
-        if (log.IsErrorEnabled)
+        if (ex is RuleException && log.IsDebugEnabled)
+        {
+            log.Debug(message, ex);
+        }
+        else if (log.IsErrorEnabled)
         {
             log.Error(message, ex);
         }
