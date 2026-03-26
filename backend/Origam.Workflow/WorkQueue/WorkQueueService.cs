@@ -1843,21 +1843,23 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         string transactionId = Guid.NewGuid().ToString();
         try
         {
-            foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.GetWorkQueueCommandRows())
+            foreach (WorkQueueData.WorkQueueCommandRow cmd in queue
+                         .GetWorkQueueCommandRows())
             {
                 try
                 {
-                    if (IsAutoProcessed(cmd, queue, queueEntryRow, transactionId))
+                    if (IsAutoProcessed(cmd, queue, queueEntryRow,
+                            transactionId))
                     {
                         if (log.IsInfoEnabled)
                         {
                             log.Info(
                                 "Auto processing work queue item. Id: "
-                                    + itemId
-                                    + ", Queue: "
-                                    + queue.Name
-                                    + ", Command: "
-                                    + cmd?.Text
+                                + itemId
+                                + ", Queue: "
+                                + queue.Name
+                                + ", Command: "
+                                + cmd?.Text
                             );
                         }
                         string param1 = null;
@@ -1900,16 +1902,17 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         {
                             log.Info(
                                 "Finished auto processing work queue item. Id: "
-                                    + itemId
-                                    + ", Queue: "
-                                    + queue.Name
-                                    + ", Command: "
-                                    + cmd.Text
+                                + itemId
+                                + ", Queue: "
+                                + queue.Name
+                                + ", Command: "
+                                + cmd.Text
                             );
                         }
                         if (
                             cmd.refWorkQueueCommandTypeId
-                            == (Guid)ps.GetParameterValue("WorkQueueCommandType_Remove")
+                            == (Guid)ps.GetParameterValue(
+                                "WorkQueueCommandType_Remove")
                         )
                         {
                             break;
@@ -1938,16 +1941,22 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             // unlock the queue item
             UnlockQueueItems(wqc, queueEntryRow.Table);
         }
-        catch (Exception ex)
+        // Catch the command exception. Transaction is already rolled back,
+        // so we continue to another queue item.
+        // RuleException is logged on the debug level, others on the error level
+        catch (RuleException ex) when (log.IsDebugEnabled)
         {
-            // Catch the command exception. Transaction is already rolled back, so we continue to another queue item.
-            if (log.IsFatalEnabled)
-            {
-                log.Fatal(
-                    "Queue item processing failed. Id: " + itemId + ", Queue: " + queue?.Name,
-                    ex
-                );
-            }
+            log.Debug(
+                $"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}",
+                ex
+            );
+        }
+        catch (Exception ex) when (log.IsErrorEnabled)
+        {
+            log.Error(
+                $"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}",
+                ex
+            );
         }
         finally
         {
