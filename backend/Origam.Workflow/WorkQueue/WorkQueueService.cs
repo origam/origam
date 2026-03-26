@@ -475,7 +475,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     if (log.IsDebugEnabled)
                     {
                         log.Debug(
-                            $"Can't find any sender for notification channel `{recipientRow.refOrigamNotificationChannelTypeId}'"
+                            $"Can't find any sender for notification channel '{recipientRow.refOrigamNotificationChannelTypeId}'"
                         );
                     }
                     // continue to process the next recipient definition row
@@ -777,7 +777,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         )
         {
             throw new OrigamException(
-                $"Programming Error: Can't find a filterset called `GetById' in DataStructure `{workQueueClass.WorkQueueStructure.Name}'. Please add the filterset to the DataStructure."
+                $"Programming Error: Can't find a filterset called 'GetById' in DataStructure '{workQueueClass.WorkQueueStructure.Name}'. Please add the filterset to the DataStructure."
             );
         }
         // fetch entry by Id
@@ -846,7 +846,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         if (log.IsDebugEnabled)
         {
-            log.Debug($"Removed Work Queue Entry `{queueEntryId}'  from Queue: {queueRow.Name}");
+            log.Debug($"Removed Work Queue Entry '{queueEntryId}'  from Queue: {queueRow.Name}");
         }
     }
 
