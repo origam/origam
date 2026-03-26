@@ -259,6 +259,19 @@ public class ServerCoreUIService : IBasicUIService
         CreateUpdateOrigamOnlineUser();
     }
 
+    public void DestroyUI(IEnumerable<Guid> sessionFormIdentifiers)
+    {
+        if (sessionFormIdentifiers == null)
+        {
+            return;
+        }
+        foreach (var sessionFormIdentifier in sessionFormIdentifiers)
+        {
+            sessionHelper.DeleteSession(sessionFormIdentifier);
+        }
+        CreateUpdateOrigamOnlineUser();
+    }
+
     public IDictionary<string, object> RefreshData(
         Guid sessionFormIdentifier,
         IStringLocalizer<SharedResources> localizer

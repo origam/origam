@@ -154,6 +154,10 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/DestroyUI`, data)).data;
   }
 
+  async destroyManyUI(data: { FormSessionIds: string[] }) {
+    return (await this.axiosInstance.post(`/UIService/DestroyManyUI`, data)).data;
+  }
+
   async getEntities(query: {
     MenuId: string;
     DataStructureEntityId: string;

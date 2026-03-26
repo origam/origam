@@ -189,6 +189,8 @@ export interface IApi {
 
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
+  destroyManyUI(data: { FormSessionIds: string[] }): Promise<any>;
+
   setMasterRecord(
     data: {
       SessionFormIdentifier: string;
