@@ -29,8 +29,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
-          cache-dependency-path: frontend-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
@@ -93,8 +91,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
-          cache-dependency-path: chat-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
@@ -140,8 +136,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
-          cache-dependency-path: architect-html/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable

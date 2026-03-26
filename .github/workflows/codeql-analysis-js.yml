@@ -34,11 +34,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22.14.0'
-        cache: yarn
-        cache-dependency-path: |
-          frontend-html/yarn.lock
-          chat-html/yarn.lock
-          architect-html/yarn.lock
 
     - name: Enable Corepack
       run: corepack enable
