@@ -26,7 +26,10 @@ const useBasicSsl = !localHttpsCertificate;
 
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const nodeEnv = mode === "production" ? "production" : "development";
+
+  return {
 	plugins: [
 		react({
 			babel: {
@@ -63,6 +66,10 @@ export default defineConfig({
 			{
 				find: 'buffer',
 				replacement: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+			},
+			{
+				find: 'process',
+				replacement: 'rollup-plugin-node-polyfills/polyfills/process-es6',
 			}
 		],
 	},
@@ -183,7 +190,14 @@ export default defineConfig({
 		}
 	},
 	define: {
-		global: 'window',
+		global: 'globalThis',
+		'process.env': JSON.stringify({
+			NODE_ENV: nodeEnv,
+			PUBLIC_URL: "",
+		}),
+		'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+		'process.env.PUBLIC_URL': JSON.stringify(""),
 	}
+  };
 })
 
