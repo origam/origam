@@ -34,6 +34,10 @@ import { IDockType } from "model/entities/types/IProperty";
 import { AutoSizer, List, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import {
+  editorTextareaSuppressionProps,
+  getEditorInputSuppressionProps
+} from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -231,7 +235,7 @@ export class TextEditor extends React.Component<{
           style={this.getStyle()}
           className={S.input}
           type={this.props.isPassword ? "password" : "text"}
-          autoComplete={"new-password"}
+          {...getEditorInputSuppressionProps(this.props.isPassword ? "password" : "text")}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
@@ -289,7 +293,7 @@ export class TextEditor extends React.Component<{
           id={this.props.id}
           style={this.getStyle()}
           className={S.input}
-          autoComplete={"new-password"}
+          {...editorTextareaSuppressionProps}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}

@@ -47,6 +47,7 @@ import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runIn
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import moment from "moment";
 import { toOrigamServerString } from "utils/moment";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 @inject(({property}: { property: IProperty }, {value}) => {
   return {
@@ -285,6 +286,7 @@ export class BlobEditor extends React.Component<{
             readOnly={true}
             className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
             value={this.props.value || ""}
+            {...getEditorInputSuppressionProps()}
           />
         </div>
       );
@@ -326,7 +328,7 @@ export class BlobEditor extends React.Component<{
           className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
           disabled={this.props.isReadOnly}
-          autoComplete={"new-password"}
+          {...getEditorInputSuppressionProps()}
           onChange={(event: any) =>
             !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
           }

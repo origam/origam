@@ -37,6 +37,7 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { InputClearButton } from "gui/connections/MobileComponents/Grid/InputClearButton";
 import { T } from "utils/translation";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 
 export const MobileDateTimeEditor: React.FC<{
@@ -133,7 +134,7 @@ export const FullScreenDateTimeEditor: React.FC<{
             id={props.id}
             className={cx("input", S.input, S.fullScreenEditorInput)}
             type="text"
-            autoComplete={"new-password"}
+            {...getEditorInputSuppressionProps()}
             onBlur={props.editorModel.handleInputBlur}
             value={props.editorModel.textFieldValue}
             onChange={props.editorModel.handleTextFieldChange}

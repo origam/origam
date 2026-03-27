@@ -23,6 +23,7 @@ import cx from 'classnames';
 import S from "gui/Components/Dropdown/Dropdown.module.scss";
 import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 export function MobileDropdownEditorInput(props: {
   backgroundColor?: string;
@@ -57,16 +58,14 @@ export function MobileDropdownEditorInput(props: {
     <Observer>
       {() => (
         <input
+          type="search"
           className={cx("input", S.input, {isLink: props.isLink})}
           ref={refInput}
           placeholder={props.editorData.isResolving ? "Loading..." : ""}
           onChange={props.behavior.handleInputChange}
           value={props.behavior.inputValue || ""}
           style={getStyle()}
-          autoComplete={"new-password"}
-          autoCorrect={"off"}
-          autoCapitalize={"off"}
-          spellCheck={"false"}
+          {...getEditorInputSuppressionProps("search")}
         />
       )}
     </Observer>
