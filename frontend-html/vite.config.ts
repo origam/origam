@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
@@ -27,8 +26,11 @@ const useBasicSsl = !localHttpsCertificate;
 
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
+export default defineConfig(({ mode }) => {
+  const nodeEnv = mode === "production" ? "production" : "development";
+
+  return {
+	plugins: [
 		react({
 			babel: {
 				plugins: [
@@ -43,10 +45,10 @@ export default defineConfig({
 				],
 			},
 		}),
-		tsconfigPaths(),
     ...(useBasicSsl ? [basicSsl()] : []),
 	],
 	resolve: {
+		tsconfigPaths: true,
 		alias: [
 			{
 				// this is required for the SCSS modules
@@ -64,6 +66,10 @@ export default defineConfig({
 			{
 				find: 'buffer',
 				replacement: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+			},
+			{
+				find: 'process',
+				replacement: 'rollup-plugin-node-polyfills/polyfills/process-es6',
 			}
 		],
 	},
@@ -79,12 +85,14 @@ export default defineConfig({
     }
 	},
 	optimizeDeps: {
-		esbuildOptions: {
-			// Node.js global to browser globalThis
-			define: {
-				global: 'globalThis'
+		rolldownOptions: {
+			transform: {
+				// Node.js global to browser globalThis
+				define: {
+					global: 'globalThis'
+				},
 			},
-			// Enable esbuild polyfill plugins
+			// Keep the existing dependency polyfills during dep optimization.
 			plugins: [
 				NodeGlobalsPolyfillPlugin({
 					process: true,
@@ -182,7 +190,14 @@ export default defineConfig({
 		}
 	},
 	define: {
-		global: 'window',
+		global: 'globalThis',
+		'process.env': JSON.stringify({
+			NODE_ENV: nodeEnv,
+			PUBLIC_URL: "",
+		}),
+		'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+		'process.env.PUBLIC_URL': JSON.stringify(""),
 	}
+  };
 })
 

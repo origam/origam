@@ -36,7 +36,7 @@ import { getBindingToParent } from "model/selectors/DataView/getBindingToParent"
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { ILookupLoader } from "model/entities/types/ILookupLoader";
-import bind from "bind-decorator";
+import { bind } from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";

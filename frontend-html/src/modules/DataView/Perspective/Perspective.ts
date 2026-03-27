@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { ContribArray } from "utils/common";
-import bind from "bind-decorator";
+import { bind } from "bind-decorator";
 
 export interface IPerspectiveContrib {
   deactivate(): Generator;
