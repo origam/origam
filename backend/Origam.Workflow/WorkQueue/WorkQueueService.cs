@@ -1956,14 +1956,19 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         // Catch the command exception. Transaction is already rolled back,
         // so we continue to another queue item.
-        // RuleException is logged on the debug level, others on the error level
-        catch (RuleException ex) when (log.IsDebugEnabled)
+        catch (RuleException ex)
         {
-            log.Debug($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
+            if (log.IsDebugEnabled)
+            {
+                log.Debug($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
+            }
         }
-        catch (Exception ex) when (log.IsErrorEnabled)
+        catch (Exception ex)
         {
-            log.Error($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
+            if (log.IsErrorEnabled)
+            {
+                log.Error($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
+            }
         }
         finally
         {
