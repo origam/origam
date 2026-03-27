@@ -135,6 +135,13 @@ public class UIServiceController : AbstractController
         return Ok();
     }
 
+    [HttpPost("[action]")]
+    public IActionResult DestroyManyUI([FromBody] DestroyManyInput input)
+    {
+        sessionObjects.UIService.DestroyUI(input.FormSessionIds ?? Array.Empty<Guid>());
+        return Ok();
+    }
+
     [HttpGet("[action]/{sessionFormIdentifier:guid}")]
     public IActionResult RefreshData(Guid sessionFormIdentifier)
     {

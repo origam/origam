@@ -28,6 +28,8 @@
   "copyright_attributions": "Copyright attributions",
   "log": "Log",
   "close": "Close",
+  "close_all_unchanged": "Close all unchanged",
+  "close_all_unchanged_but_this": "Close all unchanged but this",
   "do_you_wish_to_save": "Do you wish to save changes in {0}?",
   "save": "Save",
   "close_without_saving": "Don't Save",

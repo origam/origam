@@ -78,6 +78,8 @@ export interface IWorkbenchLifecycle {
 
   closeForm(openedScreen: IOpenedScreen): Generator;
 
+  closeAllUnchanged(clickedScreen: IOpenedScreen, keepClickedScreen?: boolean): Generator;
+
   run(): Generator;
 
   parent?: any;

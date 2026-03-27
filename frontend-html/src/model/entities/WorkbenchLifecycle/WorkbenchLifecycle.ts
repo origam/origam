@@ -59,6 +59,8 @@ import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 import { EventHandler } from "utils/EventHandler";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { ClosedSessionTracker } from "./ClosedSessionTracker";
+import { closeForm } from "model/actions/closeForm";
+import { getMobileState } from "model/selectors/getMobileState";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -340,58 +342,63 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       : openedScreens.findTopmostItemExcept(openedScreen.menuItemId, openedScreen.order);
 
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
-    if (openedScreen.dialogInfo) {
-      if (openedScreen.isActive) {
-        if (screenToActivate) {
-          openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
-          if (screenToActivate.isSleeping) {
-            screenToActivate.isSleeping = false;
-            const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start({
-              initUIResult: initUIResult,
-              preloadIsDirty: screenToActivate.isSleepingDirty
-            });
-          }
-        }
-      }
-    } else {
-      if (openedScreen.isActive) {
-        if (screenToActivate) {
-          openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
-
-          if (screenToActivate.isSleeping) {
-            screenToActivate.isSleeping = false;
-            const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start({
-              initUIResult: initUIResult,
-              preloadIsDirty: screenToActivate.isSleepingDirty
-            });
-          } else if (
-            screenToActivate.content &&
-            screenToActivate.content.formScreen &&
-            screenToActivate.content.formScreen.refreshOnFocus &&
-            !screenToActivate.content.isLoading
-          ) {
-            if (!getIsFormScreenDirty(screenToActivate.content.formScreen)) {
-              yield*reloadScreen(screenToActivate.content.formScreen)();
-            }
-          }
-        }
-      }
+    if (openedScreen.isActive && screenToActivate) {
+      yield*this.activateScreenAfterClose(
+        screenToActivate,
+        !!openedScreen.dialogInfo
+      );
     }
 
     yield*this.destroyUI(openedScreen);
+    this.finalizeClosedScreen(openedScreen);
+  }
 
-    if (openedScreen.content && openedScreen.content.formScreen) {
-      const scope = scopeFor(openedScreen.content.formScreen);
-      if (scope) scope.disposeWithChildren();
+  *closeAllUnchanged(clickedScreen: IOpenedScreen, keepClickedScreen?: boolean): Generator {
+    const openedScreens = getOpenedScreens(this);
+    const tabsToClose = openedScreens.items.filter((item) => {
+      const isWorkflow = item.content.formScreen?.workflowTaskId;
+      if (item.isDialog || isWorkflow) {
+        return false;
+      }
+      if (keepClickedScreen && item === clickedScreen) {
+        return false;
+      }
+      return !getIsFormScreenDirty(item);
+    });
+
+    const sequentialTabsToClose = tabsToClose.filter(tab => tab.content?.refreshOnReturnType);
+    const parallelTabsToClose = tabsToClose.filter(tab => !tab.content?.refreshOnReturnType);
+
+    for (const tab of sequentialTabsToClose) {
+      yield*closeForm(tab)();
     }
-    openedScreen.isClosed = true;
-    openedScreen.content.formScreen?.formScreenLifecycle?.onClose?.();
+
+    if (parallelTabsToClose.length === 0) {
+      return;
+    }
+
+    const shouldActivateScreen = parallelTabsToClose.some(tab => tab.isActive);
+    const screenToActivate = shouldActivateScreen
+      ? this.findTopmostScreen([...openedScreens.items].filter(item => !parallelTabsToClose.includes(item)))
+      : undefined;
+
+    for (const tab of parallelTabsToClose) {
+      getMobileState(tab).onFormClose(tab.content?.formScreen);
+      openedScreens.deleteItem(tab.menuItemId, tab.order);
+    }
+
+    if (screenToActivate) {
+      yield*this.activateScreenAfterClose(screenToActivate);
+    }
+
+    yield*this.destroyManyUI(parallelTabsToClose);
+
+    for (const tab of parallelTabsToClose) {
+      this.finalizeClosedScreen(tab);
+    }
   }
 
   *destroyUI(openedScreen: IOpenedScreen) {
-    const api = getApi(this);
     if (openedScreen.content) {
       if (openedScreen.content.formScreen) {
         openedScreen.content.formScreen.dispose();
@@ -402,10 +409,86 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
+  *destroyManyUI(openedScreens: IOpenedScreen[]) {
+    const sessionIds: string[] = [];
+    for (const openedScreen of openedScreens) {
+      const sessionId = this.disposeOpenedScreenAndGetSessionId(openedScreen);
+      if (sessionId) {
+        sessionIds.push(sessionId);
+      }
+    }
+    if (sessionIds.length > 0) {
+      yield *this.callCDestroyManyUI(sessionIds);
+    }
+  }
+
   private *callCDestroyUI(sessionId: string): Generator {
     const api = getApi(this);
     yield api.destroyUI({FormSessionId: sessionId});
     this.closedSessionTracker.push(sessionId);
+  }
+
+  private *callCDestroyManyUI(sessionIds: string[]): Generator {
+    const api = getApi(this);
+    yield api.destroyManyUI({FormSessionIds: sessionIds});
+    for (const sessionId of sessionIds) {
+      this.closedSessionTracker.push(sessionId);
+    }
+  }
+
+  private disposeOpenedScreenAndGetSessionId(openedScreen: IOpenedScreen) {
+    if (!openedScreen.content) {
+      return undefined;
+    }
+    if (openedScreen.content.formScreen) {
+      const sessionId = getSessionId(openedScreen.content.formScreen);
+      openedScreen.content.formScreen.dispose();
+      return sessionId;
+    }
+    return openedScreen.content.preloadedSessionId;
+  }
+
+  private *activateScreenAfterClose(
+    screenToActivate: IOpenedScreen,
+    skipRefreshOnFocus?: boolean
+  ): Generator {
+    const openedScreens = getOpenedScreens(this);
+    openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
+
+    if (screenToActivate.isSleeping) {
+      screenToActivate.isSleeping = false;
+      const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
+      yield*screenToActivate.content!.start({
+        initUIResult: initUIResult,
+        preloadIsDirty: screenToActivate.isSleepingDirty
+      });
+      return;
+    }
+
+    if (
+      !skipRefreshOnFocus &&
+      screenToActivate.content &&
+      screenToActivate.content.formScreen &&
+      screenToActivate.content.formScreen.refreshOnFocus &&
+      !screenToActivate.content.isLoading
+    ) {
+      if (!getIsFormScreenDirty(screenToActivate.content.formScreen)) {
+        yield*reloadScreen(screenToActivate.content.formScreen)();
+      }
+    }
+  }
+
+  private finalizeClosedScreen(openedScreen: IOpenedScreen) {
+    if (openedScreen.content && openedScreen.content.formScreen) {
+      const scope = scopeFor(openedScreen.content.formScreen);
+      if (scope) scope.disposeWithChildren();
+    }
+    openedScreen.isClosed = true;
+    openedScreen.content.formScreen?.formScreenLifecycle?.onClose?.();
+  }
+
+  private findTopmostScreen(screens: IOpenedScreen[]): IOpenedScreen | undefined {
+    return [...screens].sort((a, b) => b.stackPosition - a.stackPosition)[0];
   }
 
   @bind

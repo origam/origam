@@ -20,10 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { TabbedViewHandle } from "gui/Components/TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "gui/Components/TabbedView/TabbedViewHandleRow";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
+import { Dropdown } from "gui/Components/Dropdown/Dropdown";
+import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { MobXProviderContext, observer } from "mobx-react";
 import {
   onScreenTabCloseClick,
-  onScreenTabCloseMouseDown
+  onScreenTabCloseMouseDown,
+  onScreenTabCloseAllUnchangedClick,
+  onScreenTabCloseAllUnchangedButThisClick,
 } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
@@ -34,6 +39,8 @@ import React from "react";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { T } from "utils/translation";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class CScreenTabbedViewHandleRow extends React.Component {
@@ -77,21 +84,69 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
   render() {
     const {item} = this.props;
     const label = getLabel(item);
-    const isLoading = this.getIsLoading()
+    const isLoading = this.getIsLoading();
     return (
-      <TabbedViewHandle
-        title={label}
-        key={`${item.menuItemId}@${item.order}`}
-        isActive={item.isActive}
-        hasCloseBtn={true}
-        isDirty={getIsFormScreenDirty(item)}
-        onClick={(event: any) => onScreenTabHandleClick(item)(event)}
-        onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
-        onCloseMouseDown={(event: any) => onScreenTabCloseMouseDown(item)(event)}
-        isInitializing={isLoading}
-      >
-        {label}
-      </TabbedViewHandle>
+      <Dropdowner
+        style={{width: "auto", minWidth: 0, flexShrink: 1, alignItems: "end"}}
+        trigger={({refTrigger, setDropped}) => (
+          <TabbedViewHandle
+            refDom={refTrigger}
+            title={label}
+            key={`${item.menuItemId}@${item.order}`}
+            isActive={item.isActive}
+            hasCloseBtn={true}
+            isDirty={getIsFormScreenDirty(item)}
+            onClick={(event: any) => onScreenTabHandleClick(item)(event)}
+            onContextMenu={(event: any) => {
+              setDropped(true, event);
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
+            onCloseMouseDown={(event: any) => onScreenTabCloseMouseDown(item)(event)}
+            isInitializing={isLoading}
+          >
+            {label}
+          </TabbedViewHandle>
+        )}
+        content={({setDropped}) => (
+          <Dropdown>
+            <DropdownItem
+              onClick={() => {
+                setDropped(false);
+                runInFlowWithHandler({
+                  ctx: item,
+                  action: () => onScreenTabCloseClick(item)(undefined),
+                });
+              }}
+            >
+              {T("Close", "close")}
+            </DropdownItem>
+            <DropdownItem
+              onClick={() => {
+                setDropped(false);
+                runInFlowWithHandler({
+                  ctx: item,
+                  action: () => onScreenTabCloseAllUnchangedClick(item)(),
+                });
+              }}
+            >
+              {T("Close all unchanged", "close_all_unchanged")}
+            </DropdownItem>
+            <DropdownItem
+              onClick={() => {
+                setDropped(false);
+                runInFlowWithHandler({
+                  ctx: item,
+                  action: () => onScreenTabCloseAllUnchangedButThisClick(item)(),
+                });
+              }}
+            >
+              {T("Close all unchanged but this", "close_all_unchanged_but_this")}
+            </DropdownItem>
+          </Dropdown>
+        )}
+      />
     );
   }
 }
