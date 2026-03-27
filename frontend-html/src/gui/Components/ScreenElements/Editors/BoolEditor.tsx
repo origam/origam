@@ -33,6 +33,7 @@ export class BoolEditor extends React.Component<{
   onClick?(event: any): void;
   onBlur?: () => void;
   onFocus?: () => void;
+  centered?: boolean;
   id?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
@@ -47,13 +48,14 @@ export class BoolEditor extends React.Component<{
     }
   }
 
-  readOnly = (): string => {
-    return (this.props.isReadOnly) ? "readOnly" : "";
-  }
-
   render() {
+    const { isReadOnly, centered } = this.props;
+
     return (
-      <div className={cx(S.editorContainer, this.readOnly())}>
+      <div  className={cx(S.editorContainer, {
+        readOnly: isReadOnly,
+        [S.centered]: centered
+      })}>
         <input
           id={this.props.id ? this.props.id : undefined}
           className="editor"

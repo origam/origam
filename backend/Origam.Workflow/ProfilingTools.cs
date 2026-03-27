@@ -23,11 +23,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using log4net;
-using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 
 namespace Origam.Workflow;
+
+public class WorkflowProfiling { }
 
 public static class ProfilingTools
 {

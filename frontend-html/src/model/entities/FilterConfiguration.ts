@@ -487,12 +487,25 @@ export class FilterConfiguration implements IFilterConfiguration {
           row,
           childDsField
         );
-        if (parentValue !== childValue) {
+        if (!this.areBoundValuesEqual(parentValue, childValue)) {
           return false;
         }
       }
     }
     return true;
+  }
+
+  private areBoundValuesEqual(parentValue: any, childValue: any) {
+    if (parentValue === childValue) {
+      return true;
+    }
+    if (parentValue === null || parentValue === undefined || childValue === null || childValue === undefined) {
+      return false;
+    }
+    if (parentValue instanceof Date || childValue instanceof Date) {
+      return new Date(parentValue).getTime() === new Date(childValue).getTime();
+    }
+    return String(parentValue) === String(childValue);
   }
 
   @computed get dataView() {

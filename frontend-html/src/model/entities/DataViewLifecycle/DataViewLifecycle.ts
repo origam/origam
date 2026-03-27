@@ -163,7 +163,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         if (!childDsField) {
           continue;
         }
-        filterItems.push(toFilterItem(childDsField.name, "eq", parentValue));
+        filterItems.push(toFilterItem(childDsField.name, null, "eq", parentValue));
       }
     }
     return joinWithAND(filterItems);

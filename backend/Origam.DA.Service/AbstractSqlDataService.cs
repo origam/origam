@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -192,8 +191,6 @@ public class ConcurrencyExceptionLogger { }
 
 public abstract class AbstractSqlDataService : AbstractDataService
 {
-    private readonly Profiler profiler = new Profiler();
-
     private static readonly ILog log = LogManager.GetLogger(
         System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
     );
@@ -288,7 +285,6 @@ public abstract class AbstractSqlDataService : AbstractDataService
     )
     {
         var loadedDataSet = LoadDataSet(dataStructureQuery, principal, null, transactionId);
-        profiler.LogRememberedExecutionTimes();
         return loadedDataSet;
     }
 
@@ -391,34 +387,25 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 && !(entity.Entity is IAssociation association && association.IsSelfJoin)
             )
             {
-                profiler.ExecuteAndRememberLoadDuration(
-                    entity: entity,
-                    actionToExecute: () =>
-                    {
-                        var loader = new DataLoader
-                        {
-                            ConnectionString = connectionString,
-                            DataService = this,
-                            Dataset = dataset,
-                            TransactionId = transactionId,
-                        };
-                        if (transactionId != null)
-                        {
-                            loader.Transaction = GetTransaction(
-                                transactionId,
-                                query.IsolationLevel
-                            );
-                        }
-                        loader.DataStructure = dataStructure;
-                        loader.Entity = entity;
-                        loader.FilterSet = filterSet;
-                        loader.SortSet = sortSet;
-                        loader.Query = query;
-                        loader.Timeout = timeout;
-                        loader.CurrentProfile = currentProfile;
-                        loader.Fill();
-                    }
-                );
+                var loader = new DataLoader
+                {
+                    ConnectionString = connectionString,
+                    DataService = this,
+                    Dataset = dataset,
+                    TransactionId = transactionId,
+                };
+                if (transactionId != null)
+                {
+                    loader.Transaction = GetTransaction(transactionId, query.IsolationLevel);
+                }
+                loader.DataStructure = dataStructure;
+                loader.Entity = entity;
+                loader.FilterSet = filterSet;
+                loader.SortSet = sortSet;
+                loader.Query = query;
+                loader.Timeout = timeout;
+                loader.CurrentProfile = currentProfile;
+                loader.Fill();
             }
         }
         if (query.EnforceConstraints)
@@ -614,25 +601,19 @@ public abstract class AbstractSqlDataService : AbstractDataService
                         var rowCount = changedTable.Rows.Count;
                         if (rowCount > 0)
                         {
-                            profiler.ExecuteAndLogStoreActionDuration(
-                                entity: entity,
-                                actionToExecute: () =>
-                                {
-                                    ExecuteUpdate(
-                                        query,
-                                        transactionId,
-                                        profile,
-                                        dataStructure,
-                                        transaction,
-                                        connection,
-                                        deletedRowIds,
-                                        changedTable,
-                                        rowState,
-                                        entity,
-                                        rowCount,
-                                        forceBulkInsert
-                                    );
-                                }
+                            ExecuteUpdate(
+                                query,
+                                transactionId,
+                                profile,
+                                dataStructure,
+                                transaction,
+                                connection,
+                                deletedRowIds,
+                                changedTable,
+                                rowState,
+                                entity,
+                                rowCount,
+                                forceBulkInsert
                             );
                         }
                     }
@@ -651,7 +632,6 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
             // accept changes
             AcceptChanges(dataset, changedTables, query, transactionId, userProfile);
-            profiler.LogRememberedExecutionTimes();
             // delete attachments if any
             if ((deletedRowIds.Count > 0) && query.SynchronizeAttachmentsOnDelete)
             {
@@ -3147,121 +3127,4 @@ public abstract class AbstractSqlDataService : AbstractDataService
         base.Dispose();
     }
     #endregion
-}
-
-// version of log4net for NetStandard 1.3 does not have the method
-// LogManager.GetLogger(string)... have to use the overload with Type
-// as parameter
-public class WorkflowProfiling { }
-
-internal class Profiler
-{
-    private static readonly ILog workflowProfilingLog = LogManager.GetLogger(typeof(Profiler));
-    private readonly Dictionary<DataStructureEntity, List<double>> durationsMs =
-        new Dictionary<DataStructureEntity, List<double>>();
-    private readonly List<DataStructureEntity> entityOrder = new List<DataStructureEntity>();
-    private static string currentTaskId;
-
-    public void LogRememberedExecutionTimes()
-    {
-        var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
-        var taskId = (string)ThreadContext.Properties["currentTaskId"];
-        var serviceMethodName = (string)ThreadContext.Properties["ServiceMethodName"];
-        if (taskId == null)
-        {
-            return;
-        }
-        foreach (DataStructureEntity entity in entityOrder)
-        {
-            LogDuration(
-                logEntryType: serviceMethodName,
-                path: $"{taskPath}/Load/{entity.Name}",
-                id: taskId,
-                duration: durationsMs[entity].Sum(),
-                rows: durationsMs[entity].Count
-            );
-        }
-        durationsMs.Clear();
-        entityOrder.Clear();
-    }
-
-    public void ExecuteAndRememberLoadDuration(DataStructureEntity entity, Action actionToExecute)
-    {
-        ExecuteAndTakeLoggingAction(entity, RememberLoadDuration, actionToExecute);
-    }
-
-    public void ExecuteAndLogStoreActionDuration(DataStructureEntity entity, Action actionToExecute)
-    {
-        ExecuteAndTakeLoggingAction(entity, LogStoreDuration, actionToExecute);
-    }
-
-    private static void ExecuteAndTakeLoggingAction(
-        DataStructureEntity entity,
-        Action<DataStructureEntity, Stopwatch> loggingAction,
-        Action actionToExecute
-    )
-    {
-        if (workflowProfilingLog.IsDebugEnabled)
-        {
-            var taskId = (string)ThreadContext.Properties["currentTaskId"];
-            if (taskId != null)
-            {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                actionToExecute.Invoke();
-                stopwatch.Stop();
-                loggingAction.Invoke(entity, stopwatch);
-                return;
-            }
-        }
-        actionToExecute.Invoke();
-    }
-
-    private void RememberLoadDuration(DataStructureEntity entity, Stopwatch stoppedWatch)
-    {
-        var taskId = (string)ThreadContext.Properties["currentTaskId"];
-        if (currentTaskId != taskId)
-        {
-            entityOrder.Clear();
-            durationsMs.Clear();
-            currentTaskId = taskId;
-        }
-        if (!entityOrder.Contains(entity))
-        {
-            entityOrder.Add(entity);
-            durationsMs[entity] = new List<double>();
-        }
-        durationsMs[entity].Add(stoppedWatch.Elapsed.TotalMilliseconds);
-    }
-
-    private static void LogStoreDuration(DataStructureEntity entity, Stopwatch stoppedWatch)
-    {
-        var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
-        var taskId = (string)ThreadContext.Properties["currentTaskId"];
-        var serviceMethodName = (string)ThreadContext.Properties["ServiceMethodName"];
-        LogDuration(
-            logEntryType: serviceMethodName,
-            path: $"{taskPath}/Store/{entity.Name}",
-            id: taskId,
-            duration: stoppedWatch.Elapsed.TotalMilliseconds
-        );
-    }
-
-    private static void LogDuration(
-        string logEntryType,
-        string path,
-        string id,
-        double duration,
-        int rows = 0
-    )
-    {
-        var typeWithDoubleColon = $"{logEntryType}:";
-        var message =
-            $"{typeWithDoubleColon, -18}{path, -80} Id: {id}  Duration: {duration, 7:0.0} ms";
-        if (rows != 0)
-        {
-            message += " rows: " + rows;
-        }
-        workflowProfilingLog.Debug(message);
-    }
 }
