@@ -31,6 +31,7 @@ import { requestFocus } from "utils/focus";
 import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
@@ -168,6 +169,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
             )}
             <input
               id={props.id}
+              type="search"
               disabled={props.isReadOnly}
               className={S.filterInput + " " + props.customInputClass}
               ref={refInput}
@@ -177,7 +179,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
-              autoComplete={"new-password"}
+              {...getEditorInputSuppressionProps("search")}
               style={getStyle()}
               size={1}
               onDragStart={(e: any) =>  e.preventDefault()}

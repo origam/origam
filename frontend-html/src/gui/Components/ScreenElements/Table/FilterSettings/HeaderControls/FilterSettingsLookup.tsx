@@ -35,6 +35,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import {
   TagLookupFilterEditor
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 const OPERATORS = [
   Operator.in,
@@ -160,9 +161,10 @@ class OpEditors extends React.Component<{
         return (
           <input
             id={this.props.id}
+            type="search"
             value={this.props.setting.val2 ?? ""}
             className={CS.input}
-            autoComplete={"new-password"}
+            {...getEditorInputSuppressionProps("search")}
             onChange={this.handleTermChange}
           />
         );

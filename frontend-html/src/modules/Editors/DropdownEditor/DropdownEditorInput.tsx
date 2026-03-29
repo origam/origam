@@ -23,6 +23,7 @@ import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from "gui/Components/Dropdown/Dropdown.module.scss";
 import { T } from "utils/translation";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
@@ -113,6 +114,7 @@ export function DropdownEditorInput(props: {
       {() => (
         <input
           id={props.id}
+          type="search"
           className={cx(getClassNames())}
           title={getTitle()}
           readOnly={beh.isReadOnly}
@@ -126,10 +128,7 @@ export function DropdownEditorInput(props: {
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}
-          autoComplete={"new-password"}
-          autoCorrect={"off"}
-          autoCapitalize={"off"}
-          spellCheck={"false"}
+          {...getEditorInputSuppressionProps("search")}
           onDragStart={(e: any) =>  e.preventDefault()}
         />
       )}

@@ -27,6 +27,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import React from "react";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 export const MobileTagInputEditor = (
   observer(
@@ -95,9 +96,10 @@ export const MobileTagInputEditor = (
             )}
             <input
               id={props.id}
+              type="search"
               disabled={props.isReadOnly}
               className={S.filterInput + " " + props.customInputClass}
-              autoComplete={"new-password"}
+              {...getEditorInputSuppressionProps("search")}
               style={getStyle()}
               size={1}
             />

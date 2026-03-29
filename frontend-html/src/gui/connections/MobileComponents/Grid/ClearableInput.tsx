@@ -22,6 +22,7 @@ import S from "gui/connections/MobileComponents/Grid/ClearableInput.module.scss"
 import { MobXProviderContext } from "mobx-react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { InputClearButton } from "gui/connections/MobileComponents/Grid/InputClearButton";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 interface IClearableInputData{
   id?: string;
@@ -40,7 +41,7 @@ export const ClearableInput = React.forwardRef<HTMLInputElement, IClearableInput
       id={props.id}
       className={props.className}
       value={props.value}
-      autoComplete={"new-password"}
+      {...getEditorInputSuppressionProps()}
       onChange={props.onChange}
       onBlur={props.onBlur}
       ref={ref}
@@ -58,7 +59,7 @@ export const ClearableInput = React.forwardRef<HTMLInputElement, IClearableInput
         id={props.id}
         className={props.className}
         value={props.value}
-        autoComplete={"new-password"}
+        {...getEditorInputSuppressionProps()}
         onChange={props.onChange}
         onBlur={props.onBlur}
         ref={ref}

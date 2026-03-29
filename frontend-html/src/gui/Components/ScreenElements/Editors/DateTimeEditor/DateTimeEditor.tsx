@@ -31,6 +31,7 @@ import {
   IEditorState
 } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
 import { requestFocus } from "utils/focus";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 
 class DesktopEditorState implements IEditorState{
@@ -279,7 +280,7 @@ export class DateTimeEditor extends React.Component<{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
                     }}
-                    autoComplete={"new-password"}
+                    {...getEditorInputSuppressionProps()}
                     className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
                     type="text"
                     onBlur={event => this.handleInputBlur(event)()}
@@ -338,7 +339,7 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
-          autoComplete={"new-password"}
+          {...getEditorInputSuppressionProps()}
           title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
           type="text"

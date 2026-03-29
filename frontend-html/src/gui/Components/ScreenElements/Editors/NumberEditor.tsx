@@ -32,6 +32,7 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 import { observer } from "mobx-react";
 import { createNumberEditorModel } from "gui/Components/ScreenElements/Editors/NumberEditorModel";
+import { getEditorInputSuppressionProps } from "gui/Components/ScreenElements/Editors/editorInputSuppression";
 
 export interface NumberEditorProps
 {
@@ -178,7 +179,7 @@ export class NumberEditor extends React.Component<NumberEditorProps, any> {
           className={cx(S.input)}
           type={this.model.getInputType()}
           inputMode={this.model.getInputMode()}
-          autoComplete={"new-password"}
+          {...getEditorInputSuppressionProps()}
           value={this.model.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}
