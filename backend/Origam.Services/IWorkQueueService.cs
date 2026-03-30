@@ -33,7 +33,7 @@ public interface IWorkQueueService : IWorkbenchService
     ISchemaItem WQClass(Guid queueId);
     DataSet LoadWorkQueueData(string workQueueClass, object queueId);
     Guid WorkQueueAdd(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -42,7 +42,7 @@ public interface IWorkQueueService : IWorkbenchService
         string transactionId
     );
     Guid WorkQueueAdd(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -58,7 +58,7 @@ public interface IWorkQueueService : IWorkbenchService
     );
     DataRow GetNextItem(string workQueueName, string transactionId, bool processErrors);
     void WorkQueueRemove(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -68,7 +68,7 @@ public interface IWorkQueueService : IWorkbenchService
     void WorkQueueRemove(Guid workQueueId, object rowKey, string transactionId);
     IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId);
     void WorkQueueUpdate(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         int relationNo,
         Guid workQueueId,
         object rowKey,
@@ -76,7 +76,7 @@ public interface IWorkQueueService : IWorkbenchService
     );
     void HandleAction(
         Guid queueId,
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         Guid commandType,
         string command,

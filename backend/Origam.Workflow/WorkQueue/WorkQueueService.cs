@@ -40,7 +40,6 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
-using Origam.Services;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 using Timer = System.Timers.Timer;
@@ -50,7 +49,7 @@ namespace Origam.Workflow.WorkQueue;
 public class WorkQueueService : IWorkQueueService, IBackgroundService
 {
     private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+        System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType
     );
     private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
     private readonly core.ICoreDataService dataService = core.DataService.Instance;
@@ -58,9 +57,11 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     private readonly WorkQueueUtils workQueueUtils;
     private readonly IWorkQueueProcessor queueProcessor;
     private readonly WorkQueueThrottle workQueueThrottle;
-    private readonly Timer _loadExternalWorkQueuesTimer = new(60000);
-    private readonly Timer _queueAutoProcessTimer;
-    private Boolean serviceBeingUnloaded = false;
+    private readonly Timer loadExternalWorkQueuesTimer = new(60_000);
+    private readonly Timer queueAutoProcessTimer;
+    private bool serviceBeingUnloaded = false;
+    private bool externalQueueAdapterBusy = false;
+    private bool queueAutoProcessBusy = false;
     private readonly RetryManager retryManager = new();
     private static readonly Guid DS_METHOD_WQ_GETACTIVEQUEUES = new(
         "0b45c721-65d2-4305-b34a-cd0d07387ea1"
@@ -76,18 +77,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     public WorkQueueService(int queueProcessIntervalMillis)
     {
-        _queueAutoProcessTimer = new Timer(queueProcessIntervalMillis);
-        SchemaService schemaService =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-        IDataLookupService dataLookupService =
-            ServiceManager.Services.GetService<IDataLookupService>();
-        IPersistenceService persistenceService =
-            ServiceManager.Services.GetService<IPersistenceService>();
+        queueAutoProcessTimer = new Timer(queueProcessIntervalMillis);
+        var schemaService = ServiceManager.Services.GetService<SchemaService>();
+        var dataLookupService = ServiceManager.Services.GetService<IDataLookupService>();
+        var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         workQueueThrottle = new WorkQueueThrottle(persistenceService);
         workQueueUtils = new WorkQueueUtils(dataLookupService, schemaService);
         schemaService.SchemaLoaded += schemaService_SchemaLoaded;
-        schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
-        schemaService.SchemaUnloading += new CancelEventHandler(schemaService_SchemaUnloading);
+        schemaService.SchemaUnloaded += schemaService_SchemaUnloaded;
+        schemaService.SchemaUnloading += schemaService_SchemaUnloading;
 
         OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
         queueProcessor = settings.WorkQueueProcessingMode switch
@@ -114,7 +112,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     #region IWorkbenchService Members
     public void UnloadService()
     {
-        SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
+        var schemaService = ServiceManager.Services.GetService<SchemaService>();
         schemaService.SchemaLoaded -= schemaService_SchemaLoaded;
         schemaService.SchemaUnloaded -= schemaService_SchemaUnloaded;
         schemaService.SchemaUnloading -= schemaService_SchemaUnloading;
@@ -130,23 +128,21 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         serviceBeingUnloaded = true;
         cancellationTokenSource.Cancel();
         // unsubscribe from 'Elapsed' events
-        _loadExternalWorkQueuesTimer.Elapsed -= new ElapsedEventHandler(
-            LoadExternalWorkQueuesElapsed
-        );
-        _queueAutoProcessTimer.Elapsed -= new ElapsedEventHandler(WorkQueueAutoProcessTimerElapsed);
+        loadExternalWorkQueuesTimer.Elapsed -= LoadExternalWorkQueuesElapsed;
+        queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
         // stop timers
-        _queueAutoProcessTimer.Stop();
-        _loadExternalWorkQueuesTimer.Stop();
-        while (_queueAutoProcessBusy || _externalQueueAdapterBusy)
+        queueAutoProcessTimer.Stop();
+        loadExternalWorkQueuesTimer.Stop();
+        while (queueAutoProcessBusy || externalQueueAdapterBusy)
         {
             if (log.IsInfoEnabled)
             {
                 log.Info("Unloading service - waiting for queues to finish.");
             }
-            System.Threading.Thread.Sleep(1000);
+            Thread.Sleep(1000);
         }
         serviceBeingUnloaded = false;
-        cancellationTokenSource = new();
+        cancellationTokenSource = new CancellationTokenSource();
     }
 
     public void InitializeService()
@@ -159,11 +155,11 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     {
         // Load all active work queues
         DataSet result = dataService.LoadData(
-            new Guid("3a23f4e1-368c-4163-a790-4eed173af83d"),
-            new Guid("ed3d93ca-bd4e-4830-8d26-f7120c8fc7ff"),
-            Guid.Empty,
-            Guid.Empty,
-            null
+            dataStructureId: new Guid("3a23f4e1-368c-4163-a790-4eed173af83d"),
+            methodId: new Guid("ed3d93ca-bd4e-4830-8d26-f7120c8fc7ff"),
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId: null
         );
         // filter out those current user has no access to
         var rowsToDelete = new List<DataRow>();
@@ -198,7 +194,13 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
     {
-        return workQueueUtils.LoadWorkQueueData(workQueueClass, queueId, 0, 0, null);
+        return workQueueUtils.LoadWorkQueueData(
+            workQueueClass,
+            queueId,
+            pageSize: 0,
+            pageNumber: 0,
+            transactionId: null
+        );
     }
 
     public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId)
@@ -212,7 +214,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             workQueueId,
             condition,
             data,
-            null,
+            attachments: null,
             transactionId
         );
     }
@@ -239,7 +241,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     }
 
     public Guid WorkQueueAdd(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -248,18 +250,18 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     )
     {
         return WorkQueueAdd(
-            workQueueClass,
+            workQueueClassIdentifier,
             workQueueName,
             workQueueId,
             condition,
             data,
-            null,
+            attachments: null,
             transactionId
         );
     }
 
     public Guid WorkQueueAdd(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -270,44 +272,56 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     {
         if (log.IsDebugEnabled)
         {
-            log.Debug("Adding Work Queue Entry for Queue: " + workQueueName);
+            log.Debug($"Adding Work Queue Entry for Queue: {workQueueName}");
         }
         RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
         UserProfile profile = SecurityManager.CurrentUserProfile();
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
-        if (wqc != null)
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueClassIdentifier);
+        if (workQueueClass != null)
         {
             Guid rowId = Guid.NewGuid();
-            DataSet ds = new DatasetGenerator(true).CreateDataSet(wqc.WorkQueueStructure);
-            DataTable table = ds.Tables[0];
+            DataSet dataSet = new DatasetGenerator(userDefinedParameters: true).CreateDataSet(
+                workQueueClass.WorkQueueStructure
+            );
+            DataTable table = dataSet.Tables[0];
             DataRow row = table.NewRow();
             row["Id"] = rowId;
             row["refWorkQueueId"] = workQueueId;
             row["RecordCreated"] = DateTime.Now;
             row["RecordCreatedBy"] = profile.Id;
-            WorkQueueRowFill(wqc, ruleEngine, row, data);
+            WorkQueueRowFill(workQueueClass, ruleEngine, row, data);
             table.Rows.Add(row);
-            if (condition != null && condition != string.Empty)
+            if (!string.IsNullOrEmpty(condition))
             {
                 if (!EvaluateWorkQueueCondition(row, condition, workQueueName, transactionId))
                 {
                     return Guid.Empty;
                 }
             }
-            StoreQueueItems(wqc, table, transactionId);
+            StoreQueueItems(workQueueClass, table, transactionId);
             // add attachments
             if (attachments != null)
             {
-                AttachmentService attsvc =
-                    ServiceManager.Services.GetService(typeof(AttachmentService))
-                    as AttachmentService;
-                foreach (WorkQueueAttachment att in attachments)
+                var attachmentService = ServiceManager.Services.GetService<AttachmentService>();
+                foreach (WorkQueueAttachment workQueueAttachment in attachments)
                 {
-                    attsvc.AddAttachment(att.Name, att.Data, rowId, profile.Id, transactionId);
+                    attachmentService.AddAttachment(
+                        workQueueAttachment.Name,
+                        workQueueAttachment.Data,
+                        rowId,
+                        profile.Id,
+                        transactionId
+                    );
                 }
             }
             // notifications - OnCreate
-            ProcessNotifications(wqc, workQueueId, new Guid(WQ_EVENT_ONCREATE), ds, transactionId);
+            ProcessNotifications(
+                workQueueClass,
+                workQueueId,
+                eventTypeId: new Guid(WQ_EVENT_ONCREATE),
+                dataSet,
+                transactionId
+            );
             return (Guid)row["Id"];
         }
         return Guid.Empty;
@@ -315,29 +329,32 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     public IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
     {
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClassByMessageId(workQueueMessageId);
-        DataSet ds = FetchSingleQueueEntry(wqc, workQueueMessageId, transactionId);
-        return DataDocumentFactory.New(ds);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClassByMessageId(
+            workQueueMessageId
+        );
+        DataSet dataSet = FetchSingleQueueEntry(workQueueClass, workQueueMessageId, transactionId);
+        return DataDocumentFactory.New(dataSet);
     }
 
     private void ProcessNotifications(
-        WorkQueueClass wqc,
+        WorkQueueClass workQueueClass,
         Guid workQueueId,
         Guid eventTypeId,
         DataSet queueItem,
         string transactionId
     )
     {
-        IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        WorkQueueData wq = GetQueue(workQueueId);
+        var persistence = ServiceManager.Services.GetService<IPersistenceService>();
+        WorkQueueData workQueueData = GetQueue(workQueueId);
         foreach (
-            WorkQueueData.WorkQueueNotificationRow notification in wq.WorkQueueNotification.Rows
+            WorkQueueData.WorkQueueNotificationRow notification in workQueueData
+                .WorkQueueNotification
+                .Rows
         )
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Testing notification " + notification?.Description);
+                log.Debug($"Testing notification {notification?.Description}");
             }
             // check if the event type is equal (OnCreate, OnEscalate, etc...)
             if (!notification.refWorkQueueNotificationEventId.Equals(eventTypeId))
@@ -350,7 +367,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             }
             // notification source
             IXmlContainer notificationSource;
-            if (wqc.NotificationStructure == null)
+            if (workQueueClass.NotificationStructure == null)
             {
                 if (log.IsDebugEnabled)
                 {
@@ -362,29 +379,31 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Notification source is " + wqc.NotificationStructure.Path);
+                    log.Debug(
+                        $"Notification source is {workQueueClass.NotificationStructure.Path}"
+                    );
                 }
                 DataSet dataSet = dataService.LoadData(
-                    dataStructureId: wqc.NotificationStructureId,
-                    methodId: wqc.NotificationLoadMethodId,
+                    dataStructureId: workQueueClass.NotificationStructureId,
+                    methodId: workQueueClass.NotificationLoadMethodId,
                     defaultSetId: Guid.Empty,
                     sortSetId: Guid.Empty,
                     transactionId: transactionId,
-                    paramName1: wqc.NotificationFilterPkParameter,
+                    paramName1: workQueueClass.NotificationFilterPkParameter,
                     paramValue1: queueItem.Tables[0].Rows[0]["refId"]
                 );
                 notificationSource = DataDocumentFactory.New(dataSet);
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Notification source result: " + notificationSource?.Xml?.OuterXml);
+                    log.Debug($"Notification source result: {notificationSource?.Xml?.OuterXml}");
                 }
             }
-            DataRow workQueueRow = ExtractWorkQueueRowIfNotNotificationDatastructureIsSet(
-                wqc,
+            DataRow workQueueRow = ExtractWorkQueueRowIfNotNotificationDataStructureIsSet(
+                workQueueClass,
                 queueItem
             );
             // senders
-            Hashtable senders = new Hashtable();
+            var senders = new Hashtable();
             // evaluate senders - get one for each channel (e-mail, sms...) and then assign them by each recipient's notification channel
             foreach (
                 WorkQueueData.WorkQueueNotificationContact_SendersRow sender in notification.GetWorkQueueNotificationContact_SendersRows()
@@ -406,10 +425,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     if (log.IsErrorEnabled)
                     {
                         log.Error(
-                            string.Format(
-                                "Skipping notification for workqueue notification sender definition {0}, no sender returned",
-                                sender?.Id
-                            )
+                            $"Skipping notification for work queue notification sender definition {sender?.Id}, no sender returned"
                         );
                     }
                     continue;
@@ -424,11 +440,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             if (log.IsDebugEnabled)
             {
                 log.Debug(
-                    "Number of recipients rows defined for workqueue notification: "
-                        + recipientRows.Length.ToString()
+                    $"Number of recipients rows defined for work queue notification: {recipientRows.Length}"
                 );
             }
-            // evaluate recipient rows and send a notifications. For each row there can be found out more than one recipient.
+            // evaluate recipient rows and send notifications. For each row there can be found out more than one recipient.
             foreach (
                 WorkQueueData.WorkQueueNotificationContact_RecipientsRow recipientRow in recipientRows
             )
@@ -453,20 +468,17 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 }
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Recipients: " + recipients?.GetXml());
+                    log.Debug($"Recipients: {recipients?.GetXml()}");
                 }
                 if (!senders.Contains(recipientRow.refOrigamNotificationChannelTypeId))
                 {
                     if (log.IsDebugEnabled)
                     {
                         log.Debug(
-                            String.Format(
-                                "Can't find any sender for notification channel `{0}'",
-                                recipientRow.refOrigamNotificationChannelTypeId
-                            )
+                            $"Can't find any sender for notification channel '{recipientRow.refOrigamNotificationChannelTypeId}'"
                         );
                     }
-                    // continue to process next recipient definition row
+                    // continue to process the next recipient definition row
                     continue;
                 }
                 // for each recipient generate and send the mail
@@ -490,8 +502,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         if (log.IsDebugEnabled)
                         {
                             log.Debug(
-                                "Notification transformation result count: "
-                                    + notificationData.DataSet.Tables[0].Rows.Count.ToString()
+                                $"Notification transformation result count: {notificationData.DataSet.Tables[0].Rows.Count}"
                             );
                         }
                         continue;
@@ -508,10 +519,8 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         notificationSubject = (string)notificationRow["Subject"];
                     }
                     if (
-                        notificationBody == null
-                        || notificationBody == ""
-                        || notificationSubject == null
-                        || notificationSubject == ""
+                        string.IsNullOrEmpty(notificationBody)
+                        || string.IsNullOrEmpty(notificationSubject)
                     )
                     {
                         if (log.IsDebugEnabled)
@@ -524,55 +533,52 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     }
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Notification subject: " + notificationSubject);
-                        log.Debug(String.Format("Notification body: `{0}'", notificationBody));
+                        log.Debug($"Notification subject: {notificationSubject}");
+                        log.Debug($"Notification body: '{notificationBody}'");
                     }
                     // send the notification - start the notification workflow
-                    QueryParameterCollection pms = new QueryParameterCollection();
-                    pms.Add(
+                    var queryParameterCollection = new QueryParameterCollection
+                    {
                         new QueryParameter(
                             "sender",
                             (string)senders[recipientRow.refOrigamNotificationChannelTypeId]
-                        )
-                    );
-                    pms.Add(new QueryParameter("recipients", recipient.ContactIdentification));
-                    pms.Add(new QueryParameter("body", notificationBody));
-                    pms.Add(new QueryParameter("subject", notificationSubject));
-                    pms.Add(
+                        ),
+                        new QueryParameter("recipients", recipient.ContactIdentification),
+                        new QueryParameter("body", notificationBody),
+                        new QueryParameter("subject", notificationSubject),
                         new QueryParameter(
                             "notificationChannelTypeId",
                             recipientRow.refOrigamNotificationChannelTypeId
-                        )
-                    );
-                    if (notification.SendAttachments == true)
+                        ),
+                    };
+                    if (notification.SendAttachments)
                     {
-                        pms.Add(
+                        queryParameterCollection.Add(
                             new QueryParameter(
                                 "attachmentRecordId",
                                 (Guid)queueItem.Tables[0].Rows[0]["Id"]
                             )
                         );
                     }
-                    //log.Debug(string.Format("Skipping sending of mail to {0}.", recipient.Email));
                     core.WorkflowService.ExecuteWorkflow(
                         new Guid("0fea481a-24ab-4e98-8793-617ab5bb7272"),
-                        pms,
+                        queryParameterCollection,
                         transactionId
                     );
-                } // foreach recipient
-            } // foreach definition recipient row
-        } // foreach workqueue notification
+                }
+            }
+        }
     }
 
-    private static DataRow ExtractWorkQueueRowIfNotNotificationDatastructureIsSet(
-        WorkQueueClass wqc,
+    private static DataRow ExtractWorkQueueRowIfNotNotificationDataStructureIsSet(
+        WorkQueueClass workQueueClass,
         DataSet queueItem
     )
     {
-        // store WorkQueueRow if notification datastructure is set
+        // store WorkQueueRow if notification data structure is set
         // we send the work queue data anyway as a parameter (to all workflows)
         DataRow workQueueRow = null;
-        if (wqc.NotificationStructure != null)
+        if (workQueueClass.NotificationStructure != null)
         {
             workQueueRow = queueItem.Tables[0].Rows[0];
         }
@@ -595,70 +601,55 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         string transactionId
     )
     {
-        OrigamNotificationContactData.OrigamNotificationContactRow recipient =
-            recipientRow as OrigamNotificationContactData.OrigamNotificationContactRow;
-        if (recipient == null)
+        if (
+            recipientRow is not OrigamNotificationContactData.OrigamNotificationContactRow recipient
+        )
         {
             throw new Exception(
                 "Recipient must be type OrigamNotificationContactData.OrigamNotificationContactRow."
             );
         }
-        IPersistenceService persistence =
-            ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-        using (
-            LanguageSwitcher langSwitcher = new LanguageSwitcher(
-                recipient != null && !recipient.IsLanguageTagIETFNull()
-                    ? recipient.LanguageTagIETF
-                    : ""
-            )
-        )
+        var persistence = ServiceManager.Services.GetService<IPersistenceService>();
+        using var langSwitcher = new LanguageSwitcher(
+            !recipient.IsLanguageTagIETFNull() ? recipient.LanguageTagIETF : ""
+        );
+        // get the current localized XSLT template
+        DataSet templateData = dataService.LoadData(
+            dataStructureId: new Guid("92c3c8b4-68a3-482b-8a90-f7142c4b17ec"), // OrigamNotificationTemplate DS
+            methodId: new Guid("3724bd2a-9466-4129-bdfa-ca8dc8621a72"), // GetId
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId,
+            paramName1: "OrigamNotificationTemplate_parId",
+            notificationTemplateId
+        );
+        string template = (string)templateData.Tables[0].Rows[0]["Template"];
+        // transform
+        var resultStructure = persistence.SchemaProvider.RetrieveInstance<DataStructure>(
+            new Guid("2f5e1853-e885-4177-ab6d-9da52123ae82")
+        );
+        IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
+        var parameters = new Hashtable
         {
-            // get the current localized XSLT template
-            DataSet templateData = dataService.LoadData(
-                new Guid("92c3c8b4-68a3-482b-8a90-f7142c4b17ec"), // OrigamNotificationTemplate DS
-                new Guid("3724bd2a-9466-4129-bdfa-ca8dc8621a72"), // GetId
-                Guid.Empty,
-                Guid.Empty,
-                transactionId,
-                "OrigamNotificationTemplate_parId",
-                notificationTemplateId
+            ["RecipientRow"] = DatasetTools.GetRowXml(recipient, DataRowVersion.Default),
+        };
+        if (workQueueRow != null)
+        {
+            parameters["WorkQueueRow"] = DatasetTools.GetRowXml(
+                workQueueRow,
+                DataRowVersion.Default
             );
-            string template = (string)templateData.Tables[0].Rows[0]["Template"];
-            // transform
-            DataStructure resultStructure =
-                persistence.SchemaProvider.RetrieveInstance(
-                    typeof(DataStructure),
-                    new ModelElementKey(new Guid("2f5e1853-e885-4177-ab6d-9da52123ae82"))
-                ) as DataStructure;
-            IXsltEngine transform = new CompiledXsltEngine(persistence.SchemaProvider);
-            Hashtable parameters = new Hashtable();
-            if (recipient != null)
-            {
-                parameters["RecipientRow"] = DatasetTools.GetRowXml(
-                    recipient,
-                    DataRowVersion.Default
-                );
-            }
-            if (workQueueRow != null)
-            {
-                parameters["WorkQueueRow"] = DatasetTools.GetRowXml(
-                    workQueueRow,
-                    DataRowVersion.Default
-                );
-            }
-            IDataDocument notificationData = (IDataDocument)
-                transform.Transform(
-                    notificationSource,
-                    template,
-                    parameters,
-                    transactionId,
-                    resultStructure,
-                    false
-                );
-            // return result
-            return notificationData;
         }
+        var notificationData = (IDataDocument)
+            transform.Transform(
+                notificationSource,
+                template,
+                parameters,
+                transactionId,
+                resultStructure,
+                validateOnly: false
+            );
+        return notificationData;
     }
 
     public string CustomScreenName(Guid queueId)
@@ -690,38 +681,37 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         else
         {
-            // anything else - we execute the workflow in order to get the addresses
-            QueryParameterCollection pms = new QueryParameterCollection();
-            pms.Add(
+            // anything else - we execute the workflow to get the addresses
+            var queryParameterCollection = new QueryParameterCollection
+            {
                 new QueryParameter(
                     "workQueueNotificationContactTypeId",
                     workQueueNotificationContactTypeId
-                )
-            );
-            pms.Add(
+                ),
                 new QueryParameter(
                     "OrigamNotificationChannelTypeId",
                     origamNotificationChannelTypeId
-                )
-            );
-            pms.Add(new QueryParameter("value", value));
-            pms.Add(new QueryParameter("context", context));
+                ),
+                new QueryParameter("value", value),
+                new QueryParameter("context", context),
+            };
             if (workQueueRow != null)
             {
-                pms.Add(
+                queryParameterCollection.Add(
                     new QueryParameter(
                         "WorkQueueRow",
                         DatasetTools.GetRowXml(workQueueRow, DataRowVersion.Default)
                     )
                 );
             }
-            IDataDocument wfResult =
+            if (
                 core.WorkflowService.ExecuteWorkflow(
                     new Guid("1e621daf-c70d-4cc1-9a52-73427c499006"),
-                    pms,
+                    queryParameterCollection,
                     transactionId
-                ) as IDataDocument;
-            if (wfResult != null)
+                )
+                is IDataDocument wfResult
+            )
             {
                 DatasetTools.MergeDataSetVerbose(result, wfResult.DataSet);
             }
@@ -730,34 +720,38 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     }
 
     private void WorkQueueRowFill(
-        WorkQueueClass wqc,
+        WorkQueueClass workQueueClass,
         RuleEngine ruleEngine,
         DataRow row,
         IXmlContainer data
     )
     {
-        foreach (WorkQueueClassEntityMapping em in wqc.EntityMappings)
+        foreach (WorkQueueClassEntityMapping entityMapping in workQueueClass.EntityMappings)
         {
-            if (em.XPath != "" && em.XPath != null)
+            if (string.IsNullOrEmpty(entityMapping.XPath))
             {
-                DataColumn col = row.Table.Columns[em.Name];
-                OrigamDataType dataType = (OrigamDataType)col.ExtendedProperties["OrigamDataType"];
-                object value = ruleEngine.EvaluateContext(
-                    em.XPath,
-                    data,
-                    dataType,
-                    wqc.WorkQueueStructure
-                );
-                string sValue = (value as string);
-                if (sValue != null && (col.MaxLength > 0 & sValue.Length > col.MaxLength))
-                {
-                    // handle string length
-                    row[em.Name] = sValue.Substring(0, col.MaxLength - 4) + " ...";
-                }
-                else
-                {
-                    row[em.Name] = (value == null ? DBNull.Value : value);
-                }
+                continue;
+            }
+            DataColumn dataColumn = row.Table.Columns[entityMapping.Name];
+            OrigamDataType dataType = (OrigamDataType)
+                dataColumn.ExtendedProperties["OrigamDataType"];
+            object value = ruleEngine.EvaluateContext(
+                entityMapping.XPath,
+                data,
+                dataType,
+                workQueueClass.WorkQueueStructure
+            );
+            if (
+                value is string sValue
+                && (dataColumn.MaxLength > 0 & sValue.Length > dataColumn.MaxLength)
+            )
+            {
+                // handle string length
+                row[entityMapping.Name] = sValue.Substring(0, dataColumn.MaxLength - 4) + " ...";
+            }
+            else
+            {
+                row[entityMapping.Name] = value ?? DBNull.Value;
             }
         }
         // set refId to self if it was not mapped to a source row id, so e.g. notifications can
@@ -768,45 +762,44 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
     }
 
-    public DataSet FetchSingleQueueEntry(
-        WorkQueueClass wqc,
+    private DataSet FetchSingleQueueEntry(
+        WorkQueueClass workQueueClass,
         object queueEntryId,
         string transactionId
     )
     {
-        DataStructureMethod getOneEntryMethod =
-            wqc.WorkQueueStructure.GetChildByName("GetById", DataStructureMethod.CategoryConst)
-            as DataStructureMethod;
-        if (getOneEntryMethod == null)
+        if (
+            workQueueClass.WorkQueueStructure.GetChildByName(
+                "GetById",
+                DataStructureMethod.CategoryConst
+            )
+            is not DataStructureMethod getOneEntryMethod
+        )
         {
             throw new OrigamException(
-                String.Format(
-                    "Programming Error: Can't find a filterset called `GetById' in DataStructure `{0}'. Please add the filterset to the DataStructure.",
-                    wqc.WorkQueueStructure.Name
-                )
+                $"Programming Error: Can't find a filterset called 'GetById' in DataStructure '{workQueueClass.WorkQueueStructure.Name}'. Please add the filterset to the DataStructure."
             );
         }
         // fetch entry by Id
-        DataSet queueEntryDS = dataService.LoadData(
-            wqc.WorkQueueStructureId,
+        DataSet queueEntryDataSet = dataService.LoadData(
+            workQueueClass.WorkQueueStructureId,
             getOneEntryMethod.Id,
-            Guid.Empty,
-            Guid.Empty,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
             transactionId,
-            "WorkQueueEntry_parId",
+            paramName1: "WorkQueueEntry_parId",
             queueEntryId
         );
-        if (queueEntryDS.Tables[0].Rows.Count != 1)
+        if (queueEntryDataSet.Tables[0].Rows.Count == 1)
         {
-            RuleException exc = new RuleException(
-                ResourceUtils.GetString("ErrorWorkQueueEntryNotFound"),
-                RuleExceptionSeverity.High,
-                "ErrorWorkQueueEntryNotFound",
-                "WorkQueueEntry"
-            );
-            throw exc;
+            return queueEntryDataSet;
         }
-        return queueEntryDS;
+        throw new RuleException(
+            ResourceUtils.GetString("ErrorWorkQueueEntryNotFound"),
+            RuleExceptionSeverity.High,
+            "ErrorWorkQueueEntryNotFound",
+            "WorkQueueEntry"
+        );
     }
 
     public void WorkQueueRemove(Guid workQueueId, object queueEntryId, string transactionId)
@@ -820,46 +813,45 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         WorkQueueData.WorkQueueRow queueRow = queue.WorkQueue[0];
         if (log.IsDebugEnabled)
         {
-            log.Debug("Removing Work Queue Entries for Queue: " + queueRow.Name);
+            log.Debug($"Removing Work Queue Entries for Queue: {queueRow.Name}");
         }
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queueRow.WorkQueueClass);
-        if (wqc != null)
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(queueRow.WorkQueueClass);
+        if (workQueueClass == null)
         {
-            DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
-            queueEntryDS.Tables[0].Rows[0].Delete();
-            try
-            {
-                dataService.StoreData(
-                    wqc.WorkQueueStructure.Id,
-                    queueEntryDS,
-                    false,
-                    transactionId
-                );
-            }
-            catch (DBConcurrencyException)
-            {
-                dataService.StoreData(
-                    new Guid("7ca0c208-9ac8-4c55-bd0e-32575b613654"),
-                    queueEntryDS,
-                    false,
-                    transactionId
-                );
-            }
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(
-                    string.Format(
-                        "Removed Work Queue Entry `{0}'  from Queue: {1}",
-                        queueEntryId,
-                        queueRow.Name
-                    )
-                );
-            }
+            return;
+        }
+        DataSet queueEntryDataSet = FetchSingleQueueEntry(
+            workQueueClass,
+            queueEntryId,
+            transactionId
+        );
+        queueEntryDataSet.Tables[0].Rows[0].Delete();
+        try
+        {
+            dataService.StoreData(
+                workQueueClass.WorkQueueStructure.Id,
+                queueEntryDataSet,
+                loadActualValuesAfterUpdate: false,
+                transactionId
+            );
+        }
+        catch (DBConcurrencyException)
+        {
+            dataService.StoreData(
+                new Guid("7ca0c208-9ac8-4c55-bd0e-32575b613654"),
+                queueEntryDataSet,
+                loadActualValuesAfterUpdate: false,
+                transactionId
+            );
+        }
+        if (log.IsDebugEnabled)
+        {
+            log.Debug($"Removed Work Queue Entry '{queueEntryId}'  from Queue: {queueRow.Name}");
         }
     }
 
     public void WorkQueueRemove(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         string workQueueName,
         Guid workQueueId,
         string condition,
@@ -875,79 +867,79 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         if (log.IsDebugEnabled)
         {
             log.Debug(
-                "Removing Work Queue Entries for Queue: " + workQueueName + " for row Id " + rowKey
+                $"Removing Work Queue Entries for Queue: {workQueueName} for row Id {rowKey}"
             );
         }
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
-        if (wqc != null)
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueClassIdentifier);
+        if (workQueueClass == null)
         {
-            // get queue entries for this row and queue
-            DataStructureMethod pkMethod =
-                wqc.WorkQueueStructure.GetChildByName(
-                    "GetByMasterId",
-                    DataStructureMethod.CategoryConst
-                ) as DataStructureMethod;
-            if (pkMethod == null)
-            {
-                throw new Exception(
-                    "GetByMasterId method not found for data structure of work queue class '"
-                        + wqc.Name
-                        + "'"
-                );
-            }
-            DataSet ds = dataService.LoadData(
-                wqc.WorkQueueStructureId,
-                pkMethod.Id,
-                Guid.Empty,
-                Guid.Empty,
-                transactionId,
-                "WorkQueueEntry_parRefId",
-                rowKey,
-                "WorkQueueEntry_parWorkQueueId",
-                workQueueId
+            return;
+        }
+        // get queue entries for this row and queue
+        if (
+            workQueueClass.WorkQueueStructure.GetChildByName(
+                "GetByMasterId",
+                DataStructureMethod.CategoryConst
+            )
+            is not DataStructureMethod primaryKeyMethod
+        )
+        {
+            throw new Exception(
+                $"GetByMasterId method not found for data structure of work queue class '{workQueueClass.Name}'"
             );
-            int count = ds.Tables[0].Rows.Count;
-            if (count > 0)
+        }
+        DataSet dataSet = dataService.LoadData(
+            workQueueClass.WorkQueueStructureId,
+            primaryKeyMethod.Id,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
+            transactionId,
+            paramName1: "WorkQueueEntry_parRefId",
+            paramValue1: rowKey,
+            paramName2: "WorkQueueEntry_parWorkQueueId",
+            paramValue2: workQueueId
+        );
+        int count = dataSet.Tables[0].Rows.Count;
+        if (count > 0)
+        {
+            foreach (DataRow rowToDelete in dataSet.Tables[0].Rows)
             {
-                foreach (DataRow rowToDelete in ds.Tables[0].Rows)
+                bool delete = true;
+                if (!string.IsNullOrEmpty(condition))
                 {
-                    bool delete = true;
-                    if (condition != null && condition != string.Empty)
-                    {
-                        if (
-                            !EvaluateWorkQueueCondition(
-                                rowToDelete,
-                                condition,
-                                workQueueName,
-                                transactionId
-                            )
+                    if (
+                        !EvaluateWorkQueueCondition(
+                            rowToDelete,
+                            condition,
+                            workQueueName,
+                            transactionId
                         )
-                        {
-                            delete = false;
-                            count--;
-                        }
-                    }
-                    if (delete)
+                    )
                     {
-                        rowToDelete.Delete();
+                        delete = false;
+                        count--;
                     }
                 }
-                dataService.StoreData(wqc.WorkQueueStructure.Id, ds, false, transactionId);
+                if (delete)
+                {
+                    rowToDelete.Delete();
+                }
             }
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(
-                    "Removed "
-                        + count.ToString()
-                        + " work Queue Entries from Queue: "
-                        + workQueueName
-                );
-            }
+            dataService.StoreData(
+                workQueueClass.WorkQueueStructure.Id,
+                dataSet,
+                loadActualValuesAfterUpdate: false,
+                transactionId
+            );
+        }
+        if (log.IsDebugEnabled)
+        {
+            log.Debug($"Removed {count} work Queue Entries from Queue: {workQueueName}");
         }
     }
 
     public void WorkQueueUpdate(
-        string workQueueClass,
+        string workQueueClassIdentifier,
         int relationNo,
         Guid workQueueId,
         object rowKey,
@@ -959,70 +951,69 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             return;
         }
 
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueClassIdentifier);
         RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
         UserProfile profile = SecurityManager.CurrentUserProfile();
         // get filterset for this relation no (1-7)
         string filterSetName = null;
-        DataStructureFilterSet fs = null;
+        DataStructureFilterSet filterSet = null;
         if (relationNo == 0)
         {
             filterSetName = "GetByMasterId";
         }
         else if (relationNo > 0 & relationNo < 8)
         {
-            filterSetName = "GetByRel" + relationNo.ToString();
+            filterSetName = $"GetByRel{relationNo}";
         }
         else
         {
             throw new ArgumentOutOfRangeException(
-                "relationNo",
+                nameof(relationNo),
                 relationNo,
                 ResourceUtils.GetString("ErrorMaxWorkQueueEntities")
             );
         }
-        fs = (DataStructureFilterSet)
-            wqc.WorkQueueStructure.GetChildByName(
+        filterSet = (DataStructureFilterSet)
+            workQueueClass.WorkQueueStructure.GetChildByName(
                 filterSetName,
                 DataStructureFilterSet.CategoryConst
             );
-        if (fs == null)
+        if (filterSet == null)
         {
             throw new Exception(
                 ResourceUtils.GetString(
                     "ErrorNoFilterSet",
-                    wqc.WorkQueueStructure.Path,
+                    workQueueClass.WorkQueueStructure.Path,
                     filterSetName
                 )
             );
         }
         // load all entries in the queue related to this entity
         DataSet entries = dataService.LoadData(
-            wqc.WorkQueueStructureId,
-            fs.Id,
-            Guid.Empty,
-            Guid.Empty,
+            workQueueClass.WorkQueueStructureId,
+            filterSet.Id,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty,
             transactionId,
-            "WorkQueueEntry_parRefId",
-            rowKey,
-            "WorkQueueEntry_parWorkQueueId",
-            workQueueId
+            paramName1: "WorkQueueEntry_parRefId",
+            paramValue1: rowKey,
+            paramName2: "WorkQueueEntry_parWorkQueueId",
+            paramValue2: workQueueId
         );
-        string pkParamName = null;
+        string primaryKeyParamName = null;
         foreach (
-            string parameterName in wqc.EntityStructurePrimaryKeyMethod.ParameterReferences.Keys
+            string parameterName in workQueueClass
+                .EntityStructurePrimaryKeyMethod
+                .ParameterReferences
+                .Keys
         )
         {
-            pkParamName = parameterName;
+            primaryKeyParamName = parameterName;
         }
-        if (pkParamName == null)
+        if (primaryKeyParamName == null)
         {
             throw new OrigamException(
-                string.Format(
-                    "Entity Structure Primary Key Method '{0}' specified in a work queue class '{1}' has no parameters. A parameter to load a record by its primary key is expected.",
-                    wqc.EntityStructurePrimaryKeyMethod.Path,
-                    wqc.Path
-                )
+                $"Entity Structure Primary Key Method '{workQueueClass.EntityStructurePrimaryKeyMethod.Path}' specified in a work queue class '{workQueueClass.Path}' has no parameters. A parameter to load a record by its primary key is expected."
             );
         }
         // for-each entry
@@ -1030,35 +1021,36 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         {
             // load original record
             DataSet originalRecord = dataService.LoadData(
-                wqc.EntityStructureId,
-                wqc.EntityStructurePkMethodId,
-                Guid.Empty,
-                Guid.Empty,
+                workQueueClass.EntityStructureId,
+                workQueueClass.EntityStructurePkMethodId,
+                defaultSetId: Guid.Empty,
+                sortSetId: Guid.Empty,
                 transactionId,
-                pkParamName,
+                primaryKeyParamName,
                 entry["refId"]
             );
             // record could have been deleted in the meantime, we test
-            if (originalRecord.Tables[0].Rows.Count > 0)
+            if (originalRecord.Tables[0].Rows.Count <= 0)
             {
-                IXmlContainer data = DatasetTools.GetRowXml(
-                    originalRecord.Tables[0].Rows[0],
-                    DataRowVersion.Default
-                );
-                // update entry from record
-                WorkQueueRowFill(wqc, ruleEngine, entry, data);
-                entry["RecordUpdated"] = DateTime.Now;
-                entry["RecordUpdatedBy"] = profile.Id;
+                continue;
             }
+            IXmlContainer data = DatasetTools.GetRowXml(
+                originalRecord.Tables[0].Rows[0],
+                DataRowVersion.Default
+            );
+            // update entry from record
+            WorkQueueRowFill(workQueueClass, ruleEngine, entry, data);
+            entry["RecordUpdated"] = DateTime.Now;
+            entry["RecordUpdatedBy"] = profile.Id;
         }
         // save entries
-        StoreQueueItems(wqc, entries.Tables[0], transactionId);
+        StoreQueueItems(workQueueClass, entries.Tables[0], transactionId);
     }
     #endregion
     /// <summary>
     /// Handles work queue actions from the UI. WILL NOT CREATE TRANSACTIONS!
     /// </summary>
-    /// <param name="queueClass"></param>
+    /// <param name="workQueueClassIdentifier"></param>
     /// <param name="selectedRows"></param>
     /// <param name="commandType"></param>
     /// <param name="command"></param>
@@ -1067,7 +1059,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     /// <param name="errorQueueId"></param>
     public void HandleAction(
         Guid queueId,
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         Guid commandType,
         string command,
@@ -1082,15 +1074,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             WorkQueueData.WorkQueueRow queue = workQueueData.WorkQueue[0];
             HandleAction(
                 queue,
-                queueClass,
+                workQueueClassIdentifier,
                 selectedRows,
                 commandType,
                 command,
                 param1,
                 param2,
-                true,
+                lockItems: true,
                 errorQueueId,
-                null
+                transactionId: null
             );
         }
         catch
@@ -1113,7 +1105,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void HandleAction(
         WorkQueueData.WorkQueueRow queue,
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         Guid commandType,
         string command,
@@ -1127,73 +1119,96 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         if (log.IsInfoEnabled)
         {
             log.Info(
-                "Begin HandleAction() queue class: "
-                    + queueClass
-                    + " command: "
-                    + command
-                    + " lockItems: "
-                    + lockItems.ToString()
+                $"Begin HandleAction() queue class: {workQueueClassIdentifier} command: {command} lockItems: {lockItems}"
             );
         }
         // set all rows to be actual values, not added (in case the calling function did not do that)
         selectedRows.AcceptChanges();
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queueClass);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueClassIdentifier);
         try
         {
             if (lockItems)
             {
-                LockQueueItems(wqc, selectedRows);
+                LockQueueItems(workQueueClass, selectedRows);
             }
 
-            IParameterService ps =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-            if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_StateChange"))
-            {
-                HandleStateChange(queueClass, selectedRows, param1, param2, transactionId);
-            }
-            else if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_Remove"))
-            {
-                HandleRemove(queueClass, selectedRows, transactionId);
-            }
-            else if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_Move"))
-            {
-                HandleMove(queueClass, selectedRows, param1, transactionId, true);
-            }
-            else if (
+            var parameterService = ServiceManager.Services.GetService<IParameterService>();
+            if (
                 commandType
-                == (Guid)ps.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand")
+                == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_StateChange")
             )
             {
-                HandleWorkflow(queueClass, selectedRows, command, param1, param2, transactionId);
-            }
-            else if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_Archive"))
-            {
-                HandleMove(queueClass, selectedRows, param1, transactionId, false);
+                HandleStateChange(
+                    workQueueClassIdentifier,
+                    selectedRows,
+                    param1,
+                    param2,
+                    transactionId
+                );
             }
             else if (
                 commandType
-                == (Guid)ps.GetParameterValue("WorkQueueCommandType_LoadFromExternalSource")
+                == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Remove")
+            )
+            {
+                HandleRemove(workQueueClassIdentifier, selectedRows, transactionId);
+            }
+            else if (
+                commandType == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Move")
+            )
+            {
+                HandleMove(workQueueClassIdentifier, selectedRows, param1, transactionId, true);
+            }
+            else if (
+                commandType
+                == (Guid)
+                    parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand")
+            )
+            {
+                HandleWorkflow(
+                    workQueueClassIdentifier,
+                    selectedRows,
+                    command,
+                    param1,
+                    param2,
+                    transactionId
+                );
+            }
+            else if (
+                commandType
+                == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Archive")
+            )
+            {
+                HandleMove(workQueueClassIdentifier, selectedRows, param1, transactionId, false);
+            }
+            else if (
+                commandType
+                == (Guid)
+                    parameterService.GetParameterValue(
+                        "WorkQueueCommandType_LoadFromExternalSource"
+                    )
             )
             {
                 LoadFromExternalSource(queue.Id);
             }
             else if (
-                commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_RunNotifications")
+                commandType
+                == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_RunNotifications")
             )
             {
-                HandleRunNotifications(queueClass, selectedRows, transactionId);
+                HandleRunNotifications(workQueueClassIdentifier, selectedRows, transactionId);
             }
             else
             {
                 throw new ArgumentOutOfRangeException(
-                    "commandType",
+                    nameof(commandType),
                     commandType,
                     ResourceUtils.GetString("ErrorUnknownWorkQueueCommand")
                 );
             }
             if (lockItems)
             {
-                UnlockQueueItems(wqc, selectedRows);
+                UnlockQueueItems(selectedRows);
             }
         }
         catch (WorkQueueItemLockedException)
@@ -1205,10 +1220,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             if (log.IsErrorEnabled)
             {
                 log.LogOrigamError(
-                    "Error occured while processing work queue items., Queue: "
-                        + wqc?.Name
-                        + ", Command: "
-                        + command,
+                    $"Error occured while processing work queue items., Queue: {workQueueClass?.Name}, Command: {command}",
                     ex
                 );
             }
@@ -1227,23 +1239,32 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 retryManager.SetEntryRetryData(row, queue, ex.Message);
                 anyRowInRetry = anyRowInRetry || (bool)row["InRetry"];
             }
-            StoreFailedEntries(wqc, selectedRows);
+            StoreFailedEntries(workQueueClass, selectedRows);
             // other failure => move to the error queue, if available
             if (!anyRowInRetry && errorQueueId != null)
             {
-                HandleMoveQueue(wqc, selectedRows, (Guid)errorQueueId, ex.Message, null, false);
+                HandleMoveQueue(
+                    workQueueClass,
+                    selectedRows,
+                    (Guid)errorQueueId,
+                    ex.Message,
+                    transactionId: null,
+                    resetErrors: false
+                );
             }
             // unlock the queue item
             if (lockItems)
             {
-                UnlockQueueItems(wqc, selectedRows, true);
+                UnlockQueueItems(selectedRows, rejectChangesWhenDeleted: true);
             }
 
             throw;
         }
         if (log.IsInfoEnabled)
         {
-            log.Info("Finished HandleAction() queue class: " + queueClass + " command: " + command);
+            log.Info(
+                $"Finished HandleAction() queue class: {workQueueClassIdentifier} command: {command}"
+            );
         }
     }
 
@@ -1254,7 +1275,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         WorkQueueData queue = GetQueue(queueId);
         // extract WorkQueueClass name and construct WorkQueueClass from name
         WorkQueueData.WorkQueueRow queueRow = queue.WorkQueue[0];
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueRow.WorkQueueClass);
+        var workQueueClass = (WorkQueueClass)WQClass(queueRow.WorkQueueClass);
         // authorize access from API
         IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
         if (
@@ -1263,7 +1284,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         )
         {
             throw new RuleException(
-                String.Format(ResourceUtils.GetString("ErrorWorkQueueApiNotAuthorized"), queueId),
+                string.Format(ResourceUtils.GetString("ErrorWorkQueueApiNotAuthorized"), queueId),
                 RuleExceptionSeverity.High,
                 "queueId",
                 ""
@@ -1271,11 +1292,13 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         // find command in the queue data
         WorkQueueData.WorkQueueCommandRow commandRow = null;
-        foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.WorkQueueCommand.Rows)
+        foreach (
+            WorkQueueData.WorkQueueCommandRow workQueueCommandRow in queue.WorkQueueCommand.Rows
+        )
         {
-            if (cmd.Text == commandText)
+            if (workQueueCommandRow.Text == commandText)
             {
-                commandRow = cmd;
+                commandRow = workQueueCommandRow;
             }
         }
         if (
@@ -1284,7 +1307,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         )
         {
             throw new RuleException(
-                String.Format(
+                string.Format(
                     ResourceUtils.GetString("ErrorWorkQueueCommandNotAuthorized"),
                     commandText,
                     queueId
@@ -1295,27 +1318,29 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             );
         }
         // fetch a single queue entry
-        DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, null);
+        DataSet queueEntryDataSet = FetchSingleQueueEntry(
+            workQueueClass,
+            queueEntryId,
+            transactionId: null
+        );
         // call handle action
         HandleAction(
             queueRow,
             queueRow.WorkQueueClass,
-            queueEntryDS.Tables[0],
+            queueEntryDataSet.Tables[0],
             commandRow.refWorkQueueCommandTypeId,
             commandRow.IsCommandNull() ? null : commandRow.Command,
             commandRow.IsParam1Null() ? null : commandRow.Param1,
             commandRow.IsParam2Null() ? null : commandRow.Param2,
-            true,
-            commandRow.IsrefErrorWorkQueueIdNull()
-                ? (object)null
-                : (object)commandRow.refErrorWorkQueueId,
-            null
+            lockItems: true,
+            commandRow.IsrefErrorWorkQueueIdNull() ? null : commandRow.refErrorWorkQueueId,
+            transactionId: null
         );
     }
 
     public DataRow GetNextItem(string workQueueName, string transactionId, bool processErrors)
     {
-        var queueId = workQueueUtils.GetQueueId(workQueueName);
+        Guid queueId = workQueueUtils.GetQueueId(workQueueName);
         WorkQueueData.WorkQueueRow queue = GetQueue(queueId).WorkQueue[0];
         return queueProcessor.GetNextItem(
             queue,
@@ -1325,9 +1350,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         );
     }
 
-    private void LockQueueItems(WorkQueueClass wqc, DataTable selectedRows)
+    private void LockQueueItems(WorkQueueClass workQueueClass, DataTable selectedRows)
     {
-        if (!workQueueUtils.LockQueueItems(wqc, selectedRows))
+        if (!workQueueUtils.LockQueueItems(workQueueClass, selectedRows))
         {
             throw new WorkQueueItemLockedException();
         }
@@ -1336,7 +1361,6 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     /// <summary>
     /// Unlocks work queue entries in a separate (new) database transaction
     /// </summary>
-    /// <param name="wqc">Work queue class schema item</param>
     /// <param name="selectedRows">Work queue entries to unlock </param>
     /// <param name="rejectChangesWhenDeleted">This should be set if you call the
     /// function from within catch handler. In that case the original transaction
@@ -1344,11 +1368,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     /// We need to reflect that state in the dataset (reject changes)
     /// and that way unlock deleted rows.
     /// </param>
-    private void UnlockQueueItems(
-        WorkQueueClass wqc,
-        DataTable selectedRows,
-        bool rejectChangesWhenDeleted = false
-    )
+    private void UnlockQueueItems(DataTable selectedRows, bool rejectChangesWhenDeleted = false)
     {
         foreach (DataRow row in selectedRows.Rows)
         {
@@ -1361,18 +1381,18 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 Guid id = (Guid)row["Id"];
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Unlocking work queue item id " + id.ToString());
+                    log.Debug($"Unlocking work queue item id {id}");
                 }
                 // load the fresh queue entry from the database, because
                 // it may have been e.g. deleted after state change (in that case
                 // nothing will happen/nothing will be unlocked)
                 DataSet data = dataService.LoadData(
-                    new Guid("59de7db2-e2f4-437b-b191-0fd3bc766685"),
-                    new Guid("a68a8990-f476-4a64-bb9a-e45228eb9aae"),
-                    Guid.Empty,
-                    Guid.Empty,
-                    null,
-                    "WorkQueueEntry_parId",
+                    dataStructureId: new Guid("59de7db2-e2f4-437b-b191-0fd3bc766685"),
+                    methodId: new Guid("a68a8990-f476-4a64-bb9a-e45228eb9aae"),
+                    defaultSetId: Guid.Empty,
+                    sortSetId: Guid.Empty,
+                    transactionId: null,
+                    paramName1: "WorkQueueEntry_parId",
                     id
                 );
                 foreach (DataRow freshRow in data.Tables[0].Rows)
@@ -1383,15 +1403,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 dataService.StoreData(
                     new Guid("59de7db2-e2f4-437b-b191-0fd3bc766685"),
                     data,
-                    false,
-                    null
+                    loadActualValuesAfterUpdate: false,
+                    transactionId: null
                 );
             }
         }
     }
 
     private void HandleMoveQueue(
-        WorkQueueClass wqc,
+        WorkQueueClass workQueueClass,
         DataTable selectedRows,
         Guid newQueueId,
         string errorMessage,
@@ -1407,11 +1427,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 {
                     Guid itemId = (Guid)row["Id"];
                     log.Info(
-                        "Moving queue item "
-                            + itemId
-                            + " to queue id "
-                            + newQueueId
-                            + (errorMessage == null ? "" : " with error: " + errorMessage)
+                        $"Moving queue item {itemId} to queue id {newQueueId}{(errorMessage == null ? "" : " with error: " + errorMessage)}"
                     );
                 });
             }
@@ -1428,14 +1444,14 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         try
         {
-            StoreQueueItems(wqc, selectedRows, transactionId);
+            StoreQueueItems(workQueueClass, selectedRows, transactionId);
         }
         catch (DBConcurrencyException)
         {
             dataService.StoreData(
                 new Guid("7ca0c208-9ac8-4c55-bd0e-32575b613654"),
                 selectedRows.DataSet,
-                false,
+                loadActualValuesAfterUpdate: false,
                 transactionId
             );
         }
@@ -1448,11 +1464,11 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 log.RunHandled(() =>
                 {
                     Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " + itemId + ".");
+                    log.Info($"Running notifications for item {itemId}.");
                 });
             }
             ProcessNotifications(
-                wqc,
+                workQueueClass,
                 newQueueId,
                 new Guid(WQ_EVENT_ONCREATE),
                 slice,
@@ -1462,7 +1478,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     }
 
     private void HandleStateChange(
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         string fieldName,
         string newValue,
@@ -1470,31 +1486,34 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     )
     {
         CheckSelectedRowsCountPositive(selectedRows.Rows.Count);
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
+        var workQueueClass = (WorkQueueClass)WQClass(workQueueClassIdentifier);
         foreach (DataRow row in selectedRows.Rows)
         {
             // get the original record by refId
-            string pkParamName = null;
+            string primaryKeyParamName = null;
             foreach (
-                string parameterName in wqc.EntityStructurePrimaryKeyMethod.ParameterReferences.Keys
+                string parameterName in workQueueClass
+                    .EntityStructurePrimaryKeyMethod
+                    .ParameterReferences
+                    .Keys
             )
             {
-                pkParamName = parameterName;
+                primaryKeyParamName = parameterName;
             }
-            DataSet ds = dataService.LoadData(
-                wqc.EntityStructureId,
-                wqc.EntityStructurePkMethodId,
-                Guid.Empty,
-                Guid.Empty,
+            DataSet dataSet = dataService.LoadData(
+                workQueueClass.EntityStructureId,
+                workQueueClass.EntityStructurePkMethodId,
+                defaultSetId: Guid.Empty,
+                sortSetId: Guid.Empty,
                 transactionId,
-                pkParamName,
+                primaryKeyParamName,
                 row["refId"]
             );
-            if (ds.Tables[0].Rows.Count == 0)
+            if (dataSet.Tables[0].Rows.Count == 0)
             {
                 throw new Exception(ResourceUtils.GetString("ErrorNoRecords"));
             }
-            if (!ds.Tables[0].Columns.Contains(fieldName))
+            if (!dataSet.Tables[0].Columns.Contains(fieldName))
             {
                 throw new ArgumentOutOfRangeException(
                     "fieldName",
@@ -1502,39 +1521,45 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     ResourceUtils.GetString("ErrorSourceFieldNotFound")
                 );
             }
-            Type t = ds.Tables[0].Columns[fieldName].DataType;
+            Type dataType = dataSet.Tables[0].Columns[fieldName].DataType;
             object value;
-            if (t == typeof(string))
+            if (dataType == typeof(string))
             {
                 value = newValue;
             }
-            else if (t == typeof(Guid))
+            else if (dataType == typeof(Guid))
             {
                 value = new Guid(newValue);
             }
-            else if (t == typeof(int))
+            else if (dataType == typeof(int))
             {
                 value = XmlConvert.ToInt32(newValue);
             }
             else
             {
-                throw new Exception(ResourceUtils.GetString("ErrorConvertToType", t.ToString()));
+                throw new Exception(
+                    ResourceUtils.GetString("ErrorConvertToType", dataType.ToString())
+                );
             }
-            ds.Tables[0].Rows[0][fieldName] = value;
-            dataService.StoreData(wqc.EntityStructureId, ds, false, transactionId);
+            dataSet.Tables[0].Rows[0][fieldName] = value;
+            dataService.StoreData(
+                workQueueClass.EntityStructureId,
+                dataSet,
+                loadActualValuesAfterUpdate: false,
+                transactionId
+            );
         }
     }
 
     private void HandleRunNotifications(
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         string transactionId
     )
     {
         CheckSelectedRowsCountPositive(selectedRows.Rows.Count);
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
-        IParameterService ps =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        var workQueueClass = (WorkQueueClass)WQClass(workQueueClassIdentifier);
+        var parameterService = ServiceManager.Services.GetService<IParameterService>();
         foreach (DataRow row in selectedRows.Rows)
         {
             DataSet slice = DatasetTools.CloneDataSet(selectedRows.DataSet);
@@ -1544,13 +1569,14 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 log.RunHandled(() =>
                 {
                     Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " + itemId + ".");
+                    log.Info($"Running notifications for item {itemId}.");
                 });
             }
             ProcessNotifications(
-                wqc,
-                (Guid)row["refWorkQueueId"],
-                (Guid)ps.GetParameterValue("WorkQueueNotificationEvent_Command"),
+                workQueueClass,
+                workQueueId: (Guid)row["refWorkQueueId"],
+                eventTypeId: (Guid)
+                    parameterService.GetParameterValue("WorkQueueNotificationEvent_Command"),
                 slice,
                 transactionId
             );
@@ -1558,7 +1584,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     }
 
     private void HandleWorkflow(
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         string command,
         string param1,
@@ -1567,42 +1593,25 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     )
     {
         CheckSelectedRowsCountPositive(selectedRows.Rows.Count);
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
-        WorkQueueWorkflowCommand cmd = wqc.GetCommand(command);
-        QueryParameterCollection parameters = new QueryParameterCollection();
-        foreach (WorkQueueWorkflowCommandParameterMapping pm in cmd.ParameterMappings)
+        var workQueueClass = (WorkQueueClass)WQClass(workQueueClassIdentifier);
+        WorkQueueWorkflowCommand cmd = workQueueClass.GetCommand(command);
+        var parameters = new QueryParameterCollection();
+        foreach (WorkQueueWorkflowCommandParameterMapping parameterMapping in cmd.ParameterMappings)
         {
-            object val;
-            switch (pm.Value)
+            object val = parameterMapping.Value switch
             {
-                case WorkQueueCommandParameterMappingType.QueueEntries:
-                {
-                    val = GetDataDocumentFactory(selectedRows.DataSet);
-                    break;
-                }
-
-                case WorkQueueCommandParameterMappingType.Parameter1:
-                {
-                    val = param1;
-                    break;
-                }
-
-                case WorkQueueCommandParameterMappingType.Parameter2:
-                {
-                    val = param2;
-                    break;
-                }
-
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        "Value",
-                        pm.Value,
-                        ResourceUtils.GetString("ErrorUnknownWorkQueueCommandValue")
-                    );
-                }
-            }
-            parameters.Add(new QueryParameter(pm.Name, val));
+                WorkQueueCommandParameterMappingType.QueueEntries => GetDataDocumentFactory(
+                    selectedRows.DataSet
+                ),
+                WorkQueueCommandParameterMappingType.Parameter1 => param1,
+                WorkQueueCommandParameterMappingType.Parameter2 => param2,
+                _ => throw new ArgumentOutOfRangeException(
+                    "Value",
+                    parameterMapping.Value,
+                    ResourceUtils.GetString("ErrorUnknownWorkQueueCommandValue")
+                ),
+            };
+            parameters.Add(new QueryParameter(parameterMapping.Name, val));
         }
         core.WorkflowService.ExecuteWorkflow(cmd.WorkflowId, parameters, transactionId);
     }
@@ -1617,39 +1626,43 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         return val;
     }
 
-    private void HandleRemove(string queueClass, DataTable selectedRows, string transactionId)
+    private void HandleRemove(
+        string workQueueClassIdentifier,
+        DataTable selectedRows,
+        string transactionId
+    )
     {
         CheckSelectedRowsCountPositive(selectedRows.Rows.Count);
         if (log.IsInfoEnabled)
         {
-            log.Info("Begin HandleRemove() queue class: " + queueClass);
+            log.Info($"Begin HandleRemove() queue class: {workQueueClassIdentifier}");
         }
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
+        var workQueueClass = (WorkQueueClass)WQClass(workQueueClassIdentifier);
         foreach (DataRow row in selectedRows.Rows)
         {
             row.Delete();
         }
         try
         {
-            StoreQueueItems(wqc, selectedRows, transactionId);
+            StoreQueueItems(workQueueClass, selectedRows, transactionId);
         }
         catch (DBConcurrencyException)
         {
             dataService.StoreData(
                 new Guid("fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"),
                 selectedRows.DataSet,
-                false,
+                loadActualValuesAfterUpdate: false,
                 transactionId
             );
         }
         if (log.IsInfoEnabled)
         {
-            log.Info("Finished HandleRemove() queue class: " + queueClass);
+            log.Info($"Finished HandleRemove() queue class: {workQueueClassIdentifier}");
         }
     }
 
     private void HandleMove(
-        string queueClass,
+        string workQueueClassIdentifier,
         DataTable selectedRows,
         string newQueueReferenceCode,
         string transactionId,
@@ -1659,20 +1672,36 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         CheckSelectedRowsCountPositive(selectedRows.Rows.Count);
         if (log.IsInfoEnabled)
         {
-            log.Info("Begin HandleMove() queue class: " + queueClass);
+            log.Info($"Begin HandleMove() queue class: {workQueueClassIdentifier}");
         }
         Guid newQueueId = workQueueUtils.GetQueueId(newQueueReferenceCode);
-        WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
-        HandleMoveQueue(wqc, selectedRows, newQueueId, null, transactionId, resetErrors);
+        var workQueueClass = (WorkQueueClass)WQClass(workQueueClassIdentifier);
+        HandleMoveQueue(
+            workQueueClass,
+            selectedRows,
+            newQueueId,
+            errorMessage: null,
+            transactionId,
+            resetErrors
+        );
         if (log.IsInfoEnabled)
         {
-            log.Info("Finished HandleMove() queue class: " + queueClass);
+            log.Info($"Finished HandleMove() queue class: {workQueueClassIdentifier}");
         }
     }
 
-    private void StoreQueueItems(WorkQueueClass wqc, DataTable selectedRows, string transactionId)
+    private void StoreQueueItems(
+        WorkQueueClass workQueueClass,
+        DataTable selectedRows,
+        string transactionId
+    )
     {
-        dataService.StoreData(wqc.WorkQueueStructureId, selectedRows.DataSet, true, transactionId);
+        dataService.StoreData(
+            workQueueClass.WorkQueueStructureId,
+            selectedRows.DataSet,
+            loadActualValuesAfterUpdate: true,
+            transactionId
+        );
     }
 
     public WorkQueueData GetQueues(
@@ -1696,10 +1725,10 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             dataService.LoadData(
                 DS_WORKQUEUE,
                 filterMethodGuid,
-                Guid.Empty,
+                defaultSetId: Guid.Empty,
                 DS_SORTSET_WQ_SORT,
                 transactionId,
-                "WorkQueue_parQueueProcessor",
+                paramName1: "WorkQueue_parQueueProcessor",
                 settings.Name
             )
         );
@@ -1711,19 +1740,17 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         WorkQueueData queues = new WorkQueueData();
         queues.Merge(
             dataService.LoadData(
-                new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e"),
-                new Guid("2543bbd3-3592-4b14-9d74-86d0e9c65d98"),
-                Guid.Empty,
-                new Guid("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34"),
-                null,
-                "WorkQueue_parId",
+                dataStructureId: new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e"),
+                methodId: new Guid("2543bbd3-3592-4b14-9d74-86d0e9c65d98"),
+                defaultSetId: Guid.Empty,
+                sortSetId: new Guid("c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34"),
+                transactionId: null,
+                paramName1: "WorkQueue_parId",
                 queueId
             )
         );
         return queues;
     }
-
-    bool _externalQueueAdapterBusy = false;
 
     private void LoadExternalWorkQueuesElapsed(object sender, ElapsedEventArgs e)
     {
@@ -1737,23 +1764,19 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void LoadFromExternalSource(Guid queueId)
     {
-        ISchemaService schemaService =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as ISchemaService;
-        if (_externalQueueAdapterBusy || !schemaService.IsSchemaLoaded || serviceBeingUnloaded)
+        var schemaService = ServiceManager.Services.GetService<SchemaService>();
+        if (externalQueueAdapterBusy || !schemaService.IsSchemaLoaded || serviceBeingUnloaded)
         {
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat(
-                    "Skipping external work queues load: adapterBusy: {0}, schemaLoaded: {1}, serviceBeingUnloaded: {2}",
-                    _externalQueueAdapterBusy,
-                    schemaService?.IsSchemaLoaded,
-                    serviceBeingUnloaded
+                log.Debug(
+                    $"Skipping external work queues load: adapterBusy: {externalQueueAdapterBusy}, schemaLoaded: {schemaService?.IsSchemaLoaded}, serviceBeingUnloaded: {serviceBeingUnloaded}"
                 );
             }
             return;
         }
         SecurityManager.SetServerIdentity();
-        _externalQueueAdapterBusy = true;
+        externalQueueAdapterBusy = true;
         if (log.IsInfoEnabled)
         {
             log.Info("Starting loading external work queues.");
@@ -1761,35 +1784,37 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         try
         {
             WorkQueueData queues = GetQueues();
-            foreach (WorkQueueData.WorkQueueRow q in queues.WorkQueue.Rows)
+            foreach (WorkQueueData.WorkQueueRow workQueueRow in queues.WorkQueue.Rows)
             {
-                if (queueId == Guid.Empty || q.Id == queueId)
+                if (queueId != Guid.Empty && workQueueRow.Id != queueId)
                 {
-                    if (!q.IsrefWorkQueueExternalSourceTypeIdNull())
+                    continue;
+                }
+                if (workQueueRow.IsrefWorkQueueExternalSourceTypeIdNull())
+                {
+                    continue;
+                }
+                if (log.IsInfoEnabled)
+                {
+                    log.Info($"Starting loading external work queue {workQueueRow.Name}");
+                }
+                try
+                {
+                    ProcessExternalQueue(workQueueRow);
+                    StoreQueues(queues);
+                }
+                catch (Exception ex)
+                {
+                    if (log.IsErrorEnabled)
                     {
-                        if (log.IsInfoEnabled)
-                        {
-                            log.Info("Starting loading external work queue " + q.Name);
-                        }
-                        try
-                        {
-                            ProcessExternalQueue(q);
-                            StoreQueues(queues);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (log.IsErrorEnabled)
-                            {
-                                log.LogOrigamError(
-                                    "Failed loading external work queue " + q.Name,
-                                    ex
-                                );
-                            }
-                            q.ExternalSourceLastMessage = ex.Message;
-                            q.ExternalSourceLastTime = DateTime.Now;
-                            StoreQueues(queues);
-                        }
+                        log.LogOrigamError(
+                            $"Failed loading external work queue {workQueueRow.Name}",
+                            ex
+                        );
                     }
+                    workQueueRow.ExternalSourceLastMessage = ex.Message;
+                    workQueueRow.ExternalSourceLastTime = DateTime.Now;
+                    StoreQueues(queues);
                 }
             }
         }
@@ -1802,7 +1827,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
         finally
         {
-            _externalQueueAdapterBusy = false;
+            externalQueueAdapterBusy = false;
         }
         if (log.IsInfoEnabled)
         {
@@ -1815,16 +1840,18 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         dataService.StoreData(
             new Guid("7b44a488-ac98-4fe1-a427-55de0ff9e12e"),
             queues,
-            false,
-            null
+            loadActualValuesAfterUpdate: false,
+            transactionId: null
         );
     }
 
     private bool HasAutoCommand(WorkQueueData.WorkQueueRow queue)
     {
-        foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.GetWorkQueueCommandRows())
+        foreach (
+            WorkQueueData.WorkQueueCommandRow workQueueCommandRow in queue.GetWorkQueueCommandRows()
+        )
         {
-            if (cmd.IsAutoProcessed)
+            if (workQueueCommandRow.IsAutoProcessed)
             {
                 return true;
             }
@@ -1834,9 +1861,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void ProcessQueueItem(WorkQueueData.WorkQueueRow queue, DataRow queueEntryRow)
     {
-        WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queue.WorkQueueClass);
-        IParameterService ps =
-            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        var parameterService = ServiceManager.Services.GetService<IParameterService>();
         log.Info($"Running ProcessQueueItem in Thread: {Thread.CurrentThread.ManagedThreadId}");
 
         string itemId = queueEntryRow["Id"].ToString();
@@ -1847,73 +1872,64 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             {
                 try
                 {
-                    if (IsAutoProcessed(cmd, queue, queueEntryRow, transactionId))
+                    if (!IsAutoProcessed(cmd, queue, queueEntryRow, transactionId))
                     {
-                        if (log.IsInfoEnabled)
-                        {
-                            log.Info(
-                                "Auto processing work queue item. Id: "
-                                    + itemId
-                                    + ", Queue: "
-                                    + queue.Name
-                                    + ", Command: "
-                                    + cmd?.Text
-                            );
-                        }
-                        string param1 = null;
-                        string param2 = null;
-                        string command = null;
-                        object errorQueueId = null;
-                        if (!cmd.IsParam1Null())
-                        {
-                            param1 = cmd.Param1;
-                        }
-
-                        if (!cmd.IsParam2Null())
-                        {
-                            param2 = cmd.Param2;
-                        }
-
-                        if (!cmd.IsCommandNull())
-                        {
-                            command = cmd.Command;
-                        }
-
-                        if (!cmd.IsrefErrorWorkQueueIdNull())
-                        {
-                            errorQueueId = cmd.refErrorWorkQueueId;
-                        }
-                        // actual processing
-                        HandleAction(
-                            queue,
-                            queue.WorkQueueClass,
-                            queueEntryRow.Table,
-                            cmd.refWorkQueueCommandTypeId,
-                            command,
-                            param1,
-                            param2,
-                            false,
-                            errorQueueId,
-                            transactionId
+                        continue;
+                    }
+                    if (log.IsInfoEnabled)
+                    {
+                        log.Info(
+                            $"Auto processing work queue item. Id: {itemId}, Queue: {queue.Name}, Command: {cmd?.Text}"
                         );
-                        if (log.IsInfoEnabled)
-                        {
-                            log.Info(
-                                "Finished auto processing work queue item. Id: "
-                                    + itemId
-                                    + ", Queue: "
-                                    + queue.Name
-                                    + ", Command: "
-                                    + cmd.Text
-                            );
-                        }
-                        if (
-                            cmd.refWorkQueueCommandTypeId
-                            == (Guid)ps.GetParameterValue("WorkQueueCommandType_Remove")
-                        )
-                        {
-                            break;
-                        }
+                    }
+                    string param1 = null;
+                    string param2 = null;
+                    string command = null;
+                    object errorQueueId = null;
+                    if (!cmd.IsParam1Null())
+                    {
+                        param1 = cmd.Param1;
+                    }
+
+                    if (!cmd.IsParam2Null())
+                    {
+                        param2 = cmd.Param2;
+                    }
+
+                    if (!cmd.IsCommandNull())
+                    {
+                        command = cmd.Command;
+                    }
+
+                    if (!cmd.IsrefErrorWorkQueueIdNull())
+                    {
+                        errorQueueId = cmd.refErrorWorkQueueId;
+                    }
+                    // actual processing
+                    HandleAction(
+                        queue,
+                        queue.WorkQueueClass,
+                        queueEntryRow.Table,
+                        cmd.refWorkQueueCommandTypeId,
+                        command,
+                        param1,
+                        param2,
+                        lockItems: false,
+                        errorQueueId,
+                        transactionId
+                    );
+                    if (log.IsInfoEnabled)
+                    {
+                        log.Info(
+                            $"Finished auto processing work queue item. Id: {itemId}, Queue: {queue.Name}, Command: {cmd.Text}"
+                        );
+                    }
+                    if (
+                        cmd.refWorkQueueCommandTypeId
+                        == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_Remove")
+                    )
+                    {
+                        break;
                     }
                 }
                 catch (Exception)
@@ -1928,7 +1944,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         queueEntryRow.RejectChanges();
                     }
                     // unlock the queue item
-                    UnlockQueueItems(wqc, queueEntryRow.Table, true);
+                    UnlockQueueItems(queueEntryRow.Table, rejectChangesWhenDeleted: true);
                     // do not process any other commands on this queue entry
                     throw;
                 }
@@ -1936,17 +1952,22 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             // commit the transaction
             ResourceMonitor.Commit(transactionId);
             // unlock the queue item
-            UnlockQueueItems(wqc, queueEntryRow.Table);
+            UnlockQueueItems(queueEntryRow.Table);
+        }
+        // Catch the command exception. Transaction is already rolled back,
+        // so we continue to another queue item.
+        catch (RuleException ex)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
+            }
         }
         catch (Exception ex)
         {
-            // Catch the command exception. Transaction is already rolled back, so we continue to another queue item.
-            if (log.IsFatalEnabled)
+            if (log.IsErrorEnabled)
             {
-                log.Fatal(
-                    "Queue item processing failed. Id: " + itemId + ", Queue: " + queue?.Name,
-                    ex
-                );
+                log.Error($"Queue item processing failed. Id: {itemId}, Queue: {queue?.Name}", ex);
             }
         }
         finally
@@ -1956,29 +1977,29 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     }
 
     private bool IsAutoProcessed(
-        WorkQueueData.WorkQueueCommandRow cmd,
-        WorkQueueData.WorkQueueRow q,
-        DataRow queueRow,
+        WorkQueueData.WorkQueueCommandRow workQueueCommandRow,
+        WorkQueueData.WorkQueueRow workQueueRow,
+        DataRow dataRow,
         string transactionId
     )
     {
-        if (!cmd.IsAutoProcessed)
+        if (!workQueueCommandRow.IsAutoProcessed)
         {
             return false;
         }
         if (
-            !(bool)queueRow["InRetry"]
-            && !cmd.IsAutoProcessedWithErrors
-            && !queueRow.IsNull("ErrorText")
-            && (string)queueRow["ErrorText"] != ""
+            !(bool)dataRow["InRetry"]
+            && !workQueueCommandRow.IsAutoProcessedWithErrors
+            && !dataRow.IsNull("ErrorText")
+            && (string)dataRow["ErrorText"] != ""
         )
         {
             return false;
         }
         bool result = false;
         if (
-            cmd.IsAutoProcessingConditionXPathNull()
-            || cmd.AutoProcessingConditionXPath == String.Empty
+            workQueueCommandRow.IsAutoProcessingConditionXPathNull()
+            || workQueueCommandRow.AutoProcessingConditionXPath == string.Empty
         )
         {
             // no condition, we always process
@@ -1986,14 +2007,14 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         }
 
         if (
-            !cmd.IsAutoProcessingConditionXPathNull()
-            && cmd.AutoProcessingConditionXPath != String.Empty
+            !workQueueCommandRow.IsAutoProcessingConditionXPathNull()
+            && workQueueCommandRow.AutoProcessingConditionXPath != string.Empty
         )
         {
             result = EvaluateWorkQueueCondition(
-                queueRow,
-                cmd.AutoProcessingConditionXPath,
-                q.Name,
+                dataRow,
+                workQueueCommandRow.AutoProcessingConditionXPath,
+                workQueueRow.Name,
                 transactionId
             );
         }
@@ -2011,12 +2032,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         if (log.IsDebugEnabled)
         {
             log.Debug(
-                "Checking condition for work queue item. Id: "
-                    + queueRow["Id"].ToString()
-                    + ", Queue: "
-                    + queueName
-                    + ", Condition: "
-                    + condition
+                $"Checking condition for work queue item. Id: {queueRow["Id"]}, Queue: {queueName}, Condition: {condition}"
             );
         }
         try
@@ -2024,29 +2040,22 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             // we have to do it from the copied dataset, because later the XmlDataDocument would be re-created, which
             // is not supported by the .net
             IDataDocument oneRowXml = DataDocumentFactory.New(queueRow.Table.DataSet.Copy());
-            XPathNavigator nav = oneRowXml.Xml.CreateNavigator();
-            nav.MoveToFirstChild(); // /ROOT/
-            nav.MoveToFirstChild(); // WorkQueueEntry/
+            XPathNavigator navigator = oneRowXml.Xml.CreateNavigator();
+            navigator.MoveToFirstChild(); // /ROOT/
+            navigator.MoveToFirstChild(); // WorkQueueEntry/
             var evaluationResult = (string)
                 XpathEvaluator.Instance.Evaluate(
                     xpath: condition,
                     isPathRelative: false,
                     returnDataType: OrigamDataType.String,
-                    nav: nav,
+                    nav: navigator,
                     contextPosition: null,
                     transactionId: transactionId
                 );
             if (log.IsDebugEnabled)
             {
                 log.Debug(
-                    "Condition for work queue item. Id: "
-                        + queueRow["Id"].ToString()
-                        + ", Queue: "
-                        + queueName
-                        + ", Condition: "
-                        + condition
-                        + " evaluated to "
-                        + evaluationResult
+                    $"Condition for work queue item. Id: {queueRow["Id"]}, Queue: {queueName}, Condition: {condition} evaluated to {evaluationResult}"
                 );
             }
             try
@@ -2077,7 +2086,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     {
         try
         {
-            StoreQueueItems(wqc, queueEntryTable, null);
+            StoreQueueItems(wqc, queueEntryTable, transactionId: null);
         }
         catch (DBConcurrencyException)
         {
@@ -2087,41 +2096,49 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 MethodId = new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
                 LoadActualValuesAfterUpdate = false,
             };
-            dataService.StoreData(dataStructureQuery, queueEntryTable.DataSet, null);
+            dataService.StoreData(dataStructureQuery, queueEntryTable.DataSet, transactionId: null);
         }
     }
 
-    private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
+    private void ProcessExternalQueue(WorkQueueData.WorkQueueRow workQueueRow)
     {
         string transactionId = Guid.NewGuid().ToString();
         WorkQueueLoaderAdapter adapter = null;
         if (log.IsInfoEnabled)
         {
-            log.Info("Loading external work queue: " + q?.Name);
+            log.Info($"Loading external work queue: {workQueueRow?.Name}");
         }
         try
         {
             adapter = WorkQueueAdapterFactory.GetAdapter(
-                q.refWorkQueueExternalSourceTypeId.ToString()
+                workQueueRow.refWorkQueueExternalSourceTypeId.ToString()
             );
             if (adapter == null)
             {
-                throw new Exception("External Source Adapter not found for queue " + q.Name);
+                throw new Exception(
+                    $"External Source Adapter not found for queue {workQueueRow.Name}"
+                );
             }
             adapter.Connect(
-                this,
-                q.Id,
-                q.WorkQueueClass,
-                q.IsExternalSourceConnectionNull() ? null : q.ExternalSourceConnection,
-                q.IsExternalSourceUserNameNull() ? null : q.ExternalSourceUserName,
-                q.IsExternalSourcePasswordNull() ? null : q.ExternalSourcePassword,
+                service: this,
+                workQueueRow.Id,
+                workQueueRow.WorkQueueClass,
+                connection: workQueueRow.IsExternalSourceConnectionNull()
+                    ? null
+                    : workQueueRow.ExternalSourceConnection,
+                userName: workQueueRow.IsExternalSourceUserNameNull()
+                    ? null
+                    : workQueueRow.ExternalSourceUserName,
+                password: workQueueRow.IsExternalSourcePasswordNull()
+                    ? null
+                    : workQueueRow.ExternalSourcePassword,
                 transactionId
             );
             int itemCount = 0;
             string lastState = null;
-            if (!q.IsExternalSourceStateNull())
+            if (!workQueueRow.IsExternalSourceStateNull())
             {
-                lastState = q.ExternalSourceState;
+                lastState = workQueueRow.ExternalSourceState;
             }
             // get first item
             WorkQueueAdapterResult queueItem = adapter.GetItem(lastState);
@@ -2130,15 +2147,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 itemCount++;
                 lastState = queueItem.State;
                 string creationCondition = (
-                    q.IsCreationConditionNull() ? null : q.CreationCondition
+                    workQueueRow.IsCreationConditionNull() ? null : workQueueRow.CreationCondition
                 );
                 // put it to the queue
                 using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    Guid qId = WorkQueueAdd(
-                        q.WorkQueueClass,
-                        q.Name,
-                        q.Id,
+                    WorkQueueAdd(
+                        workQueueRow.WorkQueueClass,
+                        workQueueRow.Name,
+                        workQueueRow.Id,
                         creationCondition,
                         queueItem.Document,
                         queueItem.Attachments,
@@ -2161,7 +2178,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             }
             ResourceMonitor.Commit(transactionId);
             adapter.Disconnect();
-            q.ExternalSourceLastMessage = ResourceUtils.GetString(
+            workQueueRow.ExternalSourceLastMessage = ResourceUtils.GetString(
                 "OKMessage",
                 itemCount.ToString()
             );
@@ -2169,14 +2186,14 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             {
                 if (lastState == null)
                 {
-                    q.SetExternalSourceStateNull();
+                    workQueueRow.SetExternalSourceStateNull();
                 }
                 else
                 {
-                    q.ExternalSourceState = lastState;
+                    workQueueRow.ExternalSourceState = lastState;
                 }
             }
-            q.ExternalSourceLastTime = DateTime.Now;
+            workQueueRow.ExternalSourceLastTime = DateTime.Now;
         }
         catch (Exception ex)
         {
@@ -2185,28 +2202,26 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             {
                 adapter.Disconnect();
             }
-            q.ExternalSourceLastMessage = ResourceUtils.GetString("ErrorMessage", ex.Message);
-            q.ExternalSourceLastTime = DateTime.Now;
+            workQueueRow.ExternalSourceLastMessage = ResourceUtils.GetString(
+                "ErrorMessage",
+                ex.Message
+            );
+            workQueueRow.ExternalSourceLastTime = DateTime.Now;
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Failed to load queue " + q.Name, ex);
+                log.LogOrigamError($"Failed to load queue {workQueueRow.Name}", ex);
             }
         }
     }
 
     private void LoadExternalWorkQueuesDisposed(object sender, EventArgs e)
     {
-        _loadExternalWorkQueuesTimer.Elapsed -= new ElapsedEventHandler(
-            LoadExternalWorkQueuesElapsed
-        );
+        loadExternalWorkQueuesTimer.Elapsed -= LoadExternalWorkQueuesElapsed;
     }
-
-    bool _queueAutoProcessBusy = false;
 
     public WorkQueueData.WorkQueueRow FindQueue(string queueRefCode)
     {
-        var schemaService =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as ISchemaService;
+        var schemaService = ServiceManager.Services.GetService<SchemaService>();
         if (!schemaService.IsSchemaLoaded)
         {
             throw new InvalidOperationException("schemaService is not loaded");
@@ -2221,7 +2236,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
     public TaskRunner GetAutoProcessorForQueue(
         string queueRefCode,
         int parallelism,
-        int forceWait_ms
+        int forceWaitMs
     )
     {
         var queueToProcess = FindQueue(queueRefCode);
@@ -2229,10 +2244,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         if (queueToProcess == null)
         {
             throw new ArgumentException(
-                $"Queue with code: {queueRefCode} "
-                    + $"does not exist, "
-                    + $"is empty "
-                    + $"or does not have autoprocess set."
+                $"Queue with code: {queueRefCode} does not exist, is empty or does not have autoprocess set."
             );
         }
 
@@ -2245,7 +2257,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                     queueProcessor.ProcessAutoQueueCommands(
                         queueToProcess,
                         cancellationToken,
-                        forceWait_ms
+                        forceWaitMs
                     );
                 }
                 catch (OrigamException ex)
@@ -2275,13 +2287,12 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private static void HandleDeadLock()
     {
-        Random r = new Random();
-        int miliesToSleep = r.Next(1000, 2000);
+        var randomGenerator = new Random();
+        int millisToSleep = randomGenerator.Next(1000, 2000);
         log.Warn(
-            $"Deaclock was cought! Pausing thread"
-                + $" {Thread.CurrentThread.ManagedThreadId} for {miliesToSleep} ms"
+            $"Deadlock was caught! Pausing thread {Thread.CurrentThread.ManagedThreadId} for {millisToSleep} ms"
         );
-        Thread.Sleep(miliesToSleep);
+        Thread.Sleep(millisToSleep);
     }
 
     private static bool IsDeadlock(OrigamException ex)
@@ -2292,23 +2303,19 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void WorkQueueAutoProcessTimerElapsed(object sender, ElapsedEventArgs e)
     {
-        ISchemaService schemaService =
-            ServiceManager.Services.GetService(typeof(SchemaService)) as ISchemaService;
-        if (_queueAutoProcessBusy || !schemaService.IsSchemaLoaded || serviceBeingUnloaded)
+        var schemaService = ServiceManager.Services.GetService<SchemaService>();
+        if (queueAutoProcessBusy || !schemaService.IsSchemaLoaded || serviceBeingUnloaded)
         {
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat(
-                    "Skipping auto processing work queues: queueAutoProcessBusy: {0}, schemaLoaded: {1}, serviceBeingUnloaded: {2}",
-                    _queueAutoProcessBusy,
-                    schemaService.IsSchemaLoaded,
-                    serviceBeingUnloaded
+                log.Debug(
+                    $"Skipping auto processing work queues: queueAutoProcessBusy: {queueAutoProcessBusy}, schemaLoaded: {schemaService.IsSchemaLoaded}, serviceBeingUnloaded: {serviceBeingUnloaded}"
                 );
             }
             return;
         }
         SecurityManager.SetServerIdentity();
-        _queueAutoProcessBusy = true;
+        queueAutoProcessBusy = true;
         if (log.IsInfoEnabled)
         {
             log.Info("Starting auto processing work queues.");
@@ -2325,12 +2332,15 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         {
             if (log.IsErrorEnabled)
             {
-                log.LogOrigamError("Unexpected error occured while autoprocessing workqueues.", ex);
+                log.LogOrigamError(
+                    "Unexpected error occured while autoprocessing work queues.",
+                    ex
+                );
             }
         }
         finally
         {
-            _queueAutoProcessBusy = false;
+            queueAutoProcessBusy = false;
             if (log.IsInfoEnabled)
             {
                 log.Info("Finished auto processing work queues.");
@@ -2340,7 +2350,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
     private void WorkQueueAutoProcessTimerDisposed(object sender, EventArgs e)
     {
-        _queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
+        queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
     }
 
     private void schemaService_SchemaLoaded(object sender, bool isInteractive)
@@ -2351,34 +2361,33 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
             if (log.IsInfoEnabled)
             {
                 log.Info(
-                    "LoadExternalWorkQueues Enabled. Interval: "
-                        + settings.ExternalWorkQueueCheckPeriod
+                    $"LoadExternalWorkQueues Enabled. Interval: {settings.ExternalWorkQueueCheckPeriod}"
                 );
             }
 
-            _loadExternalWorkQueuesTimer.Interval = settings.ExternalWorkQueueCheckPeriod * 1000;
-            _loadExternalWorkQueuesTimer.Elapsed += LoadExternalWorkQueuesElapsed;
-            _loadExternalWorkQueuesTimer.Disposed += LoadExternalWorkQueuesDisposed;
-            _loadExternalWorkQueuesTimer.Start();
+            loadExternalWorkQueuesTimer.Interval = settings.ExternalWorkQueueCheckPeriod * 1000;
+            loadExternalWorkQueuesTimer.Elapsed += LoadExternalWorkQueuesElapsed;
+            loadExternalWorkQueuesTimer.Disposed += LoadExternalWorkQueuesDisposed;
+            loadExternalWorkQueuesTimer.Start();
         }
         else
         {
-            _loadExternalWorkQueuesTimer.Stop();
+            loadExternalWorkQueuesTimer.Stop();
         }
 
         if (settings.AutoProcessWorkQueues)
         {
-            _queueAutoProcessTimer.Elapsed += WorkQueueAutoProcessTimerElapsed;
-            _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
-            _queueAutoProcessTimer.Start();
+            queueAutoProcessTimer.Elapsed += WorkQueueAutoProcessTimerElapsed;
+            queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
+            queueAutoProcessTimer.Start();
         }
         else
         {
-            _queueAutoProcessTimer.Stop();
+            queueAutoProcessTimer.Stop();
         }
     }
 
-    void schemaService_SchemaUnloading(object sender, CancelEventArgs e)
+    private void schemaService_SchemaUnloading(object sender, CancelEventArgs e)
     {
         // work queue shouldn't start new processing here
         // since schemaService.IsSchemaLoaded has been set to false
@@ -2390,7 +2399,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         StopTasks();
     }
 
-    void schemaService_SchemaUnloaded(object sender, EventArgs e)
+    private void schemaService_SchemaUnloaded(object sender, EventArgs e)
     {
         if (log.IsDebugEnabled)
         {
@@ -2401,9 +2410,9 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
 
 public static class WorkQueueRetryType
 {
-    public const string NoRetryString = "69460BCF-81D4-4A97-94F7-5A391D16F771";
-    public const string LinearRetryString = "8A5C793F-73B8-41EF-A459-618A8E6FE4FA";
-    public const string ExponentialRetryString = "57AD4C10-1F43-4CCF-A48A-132E7E418D53";
+    private const string NoRetryString = "69460BCF-81D4-4A97-94F7-5A391D16F771";
+    private const string LinearRetryString = "8A5C793F-73B8-41EF-A459-618A8E6FE4FA";
+    private const string ExponentialRetryString = "57AD4C10-1F43-4CCF-A48A-132E7E418D53";
 
     public static readonly Guid NoRetry = new(NoRetryString);
     public static readonly Guid LinearRetry = new(LinearRetryString);
