@@ -88,7 +88,7 @@
     "browserslist-useragent-regexp": "^4.1.3",
     "esbuild": "^0.27.4",
     "identity-obj-proxy": "^3.0.0",
-    "ts-jest": "^29.4.6",
+    "ts-jest": "^29.4.9",
     "vite": "^8.0.3",
     "ws": "^8.20.0"
   },
