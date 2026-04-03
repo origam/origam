@@ -7,7 +7,6 @@ Create OrigamSettings.config file to
 ```
 backend\Origam.Architect.Server\bin\Debug\net8.0
 ```
-
 Content must contain the following, but make sure you set the correct value for **ModelSourceControlLocation**
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -37,7 +36,6 @@ Content must contain the following, but make sure you set the correct value for 
   </xmlSerializerSection>
 </OrigamSettings>
 ```
-
 Then we have to configure logging by adding the **log4net.config** to the same folder
 ```
 backend\Origam.Architect.Server\bin\Debug\net8.0\log4net.config
@@ -70,7 +68,6 @@ backend\Origam.Architect.Server\appsettings.json
   }
 }
 ```
-
 Make sure you set the correct **PathToClientApplication** in the file.
 
 All back slashes in the paths should be escaped i.e. \\ instead of \.
