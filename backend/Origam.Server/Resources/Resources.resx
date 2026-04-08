@@ -300,4 +300,7 @@
   <data name="ErrorSpecifiedCustomWorkQueueScreenNotFound" xml:space="preserve">
     <value>Custom Work Queue Screen {0} not found.</value>
   </data>
+  <data name="ActionButtonsCannotBeDisabled" xml:space="preserve">
+    <value>The root section with the root entity can’t have action buttons disabled.</value>
+  </data>
 </root>
