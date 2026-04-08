@@ -3433,9 +3433,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist-useragent-regexp@npm:^4.1.3":
-  version: 4.1.3
-  resolution: "browserslist-useragent-regexp@npm:4.1.3"
+"browserslist-useragent-regexp@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "browserslist-useragent-regexp@npm:4.1.4"
   dependencies:
     argue-cli: "npm:^2.1.0"
     easy-table: "npm:^1.2.0"
@@ -3447,7 +3447,7 @@ __metadata:
   bin:
     bluare: dist/cli.js
     browserslist-useragent-regexp: dist/cli.js
-  checksum: 10c0/58e9204790b11b8383869dde2a78393babe4d8aa3da4d20832d744bbe79b21bd50ed3741e3d58320a3e252737a60da6c0e3887a0c01d1fab9c537a675e87b4f8
+  checksum: 10c0/98d694c3c7a98b91b610bb1f5a234c427ec7c2e01381fe0960957e7bea4d00815ff4022d4ea754122ba7eb1ba57ee90f6c912718d10b7e14e02dcbf42734a9a3
   languageName: node
   linkType: hard
 
@@ -6963,7 +6963,7 @@ __metadata:
     axios: "npm:^1.14.0"
     bind-decorator: "npm:^1.0.11"
     browserslist: "npm:^4.28.2"
-    browserslist-useragent-regexp: "npm:^4.1.3"
+    browserslist-useragent-regexp: "npm:^4.1.4"
     classnames: "npm:^2.5.1"
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
