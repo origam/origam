@@ -33,6 +33,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using Origam.Security.Common.BrockAllen.IdentityReboot;
 
 namespace BrockAllen.IdentityReboot.Internal;
 
@@ -131,18 +132,34 @@ internal static class Crypto
      */
     public static string HashPassword(string password, int iterationCount = PBKDF2_ITERATION_COUNT)
     {
+        iterationCount = 250000;
+
         if (password == null)
         {
             throw new ArgumentNullException("password");
         }
         // Produce a version 0 (see comment above) password hash.
-        byte[] salt;
+        byte[] salt = new byte[128 / 8];
         byte[] subkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, SALT_SIZE, iterationCount))
+        //using (var deriveBytes = new Rfc2898DeriveBytes(password, SALT_SIZE, iterationCount))
+        //{
+        //    salt = deriveBytes.Salt;
+        //    subkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
+        //}
+
+        using (var rng = RandomNumberGenerator.Create())
         {
-            salt = deriveBytes.Salt;
-            subkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
+            rng.GetBytes(salt);
         }
+
+        var derivedBytes = Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(
+            password,
+            salt,
+            Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA512,
+            iterationCount,
+            PBKDF2_SUBKEY_LENGTH
+        );
+        subkey = derivedBytes;
         byte[] outputBytes = new byte[1 + SALT_SIZE + PBKDF2_SUBKEY_LENGTH];
         Buffer.BlockCopy(salt, 0, outputBytes, 1, SALT_SIZE);
         Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SALT_SIZE, PBKDF2_SUBKEY_LENGTH);
@@ -179,10 +196,23 @@ internal static class Crypto
         byte[] storedSubkey = new byte[PBKDF2_SUBKEY_LENGTH];
         Buffer.BlockCopy(hashedPasswordBytes, 1 + SALT_SIZE, storedSubkey, 0, PBKDF2_SUBKEY_LENGTH);
         byte[] generatedSubkey;
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, iterationCount))
-        {
-            generatedSubkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
-        }
+        //using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, iterationCount))
+        //{
+        //    generatedSubkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
+        //}
+        generatedSubkey = Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(
+            password,
+            salt,
+            Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA1,
+            iterationCount,
+            PBKDF2_SUBKEY_LENGTH
+        );
+        //generatedSubkey = UnmanagedPBKDF2.PBKDF2(
+        //        password,
+        //        salt,
+        //        iterationCount,
+        //        PBKDF2_SUBKEY_LENGTH
+        //    );
         return ByteArraysEqual(storedSubkey, generatedSubkey);
     }
 

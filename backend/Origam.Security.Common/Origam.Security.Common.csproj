@@ -53,6 +53,7 @@
     <PackageReference Include="CSharpFunctionalExtensions">
       <Version>2.20.4</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BrockAllen.IdentityReboot\license.txt" />
