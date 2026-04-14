@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getLocaleFromCookie, setLocaleToCookie } from '@utils/cookie';
-import axios from 'axios';
 import { observable } from 'mobx';
 
 const debugShowTranslations = window.localStorage.getItem('debugShowTranslations') === 'true';
@@ -37,8 +36,10 @@ export class TranslationsStore {
 
   async translationsInit(locale: string) {
     try {
-      const result = await axios.get(`locale/localization_${locale}.json`, {});
-      this.translations = result.data;
+      const response = await fetch(`locale/localization_${locale}.json`);
+      if (response.ok) {
+        this.translations = await response.json();
+      }
     } catch (error: any) {
       console.error(error);
     }
