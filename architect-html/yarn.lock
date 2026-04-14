@@ -1990,7 +1990,7 @@ __metadata:
     sass: "npm:^1.99.0"
     typescript: "npm:^5.9.3"
     vite: "npm:^7.3.1"
-    vite-plugin-babel: "npm:^1.5.1"
+    vite-plugin-babel: "npm:^1.6.0"
     vite-plugin-mkcert: "npm:^1.17.10"
     vite-tsconfig-paths: "npm:^6.1.1"
   languageName: unknown
@@ -5706,13 +5706,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-babel@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "vite-plugin-babel@npm:1.5.1"
+"vite-plugin-babel@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "vite-plugin-babel@npm:1.6.0"
   peerDependencies:
     "@babel/core": ^7.0.0
-    vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 10c0/9fd401c0792a6650e4b99b29aab427806f364f209ad55385277c9152073b57b055eb3d6a24e82b96fd237c7201bfeabafe35b51f67888944a2476482035d78d2
+    vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+  checksum: 10c0/7484bff317cdb988a65613a1c788cd6b9682df66f5cf5226831898678f2811c4d14a8a14519b15c9896b8e8483e9b4b4d5fb519dab3bb497e0952ebc1911fd99
   languageName: node
   linkType: hard
 
