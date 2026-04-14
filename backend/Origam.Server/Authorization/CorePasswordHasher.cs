@@ -66,7 +66,7 @@ class CorePasswordHasher : IPasswordHasher<IOrigamUser>
             providedPassword,
             salt,
             count,
-            HashAlgorithmName.SHA256,
+            HashAlgorithmName.SHA1,
             PBKDF2_SUBKEY_LENGTH
         );
         var verificationResult =

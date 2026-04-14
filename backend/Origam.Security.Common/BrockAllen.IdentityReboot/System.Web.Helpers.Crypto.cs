@@ -33,7 +33,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using Origam.Security.Common.BrockAllen.IdentityReboot;
 
 namespace BrockAllen.IdentityReboot.Internal;
 
@@ -132,8 +131,6 @@ internal static class Crypto
      */
     public static string HashPassword(string password, int iterationCount = PBKDF2_ITERATION_COUNT)
     {
-        iterationCount = 250000;
-
         if (password == null)
         {
             throw new ArgumentNullException("password");
@@ -146,20 +143,18 @@ internal static class Crypto
         //    salt = deriveBytes.Salt;
         //    subkey = deriveBytes.GetBytes(PBKDF2_SUBKEY_LENGTH);
         //}
-
         using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(salt);
         }
-
-        var derivedBytes = Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(
+        subkey = Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(
             password,
             salt,
-            Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA512,
+            Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA1,
             iterationCount,
             PBKDF2_SUBKEY_LENGTH
         );
-        subkey = derivedBytes;
+
         byte[] outputBytes = new byte[1 + SALT_SIZE + PBKDF2_SUBKEY_LENGTH];
         Buffer.BlockCopy(salt, 0, outputBytes, 1, SALT_SIZE);
         Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SALT_SIZE, PBKDF2_SUBKEY_LENGTH);
