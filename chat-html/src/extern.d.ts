@@ -18,4 +18,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 declare module "draftjs-utils";
+declare module "moment/min/locales";
 declare module "react-split";
