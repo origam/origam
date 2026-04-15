@@ -1,0 +1,41 @@
+# syntax=docker/dockerfile:1
+# Stage 1 - PowerShell (not included in nanoserver by default)
+FROM mcr.microsoft.com/powershell:nanoserver-ltsc2022 AS powershell
+
+# Stage 2 - Final image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-ltsc2022
+
+COPY --from=powershell ["C:/Program Files/PowerShell/", "C:/Program Files/PowerShell/"]
+
+USER ContainerAdministrator
+RUN setx /M PATH "%PATH%;C:\\Program Files\\PowerShell"
+
+WORKDIR /home/origam
+
+RUN mkdir Architect
+
+# Copy pre-built Architect Server binaries
+COPY architect/bin/ /home/origam/Architect/
+
+# Copy configs and scripts
+WORKDIR /home/origam/Architect
+COPY server/_OrigamSettings.template          .
+COPY server/log4net.server.config             log4net.config
+COPY architect/windows/appsettings.json       .
+COPY architect/windows/EntryPoint.ps1         .
+COPY server/windows/Utils.ps1                 .
+
+# Install Node.js 18 (matches Linux Dockerfile)
+RUN pwsh.exe -Command " \
+    $ProgressPreference = 'SilentlyContinue'; \
+    Invoke-WebRequest -Uri 'https://nodejs.org/dist/v18.20.8/node-v18.20.8-win-x64.zip' -OutFile node.zip; \
+    Expand-Archive node.zip -DestinationPath C:\ -Force; \
+    Remove-Item node.zip; \
+    Rename-Item 'C:\node-v18.20.8-win-x64' 'C:\node'"
+RUN setx /M PATH "%PATH%;C:\\node"
+
+RUN if not exist logs mkdir logs
+
+EXPOSE 8081
+
+ENTRYPOINT ["pwsh.exe", "-ExecutionPolicy", "Bypass", "-File", "EntryPoint.ps1"]
