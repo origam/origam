@@ -21,6 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
+interface ImportMetaEnv {
+  readonly DEV: boolean;
+  readonly VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD?: string;
+  readonly VITE_REACT_APP_ORIGAM_UI_PLUGINS?: string;
+  readonly VITE_REACT_APP_ORIGAM_SERVER_PLUGINS?: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV: 'development' | 'production' | 'test';
@@ -72,10 +83,14 @@ declare module '*.module.css' {
   export default classes;
 }
 
+declare module '*.css';
+
 declare module '*.module.scss' {
   const classes: { [key: string]: string };
   export default classes;
 }
+
+declare module '*.scss';
 
 declare module '*.module.sass' {
   const classes: { [key: string]: string };

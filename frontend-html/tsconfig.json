@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "types": ["vite/client", "node", "jest"],
+    "types": ["node", "jest"],
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
@@ -11,11 +11,22 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-	"baseUrl": "src",
+    "paths": {
+      "*": ["./src/*"],
+      "dic/*": ["./src/dic/*"],
+      "fonts/*": ["./src/fonts/*"],
+      "gui/*": ["./src/gui/*"],
+      "model/*": ["./src/model/*"],
+      "modules/*": ["./src/modules/*"],
+      "plugins/*": ["./src/plugins/*"],
+      "tests/*": ["./src/tests/*"],
+      "utils/*": ["./src/utils/*"],
+      "xmlInterpreters/*": ["./src/xmlInterpreters/*"]
+    },
     "jsx": "react-jsx",
     "experimentalDecorators": true
   },
