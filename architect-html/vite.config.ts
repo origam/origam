@@ -1,3 +1,4 @@
+import babel from '@rolldown/plugin-babel';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -5,10 +6,9 @@ import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        plugins: [['@babel/plugin-proposal-decorators', { version: '2023-05' }]],
-      },
+    react(),
+    babel({
+      plugins: [['@babel/plugin-proposal-decorators', { version: '2023-05' }]],
     }),
     mkcert(),
   ],
