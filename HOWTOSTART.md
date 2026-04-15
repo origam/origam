@@ -71,7 +71,7 @@ Open the file in a text editor and replace its contents with this
     <ArrayOfOrigamSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <OrigamSettings>
         <ModelSourceControlLocation>C:\Repos\origam\model-tests\model</ModelSourceControlLocation>
-        <DataConnectionString>Data Source=.;Initial Catalog=origam-demo;Integrated Security=True;User ID=;Password=;Pooling=True</DataConnectionString>
+        <DataConnectionString>Data Source=.;Initial Catalog=origam-demo;Integrated Security=True;User ID=;Password=;Pooling=True; Encrypt= False</DataConnectionString>
         <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>
         <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
@@ -93,12 +93,9 @@ Open the file in a text editor and replace its contents with this
 </OrigamSettings>
 ```
 Make sure you set the correct **ModelSourceControlLocation** in the file. Open the 
-Architect again. You should see the demo projects' packages. Double click the **Widgets**
+Architect again. You should see the demo projects' packages. Double click the **Automatic Tests**
 package and a **Deployment Scripts Pending** pop up should show up. Click Yes. The database 
 should now contain the generated tables and minimal data so the application can start.
-Then double click the **Automatic Tests** package
-and run the deployment scripts there too. These will add some test data to the generated tables 
-so that you have same thing to play with.
 
 Now we add a test user into the database. Open **SQL Server Management Studio** go to
 the database **origam-demo** and run the following script
@@ -184,11 +181,11 @@ C:\Users\<userName>\AppData\Roaming\ORIGAM\0.0\OrigamSettings.config
 ```
 to
 ```
-backend\Origam.Server\bin\Debug\net6.0
+backend\Origam.Server\bin\Debug\net8.0
 ```
 Then we have to configure logging by adding the **log4net.config** to the same folder
 ```
-backend\Origam.Server\bin\Debug\net6.0\log4net.config
+backend\Origam.Server\bin\Debug\net8.0\log4net.config
 ```
 You can customize the file however you want. Here is a basic logging setup
 ```xml
@@ -331,3 +328,5 @@ To debug the Architect in Visual Studio set the startup project to **OrigamArchi
 If you want to debug the server set the startup project to **Origam.Server** switch the solution configuration to **Debug Server** and run the project.
 
 If you need to debug the front end application in browser run the Origam server (previous paragraph) and start the node development server with `yarn dev`. 
+
+If you want to run web version of OrigamArchitect go to Origam.Architect.Server folder and read HOWTOSTART.md file there.
