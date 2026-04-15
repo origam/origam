@@ -1761,7 +1761,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.3"
     "@typescript-eslint/eslint-plugin": "npm:^8.57.1"
     "@typescript-eslint/parser": "npm:^8.58.2"
-    "@vitejs/plugin-react": "npm:^5.1.4"
+    "@vitejs/plugin-react": "npm:^6.0.0"
     axios: "npm:^1.13.6"
     classnames: "npm:^2.5.1"
     eslint: "npm:^9.39.4"
