@@ -277,10 +277,10 @@ jobs:
      - checkout: origam
        fetchDepth: 1
        path: s/origam
-     - task: NodeTool@0
+     - task: UseNode@1
        displayName: 'Use Node 22.x'
        inputs:
-         versionSpec: 22.x
+         version: 22.x
      - script: corepack enable
        displayName: 'Enable Corepack'
      - script: |
