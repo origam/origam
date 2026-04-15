@@ -3139,7 +3139,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^5.1.4":
+"@vitejs/plugin-react@npm:5.1.x":
   version: 5.1.4
   resolution: "@vitejs/plugin-react@npm:5.1.4"
   dependencies:
@@ -6958,7 +6958,7 @@ __metadata:
     "@types/react-virtualized": "npm:^9.22.3"
     "@types/uuid": "npm:^11.0.0"
     "@vitejs/plugin-basic-ssl": "npm:^2.3.0"
-    "@vitejs/plugin-react": "npm:^5.1.4"
+    "@vitejs/plugin-react": "npm:5.1.x"
     "@xstate/inspect": "npm:^0.8.0"
     axios: "npm:^1.15.0"
     bind-decorator: "npm:^1.0.11"
