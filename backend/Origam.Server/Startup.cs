@@ -114,7 +114,7 @@ public class Startup
         services.AddSingleton<IMailService, MailService>();
         services.AddSingleton<SearchHandler>();
         services.AddSingleton<SessionObjects, SessionObjects>();
-        services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
+        services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasherService>();
         services.AddScoped<SignInManager<IOrigamUser>>();
         services.AddScoped<
             IUserClaimsPrincipalFactory<IOrigamUser>,
