@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/runtime:8.0-nanoserver-ltsc2022
+
+USER ContainerAdministrator
+
+WORKDIR /home/origam/Composer
+
+COPY composer/bin/ .
+
+ENTRYPOINT ["dotnet", "Origam.Composer.dll"]
