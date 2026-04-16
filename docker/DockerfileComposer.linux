@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/dotnet/runtime:8.0
+
+RUN useradd -ms /bin/bash origam
+
+USER origam
+WORKDIR /home/origam/Composer
+
+COPY --chown=origam:origam composer/bin .
+
+ENTRYPOINT ["dotnet", "Origam.Composer.dll"]
