@@ -32,6 +32,8 @@ import { runInFlowWithHandler } from '@errors/runInFlowWithHandler';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect } from 'react';
 import Output from '@components/properties/Output.tsx';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { isSaveShortcut } from '@/utils/keyShortcuts';
 
 const App = observer(() => {
   const rootStore = useContext(RootStoreContext);
@@ -52,6 +54,26 @@ const App = observer(() => {
       document.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
+
+  useKeyboardShortcuts([
+    {
+      predicate: isSaveShortcut,
+      handler: () => {
+        const activeEditor = rootStore.editorTabViewState.activeEditorState;
+        if (!activeEditor?.isDirty) return;
+        runInFlowWithHandler(rootStore.errorDialogController)({
+          generator: function* () {
+            rootStore.progressBarState.isWorking = true;
+            try {
+              yield* activeEditor.save();
+            } finally {
+              rootStore.progressBarState.isWorking = false;
+            }
+          },
+        });
+      },
+    },
+  ]);
 
   return (
     <>
