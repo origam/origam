@@ -5,6 +5,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -24,17 +25,16 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Path aliases */
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@api/*": ["src/API/*"],
-      "@dialogs/*": ["src/dialog/*"],
-      "@errors/*": ["src/errorHandling/*"],
-      "@stores/*": ["src/stores/*"],
-      "@utils/*": ["src/utils/*"],
-      "@components/*": ["src/components/*"],
-      "@editors/*": ["src/components/editors/*"],
-      "@modules/*": ["src/modules/*"]
+      "@/*": ["./src/*"],
+      "@api/*": ["./src/API/*"],
+      "@dialogs/*": ["./src/dialog/*"],
+      "@errors/*": ["./src/errorHandling/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@components/*": ["./src/components/*"],
+      "@editors/*": ["./src/components/editors/*"],
+      "@modules/*": ["./src/modules/*"]
     },
     "allowSyntheticDefaultImports": true
   },
