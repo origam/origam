@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2026 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,6 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-declare module "draftjs-utils";
-declare module "moment/min/locales";
-declare module "react-split";
+export function isSaveShortcut(e: KeyboardEvent): boolean {
+  return (e.ctrlKey || e.metaKey) && e.key === 's';
+}

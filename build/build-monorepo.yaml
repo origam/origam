@@ -494,6 +494,11 @@ jobs:
            docker pull origam/architect:$(TAG).$(Build.BuildId).linux
            docker pull origam/architect:$(TAG).$(Build.BuildId).win-nano
            ```
+           Composer Docker Images
+           ```
+           docker pull origam/composer:$(TAG).$(Build.BuildId).linux
+           docker pull origam/composer:$(TAG).$(Build.BuildId).win-nano
+           ```
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
@@ -535,6 +540,11 @@ jobs:
            ```
            docker pull origam/architect:$(TAG_LATEST).linux
            docker pull origam/architect:$(TAG_LATEST).win-nano
+           ```
+           Composer Docker Images
+           ```
+           docker pull origam/composer:$(TAG_LATEST).linux
+           docker pull origam/composer:$(TAG_LATEST).win-nano
            ```
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
@@ -739,3 +749,69 @@ jobs:
          tags: |
            $(TAG).$(Build.BuildId).win-nano
            $(TAG_LATEST).win-nano
+  # ------------------------------------
+  # DOCKER COMPOSER WINDOWS NANO
+  # ------------------------------------
+  - job: build_docker_composer_windows_nano
+    displayName: Build Composer Windows Nano Docker
+    dependsOn: build_release
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-composer artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-composer'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - powershell: |
+        New-Item -ItemType Directory -Path composer -Force | Out-Null
+        Move-Item -Path origam-composer -Destination composer\bin -force
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Place resources in correct positions
+     - task: Docker@2
+       displayName: 'Build and publish docker windows composer image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/composer
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/DockerfileComposer.windows-nano'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).win-nano
+           $(TAG_LATEST).win-nano
+  # ------------------------------------
+  # DOCKER COMPOSER LINUX
+  # ------------------------------------
+  - job: build_docker_composer_linux
+    displayName: Build Composer Linux Docker
+    dependsOn: build_release
+    pool:
+      vmImage: ubuntu-24.04
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: DownloadBuildArtifacts@0
+       displayName: 'Download origam-composer artifact'
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-composer'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
+     - bash: |
+        mkdir -p composer
+        mv origam-composer composer/bin
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
+       displayName: Place resources in correct positions
+     - task: Docker@2
+       displayName: 'Build and publish docker linux composer image'
+       inputs:
+         containerRegistry: dockerhub
+         repository: origam/composer
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/DockerfileComposer.linux'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
+         tags: |
+           $(TAG).$(Build.BuildId).linux
+           $(TAG_LATEST).linux

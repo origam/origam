@@ -332,6 +332,10 @@ export class CScreenToolbar extends React.Component<{}> {
         <ScreenToolbarPusher/>
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
+          onShortcut={event => {
+            openSearchWindow(this.application);
+          }}
+          shortcutPredicate={isSearchShortcut}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
@@ -352,12 +356,12 @@ export class CScreenToolbar extends React.Component<{}> {
     return (
       <ScreenToolbar>
         <ScreenToolbarPusher/>
-        {/*<ScreenToolbarAction
-          icon={<Icon src="./icons/search.svg" />}
-          label="Search"
-        />*/}
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
+          onShortcut={event => {
+            openSearchWindow(this.application);
+          }}
+          shortcutPredicate={isSearchShortcut}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown

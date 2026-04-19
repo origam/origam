@@ -48,6 +48,7 @@ import {
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
   isFilterRecordShortcut,
+  isSearchShortcut,
   isSaveShortcut
 } from "utils/keyShortcuts";
 
@@ -80,7 +81,8 @@ function disableCollidingBrowserShortcuts() {
       isDuplicateRecordShortcut(event) ||
       isDeleteRecordShortcut(event) ||
       isSaveShortcut(event) ||
-      isFilterRecordShortcut(event)
+      isFilterRecordShortcut(event) ||
+      isSearchShortcut(event)
     ) {
       event.preventDefault();
     }
