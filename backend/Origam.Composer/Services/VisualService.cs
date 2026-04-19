@@ -169,4 +169,20 @@ public class VisualService : IVisualService
         AnsiConsole.WriteLine();
         AnsiConsole.MarkupLine(Strings.All_steps_completed);
     }
+
+    public void PrintProjectAlreadyExists(string folder)
+    {
+        var panel = new Panel(
+            new Markup($"[bold]{folder.EscapeMarkup()}[/]\n\nNothing to do, Composer will exit.")
+        )
+        {
+            Header = new PanelHeader("[yellow] Project already exists [/]"),
+            Border = BoxBorder.Rounded,
+            BorderStyle = new Style(foreground: Color.Yellow),
+            Padding = new Padding(1, 0, 1, 0),
+        };
+        AnsiConsole.WriteLine();
+        AnsiConsole.Write(panel);
+        AnsiConsole.WriteLine();
+    }
 }
