@@ -67,7 +67,7 @@
     "sass": "^1.99.0",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.5.3",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "uuid": "^13.0.0",
     "vite-tsconfig-paths": "^6.1.1",
     "wkt": "^0.1.1",
