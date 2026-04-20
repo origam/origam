@@ -33,7 +33,7 @@
     "@types/react-virtualized": "^9.22.3",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@xstate/inspect": "^0.8.0",
-    "axios": "^1.15.0",
+    "axios": "^1.15.1",
     "bind-decorator": "^1.0.11",
     "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
