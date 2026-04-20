@@ -157,6 +157,54 @@
       frmi:requestSaveAfterUpdate="false"
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Filtered By Dates"
+      x:id="90ccef7d-68aa-4446-80f0-96f125b1cbea"
+      frmi:method="GetByBetweenDate1#AllDataTypes/GetByBetweenDate1/b1129e59-49d8-4c6e-b356-dd66c9bf7d81"
+      asi:name="AllDataTypes_DateBetween"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="AllDataTypes#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d"
+      frmi:selectionDialogPanel="SD_DateSelection#SD_DateSelection/d19c26e8-49f3-4a01-be2e-93d4be9e37b7">
+      <sdpm:SelectionDialogParameterMapping
+        asi:abstract="false"
+        x:id="e1227384-3399-4c39-929c-13a1e3b2f216"
+        sdpm:itemType="SelectionDialogParameterMapping"
+        asi:name="AllDataTypes_parDate1From"
+        sdpm:selectionDialogField="d1#SD/d1/d9e921ff-b2dc-46a2-966c-aba0c53f5751" />
+      <sdpm:SelectionDialogParameterMapping
+        asi:abstract="false"
+        x:id="e8e5a0b7-4903-487e-8ffa-7e7b8f8971b1"
+        sdpm:itemType="SelectionDialogParameterMapping"
+        asi:name="AllDataTypes_parDate1To"
+        sdpm:selectionDialogField="d2#SD/d2/6a0393da-99b4-44ea-ad4f-91e8c3511e2e" />
+    </frmi:MenuItem>
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Filtered By Date Older Than Today"
+      x:id="947eed8f-1c47-4d2a-8da9-fc93f261db90"
+      frmi:method="GetByDateOlderThanToday#AllDataTypes/GetByDateOlderThanToday/da9a9223-8c7a-4cdd-92ad-1df5a52e42ff"
+      asi:name="AllDataTypes_DateOlderThanToday"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="*"
+      frmi:screen="AllDataTypes#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"

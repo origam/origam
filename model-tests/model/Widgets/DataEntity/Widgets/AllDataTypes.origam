@@ -71,10 +71,76 @@
     <dp:Parameter
       asi:abstract="false"
       sip:allowNulls="true"
+      sip:dataLength="8"
+      sip:dataType="Date"
+      x:id="a46bb4d5-066a-41d9-a547-c43861e45725"
+      asi:name="parDate1From" />
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataLength="8"
+      sip:dataType="Date"
+      x:id="a4ea759f-74a4-49b2-9e48-9e66362bbe05"
+      asi:name="parDate1To" />
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
       sip:dataLength="50"
       sip:dataType="String"
       x:id="daafcc1e-46db-44bd-9bf1-732e4a2d1387"
       asi:name="parText1" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="03face00-af56-42c7-a9e4-ce9a2016f68a"
+      asi:name="GetBetweenDate1">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Between#Between/0f583cec-f180-491a-8592-b2e20a690764"
+        x:id="84351a32-ef40-456a-ad96-7336eb9a0bbc"
+        adec:isPrimaryKey="false"
+        asi:name="Between"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="0690a47e-4c66-4846-90d3-4fd286a81a22"
+          asi:name="Right"
+          fcp:parameter="Right#Between/Right/a36d5eb3-8630-40df-9ce3-0ec1dce160b5">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="065c3d1f-b033-4a2a-ab0d-4d147117bf86"
+            asi:name="parDate1To"
+            pr1:parameter="parDate1To#AllDataTypes/parDate1To/a4ea759f-74a4-49b2-9e48-9e66362bbe05" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="9851a69b-545b-4a64-b268-167b9f37702f"
+          asi:name="Expression"
+          fcp:parameter="Expression#Between/Expression/85faf781-9658-4f9c-9995-d071ca6f82cc">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Date1#AllDataTypes/Date1/591b8777-70c9-4526-99f9-c3de3ebc3a91"
+            x:id="097a6ef7-4f74-4e1f-9d54-378d4984fc67"
+            asi:name="Date1" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="cf65f954-7897-4785-8529-472538a9bb72"
+          asi:name="Left"
+          fcp:parameter="Left#Between/Left/612b5010-8c8b-4603-9167-3175f1322e37">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="a884d4da-d37a-4351-8613-f7f05784bf6b"
+            asi:name="parDate1From"
+            pr1:parameter="parDate1From#AllDataTypes/parDate1From/a46bb4d5-066a-41d9-a547-c43861e45725" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="false"
       x:id="37cb378c-573a-4c5d-9b4f-4cc151bc501d"
@@ -184,6 +250,47 @@
             dcr:constant="Root/DataConstant/_numbers/_Number_30.origam#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
             x:id="54927d2b-ec6e-453a-8b49-ccaad7062fe2"
             asi:name="_Number_30" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="98438f56-0c3b-420b-bbe3-644ca055cc4e"
+      asi:name="GetByDateOlderThanToday">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="LessThan#LessThan/d282e478-fcbb-4330-a26d-c4d9ba17403b"
+        x:id="554229ac-2830-448c-b68b-6352395a3215"
+        adec:isPrimaryKey="false"
+        asi:name="LessThan"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="3bfb2eff-3ebd-4123-9db4-632cdfb5ed7b"
+          asi:name="Right"
+          fcp:parameter="Right#LessThan/Right/06b7c48e-ce52-45a1-ae5b-423bad79c199">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="c2ab3ae1-9ff2-4c18-8009-bc492f5fdc45"
+            asi:name="parCurrentDate"
+            pr1:parameter="parCurrentDate#IOrigamEntity2/parCurrentDate/de0c6578-bfb2-470a-b981-b808561368cd" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="8bd2d40e-c4ae-461c-85d4-1cf78a607dac"
+          asi:name="Left"
+          fcp:parameter="Left#LessThan/Left/a63f78ac-e508-4a8a-ba5d-fed0f483821d">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Date1#AllDataTypes/Date1/591b8777-70c9-4526-99f9-c3de3ebc3a91"
+            x:id="4188a28a-6ee7-4245-a94e-8b3b98172078"
+            asi:name="Date1" />
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
