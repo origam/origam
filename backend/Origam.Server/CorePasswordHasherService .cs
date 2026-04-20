@@ -9,9 +9,9 @@ namespace Origam.Server
 {
     public class CorePasswordHasherService : IPasswordHasher<IOrigamUser>
     {
-        private const int SALT_SIZE = 16; // 128 bit
+        private const int SALT_SIZE = 64; // 64 bytes
         private const int SUBKEY_LENGTH = 32; // 256 bit
-        private const int ITERATION_COUNT = 250000;
+        private const int ITERATION_COUNT = 600000;
         private const string KEY_PREFIX = "pbkdf2-sha256";
         private const int KEY_PARTS_LENGTH = 4;
 
@@ -39,11 +39,14 @@ namespace Origam.Server
             if (parts.Length != KEY_PARTS_LENGTH || !isKnownFunction(prefix))
             {
                 // Old password format, using legacy hasher
-                return legacyPasswordHasher.VerifyHashedPassword(
+                var result = legacyPasswordHasher.VerifyHashedPassword(
                     user,
                     hashedPassword,
                     providedPassword
                 );
+                return (result == PasswordVerificationResult.Success)
+                    ? PasswordVerificationResult.SuccessRehashNeeded
+                    : result;
             }
 
             int count;
