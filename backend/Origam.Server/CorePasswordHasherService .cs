@@ -64,11 +64,15 @@ namespace Origam.Server
         }
 
         public PasswordVerificationResult VerifyHashedPasswordA(
-            IOrigamUser user,
-            string hashedPassword,
-            string providedPassword
-        )
+           IOrigamUser user,
+           string hashedPassword,
+           string providedPassword
+       )
         {
+            if (string.IsNullOrEmpty(hashedPassword))
+            {
+                return PasswordVerificationResult.Failed;
+            }
             if (!isKnownFunction(hashedPassword))
             {
                 // Old password format, using legacy hasher
@@ -81,9 +85,29 @@ namespace Origam.Server
 
             var parts = hashedPassword.Split(".");
             int count;
-            Int32.TryParse(parts[0], NumberStyles.HexNumber, null, out count);
+            // Tenhle parse se předtím vůbec neoveřoval
+            if (Int32.TryParse(parts[0], NumberStyles.HexNumber, null, out count))
+            {
+                return PasswordVerificationResult.Failed;
+            }
             hashedPassword = parts[1];
-            byte[] hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
+
+            byte[] hashedPasswordBytes;
+            try
+            {
+                hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
+            }
+            catch //Chyram vyjmku?
+            {
+                return PasswordVerificationResult.Failed;
+            }
+
+            //TODO Ma smysl delat check na delku klice?
+            //if (hashedPasswordBytes.Length <= (KEY_PREFIX.Length + SALT_SIZE + SUBKEY_LENGTH))
+            //{
+            //    return PasswordVerificationResult.Failed;
+            //}
+
             byte[] salt = new byte[SALT_SIZE];
             Buffer.BlockCopy(hashedPasswordBytes, 1, salt, 0, SALT_SIZE);
             byte[] storedSubkey = new byte[SUBKEY_LENGTH];
@@ -97,13 +121,20 @@ namespace Origam.Server
                 HashAlgorithmName.SHA256,
                 SUBKEY_LENGTH
             );
-            var verificationResult =
-                (ByteArraysEqual(storedSubkey, generatedSubkey))
-                    ? VerificationResult.Success
-                    : VerificationResult.Failed;
-            return ToAspNetCoreResult(verificationResult);
-        }
 
+            bool success = CryptographicOperations.FixedTimeEquals( //Misto ByteArraysEqual
+                storedSubkey,
+                generatedSubkey
+            );
+            return success ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed;
+
+            //VS stara verze
+            //var verificationResult =
+            //  (ByteArraysEqual(storedSubkey, generatedSubkey))
+            //      ? VerificationResult.Success
+            //      : VerificationResult.Failed;
+            //return ToAspNetCoreResult(verificationResult);
+        }
         public string HashPassword(IOrigamUser user, string password)
         {
             if (password == null)
