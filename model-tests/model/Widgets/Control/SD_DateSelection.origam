@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="0db5d361-013f-4a05-85cf-3f4ef31713e5"
+    ci:isComplex="true"
+    asi:name="SD_DateSelection"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="SD_DateSelection#SD_DateSelection/d19c26e8-49f3-4a01-be2e-93d4be9e37b7"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="AsPanel#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="0c690976-6530-4eeb-be87-792ebbe80e5d" />
+  </ci:Control>
+</x:file>
