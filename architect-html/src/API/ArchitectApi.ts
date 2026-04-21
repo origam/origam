@@ -40,52 +40,32 @@ import {
   IValidationResult,
   ShemaItemInfo,
 } from '@api/IArchitectApi';
-import axios, { AxiosInstance } from 'axios';
+import { HttpClient } from '@api/httpClient';
 
 export class ArchitectApi implements IArchitectApi {
   errorHandler: (error: any) => void;
-  axiosInstance: AxiosInstance;
+  http: HttpClient;
 
   constructor(errorHandler?: (error: any) => void) {
-    this.axiosInstance = this.createAxiosInstance();
     this.errorHandler = errorHandler ?? simpleErrorHandler;
-  }
-
-  private createAxiosInstance() {
-    const axiosInstance = axios.create({});
-
-    axiosInstance.interceptors.response.use(
-      response => {
-        return response;
-      },
-      async error => {
-        if (error.response?.data?.constructor?.name === 'Blob') {
-          error.response.data = await error.response.data.text();
-        }
-        if (!axios.isCancel(error)) {
-          this.errorHandler(error);
-        }
-        throw error;
-      },
-    );
-    return axiosInstance;
+    this.http = new HttpClient(error => this.errorHandler(error));
   }
 
   async setActivePackage(packageId: string): Promise<void> {
-    await this.axiosInstance.post('/Package/SetActive', { id: packageId });
+    await this.http.post('/Package/SetActive', { id: packageId });
   }
 
   async getPackages(): Promise<IPackagesInfo> {
-    return (await this.axiosInstance.get('/Package/GetAll')).data;
+    return (await this.http.get('/Package/GetAll')).data;
   }
 
   async getTopModelNodes(): Promise<IApiTreeNode[]> {
-    return (await this.axiosInstance.get(`/Model/GetTopNodes`)).data;
+    return (await this.http.get(`/Model/GetTopNodes`)).data;
   }
 
   async getNodeChildren(node: IApiTreeNode): Promise<IApiTreeNode[]> {
     return (
-      await this.axiosInstance.get(`/Model/GetChildren`, {
+      await this.http.get(`/Model/GetChildren`, {
         params: {
           id: node.origamId,
           nodeText: node.nodeText,
@@ -97,7 +77,7 @@ export class ArchitectApi implements IArchitectApi {
 
   async searchText(text: string): Promise<ISearchResult[]> {
     return (
-      await this.axiosInstance.get('/Search/Text', {
+      await this.http.get('/Search/Text', {
         params: {
           text,
         },
@@ -107,7 +87,7 @@ export class ArchitectApi implements IArchitectApi {
 
   async searchReferences(schemaItemId: string): Promise<ISearchResult[]> {
     return (
-      await this.axiosInstance.get('/Search/References', {
+      await this.http.get('/Search/References', {
         params: {
           schemaItemId,
         },
@@ -117,7 +97,7 @@ export class ArchitectApi implements IArchitectApi {
 
   async searchDependencies(schemaItemId: string): Promise<ISearchResult[]> {
     return (
-      await this.axiosInstance.get('/Search/Dependencies', {
+      await this.http.get('/Search/Dependencies', {
         params: {
           schemaItemId,
         },
@@ -126,18 +106,15 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async openEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (await this.axiosInstance.post('/Editor/OpenEditor', { schemaItemId: schemaItemId }))
-      .data;
+    return (await this.http.post('/Editor/OpenEditor', { schemaItemId: schemaItemId })).data;
   }
 
   async closeEditor(editorId: string) {
-    await this.axiosInstance.post('/Editor/CloseEditor', { editorId: editorId });
+    await this.http.post('/Editor/CloseEditor', { editorId: editorId });
   }
 
   async openDocumentationEditor(schemaItemId: string): Promise<IApiEditorData> {
-    return (
-      await this.axiosInstance.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })
-    ).data;
+    return (await this.http.post('/Documentation/OpenEditor', { schemaItemId: schemaItemId })).data;
   }
 
   async updateDocumentationProperties(
@@ -145,7 +122,7 @@ export class ArchitectApi implements IArchitectApi {
     changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult> {
     return (
-      await this.axiosInstance.post(`/Documentation/Update`, {
+      await this.http.post(`/Documentation/Update`, {
         schemaItemId,
         changes,
       })
@@ -153,39 +130,39 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async persistDocumentationChanges(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post(`/Documentation/PersistChanges`, {
+    await this.http.post(`/Documentation/PersistChanges`, {
       schemaItemId,
     });
   }
 
   async validateTransformation(input: ITransformationInput): Promise<IValidationResult> {
-    return (await this.axiosInstance.post(`/Xslt/Validate`, input)).data;
+    return (await this.http.post(`/Xslt/Validate`, input)).data;
   }
 
   async runTransformation(input: ITransformationInput): Promise<ITransformResult> {
-    return (await this.axiosInstance.post(`/Xslt/Transform`, input)).data;
+    return (await this.http.post(`/Xslt/Transform`, input)).data;
   }
 
   async getXsltParameters(schemaItemId: string): Promise<IParametersResult> {
-    return (await this.axiosInstance.get(`/Xslt/Parameters`, { params: { schemaItemId } })).data;
+    return (await this.http.get(`/Xslt/Parameters`, { params: { schemaItemId } })).data;
   }
 
   async getXsltSettings(): Promise<ShemaItemInfo[]> {
-    return (await this.axiosInstance.get(`/Xslt/Settings`)).data;
+    return (await this.http.get(`/Xslt/Settings`)).data;
   }
 
   async getRuleSets(dataStructureId: string): Promise<ShemaItemInfo[]> {
-    return (await this.axiosInstance.get(`/Xslt/RuleSets`, { params: { dataStructureId } })).data;
+    return (await this.http.get(`/Xslt/RuleSets`, { params: { dataStructureId } })).data;
   }
 
   async persistChanges(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post(`/Editor/PersistChanges`, {
+    await this.http.post(`/Editor/PersistChanges`, {
       schemaItemId,
     });
   }
 
   async persistSectionEditorChanges(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post(`/SectionEditor/Save`, {
+    await this.http.post(`/SectionEditor/Save`, {
       schemaItemId,
     });
   }
@@ -195,7 +172,7 @@ export class ArchitectApi implements IArchitectApi {
     changes: IPropertyChange[],
   ): Promise<IUpdatePropertiesResult> {
     return (
-      await this.axiosInstance.post(`/PropertyEditor/Update`, {
+      await this.http.post(`/PropertyEditor/Update`, {
         schemaItemId,
         changes,
       })
@@ -203,12 +180,12 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async deleteSchemaItem(schemaItemId: string) {
-    await this.axiosInstance.post('/Model/DeleteSchemaItem', { schemaItemId: schemaItemId });
+    await this.http.post('/Model/DeleteSchemaItem', { schemaItemId: schemaItemId });
   }
 
   async getMenuItems(node: IApiTreeNode): Promise<IMenuItemInfo[]> {
     return (
-      await this.axiosInstance.get(`/Model/GetMenuItems`, {
+      await this.http.get(`/Model/GetMenuItems`, {
         params: {
           id: node.origamId,
           nodeText: node.nodeText,
@@ -219,12 +196,12 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async getOpenEditors(): Promise<IApiEditorData[]> {
-    return (await this.axiosInstance.get(`/Editor/GetOpenEditors`)).data;
+    return (await this.http.get(`/Editor/GetOpenEditors`)).data;
   }
 
   async createNode(node: IApiTreeNode, typeName: string): Promise<IApiEditorData> {
     return (
-      await this.axiosInstance.post('/Editor/CreateNode', {
+      await this.http.post('/Editor/CreateNode', {
         nodeId: node.origamId,
         newTypeName: typeName,
       })
@@ -237,7 +214,7 @@ export class ArchitectApi implements IArchitectApi {
     selectedDataSourceId: string;
     modelChanges: IModelChange[];
   }): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post(`/SectionEditor/Update`, args)).data;
+    return (await this.http.post(`/SectionEditor/Update`, args)).data;
   }
 
   async createSectionEditorItem(args: {
@@ -248,14 +225,14 @@ export class ArchitectApi implements IArchitectApi {
     top: number;
     left: number;
   }): Promise<IApiControl> {
-    return (await this.axiosInstance.post('/SectionEditor/CreateItem', args)).data;
+    return (await this.http.post('/SectionEditor/CreateItem', args)).data;
   }
 
   async deleteSectionEditorItem(args: {
     schemaItemIds: string[];
     editorSchemaItemId: string;
   }): Promise<ISectionEditorModel> {
-    return (await this.axiosInstance.post('/SectionEditor/Delete', args)).data;
+    return (await this.http.post('/SectionEditor/Delete', args)).data;
   }
 
   async updateScreenEditor(args: {
@@ -264,7 +241,7 @@ export class ArchitectApi implements IArchitectApi {
     selectedDataSourceId: string;
     modelChanges: IModelChange[];
   }): Promise<IScreenEditorModel> {
-    return (await this.axiosInstance.post(`/ScreenEditor/Update`, args)).data;
+    return (await this.http.post(`/ScreenEditor/Update`, args)).data;
   }
 
   async createScreenEditorItem(args: {
@@ -274,14 +251,14 @@ export class ArchitectApi implements IArchitectApi {
     top: number;
     left: number;
   }): Promise<IScreenEditorItem> {
-    return (await this.axiosInstance.post('/ScreenEditor/CreateItem', args)).data;
+    return (await this.http.post('/ScreenEditor/CreateItem', args)).data;
   }
 
   async deleteScreenEditorItem(args: {
     schemaItemIds: string[];
     editorSchemaItemId: string;
   }): Promise<IScreenEditorModel> {
-    return (await this.axiosInstance.post('/ScreenEditor/Delete', args)).data;
+    return (await this.http.post('/ScreenEditor/Delete', args)).data;
   }
 
   async loadSections(
@@ -289,7 +266,7 @@ export class ArchitectApi implements IArchitectApi {
     sectionIds: string[],
   ): Promise<Record<string, IApiControl>> {
     return (
-      await this.axiosInstance.get(`/ScreenEditor/GetSections`, {
+      await this.http.get(`/ScreenEditor/GetSections`, {
         params: {
           sectionIds: sectionIds,
           editorSchemaItemId: editorSchemaItemId,
@@ -299,18 +276,18 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async setVersionCurrent(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScripts/SetVersionCurrent', {
+    await this.http.post('/DeploymentScripts/SetVersionCurrent', {
       schemaItemId: schemaItemId,
     });
   }
 
   async runUpdateScriptActivity(schemaItemId: string): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScripts/Run', { schemaItemId: schemaItemId });
+    await this.http.post('/DeploymentScripts/Run', { schemaItemId: schemaItemId });
   }
 
   async fetchDeploymentScriptsList(platform: string | null): Promise<IDatabaseResultResponse> {
     return (
-      await this.axiosInstance.get('/DeploymentScriptsGenerator/List', {
+      await this.http.get('/DeploymentScriptsGenerator/List', {
         params: {
           platform,
         },
@@ -319,11 +296,11 @@ export class ArchitectApi implements IArchitectApi {
   }
 
   async addToDeployment(request: IAddToDeploymentRequest): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToDeployment', request);
+    await this.http.post('/DeploymentScriptsGenerator/AddToDeployment', request);
   }
 
   async addToModel(request: IAddToModelRequest): Promise<void> {
-    await this.axiosInstance.post('/DeploymentScriptsGenerator/AddToModel', request);
+    await this.http.post('/DeploymentScriptsGenerator/AddToModel', request);
   }
 }
 

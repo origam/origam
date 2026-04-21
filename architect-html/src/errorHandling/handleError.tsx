@@ -24,7 +24,7 @@ const HANDLED = Symbol('_$ErrorHandled');
 
 export function handleError(controller: ErrorDialogController) {
   return function* handleError(error: any) {
-    if (error.code === 'ERR_NETWORK' && error.name === 'AxiosError') {
+    if (error.code === 'ERR_NETWORK') {
       yield* controller.pushError('Network Unavailable');
       return;
     }
