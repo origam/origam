@@ -256,10 +256,7 @@ public class PgSqlDataService : AbstractSqlDataService
                 ),
                 transaction1
             );
-            ExecuteUpdate(
-                $"GRANT CONNECT ON DATABASE \"{database}\" TO \"{user}\"",
-                transaction1
-            );
+            ExecuteUpdate($"GRANT CONNECT ON DATABASE \"{database}\" TO \"{user}\"", transaction1);
             ExecuteUpdate(
                 string.Format(
                     "GRANT ALL PRIVILEGES ON DATABASE \"{0}\" TO \"{1}\" ",
