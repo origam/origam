@@ -85,6 +85,19 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
+      x:id="b1129e59-49d8-4c6e-b356-dd66c9bf7d81"
+      asi:name="GetByBetweenDate1">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="AllDataTypes#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsfsf:filter="GetBetweenDate1#AllDataTypes/GetBetweenDate1/03face00-af56-42c7-a9e4-ce9a2016f68a"
+        x:id="4e8d82ff-214b-4361-9cbd-f2dd50053d8d"
+        asi:name="AllDataTypes_GetBetweenDate1"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
       x:id="cb1bc588-b727-4615-ab7f-0829780e19b5"
       asi:name="GetId">
       <dsfsf:DataStructureFilterSetFilter
@@ -93,6 +106,19 @@
         dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="b696a0a4-eeb4-46c7-8326-81d682335c36"
         asi:name="AllDataTypes_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="da9a9223-8c7a-4cdd-92ad-1df5a52e42ff"
+      asi:name="GetByDateOlderThanToday">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="AllDataTypes#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsfsf:filter="GetByDateOlderThanToday#AllDataTypes/GetByDateOlderThanToday/98438f56-0c3b-420b-bbe3-644ca055cc4e"
+        x:id="54257bed-6a65-433c-83f1-5967415d7e62"
+        asi:name="AllDataTypes_GetByDateOlderThanToday"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsrs:DataStructureRuleSet
