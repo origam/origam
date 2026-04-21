@@ -27,7 +27,11 @@ using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Services;
 
-public class SearchService(IPersistenceService persistenceService, SchemaService schemaService)
+public class SearchService(
+    IPersistenceService persistenceService,
+    SchemaService schemaService,
+    ILogger<SearchService> logger
+)
 {
     public IEnumerable<SearchResult> SearchByText(string text)
     {
@@ -74,48 +78,93 @@ public class SearchService(IPersistenceService persistenceService, SchemaService
         {
             return new SearchResult();
         }
-        string name = item.ModelDescription() ?? item.ItemType;
-        string rootName = item.RootItem.ModelDescription() ?? item.RootItem.ItemType;
-        var searchResult = new SearchResult
+
+        ISchemaItem root = GetRootSafe(item);
+
+        return new SearchResult
         {
-            FoundIn = item.Path,
-            RootType = rootName,
-            Type = name,
             SchemaId = item.Id,
-            Folder = item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
-            Package = item.PackageName,
+            Type = item.ModelDescription() ?? item.ItemType,
+            RootType = root?.ModelDescription() ?? root?.ItemType ?? item.ItemType,
+            FoundIn = SafeGet(() => item.Path) ?? item.Name ?? "",
+            Folder = SafeGet(() => root?.Group?.Path) ?? "",
+            Package = SafeGet(() => item.PackageName) ?? "",
             PackageReference = referencePackages.Contains(item.SchemaExtensionId),
-            ParentNodeIds = GetParentNodeIds(item),
+            ParentNodeIds = GetParentNodeIds(item, root),
         };
-        return searchResult;
     }
 
-    private static List<string> GetParentNodeIds(ISchemaItem item)
+    private ISchemaItem GetRootSafe(ISchemaItem item)
     {
-        if (item?.RootItem?.RootProvider is not AbstractSchemaItemProvider provider)
+        try
+        {
+            ISchemaItem root = item;
+            while (root.ParentItem != null)
+            {
+                root = root.ParentItem;
+            }
+            return root;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(
+                ex,
+                "Orphaned parent reference while walking root for schema item {SchemaId}",
+                item.Id
+            );
+            return item;
+        }
+    }
+
+    private T SafeGet<T>(Func<T> getter)
+    {
+        try
+        {
+            return getter();
+        }
+        catch (Exception ex)
+        {
+            logger.LogDebug(ex, "Orphaned reference while evaluating property");
+            return default;
+        }
+    }
+
+    private List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
+    {
+        if (root?.RootProvider is not AbstractSchemaItemProvider provider)
         {
             return [];
         }
 
         var ids = new List<string>();
-
         AddFolderNameIfAny(ids, item);
 
-        for (var parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+        try
         {
-            ids.Add(parent.Id.ToString());
-            AddFolderNameIfAny(ids, parent);
-        }
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+            {
+                ids.Add(parent.Id.ToString());
+                AddFolderNameIfAny(ids, parent);
+            }
 
-        for (var group = item.RootItem.Group; group != null; group = group.ParentGroup)
+            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            {
+                ids.Add(group.Id.ToString());
+            }
+        }
+        catch (Exception ex)
         {
-            ids.Add(group.Id.ToString());
+            logger.LogWarning(
+                ex,
+                "Orphaned reference while building parent node ids for schema item {SchemaId}",
+                item.Id
+            );
         }
 
         ids.Add(provider.NodeId);
         ids.Add(provider.Group);
-
         ids.Reverse();
+
         return ids;
 
         static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
