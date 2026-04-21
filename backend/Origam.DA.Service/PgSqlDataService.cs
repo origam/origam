@@ -257,6 +257,7 @@ public class PgSqlDataService : AbstractSqlDataService
                 transaction1
             );
             ExecuteUpdate($"GRANT CONNECT ON DATABASE \"{database}\" TO \"{user}\"", transaction1);
+            ExecuteUpdate($"GRANT USAGE, CREATE ON SCHEMA public TO \"{user}\"", transaction1);
             ExecuteUpdate(
                 string.Format(
                     "GRANT ALL PRIVILEGES ON DATABASE \"{0}\" TO \"{1}\" ",
@@ -311,7 +312,6 @@ public class PgSqlDataService : AbstractSqlDataService
 
     public override void CreateSchema(string schemaName)
     {
-        ExecuteUpdate("GRANT ALL ON SCHEMA public TO PUBLIC", null);
         ExecuteUpdate($"CREATE SCHEMA \"{schemaName}\";", null);
         ExecuteUpdate($"CREATE EXTENSION pgcrypto SCHEMA \"{schemaName}\";", null);
     }
