@@ -37,7 +37,7 @@ namespace Origam.DA.Service;
 public class PgSqlDataService : AbstractSqlDataService
 {
     private const DatabaseType _PlatformName = DatabaseType.PgSql;
-    private string _DbUser = "";
+    private string dbUser = "";
 
     #region Constructors
     public PgSqlDataService()
@@ -183,7 +183,7 @@ public class PgSqlDataService : AbstractSqlDataService
                     }
                 }
             }
-            string message = string.Format("{0} {1}", recordErrorMessage, customMessage);
+            string message = $"{recordErrorMessage} {customMessage}";
             throw new OrigamException(message, ex.Message, ex);
         }
         throw new OrigamException(ex.Message, ex);
@@ -256,10 +256,7 @@ public class PgSqlDataService : AbstractSqlDataService
                 ),
                 transaction1
             );
-            ExecuteUpdate(
-                string.Format("GRANT CONNECT ON DATABASE \"{0}\" TO \"{1}\"", database, user),
-                transaction1
-            );
+            ExecuteUpdate($"GRANT CONNECT ON DATABASE \"{database}\" TO \"{user}\"", transaction1);
             ExecuteUpdate(
                 string.Format(
                     "GRANT ALL PRIVILEGES ON DATABASE \"{0}\" TO \"{1}\" ",
@@ -285,7 +282,7 @@ public class PgSqlDataService : AbstractSqlDataService
         }
     }
 
-    public override void DeleteUser(string user, bool DatabaseIntegratedAuthentication)
+    public override void DeleteUser(string user, bool integratedAuthentication)
     {
         //The user can be dropped only after the database is dropped,
         //so the operation is done in DeleteDatabase method
@@ -302,27 +299,28 @@ public class PgSqlDataService : AbstractSqlDataService
     public override void DeleteDatabase(string name)
     {
         CheckDatabaseName(name);
-        ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
-        ExecuteUpdate(string.Format("DROP ROLE IF EXISTS \"{0}\" ", name), null);
+        ExecuteUpdate($"DROP DATABASE \"{name}\"", null);
+        ExecuteUpdate($"DROP ROLE IF EXISTS \"{name}\" ", null);
     }
 
     public override void CreateDatabase(string name)
     {
         CheckDatabaseName(name);
-        ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\" ENCODING ='UTF8' ", name), null);
+        ExecuteUpdate($"CREATE DATABASE \"{name}\" ENCODING ='UTF8' ", null);
     }
 
-    public override void CreateSchema(string SchemaName)
+    public override void CreateSchema(string schemaName)
     {
-        ExecuteUpdate(string.Format("CREATE SCHEMA \"{0}\";", SchemaName), null);
-        ExecuteUpdate(string.Format("CREATE EXTENSION pgcrypto SCHEMA \"{0}\";", SchemaName), null);
+        ExecuteUpdate("GRANT ALL ON SCHEMA public TO PUBLIC", null);
+        ExecuteUpdate($"CREATE SCHEMA \"{schemaName}\";", null);
+        ExecuteUpdate($"CREATE EXTENSION pgcrypto SCHEMA \"{schemaName}\";", null);
     }
 
     private void CheckDatabaseName(string name)
     {
         if (name.Contains("\""))
         {
-            throw new Exception(string.Format("Invalid database name: {0}", name));
+            throw new Exception($"Invalid database name: {name}");
         }
     }
 
@@ -609,8 +607,8 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
     public override string DbUser
     {
-        get { return _DbUser; }
-        set { _DbUser = string.Format("{0}", value); }
+        get { return dbUser; }
+        set { dbUser = $"{value}"; }
     }
 
     internal override object FillParameterArrayData(ICollection ar)
