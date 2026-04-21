@@ -36,22 +36,22 @@ public class MsSqlRenderer : SqlRenderer
 
     public override string SelectClause(string finalQuery, int top)
     {
-        return top == 0 ? "SELECT" + finalQuery : "SELECT TOP " + top + finalQuery;
+        return top == 0 ? $"SELECT{finalQuery}" : $"SELECT TOP {top}{finalQuery}";
     }
 
     public override string ConvertGeoFromTextClause(string argument)
     {
-        return "geography::STGeomFromText(" + argument + ", 4326)";
+        return $"geography::STGeomFromText({argument}, 4326)";
     }
 
     public override string ConvertGeoToTextClause(string argument)
     {
-        return argument + ".STAsText()";
+        return $"{argument}.STAsText()";
     }
 
     internal override string Sequence(string entityName, string primaryKeyName)
     {
-        return "; SELECT @@IDENTITY AS " + primaryKeyName;
+        return $"; SELECT @@IDENTITY AS {primaryKeyName}";
     }
 
     internal override string IsNull()
@@ -84,74 +84,48 @@ public class MsSqlRenderer : SqlRenderer
         return "NVARCHAR";
     }
 
-    internal override string Length(string expresion)
+    internal override string Length(string expression)
     {
-        return string.Format("LEN({0})", expresion);
+        return $"LEN({expression})";
     }
 
-    internal override string Text(string expresion)
+    internal override string Text(string expression)
     {
-        return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
+        return $"CAST ({expression} AS NVARCHAR(MAX) )";
     }
 
-    internal override string DatePart(string datetype, string expresion)
+    internal override string DatePart(string dateType, string expression)
     {
-        return string.Format("DATEPART({0},{1})", datetype, expresion);
+        return $"DATEPART({dateType},{expression})";
     }
 
     internal override string DateAdd(DateTypeSql datepart, string number, string date)
     {
-        return string.Format("DATEADD({0},{1},{2})", GetAddDateSql(datepart), number, date);
+        return $"DATEADD({GetAddDateSql(datepart)},{number},{date})";
     }
 
     private string GetAddDateSql(DateTypeSql datepart)
     {
-        switch (datepart)
+        return datepart switch
         {
-            case DateTypeSql.Second:
-            {
-                return "s";
-            }
-            case DateTypeSql.Minute:
-            {
-                return "mi";
-            }
-            case DateTypeSql.Hour:
-            {
-                return "hh";
-            }
-            case DateTypeSql.Day:
-            {
-                return "dd";
-            }
-            case DateTypeSql.Month:
-            {
-                return "m";
-            }
-            case DateTypeSql.Year:
-            {
-                return "yy";
-            }
-            default:
-            {
-                throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
-            }
-        }
+            DateTypeSql.Second => "s",
+            DateTypeSql.Minute => "mi",
+            DateTypeSql.Hour => "hh",
+            DateTypeSql.Day => "dd",
+            DateTypeSql.Month => "m",
+            DateTypeSql.Year => "yy",
+            _ => throw new NotSupportedException($"Unsupported in AddDateSql {datepart}"),
+        };
     }
 
-    internal override string DateDiff(DateTypeSql datepart, string startdate, string enddate)
+    internal override string DateDiff(DateTypeSql datepart, string startDate, string endDate)
     {
-        return string.Format(
-            "DATEDIFF({0}, {1}, {2})",
-            GetAddDateSql(datepart),
-            startdate,
-            enddate
-        );
+        return $"DATEDIFF({GetAddDateSql(datepart)}, {startDate}, {endDate})";
     }
 
     internal override string STDistance(string point1, string point2)
     {
-        return string.Format("{0}.STDistance({1})", point1, point2);
+        return $"{point1}.STDistance({point2})";
     }
 
     internal override string Now()
@@ -160,69 +134,44 @@ public class MsSqlRenderer : SqlRenderer
     }
 
     internal override string FreeText(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
         if (string.IsNullOrEmpty(languageForFullText))
         {
-            return string.Format("FREETEXT({0},{1})", columnsForSeach, freetext_string);
+            return $"FREETEXT({columnsForSearch},{freetext})";
         }
-        return string.Format(
-            "FREETEXT({0},{1},{2})",
-            columnsForSeach,
-            freetext_string,
-            languageForFullText
-        );
+        return $"FREETEXT({columnsForSearch},{freetext},{languageForFullText})";
     }
 
     internal override string Contains(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
         if (string.IsNullOrEmpty(languageForFullText))
         {
-            return string.Format("CONTAINS({0},{1})", columnsForSeach, freetext_string);
+            return $"CONTAINS({columnsForSearch},{freetext})";
         }
-        return string.Format(
-            "CONTAINS({0},{1},{2})",
-            columnsForSeach,
-            freetext_string,
-            languageForFullText
-        );
+        return $"CONTAINS({columnsForSearch},{freetext},{languageForFullText})";
     }
 
-    internal override string LatLon(geoLatLonSql latLon, string expresion)
+    internal override string LatLon(geoLatLonSql latLon, string expression)
     {
-        switch (latLon)
+        return latLon switch
         {
-            case geoLatLonSql.Lat:
-            {
-                return string.Format("{0}.Lat", expresion);
-            }
-            case geoLatLonSql.Lon:
-            {
-                return string.Format("{0}.Long", expresion);
-            }
-            default:
-            {
-                throw new NotSupportedException(
-                    "Unsuported in Latitude or Longtitude " + latLon.ToString()
-                );
-            }
-        }
+            geoLatLonSql.Lat => $"{expression}.Lat",
+            geoLatLonSql.Lon => $"{expression}.Long",
+            _ => throw new NotSupportedException($"Unsupported in Latitude or Longitude {latLon}"),
+        };
     }
 
-    internal override string Array(string expresion1, string expresion2)
+    internal override string Array(string expression1, string expression2)
     {
-        return string.Format(
-            "{0} IN (SELECT ListValue FROM {1} origamListValue)",
-            expresion1,
-            expresion2
-        );
+        return $"{expression1} IN (SELECT ListValue FROM {expression2} origamListValue)";
     }
 
     internal override string CreateDataStructureHead()
@@ -237,11 +186,11 @@ public class MsSqlRenderer : SqlRenderer
 
     internal override string SetParameter(string name)
     {
-        return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
+        return $"SET {name} = NULL{Environment.NewLine}";
     }
 
     internal override string Char(int number)
     {
-        return "CHAR(" + number + ")";
+        return $"CHAR({number})";
     }
 }
