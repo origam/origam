@@ -84,19 +84,19 @@ public class MsSqlRenderer : SqlRenderer
         return "NVARCHAR";
     }
 
-    internal override string Length(string expresion)
+    internal override string Length(string expression)
     {
-        return string.Format("LEN({0})", expresion);
+        return string.Format("LEN({0})", expression);
     }
 
-    internal override string Text(string expresion)
+    internal override string Text(string expression)
     {
-        return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
+        return string.Format("CAST ({0} AS {1} )", expression, "NVARCHAR(MAX)");
     }
 
-    internal override string DatePart(string datetype, string expresion)
+    internal override string DatePart(string dateType, string expression)
     {
-        return string.Format("DATEPART({0},{1})", datetype, expresion);
+        return string.Format("DATEPART({0},{1})", dateType, expression);
     }
 
     internal override string DateAdd(DateTypeSql datepart, string number, string date)
@@ -139,13 +139,13 @@ public class MsSqlRenderer : SqlRenderer
         }
     }
 
-    internal override string DateDiff(DateTypeSql datepart, string startdate, string enddate)
+    internal override string DateDiff(DateTypeSql datepart, string startDate, string endDate)
     {
         return string.Format(
             "DATEDIFF({0}, {1}, {2})",
             GetAddDateSql(datepart),
-            startdate,
-            enddate
+            startDate,
+            endDate
         );
     }
 
@@ -160,52 +160,52 @@ public class MsSqlRenderer : SqlRenderer
     }
 
     internal override string FreeText(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
         if (string.IsNullOrEmpty(languageForFullText))
         {
-            return string.Format("FREETEXT({0},{1})", columnsForSeach, freetext_string);
+            return string.Format("FREETEXT({0},{1})", columnsForSearch, freetext);
         }
         return string.Format(
             "FREETEXT({0},{1},{2})",
-            columnsForSeach,
-            freetext_string,
+            columnsForSearch,
+            freetext,
             languageForFullText
         );
     }
 
     internal override string Contains(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
         if (string.IsNullOrEmpty(languageForFullText))
         {
-            return string.Format("CONTAINS({0},{1})", columnsForSeach, freetext_string);
+            return string.Format("CONTAINS({0},{1})", columnsForSearch, freetext);
         }
         return string.Format(
             "CONTAINS({0},{1},{2})",
-            columnsForSeach,
-            freetext_string,
+            columnsForSearch,
+            freetext,
             languageForFullText
         );
     }
 
-    internal override string LatLon(geoLatLonSql latLon, string expresion)
+    internal override string LatLon(geoLatLonSql latLon, string expression)
     {
         switch (latLon)
         {
             case geoLatLonSql.Lat:
             {
-                return string.Format("{0}.Lat", expresion);
+                return string.Format("{0}.Lat", expression);
             }
             case geoLatLonSql.Lon:
             {
-                return string.Format("{0}.Long", expresion);
+                return string.Format("{0}.Long", expression);
             }
             default:
             {
@@ -216,12 +216,12 @@ public class MsSqlRenderer : SqlRenderer
         }
     }
 
-    internal override string Array(string expresion1, string expresion2)
+    internal override string Array(string expression1, string expression2)
     {
         return string.Format(
             "{0} IN (SELECT ListValue FROM {1} origamListValue)",
-            expresion1,
-            expresion2
+            expression1,
+            expression2
         );
     }
 

@@ -46,25 +46,25 @@ public abstract class SqlRenderer
     internal abstract string DeclareAsSql();
     internal abstract string FunctionPrefix();
     internal abstract string VarcharSql();
-    internal abstract string Length(string expresion);
-    internal abstract string Text(string expresion);
-    internal abstract string DatePart(string datetype, string expresion);
+    internal abstract string Length(string expression);
+    internal abstract string Text(string expression);
+    internal abstract string DatePart(string dateType, string expression);
     internal abstract string DateAdd(DateTypeSql addDateSql, string number, string date);
-    internal abstract string LatLon(geoLatLonSql latLon, string expresion);
+    internal abstract string LatLon(geoLatLonSql latLon, string expression);
     internal abstract string Contains(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     );
     internal abstract string FreeText(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     );
     internal abstract string Now();
     internal abstract string STDistance(string point1, string point2);
-    internal abstract string DateDiff(DateTypeSql addDateSql, string startdate, string enddate);
-    internal abstract string Array(string expresion1, string expresion2);
+    internal abstract string DateDiff(DateTypeSql addDateSql, string startDate, string endDate);
+    internal abstract string Array(string expression1, string expression2);
     internal abstract string CreateDataStructureHead();
     internal abstract string DeclareBegin();
     internal abstract string SetParameter(string name);

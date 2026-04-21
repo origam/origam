@@ -46,70 +46,43 @@ class PgSqlRenderer : SqlRenderer
         return "VARCHAR";
     }
 
-    internal override string Length(string expresion)
+    internal override string Length(string expression)
     {
-        return string.Format("LENGTH({0})", expresion);
+        return $"LENGTH({expression})";
     }
 
-    internal override string Text(string expresion)
+    internal override string Text(string expression)
     {
-        return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
+        return $"CAST ({expression} AS TEXT)";
     }
 
-    internal override string DatePart(string datetype, string expresion)
+    internal override string DatePart(string dateType, string expression)
     {
-        return string.Format("DATE_PART('{0}',{1})", datetype, expresion);
+        return $"DATE_PART('{dateType}',{expression})";
     }
 
     internal override string DateAdd(DateTypeSql datepart, string number, string date)
     {
-        return string.Format(
-            "({0}::timestamp + ( {1} || '{2}')::interval)",
-            date,
-            number,
-            GetAddDateSql(datepart)
-        );
+        return $"({date}::timestamp + ( {number} || '{GetAddDateSql(datepart)}')::interval)";
     }
 
     private string GetAddDateSql(DateTypeSql datepart)
     {
-        switch (datepart)
+        return datepart switch
         {
-            case DateTypeSql.Second:
-            {
-                return "second";
-            }
-            case DateTypeSql.Minute:
-            {
-                return "minute";
-            }
-            case DateTypeSql.Hour:
-            {
-                return "hour";
-            }
-            case DateTypeSql.Day:
-            {
-                return "day";
-            }
-            case DateTypeSql.Month:
-            {
-                return "month";
-            }
-            case DateTypeSql.Year:
-            {
-                return "year";
-            }
-
-            default:
-            {
-                throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
-            }
-        }
+            DateTypeSql.Second => "second",
+            DateTypeSql.Minute => "minute",
+            DateTypeSql.Hour => "hour",
+            DateTypeSql.Day => "day",
+            DateTypeSql.Month => "month",
+            DateTypeSql.Year => "year",
+            _ => throw new NotSupportedException($"Unsupported in AddDateSql {datepart}"),
+        };
     }
 
-    internal override string DateDiff(DateTypeSql datepart, string startdate, string enddate)
+    internal override string DateDiff(DateTypeSql datepart, string startDate, string endDate)
     {
-        StringBuilder stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
         switch (datepart)
         {
             case DateTypeSql.Day:
@@ -146,20 +119,16 @@ class PgSqlRenderer : SqlRenderer
 
             default:
             {
-                throw new NotSupportedException("Unsuported DateDiffSql " + datepart.ToString());
+                throw new NotSupportedException($"Unsupported DateDiffSql {datepart}");
             }
         }
 
-        return string.Format(stringBuilder.ToString(), enddate, startdate);
+        return string.Format(stringBuilder.ToString(), endDate, startDate);
     }
 
     internal override string STDistance(string point1, string point2)
     {
-        return string.Format(
-            "ST_Distance(('SRID=4326;' || {0})::geography,('SRID=4326;' || {1})::geography)",
-            ConvertGeoToTextClause(point1),
-            ConvertGeoToTextClause(point2)
-        );
+        return $"ST_Distance(('SRID=4326;' || {ConvertGeoToTextClause(point1)})::geography,('SRID=4326;' || {ConvertGeoToTextClause(point2)})::geography)";
     }
 
     internal override string Now()
@@ -168,52 +137,36 @@ class PgSqlRenderer : SqlRenderer
     }
 
     internal override string FreeText(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
-        return string.Format(
-            "{0} @@ to_tsquery({1},{2})",
-            columnsForSeach,
-            languageForFullText,
-            freetext_string
-        );
+        return $"{columnsForSearch} @@ to_tsquery({languageForFullText},{freetext})";
     }
 
     internal override string Contains(
-        string columnsForSeach,
-        string freetext_string,
+        string columnsForSearch,
+        string freetext,
         string languageForFullText
     )
     {
-        return string.Format("levenshtein({0},{1})", columnsForSeach, freetext_string);
+        return $"levenshtein({columnsForSearch},{freetext})";
     }
 
-    internal override string LatLon(geoLatLonSql latLon, string expresion)
+    internal override string LatLon(geoLatLonSql latLon, string expression)
     {
-        switch (latLon)
+        return latLon switch
         {
-            case geoLatLonSql.Lat:
-            {
-                return string.Format("st_y({0})", expresion);
-            }
-            case geoLatLonSql.Lon:
-            {
-                return string.Format("st_x({0})", expresion);
-            }
-            default:
-            {
-                throw new NotSupportedException(
-                    "Unsuported in Latitude or Longtitude " + latLon.ToString()
-                );
-            }
-        }
+            geoLatLonSql.Lat => $"st_y({expression})",
+            geoLatLonSql.Lon => $"st_x({expression})",
+            _ => throw new NotSupportedException($"Unsupported in Latitude or Longitude {latLon}"),
+        };
     }
 
-    internal override string Array(string expresion1, string expresion2)
+    internal override string Array(string expression1, string expression2)
     {
-        return string.Format("{0}::text = ANY ({1})", expresion1, expresion2);
+        return $"{expression1}::text = ANY ({expression2})";
     }
 
     internal override string CreateDataStructureHead()
@@ -228,7 +181,7 @@ class PgSqlRenderer : SqlRenderer
 
     internal override string SetParameter(string name)
     {
-        return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
+        return $"{name} = NULL;{Environment.NewLine}";
     }
 
     public override string SelectClause(string finalQuery, int top)
@@ -238,27 +191,27 @@ class PgSqlRenderer : SqlRenderer
             return "SELECT" + finalQuery;
         }
 
-        return "SELECT" + finalQuery + " LIMIT " + top.ToString();
+        return $"SELECT{finalQuery} LIMIT {top}";
     }
 
     public override string ConvertGeoFromTextClause(string argument)
     {
-        return "ST_GeomFromText(" + argument + ", 4326)";
+        return $"ST_GeomFromText({argument}, 4326)";
     }
 
     public override string ConvertGeoToTextClause(string argument)
     {
-        return "ST_AsText(" + argument + ")";
+        return $"ST_AsText({argument})";
     }
 
     internal override string Sequence(string entityName, string primaryKeyName)
     {
-        StringBuilder actualsequence = new StringBuilder();
-        actualsequence.Append(entityName);
-        actualsequence.Append("_");
-        actualsequence.Append(primaryKeyName);
-        actualsequence.Append("_seq");
-        return "; SELECT currval(" + actualsequence + ")";
+        var actualSequence = new StringBuilder();
+        actualSequence.Append(entityName);
+        actualSequence.Append("_");
+        actualSequence.Append(primaryKeyName);
+        actualSequence.Append("_seq");
+        return $"; SELECT currval({actualSequence})";
     }
 
     public override string ParameterReferenceChar => GenerateConsoleUseSyntax ? "" : ":";
@@ -282,6 +235,6 @@ class PgSqlRenderer : SqlRenderer
 
     internal override string Char(int number)
     {
-        return "CHR(" + number + ")";
+        return $"CHR({number})";
     }
 }
