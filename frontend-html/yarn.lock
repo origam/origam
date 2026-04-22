@@ -6843,7 +6843,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-inlinesvg@npm:^4.2.0":
+"react-inlinesvg@npm:4.2.x":
   version: 4.2.0
   resolution: "react-inlinesvg@npm:4.2.0"
   dependencies:
@@ -6992,7 +6992,7 @@ __metadata:
     react-dom: "npm:^17.0.2"
     react-draft-wysiwyg: "npm:^1.15.0"
     react-highlight-words: "npm:^0.21.0"
-    react-inlinesvg: "npm:^4.2.0"
+    react-inlinesvg: "npm:4.2.x"
     react-measure: "npm:^2.5.2"
     react-virtualized: "npm:^9.22.6"
     sass: "npm:^1.99.0"
