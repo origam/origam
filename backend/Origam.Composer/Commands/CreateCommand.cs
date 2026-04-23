@@ -36,6 +36,15 @@ public class CreateCommand(
 {
     public override int Execute(CommandContext context, CreateCommandSettings settings)
     {
+        var modelFolder = Path.Combine(settings.ProjectFolder, "model");
+        if (
+            Directory.Exists(modelFolder) && Directory.EnumerateFileSystemEntries(modelFolder).Any()
+        )
+        {
+            visualService.PrintProjectAlreadyExists(modelFolder);
+            return 0;
+        }
+
         GitIdentity gitIdentity = GitIdentityResolver(settings);
         ShowVisualBanner(settings: settings, gitIdentity: gitIdentity);
 
