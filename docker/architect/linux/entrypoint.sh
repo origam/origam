@@ -1,4 +1,5 @@
 #!/bin/bash
+. /home/origam/Architect/bootstrap-entrypoint.sh
 sudo /root/updateTimezone.sh
 cd /home/origam/Architect
 ./configureServer.sh

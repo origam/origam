@@ -30,6 +30,7 @@ COPY server/windows/Install.ps1 .
 COPY server/windows/Utils.ps1 .
 COPY server/windows/CreateSslCertificate.ps1 .
 COPY server/windows/EntryPoint.ps1 .
+COPY shared/windows/bootstrap-entrypoint.ps1 .
 
 # Install dependencies
 RUN powershell.exe -ExecutionPolicy Bypass -File install.ps1
