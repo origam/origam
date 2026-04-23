@@ -35,10 +35,6 @@ RUN apt-get update && apt-get install -y -qq xmlstarlet
 
 USER origam
 
-WORKDIR /root
-COPY server/linux/updateTimezone.sh \
-/root/
-
 WORKDIR /home/origam
 RUN mkdir Architect
 COPY --chown=origam:origam architect/bin /home/origam/Architect/
