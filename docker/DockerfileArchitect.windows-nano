@@ -23,7 +23,7 @@ COPY server/_OrigamSettings.template          .
 COPY server/log4net.server.config             log4net.config
 COPY architect/windows/appsettings.json       .
 COPY architect/windows/EntryPoint.ps1         .
-COPY shared/windows/bootstrap-entrypoint.ps1  .
+COPY shared/windows/bootstrap.ps1  .
 COPY server/windows/Utils.ps1                 .
 
 # Install Node.js 18 (matches Linux Dockerfile)

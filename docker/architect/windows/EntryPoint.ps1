@@ -1,4 +1,4 @@
-. "$PSScriptRoot\bootstrap-entrypoint.ps1"
+. "$PSScriptRoot\bootstrap.ps1"
 . "./Utils.ps1"
 
 $ErrorActionPreference = 'Stop'
