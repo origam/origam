@@ -1,3 +1,4 @@
+. "$PSScriptRoot\bootstrap.ps1"
 . "./Utils.ps1"
 Write-Host "Container started with ContainerMode=$env:ContainerMode"
 $ErrorActionPreference = 'Stop'

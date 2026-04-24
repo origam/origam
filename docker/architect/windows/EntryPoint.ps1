@@ -1,9 +1,13 @@
+. "$PSScriptRoot\bootstrap.ps1"
 . "./Utils.ps1"
 
 $ErrorActionPreference = 'Stop'
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
 Write-Host "Origam Architect Server (Windows) starting..."
+
+# Utils.ps1 -> Initialize-OrigamSettingsConfig reads ..\_OrigamSettings.template
+Copy-Item 'C:\home\origam\Architect\_OrigamSettings.template' 'C:\home\origam\_OrigamSettings.template' -Force
 
 $projectDataPath = "C:\home\origam\projectData"
 if (-not (Test-Path "$projectDataPath\model")) {

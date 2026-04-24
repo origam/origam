@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo /root/updateTimezone.sh
+. /home/origam/Architect/bootstrap.sh
 cd /home/origam/Architect
 ./configureServer.sh
 export ASPNETCORE_URLS="http://+:8081"
