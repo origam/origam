@@ -189,7 +189,7 @@ public class DownloadFileModelBuilderTask(
         {
             return "https://localhost";
         }
-        return "https://localhost:" + project.DockerPort;
+        return $"https://localhost:{project.DockerPort}";
     }
 
     public void Rollback(Project project) { }
