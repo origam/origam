@@ -35,8 +35,6 @@ public class ProjectBuilderService(
     ICreateDatabaseStructureBuilderTask createDatabaseStructureBuilderTask,
     ICreateNewPackageBuilderTask createNewPackageBuilderTask,
     ICreateNewUserBuilderTask createNewUserBuilderTask,
-    IDockerBuilderTask dockerBuilderTask,
-    ICreateGitRepositoryBuilderTask createGitRepositoryBuilderTask,
     IPrintOrigamSettingsBuilderTask printOrigamSettingsBuilderTask
 ) : IProjectBuilderService
 {
@@ -82,12 +80,6 @@ public class ProjectBuilderService(
         Tasks.Add(createDatabaseStructureBuilderTask);
         Tasks.Add(createNewPackageBuilderTask);
         Tasks.Add(createNewUserBuilderTask);
-        Tasks.Add(dockerBuilderTask);
-
-        if (project.IsGitEnabled)
-        {
-            Tasks.Add(createGitRepositoryBuilderTask);
-        }
     }
 
     public List<IBuilderTask> GetTasks()

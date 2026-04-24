@@ -45,4 +45,6 @@ public interface IVisualService
     void PrintProjectCreateTasks(List<IBuilderTask> tasks);
 
     void PrintBye();
+
+    void PrintProjectAlreadyExists(string folder);
 }

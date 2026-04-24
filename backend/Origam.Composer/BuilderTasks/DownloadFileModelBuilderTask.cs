@@ -20,46 +20,58 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.IO.Compression;
+using System.Text;
 using Origam.Composer.DTOs;
 using Origam.Composer.Enums;
 using Origam.Composer.Interfaces.BuilderTasks;
 using Origam.Composer.Interfaces.Services;
+using Origam.DA.Common.DatabasePlatform;
 
 namespace Origam.Composer.BuilderTasks;
 
-public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
-    : IDownloadFileModelBuilderTask
+public class DownloadFileModelBuilderTask(
+    IFileSystemService fileSystemService,
+    IConnectionStringService connectionStringService
+) : IDownloadFileModelBuilderTask
 {
     public string Name => "Download ORIGAM model-root from repository";
     public BuilderTaskState State { get; set; } = BuilderTaskState.Prepared;
 
-    private string RepositoryZipPath;
+    private string repositoryZipPath;
 
     public void Execute(Project project)
     {
-        RepositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
-
-        CreateSourceFolder(projectFolder: project.ProjectFolder);
+        repositoryZipPath = Path.Combine(project.ProjectFolder, "master.zip");
+        
         DownloadModelFromRepository(origamRepositoryUrl: project.OrigamRepositoryUrl);
         UnzipDefaultModelAndCopy(projectFolder: project.ProjectFolder);
         CreateCustomAssetsFolder(projectFolder: project.ProjectFolder);
+        CreateEnvFile(project);
     }
 
-    private void CreateSourceFolder(string projectFolder)
+    private void CleanupUnnecessaryFiles(string projectFolder)
     {
-        var dir = new DirectoryInfo(projectFolder);
-        if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
+        var buildPath = Path.Combine(projectFolder, "build");
+        fileSystemService.DeleteDirectory(buildPath);
+
+        DeleteFileIfExists(Path.Combine(projectFolder, "LICENSE"));
+        DeleteFileIfExists(Path.Combine(projectFolder, ".gitignore"));
+    }
+
+    private static void DeleteFileIfExists(string filePath)
+    {
+        if (!File.Exists(filePath))
         {
-            throw new Exception(
-                string.Format(Strings.Sources_folder_already_exists, projectFolder)
-            );
+            return;
         }
-        dir.Create();
+
+        File.SetAttributes(filePath, FileAttributes.Normal);
+        File.Delete(filePath);
     }
 
     private void DownloadModelFromRepository(string origamRepositoryUrl)
     {
-        if (RepositoryZipPath == null)
+        if (repositoryZipPath == null)
         {
             throw new Exception(Strings.RepositoryZipPath_not_set);
         }
@@ -68,24 +80,25 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
         HttpResponseMessage response = client.GetAsync(origamRepositoryUrl).Result;
         response.EnsureSuccessStatusCode();
 
-        using var fs = new FileStream(RepositoryZipPath, FileMode.Create, FileAccess.Write);
+        using var fs = new FileStream(repositoryZipPath, FileMode.Create, FileAccess.Write);
         response.Content.CopyToAsync(fs).Wait();
     }
 
     private void UnzipDefaultModelAndCopy(string projectFolder)
     {
-        if (RepositoryZipPath == null)
+        if (repositoryZipPath == null)
         {
             throw new Exception("RepositoryZipPath is not set.");
         }
 
         var tempExtractPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        ZipFile.ExtractToDirectory(RepositoryZipPath, tempExtractPath);
+        ZipFile.ExtractToDirectory(repositoryZipPath, tempExtractPath);
 
         var modelRootPath = Path.Combine(tempExtractPath, "origam-master", "model-root");
 
         if (Directory.Exists(modelRootPath))
         {
+            CleanupUnnecessaryFiles(modelRootPath);
             CopyDirectory(modelRootPath, projectFolder);
         }
         else
@@ -99,9 +112,9 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
         {
             Directory.Delete(tempExtractPath, true);
         }
-        if (File.Exists(RepositoryZipPath))
+        if (File.Exists(repositoryZipPath))
         {
-            File.Delete(RepositoryZipPath);
+            File.Delete(repositoryZipPath);
         }
     }
 
@@ -142,11 +155,42 @@ public class DownloadFileModelBuilderTask(IFileSystemService fileSystemService)
         }
     }
 
-    public void Rollback(Project project)
+    private void CreateEnvFile(Project project)
     {
-        if (Directory.Exists(project.ProjectFolder))
-        {
-            fileSystemService.DeleteDirectory(directoryPath: project.ProjectFolder);
-        }
+        string dbType =
+            project.DatabaseType == DatabaseType.PgSql
+                ? "postgresql"
+                : project.DatabaseType.ToString().ToLower();
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"OrigamSettings__DefaultSchemaExtensionId={project.NewPackageId}");
+        sb.AppendLine(
+            $"OrigamSettings__DataConnectionString={connectionStringService.GetConnectionString(project)}"
+        );
+
+        sb.AppendLine($"OrigamSettings__Name={project.Name}");
+        sb.AppendLine(
+            $"CustomAssetsConfig__PathToCustomAssetsFolder={"/home/origam/projectData/customAssets"}"
+        );
+        sb.AppendLine($"CustomAssetsConfig__RouteToCustomAssetsFolder=/customAssets");
+        sb.AppendLine($"DatabaseType={dbType}");
+        sb.AppendLine($"ExternalDomain_SetOnStart={WebSiteUrl(project)}");
+        sb.Append("TZ=Europe/Prague");
+
+        File.WriteAllText(
+            Path.Combine(project.ProjectFolder, $"{project.Name}_Environments.env"),
+            sb.ToString()
+        );
     }
+
+    private string WebSiteUrl(Project project)
+    {
+        if (project.DockerPort == Common.Constants.DefaultHttpsPort)
+        {
+            return "https://localhost";
+        }
+        return $"https://localhost:{project.DockerPort}";
+    }
+
+    public void Rollback(Project project) { }
 }

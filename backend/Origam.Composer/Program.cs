@@ -59,8 +59,6 @@ class Program
         >();
         services.AddSingleton<ICreateNewPackageBuilderTask, CreateNewPackageBuilderTask>();
         services.AddSingleton<ICreateNewUserBuilderTask, CreateNewUserBuilderTask>();
-        services.AddSingleton<IDockerBuilderTask, DockerBuilderTask>();
-        services.AddSingleton<ICreateGitRepositoryBuilderTask, CreateGitRepositoryBuilderTask>();
         services.AddSingleton<IPrintOrigamSettingsBuilderTask, PrintOrigamSettingsBuilderTask>();
 
         var registrar = new OrigamTypeRegistrar(services);
