@@ -111,8 +111,7 @@ public class SearchService(
         {
             logger.LogWarning(
                 ex,
-                "Orphaned parent reference while walking root for schema item {SchemaId}",
-                item.Id
+                    $"Orphaned parent reference while walking root for schema item {item.Id}; using nearest valid ancestor {root.Id}"
             );
             }
         }
@@ -128,7 +127,7 @@ public class SearchService(
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                logger.LogDebug(ex, "Orphaned reference while evaluating property");
+                logger.LogDebug(ex, $"Orphaned reference while evaluating property");
             }
             return default;
         }
@@ -163,8 +162,7 @@ public class SearchService(
             {
                 logger.LogWarning(
                     ex,
-                    "Orphaned reference while building parent node ids for schema item {SchemaId}",
-                    item.Id
+                    $"Orphaned reference while building parent node ids for schema item {item.Id}"
                 );
             }
         }
