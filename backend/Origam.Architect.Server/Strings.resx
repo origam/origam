@@ -42,4 +42,13 @@
     <data name="DeploymentScript_UnsupportedDeploymentActivityType" xml:space="preserve">
         <value>Unsupported deployment activity type</value>
     </data>
+    <data name="SearchService_OrphanedParentReferenceWhileWalkingRoot" xml:space="preserve">
+        <value>Orphaned parent reference while walking root for schema item {SchemaId}</value>
+    </data>
+    <data name="SearchService_OrphanedReferenceWhileEvaluatingProperty" xml:space="preserve">
+        <value>Orphaned reference while evaluating property</value>
+    </data>
+    <data name="SearchService_OrphanedReferenceWhileBuildingParentNodeIds" xml:space="preserve">
+        <value>Orphaned reference while building parent node ids for schema item {SchemaId}</value>
+    </data>
 </root>

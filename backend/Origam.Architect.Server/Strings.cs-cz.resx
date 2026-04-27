@@ -23,4 +23,13 @@
     <data name="DeploymentScript_UnsupportedDeploymentActivityType" xml:space="preserve">
         <value>Nepodporovaný typ aktivity deploymentu</value>
     </data>
+    <data name="SearchService_OrphanedParentReferenceWhileWalkingRoot" xml:space="preserve">
+        <value>Osiřelá reference rodiče při hledání kořenové položky pro schema item {SchemaId}</value>
+    </data>
+    <data name="SearchService_OrphanedReferenceWhileEvaluatingProperty" xml:space="preserve">
+        <value>Osiřelá reference při vyhodnocování vlastnosti</value>
+    </data>
+    <data name="SearchService_OrphanedReferenceWhileBuildingParentNodeIds" xml:space="preserve">
+        <value>Osiřelá reference při sestavování ID rodičovských uzlů pro schema item {SchemaId}</value>
+    </data>
 </root>

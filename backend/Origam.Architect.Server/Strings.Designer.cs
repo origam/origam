@@ -96,6 +96,33 @@ namespace Origam.Architect.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orphaned parent reference while walking root for schema item {SchemaId}.
+        /// </summary>
+        internal static string SearchService_OrphanedParentReferenceWhileWalkingRoot {
+            get {
+                return ResourceManager.GetString("SearchService_OrphanedParentReferenceWhileWalkingRoot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orphaned reference while building parent node ids for schema item {SchemaId}.
+        /// </summary>
+        internal static string SearchService_OrphanedReferenceWhileBuildingParentNodeIds {
+            get {
+                return ResourceManager.GetString("SearchService_OrphanedReferenceWhileBuildingParentNodeIds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orphaned reference while evaluating property.
+        /// </summary>
+        internal static string SearchService_OrphanedReferenceWhileEvaluatingProperty {
+            get {
+                return ResourceManager.GetString("SearchService_OrphanedReferenceWhileEvaluatingProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to XSLT Validation.
         /// </summary>
         internal static string ValidationResultTitle {
