@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
@@ -107,12 +107,14 @@ public class SearchService(
         }
         catch (Exception ex)
         {
+            if (logger.IsEnabled(LogLevel.Warning))
+        {
             logger.LogWarning(
                 ex,
                 "Orphaned parent reference while walking root for schema item {SchemaId}",
                 item.Id
             );
-            return item;
+            }
         }
     }
 
@@ -124,7 +126,10 @@ public class SearchService(
         }
         catch (Exception ex)
         {
-            logger.LogDebug(ex, "Orphaned reference while evaluating property");
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug(ex, "Orphaned reference while evaluating property");
+            }
             return default;
         }
     }
@@ -154,11 +159,14 @@ public class SearchService(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                ex,
-                "Orphaned reference while building parent node ids for schema item {SchemaId}",
-                item.Id
-            );
+            if (logger.IsEnabled(LogLevel.Warning))
+            {
+                logger.LogWarning(
+                    ex,
+                    "Orphaned reference while building parent node ids for schema item {SchemaId}",
+                    item.Id
+                );
+            }
         }
 
         ids.Add(provider.NodeId);
