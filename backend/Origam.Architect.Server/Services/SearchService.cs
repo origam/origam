@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Origam.Architect.Server.Exceptions;
 using Origam.Architect.Server.Models.Requests;
 using Origam.Schema;
 using Origam.Workbench.Services;
@@ -90,7 +91,7 @@ public class SearchService(
                 IsOrphaned = false,
             };
         }
-        catch (Exception ex)
+        catch (OrphanedSchemaReferenceException ex)
         {
             if (logger.IsEnabled(LogLevel.Warning))
             {
@@ -111,40 +112,54 @@ public class SearchService(
 
     private static ISchemaItem GetRoot(ISchemaItem item)
     {
-        ISchemaItem root = item;
-        for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+        try
         {
-            root = parent;
+            ISchemaItem root = item;
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+            {
+                root = parent;
+            }
+            return root;
         }
-        return root;
+        catch (Exception ex)
+        {
+            throw new OrphanedSchemaReferenceException(item.Id, ex);
+        }
     }
 
     private static List<string> GetParentNodeIds(ISchemaItem item, ISchemaItem root)
     {
-        if (root.RootProvider is not AbstractSchemaItemProvider provider)
+        try
         {
-            return [];
+            if (root.RootProvider is not AbstractSchemaItemProvider provider)
+            {
+                return [];
+            }
+
+            var ids = new List<string>();
+            AddFolderNameIfAny(ids, item);
+
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+            {
+                ids.Add(parent.Id.ToString());
+                AddFolderNameIfAny(ids, parent);
+            }
+
+            for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
+            {
+                ids.Add(group.Id.ToString());
+            }
+
+            ids.Add(provider.NodeId);
+            ids.Add(provider.Group);
+            ids.Reverse();
+
+            return ids;
         }
-
-        var ids = new List<string>();
-        AddFolderNameIfAny(ids, item);
-
-        for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
+        catch (Exception ex)
         {
-            ids.Add(parent.Id.ToString());
-            AddFolderNameIfAny(ids, parent);
+            throw new OrphanedSchemaReferenceException(item.Id, ex);
         }
-
-        for (SchemaItemGroup group = root.Group; group != null; group = group.ParentGroup)
-        {
-            ids.Add(group.Id.ToString());
-        }
-
-        ids.Add(provider.NodeId);
-        ids.Add(provider.Group);
-        ids.Reverse();
-
-        return ids;
 
         static void AddFolderNameIfAny(List<string> target, ISchemaItem schemaItem)
         {
