@@ -86,13 +86,13 @@ const SearchResultsEditor = observer(
                         )}
                       </td>
                       <td>{result.foundIn}</td>
-                      <td>{result.isOrphaned ? '' : result.rootType}</td>
+                      <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
                       <td>{result.type}</td>
-                      <td>{result.isOrphaned ? '' : result.folder}</td>
-                      <td>{result.isOrphaned ? '' : result.package}</td>
+                      <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
+                      <td>{result.isOrphaned ? 'n/a' : result.package}</td>
                       <td>
                         {result.isOrphaned
-                          ? ''
+                          ? 'n/a'
                           : result.packageReference
                             ? T('Yes', 'dialog_yes')
                             : T('No', 'dialog_no')}
