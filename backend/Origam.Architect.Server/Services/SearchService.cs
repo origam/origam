@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 /*
 Copyright 2005 - 2025 Advantage Solutions, s. r. o.
@@ -81,35 +81,40 @@ public class SearchService(
             SchemaId = item.Id,
             Type = item.ModelDescription() ?? item.ItemType,
             RootType = root?.ModelDescription() ?? root?.ItemType ?? item.ItemType,
-            FoundIn = SafeGet(() => item.Path) ?? item.Name ?? "",
-            Folder = SafeGet(() => root?.Group?.Path) ?? "",
-            Package = SafeGet(() => item.PackageName) ?? "",
+            FoundIn = SafeGet(() => item.Path, nameof(item.Path), item.Id) ?? item.Name ?? "",
+            Folder = SafeGet(() => root?.Group?.Path, "Group.Path", item.Id) ?? "",
+            Package = SafeGet(() => item.PackageName, nameof(item.PackageName), item.Id) ?? "",
             PackageReference = referencePackages.Contains(item.SchemaExtensionId),
             ParentNodeIds = GetParentNodeIds(item, root),
         };
     }
 
+    /// <summary>
+    /// Returns the topmost ancestor of <paramref name="item"/>, or the nearest
+    /// reachable one if the parent chain is broken by an orphaned reference.
+    /// </summary>
     private ISchemaItem GetRootSafe(ISchemaItem item)
     {
+        ISchemaItem root = item;
         try
         {
-            ISchemaItem root = item;
-            while (root.ParentItem != null)
+            // Walk up the parent chain to find the root. Keep the last visited ancestor.
+            for (ISchemaItem parent = item.ParentItem; parent != null; parent = parent.ParentItem)
             {
-                root = root.ParentItem;
+                root = parent;
             }
-            return root;
         }
         catch (Exception ex)
         {
             if (logger.IsEnabled(LogLevel.Warning))
-        {
-            logger.LogWarning(
-                ex,
+            {
+                logger.LogWarning(
+                    ex,
                     $"Orphaned parent reference while walking root for schema item {item.Id}; using nearest valid ancestor {root.Id}"
-            );
+                );
             }
         }
+        return root;
     }
 
     private T SafeGet<T>(Func<T> getter, string propertyName, Guid itemId)
