@@ -117,7 +117,7 @@ public class SearchService(
         }
     }
 
-    private T SafeGet<T>(Func<T> getter)
+    private T SafeGet<T>(Func<T> getter, string propertyName, Guid itemId)
     {
         try
         {
@@ -127,7 +127,10 @@ public class SearchService(
         {
             if (logger.IsEnabled(LogLevel.Debug))
             {
-                logger.LogDebug(ex, $"Orphaned reference while evaluating property");
+                logger.LogDebug(
+                    ex,
+                    $"Orphaned reference while evaluating property {propertyName} for schema item {itemId}"
+                );
             }
             return default;
         }
