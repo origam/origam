@@ -96,8 +96,7 @@ public class SearchService(
             {
                 logger.LogWarning(
                     ex,
-                    "Orphaned reference while building search result for schema item {SchemaId}",
-                    item.Id
+                    $"Orphaned reference while building search result for schema item {item.Id}"
                 );
             }
             return new SearchResult
