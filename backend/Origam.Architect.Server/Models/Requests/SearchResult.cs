@@ -31,4 +31,5 @@ public class SearchResult
     public bool PackageReference { get; set; }
     public Guid SchemaId { get; set; }
     public List<string> ParentNodeIds { get; set; }
+    public bool IsOrphaned { get; set; }
 }
