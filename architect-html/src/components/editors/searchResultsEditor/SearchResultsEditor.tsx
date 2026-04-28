@@ -67,38 +67,38 @@ const SearchResultsEditor = observer(
               {[...editorState.results]
                 .sort((left, right) => left.foundIn.localeCompare(right.foundIn))
                 .map(result => (
-                    <tr
-                      key={result.schemaId}
-                      className={result.isOrphaned ? S.orphanedRow : S.row}
-                      onClick={() => highlightInModelTree(result)}
-                    >
-                      <td className={S.statusCell}>
-                        {result.isOrphaned && (
-                          <span
-                            className={S.orphanedMarker}
-                            title={T(
-                              'Orphaned reference — parent chain is broken',
-                              'editor_search_results_orphaned_note',
-                            )}
-                          >
-                            <VscWarning />
-                          </span>
-                        )}
-                      </td>
-                      <td>{result.foundIn}</td>
-                      <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
-                      <td>{result.type}</td>
-                      <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
-                      <td>{result.isOrphaned ? 'n/a' : result.package}</td>
-                      <td>
-                        {result.isOrphaned
-                          ? 'n/a'
-                          : result.packageReference
-                            ? T('Yes', 'dialog_yes')
-                            : T('No', 'dialog_no')}
-                      </td>
-                    </tr>
-                  ))}
+                  <tr
+                    key={result.schemaId}
+                    className={result.isOrphaned ? S.orphanedRow : S.row}
+                    onClick={() => highlightInModelTree(result)}
+                  >
+                    <td className={S.statusCell}>
+                      {result.isOrphaned && (
+                        <span
+                          className={S.orphanedMarker}
+                          title={T(
+                            'Orphaned reference — parent chain is broken',
+                            'editor_search_results_orphaned_note',
+                          )}
+                        >
+                          <VscWarning />
+                        </span>
+                      )}
+                    </td>
+                    <td>{result.foundIn}</td>
+                    <td>{result.isOrphaned ? 'n/a' : result.rootType}</td>
+                    <td>{result.type}</td>
+                    <td>{result.isOrphaned ? 'n/a' : result.folder}</td>
+                    <td>{result.isOrphaned ? 'n/a' : result.package}</td>
+                    <td>
+                      {result.isOrphaned
+                        ? 'n/a'
+                        : result.packageReference
+                          ? T('Yes', 'dialog_yes')
+                          : T('No', 'dialog_no')}
+                    </td>
+                  </tr>
+                ))}
               {editorState.results.length === 0 && (
                 <tr>
                   <td className={S.empty} colSpan={7}>
