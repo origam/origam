@@ -326,12 +326,17 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                             )
                         );
                     }
+
+                    string sanitizedEntryName = destinationFileName.Substring(
+                        startIndex: fullDestinationDirPath.Length
+                    );
+
                     if (
                         FitsMask(filename: archiveEntry.Name)
                         && !hashIndexFile.IsZipArchiveEntryProcessed(archiveEntry: archiveEntry)
                     )
                     {
-                        filesToProcess.Add(item: filename + "|" + archiveEntry.FullName);
+                        filesToProcess.Add(item: filename + "|" + sanitizedEntryName);
                     }
                 }
             }
