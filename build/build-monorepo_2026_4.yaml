@@ -500,53 +500,6 @@ jobs:
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub $(TAG) release
-     # ------------------------------------
-     # RELEASE ORIGAM_ORIGAM - TAG_LATEST
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam'
-         action: 'create'
-         target: $(ORIGAM_ORIGAM_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG_LATEST)'
-         title: '$(TAG_LATEST)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
-           
-           ---
-           
-           Server Docker Images
-           ```
-           docker pull origam/server:$(TAG_LATEST).linux
-           docker pull origam/server:$(TAG_LATEST).win-nano
-           docker pull origam/server:$(TAG_LATEST).win-core
-           ```
-           Architect Server Docker Images
-           ```
-           docker pull origam/architect:$(TAG_LATEST).linux
-           docker pull origam/architect:$(TAG_LATEST).win-nano
-           ```
-           Composer Docker Images
-           ```
-           docker pull origam/composer:$(TAG_LATEST).linux
-           docker pull origam/composer:$(TAG_LATEST).win-nano
-           ```
-         assets: |
-           $(Build.ArtifactStagingDirectory)/origam-setup/origam-architect.msi
-           $(Build.ArtifactStagingDirectory)/origam-server.zip
-           $(Build.ArtifactStagingDirectory)/origam-model.zip
-           $(Build.ArtifactStagingDirectory)/origam-scheduler.zip
-           $(Build.ArtifactStagingDirectory)/origam-architect-server.zip
-           $(Build.ArtifactStagingDirectory)/origam-composer.zip
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub $(TAG_LATEST) release
      - task: DeleteFiles@1
        inputs:
          SourceFolder: '$(Build.ArtifactStagingDirectory)'
